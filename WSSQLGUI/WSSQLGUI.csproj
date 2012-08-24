@@ -11,6 +11,7 @@
     <AssemblyName>WSSQLGUI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -23,7 +24,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -36,6 +36,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -45,13 +46,19 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Search.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.2.329, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Ink, Version=1.7.2600.2180, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -62,23 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Handlers\COLORREF.cs" />
-    <Compile Include="Handlers\FileBasedPreviewHandler.cs" />
-    <Compile Include="Handlers\FileBasedPreviewHandlerControl.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Handlers\IInitializeWithFile.cs" />
-    <Compile Include="Handlers\IObjectWithSite.cs" />
-    <Compile Include="Handlers\IOleWindow.cs" />
-    <Compile Include="Handlers\IPreviewHandler.cs" />
-    <Compile Include="Handlers\IPreviewHandlerFrame.cs" />
-    <Compile Include="Handlers\IPreviewHandlerVisuals.cs" />
-    <Compile Include="Handlers\LOGFONT.cs" />
-    <Compile Include="Handlers\MSG.cs" />
-    <Compile Include="Handlers\PdfPreviewHandler.cs" />
-    <Compile Include="Handlers\PreviewHandler.cs" />
-    <Compile Include="Handlers\PreviewHandlerAttribute.cs" />
-    <Compile Include="Handlers\RECT.cs" />
     <Compile Include="Logic.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -86,16 +76,56 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="PreviewHandlerControl.cs">
+    <Compile Include="PreviewHandlerFramework\COMInterop\COLORREF.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithFile.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithStream.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IObjectWithSite.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IOleWindow.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IPreviewHandler.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IPreviewHandlerFrame.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IPreviewHandlerVisuals.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\LOGFONT.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\MSG.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\RECT.cs" />
+    <Compile Include="PreviewHandlerFramework\FileBasedPreviewHandler.cs" />
+    <Compile Include="PreviewHandlerFramework\FileBasedPreviewHandlerControl.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PreviewHandlerFramework\PreviewHandler.cs" />
+    <Compile Include="PreviewHandlerFramework\PreviewHandlerAttribute.cs" />
+    <Compile Include="PreviewHandlerFramework\PreviewHandlerControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PreviewHandlerFramework\StreamBasedPreviewHandler.cs" />
+    <Compile Include="PreviewHandlerFramework\StreamBasedPreviewHandlerControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PreviewHandlerHost\PreviewHandlerHostControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PreviewHandlerHost\PreviewHandlerHostControl.designer.cs">
+      <DependentUpon>PreviewHandlerHostControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PreviewHandlerHost\PreviewHandlerRegistryAccessor.cs" />
+    <Compile Include="PreviewHandlerHost\StreamWrapper.cs" />
+    <Compile Include="PreviewHandlers\BinPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\CsvPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\FileTypeIconProvider.cs" />
+    <Compile Include="PreviewHandlers\InternetExplorerPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\IsfPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\MsiPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\PdfPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\ResourcesPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\ResxPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\SnkPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\ZipPreviewHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PreviewHandlerControl.resx">
-      <DependentUpon>PreviewHandlerControl.cs</DependentUpon>
+    <EmbeddedResource Include="PreviewHandlerHost\PreviewHandlerHostControl.resx">
+      <DependentUpon>PreviewHandlerHostControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -120,6 +150,9 @@
   <ItemGroup>
     <None Include="Resources\Copy %282%29 of bar.png" />
     <None Include="Resources\bar.png" />
+    <None Include="AdditionalDll\ICSharpCode.SharpZipLib.dll" />
+    <None Include="AdditionalDll\Microsoft.Ink.dll" />
+    <None Include="Resources\TreeView_XP_Explorer_ParentNode.gif" />
     <Content Include="Search.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -144,7 +177,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy $(ProjectDir)AdditionalDll\ICSharpCode.SharpZipLib.dll $(TargetDir) /F /R /Y /I
+xcopy $(ProjectDir)AdditionalDll\Microsoft.Ink.dll $(TargetDir) /F /R /Y /I</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
