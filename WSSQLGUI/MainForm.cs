@@ -103,14 +103,14 @@ namespace WSSQLGUI
         {
             _isLoading = true;
             SearchTextBox.Enabled = SearchButton.Enabled = false;
-            this.Cursor = Cursors.WaitCursor;
+            this.Cursor = dataGridView1.Cursor = previewControl.Cursor = Cursors.AppStarting;
         }
 
         private void OnComplete(bool res)
         {
             _isLoading = false;
             SearchTextBox.Enabled = SearchButton.Enabled = true;
-            this.Cursor = Cursors.Default;
+            this.Cursor = dataGridView1.Cursor = previewControl.Cursor = Cursors.Default;
         }
 
         private void AddRowsToGrid(string Value)
