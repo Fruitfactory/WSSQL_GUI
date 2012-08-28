@@ -53,9 +53,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.2.329, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <Private>True</Private>
+      <HintPath>..\Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Ink, Version=1.7.2600.2180, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.Ink, Version=1.7.2600.2180, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\Toolkits\Microsoft\Microsoft.Ink.dll</HintPath>
+    </Reference>
+    <Reference Include="MVCSharp">
+      <HintPath>..\Toolkits\MVCSharp\MVCSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -69,13 +74,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\MainTask.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Logic.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="Views\SearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="Views\SearchForm.Designer.cs">
+      <DependentUpon>SearchForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\SearchItem.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\COLORREF.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithFile.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithStream.cs" />
@@ -121,8 +129,9 @@
     <Compile Include="PreviewHandlers\ZipPreviewHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="Services\EventArgs.cs" />
+    <EmbeddedResource Include="Views\SearchForm.resx">
+      <DependentUpon>SearchForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PreviewHandlerHost\PreviewHandlerHostControl.resx">
       <DependentUpon>PreviewHandlerHostControl.cs</DependentUpon>
@@ -137,6 +146,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="Properties\DataSources\WSSQLGUI.Models.ListSearchItems.datasource" />
+    <None Include="Properties\DataSources\WSSQLGUI.Models.SearchItem.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -150,8 +161,6 @@
   <ItemGroup>
     <None Include="Resources\Copy %282%29 of bar.png" />
     <None Include="Resources\bar.png" />
-    <None Include="AdditionalDll\ICSharpCode.SharpZipLib.dll" />
-    <None Include="AdditionalDll\Microsoft.Ink.dll" />
     <None Include="Resources\TreeView_XP_Explorer_ParentNode.gif" />
     <Content Include="Search.ico" />
   </ItemGroup>
@@ -180,8 +189,10 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy $(ProjectDir)AdditionalDll\ICSharpCode.SharpZipLib.dll $(TargetDir) /F /R /Y /I
-xcopy $(ProjectDir)AdditionalDll\Microsoft.Ink.dll $(TargetDir) /F /R /Y /I</PostBuildEvent>
+    <PostBuildEvent>xcopy $(SolutionDir)Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\Microsoft\Microsoft.Ink.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\MVCSharp\MVCSharp.dll $(TargetDir) /F /R /Y /I
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

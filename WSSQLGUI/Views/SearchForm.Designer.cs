@@ -1,6 +1,6 @@
-﻿namespace WSSQLGUI
+﻿namespace WSSQLGUI.Views
 {
-    partial class MainForm
+    partial class SearchForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,17 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchForm));
             this.label1 = new System.Windows.Forms.Label();
             this.SearchButton = new System.Windows.Forms.Button();
             this.SearchTextBox = new System.Windows.Forms.TextBox();
             this.UsernameLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.previewControl = new C4F.DevKit.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl();
+            this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FileNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -102,26 +103,23 @@
             this.label2.Size = new System.Drawing.Size(82, 15);
             this.label2.TabIndex = 5;
             this.label2.Text = "Search Results";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1});
+            this.NameColumn,
+            this.FileNameColumn});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(279, 404);
             this.dataGridView1.TabIndex = 6;
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
-            // 
-            // Column1
-            // 
-            this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column1.HeaderText = "Results";
-            this.Column1.Name = "Column1";
             // 
             // panel1
             // 
@@ -160,7 +158,19 @@
             this.previewControl.Size = new System.Drawing.Size(443, 404);
             this.previewControl.TabIndex = 0;
             // 
-            // MainForm
+            // NameColumn
+            // 
+            this.NameColumn.HeaderText = "Name Item";
+            this.NameColumn.Name = "NameColumn";
+            this.NameColumn.ReadOnly = true;
+            // 
+            // FileNameColumn
+            // 
+            this.FileNameColumn.HeaderText = "File";
+            this.FileNameColumn.Name = "FileNameColumn";
+            this.FileNameColumn.ReadOnly = true;
+            // 
+            // SearchForm
             // 
             this.AcceptButton = this.SearchButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -177,10 +187,9 @@
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "MainForm";
+            this.Name = "SearchForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "WSSQL GUI";
-            this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -199,10 +208,11 @@
         private System.Windows.Forms.Label UsernameLabel;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private C4F.DevKit.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl previewControl;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NameColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FileNameColumn;
     }
 }
 
