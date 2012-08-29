@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
-using WSSQLGUI.Properties;
+using C4F.DevKit.PreviewHandler.Properties;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {

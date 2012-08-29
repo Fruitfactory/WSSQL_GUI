@@ -19,9 +19,6 @@ using WSSQLGUI.Controllers;
 using WSSQLGUI.Models;
 using WSSQLGUI.Services;
 
-// maybe we should use MVC pattern for this application ?
-// I added preview control. It works, when we enter SQL query like "select system.itemurl from systemindex"
-// and when sql query is executing, mouse pointer changes to hourglasses
 
 
 namespace WSSQLGUI.Views
@@ -29,7 +26,7 @@ namespace WSSQLGUI.Views
     [View(typeof(MainTask), MainTask.Search)]
     public partial class SearchForm : WinFormView
     {
-        private const string FILEPREFIX = "file:";
+        
         private bool _isLoading = false;
 
 
@@ -80,15 +77,6 @@ namespace WSSQLGUI.Views
             
         }
 
-        private bool IsDirectory(string filename)
-        {
-            if (string.IsNullOrEmpty(filename))
-                return true;
-            FileInfo fi = new FileInfo(filename);
-
-            return (fi.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
-        }
-
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             if (_isLoading)
@@ -99,22 +87,28 @@ namespace WSSQLGUI.Views
             SearchItem si = dataGridView1.SelectedRows[0].Tag as SearchItem;
             (Controller as SearchController).CurrentSearchItemChanged(si);
 
-            string filename = si.FileName;
-            if (!filename.StartsWith(FILEPREFIX))
-            {
-                previewControl.FilePath = string.Empty;
+            if (si == null)
                 return;
-            }
 
-            filename = filename.Substring(FILEPREFIX.Length);
+            string filename = si.FileName;
 
-            if (IsDirectory(filename) || !File.Exists(filename))
+            if (FileService.IsDirectory(filename) || !File.Exists(filename))
             {
                 previewControl.FilePath = string.Empty;
                 return;
             }
 
             previewControl.FilePath = filename;
+        }
+
+        private void buttonPreview_Click(object sender, EventArgs e)
+        {
+            (Controller as SearchController).OpenCurrentFile();
+        }
+
+        private void toolStripMenuItemOpen_Click(object sender, EventArgs e)
+        {
+            (Controller as SearchController).OpenCurrentFile();
         }
 
        

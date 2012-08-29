@@ -9,6 +9,8 @@ using WSSQLGUI.Services;
 using System.Data.OleDb;
 using System.Data;
 using System.Threading;
+using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace WSSQLGUI.Controllers
 {
@@ -18,6 +20,9 @@ namespace WSSQLGUI.Controllers
 
         private const string connectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
         private const string qyeryTemplate = "SELECT System.ItemName, System.ItemUrl  FROM SystemIndex WHERE Contains(*,'{0}*')";
+        private const string FILEPREFIX = "file:";
+        private const string FILEPREFIX1 = "file:///";
+
 
         #endregion
 
@@ -58,6 +63,22 @@ namespace WSSQLGUI.Controllers
         public void CurrentSearchItemChanged(SearchItem item)
         {
             CurrenItem = item;
+        }
+
+        public void OpenCurrentFile()
+        {
+            if (CurrenItem == null ||
+                string.IsNullOrEmpty(CurrenItem.FileName) ||
+                FileService.IsDirectory(CurrenItem.FileName))
+                return;
+            try
+            {
+                Process.Start(CurrenItem.FileName);
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         #endregion
@@ -110,27 +131,37 @@ namespace WSSQLGUI.Controllers
         {
             EventHandler temp = OnStartSearch;
             if (temp != null)
-                temp.Invoke(this, new EventArgs());
+                temp(this, new EventArgs());
         }
 
         private void OnComplete(bool res)
         {
             EventHandler<EventArgs<bool>> temp = OnCompleteSearch;
             if (temp != null)
-                temp.Invoke(this, new EventArgs<bool>(res));
+                temp(this, new EventArgs<bool>(res));
         }
 
         private void OnAddItem(SearchItem item)
         {
             EventHandler<EventArgs<SearchItem>> temp = OnAddSearchItem;
             if (temp != null)
-                temp.Invoke(this, new EventArgs<SearchItem>(item));
+                temp(this, new EventArgs<SearchItem>(item));
         }
 
         private SearchItem ReadResult(IDataReader reader)
         {
             string name = reader[0] as string;
             string file = reader[1] as string;
+            int index = -1;
+            if ( (index =  file.IndexOf(FILEPREFIX1)) > -1 )
+            {
+                file = file.Substring(index + FILEPREFIX1.Length);
+            }
+            else if ((index = file.IndexOf(FILEPREFIX)) > -1)
+            {
+                file = file.Substring(index + FILEPREFIX.Length);
+            }
+            
 
             return new SearchItem() { Name = name, FileName = file };
         }

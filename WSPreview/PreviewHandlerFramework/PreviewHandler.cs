@@ -196,6 +196,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerFramework
        
         protected static void RegisterPreviewHandler(string name, string extensions, string previewerGuid, string appId)
         {
+           
             // Create a new prevhost AppID so that this always runs in its own isolated process
             using (RegistryKey appIdsKey = Registry.ClassesRoot.OpenSubKey("AppID", true))
             using (RegistryKey appIdKey = appIdsKey.CreateSubKey(appId))
@@ -213,9 +214,12 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerFramework
             using (RegistryKey clsidKey = Registry.ClassesRoot.OpenSubKey("CLSID"))
             using (RegistryKey idKey = clsidKey.OpenSubKey(previewerGuid, true))
             {
-                idKey.SetValue("DisplayName", name, RegistryValueKind.String);
-                idKey.SetValue("AppID", appId, RegistryValueKind.String);
-                idKey.SetValue("DisableLowILProcessIsolation", 1, RegistryValueKind.DWord); // optional, depending on what preview handler needs to be able to do
+                if (idKey != null)
+                {
+                    idKey.SetValue("DisplayName", name, RegistryValueKind.String);
+                    idKey.SetValue("AppID", appId, RegistryValueKind.String);
+                    idKey.SetValue("DisableLowILProcessIsolation", 1, RegistryValueKind.DWord); // optional, depending on what preview handler needs to be able to do 
+                }
             }
 
             foreach (string extension in extensions.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries))

@@ -7,6 +7,7 @@ using WSSQLGUI.Views;
 using MVCSharp.Core.Configuration;
 using MVCSharp.Core.Tasks;
 using MVCSharp.Winforms;
+using C4F.DevKit.PreviewHandler;
 
 namespace WSSQLGUI
 {
@@ -20,6 +21,9 @@ namespace WSSQLGUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+
+            HelperRegisterPreviewHandlers.RegisterHandlers();
 
             TasksManager tasksManager = new TasksManager(WinformsViewsManager.GetDefaultConfig());
             tasksManager.StartTask(typeof(MainTask));

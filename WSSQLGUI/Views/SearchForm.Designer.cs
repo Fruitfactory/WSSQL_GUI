@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchForm));
             this.label1 = new System.Windows.Forms.Label();
             this.SearchButton = new System.Windows.Forms.Button();
@@ -35,16 +36,20 @@
             this.UsernameLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FileNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.previewControl = new C4F.DevKit.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl();
-            this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FileNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonPreview = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -98,7 +103,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(40, 161);
+            this.label2.Location = new System.Drawing.Point(42, 186);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(82, 15);
             this.label2.TabIndex = 5;
@@ -112,14 +117,31 @@
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.NameColumn,
             this.FileNameColumn});
+            this.dataGridView1.ContextMenuStrip = this.contextMenu;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(279, 404);
+            this.dataGridView1.Size = new System.Drawing.Size(279, 379);
             this.dataGridView1.TabIndex = 6;
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
+            // 
+            // NameColumn
+            // 
+            this.NameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.NameColumn.HeaderText = "Name Item";
+            this.NameColumn.Name = "NameColumn";
+            this.NameColumn.ReadOnly = true;
+            this.NameColumn.Width = 91;
+            // 
+            // FileNameColumn
+            // 
+            this.FileNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.FileNameColumn.HeaderText = "File";
+            this.FileNameColumn.Name = "FileNameColumn";
+            this.FileNameColumn.ReadOnly = true;
+            this.FileNameColumn.Width = 50;
             // 
             // panel1
             // 
@@ -134,7 +156,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.splitContainer1.Location = new System.Drawing.Point(43, 179);
+            this.splitContainer1.Location = new System.Drawing.Point(43, 204);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -144,7 +166,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.previewControl);
-            this.splitContainer1.Size = new System.Drawing.Size(734, 408);
+            this.splitContainer1.Size = new System.Drawing.Size(734, 383);
             this.splitContainer1.SplitterDistance = 283;
             this.splitContainer1.TabIndex = 8;
             // 
@@ -155,20 +177,39 @@
             this.previewControl.FilePath = null;
             this.previewControl.Location = new System.Drawing.Point(0, 0);
             this.previewControl.Name = "previewControl";
-            this.previewControl.Size = new System.Drawing.Size(443, 404);
+            this.previewControl.Size = new System.Drawing.Size(443, 379);
             this.previewControl.TabIndex = 0;
             // 
-            // NameColumn
+            // contextMenu
             // 
-            this.NameColumn.HeaderText = "Name Item";
-            this.NameColumn.Name = "NameColumn";
-            this.NameColumn.ReadOnly = true;
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemOpen});
+            this.contextMenu.Name = "contextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(168, 26);
             // 
-            // FileNameColumn
+            // toolStripMenuItemOpen
             // 
-            this.FileNameColumn.HeaderText = "File";
-            this.FileNameColumn.Name = "FileNameColumn";
-            this.FileNameColumn.ReadOnly = true;
+            this.toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
+            this.toolStripMenuItemOpen.Size = new System.Drawing.Size(167, 22);
+            this.toolStripMenuItemOpen.Text = "Open Current File";
+            this.toolStripMenuItemOpen.Click += new System.EventHandler(this.toolStripMenuItemOpen_Click);
+            // 
+            // buttonPreview
+            // 
+            this.buttonPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPreview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
+            this.buttonPreview.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonPreview.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
+            this.buttonPreview.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gray;
+            this.buttonPreview.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonPreview.ForeColor = System.Drawing.Color.Black;
+            this.buttonPreview.Location = new System.Drawing.Point(689, 173);
+            this.buttonPreview.Name = "buttonPreview";
+            this.buttonPreview.Size = new System.Drawing.Size(88, 25);
+            this.buttonPreview.TabIndex = 10;
+            this.buttonPreview.Text = "Preview";
+            this.buttonPreview.UseVisualStyleBackColor = false;
+            this.buttonPreview.Click += new System.EventHandler(this.buttonPreview_Click);
             // 
             // SearchForm
             // 
@@ -177,10 +218,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ClientSize = new System.Drawing.Size(816, 617);
+            this.Controls.Add(this.buttonPreview);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.SearchTextBox);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.UsernameLabel);
             this.Controls.Add(this.SearchButton);
             this.Controls.Add(this.label1);
@@ -195,6 +237,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -213,6 +256,9 @@
         private C4F.DevKit.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl previewControl;
         private System.Windows.Forms.DataGridViewTextBoxColumn NameColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileNameColumn;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.Button buttonPreview;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
     }
 }
 
