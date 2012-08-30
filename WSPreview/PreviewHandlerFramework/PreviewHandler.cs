@@ -210,18 +210,6 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerFramework
                 handlersKey.SetValue(previewerGuid, name, RegistryValueKind.String);
             }
 
-            // Modify preview handler registration
-            using (RegistryKey clsidKey = Registry.ClassesRoot.OpenSubKey("CLSID"))
-            using (RegistryKey idKey = clsidKey.OpenSubKey(previewerGuid, true))
-            {
-                if (idKey != null)
-                {
-                    idKey.SetValue("DisplayName", name, RegistryValueKind.String);
-                    idKey.SetValue("AppID", appId, RegistryValueKind.String);
-                    idKey.SetValue("DisableLowILProcessIsolation", 1, RegistryValueKind.DWord); // optional, depending on what preview handler needs to be able to do 
-                }
-            }
-
             foreach (string extension in extensions.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
 
@@ -232,6 +220,15 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerFramework
                 {
                     previewKey.SetValue(null, previewerGuid, RegistryValueKind.String);
                 }
+            }
+
+            // Modify preview handler registration
+            using (RegistryKey clsidKey = Registry.ClassesRoot.OpenSubKey("CLSID"))
+            using (RegistryKey idKey = clsidKey.OpenSubKey(previewerGuid, true))
+            {
+                idKey.SetValue("DisplayName", name, RegistryValueKind.String);
+                idKey.SetValue("AppID", appId, RegistryValueKind.String);
+                idKey.SetValue("DisableLowILProcessIsolation", 1, RegistryValueKind.DWord); // optional, depending on what preview handler needs to be able to do 
             }
         }
 

@@ -15,9 +15,9 @@ using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("MSDN Magazine Resources Preview Handler", ".resources", "{5679D180-540C-4db3-AF0C-97CDE2B7B5E7}")]
+    [PreviewHandler("MSDN Magazine Resources Preview Handler", ".resources", "{0595438C-7C68-4A9B-B5CD-BF6EBAA6623A}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.ResourcesPreviewHandler")]
-    [Guid("739972DC-DAD1-4e8c-BB82-113DE4B16B13")]
+    [Guid("7B2D1C25-6DE7-4F16-8C9B-AD65A1EC8FB0")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
     public sealed class ResourcesPreviewHandler : StreamBasedPreviewHandler

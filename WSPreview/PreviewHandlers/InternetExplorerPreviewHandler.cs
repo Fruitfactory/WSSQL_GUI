@@ -10,9 +10,9 @@ using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("MSDN Magazine Internet Explorer Preview Handler", "xmlfile;.xml;.xps;.config;.psq", "{88235ab2-bfce-4be8-9ed0-0408cd8da792}")]
+    [PreviewHandler("MSDN Magazine Internet Explorer Preview Handler", "xmlfile;.xml;.xps;.config;.psq", "{5C92DC69-2154-4974-8937-C9A2158D1ADC}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.InternetExplorerPreviewHandler")]
-    [Guid("8fd75842-96ae-4ac9-a029-b57f7ef961a8")]
+    [Guid("77A309CD-9901-400A-93FC-460B97C4FF88")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
     public sealed class InternetExplorerPreviewHandler : FileBasedPreviewHandler

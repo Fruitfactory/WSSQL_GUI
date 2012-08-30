@@ -11,9 +11,9 @@ using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("MSDN Magazine Serialized Ink Preview Handler", ".isf", "{10355E34-5C18-43dc-A257-8069A960AB89}")]
+    [PreviewHandler("MSDN Magazine Serialized Ink Preview Handler", ".isf", "{B85299A9-2E8D-4D5F-AE4D-13C1FD6FF999}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.IsfPreviewHandler")]
-    [Guid("E90A8ADF-A1A7-42e8-87B9-02B3BFEE31F7")]
+    [Guid("8FD7B59B-A960-4D76-A89E-35C359BC123E")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
     public sealed class IsfPreviewHandler : StreamBasedPreviewHandler

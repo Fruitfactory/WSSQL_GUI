@@ -13,9 +13,9 @@ using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("MSDN Magazine CSV Preview Handler", ".csv", "{8CF7761A-E923-470c-926E-8440C06FA8FE}")]
+    [PreviewHandler("MSDN Magazine CSV Preview Handler", ".csv", "{5F1DA711-99CA-4C7B-B314-90DD9D23E525}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.CsvPreviewHandler")]
-    [Guid("47F228F7-5338-4bb4-AF7B-7B52278E1095")]
+    [Guid("9834EBE8-DA5E-465E-9C51-3B5E4F13C015")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
     public sealed class CsvPreviewHandler : StreamBasedPreviewHandler

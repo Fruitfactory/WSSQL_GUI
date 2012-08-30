@@ -16,9 +16,9 @@ using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("MSDN Magazine ZIP Preview Handler", ".zip;.gadget", "{c0a64ec6-729b-442d-88ce-d76a9fc69e44}")]
+    [PreviewHandler("MSDN Magazine ZIP Preview Handler", ".zip;.gadget", "{2CE489C3-D409-481D-A06E-749096E8241E}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.ZipPreviewHandler")]
-    [Guid("853f35e3-bd13-417b-b859-1df25be6c834")]
+    [Guid("DC7F27B1-B3F3-4F9D-85EC-8CC5FA18CF2F")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
     public sealed class ZipPreviewHandler : FileBasedPreviewHandler

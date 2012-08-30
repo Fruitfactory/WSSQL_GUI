@@ -13,17 +13,32 @@ namespace WSSQLGUI
 {
     static class Program
     {
+        private static string Registrekey = "/r";
+        private static string Unregistrekey = "/u";
+
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
+            if (args.Length == 1)
+            {
+                if (string.Equals(args[0], Registrekey))
+                {
+                    HelperPreviewHandlers.RegisterHandlers();
+                    return;
+                }
+                else if (string.Equals(args[0], Unregistrekey))
+                {
+                    HelperPreviewHandlers.UnregisterHandlers();
+                    return;
+                }
+            }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-
-            HelperRegisterPreviewHandlers.RegisterHandlers();
 
             TasksManager tasksManager = new TasksManager(WinformsViewsManager.GetDefaultConfig());
             tasksManager.StartTask(typeof(MainTask));

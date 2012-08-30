@@ -42,6 +42,8 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.2.329, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Microsoft.Ink, Version=1.7.2600.2180, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <HintPath>..\Toolkits\Microsoft\Microsoft.Ink.dll</HintPath>
     </Reference>
@@ -57,7 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HelperRegisterPreviewHandlers.cs" />
+    <Compile Include="HelperPreviewHandlers.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\COLORREF.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithFile.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithStream.cs" />

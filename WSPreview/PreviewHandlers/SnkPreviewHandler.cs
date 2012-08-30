@@ -12,9 +12,9 @@ using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("MSDN Magazine Strong Name Key Preview Handler", ".snk;.keys", "{D7CAD297-1D39-478d-8BCC-585D74B234DA}")]
+    [PreviewHandler("MSDN Magazine Strong Name Key Preview Handler", ".snk;.keys", "{27145BEA-45DC-4E09-BDC1-7847AEC8AE6B}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.SnkPreviewHandler")]
-    [Guid("2D6DAD69-F296-4be0-AB9E-6ED642AEF76B")]
+    [Guid("00F574FF-7474-4FDF-B1E5-DA7D6F83BDC9")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
     public sealed class SnkPreviewHandler : FileBasedPreviewHandler

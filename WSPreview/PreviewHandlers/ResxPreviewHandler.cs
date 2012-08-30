@@ -12,9 +12,9 @@ using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("MSDN Magazine RESX Preview Handler", ".resx", "{A35B7E1D-C922-439d-81F4-6F9681D02F7F}")]
+    [PreviewHandler("MSDN Magazine RESX Preview Handler", ".resx", "{860E1DCC-0691-41DB-B879-C79242A6AF24}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.ResxPreviewHandler")]
-    [Guid("F2D43DD7-1233-4d5f-9032-B82A570AEE81")]
+    [Guid("27145BEA-45DC-4E09-BDC1-7847AEC8AE6B")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
     public sealed class ResxPreviewHandler : FileBasedPreviewHandler

@@ -12,9 +12,9 @@ using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("MSDN Magazine PDF Preview Handler", ".pdf", "{E1B9A916-BD9E-45e6-9266-E9BD0AF00CB7}")]
+    [PreviewHandler("MSDN Magazine PDF Preview Handler", ".pdf", "{480EE062-3BC0-4311-A18F-CACB7D3FBE74}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.PdfPreviewHandler")]
-    [Guid("574FFFAA-17F6-44b1-A1B4-177AB5900A51")]
+    [Guid("092B96A3-5136-40DE-AA8B-13CB54084789")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
     public sealed class PdfPreviewHandler : FileBasedPreviewHandler
@@ -39,7 +39,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Error Rendering Preview- this handler requires Acrobat Reader", ex);
+                    throw new Exception("Error Rendering Preview - this handler requires Acrobat Reader", ex);
                 }
             }
         }

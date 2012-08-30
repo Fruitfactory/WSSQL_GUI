@@ -14,9 +14,15 @@ namespace WSSQLGUI.Services
         {
             if (string.IsNullOrEmpty(filename))
                 return true;
-            FileInfo fi = new FileInfo(filename);
-
-            return (fi.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
+            try
+            {
+                FileInfo fi = new FileInfo(filename);
+                return (fi.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
+            }
+            catch (Exception)
+            {
+                return true;
+            }
         }
 
         #endregion

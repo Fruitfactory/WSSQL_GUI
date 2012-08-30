@@ -8,9 +8,9 @@ using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("WSSQL TXT Preview Handler", ".txt", "{FE6E2141-FF49-4AD7-9B63-C5024F86CE9D}")]
+    [PreviewHandler("WSSQL TXT Preview Handler", ".txt", "{24B7E73C-C49F-488A-86AD-2FA2E3232E06}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.TxtPreviewHandler")]
-    [Guid("F5335413-19DB-4C39-90C4-D45680621B76")]
+    [Guid("D12FC8ED-130D-4D85-9EA0-59AD9C843F63")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
     public sealed class TxtPreviewHandler : FileBasedPreviewHandler
@@ -31,6 +31,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
                     reader = File.OpenText(file.FullName);
                     TextBox txtBox = new TextBox();
                     txtBox.Multiline = true;
+                    txtBox.ScrollBars = ScrollBars.Both;
                     txtBox.Dock = DockStyle.Fill;
                     txtBox.Text = reader.ReadToEnd();
                     Controls.Add(txtBox);

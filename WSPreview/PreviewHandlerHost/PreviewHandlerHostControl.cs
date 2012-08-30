@@ -72,10 +72,11 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
             r.bottom = this.Height;
             r.left = 0;
             r.right = this.Width;
-
+            
+            //check registry
             RegistrationData data = PreviewHandlerRegistryAccessor.LoadRegistrationInformation();
             PreviewHandlerInfo handler = null;
-
+            Type comType = null;
             foreach (ExtensionInfo ei in data.Extensions)
             {
                 if (_filePath.ToUpper().EndsWith(ei.Extension.ToUpper()))
@@ -85,14 +86,22 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                         break;
                 }
             }
+            // check application handlers
             if (handler == null)
             {
-                lblMessage.Visible = true;
-                lblMessage.Text = "No Preview Available";
-                return;
-            }
+                string ext = Path.GetExtension(_filePath);
+                if(HelperPreviewHandlers.HandlersDictionary.ContainsKey(ext))
+                    comType = HelperPreviewHandlers.HandlersDictionary[ext];
+                if (comType == null)
+                {
+                    lblMessage.Visible = true;
+                    lblMessage.Text = "No Preview Available";
+                    return;
+                }
+            } 
+            else
+                comType = Type.GetTypeFromCLSID(new Guid(handler.ID));
 
-            Type comType = Type.GetTypeFromCLSID(new Guid(handler.ID));
             try
             {
                 // Create an instance of the preview handler

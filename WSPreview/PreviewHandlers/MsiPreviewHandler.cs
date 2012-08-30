@@ -17,9 +17,9 @@ using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers.PreviewHandlers
 {
-    [PreviewHandler("MSDN Magazine MSI Preview Handler", ".msi", "{63cf7c29-dd45-4906-ac42-bb117d816f65}")]
+    [PreviewHandler("MSDN Magazine MSI Preview Handler", ".msi", "{5CAD7435-A7CD-495C-A84F-A697E4D81C06}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.MsiPreviewHandler")]
-    [Guid("21c532d1-6f1a-4f53-a000-0468a4337ab5")]
+    [Guid("F90F8E43-EF26-4321-A172-5502E8E63536")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
     public sealed class MsiPreviewHandler : FileBasedPreviewHandler

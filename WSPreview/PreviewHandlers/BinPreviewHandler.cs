@@ -11,9 +11,9 @@ using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("MSDN Magazine Binary Preview Handler", ".bin;.dat", "{FDFA5AAF-8243-415d-B5E5-AF551336BE7B}")]
+    [PreviewHandler("MSDN Magazine Binary Preview Handler", ".bin;.dat", "{E722C141-DA78-414D-B031-EED646E9B991}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.BinaryPreviewHandler")]
-    [Guid("DF9E65B0-7980-4053-9FCF-6E9AF953A9F4")]
+    [Guid("01EFABEE-0E35-410C-9B57-6C2A9ADE12AE")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
     public sealed class BinaryPreviewHandler : FileBasedPreviewHandler
