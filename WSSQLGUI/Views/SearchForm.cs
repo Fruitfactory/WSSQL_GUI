@@ -18,6 +18,7 @@ using MVCSharp.Winforms;
 using WSSQLGUI.Controllers;
 using WSSQLGUI.Models;
 using WSSQLGUI.Services;
+using System.Text.RegularExpressions;
 
 
 
@@ -26,6 +27,7 @@ namespace WSSQLGUI.Views
     [View(typeof(MainTask), MainTask.Search)]
     public partial class SearchForm : WinFormView
     {
+
         
         private bool _isLoading = false;
 
@@ -72,9 +74,11 @@ namespace WSSQLGUI.Views
 
         private void SearchButton_Click(object sender, EventArgs e)
         {
-            dataGridView1.Rows.Clear();
-            (Controller as SearchController).StartSearch(SearchTextBox.Text);
-            
+            if (string.IsNullOrEmpty(errorProvider.GetError(SearchTextBox)))
+            {
+                dataGridView1.Rows.Clear();
+                (Controller as SearchController).StartSearch(SearchTextBox.Text);
+            }
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
@@ -109,6 +113,26 @@ namespace WSSQLGUI.Views
         private void toolStripMenuItemOpen_Click(object sender, EventArgs e)
         {
             (Controller as SearchController).OpenCurrentFile();
+        }
+
+        private void SearchTextBox_Validated(object sender, EventArgs e)
+        {
+            string pattern = @"\bselect\s.*from\b";
+            Regex reg = new Regex(pattern,RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            Match m = reg.Match(SearchTextBox.Text);
+            if (m.Success)
+            {
+                errorProvider.SetError(SearchTextBox, "You have written wrong Searh Creteria");
+            }
+            else
+            {
+                errorProvider.SetError(SearchTextBox, "");
+            }
+        }
+
+        private void SearchTextBox_TextChanged(object sender, EventArgs e)
+        {
+            SearchTextBox_Validated(sender, e);
         }
 
        
