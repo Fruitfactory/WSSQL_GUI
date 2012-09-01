@@ -64,6 +64,10 @@ namespace C4F.DevKit.PreviewHandler
             processInfo.UseShellExecute = false;
             process = Process.Start(processInfo);
             process.WaitForExit();
+
+            //var listTypes = assembly.GetTypes().Where(type => type.IsSealed && (type.IsSubclassOf(typeof(C4F.DevKit.PreviewHandler.PreviewHandlerFramework.FileBasedPreviewHandler)) || type.IsSubclassOf(typeof(C4F.DevKit.PreviewHandler.PreviewHandlerFramework.StreamBasedPreviewHandler)))).ToList();
+            //listTypes.ForEach(type => PreviewHandler.PreviewHandlerFramework.PreviewHandler.Register(type));
+
             return true;
         }
 
@@ -87,6 +91,10 @@ namespace C4F.DevKit.PreviewHandler
             processInfo.UseShellExecute = false;
             process = Process.Start(processInfo);
             process.WaitForExit();
+
+            //var listTypes = assembly.GetTypes().Where(type => type.IsSealed && (type.IsSubclassOf(typeof(C4F.DevKit.PreviewHandler.PreviewHandlerFramework.FileBasedPreviewHandler)) || type.IsSubclassOf(typeof(C4F.DevKit.PreviewHandler.PreviewHandlerFramework.StreamBasedPreviewHandler)))).ToList();
+            //listTypes.ForEach(type => PreviewHandler.PreviewHandlerFramework.PreviewHandler.Register(type));
+
 
             return true;
         }

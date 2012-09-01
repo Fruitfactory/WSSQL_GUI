@@ -28,7 +28,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -39,7 +39,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -144,7 +144,7 @@
     <PostBuildEvent>xcopy $(SolutionDir)Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\Microsoft\Microsoft.Ink.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\MVCSharp\MVCSharp.dll $(TargetDir) /F /R /Y /I
-</PostBuildEvent>
+xcopy $(SolutionDir)Toolkits\PDFSharp\PDFLibNet.dll $(TargetDir) /F /R /Y /I</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

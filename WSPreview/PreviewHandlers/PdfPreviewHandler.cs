@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Globalization;
+using C4F.DevKit.PreviewHandler;
 using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
@@ -30,12 +31,11 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
             {
                 try
                 {
-                    PdfAxHost viewer = new PdfAxHost();
-                    Controls.Add(viewer);
+                    PDFViewer viewer = new PDFViewer();
                     viewer.Dock = DockStyle.Fill;
-
-                    // file = MakeTemporaryCopy(file); // to avoid file sharing problems with the PDF control, make a copy first
+                    Controls.Add(viewer);
                     viewer.LoadFile(file.FullName);
+
                 }
                 catch (Exception ex)
                 {
@@ -43,26 +43,6 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
                 }
             }
         }
-
-        private class PdfAxHost : AxHost
-        {
-            object _ocx;
-
-            public PdfAxHost()
-                : base("ca8a9780-280d-11cf-a24d-444553540000") { }
-
-            protected override void AttachInterfaces()
-            {
-                _ocx = base.GetOcx();
-            }
-
-            public void LoadFile(string fileName)
-            {
-                IntPtr forceCreation = Handle; // necessary for OCX instance to be created
-                _ocx.GetType().InvokeMember(
-                    "LoadFile", BindingFlags.InvokeMethod, null,
-                    _ocx, new object[] { fileName }, CultureInfo.InvariantCulture);
-            }
-        }
+       
     }
 }

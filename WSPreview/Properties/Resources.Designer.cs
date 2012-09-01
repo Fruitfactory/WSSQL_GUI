@@ -60,9 +60,79 @@ namespace C4F.DevKit.PreviewHandler.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap dmdskres_373_9_16x16x32 {
+            get {
+                object obj = ResourceManager.GetObject("dmdskres_373_9_16x16x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap netshell_1611_1_16x16x32 {
+            get {
+                object obj = ResourceManager.GetObject("netshell_1611_1_16x16x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap netshell_21611_1_16x16x32 {
+            get {
+                object obj = ResourceManager.GetObject("netshell_21611_1_16x16x32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap TreeView_XP_Explorer_ParentNode {
             get {
                 object obj = ResourceManager.GetObject("TreeView_XP_Explorer_ParentNode", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap tshadowdown {
+            get {
+                object obj = ResourceManager.GetObject("tshadowdown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap tshadowdownleft {
+            get {
+                object obj = ResourceManager.GetObject("tshadowdownleft", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap tshadowdownright {
+            get {
+                object obj = ResourceManager.GetObject("tshadowdownright", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap tshadowright {
+            get {
+                object obj = ResourceManager.GetObject("tshadowright", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap tshadowtopright {
+            get {
+                object obj = ResourceManager.GetObject("tshadowtopright", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ZoomIn {
+            get {
+                object obj = ResourceManager.GetObject("ZoomIn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ZoomOut {
+            get {
+                object obj = ResourceManager.GetObject("ZoomOut", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

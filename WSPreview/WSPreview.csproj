@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -47,6 +49,9 @@
     <Reference Include="Microsoft.Ink, Version=1.7.2600.2180, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <HintPath>..\Toolkits\Microsoft\Microsoft.Ink.dll</HintPath>
     </Reference>
+    <Reference Include="PDFLibNet">
+      <HintPath>..\Toolkits\PDFSharp\PDFLibNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -59,6 +64,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\GDI.cs" />
+    <Compile Include="Controls\PageViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PDFViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PDFViewer.designer.cs">
+      <DependentUpon>PDFViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="HelperPreviewHandlers.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\COLORREF.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithFile.cs" />
@@ -112,6 +127,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\PageViewer.resx">
+      <DependentUpon>PageViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PDFViewer.resx">
+      <DependentUpon>PDFViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PreviewHandlerHost\PreviewHandlerHostControl.resx">
       <DependentUpon>PreviewHandlerHostControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -123,6 +144,36 @@
   <ItemGroup>
     <None Include="Resources\TreeView_XP_Explorer_ParentNode.gif" />
     <None Include="StrongNameKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dmdskres_373_9_16x16x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\netshell_1611_1_16x16x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\netshell_21611_1_16x16x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomIn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomOut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tshadowdown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tshadowdownleft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tshadowdownright.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tshadowright.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tshadowtopright.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
