@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using MVCSharp.Core;
 using MVCSharp.Core.Views;
+using MVCSharp.Core.CommandManager;
 using WSSQLGUI.Models;
 using WSSQLGUI.Services;
 using System.Data.OleDb;
@@ -22,7 +23,14 @@ namespace WSSQLGUI.Controllers
         private const string qyeryTemplate = "SELECT System.ItemName, System.ItemUrl  FROM SystemIndex WHERE Contains(*,'{0}*')";
         private const string FILEPREFIX = "file:";
         private const string FILEPREFIX1 = "file:///";
+        
 
+        #endregion
+
+        #region fields
+
+        private DelegateCommand _openFileCommand;
+        private DelegateCommand _searchCommand;
 
         #endregion
 
@@ -33,6 +41,31 @@ namespace WSSQLGUI.Controllers
         public event EventHandler<EventArgs<SearchItem>> OnAddSearchItem;
 
         #endregion
+
+        #region commands
+
+        public ICommand OpenFileCommand
+        {
+            get
+            {
+                if (_openFileCommand == null)
+                    _openFileCommand = new DelegateCommand("Preview", CanOpenFile, OpenCurrentFile);
+                return _openFileCommand;
+            }
+        }
+
+        public ICommand SearchCommand
+        {
+            get 
+            {
+                if (_searchCommand == null)
+                    _searchCommand = new DelegateCommand("Search", CanSearch, Search);
+                return _searchCommand;
+            }
+        }
+
+        #endregion
+
 
         #region properties
 
@@ -49,23 +82,22 @@ namespace WSSQLGUI.Controllers
         }
 
         public SearchItem CurrenItem { get; private set; }
+        public string SearchCriteria { get; set;}
 
         #endregion
 
         #region public methods
-        
-        public void StartSearch(string searchString)
-        {
-            Thread thread = new Thread(() => DoQuery(searchString));
-            thread.Start();
-        }
-
+       
         public void CurrentSearchItemChanged(SearchItem item)
         {
             CurrenItem = item;
         }
 
-        public void OpenCurrentFile()
+        #endregion
+
+        #region private
+
+        private void OpenCurrentFile()
         {
             if (CurrenItem == null ||
                 string.IsNullOrEmpty(CurrenItem.FileName) ||
@@ -81,9 +113,21 @@ namespace WSSQLGUI.Controllers
             }
         }
 
-        #endregion
+        private bool CanOpenFile()
+        {
+            return CurrenItem != null;
+        }
 
-        #region private
+        private void Search()
+        {
+            Thread thread = new Thread(() => DoQuery(SearchCriteria));
+            thread.Start();
+        }
+
+        private bool CanSearch()
+        {
+            return !string.IsNullOrEmpty(SearchCriteria);
+        }
 
 
         private void DoQuery(object queryString)

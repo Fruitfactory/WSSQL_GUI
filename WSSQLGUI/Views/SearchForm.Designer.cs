@@ -79,7 +79,6 @@
             this.SearchButton.TabIndex = 3;
             this.SearchButton.Text = "Search";
             this.SearchButton.UseVisualStyleBackColor = false;
-            this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
             // 
             // SearchTextBox
             // 
@@ -143,7 +142,6 @@
             this.toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
             this.toolStripMenuItemOpen.Size = new System.Drawing.Size(167, 22);
             this.toolStripMenuItemOpen.Text = "Open Current File";
-            this.toolStripMenuItemOpen.Click += new System.EventHandler(this.toolStripMenuItemOpen_Click);
             // 
             // panel1
             // 
@@ -197,7 +195,6 @@
             this.buttonPreview.TabIndex = 10;
             this.buttonPreview.Text = "Preview";
             this.buttonPreview.UseVisualStyleBackColor = false;
-            this.buttonPreview.Click += new System.EventHandler(this.buttonPreview_Click);
             // 
             // NameColumn
             // 

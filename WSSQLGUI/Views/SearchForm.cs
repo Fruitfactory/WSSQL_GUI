@@ -45,6 +45,9 @@ namespace WSSQLGUI.Views
                 (Controller as SearchController).OnStartSearch += (sender,e) => this.Invoke(new Action<object,EventArgs>(StartSearch),new object[]{sender,e});
                 (Controller as SearchController).OnCompleteSearch += (sender, e) => this.Invoke(new Action<object, EventArgs<bool>>(CompleteSearch), new object[] { sender, e });
                 (Controller as SearchController).OnAddSearchItem += AddSearchItem;
+                commandManager.Bind((Controller as SearchController).OpenFileCommand, buttonPreview);
+                commandManager.Bind((Controller as SearchController).OpenFileCommand, toolStripMenuItemOpen);
+                commandManager.Bind((Controller as SearchController).SearchCommand, SearchButton);
             }
 
         }
@@ -54,6 +57,7 @@ namespace WSSQLGUI.Views
             _isLoading = true;
             SearchTextBox.Enabled = SearchButton.Enabled = false;
             this.Cursor = dataGridView1.Cursor = previewControl.Cursor = Cursors.AppStarting;
+            dataGridView1.Rows.Clear();
         }
 
         private void CompleteSearch(object sender, EventArgs<bool> e)
@@ -70,15 +74,6 @@ namespace WSSQLGUI.Views
                     int i = dataGridView1.Rows.Add(new object[] { e.Value.Name, e.Value.FileName });
                     dataGridView1.Rows[i].Tag = e.Value;
                 }),null);
-        }
-
-        private void SearchButton_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(errorProvider.GetError(SearchTextBox)))
-            {
-                dataGridView1.Rows.Clear();
-                (Controller as SearchController).StartSearch(SearchTextBox.Text);
-            }
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
@@ -105,16 +100,6 @@ namespace WSSQLGUI.Views
             previewControl.FilePath = filename;
         }
 
-        private void buttonPreview_Click(object sender, EventArgs e)
-        {
-            (Controller as SearchController).OpenCurrentFile();
-        }
-
-        private void toolStripMenuItemOpen_Click(object sender, EventArgs e)
-        {
-            (Controller as SearchController).OpenCurrentFile();
-        }
-
         private void SearchTextBox_Validated(object sender, EventArgs e)
         {
             string pattern = @"\bselect\s.*from\b";
@@ -123,16 +108,19 @@ namespace WSSQLGUI.Views
             if (m.Success)
             {
                 errorProvider.SetError(SearchTextBox, "You have written wrong Searh Creteria");
+                (Controller as SearchController).SearchCriteria = string.Empty;
             }
             else
             {
                 errorProvider.SetError(SearchTextBox, "");
+                (Controller as SearchController).SearchCriteria = SearchTextBox.Text;
             }
         }
 
         private void SearchTextBox_TextChanged(object sender, EventArgs e)
         {
             SearchTextBox_Validated(sender, e);
+            
         }
 
        
