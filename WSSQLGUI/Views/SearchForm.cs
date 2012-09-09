@@ -67,7 +67,7 @@ namespace WSSQLGUI.Views
             this.Cursor = dataGridView1.Cursor = previewControl.Cursor = Cursors.Default;
         }
 
-        private void AddSearchItem(object sener, EventArgs<SearchItem> e)
+        private void AddSearchItem(object sender, EventArgs<SearchItem> e)
         {
             this.Invoke(new Action(() => 
                 {
@@ -86,10 +86,7 @@ namespace WSSQLGUI.Views
             SearchItem si = dataGridView1.SelectedRows[0].Tag as SearchItem;
             (Controller as SearchController).CurrentSearchItemChanged(si);
 
-            if (si == null)
-                return;
-
-            string filename = si.FileName;
+            string filename = (Controller as SearchController).FileName;
 
             if (FileService.IsDirectory(filename) || !File.Exists(filename))
             {
@@ -107,7 +104,7 @@ namespace WSSQLGUI.Views
             Match m = reg.Match(SearchTextBox.Text);
             if (m.Success)
             {
-                errorProvider.SetError(SearchTextBox, "You have written wrong Searh Creteria");
+                errorProvider.SetError(SearchTextBox, "You have written wrong Search Criteria");
                 (Controller as SearchController).SearchCriteria = string.Empty;
             }
             else

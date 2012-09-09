@@ -76,7 +76,9 @@
     </Compile>
     <Compile Include="HelperPreviewHandlers.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\COLORREF.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\COMStream.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithFile.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithItem.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithStream.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\IObjectWithSite.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\IOleWindow.cs" />

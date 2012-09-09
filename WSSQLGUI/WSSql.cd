@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="WSSQLGUI.Controllers.MainTask">
+    <Position X="6.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Controllers\MainTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WSSQLGUI.Controllers.SearchController">
+    <Position X="10.25" Y="3.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AIIAICAIAgAAiJgBEAAAYEAAAAIJgEIAAAAAAEBgAAA=</HashCode>
+      <FileName>Controllers\SearchController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WSSQLGUI.Models.SearchItem">
+    <Position X="10.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAQAAAAAAAQAAQAAAABAAAA=</HashCode>
+      <FileName>Models\SearchItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WSSQLGUI.Models.ListSearchItems">
+    <Position X="4.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\SearchItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WSSQLGUI.Services.EventArgs&lt;T&gt;">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Services\EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WSSQLGUI.Services.FileService">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\FileService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WSSQLGUI.Views.SearchForm">
+    <Position X="0.5" Y="5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>BABBCAAQACDBARAAQACEAAQCQAgAAQAACIAQAQAEAAA=</HashCode>
+      <FileName>Views\SearchForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WSSQLGUI.Services.Helpers.SearchItemHelper">
+    <Position X="3.5" Y="5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Helpers\SearchItemHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WSSQLGUI.Services.Helpers.OutlookHelper">
+    <Position X="7.25" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEEAAAASAUAAAUCAAAAAAEAEAAAAAAQgAAACAAIAA=</HashCode>
+      <FileName>Services\Helpers\OutlookHelper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.1" />
+  </Class>
+  <Class Name="WSSQLGUI.Services.Helpers.TempFileManager">
+    <Position X="3.5" Y="7" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEEAAAAAAAEAEAAAAAAEAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Services\Helpers\TempFileManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="WSSQLGUI.Services.Interfaces.IOutlookHelper">
+    <Position X="3.75" Y="3" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAIAA=</HashCode>
+      <FileName>Services\Interfaces\IOutlookHelper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="WSSQLGUI.Services.Enums.TypeSearchItem">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAEAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Services\Enums\TypeSearchItem.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

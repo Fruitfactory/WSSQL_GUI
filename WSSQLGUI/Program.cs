@@ -42,8 +42,15 @@ namespace WSSQLGUI
 
             TasksManager tasksManager = new TasksManager(WinformsViewsManager.GetDefaultConfig());
             tasksManager.StartTask(typeof(MainTask));
+            Application.ApplicationExit += (o, e) =>
+            {
+                WSSQLGUI.Services.Helpers.TempFileManager.Instance.ClearTempFolder();
+                WSSQLGUI.Services.Helpers.OutlookHelper.Instance.Logoff();
+                WSSQLGUI.Services.Helpers.OutlookHelper.Instance.Dispose();
+            };
 
             Application.Run(Application.OpenForms[0]);
         }
+
     }
 }

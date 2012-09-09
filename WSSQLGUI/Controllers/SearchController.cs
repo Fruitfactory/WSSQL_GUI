@@ -12,6 +12,10 @@ using System.Data;
 using System.Threading;
 using System.Diagnostics;
 using System.Windows.Forms;
+using Outlook = Microsoft.Office.Interop.Outlook;
+using System.Text.RegularExpressions;
+using WSSQLGUI.Services.Helpers;
+using WSSQLGUI.Services.Enums;
 
 namespace WSSQLGUI.Controllers
 {
@@ -20,9 +24,8 @@ namespace WSSQLGUI.Controllers
         #region const
 
         private const string connectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
-        private const string qyeryTemplate = "SELECT System.ItemName, System.ItemUrl  FROM SystemIndex WHERE Contains(*,'{0}*')";
-        private const string FILEPREFIX = "file:";
-        private const string FILEPREFIX1 = "file:///";
+        private const string qyeryTemplate = "SELECT System.ItemName, System.ItemUrl, System.IsAttachment  FROM SystemIndex WHERE Contains(*,'{0}*')";
+
         
 
         #endregion
@@ -83,6 +86,7 @@ namespace WSSQLGUI.Controllers
 
         public SearchItem CurrenItem { get; private set; }
         public string SearchCriteria { get; set;}
+        public string FileName { get; private set;}
 
         #endregion
 
@@ -91,6 +95,7 @@ namespace WSSQLGUI.Controllers
         public void CurrentSearchItemChanged(SearchItem item)
         {
             CurrenItem = item;
+            FileName = SearchItemHelper.GetFileName(CurrenItem);
         }
 
         #endregion
@@ -99,18 +104,21 @@ namespace WSSQLGUI.Controllers
 
         private void OpenCurrentFile()
         {
-            if (CurrenItem == null ||
-                string.IsNullOrEmpty(CurrenItem.FileName) ||
-                FileService.IsDirectory(CurrenItem.FileName))
-                return;
-            try
-            {
-                Process.Start(CurrenItem.FileName);
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+
+            //if (CurrenItem == null)
+            //    return;
+            
+            //if (string.IsNullOrEmpty(CurrenItem.FileName) ||
+            //    FileService.IsDirectory(CurrenItem.FileName))
+            //    return;
+            //try
+            //{
+            //    Process.Start(CurrenItem.FileName);
+            //}
+            //catch (System.Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
 
         private bool CanOpenFile()
@@ -196,18 +204,12 @@ namespace WSSQLGUI.Controllers
         {
             string name = reader[0] as string;
             string file = reader[1] as string;
-            int index = -1;
-            if ( (index =  file.IndexOf(FILEPREFIX1)) > -1 )
-            {
-                file = file.Substring(index + FILEPREFIX1.Length);
-            }
-            else if ((index = file.IndexOf(FILEPREFIX)) > -1)
-            {
-                file = file.Substring(index + FILEPREFIX.Length);
-            }
+            bool isattach = false;
+            string att = reader[2] as string;
+            bool.TryParse(att, out isattach);
+            TypeSearchItem type = SearchItemHelper.GetTypeItem(file);
             
-
-            return new SearchItem() { Name = name, FileName = file };
+            return new SearchItem() { Name = name, FileName = file,IsAttachment = isattach,ID = Guid.NewGuid(),Type = type };
         }
 
         #endregion

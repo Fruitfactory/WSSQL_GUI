@@ -52,6 +52,10 @@
     <ApplicationIcon>Search.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    </Reference>
     <Reference Include="MVCSharp">
       <HintPath>..\Toolkits\MVCSharp\MVCSharp.dll</HintPath>
     </Reference>
@@ -70,8 +74,13 @@
   <ItemGroup>
     <Compile Include="Controllers\MainTask.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Services\Helpers\OutlookHelper.cs" />
+    <Compile Include="Services\Helpers\SearchItemHelper.cs" />
+    <Compile Include="Services\Helpers\TempFileManager.cs" />
+    <Compile Include="Services\Interfaces\IOutlookHelper.cs" />
     <Compile Include="Logic.cs" />
     <Compile Include="Services\FileService.cs" />
+    <Compile Include="Services\Enums\TypeSearchItem.cs" />
     <Compile Include="Views\SearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,6 +104,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="WSSql.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -144,7 +154,8 @@
     <PostBuildEvent>xcopy $(SolutionDir)Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\Microsoft\Microsoft.Ink.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\MVCSharp\MVCSharp.dll $(TargetDir) /F /R /Y /I
-xcopy $(SolutionDir)Toolkits\PDFSharp\PDFLibNet.dll $(TargetDir) /F /R /Y /I</PostBuildEvent>
+xcopy $(SolutionDir)Toolkits\PDFSharp\PDFLibNet.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll $(TargetDir) /F /R /Y /I</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

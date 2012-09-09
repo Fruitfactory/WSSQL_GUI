@@ -17,5 +17,6 @@ namespace WSSQLGUI.Controllers
         {
             Navigator.NavigateDirectly(Search);
         }
+
     }
 }

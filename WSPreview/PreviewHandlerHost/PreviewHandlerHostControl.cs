@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
 {
@@ -61,6 +62,11 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
         /// </summary>
         private void GeneratePreview()
         {
+            if (Controls.Count > 0)
+            {
+                Controls.Clear();
+            }
+
             lblMessage.Visible = false;
             if (_comInstance != null)
             {
@@ -124,6 +130,25 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                         throw new Exception("File not found");
                     }
                 }
+                else if (_comInstance is IInitializeWithItem)
+                {
+                    if (File.Exists(_filePath))
+                    {
+                        IShellItem shellItem = null;
+                        Guid idShell = new Guid("43826d1e-e718-42ee-bc55-a1e261c37bfe");
+                        UnsafeNativeMethods.SHCreateItemFromParsingName(_filePath, IntPtr.Zero, idShell, out shellItem);
+                        if (shellItem != null)
+                        {
+                            ((IInitializeWithItem)_comInstance).Initialize(shellItem, 0);
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("File not found");
+                    }
+                }
+
+
                 ((IPreviewHandler)_comInstance).SetWindow(this.Handle, ref r);
                 ((IPreviewHandler)_comInstance).DoPreview();
             }
