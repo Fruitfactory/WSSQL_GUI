@@ -13,12 +13,15 @@ namespace WSSQLGUI.Services.Helpers
     class OutlookHelper : IOutlookHelper, IDisposable
     {
 #region static
-        private string OutlookProcessName = "OUTLOOK";
-        private string OutlookApplication = "Outlook.Application";
+        private static string OutlookProcessName = "OUTLOOK";
+        private static string OutlookApplication = "Outlook.Application";
         private static OutlookHelper _instance= null;
         private static readonly object _lockObject = new object();
 #endregion
-        
+
+        private const string ATSUFFIX = "/at=";
+        private const int IDLENGHT = 24;
+
 #region fields
         
         private bool _disposed;
@@ -67,7 +70,21 @@ namespace WSSQLGUI.Services.Helpers
 
         public string GetAttachmentTempFileName(WSSQLGUI.Models.SearchItem item)
         {
-            throw new NotImplementedException();
+            if (item == null)
+                return null;
+            string mapi = item.FileName;
+            string entryID = EIDFromEncodeStringWDS30(mapi.Substring(mapi.IndexOf(ATSUFFIX) - IDLENGHT, IDLENGHT));
+            string fileNameAttach = mapi.Substring(mapi.LastIndexOf(':') + 1);
+            Outlook.MailItem mi = GetMailItem(entryID);
+            Outlook.Attachment att = GetAttacment(mi, fileNameAttach);
+            if (att == null)
+                return null;
+            string tempFileName = TempFileManager.Instance.GenerateTempFileName(item);
+            if (string.IsNullOrEmpty(tempFileName))
+                return null;
+            att.SaveAsFile(tempFileName);
+
+            return tempFileName;
         }
        
         public void Logoff()
@@ -155,15 +172,27 @@ namespace WSSQLGUI.Services.Helpers
             return mi;
         }
 
-        private object GetAttacment(string entryID, string filename)
+        private Outlook.Attachment GetAttacment(Outlook.MailItem mail,string filename)
         {
-            throw new System.NotImplementedException();
+            Outlook.Attachment att = null;
+            if (mail == null)
+                return null;
+            try
+            {
+                if (mail.Attachments.Count == 0)
+                    return null;
+                var listAttachment = mail.Attachments.OfType<Outlook.Attachment>().Where(a => a.FileName == filename).ToList();
+                if (listAttachment.Count == 0)
+                    return null;
+                att = listAttachment[0];
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Error: {0}", ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return att;
         }
 
-        private string SaveTempAttachment(object attach)
-        {
-            throw new System.NotImplementedException();
-        }
 
         private string EIDFromEncodeStringWDS30(string mapi)
         {

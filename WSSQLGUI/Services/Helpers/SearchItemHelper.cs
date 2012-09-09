@@ -12,22 +12,26 @@ namespace WSSQLGUI.Services.Helpers
         private const string FILEPREFIX = "file:";
         private const string FILEPREFIX1 = "file:///";
         private const string MAPIPREFIX = "mapi://";
+        private const string ATSUFFIX = "/at=";
 
         #region public static 
         
 
         public static TypeSearchItem GetTypeItem(string itemurl)
         {
-            int index = -1;
-            if ((index = itemurl.IndexOf(FILEPREFIX1)) > -1)
+            if (itemurl.IndexOf(FILEPREFIX1) > -1)
             {
                 return TypeSearchItem.File;
             }
-            else if ((index = itemurl.IndexOf(FILEPREFIX)) > -1)
+            else if (itemurl.IndexOf(FILEPREFIX) > -1)
             {
                 return TypeSearchItem.File;
             }
-            else if ((index = itemurl.IndexOf(MAPIPREFIX)) > -1)
+            else if (itemurl.IndexOf(MAPIPREFIX) > -1 && itemurl.LastIndexOf(ATSUFFIX) > -1) 
+            {
+                return TypeSearchItem.Attachment;
+            }
+            else if (itemurl.IndexOf(MAPIPREFIX) > -1)
             {
                 return TypeSearchItem.Email;
             }
@@ -39,9 +43,9 @@ namespace WSSQLGUI.Services.Helpers
             switch(item.Type)
             {
                 case TypeSearchItem.Email:
-                    string temp = item.IsAttachment ? OutlookHelper.Instance.GetAttachmentTempFileName(item) :
-                                                      OutlookHelper.Instance.GetEMailTempFileName(item);
-                    return temp;
+                    return OutlookHelper.Instance.GetEMailTempFileName(item);
+                case TypeSearchItem.Attachment:
+                    return OutlookHelper.Instance.GetAttachmentTempFileName(item);
                 case TypeSearchItem.File:
                     return GetFileName(item.FileName);
                 default:

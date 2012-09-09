@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.InteropServices;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
 {
@@ -62,15 +63,12 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
         /// </summary>
         private void GeneratePreview()
         {
-            if (Controls.Count > 0)
-            {
-                Controls.Clear();
-            }
-
+          
             lblMessage.Visible = false;
             if (_comInstance != null)
             {
                 ((IPreviewHandler)_comInstance).Unload();
+                _comInstance = null;
             }
 
             RECT r;
@@ -118,34 +116,26 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                 {
                     ((IInitializeWithFile)_comInstance).Initialize(_filePath, 0);
                 }
-                else if (_comInstance is IInitializeWithStream)
+                else if (File.Exists(_filePath))
                 {
-                    if (File.Exists(_filePath))
+                    if (_comInstance is IInitializeWithStream)
                     {
                         StreamWrapper stream = new StreamWrapper(File.Open(_filePath, FileMode.Open));
                         ((C4F.DevKit.PreviewHandler.PreviewHandlerFramework.IInitializeWithStream)_comInstance).Initialize(stream, 0);
                     }
-                    else
-                    {
-                        throw new Exception("File not found");
-                    }
-                }
-                else if (_comInstance is IInitializeWithItem)
-                {
-                    if (File.Exists(_filePath))
+                    else if (_comInstance is IInitializeWithItem)
                     {
                         IShellItem shellItem = null;
-                        Guid idShell = new Guid("43826d1e-e718-42ee-bc55-a1e261c37bfe");
-                        UnsafeNativeMethods.SHCreateItemFromParsingName(_filePath, IntPtr.Zero, idShell, out shellItem);
+                        UnsafeNativeMethods.SHCreateItemFromParsingName(_filePath, IntPtr.Zero, typeof(IShellItem).GUID, out shellItem);
                         if (shellItem != null)
                         {
-                            ((IInitializeWithItem)_comInstance).Initialize(shellItem, 0);
+                            ((IInitializeWithItem)_comInstance).Initialize(shellItem, 2);
                         }
                     }
-                    else
-                    {
-                        throw new Exception("File not found");
-                    }
+                }
+                else
+                {
+                    throw new FileNotFoundException(_filePath);
                 }
 
 

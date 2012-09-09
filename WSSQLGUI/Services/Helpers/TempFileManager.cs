@@ -95,7 +95,11 @@ namespace WSSQLGUI.Services.Helpers
             switch (searchItem.Type)
             {
                 case Enums.TypeSearchItem.Email:
-                    ext = searchItem.IsAttachment ? Path.GetExtension(searchItem.FileName) : ".msg";
+                    ext = ".msg";
+                    break;
+                case Enums.TypeSearchItem.Attachment:
+                    string filename = searchItem.FileName.Substring(searchItem.FileName.LastIndexOf(':') + 1);
+                    ext = Path.GetExtension(filename);
                     break;
             }
             return ext;

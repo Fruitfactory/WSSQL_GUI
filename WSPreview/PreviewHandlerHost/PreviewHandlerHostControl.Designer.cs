@@ -38,6 +38,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
             this.lblMessage.Name = "lblMessage";
             this.lblMessage.Size = new System.Drawing.Size(148, 148);
             this.lblMessage.TabIndex = 0;
+            this.lblMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblMessage.Visible = false;
             // 
             // PreviewHandlerHostControl

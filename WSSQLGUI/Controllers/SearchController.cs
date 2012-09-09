@@ -204,12 +204,10 @@ namespace WSSQLGUI.Controllers
         {
             string name = reader[0] as string;
             string file = reader[1] as string;
-            bool isattach = false;
-            string att = reader[2] as string;
-            bool.TryParse(att, out isattach);
+            bool att = (bool) reader[2];
             TypeSearchItem type = SearchItemHelper.GetTypeItem(file);
             
-            return new SearchItem() { Name = name, FileName = file,IsAttachment = isattach,ID = Guid.NewGuid(),Type = type };
+            return new SearchItem() { Name = name, FileName = file,IsAttachment = att,ID = Guid.NewGuid(),Type = type };
         }
 
         #endregion
