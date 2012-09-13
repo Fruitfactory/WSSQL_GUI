@@ -25,7 +25,7 @@ namespace WSSQLGUI.Controllers
 
         private const string connectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
         private const string qyeryTemplate = "SELECT System.ItemName, System.ItemUrl, System.IsAttachment  FROM SystemIndex WHERE Contains(*,'{0}*')";
-
+        private const string qyeryAnd = " AND Contains(*,'{0}*')";
         
 
         #endregion
@@ -105,20 +105,20 @@ namespace WSSQLGUI.Controllers
         private void OpenCurrentFile()
         {
 
-            //if (CurrenItem == null)
-            //    return;
-            
-            //if (string.IsNullOrEmpty(CurrenItem.FileName) ||
-            //    FileService.IsDirectory(CurrenItem.FileName))
-            //    return;
-            //try
-            //{
-            //    Process.Start(CurrenItem.FileName);
-            //}
-            //catch (System.Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //}
+            if (CurrenItem == null)
+                return;
+
+            if (string.IsNullOrEmpty(FileName) ||
+                FileService.IsDirectory(FileName))
+                return;
+            try
+            {
+                Process.Start(FileName);
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private bool CanOpenFile()
@@ -140,7 +140,7 @@ namespace WSSQLGUI.Controllers
 
         private void DoQuery(object queryString)
         {
-            string query = String.Format(qyeryTemplate, queryString);
+            string query = CreateSqlQyery((string)queryString);
             bool result = true;
             OleDbDataReader myDataReader = null;
             OleDbConnection myOleDbConnection = new OleDbConnection(connectionString);
@@ -179,6 +179,28 @@ namespace WSSQLGUI.Controllers
             }
         }
 
+        private string CreateSqlQyery(string searchCriteria)
+        {
+            string res = string.Empty;
+            if(searchCriteria.IndexOf(' ') > -1)
+            {
+                StringBuilder temp = new StringBuilder();
+                var list = searchCriteria.Split(' ').ToList();
+                if (list == null || list.Count == 1)
+                    return searchCriteria;
+                res = string.Format(qyeryTemplate, list[0]);
+                for (int i = 1; i < list.Count; i++)
+                {
+                    temp.Append(string.Format(qyeryAnd,list[i]));
+                }
+                res += temp.ToString();
+            }
+            else
+                res = string.Format(qyeryTemplate, searchCriteria);
+
+            return res;
+        }
+
         private void OnStart()
         {
             EventHandler temp = OnStartSearch;
@@ -209,6 +231,8 @@ namespace WSSQLGUI.Controllers
             
             return new SearchItem() { Name = name, FileName = file,IsAttachment = att,ID = Guid.NewGuid(),Type = type };
         }
+
+        
 
         #endregion
 

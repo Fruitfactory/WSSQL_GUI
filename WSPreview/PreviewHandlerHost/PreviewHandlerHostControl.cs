@@ -25,6 +25,9 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
     [ToolboxItem(true), ToolboxBitmap(typeof(PreviewHandlerHostControl))]
     public partial class PreviewHandlerHostControl : UserControl
     {
+
+        private const int WM_DESTROY = 0x0002;
+
         private string _filePath;
         private object _comInstance = null;
 
@@ -47,6 +50,16 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                     GeneratePreview();
             }
         }
+
+        public void UnloadPreview()
+        {
+            if (_comInstance != null)
+            {
+                ((IPreviewHandler)_comInstance).Unload();
+                _comInstance = null;
+            }
+        }
+
 
         private bool IsDesignTime()
         {
@@ -93,7 +106,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
             // check application handlers
             if (handler == null)
             {
-                string ext = Path.GetExtension(_filePath);
+                string ext = Path.GetExtension(_filePath).ToLower();
                 if(HelperPreviewHandlers.HandlersDictionary.ContainsKey(ext))
                     comType = HelperPreviewHandlers.HandlersDictionary[ext];
                 if (comType == null)
@@ -165,5 +178,22 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
             }
 
         }
+
+        protected override void WndProc(ref Message m)
+        {
+            switch (m.Msg)
+            {
+                case WM_DESTROY:
+                    if (_comInstance != null)
+                    {
+                        ((IPreviewHandler)_comInstance).Unload();
+                        _comInstance = null;
+                    }
+                    break;
+            }
+            base.WndProc(ref m);
+        }
+
+
     }
 }

@@ -58,6 +58,7 @@ namespace WSSQLGUI.Views
             SearchTextBox.Enabled = SearchButton.Enabled = false;
             this.Cursor = dataGridView1.Cursor = previewControl.Cursor = Cursors.AppStarting;
             dataGridView1.Rows.Clear();
+            previewControl.UnloadPreview();
         }
 
         private void CompleteSearch(object sender, EventArgs<bool> e)
@@ -119,7 +120,6 @@ namespace WSSQLGUI.Views
             SearchTextBox_Validated(sender, e);
             
         }
-
-       
+               
     }
 }

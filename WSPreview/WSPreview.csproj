@@ -51,6 +51,18 @@
     <Reference Include="Microsoft.Ink, Version=1.7.2600.2180, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <HintPath>..\Toolkits\Microsoft\Microsoft.Ink.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Excel\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Word\Microsoft.Office.Interop.Word.dll</HintPath>
+    </Reference>
+    <Reference Include="Office, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Office\Office.dll</HintPath>
+    </Reference>
     <Reference Include="PDFLibNet">
       <HintPath>..\Toolkits\PDFSharp\PDFLibNet.dll</HintPath>
     </Reference>
@@ -67,6 +79,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\GDI.cs" />
+    <Compile Include="Controls\Office\BaseOfficeWindow.cs" />
+    <Compile Include="Controls\Office\ExcelWindow.cs" />
+    <Compile Include="Controls\Office\OfficeFilePreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Office\OfficeFilePreview.Designer.cs">
+      <DependentUpon>OfficeFilePreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Office\OfficeWindowFactory.cs" />
+    <Compile Include="Controls\Office\WordWindow.cs" />
     <Compile Include="Controls\PageViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -77,6 +99,7 @@
       <DependentUpon>PDFViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="HelperPreviewHandlers.cs" />
+    <Compile Include="PInvoke\WindowAPI.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\COLORREF.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\COMStream.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithFile.cs" />
@@ -117,6 +140,7 @@
     <Compile Include="PreviewHandlers\InternetExplorerPreviewHandler.cs" />
     <Compile Include="PreviewHandlers\IsfPreviewHandler.cs" />
     <Compile Include="PreviewHandlers\MsiPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\OfficePreviewHandler.cs" />
     <Compile Include="PreviewHandlers\PdfPreviewHandler.cs" />
     <Compile Include="PreviewHandlers\ResourcesPreviewHandler.cs" />
     <Compile Include="PreviewHandlers\ResxPreviewHandler.cs" />
@@ -131,6 +155,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\Office\OfficeFilePreview.resx">
+      <DependentUpon>OfficeFilePreview.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\PageViewer.resx">
       <DependentUpon>PageViewer.cs</DependentUpon>
     </EmbeddedResource>
