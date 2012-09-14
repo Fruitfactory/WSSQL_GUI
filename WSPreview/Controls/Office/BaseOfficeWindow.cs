@@ -52,11 +52,15 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             if (_childHandle != null)
             {
                 long style = WindowAPI.GetWindowLong(_childHandle, (int)WindowAPI.WindowLongFlags.GWL_STYLE);
-                style &= ~(WindowAPI.WS_BORDER | WindowAPI.WS_CAPTION | WindowAPI.WS_SIZEBOX);
+                style &= ~(WindowAPI.WS_BORDER | WindowAPI.WS_CAPTION | WindowAPI.WS_SIZEBOX | WindowAPI.WS_SIZEBOX);
                 WindowAPI.SetWindowLong(_childHandle, (int)WindowAPI.WindowLongFlags.GWL_STYLE, (int)style);
                 WindowAPI.MoveWindow(_childHandle, _margin, _margin,
                     _parentControl.Width - _margin, _parentControl.Height - _margin,
                     true);
+                WindowAPI.SetWindowPos(_childHandle, IntPtr.Zero, _margin, _margin,
+               _parentControl.Width - _margin, _parentControl.Height - _margin,
+               WindowAPI.SetWindowPosFlags.NOZORDER | WindowAPI.SetWindowPosFlags.NOMOVE | WindowAPI.SetWindowPosFlags.DRAWFRAME
+               );
             }
 		}
 
@@ -65,13 +69,12 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             WindowAPI.SetParent(_childHandle, _parentHandle);
 
             long lExStyle = WindowAPI.GetWindowLong(_childHandle, (int)WindowAPI.WindowLongFlags.GWL_STYLE);
-            lExStyle &= ~(WindowAPI.WS_BORDER | WindowAPI.WS_SIZEBOX | WindowAPI.WS_CAPTION);
+            lExStyle &= ~(WindowAPI.WS_BORDER | WindowAPI.WS_SIZEBOX | WindowAPI.WS_SIZEBOX | WindowAPI.WS_CAPTION);
             WindowAPI.SetWindowLong(_childHandle, (int)WindowAPI.WindowLongFlags.GWL_STYLE, (int)lExStyle);
             WindowAPI.SetWindowPos(_childHandle, IntPtr.Zero, _margin, _margin, 
-                _parentControl.Width - _margin, _parentControl.Height - _margin, 
-                WindowAPI.SetWindowPosFlags.NOZORDER | 
-                WindowAPI.SetWindowPosFlags.NOMOVE | 
-                WindowAPI.SetWindowPosFlags.DRAWFRAME);
+                _parentControl.Width - _margin, _parentControl.Height - _margin,
+                WindowAPI.SetWindowPosFlags.NOZORDER | WindowAPI.SetWindowPosFlags.NOMOVE | WindowAPI.SetWindowPosFlags.DRAWFRAME
+                );
 		}
 	}
 }

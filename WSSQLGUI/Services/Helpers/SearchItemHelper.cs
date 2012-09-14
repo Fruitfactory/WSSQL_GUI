@@ -40,6 +40,9 @@ namespace WSSQLGUI.Services.Helpers
 
         public static string GetFileName(SearchItem item)
         {
+            if (item == null)
+                return null;
+
             switch(item.Type)
             {
                 case TypeSearchItem.Email:

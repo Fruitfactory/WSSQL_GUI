@@ -17,12 +17,9 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
     [ComVisible(true)]
     public sealed class OfficePreviewHandler : FileBasedPreviewHandler
     {
-        private OfficePreviewHandlerControl _ctrl;
-
         protected override PreviewHandlerControl CreatePreviewHandlerControl()
         {
-            _ctrl = new OfficePreviewHandlerControl();
-            return _ctrl;
+             return new OfficePreviewHandlerControl();
         }
 
         private sealed class OfficePreviewHandlerControl : FileBasedPreviewHandlerControl
@@ -38,11 +35,11 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 
             public override void Unload()
             {
-                base.Unload();
                 if (_preview == null)
                     return;
-                Controls.Clear();
                 _preview.Unload();
+                Controls.Clear();
+                base.Unload();
             }
         }
 

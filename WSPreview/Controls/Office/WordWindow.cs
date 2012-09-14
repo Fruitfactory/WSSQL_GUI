@@ -20,7 +20,6 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 		public override void CreateApp()
 		{
             
-
             _app = new Word.Application();
             _app.Visible = false;
             
@@ -30,11 +29,9 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 		{
             if (_app != null)
             {
-                var list = Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith("WINWORD")).ToList();
-                if (list != null && list.Count > 0)
-                {
-                    list[0].Kill();
-                }
+                
+                _doc.Close(false, Type.Missing, Type.Missing);
+                _app.Quit();
                 Marshal.FinalReleaseComObject(_doc);
                 Marshal.FinalReleaseComObject(_app);
                 _doc = null;
@@ -79,7 +76,6 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
                     catch { }
                 }
             }
-            WindowAPI.SetParent(_childHandle, IntPtr.Zero);
 		}
 
 		public override void LoadFile(string filename)
