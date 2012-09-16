@@ -7,6 +7,8 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using C4F.DevKit.PreviewHandler.Service.Logger;
+
 
 namespace WSSQLGUI.Services.Helpers
 {
@@ -59,7 +61,10 @@ namespace WSSQLGUI.Services.Helpers
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
             Outlook.MailItem mailItem = GetMailItem(entryID);
             if (mailItem == null)
+            {
+                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Mail not found", itemsearch.FileName));
                 return null;
+            }
             string tempFilename = TempFileManager.Instance.GenerateTempFileName(itemsearch);
             if (string.IsNullOrEmpty(tempFilename))
                 return null;
@@ -78,7 +83,10 @@ namespace WSSQLGUI.Services.Helpers
             Outlook.MailItem mi = GetMailItem(entryID);
             Outlook.Attachment att = GetAttacment(mi, fileNameAttach);
             if (att == null)
+            {
+                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1} - {2}", "Attachment not found", item.Name, item.FileName));
                 return null;
+            }
             string tempFileName = TempFileManager.Instance.GenerateTempFileName(item);
             if (string.IsNullOrEmpty(tempFileName))
                 return null;
@@ -130,6 +138,7 @@ namespace WSSQLGUI.Services.Helpers
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format("Error: {0}", ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                WSSqlLogger.Instance.LogError(ex.Message);
             }
 
             return ret;
@@ -150,6 +159,7 @@ namespace WSSQLGUI.Services.Helpers
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format("Error: {0}", ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                WSSqlLogger.Instance.LogError(ex.Message);
             }
 
             return ret;
@@ -168,6 +178,7 @@ namespace WSSQLGUI.Services.Helpers
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format("Error: {0}", ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                WSSqlLogger.Instance.LogError(ex.Message);
             }
             return mi;
         }
@@ -189,6 +200,7 @@ namespace WSSQLGUI.Services.Helpers
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format("Error: {0}", ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                WSSqlLogger.Instance.LogError(ex.Message);
             }
             return att;
         }

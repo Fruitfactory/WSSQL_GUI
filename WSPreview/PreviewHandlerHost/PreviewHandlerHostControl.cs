@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.InteropServices;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
 {
@@ -113,6 +114,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                 {
                     lblMessage.Visible = true;
                     lblMessage.Text = "No Preview Available";
+                    WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", lblMessage.Text, _filePath));
                     return;
                 }
             } 
@@ -148,6 +150,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                 }
                 else
                 {
+                    WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "File Not Found", _filePath));
                     throw new FileNotFoundException(_filePath);
                 }
 
@@ -160,6 +163,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                 _comInstance = null;
                 lblMessage.Visible = true;
                 lblMessage.Text = "Preview Generation Failed - " + ex.Message;
+                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", lblMessage.Text, ex.Message));
             }
 
         }

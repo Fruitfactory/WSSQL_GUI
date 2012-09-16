@@ -8,6 +8,7 @@ using MVCSharp.Core.Configuration;
 using MVCSharp.Core.Tasks;
 using MVCSharp.Winforms;
 using C4F.DevKit.PreviewHandler;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSSQLGUI
 {
@@ -36,7 +37,7 @@ namespace WSSQLGUI
                     return;
                 }
             }
-
+            //WSSqlLogger.Instance.LogInfo("Start Application");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -50,6 +51,7 @@ namespace WSSQLGUI
             };
 
             Application.Run(Application.OpenForms[0]);
+            //WSSqlLogger.Instance.LogInfo("Finish Application");
         }
 
     }

@@ -16,6 +16,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Text.RegularExpressions;
 using WSSQLGUI.Services.Helpers;
 using WSSQLGUI.Services.Enums;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSSQLGUI.Controllers
 {
@@ -118,6 +119,7 @@ namespace WSSQLGUI.Controllers
             catch (System.Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "Open preview", ex.Message));
             }
         }
 
@@ -141,6 +143,9 @@ namespace WSSQLGUI.Controllers
         private void DoQuery(object queryString)
         {
             string query = CreateSqlQyery((string)queryString);
+
+            WSSqlLogger.Instance.LogInfo(string.Format("{0} - {1}", "User query", query));
+
             bool result = true;
             OleDbDataReader myDataReader = null;
             OleDbConnection myOleDbConnection = new OleDbConnection(connectionString);
@@ -159,7 +164,7 @@ namespace WSSQLGUI.Controllers
             }
             catch (System.Data.OleDb.OleDbException oleDbException)
             {
-                //MessageBox.Show(oleDbException.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "Do Query", oleDbException.Message));
                 result = false;
             }
             finally
@@ -187,7 +192,7 @@ namespace WSSQLGUI.Controllers
                 StringBuilder temp = new StringBuilder();
                 var list = searchCriteria.Split(' ').ToList();
                 if (list == null || list.Count == 1)
-                    return searchCriteria;
+                    return string.Format(qyeryTemplate, searchCriteria);
                 res = string.Format(qyeryTemplate, list[0]);
                 for (int i = 1; i < list.Count; i++)
                 {

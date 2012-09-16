@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSSQLGUI.Services.Helpers
 {
@@ -33,6 +34,7 @@ namespace WSSQLGUI.Services.Helpers
             if (!File.Exists(temp))
             {
                 Directory.CreateDirectory(temp);
+                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Create folder", temp));
             }
         }
 
@@ -62,7 +64,10 @@ namespace WSSQLGUI.Services.Helpers
             string tempFolder = string.Format(TempFolderFile, Path.GetTempPath(), searchitem.ID.ToString());
             DirectoryInfo di = new DirectoryInfo(tempFolder);
             if (!di.Exists)
+            {
                 di.Create();
+                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Create folder", di.FullName));
+            }
             string tempFilename = string.Format(TempFileName, Path.GetTempPath(), searchitem.ID.ToString(), filename);
             if (string.IsNullOrEmpty(tempFilename))
                 return null;
@@ -79,7 +84,14 @@ namespace WSSQLGUI.Services.Helpers
                 var dirCollection = di.GetDirectories();
                 foreach (var dir in dirCollection)
                 {
-                    dir.Delete(true);
+                    try
+                    {
+                        dir.Delete(true);
+                    }
+                    catch (Exception ex)
+                    {
+                        WSSqlLogger.Instance.LogError(ex.Message);
+                    }
                 }
             }
         }
