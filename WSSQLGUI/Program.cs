@@ -37,7 +37,7 @@ namespace WSSQLGUI
                     return;
                 }
             }
-            //WSSqlLogger.Instance.LogInfo("Start Application");
+            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -51,7 +51,7 @@ namespace WSSQLGUI
             };
 
             Application.Run(Application.OpenForms[0]);
-            //WSSqlLogger.Instance.LogInfo("Finish Application");
+            
         }
 
     }
