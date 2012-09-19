@@ -85,6 +85,8 @@
   <ItemGroup>
     <Compile Include="Controllers\MainTask.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Models\EmailData.cs" />
+    <Compile Include="Models\SearchData.cs" />
     <Compile Include="Services\Helpers\OutlookHelper.cs" />
     <Compile Include="Services\Helpers\SearchItemHelper.cs" />
     <Compile Include="Services\Helpers\TempFileManager.cs" />
@@ -115,7 +117,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="app.manifest" />
     <None Include="WSSql.cd" />
     <None Include="Properties\Settings.settings">

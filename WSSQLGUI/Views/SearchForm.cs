@@ -28,13 +28,14 @@ namespace WSSQLGUI.Views
     public partial class SearchForm : WinFormView
     {
 
-        
+        private Font _defaultFont;
         private bool _isLoading = false;
 
 
         public SearchForm()
         {
             InitializeComponent();
+            _defaultFont = dataGridView1.DefaultCellStyle.Font;
         }
 
         public override void Initialize()
@@ -54,7 +55,6 @@ namespace WSSQLGUI.Views
 
         private void StartSearch(object sender, EventArgs e)
         {
-            _isLoading = true;
             SearchTextBox.Enabled = SearchButton.Enabled = false;
             this.Cursor = dataGridView1.Cursor = previewControl.Cursor = Cursors.AppStarting;
             dataGridView1.Rows.Clear();
@@ -72,7 +72,7 @@ namespace WSSQLGUI.Views
         {
             this.Invoke(new Action(() => 
                 {
-                    int i = dataGridView1.Rows.Add(new object[] { e.Value.Name, e.Value.FileName });
+                    int i = dataGridView1.Rows.Add(new object[] { e.Value.Recepient, e.Value.Subject,e.Value.Date });
                     dataGridView1.Rows[i].Tag = e.Value;
                 }),null);
         }
@@ -85,6 +85,7 @@ namespace WSSQLGUI.Views
                 return;
 
             SearchItem si = dataGridView1.SelectedRows[0].Tag as SearchItem;
+            
             (Controller as SearchController).CurrentSearchItemChanged(si);
 
             string filename = (Controller as SearchController).FileName;
@@ -119,6 +120,16 @@ namespace WSSQLGUI.Views
         {
             SearchTextBox_Validated(sender, e);
             
+        }
+
+        private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            dataGridView1.Rows[e.RowIndex].DefaultCellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+        }
+
+        private void dataGridView1_RowLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            dataGridView1.Rows[e.RowIndex].DefaultCellStyle.Font = _defaultFont;
         }
                
     }

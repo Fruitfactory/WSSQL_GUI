@@ -25,8 +25,10 @@ namespace WSSQLGUI.Controllers
         #region const
 
         private const string connectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
-        private const string qyeryTemplate = "SELECT System.ItemName, System.ItemUrl, System.IsAttachment  FROM SystemIndex WHERE Contains(*,'{0}*')";
+        private const string qyeryTemplate = "SELECT System.ItemName, System.ItemUrl, System.IsAttachment, System.Message.ConversationID, System.Message.DateReceived  FROM SystemIndex WHERE Contains(*,'{0}*')";
+        private const string emailQueryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(*,'{0}*') AND CONTAINS(System.ItemPathDisplay,'Inbox*',1033))";
         private const string qyeryAnd = " AND Contains(*,'{0}*')";
+        
         
 
         #endregion
@@ -142,7 +144,7 @@ namespace WSSQLGUI.Controllers
 
         private void DoQuery(object queryString)
         {
-            string query = CreateSqlQyery((string)queryString);
+            string query = string.Format(emailQueryTemplate, queryString); //CreateSqlQyery((string)queryString);
 
             WSSqlLogger.Instance.LogInfo(string.Format("{0} - {1}", "User query", query));
 
@@ -156,10 +158,43 @@ namespace WSSQLGUI.Controllers
 
                 myOleDbConnection.Open();
                 myDataReader = myOleDbCommand.ExecuteReader();
+
+
+                List<EmailData> tempList = new List<EmailData>();
                 while (myDataReader.Read())
                 {
-                    OnAddItem(ReadResult(myDataReader));                    
+                    //OnAddItem(ReadResult(myDataReader));
+                    //tempList.Add(ReadResult(myDataReader));
+                    tempList.Add(ReadGroups(myDataReader));
                 }
+
+                foreach (var g in tempList)
+                {
+                    g.Items.Sort((a, b) =>
+                    {
+                        if (a.Date == b.Date)
+                            return 0;
+                        if (a.Date > b.Date)
+                            return -1;
+                        return 1;
+                    });
+
+                    var item = g.Items[0];
+                    TypeSearchItem type = SearchItemHelper.GetTypeItem(item.ItemUrl);
+                    SearchItem si = new SearchItem()
+                    {
+                        Subject = item.Subject,
+                        Recepient = string.Format("{0} ({1})",
+                        item.Recepient, g.Items.Count),
+                        Name = item.ItemName,
+                        FileName = item.ItemUrl,
+                        Date = item.Date,
+                        Type = type
+                    };
+
+                    OnAddItem(si);
+                }
+
 
             }
             catch (System.Data.OleDb.OleDbException oleDbException)
@@ -198,10 +233,10 @@ namespace WSSQLGUI.Controllers
                 {
                     temp.Append(string.Format(qyeryAnd,list[i]));
                 }
-                res += temp.ToString();
+                res += temp.ToString();// +groupOn;
             }
             else
-                res = string.Format(qyeryTemplate, searchCriteria);
+                res = string.Format(qyeryTemplate, searchCriteria);// +groupOn;
 
             return res;
         }
@@ -227,17 +262,58 @@ namespace WSSQLGUI.Controllers
                 temp(this, new EventArgs<SearchItem>(item));
         }
 
-        private SearchItem ReadResult(IDataReader reader)
+        private SearchData ReadResult(IDataReader reader)
         {
             string name = reader[0] as string;
             string file = reader[1] as string;
             bool att = (bool) reader[2];
-            TypeSearchItem type = SearchItemHelper.GetTypeItem(file);
+            string convID = reader[3].ToString();
+            string date = reader[4].ToString();
+
+            //TypeSearchItem type = SearchItemHelper.GetTypeItem(file);
             
-            return new SearchItem() { Name = name, FileName = file,IsAttachment = att,ID = Guid.NewGuid(),Type = type };
+            //return new SearchItem() { Name = name, FileName = file,IsAttachment = att,ID = Guid.NewGuid(),Type = type };
+            return new SearchData(){ItemName = name, ItemUrl = file, IsAttachment = att, ConversationID = convID,Date = date};
         }
 
         
+        private EmailData ReadGroups(IDataReader reader)
+        {
+            EmailData d = new EmailData() { Type = TypeRecord.Group};
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                if (reader.GetFieldType(i).ToString() != "System.Data.IDataReader")
+                    continue;
+                //WSSqlLogger.Instance.LogInfo(reader.GetName(i));
+                OleDbDataReader itemsReader = reader.GetValue(i) as OleDbDataReader;
+                while (itemsReader.Read())
+                {
+                    d.Items.Add(ReadItem(itemsReader));
+                }
+            }
+
+            return d;
+        }
+
+        private EmailItem  ReadItem(IDataReader reader)
+        {
+            string subject = reader[0].ToString();
+            string name = reader[1].ToString();
+            var recArr = reader[3] as string[];
+            string recep = string.Empty;
+            if (recArr.Length > 0)
+            {
+                recep = recArr[0];
+            }
+            string url  = reader[2].ToString();
+            
+            DateTime res;
+            DateTime.TryParse(reader[4].ToString(),out res);
+            
+            //WSSqlLogger.Instance.LogInfo(string.Format("{0} {1} {2} {3}", name, url, recep, res));
+
+            return new EmailItem() {Subject = subject, ItemName = name, ItemUrl = url, Recepient = recep, Date = res, Type = TypeRecord.Item};
+        }
 
         #endregion
 
