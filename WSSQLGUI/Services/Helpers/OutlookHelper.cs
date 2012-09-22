@@ -154,7 +154,7 @@ namespace WSSQLGUI.Services.Helpers
                 if (ret == null)
                     return ret;
                 Outlook.NameSpace ns = ret.GetNamespace("MAPI");
-                ns.Logon("", "", Type.Missing, Type.Missing);
+                ns.Logon(ret.DefaultProfileName, "", Type.Missing, Type.Missing);//ret.DefaultProfileName
             }
             catch (Exception ex)
             {
@@ -169,10 +169,12 @@ namespace WSSQLGUI.Services.Helpers
         {
             if (_app == null)
                 return null;
-            Outlook.NameSpace ns = _app.GetNamespace("MAPI");
             Outlook.MailItem mi = null;
             try
             {
+                Outlook.NameSpace ns = _app.GetNamespace("MAPI");
+                
+           
                 mi = ns.GetItemFromID(entryID, Type.Missing);
             }
             catch (Exception ex)

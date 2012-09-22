@@ -26,7 +26,7 @@ namespace WSSQLGUI.Controllers
 
         private const string connectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
         private const string qyeryTemplate = "SELECT System.ItemName, System.ItemUrl, System.IsAttachment, System.Message.ConversationID, System.Message.DateReceived  FROM SystemIndex WHERE Contains(*,'{0}*')";
-        private const string emailQueryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(*,'{0}*') AND CONTAINS(System.ItemPathDisplay,'Inbox*',1033))";
+        private const string emailQueryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateSent, System.Message.ConversationID FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(*,'{0}*') AND CONTAINS(System.ItemPathDisplay,'Входящие*',1033) ORDER BY System.Message.DateReceived DESC) ";
         private const string qyeryAnd = " AND Contains(*,'{0}*')";
         
         
@@ -170,15 +170,6 @@ namespace WSSQLGUI.Controllers
 
                 foreach (var g in tempList)
                 {
-                    g.Items.Sort((a, b) =>
-                    {
-                        if (a.Date == b.Date)
-                            return 0;
-                        if (a.Date > b.Date)
-                            return -1;
-                        return 1;
-                    });
-
                     var item = g.Items[0];
                     TypeSearchItem type = SearchItemHelper.GetTypeItem(item.ItemUrl);
                     SearchItem si = new SearchItem()
@@ -308,7 +299,9 @@ namespace WSSQLGUI.Controllers
             string url  = reader[2].ToString();
             
             DateTime res;
-            DateTime.TryParse(reader[4].ToString(),out res);
+            string date = reader[4].ToString();
+            DateTime.TryParse(date,out res);
+            //res = TimeZoneInfo.ConvertTimeToUtc(res);
             
             //WSSqlLogger.Instance.LogInfo(string.Format("{0} {1} {2} {3}", name, url, recep, res));
 
