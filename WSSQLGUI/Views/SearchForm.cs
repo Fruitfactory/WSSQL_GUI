@@ -66,6 +66,7 @@ namespace WSSQLGUI.Views
             _isLoading = false;
             SearchTextBox.Enabled = SearchButton.Enabled = true;
             this.Cursor = dataGridView1.Cursor = previewControl.Cursor = Cursors.Default;
+            dataGridView1.ClearSelection();
         }
 
         private void AddSearchItem(object sender, EventArgs<SearchItem> e)

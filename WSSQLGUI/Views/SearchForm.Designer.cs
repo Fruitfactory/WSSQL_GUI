@@ -41,12 +41,12 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.buttonPreview = new System.Windows.Forms.Button();
-            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.columnRecepient = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnSubject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.previewControl = new C4F.DevKit.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl();
+            this.buttonPreview = new System.Windows.Forms.Button();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.contextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -157,6 +157,10 @@
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnRecepient,
@@ -165,7 +169,7 @@
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Menu;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.DarkGray;
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Info;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
@@ -181,6 +185,34 @@
             this.dataGridView1.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowEnter);
             this.dataGridView1.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowLeave);
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
+            // 
+            // columnRecepient
+            // 
+            this.columnRecepient.HeaderText = "Recepient";
+            this.columnRecepient.Name = "columnRecepient";
+            this.columnRecepient.Width = 84;
+            // 
+            // columnSubject
+            // 
+            this.columnSubject.HeaderText = "Subject";
+            this.columnSubject.Name = "columnSubject";
+            this.columnSubject.Width = 71;
+            // 
+            // columnDate
+            // 
+            this.columnDate.HeaderText = "Date";
+            this.columnDate.Name = "columnDate";
+            this.columnDate.Width = 56;
+            // 
+            // previewControl
+            // 
+            this.previewControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.previewControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.previewControl.FilePath = null;
+            this.previewControl.Location = new System.Drawing.Point(0, 0);
+            this.previewControl.Name = "previewControl";
+            this.previewControl.Size = new System.Drawing.Size(328, 383);
+            this.previewControl.TabIndex = 0;
             // 
             // buttonPreview
             // 
@@ -201,33 +233,6 @@
             // errorProvider
             // 
             this.errorProvider.ContainerControl = this;
-            // 
-            // columnRecepient
-            // 
-            this.columnRecepient.HeaderText = "Recepient";
-            this.columnRecepient.Name = "columnRecepient";
-            this.columnRecepient.Width = 200;
-            // 
-            // columnSubject
-            // 
-            this.columnSubject.HeaderText = "Subject";
-            this.columnSubject.Name = "columnSubject";
-            this.columnSubject.Width = 200;
-            // 
-            // columnDate
-            // 
-            this.columnDate.HeaderText = "Date";
-            this.columnDate.Name = "columnDate";
-            // 
-            // previewControl
-            // 
-            this.previewControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.previewControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.previewControl.FilePath = null;
-            this.previewControl.Location = new System.Drawing.Point(0, 0);
-            this.previewControl.Name = "previewControl";
-            this.previewControl.Size = new System.Drawing.Size(328, 383);
-            this.previewControl.TabIndex = 0;
             // 
             // SearchForm
             // 
