@@ -26,7 +26,7 @@ namespace WSSQLGUI.Controllers
 
         private const string connectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
         private const string qyeryTemplate = "SELECT System.ItemName, System.ItemUrl, System.IsAttachment, System.Message.ConversationID, System.Message.DateReceived  FROM SystemIndex WHERE Contains(*,'{0}*')";
-        private const string emailQueryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateSent, System.Message.ConversationID FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(*,'{0}*') AND CONTAINS(System.ItemPathDisplay,'Входящие*',1033) ORDER BY System.Message.DateReceived DESC) ";
+        private const string emailQueryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(*,'{0}*') AND CONTAINS(System.ItemPathDisplay,'Inbox*',1033) ORDER BY System.Message.DateReceived DESC) ";
         private const string qyeryAnd = " AND Contains(*,'{0}*')";
         
         
