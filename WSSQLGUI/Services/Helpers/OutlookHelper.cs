@@ -172,6 +172,8 @@ namespace WSSQLGUI.Services.Helpers
             Outlook.MailItem mi = null;
             try
             {
+                if (!IsOutlookAlive())
+                    ReopenOutlook(ref _app);
                 Outlook.NameSpace ns = _app.GetNamespace("MAPI");
                 
            
@@ -205,6 +207,35 @@ namespace WSSQLGUI.Services.Helpers
                 WSSqlLogger.Instance.LogError(ex.Message);
             }
             return att;
+        }
+
+        /// <summary>
+        /// after preview Outlook can close, that why I check Outlook process. If it closed, I create new instance
+        /// </summary>
+        /// <returns></returns>
+        private bool IsOutlookAlive()
+        {
+            bool res = false;
+            try
+            {
+                var outlook = Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith(OutlookProcessName));
+                if (outlook.Count() > 0)
+                    res = true;
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+
+            return res;
+        }
+
+        private void ReopenOutlook(ref Outlook.Application app)
+        {
+            Marshal.ReleaseComObject(app);
+            app = null;
+            app = GetApplication();
+            WSSqlLogger.Instance.LogWarning("Outlook was closed. Create new instance.");
         }
 
 

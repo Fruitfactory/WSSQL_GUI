@@ -180,7 +180,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                 r.right = this.Width;
                 ((IPreviewHandler)_comInstance).SetRect(ref r);
             }
-
+            this.Invalidate();
         }
 
         protected override void WndProc(ref Message m)
