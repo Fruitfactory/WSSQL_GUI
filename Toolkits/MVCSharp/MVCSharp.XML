@@ -4,350 +4,15 @@
         <name>MVCSharp</name>
     </assembly>
     <members>
-        <member name="T:MVCSharp.Winforms.WinUserControlView`1">
+        <member name="T:MVCSharp.Webforms.WebformsViewsManager">
             <summary>
-            A base generic user control class implementing the <see cref="T:MVCSharp.Core.Views.IView`1"/>
-            interface. Has a strongly typed association to the controller (of the
-            parameter type T).
-            <para>It is recommended to inherit your user control view classes from
-            this one instead of manually implementing the <see cref="T:MVCSharp.Core.Views.IView`1"/>
-            interface. Neccessary <see cref="T:MVCSharp.Core.Views.IView`1"/> members may be overriden.</para>
-            </summary>
-            <remarks>This class also implements the <see cref="T:MVCSharp.Core.Views.INotifiedView"/>
-            interface (with empty methods) so in derived classes it is
-            possible to override Activate and Initialize methods specifying
-            response to (de)activation and initialization events.
-            </remarks>
-            <seealso cref="T:MVCSharp.Winforms.WinUserControlView"/>
-        </member>
-        <member name="T:MVCSharp.Core.Views.INotifiedView">
-            <summary>
-            If a view class implements this interface (in addition to IView)
-            then the views manager will notify corresponding view objects
-            on activation and initialization events through the operations
-            of this interface.
-            </summary>
-            <remarks>Note that not every views manager sends notifications
-            to a view which implements INotifiedView. This feature depends
-            on the views manager implementation.</remarks>
-        </member>
-        <member name="M:MVCSharp.Core.Views.INotifiedView.Activate(System.Boolean)">
-            <summary>
-            Through this operation views (which implement INotifiedView)
-            are notified about their (de)activation.
-            </summary>
-            <param name="activate">If <c>true</c> then the view is
-            activated, otherwise it is deactivated.</param>
-        </member>
-        <member name="M:MVCSharp.Core.Views.INotifiedView.Initialize">
-            <summary>
-            Through this operation views (which implement INotifiedView)
-            are notified about their initialization.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Views.IView`1">
-            <summary>
-            Generic extension of the <see cref="T:MVCSharp.Core.Views.IView"/> interface.
-            Has a strongly typed generic association to the controller.
-            Therefore no typecasting is required when accessing the
-            associated controller.
-            <para>Istead of implementing this interface manually you
-            might better use generic base view classes such as
-            <see cref="T:MVCSharp.Webforms.WebFormView`1"/> or
-            <see cref="T:MVCSharp.Winforms.WinFormView`1"/>.</para>
-            </summary>
-            <remarks>The framework knows nothing about the generic types
-            and deals only their non-generic versions. Generic types serve
-            only for user convenience: to provide type-safety and reduce
-            the amount of typecasts.</remarks>
-            <typeparam name="T">Specifies the expected type of the
-            associated controller. Must be a subtype of <see cref="T:MVCSharp.Core.IController"/>
-            </typeparam>
-            <seealso cref="T:MVCSharp.Webforms.WebFormView`1"/>
-            <seealso cref="T:MVCSharp.Winforms.WinFormView`1"/>
-        </member>
-        <member name="T:MVCSharp.Core.Views.IView">
-            <summary>
-            All views should implement this interface.
-            <para>For user convenience a generic version of this
-            interface exists with a strongly typed association to
-            the controller, see <see cref="T:MVCSharp.Core.Views.IView`1"/></para>
-            </summary>
-            <seealso cref="T:MVCSharp.Core.Views.IView`1"/>
-        </member>
-        <member name="P:MVCSharp.Core.Views.IView.Controller">
-            <summary>
-            Used to connect a view to its controller.
-            </summary>
-            <remarks>
-            This is one of the most important and widely used properties
-            in the framework. Through it views pass control to controllers
-            (see the example below).
-            </remarks>
-            <example>
-            In this example the view handles a user gesture (button click)
-            by passing control to the associated controller:
-            <code>
-            class MyView : IView
-            {
-                // here the IView implementation goes
-                ...
-            
-                private void button_Click(object sender, EventArgs e)
-                {
-                    (Controller as MyController).DoSomething();
-                }
-            }
-            </code>
-            </example>
-        </member>
-        <member name="P:MVCSharp.Core.Views.IView.ViewName">
-            <summary>
-            Used to assign a view its name.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Views.IView`1.Controller">
-            <summary>
-            Gets or sets the associated controller of the generic parameter
-            type T.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinUserControlView`1.Activate(System.Boolean)">
-            <summary>
-            INotifiedView.Activate empty implementation.
-            Marked as virtual so that can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinUserControlView`1.Initialize">
-            <summary>
-            INotifiedView.Initialize empty implementation.
-            Marked as virtual so that can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.WinUserControlView`1.Controller">
-            <summary>
-            Simple <see cref="P:MVCSharp.Core.Views.IView`1.Controller">IView&lt;T&gt;.Controller</see>
-            implementation with backing field. Marked as virtual, so can be
-            overriden in subclasses.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.WinUserControlView`1.MVCSharp#Core#Views#IView#Controller">
-            <summary>
-            <see cref="P:MVCSharp.Core.Views.IView.Controller">IView.Controller</see>
-            implementation done as a gateway to the strongly typed
-            <see cref="P:MVCSharp.Winforms.WinUserControlView`1.Controller"/> property.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.WinUserControlView`1.ViewName">
-            <summary>
-            <see cref="P:MVCSharp.Core.Views.IView.ViewName"/> property simple implementation with
-            backing field. Marked as virtual to be overrideable in sublasses.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Winforms.WinFormView">
-            <summary>
-            Base implementation of the <see cref="T:MVCSharp.Core.Views.IView"/> interface for
-            windows forms presentation mechanism. Inherit your view classes
-            from this one and override IView members if necessary.
-            </summary>
-            <remarks>
-            This class also implements <see cref="T:MVCSharp.Core.Views.INotifiedView"/> interface,
-            which tells the views manager to notify the view on such events
-            as view initialization and activation. Default implementation
-            methods do nothing but descendant classes may override them to
-            add some functionality.
-            <para>It is recommended to use the generic version of this class
-            - <see cref="T:MVCSharp.Winforms.WinFormView`1"/> - with a strongly typed association
-            to the controller and, thus, higher type safety.</para>
-            </remarks>
-            <example>
-            In this example we declare a view type by deriving it from the
-            WinFormView class without a need to manually implement IView
-            interface.
-            <code>
-            [WinformsView(typeof(MyTask), MyTask.MyView)]
-            partial class MyView : WinFormView
-            {
-                public MyView()
-                {
-                    InitializeComponent();
-                }
-            
-                private buttonDoAction_Click(object sender, EventArgs e)
-                {
-                    (Controller as MyController).MyAction();
-                }
-            }
-            </code>
-            </example>
-            <seealso cref="T:MVCSharp.Winforms.Configuration.WinformsViewAttribute"/>
-            <seealso cref="T:MVCSharp.Winforms.WinFormView`1"/>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinFormView.Activate(System.Boolean)">
-            <summary>
-            INotifiedView.Activate empty implementation.
-            Marked as virtual, so can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinFormView.Initialize">
-            <summary>
-            INotifiedView.Initialize empty implementation.
-            Marked as virtual, so can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.WinFormView.Controller">
-            <summary>
-            Simple IView.Controller implementation with backing field.
-            Marked as virtual, so can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.WinFormView.ViewName">
-            <summary>
-            Simple IView.ViewName implementation with backing field.
-            Marked as virtual, so can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Winforms.WinUserControlView">
-            <summary>
-            A base user control class implementing IView interface.
-            User control classes may inherit from this class instead of
-            implementing IView interface themselves. Neccessary IView
-            members may be overriden.
-            </summary>
-            <remarks>This class also implements the <see cref="T:MVCSharp.Core.Views.INotifiedView"/>
-            interface (with empty methods) so in derived classes it is
-            possible to override Activate and Initialize methods specifying
-            response to (de)activation and initialization events.
-            <para>It is recommended to use the generic version of this class
-            - <see cref="T:MVCSharp.Winforms.WinUserControlView`1"/> - with a strongly typed association
-            to the controller and, thus, higher type safety.</para>
-            </remarks>
-            <seealso cref="T:MVCSharp.Winforms.WinUserControlView`1"/>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinUserControlView.Activate(System.Boolean)">
-            <summary>
-            INotifiedView.Activate empty implementation.
-            Marked as virtual so that can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinUserControlView.Initialize">
-            <summary>
-            INotifiedView.Initialize empty implementation.
-            Marked as virtual so that can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.WinUserControlView.Controller">
-            <summary>
-            IView.Controller simple implementation with backing field.
-            Marked as virtual so that can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.WinUserControlView.ViewName">
-            <summary>
-            IView.ViewName simple implementation with backing field.
-            Marked as virtual so that can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Webforms.Configuration.WebformsViewInfoCollection">
-            <summary>
-            Represents a collection of <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewInfo"/> objects
-            with methods to access elements by the view name and view url
-            strings.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Views.ViewInfoCollection">
-            <summary>
-            Represents an enumerable collection of <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects
-            with an indexer to retrieve an element by the view name.
-            </summary>
-            <remarks>
-            Before a task is started the ViewInfoCollection object is stored
-            within the <see cref="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.ViewInfos">TaskInfo.ViewInfos</see> property.
-            After a task is started the corresponding <see cref="T:MVCSharp.Core.Views.IViewsManager"/> is linked
-            to this ViewInfoCollection object via its <see cref="P:MVCSharp.Core.Views.IViewsManager.ViewInfos">
-            IViewsManager.ViewInfos</see> property.</remarks>
-            <seealso cref="P:MVCSharp.Core.Views.IViewsManager.ViewInfos"/>
-            <seealso cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask"/>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfoCollection.Add(MVCSharp.Core.Configuration.Views.ViewInfo)">
-            <summary>
-            Adds ViewInfo object to the collection.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfoCollection.Remove(System.String)">
-            <summary>
-            Removes the view description with given view name from the collection.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfoCollection.Add(MVCSharp.Core.Configuration.Views.ViewInfoCollection)">
-            <summary>
-            Adds all items from another collection to this one.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfoCollection.GetEnumerator">
-            <summary>
-            Implementation of <see cref="M:System.Collections.IEnumerable.GetEnumerator"/>
-            method. Returns an enumerator through the collection of
-            <c>ViewInfo</c> objects.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfoCollection.Item(System.String)">
-            <summary>
-            Indexer to retrieve ViewInfo object by the view name.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfoCollection.Item(System.Type)">
-            <summary>
-            Indexer to retrieve ViewInfo object by the view type.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfoCollection.Count">
-            <summary>
-            Returns the number of <c>ViewInfo</c> objects
-            in the collection.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewInfoCollection.Add(MVCSharp.Webforms.Configuration.WebformsViewInfo)">
-            <summary>
-            Adds <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewInfo"/> object to the collection.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewInfoCollection.Add(MVCSharp.Core.Configuration.Views.ViewInfo)">
-            <summary>
-            Adds <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> object to the collection, preliminarily
-            typecasting it to <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewInfo"/>.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewInfoCollection.GetByUrl(System.String)">
-            <summary>
-            Accesses WebformsViewInfo object by the view url.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Webforms.Configuration.WebformsViewInfoCollection.Item(System.String)">
-            <summary>
-            Accesses WebformsViewInfo object by the view name.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Views.ViewCreationException">
-            <summary>
-            Thrown when a views manager finds it impossible to
-            create a view instance.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Views.ViewCreationException.#ctor(System.String,System.Type)">
-            <summary>
-            Constructor taking the view name and view type as parameters.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Winforms.WinformsViewsManager">
-            <summary>
-            Works with views represented as windows forms and user controls.
+            Works with views represented as web pages.
             </summary>
             <remarks>
             <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects for this views manager should be of
-            <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfo"/> type. That is why the WinformsViewsManager
+            <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewInfo"/> type. That is why the WinformsViewsManager
             is often used in combination with <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType"/>
-            set to <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfosProvider"/>.
+            set to <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewInfosProvider"/>.
             </remarks>
         </member>
         <member name="T:MVCSharp.Core.Views.ViewsManagerBase">
@@ -426,223 +91,6 @@
             Marked as virtual so that can be overriden in subclasses.
             </summary>
         </member>
-        <member name="F:MVCSharp.Winforms.WinformsViewsManager.views">
-            <summary>
-            Used to hold all view instances.
-            </summary>
-        </member>
-        <member name="F:MVCSharp.Winforms.WinformsViewsManager.prevActiveView">
-            <summary>
-            Used to notify the previously active view on its deactivation.
-            </summary>
-        </member>
-        <member name="F:MVCSharp.Winforms.WinformsViewsManager.viewActivatedInCode">
-            <summary>
-            A flag indicating that the last view activation has been done via code.
-            </summary>
-        </member>
-        <member name="F:MVCSharp.Winforms.WinformsViewsManager.activeView">
-            <summary>
-            Holds currently active view instance.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.ActivateView(System.String)">
-            <summary>
-            <see cref="M:MVCSharp.Core.Views.IViewsManager.ActivateView(System.String)">IViewsManager.ActivateView</see> implementation.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.#ctor">
-            <summary>
-            Creates an instance of the class.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.GetView(System.String)">
-            <summary>
-            <see cref="M:MVCSharp.Core.Views.IViewsManager.GetView(System.String)">IViewsManager.GetView</see> implementation.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.NotifyViewsOnActivation(MVCSharp.Core.Views.IView)">
-            <summary>
-            A method used to notify views about their (de)activation.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.ActivateFormView(MVCSharp.Core.Views.IView)">
-            <summary>
-            Method to activate a view if it happens to be a form.
-            Can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.ActivateUserControlView(MVCSharp.Core.Views.IView)">
-            <summary>
-            Method to activate a view if it happens to be a user control.
-            Can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.FindOrCreateView(System.String)">
-            <summary>
-            Method to find a view by its name or create a new one
-            if nothing was found.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.InitializeUserControlView(System.Windows.Forms.UserControl)">
-            <summary>
-            Method to initialize a view if it happens to be a user control.
-            Can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.InitializeFormView(System.Windows.Forms.Form,MVCSharp.Winforms.Configuration.WinformsViewInfo)">
-            <summary>
-            Method to initialize a view if it happens to be a form.
-            Can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.InitializeView(MVCSharp.Core.Views.IView)">
-            <summary>
-            Method to perform a general view initialization
-            (regardless of its specific type)/
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.View_ActivatedManually(System.Object,System.EventArgs)">
-            <summary>
-            Event hanlder for the manual view activation (by the end-user).
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.View_Deactivate(System.Object,System.EventArgs)">
-            <summary>
-            Event hanlder view de-activation.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.Application_Idle(System.Object,System.EventArgs)">
-            <summary>
-            A method called whenever the application gets idle and used to eliminate
-            possible mismatches between the current view and actually active view.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.FindContainerView(System.Windows.Forms.Control)">
-            <summary>
-            Used to find a container view for a specific control (view).
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.NotifyInitialize(MVCSharp.Core.Views.IView)">
-            <summary>
-            Notifies the view about its initialization if the view
-            class implements the <see cref="T:MVCSharp.Core.Views.INotifiedView"/> interface.
-            </summary>
-            <param name="view">The view to be notified.</param>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.InitializeChildViews(System.Windows.Forms.Control)">
-            <summary>
-            Initializes user control views located inside a container control.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinformsViewsManager.GetDefaultConfig">
-            <summary>
-            Returns the default MVCConfiguration instance (obtained via
-            <see cref="M:MVCSharp.Core.Configuration.MVCConfiguration.GetDefault">MVCConfiguration.GetDefault</see>) with
-            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType"/> set to
-            <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfosProvider"/> and
-            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewsManagerType"/> set to <see cref="T:MVCSharp.Winforms.WinformsViewsManager"/>.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Views.ViewAttribute">
-            <summary>
-            A base attribute for declaring views. See example code below.
-            </summary>
-            <remarks>
-            ViewAttribute attributes are converted to <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects
-            by an instance of the <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType">
-            MVCConfiguration.ViewInfosProviderType</see> type.
-            <para>Note that different presentation mechanisms
-            may require different ViewAttribute descendants to
-            declare views. For instance see <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewAttribute"/> and
-            <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewAttribute"/> attributes.</para>
-            </remarks>
-            <example>
-            Below we declare a view type that should be used for the <c>MyTask.MyView</c>
-            view within the <c>MyTask</c> task.
-            <code>
-            [WinformsView(typeof(MyTask), MyTask.MyView)]
-            class MyView : IView
-            {
-                ...
-            }
-            </code>
-            </example>
-            <seealso cref="T:MVCSharp.Winforms.Configuration.WinformsViewAttribute"/>
-            <seealso cref="T:MVCSharp.Webforms.Configuration.WebformsViewAttribute"/>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Views.ViewAttribute.#ctor">
-            <summary>
-            Parameterless constructor.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Views.ViewAttribute.#ctor(System.Type,System.String)">
-            <summary>
-            Constructor which sets TaskType and ViewName taking
-            values from parameters.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Views.ViewAttribute.TaskType">
-            <summary>
-            Links an attribute to a specific task type.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Views.ViewAttribute.ViewName">
-            <summary>
-            Links an attribute to a specific view within a task.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Tasks.AdjacentPointsAttribute">
-            <summary>
-            With this attribute applied to a task type adjacent interaction
-            points can be defined. By the term adjacent we mean interaction
-            points with transitions possible between each two of them.
-            </summary>
-            <remarks>
-            This attribute is valid only if specific <see cref="T:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider"/>
-            implementations are used: <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider"/> or
-            a composite <see cref="T:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider"/>.
-            </remarks>
-            <example>
-            The code below declares a task with three interaction points,
-            and transitions possible between each two of them.
-            <code>
-            [AdjacentPoints(View1, View2, View3)]
-            class MyTask : ITask
-            {
-                [IPoint(typeof(MyController))]
-                public const string View1 = "View 1";
-                [IPoint(typeof(MyController))]
-                public const string View2 = "View 2";
-                [IPoint(typeof(MyController))]
-                public const string View3 = "View 3";
-            }
-            </code>
-            </example>
-            <seealso cref="T:MVCSharp.Core.Configuration.Tasks.IPointAttribute"/>
-            <seealso cref="T:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute"/>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.AdjacentPointsAttribute.#ctor(System.String[])">
-            <summary>
-            Constructor taking an array of adjacent view names.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.AdjacentPointsAttribute.AdjacentViewNames">
-            <summary>
-            Gets or sets the array of adjacent view names.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Webforms.WebformsViewsManager">
-            <summary>
-            Works with views represented as web pages.
-            </summary>
-            <remarks>
-            <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects for this views manager should be of
-            <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewInfo"/> type. That is why the WinformsViewsManager
-            is often used in combination with <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType"/>
-            set to <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewInfosProvider"/>.
-            </remarks>
-        </member>
         <member name="M:MVCSharp.Webforms.WebformsViewsManager.ActivateView(System.String)">
             <summary>
             IViewsManager.ActivateView implementation.
@@ -684,497 +132,105 @@
             IHttpModule.Dispose implementation.
             </summary>
         </member>
-        <member name="T:MVCSharp.Core.Tasks.TaskBase">
+        <member name="T:MVCSharp.Core.Configuration.Tasks.InteractionPointInfoCollection">
             <summary>
-            Simple implementation of <see cref="T:MVCSharp.Core.Tasks.ITask">ITask</see>
-            interface with backing fields. All members are marked as virtual
-            so it is possible to override them in derived classes.
+            Represents a collection of <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointInfo"/>
+            objects accessible by the view name.
             </summary>
+            <remarks>
+            Such collection is a part of the <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/> object
+            descibing a task (see <see cref="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.InteractionPoints">
+            TaskInfo.InteractionPoints</see>).</remarks>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.InteractionPointInfoCollection.Remove(System.String)">
+            <summary>
+            Removes the interaction with given view name from the collection.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.InteractionPointInfoCollection.GetEnumerator">
+            <summary>
+            Allows to enumerate through all interaction points within the collection.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointInfoCollection.Count">
+            <summary>
+            Gets the number of interation points within the collection.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointInfoCollection.Item(System.String)">
+            <summary>
+            Accesses the description of an interaction point by the view name.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Webforms.WebFormView">
+            <summary>
+            Base web page implementation of the <see cref="T:MVCSharp.Core.Views.IView"/> interface.
+            Instead of implementing the IView interface your web page view may
+            simply inherit the WebFormView class.
+            </summary>
+            <remarks>It is recommended to use the generic version of this class
+            - <see cref="T:MVCSharp.Webforms.WebFormView`1"/> - with a strongly typed association
+            to the controller and, thus, higher type safety.</remarks>
+            <seealso cref="T:MVCSharp.Webforms.WebFormView`1"/>
+        </member>
+        <member name="T:MVCSharp.Core.Views.IView">
+            <summary>
+            All views should implement this interface.
+            <para>For user convenience a generic version of this
+            interface exists with a strongly typed association to
+            the controller, see <see cref="T:MVCSharp.Core.Views.IView`1"/></para>
+            </summary>
+            <seealso cref="T:MVCSharp.Core.Views.IView`1"/>
+        </member>
+        <member name="P:MVCSharp.Core.Views.IView.Controller">
+            <summary>
+            Used to connect a view to its controller.
+            </summary>
+            <remarks>
+            This is one of the most important and widely used properties
+            in the framework. Through it views pass control to controllers
+            (see the example below).
+            </remarks>
             <example>
-            TaskBase class is commonly used as base for task classes,
-            the latter overriding its members:
+            In this example the view handles a user gesture (button click)
+            by passing control to the associated controller:
             <code>
-            class MyTask : TaskBase
+            class MyView : IView
             {
-                public override void OnStart(object param)
-                {
-                    // Some actions
-                }
-            }
-            </code>
-            </example>
-        </member>
-        <member name="T:MVCSharp.Core.Tasks.ITask">
-            <summary>
-            The interface all tasks should implement.
-            See each members' descriptions for details.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Tasks.ITask.OnStart(System.Object)">
-            <summary>
-            This operation is called by the framework when it starts a task.
-            Specific task classes implement this method to define actions
-            performed on task start.
-            </summary>
-            <param name="param">
-            Parameter object passed to a task when it gets started.
-            </param>
-        </member>
-        <member name="P:MVCSharp.Core.Tasks.ITask.Navigator">
-            <summary>
-            Each task should be linked to a proper <see cref="T:MVCSharp.Core.Navigator"/> instance.
-            This property is responsible for such linking.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Tasks.ITask.TasksManager">
-            <summary>
-            Read/write property for associating a task with its context
-            <see cref="T:MVCSharp.Core.Tasks.TasksManager"/> object.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Tasks.ITask.CurrViewName">
-            <summary>
-            Used for holding the current view (interaction point) name.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Tasks.TaskBase.OnStart(System.Object)">
-            <summary>
-            <see cref="M:MVCSharp.Core.Tasks.ITask.OnStart(System.Object)"/> empty implementation.
-            Can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Tasks.TaskBase.Navigator">
-            <summary>
-            <see cref="P:MVCSharp.Core.Tasks.ITask.Navigator"/> simple implementation with backing field.
-            Can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Tasks.TaskBase.TasksManager">
-            <summary>
-            <see cref="P:MVCSharp.Core.Tasks.ITask.TasksManager"/> simple implementation with backing field.
-            Can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Tasks.TaskBase.CurrViewName">
-            <summary>
-            <see cref="P:MVCSharp.Core.Tasks.ITask.CurrViewName"/> simple implementation with backing field.
-            Can be overriden in subclasses.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.ControllerBase">
-            <summary>
-            Simple <see cref="T:MVCSharp.Core.IController"/> interface implementation
-            with backing fields. Members are marked as virtual    
-            so it is possible to override them in subclasses.
-            </summary>
-            <remarks>It is recommended to use the generic version of
-            this class - <see cref="T:MVCSharp.Core.ControllerBase`2"/> -
-            with strongly typed associations and, thus, higher type
-            safety.</remarks>
-            <example>ControllerBase class frees users from implementing
-            <see cref="T:MVCSharp.Core.IController"/> manually, yet allowing to override
-            IController members:
-            <code>
-            class MyController : ControllerBase
-            {
-                public void MyOperation()
-                {
-                    // Do something
-                }
+                // here the IView implementation goes
+                ...
             
-                public override IView View
+                private void button_Click(object sender, EventArgs e)
                 {
-                    get { return base.View; }
-                    set
-                    {
-                        base.View = value;
-                        // Do view initialization
-                    }
-                }
-            }
-            </code>
-            </example>
-            <seealso cref="T:MVCSharp.Core.ControllerBase`2"/>
-            <seealso cref="T:MVCSharp.Core.IController"/>
-        </member>
-        <member name="T:MVCSharp.Core.IController">
-            <summary>
-            All controller classes should implement this interface.
-            In practice it is more handy to inherit from <see cref="T:MVCSharp.Core.ControllerBase"/>
-            or from <see cref="T:MVCSharp.Core.ControllerBase`2"/> class than to manually
-            implement IController members.
-            </summary>
-            <seealso cref="T:MVCSharp.Core.ControllerBase"/>
-            <seealso cref="T:MVCSharp.Core.ControllerBase`2"/>
-        </member>
-        <member name="P:MVCSharp.Core.IController.Task">
-            <summary>
-            Links controller to its context <see cref="T:MVCSharp.Core.Tasks.ITask"/> object. The
-            framework takes care of setting this property, so that every controller
-            can access its task (see the example at the bottom).
-            </summary>
-            <remarks>
-            The setter method of the Task property is often used
-            to do the necessary controller initialization:
-            <code>
-            class MyController : ControllerBase
-            {
-                public override ITask Task
-                {
-                    get { return base.Task; }
-                    set
-                    {
-                        base.Task = value;
-                        // Do controller initialization
-                    }
-                }
-            }
-            </code>
-            </remarks>
-            <example>
-            Here we access the task state from the controller:
-            <code>
-            class MyController : ControllerBase
-            {
-                public void DoSomething()
-                {
-                    if ((Task as MyTask).Counter &gt;= 5)
-                        MessageBox.Show("You cannot do something more than five times.");
-                    else
-                        (Task as MyTask).Counter++;
+                    (Controller as MyController).DoSomething();
                 }
             }
             </code>
             </example>
         </member>
-        <member name="P:MVCSharp.Core.IController.View">
+        <member name="P:MVCSharp.Core.Views.IView.ViewName">
             <summary>
-            Links controller to its view. The framework takes care of setting
-            this property for every controller instance. Thus, in full
-            accordance to the Model-View-Presenter pattern, any controller
-            may access its view (see the example in the bottom).
-            </summary>
-            <remarks>
-            The setter method of the View property is often used
-            to do the necessary view initialization:
-            <code>
-            class MyController : ControllerBase
-            {
-                public override IView View
-                {
-                    get { return base.View; }
-                    set
-                    {
-                        base.View = value;
-                        // Do view initialization
-                    }
-                }
-            }
-            </code>
-            </remarks>
-            <example>
-            Here we access the view from the controller:
-            <code>
-            class MyController : ControllerBase
-            {
-                public void DoSomething()
-                {
-                    if ((View as IMyView).InputValue &lt; 0)
-                        MessageBox.Show(&quot;The input value should be not negative.&quot;);
-                    else
-                        (View as IMyView).OutputValue = Math.Sqrt((View as IMyView).InputValue);
-                }
-            }
-            </code>
-            </example>
-        </member>
-        <member name="P:MVCSharp.Core.ControllerBase.Task">
-            <summary>
-            Simple <see cref="P:MVCSharp.Core.IController.Task">IController.Task</see> implementation
-            with backing field. Can be overriden in subclasses.
-            </summary>
-            <remarks>
-            The setter method of the Task property is often used
-            to do the necessary controller initialization:
-            <code>
-            class MyController : ControllerBase
-            {
-                public override ITask Task
-                {
-                    get { return base.Task; }
-                    set
-                    {
-                        base.Task = value;
-                        // Do controller initialization
-                    }
-                }
-            }
-            </code>
-            </remarks>
-            <example>
-            Here we access the task state from the controller:
-            <code>
-            class MyController : ControllerBase
-            {
-                public void DoSomething()
-                {
-                    if ((Task as MyTask).Counter &gt;= 5)
-                        MessageBox.Show("You cannot do something more than five times.");
-                    else
-                        (Task as MyTask).Counter++;
-                }
-            }
-            </code>
-            </example>
-        </member>
-        <member name="P:MVCSharp.Core.ControllerBase.View">
-            <summary>
-            Simple <see cref="P:MVCSharp.Core.IController.View">IController.View</see> implementation
-            with backing field. Can be overriden in subclasses.
-            </summary>
-            <remarks>
-            The setter method of the View property is often used
-            to do the necessary view initialization:
-            <code>
-            class MyController : ControllerBase
-            {
-                public override IView View
-                {
-                    get { return base.View; }
-                    set
-                    {
-                        base.View = value;
-                        // Do view initialization
-                    }
-                }
-            }
-            </code>
-            </remarks>
-            <example>
-            Here we access the view from the controller:
-            <code>
-            class MyController : ControllerBase
-            {
-                public void DoSomething()
-                {
-                    if ((View as IMyView).InputValue &lt; 0)
-                        MessageBox.Show("The input value should be not negative.");
-                    else
-                        (View as IMyView).OutputValue = Math.Sqrt((View as IMyView).InputValue);
-                }
-            }
-            </code>
-            </example>
-        </member>
-        <member name="T:MVCSharp.Winforms.WinFormView`1">
-            <summary>
-            Base generic implementation of the <see cref="T:MVCSharp.Core.Views.IView`1"/> interface
-            for windows forms presentation mechanism. Has a strongly typed
-            association to the controller (of the parameter type T).
-            <para>It is recommended to inherit your Windows view classes from
-            this one instead of manually implementing the <see cref="T:MVCSharp.Core.Views.IView`1"/>
-            interface.</para>
-            </summary>
-            <remarks>
-            This class also implements <see cref="T:MVCSharp.Core.Views.INotifiedView"/> interface,
-            which tells the views manager to notify the view on such events
-            as view initialization and activation. Default implementation
-            methods do nothing but descendant classes may override them to
-            add some functionality.</remarks>
-            <typeparam name="T">Specifies the expected type of the
-            associated controller. Must be a subtype of <see cref="T:MVCSharp.Core.IController"/>
-            </typeparam>
-            <example>
-            In this example we declare a view type by deriving it from the
-            WinFormView&lt;T&gt; class without a need to manually implement
-            the IView&lt;T&gt; interface.
-            <code>
-            [WinformsView(typeof(MyTask), MyTask.MyView)]
-            partial class MyView : WinFormView&lt;MyController&gt;
-            {
-                public MyView()
-                {
-                    InitializeComponent();
-                }
-            
-                private buttonDoAction_Click(object sender, EventArgs e)
-                {
-                    Controller.MyAction();
-                }
-            }
-            </code>
-            </example>
-            <seealso cref="T:MVCSharp.Winforms.Configuration.WinformsViewAttribute"/>
-            <seealso cref="T:MVCSharp.Winforms.WinFormView"/>
-        </member>
-        <member name="M:MVCSharp.Winforms.WinFormView`1.Activate(System.Boolean)">
-            <summary>
-            INotifiedView.Activate empty implementation.
-            Marked as virtual, so can be overriden in subclasses.
+            Used to assign a view its name.
             </summary>
         </member>
-        <member name="M:MVCSharp.Winforms.WinFormView`1.Initialize">
+        <member name="P:MVCSharp.Webforms.WebFormView.Controller">
             <summary>
-            INotifiedView.Initialize empty implementation.
-            Marked as virtual, so can be overriden in subclasses.
+            <see cref="P:MVCSharp.Core.Views.IView.Controller"/> property simple implementation with
+            backing field. Marked as virtual to be overrideable in sublasses.
             </summary>
         </member>
-        <member name="P:MVCSharp.Winforms.WinFormView`1.Controller">
-            <summary>
-            Simple <see cref="P:MVCSharp.Core.Views.IView`1.Controller">IView&lt;T&gt;.Controller</see>
-            implementation with backing field. Marked as virtual, so can be
-            overriden in subclasses.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.WinFormView`1.MVCSharp#Core#Views#IView#Controller">
-            <summary>
-            <see cref="P:MVCSharp.Core.Views.IView.Controller">IView.Controller</see>
-            implementation done as a gateway to the strongly typed
-            <see cref="P:MVCSharp.Winforms.WinFormView`1.Controller"/> property.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.WinFormView`1.ViewName">
+        <member name="P:MVCSharp.Webforms.WebFormView.ViewName">
             <summary>
             <see cref="P:MVCSharp.Core.Views.IView.ViewName"/> property simple implementation with
             backing field. Marked as virtual to be overrideable in sublasses.
             </summary>
         </member>
-        <member name="T:MVCSharp.Core.Configuration.Views.ViewInfo">
+        <member name="T:MVCSharp.Core.StubNavigator">
             <summary>
-            ViewInfo objects are used by views managers for view creation
-            and activation. Base ViewInfo objects contain only information
-            on view type and name (<see cref="P:MVCSharp.Core.Configuration.Views.ViewInfo.ViewType"/> and <see cref="P:MVCSharp.Core.Configuration.Views.ViewInfo.ViewName"/>
-            properties), whereas different <c>ViewInfo</c> subclasses
-            define properties specific to the corresponding
-            presentation platforms.
-            </summary>
-            <remarks>
-            It is unlikely you will need to manually create ViewInfo objects.
-            Typically they are generated by the framework from <see cref="T:MVCSharp.Core.Configuration.Views.ViewAttribute"/>
-            and derived attributes.
-            </remarks>
-            <seealso cref="T:MVCSharp.Core.Configuration.Views.ViewAttribute"/>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfo.#ctor(System.String,System.Type)">
-            <summary>
-            ViewInfo constructor. Creates ViewInfo object with specified
-            <c>ViewType</c> and <c>ViewName</c> values.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfo.ViewName">
-            <summary>
-            Specifies the view name.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfo.ViewType">
-            <summary>
-            Defines view type as a part of a view description.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Tasks.TasksManager">
-            <summary>
-            TasksManager class is responsible for starting tasks. Task
-            descriptions are obtained from the associated
-            <see cref="P:MVCSharp.Core.Tasks.TasksManager.Config">TasksManager.Config</see> object.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Tasks.TasksManager.#ctor">
-            <summary>
-            Parameterless constructor.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Tasks.TasksManager.#ctor(MVCSharp.Core.Configuration.MVCConfiguration)">
-            <summary>
-            Creates a tasks manager and links it to the MVCConfiguration
-            instance passed as parameter.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Tasks.TasksManager.StartTask(System.Type)">
-            <summary>
-            Starts a task passing null to the <see cref="M:MVCSharp.Core.Tasks.ITask.OnStart(System.Object)"/> method.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Tasks.TasksManager.StartTask(System.Type,System.Object)">
-            <summary>
-            Starts a task passing <c>param</c> to the <see cref="M:MVCSharp.Core.Tasks.ITask.OnStart(System.Object)">
-            ITask.OnStart</see> operation. Task description (<see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/>
-            instance) and views manager type are taken from the
-            associated <see cref="P:MVCSharp.Core.Tasks.TasksManager.Config">TasksManager.Config</see>
-            object.</summary>
-            <param name="taskType">The type of the task to start.</param>
-            <param name="param">Parameter passed to the <see cref="M:MVCSharp.Core.Tasks.ITask.OnStart(System.Object)">
-            ITask.OnStart</see> method.</param>
-        </member>
-        <member name="P:MVCSharp.Core.Tasks.TasksManager.Config">
-            <summary>
-            Gets or sets the associated <see cref="T:MVCSharp.Core.Configuration.MVCConfiguration"/> object.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.IController`2">
-            <summary>
-            Generic extension of the <see cref="T:MVCSharp.Core.IController"/> interface.
-            Has strongly typed generic associations to the task and the
-            view. Therefore no typecasting is required when accessing the
-            associated task or view.
-            <para>Istead of implementing this interface manually you
-            might better use the generic base controller class -
-            <see cref="T:MVCSharp.Core.ControllerBase`2"/></para>
-            </summary>
-            <remarks>The framework knows nothing about the generic types
-            and deals only their non-generic versions. Generic types serve
-            only for user convenience: to provide type-safety and reduce
-            the amount of typecasts.</remarks>
-            <typeparam name="TTask">Specifies the expected type of the
-            associated task. Must be a subtype of <see cref="T:MVCSharp.Core.Tasks.ITask"/>.
-            </typeparam>
-            <typeparam name="TView">Specifies the expected type of the
-            associated view.
-            </typeparam>
-            <seealso cref="T:MVCSharp.Core.ControllerBase`2"/>
-        </member>
-        <member name="P:MVCSharp.Core.IController`2.Task">
-            <summary>
-            Gets or sets the associated task of the generic parameter
-            type TTask.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.IController`2.View">
-            <summary>
-            Gets or sets the associated view of the generic parameter
-            type TView.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Tasks.InteractionPointInfo">
-            <summary>
-            Describes interaction point (view-controller pair). Holds a view
-            name, the corresponding controller type and navigation information
-            for this interaction point.
-            </summary>
-            <remarks><see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/> object contains a collection of
-            InteractionPointInfo objects, thus describing the whole task.</remarks>
-            <seealso cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointInfo.ViewName">
-            <summary>
-            Gets or sets the name of the view for this interaction point.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointInfo.NavTargets">
-            <summary>
-            Gets descriptions for target interaction points. A view name or
-            a navigation trigger name could be used as a key.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointInfo.ControllerType">
-            <summary>
-            Gets or sets the type of the controller for an interation point.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointInfo.IsCommonTarget">
-            <summary>
-            If <c>true</c> then it is possible to navigate to this interaction
-            point from any other.
-            </summary>
+            Navigator subclass which has no real functionality except for
+            modifying the task state. The views manager is not used at all, and no
+            actual view switching is done. This class is intended primarily for 
+            tests. </summary>
         </member>
         <member name="T:MVCSharp.Core.Navigator">
             <summary>
@@ -1307,6 +363,119 @@
             activates that view.
             </summary>
         </member>
+        <member name="M:MVCSharp.Core.StubNavigator.Navigate(System.String)">
+            <summary>
+            Only alters the task state by making its current view
+            (<see cref="P:MVCSharp.Core.Tasks.ITask.CurrViewName"/>) equal to the passed
+            <c>viewName</c>.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.StubNavigator.NavigateDirectly(System.String)">
+            <summary>
+            Only alters the task state by making its current view
+            (<see cref="P:MVCSharp.Core.Tasks.ITask.CurrViewName"/>) equal to the passed
+            <c>viewName</c>.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.StubNavigator.TryNavigateToView(System.String)">
+            <summary>
+            Only alters the task state by making its current view
+            (<see cref="P:MVCSharp.Core.Tasks.ITask.CurrViewName"/>) equal to the passed
+            <c>viewName</c>.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.StubNavigator.ActivateView(System.String)">
+            <summary>
+            Only alters the task state by making its current view
+            (<see cref="P:MVCSharp.Core.Tasks.ITask.CurrViewName"/>) equal to the passed
+            <c>viewName</c>.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection">
+            <summary>
+            Represents an enumerable set of <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfoCollection"/> objects for each
+            task type. Thus includes descriptions for all views in the
+            application.
+            </summary>
+            <remarks>This collection is a part of the <see cref="T:MVCSharp.Core.Configuration.MVCConfiguration"/>
+            object: when a task is started the necessary <c>ViewInfoCollection</c> object is
+            obtained from the <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask"/> property.
+            </remarks>
+        </member>
+        <member name="F:MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection.viewInfosByTask">
+            <summary>
+            Dictionary storing ViewInfoCollection objects with task types as keys.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection.Add(MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection)">
+            <summary>
+            Adds all items from another <c>ViewInfosByTaskCollection</c>
+            collection to this one.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection.GetEnumerator">
+            <summary>
+            Implementation of <see cref="M:System.Collections.IEnumerable.GetEnumerator"/> method.
+            Returns an enumerator to walk through the task types included
+            in this collection.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection.Item(System.Type)">
+            <summary>
+            Indexer to get or set ViewInfoCollection instance for a given task type.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection.Count">
+            <summary>
+            Gets the number of <c>ViewInfoCollection</c> objects
+            present in this collection.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Views.DefaultViewInfosProvider">
+            <summary>
+            This IViewInfosProvider implementation generates <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects
+            from <see cref="T:MVCSharp.Core.Configuration.Views.ViewAttribute"/> attributes.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Views.IViewInfosProvider">
+            <summary>
+            Classes which implement this interface can extract information
+            on all views declared within an assembly. <see cref="T:MVCSharp.Core.Configuration.MVCConfiguration"/>
+            class uses this object to populate its <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask">
+            MVCConfiguration.ViewInfosByTask</see> property.
+            </summary>
+            <remarks>
+            Different IViewInfosProvider implementations account for different ways
+            to describe views.
+            </remarks>
+            <seealso cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfosProvider"/>
+            <seealso cref="T:MVCSharp.Webforms.Configuration.WebformsViewInfosProvider"/>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Views.IViewInfosProvider.GetFromAssembly(System.Reflection.Assembly)">
+            <summary>
+            Extracts a set of ViewInfoCollection objects for each task within
+            the specified assebmly.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Views.DefaultViewInfosProvider.GetFromAssembly(System.Reflection.Assembly)">
+            <summary>
+            Generates <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects from <see cref="T:MVCSharp.Core.Configuration.Views.ViewAttribute"/> attributes
+            found in the given assembly.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Views.DefaultViewInfosProvider.newViewInfo(System.Type,MVCSharp.Core.Configuration.Views.ViewAttribute)">
+            <summary>
+            Creates a ViewInfo object by a given ViewAttribute instance.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider">
+            <summary>
+            This is a composite <see cref="T:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider"/> implementation.
+            It applies either <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByXmlAttributeProvider"/> or
+            <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider"/> depending on what attributes
+            the task type is equipped with.
+            </summary>
+        </member>
         <member name="T:MVCSharp.Core.Configuration.Tasks.TaskInfoProviderBase">
             <summary>
             Base abstract Implementation of the <see cref="T:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider"/>
@@ -1353,6 +522,1278 @@
             </summary>
             <seealso cref="T:MVCSharp.Core.Configuration.Tasks.TaskAttribute"/>
         </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider.GetTaskInfo(System.Type)">
+            <summary>
+            This <see cref="M:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider.GetTaskInfo(System.Type)"/> implementation applies
+            either <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByXmlAttributeProvider"/> or
+            <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider"/> depending on what attributes
+            the task type is equipped with.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.IController">
+            <summary>
+            All controller classes should implement this interface.
+            In practice it is more handy to inherit from <see cref="T:MVCSharp.Core.ControllerBase"/>
+            or from <see cref="T:MVCSharp.Core.ControllerBase`2"/> class than to manually
+            implement IController members.
+            </summary>
+            <seealso cref="T:MVCSharp.Core.ControllerBase"/>
+            <seealso cref="T:MVCSharp.Core.ControllerBase`2"/>
+        </member>
+        <member name="P:MVCSharp.Core.IController.Task">
+            <summary>
+            Links controller to its context <see cref="T:MVCSharp.Core.Tasks.ITask"/> object. The
+            framework takes care of setting this property, so that every controller
+            can access its task (see the example at the bottom).
+            </summary>
+            <remarks>
+            The setter method of the Task property is often used
+            to do the necessary controller initialization:
+            <code>
+            class MyController : ControllerBase
+            {
+                public override ITask Task
+                {
+                    get { return base.Task; }
+                    set
+                    {
+                        base.Task = value;
+                        // Do controller initialization
+                    }
+                }
+            }
+            </code>
+            </remarks>
+            <example>
+            Here we access the task state from the controller:
+            <code>
+            class MyController : ControllerBase
+            {
+                public void DoSomething()
+                {
+                    if ((Task as MyTask).Counter &gt;= 5)
+                        MessageBox.Show("You cannot do something more than five times.");
+                    else
+                        (Task as MyTask).Counter++;
+                }
+            }
+            </code>
+            </example>
+        </member>
+        <member name="P:MVCSharp.Core.IController.View">
+            <summary>
+            Links controller to its view. The framework takes care of setting
+            this property for every controller instance. Thus, in full
+            accordance to the Model-View-Presenter pattern, any controller
+            may access its view (see the example in the bottom).
+            </summary>
+            <remarks>
+            The setter method of the View property is often used
+            to do the necessary view initialization:
+            <code>
+            class MyController : ControllerBase
+            {
+                public override IView View
+                {
+                    get { return base.View; }
+                    set
+                    {
+                        base.View = value;
+                        // Do view initialization
+                    }
+                }
+            }
+            </code>
+            </remarks>
+            <example>
+            Here we access the view from the controller:
+            <code>
+            class MyController : ControllerBase
+            {
+                public void DoSomething()
+                {
+                    if ((View as IMyView).InputValue &lt; 0)
+                        MessageBox.Show(&quot;The input value should be not negative.&quot;);
+                    else
+                        (View as IMyView).OutputValue = Math.Sqrt((View as IMyView).InputValue);
+                }
+            }
+            </code>
+            </example>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Tasks.TaskInfo">
+            <summary>
+            Contains descriptions for all interaction points and views
+            within the task. Has methods to obtain navigation information
+            for the task (see <see cref="M:MVCSharp.Core.Configuration.Tasks.TaskInfo.GetNextViewName(System.String,System.String)"/> and
+            <see cref="M:MVCSharp.Core.Configuration.Tasks.TaskInfo.CanNavigateToView(System.String,System.String)"/>).
+            </summary>
+            <remarks>
+            During a task start a TaskInfo object is obtained from
+            the <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfos">MVCConfiguration.TaskInfos</see> collection.
+            Then the TaskInfo instance is linked to the navigator for that
+            task through the <see cref="P:MVCSharp.Core.Navigator.TaskInfo">Navigator.TaskInfo</see> property.
+            After that the navigator uses the linked TaskInfo for getting
+            the navigation information.
+            </remarks>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskInfo.GetNextViewName(System.String,System.String)">
+            <summary>
+            Looks through the <see cref="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.InteractionPoints"/> collection
+            to retrieve the name of the next view, given the current view
+            name and the navigation trigger name.
+            </summary>
+            <param name="currViewName">The name of the current view.</param>
+            <param name="triggerName">The name of the navigation trigger (may be
+            equal to the target view name).</param>
+            <returns>The name of the next view or <c>null</c> if
+            not found.</returns>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskInfo.CanNavigateToView(System.String,System.String)">
+            <summary>
+            Looks through the <see cref="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.InteractionPoints"/> collection
+            to determine whether the navigation to the destination view
+            is possible.
+            </summary>
+            <param name="currViewName">The name of the current view.</param>
+            <param name="destViewName">The name of the destination view.</param>
+            <returns><c>True</c> if the navigation is possible, otherwise
+            <c>false</c>.</returns>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.ViewInfos">
+            <summary>
+            Gets or sets the associated collection of view descriptions
+            for the task.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.InteractionPoints">
+            <summary>
+            Gets or sets the associated collection of interaction point
+            descriptions for the task.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.NavigatorType">
+            <summary>
+            Specifies the type of the <see cref="T:MVCSharp.Core.Navigator"/> descendant
+            to be associated with the task instance.
+            </summary>
+            <seealso cref="P:MVCSharp.Core.Tasks.ITask.Navigator">ITask.Navigator</seealso>
+        </member>
+        <member name="T:MVCSharp.Winforms.WinFormView">
+            <summary>
+            Base implementation of the <see cref="T:MVCSharp.Core.Views.IView"/> interface for
+            windows forms presentation mechanism. Inherit your view classes
+            from this one and override IView members if necessary.
+            </summary>
+            <remarks>
+            This class also implements <see cref="T:MVCSharp.Core.Views.INotifiedView"/> interface,
+            which tells the views manager to notify the view on such events
+            as view initialization and activation. Default implementation
+            methods do nothing but descendant classes may override them to
+            add some functionality.
+            <para>It is recommended to use the generic version of this class
+            - <see cref="T:MVCSharp.Winforms.WinFormView`1"/> - with a strongly typed association
+            to the controller and, thus, higher type safety.</para>
+            </remarks>
+            <example>
+            In this example we declare a view type by deriving it from the
+            WinFormView class without a need to manually implement IView
+            interface.
+            <code>
+            [WinformsView(typeof(MyTask), MyTask.MyView)]
+            partial class MyView : WinFormView
+            {
+                public MyView()
+                {
+                    InitializeComponent();
+                }
+            
+                private buttonDoAction_Click(object sender, EventArgs e)
+                {
+                    (Controller as MyController).MyAction();
+                }
+            }
+            </code>
+            </example>
+            <seealso cref="T:MVCSharp.Winforms.Configuration.WinformsViewAttribute"/>
+            <seealso cref="T:MVCSharp.Winforms.WinFormView`1"/>
+        </member>
+        <member name="T:MVCSharp.Core.Views.INotifiedView">
+            <summary>
+            If a view class implements this interface (in addition to IView)
+            then the views manager will notify corresponding view objects
+            on activation and initialization events through the operations
+            of this interface.
+            </summary>
+            <remarks>Note that not every views manager sends notifications
+            to a view which implements INotifiedView. This feature depends
+            on the views manager implementation.</remarks>
+        </member>
+        <member name="M:MVCSharp.Core.Views.INotifiedView.Activate(System.Boolean)">
+            <summary>
+            Through this operation views (which implement INotifiedView)
+            are notified about their (de)activation.
+            </summary>
+            <param name="activate">If <c>true</c> then the view is
+            activated, otherwise it is deactivated.</param>
+        </member>
+        <member name="M:MVCSharp.Core.Views.INotifiedView.Initialize">
+            <summary>
+            Through this operation views (which implement INotifiedView)
+            are notified about their initialization.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinFormView.Activate(System.Boolean)">
+            <summary>
+            INotifiedView.Activate empty implementation.
+            Marked as virtual, so can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinFormView.Initialize">
+            <summary>
+            INotifiedView.Initialize empty implementation.
+            Marked as virtual, so can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.WinFormView.Controller">
+            <summary>
+            Simple IView.Controller implementation with backing field.
+            Marked as virtual, so can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.WinFormView.ViewName">
+            <summary>
+            Simple IView.ViewName implementation with backing field.
+            Marked as virtual, so can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Winforms.WinUserControlView`1">
+            <summary>
+            A base generic user control class implementing the <see cref="T:MVCSharp.Core.Views.IView`1"/>
+            interface. Has a strongly typed association to the controller (of the
+            parameter type T).
+            <para>It is recommended to inherit your user control view classes from
+            this one instead of manually implementing the <see cref="T:MVCSharp.Core.Views.IView`1"/>
+            interface. Neccessary <see cref="T:MVCSharp.Core.Views.IView`1"/> members may be overriden.</para>
+            </summary>
+            <remarks>This class also implements the <see cref="T:MVCSharp.Core.Views.INotifiedView"/>
+            interface (with empty methods) so in derived classes it is
+            possible to override Activate and Initialize methods specifying
+            response to (de)activation and initialization events.
+            </remarks>
+            <seealso cref="T:MVCSharp.Winforms.WinUserControlView"/>
+        </member>
+        <member name="T:MVCSharp.Core.Views.IView`1">
+            <summary>
+            Generic extension of the <see cref="T:MVCSharp.Core.Views.IView"/> interface.
+            Has a strongly typed generic association to the controller.
+            Therefore no typecasting is required when accessing the
+            associated controller.
+            <para>Istead of implementing this interface manually you
+            might better use generic base view classes such as
+            <see cref="T:MVCSharp.Webforms.WebFormView`1"/> or
+            <see cref="T:MVCSharp.Winforms.WinFormView`1"/>.</para>
+            </summary>
+            <remarks>The framework knows nothing about the generic types
+            and deals only their non-generic versions. Generic types serve
+            only for user convenience: to provide type-safety and reduce
+            the amount of typecasts.</remarks>
+            <typeparam name="T">Specifies the expected type of the
+            associated controller. Must be a subtype of <see cref="T:MVCSharp.Core.IController"/>
+            </typeparam>
+            <seealso cref="T:MVCSharp.Webforms.WebFormView`1"/>
+            <seealso cref="T:MVCSharp.Winforms.WinFormView`1"/>
+        </member>
+        <member name="P:MVCSharp.Core.Views.IView`1.Controller">
+            <summary>
+            Gets or sets the associated controller of the generic parameter
+            type T.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinUserControlView`1.Activate(System.Boolean)">
+            <summary>
+            INotifiedView.Activate empty implementation.
+            Marked as virtual so that can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinUserControlView`1.Initialize">
+            <summary>
+            INotifiedView.Initialize empty implementation.
+            Marked as virtual so that can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.WinUserControlView`1.Controller">
+            <summary>
+            Simple <see cref="P:MVCSharp.Core.Views.IView`1.Controller">IView&lt;T&gt;.Controller</see>
+            implementation with backing field. Marked as virtual, so can be
+            overriden in subclasses.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.WinUserControlView`1.MVCSharp#Core#Views#IView#Controller">
+            <summary>
+            <see cref="P:MVCSharp.Core.Views.IView.Controller">IView.Controller</see>
+            implementation done as a gateway to the strongly typed
+            <see cref="P:MVCSharp.Winforms.WinUserControlView`1.Controller"/> property.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.WinUserControlView`1.ViewName">
+            <summary>
+            <see cref="P:MVCSharp.Core.Views.IView.ViewName"/> property simple implementation with
+            backing field. Marked as virtual to be overrideable in sublasses.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Winforms.Configuration.WinformsViewAttribute">
+            <summary>
+            This attribute should by applied to view classes intended
+            for windows forms presentation mechanism.
+            </summary>
+            <remarks>
+            For this attribute to be properly processed <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType"/>
+            property should be equal to the <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfosProvider"/>  type.
+            If so, then <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfo"/> objects will be generated for
+            each WinformsViewAttribute occurrence.
+            </remarks>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Views.ViewAttribute">
+            <summary>
+            A base attribute for declaring views. See example code below.
+            </summary>
+            <remarks>
+            ViewAttribute attributes are converted to <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects
+            by an instance of the <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType">
+            MVCConfiguration.ViewInfosProviderType</see> type.
+            <para>Note that different presentation mechanisms
+            may require different ViewAttribute descendants to
+            declare views. For instance see <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewAttribute"/> and
+            <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewAttribute"/> attributes.</para>
+            </remarks>
+            <example>
+            Below we declare a view type that should be used for the <c>MyTask.MyView</c>
+            view within the <c>MyTask</c> task.
+            <code>
+            [WinformsView(typeof(MyTask), MyTask.MyView)]
+            class MyView : IView
+            {
+                ...
+            }
+            </code>
+            </example>
+            <seealso cref="T:MVCSharp.Winforms.Configuration.WinformsViewAttribute"/>
+            <seealso cref="T:MVCSharp.Webforms.Configuration.WebformsViewAttribute"/>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Views.ViewAttribute.#ctor">
+            <summary>
+            Parameterless constructor.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Views.ViewAttribute.#ctor(System.Type,System.String)">
+            <summary>
+            Constructor which sets TaskType and ViewName taking
+            values from parameters.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Views.ViewAttribute.TaskType">
+            <summary>
+            Links an attribute to a specific task type.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Views.ViewAttribute.ViewName">
+            <summary>
+            Links an attribute to a specific view within a task.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.Configuration.WinformsViewAttribute.#ctor(System.Type,System.String)">
+            <summary>
+            Constructor taking the task type, and the view name as parameters.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.Configuration.WinformsViewAttribute.#ctor">
+            <summary>
+            Parameterless constructor.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.Configuration.WinformsViewAttribute.ShowModal">
+            <summary>
+            Specifies whether a view should be displayed as a modal dialog box.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.Configuration.WinformsViewAttribute.IsMdiParent">
+            <summary>
+            Specifies whether a view should act as an MDI parent form.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.Configuration.WinformsViewAttribute.MdiParent">
+            <summary>
+            Specifies the name of the view that should be an MDI parent for this view.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Tasks.ITask">
+            <summary>
+            The interface all tasks should implement.
+            See each members' descriptions for details.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Tasks.ITask.OnStart(System.Object)">
+            <summary>
+            This operation is called by the framework when it starts a task.
+            Specific task classes implement this method to define actions
+            performed on task start.
+            </summary>
+            <param name="param">
+            Parameter object passed to a task when it gets started.
+            </param>
+        </member>
+        <member name="P:MVCSharp.Core.Tasks.ITask.Navigator">
+            <summary>
+            Each task should be linked to a proper <see cref="T:MVCSharp.Core.Navigator"/> instance.
+            This property is responsible for such linking.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Tasks.ITask.TasksManager">
+            <summary>
+            Read/write property for associating a task with its context
+            <see cref="T:MVCSharp.Core.Tasks.TasksManager"/> object.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Tasks.ITask.CurrViewName">
+            <summary>
+            Used for holding the current view (interaction point) name.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Tasks.TaskInfoCollection">
+            <summary>
+            Contains descriptions for all tasks. This collection is a part of
+            an MVC# application configuration (see <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfos">MVCConfiguration.TaskInfos</see>).
+            <para>This collection is enumerable to be able to walk through the
+            included task types.</para>
+            </summary>
+            <remarks>When a task is started the neccessary <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/> object is obtained
+            from the TaskInfoCollection object referenced by <see cref="T:MVCSharp.Core.Configuration.MVCConfiguration"/>
+            object (see <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfos">MVCConfiguration.TaskInfos</see>). If not found a new
+            TaskInfo object is created with the help of
+            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProvider">MVCConfiguration.TaskInfoProvider</see> object.</remarks>
+            <seealso cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskInfoCollection.GetEnumerator">
+            <summary>
+            Implementation of <see cref="M:System.Collections.IEnumerable.GetEnumerator"/> method.
+            Returns an enumerator to walk through the task types included
+            in this collection.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskInfoCollection.Item(System.Type)">
+            <summary>
+            Indexer for obtaining the <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/> object given a task type. If the needed
+            TaskInfo object does not exist yet the <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProvider">
+            MVCConfiguration.TaskInfoProvider</see> object is used to create it.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskInfoCollection.Count">
+            <summary>
+            Gets the total number of <c>TaskInfo</c> objects included.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskInfoCollection.MVCConfig">
+            <summary>
+            Provides an association to the MVCConfiguration object.
+            Neccessary for accessing the
+            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProvider"/> instance.</summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute">
+            <summary>
+            Used to declare navigation triggers with targets for interaction points.
+            </summary>
+            <remarks>Should be used with <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider"/> or
+            <see cref="T:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider"/> task info providers. They
+            convert this attribute occurrences into <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/>
+            objects.</remarks>
+            <example>
+            Below we declare a task with two interaction points and a "Next" trigger
+            navigating from "View 1" to "View 2":
+            <code>
+            class MyTask : TaskBase
+            {
+                [InteractionPoint(typeof(MyController))]
+                [NavTarget("Next", View2)]
+                public const string View1 = "View 1";
+            
+                [InteractionPoint(typeof(MyController))]
+                public const string View2 = "View 2";
+            
+                public override void OnStart(object param)
+                {
+                    Navigator.NavigateDirectly(View1); // Initial interaction point is "View 1"
+                    Navigator.Navigate("Next"); // Navigate to "View 2"
+                }
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Contructor taking the trigger name and the view name of the
+            target interaction point.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute.TriggerName">
+            <summary>
+            The name of the trigger initiating the transition.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute.ViewName">
+            <summary>
+            The view name for the target interaction point.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Winforms.WinUserControlView">
+            <summary>
+            A base user control class implementing IView interface.
+            User control classes may inherit from this class instead of
+            implementing IView interface themselves. Neccessary IView
+            members may be overriden.
+            </summary>
+            <remarks>This class also implements the <see cref="T:MVCSharp.Core.Views.INotifiedView"/>
+            interface (with empty methods) so in derived classes it is
+            possible to override Activate and Initialize methods specifying
+            response to (de)activation and initialization events.
+            <para>It is recommended to use the generic version of this class
+            - <see cref="T:MVCSharp.Winforms.WinUserControlView`1"/> - with a strongly typed association
+            to the controller and, thus, higher type safety.</para>
+            </remarks>
+            <seealso cref="T:MVCSharp.Winforms.WinUserControlView`1"/>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinUserControlView.Activate(System.Boolean)">
+            <summary>
+            INotifiedView.Activate empty implementation.
+            Marked as virtual so that can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinUserControlView.Initialize">
+            <summary>
+            INotifiedView.Initialize empty implementation.
+            Marked as virtual so that can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.WinUserControlView.Controller">
+            <summary>
+            IView.Controller simple implementation with backing field.
+            Marked as virtual so that can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.WinUserControlView.ViewName">
+            <summary>
+            IView.ViewName simple implementation with backing field.
+            Marked as virtual so that can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Webforms.Configuration.WebformsViewAttribute">
+            <summary>
+            Attribute for declaring views for the web forms presentation
+            mechanism.
+            </summary>
+            <remarks>It does not matter what type this attribute is applied
+            to. All neccessary information is contained inside the attribute
+            declarations.</remarks>
+            <example>
+            Below we declare two web views:
+            <code>
+            [WebformsView(typeof(MyTask), "View 1", "Default.aspx")]
+            [WebformsView(typeof(MyTask), "View 2", "Views/View2.aspx")]
+            class MyViews {}
+            </code>
+            </example>
+        </member>
+        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewAttribute.#ctor(System.Type,System.String,System.String)">
+            <summary>
+            Constructor taking the task type, view name and page Url as parameters.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewAttribute.#ctor">
+            <summary>
+            Parameterless constructor.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Webforms.Configuration.WebformsViewAttribute.ViewUrl">
+            <summary>
+            Specifies the url of the page representing the view.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Views.ViewCreationException">
+            <summary>
+            Thrown when a views manager finds it impossible to
+            create a view instance.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Views.ViewCreationException.#ctor(System.String,System.Type)">
+            <summary>
+            Constructor taking the view name and view type as parameters.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider">
+            <summary>
+            Implementation of <see cref="T:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider"/> interface.
+            Extracts task information from <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/>,
+            <see cref="T:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute"/> and <see cref="T:MVCSharp.Core.Configuration.Tasks.AdjacentPointsAttribute"/>
+            attributes applied to the task type and its members.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider.GetTaskInfo(System.Type)">
+            <summary>
+            Extracts task information from <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/>,
+            <see cref="T:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute"/>, <see cref="T:MVCSharp.Core.Configuration.Tasks.AdjacentPointsAttribute"/>
+            attributes applied to the task type and its members.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider.CreateInteractionPointInfo(System.String,MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute)">
+            <summary>
+            Extracts task information from the specific <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/>
+            attribute instance. Can be overriden in subclasses to support custom
+            interaction point attributes for example.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Webforms.Configuration.WebformsViewInfoCollection">
+            <summary>
+            Represents a collection of <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewInfo"/> objects
+            with methods to access elements by the view name and view url
+            strings.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Views.ViewInfoCollection">
+            <summary>
+            Represents an enumerable collection of <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects
+            with an indexer to retrieve an element by the view name.
+            </summary>
+            <remarks>
+            Before a task is started the ViewInfoCollection object is stored
+            within the <see cref="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.ViewInfos">TaskInfo.ViewInfos</see> property.
+            After a task is started the corresponding <see cref="T:MVCSharp.Core.Views.IViewsManager"/> is linked
+            to this ViewInfoCollection object via its <see cref="P:MVCSharp.Core.Views.IViewsManager.ViewInfos">
+            IViewsManager.ViewInfos</see> property.</remarks>
+            <seealso cref="P:MVCSharp.Core.Views.IViewsManager.ViewInfos"/>
+            <seealso cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask"/>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfoCollection.Add(MVCSharp.Core.Configuration.Views.ViewInfo)">
+            <summary>
+            Adds ViewInfo object to the collection.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfoCollection.Remove(System.String)">
+            <summary>
+            Removes the view description with given view name from the collection.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfoCollection.Add(MVCSharp.Core.Configuration.Views.ViewInfoCollection)">
+            <summary>
+            Adds all items from another collection to this one.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfoCollection.GetEnumerator">
+            <summary>
+            Implementation of <see cref="M:System.Collections.IEnumerable.GetEnumerator"/>
+            method. Returns an enumerator through the collection of
+            <c>ViewInfo</c> objects.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfoCollection.Item(System.String)">
+            <summary>
+            Indexer to retrieve ViewInfo object by the view name.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfoCollection.Item(System.Type)">
+            <summary>
+            Indexer to retrieve ViewInfo object by the view type.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfoCollection.Count">
+            <summary>
+            Returns the number of <c>ViewInfo</c> objects
+            in the collection.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewInfoCollection.Add(MVCSharp.Webforms.Configuration.WebformsViewInfo)">
+            <summary>
+            Adds <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewInfo"/> object to the collection.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewInfoCollection.Add(MVCSharp.Core.Configuration.Views.ViewInfo)">
+            <summary>
+            Adds <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> object to the collection, preliminarily
+            typecasting it to <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewInfo"/>.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewInfoCollection.GetByUrl(System.String)">
+            <summary>
+            Accesses WebformsViewInfo object by the view url.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Webforms.Configuration.WebformsViewInfoCollection.Item(System.String)">
+            <summary>
+            Accesses WebformsViewInfo object by the view name.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.MVCConfiguration">
+            <summary>
+            Represents configuration data for an MVC# application. It
+            contains descriptions for all tasks and views (
+            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfos"/> and <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask"/>
+            properties) and other configuration data.
+            </summary>
+            <remarks>Every <see cref="T:MVCSharp.Core.Tasks.TasksManager"/> instance has its
+            own MVCConfiguration object and starts tasks accordingly
+            to this configuration.
+            </remarks>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.MVCConfiguration.#ctor">
+            <summary>
+            Parameterless constructor.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.MVCConfiguration.GetDefault">
+            <summary>
+            Returns the default MVCConfiguration instance with
+            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType"/> set to <see cref="T:MVCSharp.Core.Configuration.Views.DefaultViewInfosProvider"/>
+            and <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProviderType"/> set to <see cref="T:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider"/>
+            and <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewsAssembly"/> pointing to the calling assembly.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.NavigatorType">
+            <summary>
+            Specifies the type of the <see cref="T:MVCSharp.Core.Navigator"/> descendants
+            associated with task objects by default.
+            </summary>
+            <seealso cref="P:MVCSharp.Core.Tasks.ITask.Navigator">ITask.Navigator</seealso>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType">
+            <summary>
+            Specifies the type of the <see cref="T:MVCSharp.Core.Configuration.Views.IViewInfosProvider"/> implementation
+            used to populate view descriptions (
+            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask"/> property).
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProviderType">
+            <summary>
+            Specifies the type of the <see cref="T:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider"/> implementation
+            used to populate task descriptions (
+            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfos">MVCConfiguration.TaskInfos</see> property).
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewsManagerType">
+            <summary>
+            Specifies a views manager type (<see cref="T:MVCSharp.Core.Views.IViewsManager"/> implementation)
+            to be used.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewsAssembly">
+            <summary>
+            Gets or sets an assembly containing view descriptions. These
+            descriptions are converted by the <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType"/> class
+            to <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects and stored in <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask">
+            MVCConfiguration.ViewInfosByTask</see> collections.</summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewsAssemblies">
+            <summary>
+            Collection of assemblies containing view descriptions. These
+            descriptions are converted by the <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType"/> class
+            to <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects and stored in <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask">
+            MVCConfiguration.ViewInfosByTask</see> collections.</summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask">
+            <summary>
+            Gets a set of <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfoCollection"/> objects for
+            every task. These objects are produced by an instance of the
+            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType">
+            MVCConfiguration.ViewInfosProviderType</see> type</summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProvider">
+            <summary>
+            Gets or sets an associated <see cref="T:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider"/> instance used
+            to convert task types to <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/> objects.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfos">
+            <summary>
+            Associates MVCConfiguration to task descriptions.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Tasks.AdjacentPointsAttribute">
+            <summary>
+            With this attribute applied to a task type adjacent interaction
+            points can be defined. By the term adjacent we mean interaction
+            points with transitions possible between each two of them.
+            </summary>
+            <remarks>
+            This attribute is valid only if specific <see cref="T:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider"/>
+            implementations are used: <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider"/> or
+            a composite <see cref="T:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider"/>.
+            </remarks>
+            <example>
+            The code below declares a task with three interaction points,
+            and transitions possible between each two of them.
+            <code>
+            [AdjacentPoints(View1, View2, View3)]
+            class MyTask : ITask
+            {
+                [IPoint(typeof(MyController))]
+                public const string View1 = "View 1";
+                [IPoint(typeof(MyController))]
+                public const string View2 = "View 2";
+                [IPoint(typeof(MyController))]
+                public const string View3 = "View 3";
+            }
+            </code>
+            </example>
+            <seealso cref="T:MVCSharp.Core.Configuration.Tasks.IPointAttribute"/>
+            <seealso cref="T:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute"/>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.AdjacentPointsAttribute.#ctor(System.String[])">
+            <summary>
+            Constructor taking an array of adjacent view names.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.AdjacentPointsAttribute.AdjacentViewNames">
+            <summary>
+            Gets or sets the array of adjacent view names.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Winforms.WinFormView`1">
+            <summary>
+            Base generic implementation of the <see cref="T:MVCSharp.Core.Views.IView`1"/> interface
+            for windows forms presentation mechanism. Has a strongly typed
+            association to the controller (of the parameter type T).
+            <para>It is recommended to inherit your Windows view classes from
+            this one instead of manually implementing the <see cref="T:MVCSharp.Core.Views.IView`1"/>
+            interface.</para>
+            </summary>
+            <remarks>
+            This class also implements <see cref="T:MVCSharp.Core.Views.INotifiedView"/> interface,
+            which tells the views manager to notify the view on such events
+            as view initialization and activation. Default implementation
+            methods do nothing but descendant classes may override them to
+            add some functionality.</remarks>
+            <typeparam name="T">Specifies the expected type of the
+            associated controller. Must be a subtype of <see cref="T:MVCSharp.Core.IController"/>
+            </typeparam>
+            <example>
+            In this example we declare a view type by deriving it from the
+            WinFormView&lt;T&gt; class without a need to manually implement
+            the IView&lt;T&gt; interface.
+            <code>
+            [WinformsView(typeof(MyTask), MyTask.MyView)]
+            partial class MyView : WinFormView&lt;MyController&gt;
+            {
+                public MyView()
+                {
+                    InitializeComponent();
+                }
+            
+                private buttonDoAction_Click(object sender, EventArgs e)
+                {
+                    Controller.MyAction();
+                }
+            }
+            </code>
+            </example>
+            <seealso cref="T:MVCSharp.Winforms.Configuration.WinformsViewAttribute"/>
+            <seealso cref="T:MVCSharp.Winforms.WinFormView"/>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinFormView`1.Activate(System.Boolean)">
+            <summary>
+            INotifiedView.Activate empty implementation.
+            Marked as virtual, so can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinFormView`1.Initialize">
+            <summary>
+            INotifiedView.Initialize empty implementation.
+            Marked as virtual, so can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.WinFormView`1.Controller">
+            <summary>
+            Simple <see cref="P:MVCSharp.Core.Views.IView`1.Controller">IView&lt;T&gt;.Controller</see>
+            implementation with backing field. Marked as virtual, so can be
+            overriden in subclasses.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.WinFormView`1.MVCSharp#Core#Views#IView#Controller">
+            <summary>
+            <see cref="P:MVCSharp.Core.Views.IView.Controller">IView.Controller</see>
+            implementation done as a gateway to the strongly typed
+            <see cref="P:MVCSharp.Winforms.WinFormView`1.Controller"/> property.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.WinFormView`1.ViewName">
+            <summary>
+            <see cref="P:MVCSharp.Core.Views.IView.ViewName"/> property simple implementation with
+            backing field. Marked as virtual to be overrideable in sublasses.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.ControllerBase">
+            <summary>
+            Simple <see cref="T:MVCSharp.Core.IController"/> interface implementation
+            with backing fields. Members are marked as virtual    
+            so it is possible to override them in subclasses.
+            </summary>
+            <remarks>It is recommended to use the generic version of
+            this class - <see cref="T:MVCSharp.Core.ControllerBase`2"/> -
+            with strongly typed associations and, thus, higher type
+            safety.</remarks>
+            <example>ControllerBase class frees users from implementing
+            <see cref="T:MVCSharp.Core.IController"/> manually, yet allowing to override
+            IController members:
+            <code>
+            class MyController : ControllerBase
+            {
+                public void MyOperation()
+                {
+                    // Do something
+                }
+            
+                public override IView View
+                {
+                    get { return base.View; }
+                    set
+                    {
+                        base.View = value;
+                        // Do view initialization
+                    }
+                }
+            }
+            </code>
+            </example>
+            <seealso cref="T:MVCSharp.Core.ControllerBase`2"/>
+            <seealso cref="T:MVCSharp.Core.IController"/>
+        </member>
+        <member name="P:MVCSharp.Core.ControllerBase.Task">
+            <summary>
+            Simple <see cref="P:MVCSharp.Core.IController.Task">IController.Task</see> implementation
+            with backing field. Can be overriden in subclasses.
+            </summary>
+            <remarks>
+            The setter method of the Task property is often used
+            to do the necessary controller initialization:
+            <code>
+            class MyController : ControllerBase
+            {
+                public override ITask Task
+                {
+                    get { return base.Task; }
+                    set
+                    {
+                        base.Task = value;
+                        // Do controller initialization
+                    }
+                }
+            }
+            </code>
+            </remarks>
+            <example>
+            Here we access the task state from the controller:
+            <code>
+            class MyController : ControllerBase
+            {
+                public void DoSomething()
+                {
+                    if ((Task as MyTask).Counter &gt;= 5)
+                        MessageBox.Show("You cannot do something more than five times.");
+                    else
+                        (Task as MyTask).Counter++;
+                }
+            }
+            </code>
+            </example>
+        </member>
+        <member name="P:MVCSharp.Core.ControllerBase.View">
+            <summary>
+            Simple <see cref="P:MVCSharp.Core.IController.View">IController.View</see> implementation
+            with backing field. Can be overriden in subclasses.
+            </summary>
+            <remarks>
+            The setter method of the View property is often used
+            to do the necessary view initialization:
+            <code>
+            class MyController : ControllerBase
+            {
+                public override IView View
+                {
+                    get { return base.View; }
+                    set
+                    {
+                        base.View = value;
+                        // Do view initialization
+                    }
+                }
+            }
+            </code>
+            </remarks>
+            <example>
+            Here we access the view from the controller:
+            <code>
+            class MyController : ControllerBase
+            {
+                public void DoSomething()
+                {
+                    if ((View as IMyView).InputValue &lt; 0)
+                        MessageBox.Show("The input value should be not negative.");
+                    else
+                        (View as IMyView).OutputValue = Math.Sqrt((View as IMyView).InputValue);
+                }
+            }
+            </code>
+            </example>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Tasks.TaskAttribute">
+            <summary>
+            Attribute to describe a task structure. Allows describing a task's structure
+            with XML (see the example below) and/or specifying a <see cref="T:MVCSharp.Core.Navigator"/>
+            type to be used by this task.
+            <para>If you want to describe a task's structure with an XML string then the
+            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProviderType">MVCConfiguration.TaskInfoProviderType</see>
+            property should point to <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByXmlAttributeProvider"/> or
+            <see cref="T:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider"/> types.</para> 
+            </summary>
+            <example>
+            This is how a task structure is described with XML string inside the
+            [Task] attribute:
+            <code>
+            [Task(@"
+                &lt;interactionPoints&gt;
+                    &lt;interactionPoint view = ""View1"" controllerType = ""MyApp.MyController1""&gt;
+                        &lt;navTarget trigger = ""To View2"" view = ""View2""/&gt;
+                        &lt;navTarget view = ""View3""/&gt;
+                    &lt;/interactionPoint&gt;
+                    &lt;iPoint view = ""View2"" controllerType = ""MyApp.MyController2""&gt;
+                    &lt;/iPoint&gt;
+                    &lt;interactionPoint view = ""View3"" controllerType = ""MyApp.MyController3""&gt;
+                        &lt;navTarget trigger = ""To View2"" view = ""View2""/&gt;
+                    &lt;/interactionPoint&gt;
+                &lt;/interactionPoints&gt;
+            ")]
+            class MyTask1 { }
+            </code>
+            Note that it is possible to use either interactionPoint tag or its short
+            analog iPoint. Next example shows how to define adjacent interaction points
+            with transitions possible between each two of them.
+            <code>
+            [Task(@"
+                &lt;interactionPoints&gt;
+                    &lt;interactionPoint view = ""View1"" controllerType = ""MyApp.MyController1""&gt;
+                        &lt;navTarget trigger = ""View2"" view = ""View3""/&gt;
+                    &lt;/interactionPoint&gt;
+                    &lt;iPoint view = ""View2"" controllerType = ""MyApp.MyController2""/&gt;
+                    &lt;iPoint view = ""View3"" controllerType = ""MyApp.MyController3""/&gt;
+                    &lt;interactionPoint view = ""View4"" controllerType = ""MyApp.MyController3""/&gt;
+                &lt;/interactionPoints&gt;
+                &lt;adjacentPoints&gt;
+                    &lt;iPointRef view = ""View1""/&gt;
+                    &lt;interactionPointRef view = ""View2""/&gt;
+                    &lt;iPointRef view = ""View3""/&gt;
+                &lt;/adjacentPoints&gt;
+                &lt;adjacentPoints&gt;
+                    &lt;iPointRef view = ""View2""/&gt;
+                    &lt;interactionPointRef view = ""View3""/&gt;
+                &lt;/adjacentPoints&gt;
+                &lt;adjacentPoints&gt;
+                    &lt;iPointRef view = ""View3""/&gt;
+                    &lt;iPointRef view = ""View4""/&gt;
+                &lt;/adjacentPoints&gt;
+            ")]
+            class MyTask2 { }
+            </code>
+            </example>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskAttribute.#ctor(System.String)">
+            <summary>
+            Constructor taking the task XML description as a parameter.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskAttribute.#ctor(System.Type)">
+            <summary>
+            Constructor taking the desired navigator type as a parameter.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskAttribute.#ctor(System.Type,System.String)">
+            <summary>
+            Constructor taking the desired navigator type and the task XML
+            description as parameters.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskAttribute.Xml">
+            <summary>
+            Xml string describing the task.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskAttribute.NavigatorType">
+            <summary>
+            Navigator type to be used by the task.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Tasks.TaskBase">
+            <summary>
+            Simple implementation of <see cref="T:MVCSharp.Core.Tasks.ITask">ITask</see>
+            interface with backing fields. All members are marked as virtual
+            so it is possible to override them in derived classes.
+            </summary>
+            <example>
+            TaskBase class is commonly used as base for task classes,
+            the latter overriding its members:
+            <code>
+            class MyTask : TaskBase
+            {
+                public override void OnStart(object param)
+                {
+                    // Some actions
+                }
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:MVCSharp.Core.Tasks.TaskBase.OnStart(System.Object)">
+            <summary>
+            <see cref="M:MVCSharp.Core.Tasks.ITask.OnStart(System.Object)"/> empty implementation.
+            Can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Tasks.TaskBase.Navigator">
+            <summary>
+            <see cref="P:MVCSharp.Core.Tasks.ITask.Navigator"/> simple implementation with backing field.
+            Can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Tasks.TaskBase.TasksManager">
+            <summary>
+            <see cref="P:MVCSharp.Core.Tasks.ITask.TasksManager"/> simple implementation with backing field.
+            Can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Tasks.TaskBase.CurrViewName">
+            <summary>
+            <see cref="P:MVCSharp.Core.Tasks.ITask.CurrViewName"/> simple implementation with backing field.
+            Can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.IController`2">
+            <summary>
+            Generic extension of the <see cref="T:MVCSharp.Core.IController"/> interface.
+            Has strongly typed generic associations to the task and the
+            view. Therefore no typecasting is required when accessing the
+            associated task or view.
+            <para>Istead of implementing this interface manually you
+            might better use the generic base controller class -
+            <see cref="T:MVCSharp.Core.ControllerBase`2"/></para>
+            </summary>
+            <remarks>The framework knows nothing about the generic types
+            and deals only their non-generic versions. Generic types serve
+            only for user convenience: to provide type-safety and reduce
+            the amount of typecasts.</remarks>
+            <typeparam name="TTask">Specifies the expected type of the
+            associated task. Must be a subtype of <see cref="T:MVCSharp.Core.Tasks.ITask"/>.
+            </typeparam>
+            <typeparam name="TView">Specifies the expected type of the
+            associated view.
+            </typeparam>
+            <seealso cref="T:MVCSharp.Core.ControllerBase`2"/>
+        </member>
+        <member name="P:MVCSharp.Core.IController`2.Task">
+            <summary>
+            Gets or sets the associated task of the generic parameter
+            type TTask.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.IController`2.View">
+            <summary>
+            Gets or sets the associated view of the generic parameter
+            type TView.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Tasks.TasksManager">
+            <summary>
+            TasksManager class is responsible for starting tasks. Task
+            descriptions are obtained from the associated
+            <see cref="P:MVCSharp.Core.Tasks.TasksManager.Config">TasksManager.Config</see> object.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Tasks.TasksManager.#ctor">
+            <summary>
+            Parameterless constructor.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Tasks.TasksManager.#ctor(MVCSharp.Core.Configuration.MVCConfiguration)">
+            <summary>
+            Creates a tasks manager and links it to the MVCConfiguration
+            instance passed as parameter.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Tasks.TasksManager.StartTask(System.Type)">
+            <summary>
+            Starts a task passing null to the <see cref="M:MVCSharp.Core.Tasks.ITask.OnStart(System.Object)"/> method.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Tasks.TasksManager.StartTask(System.Type,System.Object)">
+            <summary>
+            Starts a task passing <c>param</c> to the <see cref="M:MVCSharp.Core.Tasks.ITask.OnStart(System.Object)">
+            ITask.OnStart</see> operation. Task description (<see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/>
+            instance) and views manager type are taken from the
+            associated <see cref="P:MVCSharp.Core.Tasks.TasksManager.Config">TasksManager.Config</see>
+            object.</summary>
+            <param name="taskType">The type of the task to start.</param>
+            <param name="param">Parameter passed to the <see cref="M:MVCSharp.Core.Tasks.ITask.OnStart(System.Object)">
+            ITask.OnStart</see> method.</param>
+        </member>
+        <member name="P:MVCSharp.Core.Tasks.TasksManager.Config">
+            <summary>
+            Gets or sets the associated <see cref="T:MVCSharp.Core.Configuration.MVCConfiguration"/> object.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Webforms.Configuration.WebformsViewInfo">
+            <summary>
+            Contains information about views within the Web Forms presentation
+            mechanism. In addition to base properties includes view url, since
+            view activation requires redirecting browser to the proper url.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Views.ViewInfo">
+            <summary>
+            ViewInfo objects are used by views managers for view creation
+            and activation. Base ViewInfo objects contain only information
+            on view type and name (<see cref="P:MVCSharp.Core.Configuration.Views.ViewInfo.ViewType"/> and <see cref="P:MVCSharp.Core.Configuration.Views.ViewInfo.ViewName"/>
+            properties), whereas different <c>ViewInfo</c> subclasses
+            define properties specific to the corresponding
+            presentation platforms.
+            </summary>
+            <remarks>
+            It is unlikely you will need to manually create ViewInfo objects.
+            Typically they are generated by the framework from <see cref="T:MVCSharp.Core.Configuration.Views.ViewAttribute"/>
+            and derived attributes.
+            </remarks>
+            <seealso cref="T:MVCSharp.Core.Configuration.Views.ViewAttribute"/>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfo.#ctor(System.String,System.Type)">
+            <summary>
+            ViewInfo constructor. Creates ViewInfo object with specified
+            <c>ViewType</c> and <c>ViewName</c> values.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfo.ViewName">
+            <summary>
+            Specifies the view name.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfo.ViewType">
+            <summary>
+            Defines view type as a part of a view description.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewInfo.#ctor(System.String,System.String)">
+            <summary>
+            Constructor taking the view name and url as parameters.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Webforms.Configuration.WebformsViewInfo.ViewUrl">
+            <summary>
+            Specifies the view url.
+            </summary>
+        </member>
         <member name="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByXmlAttributeProvider">
             <summary>
             Implementation of the <see cref="T:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider"/>
@@ -1370,6 +1811,169 @@
             <seealso cref="T:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider"/>
             <seealso cref="T:MVCSharp.Core.Configuration.Tasks.TaskAttribute"/>
         </member>
+        <member name="T:MVCSharp.Winforms.Configuration.WinformsViewInfo">
+            <summary>
+            Instances of this type describe views within the Windows Forms
+            presentation platform. In addition to the view type it intoduces
+            several properties specific to the Windows Forms presentation
+            mechanism.
+            <para>When the <see cref="T:MVCSharp.Winforms.WinformsViewsManager"/>activates a view
+            it looks to the properties of the corresponding WinformsViewInfo
+            object. For example a form will be shown as modal if
+            <see cref="P:MVCSharp.Winforms.Configuration.WinformsViewInfo.ShowModal"/> is set to true.</para>
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.Configuration.WinformsViewInfo.#ctor(System.String,System.Type)">
+            <summary>
+            Constructor recieving the view name and type as parameters.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.Configuration.WinformsViewInfo.ShowModal">
+            <summary>
+            Specifies if a view should be displayed as a modal dialog.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.Configuration.WinformsViewInfo.IsMdiParent">
+            <summary>
+            Specifies whether a view should act as an MDI parent form.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Winforms.Configuration.WinformsViewInfo.MdiParent">
+            <summary>
+            Specifies an MDI parent view name.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Tasks.InteractionPointInfo">
+            <summary>
+            Describes interaction point (view-controller pair). Holds a view
+            name, the corresponding controller type and navigation information
+            for this interaction point.
+            </summary>
+            <remarks><see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/> object contains a collection of
+            InteractionPointInfo objects, thus describing the whole task.</remarks>
+            <seealso cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointInfo.ViewName">
+            <summary>
+            Gets or sets the name of the view for this interaction point.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointInfo.NavTargets">
+            <summary>
+            Gets descriptions for target interaction points. A view name or
+            a navigation trigger name could be used as a key.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointInfo.ControllerType">
+            <summary>
+            Gets or sets the type of the controller for an interation point.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointInfo.IsCommonTarget">
+            <summary>
+            If <c>true</c> then it is possible to navigate to this interaction
+            point from any other.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute">
+            <summary>
+            Attribute for describing interaction points within a task.
+            </summary>
+            <remarks>Should be used with <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider"/> or
+            <see cref="T:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider"/> task info providers. They
+            convert this attribute occurrences into <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/>
+            objects.</remarks>
+            <example>
+            Here is an example of how this attribute may be used:
+            <code>
+            class MyTask
+            {
+                [InteractionPoint(typeof(MyController1))]
+                public const string iPoint1 = "View1";
+            
+                [IPoint(typeof(MyController2), true, iPoint1)]
+                public const string iPoint2 = "View2";
+            
+                [InteractionPoint(typeof(MyController1), iPoint1, iPoint2)]
+                public const string iPoint3 = "View3";
+            
+                [InteractionPoint(typeof(MyController1), true)]
+                [NavTarget("Next", iPoint3)]
+                [NavTarget("Previous", iPoint2)]
+                public const string iPoint4 = "View4";
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute.#ctor(System.Type,System.String[])">
+            <summary>
+            Constructor taking the controller type and an array of
+            navigation targets for this interation point.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute.#ctor(System.Type,System.Boolean)">
+            <summary>
+            Constructor taking the controller type and a parameter specifying
+            whether the interaction point is a common target for other points.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute.#ctor(System.Type,System.Boolean,System.String[])">
+            <summary>
+            Constructor taking the controller type, a parameter specifying
+            whether the interaction point is a common target for other points
+            and an array of navigation targets for this interation point.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute.ControllerType">
+            <summary>
+            Specifies the type of the controller for the interaction point.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute.IsCommonTarget">
+            <summary>
+            Specifies whether the interaction point should be a common target
+            (i.e. a navigation can be done from any other interaction point to this one).
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute.NavTargets">
+            <summary>
+            Gets or sets an array of target navigation points represented by
+            their view names. Any of these interaction points can be navigated
+            to with the trigger name equal to the target view name.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Core.Configuration.Tasks.IPointAttribute">
+            <summary>
+            Equivalent to the <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/> attribute.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.IPointAttribute.#ctor(System.Type,System.String[])">
+            <summary>
+            See <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/> equivalent constructor.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.IPointAttribute.#ctor(System.Type,System.Boolean)">
+            <summary>
+            See <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/> equivalent constructor.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Core.Configuration.Tasks.IPointAttribute.#ctor(System.Type,System.Boolean,System.String[])">
+            <summary>
+            See <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/> equivalent constructor.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Winforms.Configuration.WinformsViewInfosProvider">
+            <summary>
+            <see cref="T:MVCSharp.Core.Configuration.Views.IViewInfosProvider"/> implementation which creates
+            <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfo"/> objects based on <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewAttribute"/>
+            and <see cref="T:MVCSharp.Core.Configuration.Views.ViewAttribute"/> attributes.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.Configuration.WinformsViewInfosProvider.newViewInfo(System.Type,MVCSharp.Core.Configuration.Views.ViewAttribute)">
+            <summary>
+            Creates a WinformsViewInfo object by a given ViewAttribute instance.
+            </summary>
+        </member>
         <member name="T:MVCSharp.Core.Configuration.CreateHelper">
             <summary>
             Helper class for creating objects.
@@ -1383,6 +1987,193 @@
         <member name="M:MVCSharp.Core.Configuration.CreateHelper.Create(System.Type,System.Object[])">
             <summary>
             Creates an object of specified type with parameters passed to the constructor.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Winforms.WinformsViewsManager">
+            <summary>
+            Works with views represented as windows forms and user controls.
+            </summary>
+            <remarks>
+            <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects for this views manager should be of
+            <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfo"/> type. That is why the WinformsViewsManager
+            is often used in combination with <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType"/>
+            set to <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfosProvider"/>.
+            </remarks>
+        </member>
+        <member name="F:MVCSharp.Winforms.WinformsViewsManager.views">
+            <summary>
+            Used to hold all view instances.
+            </summary>
+        </member>
+        <member name="F:MVCSharp.Winforms.WinformsViewsManager.prevActiveView">
+            <summary>
+            Used to notify the previously active view on its deactivation.
+            </summary>
+        </member>
+        <member name="F:MVCSharp.Winforms.WinformsViewsManager.viewActivatedInCode">
+            <summary>
+            A flag indicating that the last view activation has been done via code.
+            </summary>
+        </member>
+        <member name="F:MVCSharp.Winforms.WinformsViewsManager.activeView">
+            <summary>
+            Holds currently active view instance.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.ActivateView(System.String)">
+            <summary>
+            <see cref="M:MVCSharp.Core.Views.IViewsManager.ActivateView(System.String)">IViewsManager.ActivateView</see> implementation.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.#ctor">
+            <summary>
+            Creates an instance of the class.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.GetView(System.String)">
+            <summary>
+            <see cref="M:MVCSharp.Core.Views.IViewsManager.GetView(System.String)">IViewsManager.GetView</see> implementation.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.NotifyViewsOnActivation(MVCSharp.Core.Views.IView)">
+            <summary>
+            A method used to notify views about their (de)activation.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.ActivateFormView(MVCSharp.Core.Views.IView)">
+            <summary>
+            Method to activate a view if it happens to be a form.
+            Can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.ActivateUserControlView(MVCSharp.Core.Views.IView)">
+            <summary>
+            Method to activate a view if it happens to be a user control.
+            Can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.FindOrCreateView(System.String)">
+            <summary>
+            Method to find a view by its name or create a new one
+            if nothing was found.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.InitializeUserControlView(System.Windows.Forms.UserControl)">
+            <summary>
+            Method to initialize a view if it happens to be a user control.
+            Can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.InitializeFormView(System.Windows.Forms.Form,MVCSharp.Winforms.Configuration.WinformsViewInfo)">
+            <summary>
+            Method to initialize a view if it happens to be a form.
+            Can be overriden in subclasses.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.InitializeView(MVCSharp.Core.Views.IView)">
+            <summary>
+            Method to perform a general view initialization
+            (regardless of its specific type)/
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.View_ActivatedManually(System.Object,System.EventArgs)">
+            <summary>
+            Event hanlder for the manual view activation (by the end-user).
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.View_Deactivate(System.Object,System.EventArgs)">
+            <summary>
+            Event hanlder view de-activation.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.Application_Idle(System.Object,System.EventArgs)">
+            <summary>
+            A method called whenever the application gets idle and used to eliminate
+            possible mismatches between the current view and actually active view.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.FindContainerView(System.Windows.Forms.Control)">
+            <summary>
+            Used to find a container view for a specific control (view).
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.NotifyInitialize(MVCSharp.Core.Views.IView)">
+            <summary>
+            Notifies the view about its initialization if the view
+            class implements the <see cref="T:MVCSharp.Core.Views.INotifiedView"/> interface.
+            </summary>
+            <param name="view">The view to be notified.</param>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.InitializeChildViews(System.Windows.Forms.Control)">
+            <summary>
+            Initializes user control views located inside a container control.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Winforms.WinformsViewsManager.GetDefaultConfig">
+            <summary>
+            Returns the default MVCConfiguration instance (obtained via
+            <see cref="M:MVCSharp.Core.Configuration.MVCConfiguration.GetDefault">MVCConfiguration.GetDefault</see>) with
+            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType"/> set to
+            <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfosProvider"/> and
+            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewsManagerType"/> set to <see cref="T:MVCSharp.Winforms.WinformsViewsManager"/>.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Webforms.WebFormView`1">
+            <summary>
+            Base web page implementation of the <see cref="T:MVCSharp.Core.Views.IView`1"/>
+            interface. Has a strongly typed association to the controller
+            (of the parameter type T).
+            <para>It is recommended to inherit your web view classes from
+            this one instead of manually implementing the <see cref="T:MVCSharp.Core.Views.IView`1"/>
+            interface.</para>
+            </summary>
+            <typeparam name="T">Specifies the expected type of the
+            associated controller. Must be a subtype of <see cref="T:MVCSharp.Core.IController"/>
+            </typeparam>
+            <example>
+            In this example we declare a view type by deriving it from the
+            WebFormView&lt;T&gt; class without a need to manually implement
+            the IView&lt;T&gt; interface.
+            <code>
+            public partial class MyView : WebFormView&lt;MyController&gt;
+            {
+                private DoActionButton_Click(object sender, EventArgs e)
+                {
+                    Controller.MyAction();
+                }
+            }
+            </code>
+            </example>
+            <seealso cref="T:MVCSharp.Webforms.WebFormView"/>
+        </member>
+        <member name="P:MVCSharp.Webforms.WebFormView`1.Controller">
+            <summary>
+            <see cref="P:MVCSharp.Core.Views.IView`1.Controller"/> property simple implementation with
+            backing field. Marked as virtual to be overrideable in sublasses.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Webforms.WebFormView`1.MVCSharp#Core#Views#IView#Controller">
+            <summary>
+            <see cref="P:MVCSharp.Core.Views.IView.Controller">IView.Controller</see>
+            implementation done as a gateway to the strongly typed
+            <see cref="P:MVCSharp.Webforms.WebFormView`1.Controller"/> property.
+            </summary>
+        </member>
+        <member name="P:MVCSharp.Webforms.WebFormView`1.ViewName">
+            <summary>
+            <see cref="P:MVCSharp.Core.Views.IView.ViewName"/> property simple implementation with
+            backing field. Marked as virtual to be overrideable in sublasses.
+            </summary>
+        </member>
+        <member name="T:MVCSharp.Webforms.Configuration.WebformsViewInfosProvider">
+            <summary>
+            <see cref="T:MVCSharp.Core.Configuration.Views.IViewInfosProvider"/> implementation which generates WebformsViewInfo
+            objects from <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewAttribute"/> attributes.
+            </summary>
+        </member>
+        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewInfosProvider.GetFromAssembly(System.Reflection.Assembly)">
+            <summary>
+            <see cref="M:MVCSharp.Core.Configuration.Views.IViewInfosProvider.GetFromAssembly(System.Reflection.Assembly)"/> implementation.
             </summary>
         </member>
         <member name="T:MVCSharp.Core.ControllerBase`2">
@@ -1524,559 +2315,6 @@
             <see cref="P:MVCSharp.Core.ControllerBase`2.View"/> property.
             </summary>
         </member>
-        <member name="T:MVCSharp.Winforms.Configuration.WinformsViewInfosProvider">
-            <summary>
-            <see cref="T:MVCSharp.Core.Configuration.Views.IViewInfosProvider"/> implementation which creates
-            <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfo"/> objects based on <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewAttribute"/>
-            and <see cref="T:MVCSharp.Core.Configuration.Views.ViewAttribute"/> attributes.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Views.DefaultViewInfosProvider">
-            <summary>
-            This IViewInfosProvider implementation generates <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects
-            from <see cref="T:MVCSharp.Core.Configuration.Views.ViewAttribute"/> attributes.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Views.IViewInfosProvider">
-            <summary>
-            Classes which implement this interface can extract information
-            on all views declared within an assembly. <see cref="T:MVCSharp.Core.Configuration.MVCConfiguration"/>
-            class uses this object to populate its <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask">
-            MVCConfiguration.ViewInfosByTask</see> property.
-            </summary>
-            <remarks>
-            Different IViewInfosProvider implementations account for different ways
-            to describe views.
-            </remarks>
-            <seealso cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfosProvider"/>
-            <seealso cref="T:MVCSharp.Webforms.Configuration.WebformsViewInfosProvider"/>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Views.IViewInfosProvider.GetFromAssembly(System.Reflection.Assembly)">
-            <summary>
-            Extracts a set of ViewInfoCollection objects for each task within
-            the specified assebmly.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Views.DefaultViewInfosProvider.GetFromAssembly(System.Reflection.Assembly)">
-            <summary>
-            Generates <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects from <see cref="T:MVCSharp.Core.Configuration.Views.ViewAttribute"/> attributes
-            found in the given assembly.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Views.DefaultViewInfosProvider.newViewInfo(System.Type,MVCSharp.Core.Configuration.Views.ViewAttribute)">
-            <summary>
-            Creates a ViewInfo object by a given ViewAttribute instance.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.Configuration.WinformsViewInfosProvider.newViewInfo(System.Type,MVCSharp.Core.Configuration.Views.ViewAttribute)">
-            <summary>
-            Creates a WinformsViewInfo object by a given ViewAttribute instance.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Webforms.Configuration.WebformsViewInfosProvider">
-            <summary>
-            <see cref="T:MVCSharp.Core.Configuration.Views.IViewInfosProvider"/> implementation which generates WebformsViewInfo
-            objects from <see cref="T:MVCSharp.Webforms.Configuration.WebformsViewAttribute"/> attributes.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewInfosProvider.GetFromAssembly(System.Reflection.Assembly)">
-            <summary>
-            <see cref="M:MVCSharp.Core.Configuration.Views.IViewInfosProvider.GetFromAssembly(System.Reflection.Assembly)"/> implementation.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Tasks.TaskInfoCollection">
-            <summary>
-            Contains descriptions for all tasks. This collection is a part of
-            an MVC# application configuration (see <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfos">MVCConfiguration.TaskInfos</see>).
-            <para>This collection is enumerable to be able to walk through the
-            included task types.</para>
-            </summary>
-            <remarks>When a task is started the neccessary <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/> object is obtained
-            from the TaskInfoCollection object referenced by <see cref="T:MVCSharp.Core.Configuration.MVCConfiguration"/>
-            object (see <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfos">MVCConfiguration.TaskInfos</see>). If not found a new
-            TaskInfo object is created with the help of
-            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProvider">MVCConfiguration.TaskInfoProvider</see> object.</remarks>
-            <seealso cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskInfoCollection.GetEnumerator">
-            <summary>
-            Implementation of <see cref="M:System.Collections.IEnumerable.GetEnumerator"/> method.
-            Returns an enumerator to walk through the task types included
-            in this collection.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskInfoCollection.Item(System.Type)">
-            <summary>
-            Indexer for obtaining the <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/> object given a task type. If the needed
-            TaskInfo object does not exist yet the <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProvider">
-            MVCConfiguration.TaskInfoProvider</see> object is used to create it.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskInfoCollection.Count">
-            <summary>
-            Gets the total number of <c>TaskInfo</c> objects included.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskInfoCollection.MVCConfig">
-            <summary>
-            Provides an association to the MVCConfiguration object.
-            Neccessary for accessing the
-            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProvider"/> instance.</summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Tasks.TaskInfo">
-            <summary>
-            Contains descriptions for all interaction points and views
-            within the task. Has methods to obtain navigation information
-            for the task (see <see cref="M:MVCSharp.Core.Configuration.Tasks.TaskInfo.GetNextViewName(System.String,System.String)"/> and
-            <see cref="M:MVCSharp.Core.Configuration.Tasks.TaskInfo.CanNavigateToView(System.String,System.String)"/>).
-            </summary>
-            <remarks>
-            During a task start a TaskInfo object is obtained from
-            the <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfos">MVCConfiguration.TaskInfos</see> collection.
-            Then the TaskInfo instance is linked to the navigator for that
-            task through the <see cref="P:MVCSharp.Core.Navigator.TaskInfo">Navigator.TaskInfo</see> property.
-            After that the navigator uses the linked TaskInfo for getting
-            the navigation information.
-            </remarks>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskInfo.GetNextViewName(System.String,System.String)">
-            <summary>
-            Looks through the <see cref="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.InteractionPoints"/> collection
-            to retrieve the name of the next view, given the current view
-            name and the navigation trigger name.
-            </summary>
-            <param name="currViewName">The name of the current view.</param>
-            <param name="triggerName">The name of the navigation trigger (may be
-            equal to the target view name).</param>
-            <returns>The name of the next view or <c>null</c> if
-            not found.</returns>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskInfo.CanNavigateToView(System.String,System.String)">
-            <summary>
-            Looks through the <see cref="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.InteractionPoints"/> collection
-            to determine whether the navigation to the destination view
-            is possible.
-            </summary>
-            <param name="currViewName">The name of the current view.</param>
-            <param name="destViewName">The name of the destination view.</param>
-            <returns><c>True</c> if the navigation is possible, otherwise
-            <c>false</c>.</returns>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.ViewInfos">
-            <summary>
-            Gets or sets the associated collection of view descriptions
-            for the task.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.InteractionPoints">
-            <summary>
-            Gets or sets the associated collection of interaction point
-            descriptions for the task.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.NavigatorType">
-            <summary>
-            Specifies the type of the <see cref="T:MVCSharp.Core.Navigator"/> descendant
-            to be associated with the task instance.
-            </summary>
-            <seealso cref="P:MVCSharp.Core.Tasks.ITask.Navigator">ITask.Navigator</seealso>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute">
-            <summary>
-            Used to declare navigation triggers with targets for interaction points.
-            </summary>
-            <remarks>Should be used with <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider"/> or
-            <see cref="T:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider"/> task info providers. They
-            convert this attribute occurrences into <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/>
-            objects.</remarks>
-            <example>
-            Below we declare a task with two interaction points and a "Next" trigger
-            navigating from "View 1" to "View 2":
-            <code>
-            class MyTask : TaskBase
-            {
-                [InteractionPoint(typeof(MyController))]
-                [NavTarget("Next", View2)]
-                public const string View1 = "View 1";
-            
-                [InteractionPoint(typeof(MyController))]
-                public const string View2 = "View 2";
-            
-                public override void OnStart(object param)
-                {
-                    Navigator.NavigateDirectly(View1); // Initial interaction point is "View 1"
-                    Navigator.Navigate("Next"); // Navigate to "View 2"
-                }
-            }
-            </code>
-            </example>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute.#ctor(System.String,System.String)">
-            <summary>
-            Contructor taking the trigger name and the view name of the
-            target interaction point.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute.TriggerName">
-            <summary>
-            The name of the trigger initiating the transition.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute.ViewName">
-            <summary>
-            The view name for the target interaction point.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Webforms.WebFormView`1">
-            <summary>
-            Base web page implementation of the <see cref="T:MVCSharp.Core.Views.IView`1"/>
-            interface. Has a strongly typed association to the controller
-            (of the parameter type T).
-            <para>It is recommended to inherit your web view classes from
-            this one instead of manually implementing the <see cref="T:MVCSharp.Core.Views.IView`1"/>
-            interface.</para>
-            </summary>
-            <typeparam name="T">Specifies the expected type of the
-            associated controller. Must be a subtype of <see cref="T:MVCSharp.Core.IController"/>
-            </typeparam>
-            <example>
-            In this example we declare a view type by deriving it from the
-            WebFormView&lt;T&gt; class without a need to manually implement
-            the IView&lt;T&gt; interface.
-            <code>
-            public partial class MyView : WebFormView&lt;MyController&gt;
-            {
-                private DoActionButton_Click(object sender, EventArgs e)
-                {
-                    Controller.MyAction();
-                }
-            }
-            </code>
-            </example>
-            <seealso cref="T:MVCSharp.Webforms.WebFormView"/>
-        </member>
-        <member name="P:MVCSharp.Webforms.WebFormView`1.Controller">
-            <summary>
-            <see cref="P:MVCSharp.Core.Views.IView`1.Controller"/> property simple implementation with
-            backing field. Marked as virtual to be overrideable in sublasses.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Webforms.WebFormView`1.MVCSharp#Core#Views#IView#Controller">
-            <summary>
-            <see cref="P:MVCSharp.Core.Views.IView.Controller">IView.Controller</see>
-            implementation done as a gateway to the strongly typed
-            <see cref="P:MVCSharp.Webforms.WebFormView`1.Controller"/> property.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Webforms.WebFormView`1.ViewName">
-            <summary>
-            <see cref="P:MVCSharp.Core.Views.IView.ViewName"/> property simple implementation with
-            backing field. Marked as virtual to be overrideable in sublasses.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute">
-            <summary>
-            Attribute for describing interaction points within a task.
-            </summary>
-            <remarks>Should be used with <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider"/> or
-            <see cref="T:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider"/> task info providers. They
-            convert this attribute occurrences into <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/>
-            objects.</remarks>
-            <example>
-            Here is an example of how this attribute may be used:
-            <code>
-            class MyTask
-            {
-                [InteractionPoint(typeof(MyController1))]
-                public const string iPoint1 = "View1";
-            
-                [IPoint(typeof(MyController2), true, iPoint1)]
-                public const string iPoint2 = "View2";
-            
-                [InteractionPoint(typeof(MyController1), iPoint1, iPoint2)]
-                public const string iPoint3 = "View3";
-            
-                [InteractionPoint(typeof(MyController1), true)]
-                [NavTarget("Next", iPoint3)]
-                [NavTarget("Previous", iPoint2)]
-                public const string iPoint4 = "View4";
-            }
-            </code>
-            </example>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute.#ctor(System.Type,System.String[])">
-            <summary>
-            Constructor taking the controller type and an array of
-            navigation targets for this interation point.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute.#ctor(System.Type,System.Boolean)">
-            <summary>
-            Constructor taking the controller type and a parameter specifying
-            whether the interaction point is a common target for other points.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute.#ctor(System.Type,System.Boolean,System.String[])">
-            <summary>
-            Constructor taking the controller type, a parameter specifying
-            whether the interaction point is a common target for other points
-            and an array of navigation targets for this interation point.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute.ControllerType">
-            <summary>
-            Specifies the type of the controller for the interaction point.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute.IsCommonTarget">
-            <summary>
-            Specifies whether the interaction point should be a common target
-            (i.e. a navigation can be done from any other interaction point to this one).
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute.NavTargets">
-            <summary>
-            Gets or sets an array of target navigation points represented by
-            their view names. Any of these interaction points can be navigated
-            to with the trigger name equal to the target view name.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Tasks.IPointAttribute">
-            <summary>
-            Equivalent to the <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/> attribute.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.IPointAttribute.#ctor(System.Type,System.String[])">
-            <summary>
-            See <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/> equivalent constructor.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.IPointAttribute.#ctor(System.Type,System.Boolean)">
-            <summary>
-            See <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/> equivalent constructor.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.IPointAttribute.#ctor(System.Type,System.Boolean,System.String[])">
-            <summary>
-            See <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/> equivalent constructor.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Webforms.Configuration.WebformsViewInfo">
-            <summary>
-            Contains information about views within the Web Forms presentation
-            mechanism. In addition to base properties includes view url, since
-            view activation requires redirecting browser to the proper url.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewInfo.#ctor(System.String,System.String)">
-            <summary>
-            Constructor taking the view name and url as parameters.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Webforms.Configuration.WebformsViewInfo.ViewUrl">
-            <summary>
-            Specifies the view url.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.MVCConfiguration">
-            <summary>
-            Represents configuration data for an MVC# application. It
-            contains descriptions for all tasks and views (
-            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfos"/> and <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask"/>
-            properties) and other configuration data.
-            </summary>
-            <remarks>Every <see cref="T:MVCSharp.Core.Tasks.TasksManager"/> instance has its
-            own MVCConfiguration object and starts tasks accordingly
-            to this configuration.
-            </remarks>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.MVCConfiguration.#ctor">
-            <summary>
-            Parameterless constructor.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.MVCConfiguration.GetDefault">
-            <summary>
-            Returns the default MVCConfiguration instance with
-            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType"/> set to <see cref="T:MVCSharp.Core.Configuration.Views.DefaultViewInfosProvider"/>
-            and <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProviderType"/> set to <see cref="T:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider"/>
-            and <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewsAssembly"/> pointing to the calling assembly.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.NavigatorType">
-            <summary>
-            Specifies the type of the <see cref="T:MVCSharp.Core.Navigator"/> descendants
-            associated with task objects by default.
-            </summary>
-            <seealso cref="P:MVCSharp.Core.Tasks.ITask.Navigator">ITask.Navigator</seealso>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType">
-            <summary>
-            Specifies the type of the <see cref="T:MVCSharp.Core.Configuration.Views.IViewInfosProvider"/> implementation
-            used to populate view descriptions (
-            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask"/> property).
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProviderType">
-            <summary>
-            Specifies the type of the <see cref="T:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider"/> implementation
-            used to populate task descriptions (
-            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfos">MVCConfiguration.TaskInfos</see> property).
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewsManagerType">
-            <summary>
-            Specifies a views manager type (<see cref="T:MVCSharp.Core.Views.IViewsManager"/> implementation)
-            to be used.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewsAssembly">
-            <summary>
-            Gets or sets an assembly containing view descriptions. These
-            descriptions are converted by the <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType"/> class
-            to <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects and stored in <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask">
-            MVCConfiguration.ViewInfosByTask</see> collections.</summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewsAssemblies">
-            <summary>
-            Collection of assemblies containing view descriptions. These
-            descriptions are converted by the <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType"/> class
-            to <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfo"/> objects and stored in <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask">
-            MVCConfiguration.ViewInfosByTask</see> collections.</summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask">
-            <summary>
-            Gets a set of <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfoCollection"/> objects for
-            every task. These objects are produced by an instance of the
-            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType">
-            MVCConfiguration.ViewInfosProviderType</see> type</summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProvider">
-            <summary>
-            Gets or sets an associated <see cref="T:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider"/> instance used
-            to convert task types to <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/> objects.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfos">
-            <summary>
-            Associates MVCConfiguration to task descriptions.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Tasks.InteractionPointInfoCollection">
-            <summary>
-            Represents a collection of <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointInfo"/>
-            objects accessible by the view name.
-            </summary>
-            <remarks>
-            Such collection is a part of the <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfo"/> object
-            descibing a task (see <see cref="P:MVCSharp.Core.Configuration.Tasks.TaskInfo.InteractionPoints">
-            TaskInfo.InteractionPoints</see>).</remarks>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.InteractionPointInfoCollection.Remove(System.String)">
-            <summary>
-            Removes the interaction with given view name from the collection.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.InteractionPointInfoCollection.GetEnumerator">
-            <summary>
-            Allows to enumerate through all interaction points within the collection.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointInfoCollection.Count">
-            <summary>
-            Gets the number of interation points within the collection.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.InteractionPointInfoCollection.Item(System.String)">
-            <summary>
-            Accesses the description of an interaction point by the view name.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider">
-            <summary>
-            This is a composite <see cref="T:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider"/> implementation.
-            It applies either <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByXmlAttributeProvider"/> or
-            <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider"/> depending on what attributes
-            the task type is equipped with.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider.GetTaskInfo(System.Type)">
-            <summary>
-            This <see cref="M:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider.GetTaskInfo(System.Type)"/> implementation applies
-            either <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByXmlAttributeProvider"/> or
-            <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider"/> depending on what attributes
-            the task type is equipped with.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Winforms.Configuration.WinformsViewInfo">
-            <summary>
-            Instances of this type describe views within the Windows Forms
-            presentation platform. In addition to the view type it intoduces
-            several properties specific to the Windows Forms presentation
-            mechanism.
-            <para>When the <see cref="T:MVCSharp.Winforms.WinformsViewsManager"/>activates a view
-            it looks to the properties of the corresponding WinformsViewInfo
-            object. For example a form will be shown as modal if
-            <see cref="P:MVCSharp.Winforms.Configuration.WinformsViewInfo.ShowModal"/> is set to true.</para>
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.Configuration.WinformsViewInfo.#ctor(System.String,System.Type)">
-            <summary>
-            Constructor recieving the view name and type as parameters.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.Configuration.WinformsViewInfo.ShowModal">
-            <summary>
-            Specifies if a view should be displayed as a modal dialog.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.Configuration.WinformsViewInfo.IsMdiParent">
-            <summary>
-            Specifies whether a view should act as an MDI parent form.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.Configuration.WinformsViewInfo.MdiParent">
-            <summary>
-            Specifies an MDI parent view name.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Winforms.Configuration.WinformsViewAttribute">
-            <summary>
-            This attribute should by applied to view classes intended
-            for windows forms presentation mechanism.
-            </summary>
-            <remarks>
-            For this attribute to be properly processed <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosProviderType"/>
-            property should be equal to the <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfosProvider"/>  type.
-            If so, then <see cref="T:MVCSharp.Winforms.Configuration.WinformsViewInfo"/> objects will be generated for
-            each WinformsViewAttribute occurrence.
-            </remarks>
-        </member>
-        <member name="M:MVCSharp.Winforms.Configuration.WinformsViewAttribute.#ctor(System.Type,System.String)">
-            <summary>
-            Constructor taking the task type, and the view name as parameters.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Winforms.Configuration.WinformsViewAttribute.#ctor">
-            <summary>
-            Parameterless constructor.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.Configuration.WinformsViewAttribute.ShowModal">
-            <summary>
-            Specifies whether a view should be displayed as a modal dialog box.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.Configuration.WinformsViewAttribute.IsMdiParent">
-            <summary>
-            Specifies whether a view should act as an MDI parent form.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Winforms.Configuration.WinformsViewAttribute.MdiParent">
-            <summary>
-            Specifies the name of the view that should be an MDI parent for this view.
-            </summary>
-        </member>
         <member name="T:MVCSharp.Core.Configuration.Views.ViewInfoNotFoundException">
             <summary>
             Views managers throw this exception if unable to find an
@@ -2087,244 +2325,6 @@
         <member name="M:MVCSharp.Core.Configuration.Views.ViewInfoNotFoundException.#ctor(System.String)">
             <summary>
             Constructor taking the name of the view with missing description.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Webforms.Configuration.WebformsViewAttribute">
-            <summary>
-            Attribute for declaring views for the web forms presentation
-            mechanism.
-            </summary>
-            <remarks>It does not matter what type this attribute is applied
-            to. All neccessary information is contained inside the attribute
-            declarations.</remarks>
-            <example>
-            Below we declare two web views:
-            <code>
-            [WebformsView(typeof(MyTask), "View 1", "Default.aspx")]
-            [WebformsView(typeof(MyTask), "View 2", "Views/View2.aspx")]
-            class MyViews {}
-            </code>
-            </example>
-        </member>
-        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewAttribute.#ctor(System.Type,System.String,System.String)">
-            <summary>
-            Constructor taking the task type, view name and page Url as parameters.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Webforms.Configuration.WebformsViewAttribute.#ctor">
-            <summary>
-            Parameterless constructor.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Webforms.Configuration.WebformsViewAttribute.ViewUrl">
-            <summary>
-            Specifies the url of the page representing the view.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.StubNavigator">
-            <summary>
-            Navigator subclass which has no real functionality except for
-            modifying the task state. The views manager is not used at all, and no
-            actual view switching is done. This class is intended primarily for 
-            tests. </summary>
-        </member>
-        <member name="M:MVCSharp.Core.StubNavigator.Navigate(System.String)">
-            <summary>
-            Only alters the task state by making its current view
-            (<see cref="P:MVCSharp.Core.Tasks.ITask.CurrViewName"/>) equal to the passed
-            <c>viewName</c>.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.StubNavigator.NavigateDirectly(System.String)">
-            <summary>
-            Only alters the task state by making its current view
-            (<see cref="P:MVCSharp.Core.Tasks.ITask.CurrViewName"/>) equal to the passed
-            <c>viewName</c>.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.StubNavigator.TryNavigateToView(System.String)">
-            <summary>
-            Only alters the task state by making its current view
-            (<see cref="P:MVCSharp.Core.Tasks.ITask.CurrViewName"/>) equal to the passed
-            <c>viewName</c>.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.StubNavigator.ActivateView(System.String)">
-            <summary>
-            Only alters the task state by making its current view
-            (<see cref="P:MVCSharp.Core.Tasks.ITask.CurrViewName"/>) equal to the passed
-            <c>viewName</c>.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Tasks.TaskAttribute">
-            <summary>
-            Attribute to describe a task structure. Allows describing a task's structure
-            with XML (see the example below) and/or specifying a <see cref="T:MVCSharp.Core.Navigator"/>
-            type to be used by this task.
-            <para>If you want to describe a task's structure with an XML string then the
-            <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.TaskInfoProviderType">MVCConfiguration.TaskInfoProviderType</see>
-            property should point to <see cref="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByXmlAttributeProvider"/> or
-            <see cref="T:MVCSharp.Core.Configuration.Tasks.DefaultTaskInfoProvider"/> types.</para> 
-            </summary>
-            <example>
-            This is how a task structure is described with XML string inside the
-            [Task] attribute:
-            <code>
-            [Task(@"
-                &lt;interactionPoints&gt;
-                    &lt;interactionPoint view = ""View1"" controllerType = ""MyApp.MyController1""&gt;
-                        &lt;navTarget trigger = ""To View2"" view = ""View2""/&gt;
-                        &lt;navTarget view = ""View3""/&gt;
-                    &lt;/interactionPoint&gt;
-                    &lt;iPoint view = ""View2"" controllerType = ""MyApp.MyController2""&gt;
-                    &lt;/iPoint&gt;
-                    &lt;interactionPoint view = ""View3"" controllerType = ""MyApp.MyController3""&gt;
-                        &lt;navTarget trigger = ""To View2"" view = ""View2""/&gt;
-                    &lt;/interactionPoint&gt;
-                &lt;/interactionPoints&gt;
-            ")]
-            class MyTask1 { }
-            </code>
-            Note that it is possible to use either interactionPoint tag or its short
-            analog iPoint. Next example shows how to define adjacent interaction points
-            with transitions possible between each two of them.
-            <code>
-            [Task(@"
-                &lt;interactionPoints&gt;
-                    &lt;interactionPoint view = ""View1"" controllerType = ""MyApp.MyController1""&gt;
-                        &lt;navTarget trigger = ""View2"" view = ""View3""/&gt;
-                    &lt;/interactionPoint&gt;
-                    &lt;iPoint view = ""View2"" controllerType = ""MyApp.MyController2""/&gt;
-                    &lt;iPoint view = ""View3"" controllerType = ""MyApp.MyController3""/&gt;
-                    &lt;interactionPoint view = ""View4"" controllerType = ""MyApp.MyController3""/&gt;
-                &lt;/interactionPoints&gt;
-                &lt;adjacentPoints&gt;
-                    &lt;iPointRef view = ""View1""/&gt;
-                    &lt;interactionPointRef view = ""View2""/&gt;
-                    &lt;iPointRef view = ""View3""/&gt;
-                &lt;/adjacentPoints&gt;
-                &lt;adjacentPoints&gt;
-                    &lt;iPointRef view = ""View2""/&gt;
-                    &lt;interactionPointRef view = ""View3""/&gt;
-                &lt;/adjacentPoints&gt;
-                &lt;adjacentPoints&gt;
-                    &lt;iPointRef view = ""View3""/&gt;
-                    &lt;iPointRef view = ""View4""/&gt;
-                &lt;/adjacentPoints&gt;
-            ")]
-            class MyTask2 { }
-            </code>
-            </example>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskAttribute.#ctor(System.String)">
-            <summary>
-            Constructor taking the task XML description as a parameter.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskAttribute.#ctor(System.Type)">
-            <summary>
-            Constructor taking the desired navigator type as a parameter.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskAttribute.#ctor(System.Type,System.String)">
-            <summary>
-            Constructor taking the desired navigator type and the task XML
-            description as parameters.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskAttribute.Xml">
-            <summary>
-            Xml string describing the task.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Tasks.TaskAttribute.NavigatorType">
-            <summary>
-            Navigator type to be used by the task.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider">
-            <summary>
-            Implementation of <see cref="T:MVCSharp.Core.Configuration.Tasks.ITaskInfoProvider"/> interface.
-            Extracts task information from <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/>,
-            <see cref="T:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute"/> and <see cref="T:MVCSharp.Core.Configuration.Tasks.AdjacentPointsAttribute"/>
-            attributes applied to the task type and its members.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider.GetTaskInfo(System.Type)">
-            <summary>
-            Extracts task information from <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/>,
-            <see cref="T:MVCSharp.Core.Configuration.Tasks.NavTargetAttribute"/>, <see cref="T:MVCSharp.Core.Configuration.Tasks.AdjacentPointsAttribute"/>
-            attributes applied to the task type and its members.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Tasks.TaskInfoByAttributesProvider.CreateInteractionPointInfo(System.String,MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute)">
-            <summary>
-            Extracts task information from the specific <see cref="T:MVCSharp.Core.Configuration.Tasks.InteractionPointAttribute"/>
-            attribute instance. Can be overriden in subclasses to support custom
-            interaction point attributes for example.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Webforms.WebFormView">
-            <summary>
-            Base web page implementation of the <see cref="T:MVCSharp.Core.Views.IView"/> interface.
-            Instead of implementing the IView interface your web page view may
-            simply inherit the WebFormView class.
-            </summary>
-            <remarks>It is recommended to use the generic version of this class
-            - <see cref="T:MVCSharp.Webforms.WebFormView`1"/> - with a strongly typed association
-            to the controller and, thus, higher type safety.</remarks>
-            <seealso cref="T:MVCSharp.Webforms.WebFormView`1"/>
-        </member>
-        <member name="P:MVCSharp.Webforms.WebFormView.Controller">
-            <summary>
-            <see cref="P:MVCSharp.Core.Views.IView.Controller"/> property simple implementation with
-            backing field. Marked as virtual to be overrideable in sublasses.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Webforms.WebFormView.ViewName">
-            <summary>
-            <see cref="P:MVCSharp.Core.Views.IView.ViewName"/> property simple implementation with
-            backing field. Marked as virtual to be overrideable in sublasses.
-            </summary>
-        </member>
-        <member name="T:MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection">
-            <summary>
-            Represents an enumerable set of <see cref="T:MVCSharp.Core.Configuration.Views.ViewInfoCollection"/> objects for each
-            task type. Thus includes descriptions for all views in the
-            application.
-            </summary>
-            <remarks>This collection is a part of the <see cref="T:MVCSharp.Core.Configuration.MVCConfiguration"/>
-            object: when a task is started the necessary <c>ViewInfoCollection</c> object is
-            obtained from the <see cref="P:MVCSharp.Core.Configuration.MVCConfiguration.ViewInfosByTask"/> property.
-            </remarks>
-        </member>
-        <member name="F:MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection.viewInfosByTask">
-            <summary>
-            Dictionary storing ViewInfoCollection objects with task types as keys.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection.Add(MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection)">
-            <summary>
-            Adds all items from another <c>ViewInfosByTaskCollection</c>
-            collection to this one.
-            </summary>
-        </member>
-        <member name="M:MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection.GetEnumerator">
-            <summary>
-            Implementation of <see cref="M:System.Collections.IEnumerable.GetEnumerator"/> method.
-            Returns an enumerator to walk through the task types included
-            in this collection.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection.Item(System.Type)">
-            <summary>
-            Indexer to get or set ViewInfoCollection instance for a given task type.
-            </summary>
-        </member>
-        <member name="P:MVCSharp.Core.Configuration.Views.ViewInfosByTaskCollection.Count">
-            <summary>
-            Gets the number of <c>ViewInfoCollection</c> objects
-            present in this collection.
             </summary>
         </member>
     </members>
