@@ -41,7 +41,7 @@ namespace WSSQLGUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            TasksManager tasksManager = new TasksManager(WinformsViewsManager.GetDefaultConfig());
+            TasksManager tasksManager = new TasksManager(WSSqlViewsManager.GetDefaultConfig());
             tasksManager.StartTask(typeof(MainTask));
             Application.ApplicationExit += (o, e) =>
             {

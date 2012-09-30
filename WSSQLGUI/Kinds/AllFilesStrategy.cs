@@ -10,38 +10,23 @@ using System.Data.OleDb;
 using System.Data;
 using WSSQLGUI.Services.Enums;
 using WSSQLGUI.Services.Helpers;
+using MVCSharp.Core.Views;
 
 namespace WSSQLGUI.Kinds
 {
-	internal class AllFilesStrategy : BaseKindItemStrategy
-	{
+    internal class AllFilesStrategy : BaseKindItemStrategy
+    {
+        
 
         public AllFilesStrategy()
         {
             // init
             _queryTemplate = "SELECT System.ItemName, System.ItemUrl FROM SystemIndex WHERE Contains(*,'{0}*')";
             _queryAnd = " AND Contains(*,'{0}*')";
-            
-
-        }
-
-        public override void OnInit()
-        {
-            base.OnInit();
             ID = 0;
-            SettingsView = new AllFilesSettingsView();
-            _settingsController = SettingsView.Controller as AllFilesSettingsController;
-            DataView = new AllFilesDataView();
-            _dataController = DataView.Controller as AllFilesDataController;
-            (_settingsController as AllFilesSettingsController).Search += (o, e) =>
-            {
-                Thread thread = new Thread(() => DoQuery());
-                OnStart();
-                (DataView as IDataView).IsLoading = true;
-                thread.Start();
-            };
-            (_settingsController as AllFilesSettingsController).Error += (o, e) => { OnError(e.Value); };
-            (DataView as IDataView).SelectedItemChanged += (o, e) => { OnCurrentItemChanged(e.Value); };
+            _name = "All Files";
+            SettingsTaskType = typeof(AllFilesSettingsTask);
+            DataTaskType = typeof(AllFilesDataTask);
 
         }
 
@@ -55,7 +40,6 @@ namespace WSSQLGUI.Kinds
         {
             string name = reader[0] as string;
             string file = reader[1] as string;
-            bool att = (bool)reader[2];
             TypeSearchItem type = SearchItemHelper.GetTypeItem(file);
             (_dataController as AllFilesDataController).SetData( new BaseSearchData() { Name = name, Path = file, Type = type, ID = Guid.NewGuid() });
         }
@@ -82,5 +66,5 @@ namespace WSSQLGUI.Kinds
 
             return res;
         }
-	}
+    }
 }

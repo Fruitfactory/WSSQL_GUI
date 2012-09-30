@@ -5,16 +5,11 @@ using WSSQLGUI.Core;
 
 namespace WSSQLGUI.Views
 {
-	public interface IAllFilesDataView : IDataView
+	internal interface IAllFilesDataView : IDataView
 	{
 		BaseSearchData CurrentFilelItem
 		{
 			get;
 		}
-
-        void SetData(object[] data, BaseSearchData addData)
-        {}
-
-
 	}
 }

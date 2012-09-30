@@ -5,7 +5,7 @@ using WSSQLGUI.Core;
 
 namespace WSSQLGUI.Kinds
 {
-	public class ContactStrategy : BaseKindItemStrategy
+	internal class ContactStrategy : BaseKindItemStrategy
 	{
 	}
 }

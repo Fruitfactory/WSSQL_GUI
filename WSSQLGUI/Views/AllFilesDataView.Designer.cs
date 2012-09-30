@@ -36,19 +36,19 @@
             // 
             // dataGridViewFiles
             // 
-            this.dataGridViewFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewFiles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.columnName,
             this.columnPath});
             this.dataGridViewFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewFiles.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewFiles.Name = "dataGridViewFiles";
+            this.dataGridViewFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewFiles.Size = new System.Drawing.Size(247, 196);
             this.dataGridViewFiles.TabIndex = 0;
             // 
             // columnName
             // 
-            this.columnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.columnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.columnName.HeaderText = "Name";
             this.columnName.MinimumWidth = 150;
             this.columnName.Name = "columnName";
@@ -57,7 +57,7 @@
             // 
             // columnPath
             // 
-            this.columnPath.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.columnPath.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.columnPath.HeaderText = "Path";
             this.columnPath.MinimumWidth = 200;
             this.columnPath.Name = "columnPath";

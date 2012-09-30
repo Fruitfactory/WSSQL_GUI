@@ -6,12 +6,16 @@ using System.Windows.Forms;
 
 namespace WSSQLGUI.Core
 {
-	internal interface IDataView
-	{
+    internal interface IDataView
+    {
         bool IsLoading { get; set; }
 
-		event EventHandler<EventArgs<BaseSearchData>> SelectedItemChanged;
+        event EventHandler<EventArgs<BaseSearchData>> SelectedItemChanged;
 
-		void SetContextMenu(ContextMenuStrip contextMenu);
-	}
+        void SetContextMenu(ContextMenuStrip contextMenu);
+
+        void SetData(object[] value, BaseSearchData data);
+        void Clear();
+
+    }
 }

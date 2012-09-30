@@ -95,6 +95,27 @@ namespace WSSQLGUI.Services.Helpers
             return tempFileName;
         }
        
+        public List<string> GetFolderList()
+        {
+            List<string> res = new List<string>();
+            if (_app == null)
+                return res;
+            try
+            {
+                if (!IsOutlookAlive())
+                    ReopenOutlook(ref _app);
+                Outlook.NameSpace ns = _app.GetNamespace("MAPI");
+                foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
+                    GetOutlookFolders(folder, res);
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+                return res;
+            }
+            return res;
+        }
+
         public void Logoff()
         {
             if (_app == null)
@@ -137,7 +158,6 @@ namespace WSSQLGUI.Services.Helpers
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Error: {0}", ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 WSSqlLogger.Instance.LogError(ex.Message);
             }
 
@@ -158,7 +178,6 @@ namespace WSSQLGUI.Services.Helpers
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Error: {0}", ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 WSSqlLogger.Instance.LogError(ex.Message);
             }
 
@@ -181,7 +200,6 @@ namespace WSSQLGUI.Services.Helpers
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Error: {0}", ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 WSSqlLogger.Instance.LogError(ex.Message);
             }
             return mi;
@@ -203,7 +221,6 @@ namespace WSSQLGUI.Services.Helpers
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Error: {0}", ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 WSSqlLogger.Instance.LogError(ex.Message);
             }
             return att;
@@ -266,6 +283,25 @@ namespace WSSQLGUI.Services.Helpers
                     }
                 }
                 _disposed = true;
+            }
+        }
+
+
+        private void GetOutlookFolders(Outlook.MAPIFolder folder, List<string> res)
+        {
+            try
+            {
+                if (folder.Folders.Count == 0)
+                    return;
+                foreach (var subfolder in folder.Folders.OfType<Outlook.MAPIFolder>())
+                {
+                    res.Add(subfolder.Name);
+                    GetOutlookFolders(subfolder, res);
+                }
+            }
+            catch (Exception e)
+            {
+                WSSqlLogger.Instance.LogError(e.Message);
             }
         }
 

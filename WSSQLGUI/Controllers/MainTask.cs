@@ -12,7 +12,6 @@ namespace WSSQLGUI.Controllers
         [InteractionPoint(typeof(SearchController))]
         public const string Search = "Search";
 
-
         public override void OnStart(object param)
         {
             Navigator.NavigateDirectly(Search);

@@ -2,14 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using WSSQLGUI.Core;
+using WSSQLGUI.Services.Helpers;
 
 namespace WSSQLGUI.Controllers
 {
-	public class EmailSettingsController : BaseSettingsController
+	internal class EmailSettingsController : BaseSettingsController
 	{
 		public List<string> GetFolders()
 		{
-			throw new NotImplementedException();
+            var list = OutlookHelper.Instance.GetFolderList();
+            return list;
 		}
 	}
 }

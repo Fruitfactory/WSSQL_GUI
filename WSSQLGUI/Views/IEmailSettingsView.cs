@@ -5,7 +5,7 @@ using WSSQLGUI.Core;
 
 namespace WSSQLGUI.Views
 {
-	public interface IEmailSettingsView : ISettingsView
+	internal interface IEmailSettingsView : ISettingsView
 	{
 		string Folder
 		{

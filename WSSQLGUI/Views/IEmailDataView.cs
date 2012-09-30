@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using WSSQLGUI.Core;
+using WSSQLGUI.Models;
 
 namespace WSSQLGUI.Views
 {
-	public interface IEmailDataView : IDataView
+	internal interface IEmailDataView : IDataView
 	{
 		EmailSearchData CurrentEmailItem
 		{
 			get;
-			set;
 		}
 	}
 }

@@ -14,7 +14,7 @@ namespace WSSQLGUI.Core
 			get;
 		}
 
-		IView SettingsVIew
+		IView SettingsView
 		{
 			get;
 		}
@@ -33,5 +33,9 @@ namespace WSSQLGUI.Core
 		{
 			get;
 		}
+
+        void ConnectWithSettingsView(IView settingsView);
+        void ConnectWithDataView(IView dataView);
+
 	}
 }

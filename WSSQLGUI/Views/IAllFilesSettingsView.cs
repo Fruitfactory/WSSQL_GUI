@@ -5,7 +5,7 @@ using WSSQLGUI.Core;
 
 namespace WSSQLGUI.Views
 {
-	public interface IAllFilesSettingsView : ISettingsView
+	internal interface IAllFilesSettingsView : ISettingsView
 	{
 	}
 }

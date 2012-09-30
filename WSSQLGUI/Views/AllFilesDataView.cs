@@ -10,11 +10,12 @@ using MVCSharp.Core;
 using MVCSharp.Winforms;
 using WSSQLGUI.Controllers;
 using WSSQLGUI.Core;
-
+using MVCSharp.Core.Configuration.Views;
 
 namespace WSSQLGUI.Views
 {
-    internal partial class AllFilesDataView : WinUserControlView<AllFilesDataController>,IAllFilesDataView
+    [View(typeof(AllFilesDataTask), AllFilesDataTask.AllFilesDataView)]
+    internal partial class AllFilesDataView : WinUserControlView,IAllFilesDataView
     {
 
         private BaseSearchData _current;
@@ -23,7 +24,30 @@ namespace WSSQLGUI.Views
         {
             InitializeComponent();
             dataGridViewFiles.SelectionChanged += DataGridSelectionChanged;
+            
         }
+
+        public override IController Controller
+        {
+            get
+            {
+                return base.Controller as AllFilesDataController;
+            }
+            set
+            {
+                if(value != null)
+                    base.Controller = value;
+            }
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            if (Controller == null)
+                return;
+
+        }
+
 
         public Core.BaseSearchData CurrentFilelItem
         {
@@ -56,6 +80,10 @@ namespace WSSQLGUI.Views
             set;
         }
 
+        public void Clear()
+        {
+            dataGridViewFiles.Rows.Clear();
+        }
 
         private void DataGridSelectionChanged(object sender, EventArgs e)
         {
@@ -65,13 +93,13 @@ namespace WSSQLGUI.Views
             if (dataGridViewFiles.SelectedCells.Count == 0)
                 return;
 
-            BaseSearchData si = dataGridViewFiles.SelectedRows[0].Tag as BaseSearchData;
-            _current = si;
-            EventHandler<Services.EventArgs<BaseSearchData>> temp = SelectedItemChanged;
-            if (temp != null)
-            {
-                temp(this, new Services.EventArgs<BaseSearchData>(si));        
-            }
+            //BaseSearchData si = dataGridViewFiles.SelectedRows[0].Tag as BaseSearchData;
+            //_current = si;
+            //EventHandler<Services.EventArgs<BaseSearchData>> temp = SelectedItemChanged;
+            //if (temp != null)
+            //{
+            //    temp(this, new Services.EventArgs<BaseSearchData>(si));        
+            //}
         }
 
     }

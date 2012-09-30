@@ -7,7 +7,7 @@ using WSSQLGUI.Views;
 
 namespace WSSQLGUI.Controllers
 {
-	public class AllFilesDataController : BaseDataController
+	internal class AllFilesDataController : BaseDataController
 	{
 
         public override void SetData(BaseSearchData item)

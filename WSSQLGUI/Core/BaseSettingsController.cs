@@ -4,6 +4,9 @@ using System.Text;
 using MVCSharp.Core;
 using MVCSharp.Core.CommandManager;
 using WSSQLGUI.Services;
+using MVCSharp.Core.Views;
+using WSSQLGUI.Controllers;
+using System.Text.RegularExpressions;
 
 
 namespace WSSQLGUI.Core
@@ -12,10 +15,25 @@ namespace WSSQLGUI.Core
 	{
         protected DelegateCommand _searchCommand;
         protected string _nameButton = "Search";
+        protected bool _isError = false;
 
 		public virtual string ErrorProvider(string textForAnalyz)
 		{
-            return String.Empty;
+            string pattern = @"\bselect\s.*from\b";
+            var message = string.Empty;
+            Regex reg = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            Match m = reg.Match(textForAnalyz);
+            if (m.Success)
+            {
+                _isError = true;
+                message = "You have written wrong Search Criteria";
+            }
+            else
+            {
+                _isError = false;
+            }
+            OnError(_isError);
+            return message;
 		}
 
 		public ICommand SearchCommand

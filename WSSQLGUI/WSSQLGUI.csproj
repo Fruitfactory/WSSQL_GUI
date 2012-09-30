@@ -84,9 +84,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AllFilesDataController.cs" />
+    <Compile Include="Controllers\AllFilesDataTask.cs" />
     <Compile Include="Controllers\AllFilesSettingsController.cs" />
+    <Compile Include="Controllers\AllFilesSettingsTask.cs" />
     <Compile Include="Controllers\EmailDataController.cs" />
+    <Compile Include="Controllers\EmailDataTask.cs" />
     <Compile Include="Controllers\EmailSettingsController.cs" />
+    <Compile Include="Controllers\EmailSettingsTask.cs" />
     <Compile Include="Controllers\MainTask.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Core\BaseDataController.cs" />
@@ -99,7 +103,6 @@
     <Compile Include="Kinds\AllFilesStrategy.cs" />
     <Compile Include="Kinds\ContactStrategy.cs" />
     <Compile Include="Kinds\EmailStrategy.cs" />
-    <Compile Include="Models\EmailData.cs" />
     <Compile Include="Models\EmailSearchData.cs" />
     <Compile Include="Models\SearchData.cs" />
     <Compile Include="Services\Helpers\OutlookHelper.cs" />
@@ -121,8 +124,18 @@
     <Compile Include="Views\AllFilesSettingsView.Designer.cs">
       <DependentUpon>AllFilesSettingsView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\EmailDataView.cs" />
-    <Compile Include="Views\EmailSettingsView.cs" />
+    <Compile Include="Views\EmailDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\EmailDataView.Designer.cs">
+      <DependentUpon>EmailDataView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EmailSettingsView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\EmailSettingsView.Designer.cs">
+      <DependentUpon>EmailSettingsView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\IAllFilesDataView.cs" />
     <Compile Include="Views\IAllFilesSettingsView.cs" />
     <Compile Include="Views\IEmailDataView.cs" />
@@ -137,11 +150,18 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\EventArgs.cs" />
+    <Compile Include="Views\WSSqlViewsManager.cs" />
     <EmbeddedResource Include="Views\AllFilesDataView.resx">
       <DependentUpon>AllFilesDataView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\AllFilesSettingsView.resx">
       <DependentUpon>AllFilesSettingsView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\EmailDataView.resx">
+      <DependentUpon>EmailDataView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\EmailSettingsView.resx">
+      <DependentUpon>EmailSettingsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SearchForm.resx">
       <DependentUpon>SearchForm.cs</DependentUpon>

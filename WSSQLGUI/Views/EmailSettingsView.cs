@@ -13,21 +13,21 @@ using MVCSharp.Core.Configuration.Views;
 
 namespace WSSQLGUI.Views
 {
-    [View(typeof(AllFilesSettingsTask),AllFilesSettingsTask.AllFilesSettingsView)]
-    internal partial class AllFilesSettingsView : WinUserControlView, IAllFilesSettingsView
-    {
-        public AllFilesSettingsView()
-        {
-            InitializeComponent();
+    [View(typeof(EmailSettingsTask),EmailSettingsTask.EmailSettingsView)]
+	internal partial class EmailSettingsView: WinUserControlView,IEmailSettingsView
+	{
+		public EmailSettingsView()
+		{
+			InitializeComponent();
             textBoxSearch.TextChanged += (o, e) => SearchCriteriaValidate();
             textBoxSearch.Validated += (o, e) => SearchCriteriaValidate();
-        }
+		}
 
         public override IController Controller
         {
             get
             {
-                return  base.Controller as AllFilesSettingsController; 
+                return base.Controller as EmailSettingsController;
             }
             set
             {
@@ -39,10 +39,26 @@ namespace WSSQLGUI.Views
         public override void Initialize()
         {
             base.Initialize();
-            if (Controller == null)
+            var contr = Controller as EmailSettingsController;
+            if (contr == null)
                 return;
-            if(buttonSearch.DataBindings.Count == 0)
-                commandManager.Bind((Controller as AllFilesSettingsController).SearchCommand, buttonSearch);
+            commandManager.Bind(contr.SearchCommand, buttonSearch);
+            comboBoxFolder.DataSource = contr.GetFolders();
+            if (comboBoxFolder.Items.Count > 0)
+                comboBoxFolder.SelectedIndex = 0;
+        }
+
+
+        public string Folder
+        {
+            get
+            {
+                return comboBoxFolder.SelectedText;
+            }
+            set
+            {
+                comboBoxFolder.SelectedText = value;
+            }
         }
 
         public string SearchCriteria
@@ -61,9 +77,8 @@ namespace WSSQLGUI.Views
         {
             if (Controller == null)
                 return;
-            var message = (Controller as AllFilesSettingsController).ErrorProvider(textBoxSearch.Text);
+            var message = (Controller as EmailSettingsController).ErrorProvider(textBoxSearch.Text);
             errorProvider.SetError(textBoxSearch, message);
         }
-
     }
 }

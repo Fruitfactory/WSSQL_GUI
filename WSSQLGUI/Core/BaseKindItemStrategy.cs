@@ -6,6 +6,7 @@ using MVCSharp.Core.Views;
 using WSSQLGUI.Services;
 using System.Data;
 using System.Data.OleDb;
+using System.Threading;
 
 namespace WSSQLGUI.Core
 {
@@ -16,6 +17,7 @@ namespace WSSQLGUI.Core
 		protected string _queryAnd;
         protected ControllerBase _settingsController;
         protected ControllerBase _dataController;
+        protected string _name = String.Empty;
 
 		protected virtual void DoQuery()
 		{
@@ -114,9 +116,40 @@ namespace WSSQLGUI.Core
         
         }
 
+        public virtual void ConnectWithSettingsView(IView settingsView)
+        {
+            if (settingsView == null ||
+                SettingsView != null) 
+                return;
+            SettingsView = settingsView;
+            _settingsController = SettingsView.Controller as ControllerBase;
+            (_settingsController as BaseSettingsController).Search += (o, e) =>
+            {
+                Thread thread = new Thread(() => DoQuery());
+                OnStart();
+                (DataView as IDataView).IsLoading = true;
+                (DataView as IDataView).Clear();
+                thread.Start();
+            };
+            (_settingsController as BaseSettingsController).Error += (o, e) => { OnError(e.Value); };
+            
+        }
+
+        public virtual void ConnectWithDataView(IView dataView)
+        {
+            if (dataView == null || 
+                DataView != null) 
+                return;
+            DataView = dataView;
+            _dataController = DataView.Controller as ControllerBase;
+
+            (DataView as IDataView).SelectedItemChanged += (o, e) => { OnCurrentItemChanged(e.Value); };
+        }
+
+
         public string Name
         {
-            get { return "All files"; }
+            get { return _name; }
         }
 
         public IView SettingsView
@@ -137,6 +170,18 @@ namespace WSSQLGUI.Core
         public event EventHandler<EventArgs<BaseSearchData>> CurrentItemChanged;
 
         public int ID
+        {
+            get;
+            protected set;
+        }
+
+        public Type SettingsTaskType
+        {
+            get;
+            protected set;
+        }
+
+        public Type DataTaskType
         {
             get;
             protected set;
