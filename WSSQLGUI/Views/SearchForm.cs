@@ -19,6 +19,7 @@ using WSSQLGUI.Controllers;
 using WSSQLGUI.Models;
 using WSSQLGUI.Services;
 using System.Text.RegularExpressions;
+using WSSQLGUI.Core;
 
 
 
@@ -27,15 +28,9 @@ namespace WSSQLGUI.Views
     [View(typeof(MainTask), MainTask.Search)]
     public partial class SearchForm : WinFormView
     {
-
-        private Font _defaultFont;
-        private bool _isLoading = false;
-
-
         public SearchForm()
         {
             InitializeComponent();
-            //_defaultFont = dataGridView1.DefaultCellStyle.Font;
         }
 
         public override void Initialize()
@@ -43,12 +38,11 @@ namespace WSSQLGUI.Views
             base.Initialize();
             if (Controller != null)
             {
-                //(Controller as SearchController).OnStartSearch += (sender,e) => this.Invoke(new Action<object,EventArgs>(StartSearch),new object[]{sender,e});
-                //(Controller as SearchController).OnCompleteSearch += (sender, e) => this.Invoke(new Action<object, EventArgs<bool>>(CompleteSearch), new object[] { sender, e });
-                //(Controller as SearchController).OnAddSearchItem += AddSearchItem;
+                (Controller as SearchController).OnStartSearch += (sender,e) => this.Invoke(new Action<object,EventArgs>(StartSearch),new object[]{sender,e});
+                (Controller as SearchController).OnCompleteSearch += (sender, e) => this.Invoke(new Action<object, EventArgs<bool>>(CompleteSearch), new object[] { sender, e });
+                (Controller as SearchController).OnItemChanged += ItemChanged;
                 commandManager.Bind((Controller as SearchController).OpenFileCommand, buttonPreview);
                 commandManager.Bind((Controller as SearchController).OpenFileCommand, toolStripMenuItemOpen);
-                //commandManager.Bind((Controller as SearchController).SearchCommand, SearchButton);
                 var list = (Controller as SearchController).GetAllKinds();
                 comboBoxKinds.DataSource = list;
             }
@@ -71,59 +65,26 @@ namespace WSSQLGUI.Views
 
         private void StartSearch(object sender, EventArgs e)
         {
-            //SearchTextBox.Enabled = SearchButton.Enabled = false;
-            //this.Cursor = dataGridView1.Cursor = previewControl.Cursor = Cursors.AppStarting;
-            //dataGridView1.Rows.Clear();
+            this.Cursor =  previewControl.Cursor = Cursors.AppStarting;
             previewControl.UnloadPreview();
         }
 
         private void CompleteSearch(object sender, EventArgs<bool> e)
         {
-            //_isLoading = false;
-            //SearchTextBox.Enabled = SearchButton.Enabled = true;
-            //this.Cursor = dataGridView1.Cursor = previewControl.Cursor = Cursors.Default;
-            //dataGridView1.ClearSelection();
+            this.Cursor = previewControl.Cursor = Cursors.Default;
         }
 
-        private void AddSearchItem(object sender, EventArgs<SearchItem> e)
+        private void ItemChanged(object sender, EventArgs e)
         {
-            //this.Invoke(new Action(() => 
-            //    {
-            //        int i = dataGridView1.Rows.Add(new object[] { e.Value.Recepient, e.Value.Subject,e.Value.Date });
-            //        dataGridView1.Rows[i].Tag = e.Value;
-            //    }),null);
-        }
+            string filename = (Controller as SearchController).FileName;
 
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
-        {
-            //if (_isLoading)
-            //    return;
-            //if (dataGridView1.SelectedCells.Count == 0)
-            //    return;
+            if (FileService.IsDirectory(filename) || !File.Exists(filename))
+            {
+                previewControl.FilePath = string.Empty;
+                return;
+            }
 
-            //SearchItem si = dataGridView1.SelectedRows[0].Tag as SearchItem;
-            
-            //(Controller as SearchController).CurrentSearchItemChanged(si);
-
-            //string filename = (Controller as SearchController).FileName;
-
-            //if (FileService.IsDirectory(filename) || !File.Exists(filename))
-            //{
-            //    previewControl.FilePath = string.Empty;
-            //    return;
-            //}
-
-            //previewControl.FilePath = filename;
-        }
-
-        private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            //dataGridView1.Rows[e.RowIndex].DefaultCellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
-        }
-
-        private void dataGridView1_RowLeave(object sender, DataGridViewCellEventArgs e)
-        {
-            //dataGridView1.Rows[e.RowIndex].DefaultCellStyle.Font = _defaultFont;
+            previewControl.FilePath = filename;
         }
 
         private void comboBoxKinds_SelectedIndexChanged(object sender, EventArgs e)
@@ -132,6 +93,7 @@ namespace WSSQLGUI.Views
             if (controller == null)
                 return;
             controller.CurrentKindChanged(comboBoxKinds.SelectedValue.ToString());
+            previewControl.UnloadPreview();
         }
     }
 }

@@ -41,6 +41,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.panelSettings = new System.Windows.Forms.Panel();
             this.comboBoxKinds = new System.Windows.Forms.ComboBox();
+            this.labelKinds = new System.Windows.Forms.Label();
             this.contextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitPanels)).BeginInit();
             this.splitPanels.Panel2.SuspendLayout();
@@ -74,7 +75,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(42, 242);
+            this.label2.Location = new System.Drawing.Point(42, 204);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(82, 15);
             this.label2.TabIndex = 5;
@@ -98,13 +99,13 @@
             this.splitPanels.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitPanels.Location = new System.Drawing.Point(43, 273);
+            this.splitPanels.Location = new System.Drawing.Point(43, 225);
             this.splitPanels.Name = "splitPanels";
             // 
             // splitPanels.Panel2
             // 
             this.splitPanels.Panel2.Controls.Add(this.previewControl);
-            this.splitPanels.Size = new System.Drawing.Size(887, 433);
+            this.splitPanels.Size = new System.Drawing.Size(887, 319);
             this.splitPanels.SplitterDistance = 485;
             this.splitPanels.TabIndex = 8;
             // 
@@ -115,7 +116,7 @@
             this.previewControl.FilePath = null;
             this.previewControl.Location = new System.Drawing.Point(0, 0);
             this.previewControl.Name = "previewControl";
-            this.previewControl.Size = new System.Drawing.Size(398, 433);
+            this.previewControl.Size = new System.Drawing.Size(398, 319);
             this.previewControl.TabIndex = 0;
             // 
             // buttonPreview
@@ -127,9 +128,9 @@
             this.buttonPreview.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gray;
             this.buttonPreview.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonPreview.ForeColor = System.Drawing.Color.Black;
-            this.buttonPreview.Location = new System.Drawing.Point(842, 242);
+            this.buttonPreview.Location = new System.Drawing.Point(845, 194);
             this.buttonPreview.Name = "buttonPreview";
-            this.buttonPreview.Size = new System.Drawing.Size(88, 25);
+            this.buttonPreview.Size = new System.Drawing.Size(85, 24);
             this.buttonPreview.TabIndex = 10;
             this.buttonPreview.Text = "Preview";
             this.buttonPreview.UseVisualStyleBackColor = false;
@@ -142,37 +143,50 @@
             // 
             this.panelSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelSettings.Location = new System.Drawing.Point(45, 37);
+            this.panelSettings.Location = new System.Drawing.Point(235, 37);
             this.panelSettings.Name = "panelSettings";
-            this.panelSettings.Size = new System.Drawing.Size(885, 199);
+            this.panelSettings.Size = new System.Drawing.Size(695, 151);
             this.panelSettings.TabIndex = 11;
             // 
             // comboBoxKinds
             // 
+            this.comboBoxKinds.BackColor = System.Drawing.Color.Silver;
             this.comboBoxKinds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxKinds.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.comboBoxKinds.FormattingEnabled = true;
-            this.comboBoxKinds.Location = new System.Drawing.Point(176, 8);
+            this.comboBoxKinds.Location = new System.Drawing.Point(43, 58);
             this.comboBoxKinds.Name = "comboBoxKinds";
-            this.comboBoxKinds.Size = new System.Drawing.Size(240, 23);
+            this.comboBoxKinds.Size = new System.Drawing.Size(163, 23);
             this.comboBoxKinds.TabIndex = 12;
             this.comboBoxKinds.SelectedIndexChanged += new System.EventHandler(this.comboBoxKinds_SelectedIndexChanged);
+            // 
+            // labelKinds
+            // 
+            this.labelKinds.AutoSize = true;
+            this.labelKinds.Location = new System.Drawing.Point(43, 40);
+            this.labelKinds.Name = "labelKinds";
+            this.labelKinds.Size = new System.Drawing.Size(163, 15);
+            this.labelKinds.TabIndex = 13;
+            this.labelKinds.Text = "Choose kind of file searching:";
             // 
             // SearchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ClientSize = new System.Drawing.Size(969, 736);
-            this.Controls.Add(this.comboBoxKinds);
+            this.ClientSize = new System.Drawing.Size(969, 574);
+            this.Controls.Add(this.labelKinds);
             this.Controls.Add(this.panelSettings);
             this.Controls.Add(this.splitPanels);
-            this.Controls.Add(this.buttonPreview);
+            this.Controls.Add(this.comboBoxKinds);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.buttonPreview);
             this.Controls.Add(this.SearchTextBox);
+            this.Controls.Add(this.label2);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(985, 612);
             this.Name = "SearchForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "WSSQL GUI";
@@ -193,12 +207,13 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.SplitContainer splitPanels;
         private C4F.DevKit.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl previewControl;
-        private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.Button buttonPreview;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.Panel panelSettings;
         private System.Windows.Forms.ComboBox comboBoxKinds;
+        public System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.Label labelKinds;
     }
 }
 

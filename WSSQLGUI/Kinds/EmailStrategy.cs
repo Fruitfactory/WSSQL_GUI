@@ -11,16 +11,17 @@ using WSSQLGUI.Services.Enums;
 using WSSQLGUI.Views;
 using WSSQLGUI.Controllers;
 using System.Threading;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSSQLGUI.Kinds
 {
 	internal class EmailStrategy : BaseKindItemStrategy
 	{
-
+        private string _queryAttach = "SELECT System.ItemName,System.ItemUrl,System.IsAttachment  FROM SystemIndex WHERE System.Message.ConversationIndex = '{0}' ";//AND System.Message.ConversationIndex = '{1}'
 
         public EmailStrategy()
         {
-            _queryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(*,'{0}*') AND CONTAINS(System.ItemPathDisplay,'Входящие*',1033) ORDER BY System.Message.DateReceived DESC) ";//Входящие  //Inbox
+            _queryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(*,'{0}*') AND CONTAINS(System.ItemPathDisplay,'{1}*',1033) ORDER BY System.Message.DateReceived DESC) ";//Входящие  //Inbox
             _queryAnd = " AND Contains(*,'{0}*')";
             ID = 1;
             _name = "E-Mail";
@@ -52,13 +53,25 @@ namespace WSSQLGUI.Kinds
                 Type = type,
                 ID = Guid.NewGuid()
             };
+            try
+            {
+
+                si.Attachments = OutlookHelper.Instance.GetAttachments(item);
+
+            }
+            catch (Exception e)
+            {
+                WSSqlLogger.Instance.LogError(e.Message);
+            }
+
             //TODO: paste item to datacontroller;
-            (DataView as EmailDataController).SetData(si);
+            (_dataController as EmailDataController).SetData(si);
         }
 
         protected override string CreateSqlQuery()
         {
-            var searchCriteria = string.Empty;
+            var searchCriteria = (SettingsView as IEmailSettingsView).SearchCriteria;
+            var folder = (SettingsView as IEmailSettingsView).Folder;
             string res = string.Empty;
             if (searchCriteria.IndexOf(' ') > -1)
             {
@@ -74,7 +87,7 @@ namespace WSSQLGUI.Kinds
                 res += temp.ToString();// +groupOn;
             }
             else
-                res = string.Format(_queryTemplate, searchCriteria);// +groupOn;
+                res = string.Format(_queryTemplate, searchCriteria,folder);// +groupOn;
 
             return res;
         }
@@ -116,9 +129,12 @@ namespace WSSQLGUI.Kinds
             string date = reader[4].ToString();
             DateTime.TryParse(date, out res);
 
+
             return new EmailSearchData() { Subject = subject, Name = name, Path = url, Recepient = recep, Date = res };
+             
         }
 
+       
         #endregion
 
 

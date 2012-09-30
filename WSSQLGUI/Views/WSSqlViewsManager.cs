@@ -39,7 +39,7 @@ namespace WSSQLGUI.Views
                 _mainFrm.DataPanel.Controls.Add(userControlView);
                 if (_mainFrm.Controller != null)
                     (_mainFrm.Controller as SearchController).SetDataView(userControlView);
-
+                userControlView.ContextMenuStrip = _mainFrm.contextMenu;
             }
             
             userControlView.Dock = DockStyle.Fill;

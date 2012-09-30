@@ -53,21 +53,25 @@
             // 
             this.textBoxSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSearch.BackColor = System.Drawing.Color.Silver;
+            this.textBoxSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxSearch.Location = new System.Drawing.Point(3, 16);
             this.textBoxSearch.Name = "textBoxSearch";
-            this.textBoxSearch.Size = new System.Drawing.Size(263, 20);
+            this.textBoxSearch.Size = new System.Drawing.Size(268, 20);
             this.textBoxSearch.TabIndex = 1;
             // 
             // buttonSearch
             // 
             this.buttonSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSearch.AutoEllipsis = true;
+            this.buttonSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
+            this.buttonSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSearch.Location = new System.Drawing.Point(149, 42);
             this.buttonSearch.MinimumSize = new System.Drawing.Size(148, 23);
             this.buttonSearch.Name = "buttonSearch";
             this.buttonSearch.Size = new System.Drawing.Size(148, 23);
             this.buttonSearch.TabIndex = 2;
-            this.buttonSearch.UseVisualStyleBackColor = true;
+            this.buttonSearch.UseVisualStyleBackColor = false;
             // 
             // groupBoxAddSettings
             // 
@@ -85,7 +89,9 @@
             // 
             // comboBoxFolder
             // 
+            this.comboBoxFolder.BackColor = System.Drawing.Color.Silver;
             this.comboBoxFolder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.comboBoxFolder.FormattingEnabled = true;
             this.comboBoxFolder.Location = new System.Drawing.Point(127, 25);
             this.comboBoxFolder.Name = "comboBoxFolder";

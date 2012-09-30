@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSSQLGUI.Core;
+using WSSQLGUI.Models;
 
 
 namespace WSSQLGUI.Services.Helpers
@@ -53,16 +55,16 @@ namespace WSSQLGUI.Services.Helpers
 
         #region public
         
-        public string GetEMailTempFileName(WSSQLGUI.Models.SearchItem itemsearch)
+        public string GetEMailTempFileName(BaseSearchData itemsearch)
         {
             if (itemsearch == null)
                 return null;
-            string mapiUrl = itemsearch.FileName;
+            string mapiUrl = itemsearch.Path;
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
             Outlook.MailItem mailItem = GetMailItem(entryID);
             if (mailItem == null)
             {
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Mail not found", itemsearch.FileName));
+                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Mail not found", itemsearch.Path));
                 return null;
             }
             string tempFilename = TempFileManager.Instance.GenerateTempFileName(itemsearch);
@@ -73,18 +75,18 @@ namespace WSSQLGUI.Services.Helpers
             return tempFilename;
         }
 
-        public string GetAttachmentTempFileName(WSSQLGUI.Models.SearchItem item)
+        public string GetAttachmentTempFileName(WSSQLGUI.Core.BaseSearchData item)
         {
             if (item == null)
                 return null;
-            string mapi = item.FileName;
+            string mapi = item.Path;
             string entryID = EIDFromEncodeStringWDS30(mapi.Substring(mapi.IndexOf(ATSUFFIX) - IDLENGHT, IDLENGHT));
             string fileNameAttach = mapi.Substring(mapi.LastIndexOf(':') + 1);
             Outlook.MailItem mi = GetMailItem(entryID);
             Outlook.Attachment att = GetAttacment(mi, fileNameAttach);
             if (att == null)
             {
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1} - {2}", "Attachment not found", item.Name, item.FileName));
+                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1} - {2}", "Attachment not found", item.Name, item.Path));
                 return null;
             }
             string tempFileName = TempFileManager.Instance.GenerateTempFileName(item);
@@ -94,7 +96,25 @@ namespace WSSQLGUI.Services.Helpers
 
             return tempFileName;
         }
-       
+
+        public List<string> GetAttachments(BaseSearchData itemsearch)
+        {
+            List<string> list = new List<string>();
+            if (itemsearch == null)
+                return null;
+            string mapiUrl = itemsearch.Path;
+            string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
+            Outlook.MailItem mi = GetMailItem(entryID);
+            if (mi == null)
+                return list;
+            foreach (Outlook.Attachment att in mi.Attachments)
+            {
+                list.Add(att.DisplayName);
+            }
+            
+            return list;
+        }
+
         public List<string> GetFolderList()
         {
             List<string> res = new List<string>();
@@ -128,6 +148,21 @@ namespace WSSQLGUI.Services.Helpers
         {
             Dispose(true);
         }
+
+        public string EIDFromEncodeStringWDS30(string mapi)
+        {
+            StringBuilder sbEID = new StringBuilder(mapi.Length);
+            int Len = mapi.Length;
+            for (int index = 0; index < Len; index++)
+            {
+                ulong offset = 0xAC00; // Hangul char range (AC00-D7AF)
+                ulong ulByte = (((ulong)mapi[index]) & 0xffff) - offset;
+                sbEID.AppendFormat(
+                "{0:X2}", (ulByte & 0x00ff));
+            }
+            return sbEID.ToString();
+        }
+
 
         #endregion
 
@@ -253,21 +288,6 @@ namespace WSSQLGUI.Services.Helpers
             app = null;
             app = GetApplication();
             WSSqlLogger.Instance.LogWarning("Outlook was closed. Create new instance.");
-        }
-
-
-        private string EIDFromEncodeStringWDS30(string mapi)
-        {
-            StringBuilder sbEID = new StringBuilder(mapi.Length);
-            int Len = mapi.Length;
-            for (int index = 0; index < Len; index++)
-            {
-                ulong offset = 0xAC00; // Hangul char range (AC00-D7AF)
-                ulong ulByte = (((ulong)mapi[index]) & 0xffff) - offset;
-                sbEID.AppendFormat(
-                "{0:X2}", (ulByte & 0x00ff));
-            }
-            return sbEID.ToString();
         }
 
         private void Dispose(bool disposing)

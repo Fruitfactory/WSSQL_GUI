@@ -54,7 +54,7 @@ namespace WSSQLGUI.Services.Helpers
         #region public 
 
 
-        public string GenerateTempFileName(WSSQLGUI.Models.SearchItem searchitem)
+        public string GenerateTempFileName(WSSQLGUI.Core.BaseSearchData searchitem)
         {
             if (_tempFileList.ContainsKey(searchitem.ID))
             {
@@ -101,7 +101,7 @@ namespace WSSQLGUI.Services.Helpers
 
         #region private 
 
-        private string GetExtension(WSSQLGUI.Models.SearchItem searchItem)
+        private string GetExtension(WSSQLGUI.Core.BaseSearchData searchItem)
         {
             string ext = null;
             switch (searchItem.Type)
@@ -110,7 +110,7 @@ namespace WSSQLGUI.Services.Helpers
                     ext = ".msg";
                     break;
                 case Enums.TypeSearchItem.Attachment:
-                    string filename = searchItem.FileName.Substring(searchItem.FileName.LastIndexOf(':') + 1);
+                    string filename = searchItem.Path.Substring(searchItem.Path.LastIndexOf(':') + 1);
                     ext = Path.GetExtension(filename);
                     break;
             }

@@ -7,7 +7,7 @@ using WSSQLGUI.Core;
 namespace WSSQLGUI.Models
 {
 
-
+   
     internal class EmailData
     {
         private List<EmailSearchData> _data = new List<EmailSearchData>();
@@ -41,5 +41,12 @@ namespace WSSQLGUI.Models
             get;
             set;
         }
+
+        public List<string> Attachments
+        {
+            get;
+            set;
+        }
+       
     }
 }

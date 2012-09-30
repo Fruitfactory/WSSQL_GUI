@@ -7,8 +7,8 @@ namespace WSSQLGUI.Services.Interfaces
 {
     interface IOutlookHelper
     {
-        string GetEMailTempFileName(WSSQLGUI.Models.SearchItem itemsearch);
+        string GetEMailTempFileName(WSSQLGUI.Core.BaseSearchData itemsearch);
 
-        string GetAttachmentTempFileName(WSSQLGUI.Models.SearchItem itemsearch);
+        string GetAttachmentTempFileName(WSSQLGUI.Core.BaseSearchData itemsearch);
     }
 }

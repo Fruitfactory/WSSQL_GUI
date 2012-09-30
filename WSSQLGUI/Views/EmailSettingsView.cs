@@ -44,8 +44,7 @@ namespace WSSQLGUI.Views
                 return;
             commandManager.Bind(contr.SearchCommand, buttonSearch);
             comboBoxFolder.DataSource = contr.GetFolders();
-            if (comboBoxFolder.Items.Count > 0)
-                comboBoxFolder.SelectedIndex = 0;
+
         }
 
 
@@ -53,7 +52,7 @@ namespace WSSQLGUI.Views
         {
             get
             {
-                return comboBoxFolder.SelectedText;
+                return comboBoxFolder.SelectedValue.ToString();
             }
             set
             {

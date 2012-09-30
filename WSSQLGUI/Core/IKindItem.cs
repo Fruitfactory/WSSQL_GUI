@@ -28,6 +28,7 @@ namespace WSSQLGUI.Core
 
 		event EventHandler<EventArgs<bool>> Complete;
         event EventHandler<EventArgs<bool>> Error;
+        event EventHandler<EventArgs<BaseSearchData>> CurrentItemChanged;
 
 		int ID
 		{

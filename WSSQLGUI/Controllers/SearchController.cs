@@ -40,7 +40,6 @@ namespace WSSQLGUI.Controllers
         #region fields
 
         private DelegateCommand _openFileCommand;
-        private DelegateCommand _searchCommand;
         private List<IKindItem> _listKind = new List<IKindItem>();
         private BaseKindItemStrategy _currentKind = null;
         private Dictionary<string, List<ITask>> _tasks = new Dictionary<string, List<ITask>>();
@@ -51,7 +50,7 @@ namespace WSSQLGUI.Controllers
 
         public event EventHandler OnStartSearch;
         public event EventHandler<EventArgs<bool>> OnCompleteSearch;
-        public event EventHandler<EventArgs<SearchItem>> OnAddSearchItem;
+        public event EventHandler OnItemChanged;
 
         #endregion
 
@@ -93,8 +92,14 @@ namespace WSSQLGUI.Controllers
 
         #region public methods
        
-        public void CurrentSearchItemChanged(SearchItem item)
+        public void CurrentSearchItemChanged(BaseSearchData item)
         {
+            CurrenItem = item;
+            FileName = SearchItemHelper.GetFileName(CurrenItem);
+            EventHandler temp = OnItemChanged;
+            if (temp != null)
+                temp(this, null);
+
         }
 
         public List<string> GetAllKinds()
@@ -122,6 +127,7 @@ namespace WSSQLGUI.Controllers
             var item = _listKind.OfType<BaseKindItemStrategy>().Where(k => k.Name == name).ToList();
             if (item == null || item.Count == 0)
                 return;
+            Disconnect(_currentKind);
             _currentKind = item[0];
             if (_currentKind.SettingsTaskType == null ||
                 _currentKind.DataTaskType == null)
@@ -135,6 +141,7 @@ namespace WSSQLGUI.Controllers
             {
                 _tasks[name].ForEach(it => it.OnStart(null));
             }
+            Connect(_currentKind);
         }
 
         public void SetSettingsView(UserControl settings)
@@ -185,7 +192,54 @@ namespace WSSQLGUI.Controllers
             return CurrenItem != null;
         }
 
-       
+        private void Disconnect(IKindItem cur)
+        {
+            if (cur == null)
+                return;
+            cur.Start -= OnStart;
+            cur.Complete -= OnComplete;
+            cur.Error -= OnError;
+            cur.CurrentItemChanged -= OnChangedItem;
+        }
+
+        private void Connect(IKindItem cur)
+        {
+            if (cur == null)
+                return;
+            cur.Start += OnStart;
+            cur.Complete += OnComplete;
+            cur.Error += OnError;
+            cur.CurrentItemChanged += OnChangedItem;
+        }
+
+
+        #endregion
+
+        #region connect to event
+
+        private void OnChangedItem(object sender, EventArgs<BaseSearchData> e)
+        {
+            CurrentSearchItemChanged(e.Value);
+        }
+
+        private void OnStart(object sender, EventArgs e)
+        {
+            EventHandler temp = OnStartSearch;
+            if (temp != null)
+                temp(sender, e);
+        }
+
+        private void OnComplete(object sender, EventArgs<bool> e)
+        {
+            EventHandler<EventArgs<bool>> temp = OnCompleteSearch;
+            if (temp != null)
+                temp(sender, e);
+        }
+
+        private void OnError(object sender, EventArgs<bool> e)
+        {
+
+        }
 
         #endregion
 

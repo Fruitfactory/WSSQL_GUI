@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using WSSQLGUI.Services.Enums;
 using WSSQLGUI.Models;
+using WSSQLGUI.Core;
 
 namespace WSSQLGUI.Services.Helpers
 {
@@ -38,7 +39,7 @@ namespace WSSQLGUI.Services.Helpers
             return TypeSearchItem.None;
         }
 
-        public static string GetFileName(SearchItem item)
+        public static string GetFileName(BaseSearchData item)
         {
             if (item == null)
                 return null;
@@ -50,7 +51,7 @@ namespace WSSQLGUI.Services.Helpers
                 case TypeSearchItem.Attachment:
                     return OutlookHelper.Instance.GetAttachmentTempFileName(item);
                 case TypeSearchItem.File:
-                    return GetFileName(item.FileName);
+                    return GetFileName(item.Path);
                 default:
                     return null;
             }

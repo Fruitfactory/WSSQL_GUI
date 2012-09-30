@@ -93,13 +93,13 @@ namespace WSSQLGUI.Views
             if (dataGridViewFiles.SelectedCells.Count == 0)
                 return;
 
-            //BaseSearchData si = dataGridViewFiles.SelectedRows[0].Tag as BaseSearchData;
-            //_current = si;
-            //EventHandler<Services.EventArgs<BaseSearchData>> temp = SelectedItemChanged;
-            //if (temp != null)
-            //{
-            //    temp(this, new Services.EventArgs<BaseSearchData>(si));        
-            //}
+            BaseSearchData si = dataGridViewFiles.SelectedRows[0].Tag as BaseSearchData;
+            _current = si;
+            EventHandler<Services.EventArgs<BaseSearchData>> temp = SelectedItemChanged;
+            if (temp != null)
+            {
+                temp(this, new Services.EventArgs<BaseSearchData>(si));
+            }
         }
 
     }

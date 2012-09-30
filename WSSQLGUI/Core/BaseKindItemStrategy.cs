@@ -18,14 +18,16 @@ namespace WSSQLGUI.Core
         protected ControllerBase _settingsController;
         protected ControllerBase _dataController;
         protected string _name = String.Empty;
+        protected string _query = string.Empty;
 
 		protected virtual void DoQuery()
 		{
-            var query = CreateSqlQuery();
+            if (string.IsNullOrEmpty(_query))
+                return;
             bool result = true;
             OleDbDataReader myDataReader = null;
             OleDbConnection myOleDbConnection = new OleDbConnection(_connectionString);
-            OleDbCommand myOleDbCommand = new OleDbCommand(query, myOleDbConnection);
+            OleDbCommand myOleDbCommand = new OleDbCommand(_query, myOleDbConnection);
             try
             {
 
@@ -129,6 +131,7 @@ namespace WSSQLGUI.Core
                 OnStart();
                 (DataView as IDataView).IsLoading = true;
                 (DataView as IDataView).Clear();
+                _query = CreateSqlQuery();
                 thread.Start();
             };
             (_settingsController as BaseSettingsController).Error += (o, e) => { OnError(e.Value); };
