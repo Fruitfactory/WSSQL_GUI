@@ -108,12 +108,7 @@ namespace WSSQLGUI.Core
             }
         }
 
-		public void Search()
-		{
-			
-		}
-
-        public virtual void OnInit()
+		public virtual void OnInit()
         {
         
         }
