@@ -42,7 +42,8 @@ namespace WSSQLGUI.Views
             var contr = Controller as EmailSettingsController;
             if (contr == null)
                 return;
-            commandManager.Bind(contr.SearchCommand, buttonSearch);
+            if(buttonSearch.DataBindings.Count == 0)
+            	commandManager.Bind(contr.SearchCommand, buttonSearch);
             comboBoxFolder.DataSource = contr.GetFolders();
 
         }
