@@ -113,6 +113,9 @@ namespace WSSQLGUI.Services.Helpers
                     string filename = searchItem.Path.Substring(searchItem.Path.LastIndexOf(':') + 1);
                     ext = Path.GetExtension(filename);
                     break;
+                case Enums.TypeSearchItem.Contact:
+                    ext = Path.GetExtension(searchItem.Path);
+                    break;
             }
             return ext;
         }

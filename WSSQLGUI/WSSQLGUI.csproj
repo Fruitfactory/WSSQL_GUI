@@ -87,12 +87,19 @@
     <Compile Include="Controllers\AllFilesDataTask.cs" />
     <Compile Include="Controllers\AllFilesSettingsController.cs" />
     <Compile Include="Controllers\AllFilesSettingsTask.cs" />
+    <Compile Include="Controllers\ContactDataController.cs" />
+    <Compile Include="Controllers\ContactDataTask.cs" />
+    <Compile Include="Controllers\ContactSettingsController.cs" />
+    <Compile Include="Controllers\ContactSettingsTask.cs" />
     <Compile Include="Controllers\EmailDataController.cs" />
     <Compile Include="Controllers\EmailDataTask.cs" />
     <Compile Include="Controllers\EmailSettingsController.cs" />
     <Compile Include="Controllers\EmailSettingsTask.cs" />
     <Compile Include="Controllers\MainTask.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controls\TextComplete\TextSearchComplete.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Core\BaseDataController.cs" />
     <Compile Include="Core\BaseKindItemStrategy.cs" />
     <Compile Include="Core\BaseSearchData.cs" />
@@ -103,8 +110,10 @@
     <Compile Include="Kinds\AllFilesStrategy.cs" />
     <Compile Include="Kinds\ContactStrategy.cs" />
     <Compile Include="Kinds\EmailStrategy.cs" />
+    <Compile Include="Models\ContactSearchData.cs" />
     <Compile Include="Models\EmailSearchData.cs" />
     <Compile Include="Models\SearchData.cs" />
+    <Compile Include="Services\Helpers\EmailGroupReaderHelpers.cs" />
     <Compile Include="Services\Helpers\OutlookHelper.cs" />
     <Compile Include="Services\Helpers\SearchItemHelper.cs" />
     <Compile Include="Services\Helpers\TempFileManager.cs" />
@@ -124,6 +133,18 @@
     <Compile Include="Views\AllFilesSettingsView.Designer.cs">
       <DependentUpon>AllFilesSettingsView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\ContactDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\ContactDataView.Designer.cs">
+      <DependentUpon>ContactDataView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ContactSettingsView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\ContactSettingsView.Designer.cs">
+      <DependentUpon>ContactSettingsView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\EmailDataView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -138,6 +159,8 @@
     </Compile>
     <Compile Include="Views\IAllFilesDataView.cs" />
     <Compile Include="Views\IAllFilesSettingsView.cs" />
+    <Compile Include="Views\IContactDataView.cs" />
+    <Compile Include="Views\IContactSettingsView.cs" />
     <Compile Include="Views\IEmailDataView.cs" />
     <Compile Include="Views\IEmailSettingsView.cs" />
     <Compile Include="Views\SearchForm.cs">
@@ -156,6 +179,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\AllFilesSettingsView.resx">
       <DependentUpon>AllFilesSettingsView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ContactDataView.resx">
+      <DependentUpon>ContactDataView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ContactSettingsView.resx">
+      <DependentUpon>ContactSettingsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\EmailDataView.resx">
       <DependentUpon>EmailDataView.cs</DependentUpon>

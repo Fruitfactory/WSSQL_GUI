@@ -9,7 +9,6 @@ namespace WSSQLGUI.Controllers
 {
     internal class EmailDataController : BaseDataController
     {
-
         public override void SetData(BaseSearchData item)
         {
             if (item == null || !(item is EmailSearchData))
@@ -17,7 +16,6 @@ namespace WSSQLGUI.Controllers
             EmailSearchData email = item as EmailSearchData;
             var value = new object[] { email.Recepient, email.Subject, email.Date };
             (View as IDataView).SetData(value, email);
-
         }
     }
 }

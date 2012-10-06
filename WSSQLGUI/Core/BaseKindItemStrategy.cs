@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using MVCSharp.Core;
 using MVCSharp.Core.Views;
 using WSSQLGUI.Services;
@@ -57,9 +58,14 @@ namespace WSSQLGUI.Core
                 {
                     myOleDbConnection.Close();
                 }
-                OnComplete(result);
+                
             }
 		}
+
+        protected  virtual void DoAddidionalQuery()
+        {
+            OnComplete(true);
+        }
 
 		protected virtual void ReadData(IDataReader reader)
 		{
@@ -122,10 +128,12 @@ namespace WSSQLGUI.Core
             _settingsController = SettingsView.Controller as ControllerBase;
             (_settingsController as BaseSettingsController).Search += (o, e) =>
             {
-                Thread thread = new Thread(() => DoQuery());
                 OnStart();
                 (DataView as IDataView).IsLoading = true;
                 (DataView as IDataView).Clear();
+
+                Task thread = new Task(() => DoQuery());
+                Task thread2 = thread.ContinueWith((t) => DoAddidionalQuery());
                 _query = CreateSqlQuery();
                 thread.Start();
             };

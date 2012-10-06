@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using WSSQLGUI.Services.Interfaces;
@@ -113,6 +114,34 @@ namespace WSSQLGUI.Services.Helpers
             }
             
             return list;
+        }
+
+        public string GetContactFotoTempFileName(ContactSearchData data)
+        {
+            if (data == null)
+                return string.Empty;
+            string mapiUrl = data.Path;
+            Outlook.ContactItem ci = GetContact(data);
+            if (ci == null)
+                return string.Empty;
+            Outlook.Attachment att  = GetFotoAttachment(ci);
+            if (att == null)
+                return string.Empty;
+            data.Path = att.DisplayName;
+
+            string tempFilename = TempFileManager.Instance.GenerateTempFileName(data);
+            
+            if (string.IsNullOrEmpty(tempFilename))
+                return string.Empty;
+            att.SaveAsFile(tempFilename);
+
+            return tempFilename;
+        }
+
+        public Outlook.MailItem CreateNewEmail()
+        {
+            var newMail = (Microsoft.Office.Interop.Outlook.MailItem)_app.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olMailItem);
+            return newMail;
         }
 
         public List<string> GetFolderList()
@@ -322,6 +351,60 @@ namespace WSSQLGUI.Services.Helpers
             catch (Exception e)
             {
                 WSSqlLogger.Instance.LogError(e.Message);
+            }
+        }
+
+
+        private Outlook.ContactItem GetContact(ContactSearchData data)
+        {
+            if (_app == null)
+                return null;
+            Outlook.ContactItem ci = null;
+            try
+            {
+                if (!IsOutlookAlive())
+                    ReopenOutlook(ref _app);
+                Outlook.NameSpace ns = _app.GetNamespace("MAPI");
+                Outlook.MAPIFolder contacts =
+                        ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderContacts);
+
+                if (contacts == null)
+                    return null;
+
+                ci =
+                    contacts.Items.OfType<Outlook.ContactItem>().ToList().Find(
+                        c => c.FirstName == data.FirstName && c.LastName == data.LastName);
+
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+            return ci;
+        }
+
+        private Outlook.Attachment GetFotoAttachment(Outlook.ContactItem ci)
+        {
+            var att =
+                ci.Attachments.OfType<Outlook.Attachment>().ToList().Where(a => IsPicture(a.DisplayName));
+            return att.Count() > 0 ? att.ElementAt(0): null ;
+        }
+
+
+        private  bool IsPicture(string filename)
+        {
+            string ext = Path.GetExtension(filename);
+            if (string.IsNullOrEmpty(ext))
+                return false;
+            switch (ext.ToLower())
+            {
+                case ".jpg":
+                case ".png":
+                case ".bmp":
+                case ".jpeg":
+                    return true;
+                default:
+                    return false;
             }
         }
 

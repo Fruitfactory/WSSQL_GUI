@@ -17,7 +17,6 @@ namespace WSSQLGUI.Kinds
 {
 	internal class EmailStrategy : BaseKindItemStrategy
 	{
-        private string _queryAttach = "SELECT System.ItemName,System.ItemUrl,System.IsAttachment  FROM SystemIndex WHERE System.Message.ConversationIndex = '{0}' ";//AND System.Message.ConversationIndex = '{1}'
 
         public EmailStrategy()
         {
@@ -37,7 +36,7 @@ namespace WSSQLGUI.Kinds
 
         protected override void ReadData(System.Data.IDataReader reader)
         {
-            var groups = ReadGroups(reader);
+            var groups = EmailGroupReaderHelpers.ReadGroups(reader);
             if (groups == null)
                 return;
             var item = groups.Items[0];
@@ -93,50 +92,7 @@ namespace WSSQLGUI.Kinds
         }
 
 
-        #region private 
-
-        private EmailData ReadGroups(IDataReader reader)
-        {
-            EmailData d = new EmailData();
-            for (int i = 0; i < reader.FieldCount; i++)
-            {
-                if (reader.GetFieldType(i).ToString() != "System.Data.IDataReader")
-                    continue;
-                //WSSqlLogger.Instance.LogInfo(reader.GetName(i));
-                OleDbDataReader itemsReader = reader.GetValue(i) as OleDbDataReader;
-                while (itemsReader.Read())
-                {
-                    d.Items.Add(ReadItem(itemsReader));
-                }
-            }
-
-            return d;
-        }
-
-        private EmailSearchData ReadItem(IDataReader reader)
-        {
-            string subject = reader[0].ToString();
-            string name = reader[1].ToString();
-            var recArr = reader[3] as string[];
-            string recep = string.Empty;
-            if (recArr.Length > 0)
-            {
-                recep = recArr[0];
-            }
-            string url = reader[2].ToString();
-
-            DateTime res;
-            string date = reader[4].ToString();
-            DateTime.TryParse(date, out res);
-
-
-            return new EmailSearchData() { Subject = subject, Name = name, Path = url, Recepient = recep, Date = res };
-             
-        }
-
-       
-        #endregion
-
+        
 
     }
 }

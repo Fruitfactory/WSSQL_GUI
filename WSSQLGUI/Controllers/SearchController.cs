@@ -105,7 +105,7 @@ namespace WSSQLGUI.Controllers
         public List<string> GetAllKinds()
         {
             var currentAssembly = Assembly.GetExecutingAssembly();
-            var list = new List<string>();
+            var list = new List<IKindItem>();
             foreach (var type in currentAssembly.GetTypes())
             {
                 if (type.IsClass && !type.IsAbstract && type.GetInterface(Interface, true) != null)
@@ -115,11 +115,20 @@ namespace WSSQLGUI.Controllers
                         continue;
                     if (string.IsNullOrEmpty(kind.Name))
                         continue;
-                    list.Add(kind.Name);
+                    list.Add(kind);
                     _listKind.Add(kind);
                 }
             }
-            return list;
+            list.Sort((x, y) =>
+            {
+                if (x.ID < y.ID)
+                    return -1;
+                else if (x.ID > y.ID)
+                    return 1;
+                return 0;
+            });
+
+            return list.Select(k => k.Name).ToList();
         }
 
         public void CurrentKindChanged(string name)

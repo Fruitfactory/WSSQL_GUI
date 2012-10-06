@@ -10,6 +10,7 @@ namespace WSSQLGUI.Services.Enums
         File,
         Email,
         Attachment,
+        Contact,
         None
     }
 }
