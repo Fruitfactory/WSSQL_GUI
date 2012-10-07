@@ -71,7 +71,8 @@ namespace WSSQLGUI.Services.Helpers
             string tempFilename = TempFileManager.Instance.GenerateTempFileName(itemsearch);
             if (string.IsNullOrEmpty(tempFilename))
                 return null;
-            mailItem.SaveAs(tempFilename, Type.Missing);
+            if(!File.Exists(tempFilename))
+                mailItem.SaveAs(tempFilename, Type.Missing);
 
             return tempFilename;
         }

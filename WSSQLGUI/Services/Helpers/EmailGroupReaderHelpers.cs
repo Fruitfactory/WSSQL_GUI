@@ -34,7 +34,7 @@ namespace WSSQLGUI.Services.Helpers
             string name = reader[1].ToString();
             var recArr = reader[3] as string[];
             string recep = string.Empty;
-            if (recArr.Length > 0)
+            if (recArr != null && recArr.Length > 0)
             {
                 recep = recArr[0];
             }

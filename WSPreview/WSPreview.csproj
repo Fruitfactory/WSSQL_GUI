@@ -58,6 +58,10 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\Toolkits\Interop\Excel\Microsoft.Office.Interop.Excel.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Word, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\Toolkits\Interop\Word\Microsoft.Office.Interop.Word.dll</HintPath>
@@ -91,6 +95,12 @@
       <DependentUpon>OfficeFilePreview.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\Office\OfficeWindowFactory.cs" />
+    <Compile Include="Controls\Office\OutlookFilePreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Office\OutlookFilePreview.Designer.cs">
+      <DependentUpon>OutlookFilePreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Office\WordWindow.cs" />
     <Compile Include="Controls\PageViewer.cs">
       <SubType>UserControl</SubType>
@@ -144,6 +154,7 @@
     <Compile Include="PreviewHandlers\IsfPreviewHandler.cs" />
     <Compile Include="PreviewHandlers\MsiPreviewHandler.cs" />
     <Compile Include="PreviewHandlers\OfficePreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\OutlookPreviewHandler.cs" />
     <Compile Include="PreviewHandlers\PdfPreviewHandler.cs" />
     <Compile Include="PreviewHandlers\ResourcesPreviewHandler.cs" />
     <Compile Include="PreviewHandlers\ResxPreviewHandler.cs" />
@@ -161,6 +172,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Controls\Office\OfficeFilePreview.resx">
       <DependentUpon>OfficeFilePreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Office\OutlookFilePreview.resx">
+      <DependentUpon>OutlookFilePreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\PageViewer.resx">
       <DependentUpon>PageViewer.cs</DependentUpon>

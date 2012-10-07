@@ -105,7 +105,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                 }
             }
             // check application handlers
-            if (handler == null)
+            if (_filePath.ToLower().EndsWith(".msg") || handler == null )//
             {
                 string ext = Path.GetExtension(_filePath).ToLower();
                 if(HelperPreviewHandlers.HandlersDictionary.ContainsKey(ext))

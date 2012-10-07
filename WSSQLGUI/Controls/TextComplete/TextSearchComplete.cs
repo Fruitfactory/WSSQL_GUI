@@ -81,6 +81,7 @@ namespace WSSQLGUI.Controls.TextComplete
 		{
             UpdateLocationList();
 			_list.Visible = true;
+		    _list.SelectedIndex = -1;
 		}
 		
 		private void HideSuggest()
