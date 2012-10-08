@@ -14,7 +14,7 @@ using MVCSharp.Core.Configuration.Views;
 namespace WSSQLGUI.Views
 {
     [View(typeof(AllFilesSettingsTask),AllFilesSettingsTask.AllFilesSettingsView)]
-    internal partial class AllFilesSettingsView : WinUserControlView, IAllFilesSettingsView
+    internal partial class AllFilesSettingsView : BaseSettingsView, IAllFilesSettingsView
     {
         public AllFilesSettingsView()
         {
@@ -22,6 +22,12 @@ namespace WSSQLGUI.Views
             textBoxSearch.TextChanged += (o, e) => SearchCriteriaValidate();
             textBoxSearch.Validated += (o, e) => SearchCriteriaValidate();
         }
+
+        protected override void OnInit()
+        {
+            tabControlBase.TabPages.RemoveAt(1);
+        }
+
 
         public override IController Controller
         {
@@ -49,7 +55,7 @@ namespace WSSQLGUI.Views
         {
             get
             {
-                return textBoxSearch.Text;
+                return  textBoxSearch.Text;
             }
             set
             {

@@ -133,6 +133,12 @@
     <Compile Include="Views\AllFilesSettingsView.Designer.cs">
       <DependentUpon>AllFilesSettingsView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\BaseSettingsView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\BaseSettingsView.Designer.cs">
+      <DependentUpon>BaseSettingsView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\ContactDataView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -179,6 +185,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\AllFilesSettingsView.resx">
       <DependentUpon>AllFilesSettingsView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\BaseSettingsView.resx">
+      <DependentUpon>BaseSettingsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ContactDataView.resx">
       <DependentUpon>ContactDataView.cs</DependentUpon>

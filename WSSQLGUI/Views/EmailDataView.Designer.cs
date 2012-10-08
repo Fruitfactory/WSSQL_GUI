@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridViewEmail = new System.Windows.Forms.DataGridView();
-            this.panelCheck = new System.Windows.Forms.Panel();
-            this.checkBoxAttachments = new System.Windows.Forms.CheckBox();
             this.ColumnRecepient = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnSubject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnAttachment = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ColumnPreview = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.panelCheck = new System.Windows.Forms.Panel();
+            this.checkBoxAttachments = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewEmail)).BeginInit();
             this.panelCheck.SuspendLayout();
             this.SuspendLayout();
@@ -49,8 +49,7 @@
             this.dataGridViewEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridViewEmail.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dataGridViewEmail.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridViewEmail.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewEmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewEmail.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.dataGridViewEmail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -60,14 +59,14 @@
             this.ColumnDate,
             this.ColumnAttachment,
             this.ColumnPreview});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Menu;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.DarkGray;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Info;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewEmail.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Menu;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.DarkGray;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Info;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewEmail.DefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridViewEmail.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewEmail.MultiSelect = false;
             this.dataGridViewEmail.Name = "dataGridViewEmail";
@@ -78,26 +77,6 @@
             this.dataGridViewEmail.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewEmail_CellClick);
             this.dataGridViewEmail.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewEmail_RowEnter);
             this.dataGridViewEmail.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewEmail_RowLeave);
-            // 
-            // panelCheck
-            // 
-            this.panelCheck.Controls.Add(this.checkBoxAttachments);
-            this.panelCheck.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelCheck.Location = new System.Drawing.Point(0, 158);
-            this.panelCheck.Name = "panelCheck";
-            this.panelCheck.Size = new System.Drawing.Size(247, 27);
-            this.panelCheck.TabIndex = 1;
-            // 
-            // checkBoxAttachments
-            // 
-            this.checkBoxAttachments.AutoSize = true;
-            this.checkBoxAttachments.Location = new System.Drawing.Point(3, 3);
-            this.checkBoxAttachments.Name = "checkBoxAttachments";
-            this.checkBoxAttachments.Size = new System.Drawing.Size(115, 17);
-            this.checkBoxAttachments.TabIndex = 0;
-            this.checkBoxAttachments.Text = "Show Attachments";
-            this.checkBoxAttachments.UseVisualStyleBackColor = true;
-            this.checkBoxAttachments.CheckedChanged += new System.EventHandler(this.checkBoxAttachments_CheckedChanged);
             // 
             // ColumnRecepient
             // 
@@ -128,7 +107,6 @@
             this.ColumnAttachment.HeaderText = "Attachments";
             this.ColumnAttachment.Name = "ColumnAttachment";
             this.ColumnAttachment.Visible = false;
-            this.ColumnAttachment.Width = 72;
             // 
             // ColumnPreview
             // 
@@ -137,7 +115,26 @@
             this.ColumnPreview.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.ColumnPreview.Text = "...";
             this.ColumnPreview.Visible = false;
-            this.ColumnPreview.Width = 41;
+            // 
+            // panelCheck
+            // 
+            this.panelCheck.Controls.Add(this.checkBoxAttachments);
+            this.panelCheck.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelCheck.Location = new System.Drawing.Point(0, 158);
+            this.panelCheck.Name = "panelCheck";
+            this.panelCheck.Size = new System.Drawing.Size(247, 27);
+            this.panelCheck.TabIndex = 1;
+            // 
+            // checkBoxAttachments
+            // 
+            this.checkBoxAttachments.AutoSize = true;
+            this.checkBoxAttachments.Location = new System.Drawing.Point(3, 3);
+            this.checkBoxAttachments.Name = "checkBoxAttachments";
+            this.checkBoxAttachments.Size = new System.Drawing.Size(115, 17);
+            this.checkBoxAttachments.TabIndex = 0;
+            this.checkBoxAttachments.Text = "Show Attachments";
+            this.checkBoxAttachments.UseVisualStyleBackColor = true;
+            this.checkBoxAttachments.CheckedChanged += new System.EventHandler(this.checkBoxAttachments_CheckedChanged);
             // 
             // EmailDataView
             // 

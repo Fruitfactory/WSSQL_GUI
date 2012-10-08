@@ -14,7 +14,7 @@ using MVCSharp.Core.Configuration.Views;
 namespace WSSQLGUI.Views
 {
     [View(typeof(EmailSettingsTask),EmailSettingsTask.EmailSettingsView)]
-	internal partial class EmailSettingsView: WinUserControlView,IEmailSettingsView
+	internal partial class EmailSettingsView: BaseSettingsView,IEmailSettingsView
 	{
 		public EmailSettingsView()
 		{
@@ -80,5 +80,7 @@ namespace WSSQLGUI.Views
             var message = (Controller as EmailSettingsController).ErrorProvider(textBoxSearch.Text);
             errorProvider.SetError(textBoxSearch, message);
         }
+
+    
     }
 }

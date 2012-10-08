@@ -17,7 +17,8 @@ namespace WSSQLGUI.Kinds
     internal class AllFilesStrategy : BaseKindItemStrategy
     {
         private const string KindGroup = "email";
-        private const string QueryForGroupEmails = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.Message.ConversationID,'{0}*') AND CONTAINS(System.ItemPathDisplay,'¬ход€щие*',1033)  ORDER BY System.Message.DateReceived DESC) ";
+        private const string InboxFolder = "Inbox";
+        private const string QueryForGroupEmails = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.Message.ConversationID,'{0}*') AND CONTAINS(System.ItemPathDisplay,'{1}*',1033)  ORDER BY System.Message.DateReceived DESC) ";
 
 
         private  List<string> _listID = new List<string>(); 
@@ -90,7 +91,7 @@ namespace WSSQLGUI.Kinds
 
         private Tuple<string,string>  GroupEmail(string name,string id)
         {
-            var query = string.Format(QueryForGroupEmails, id);
+            var query = string.Format(QueryForGroupEmails, id,InboxFolder);
             int count = 0;
             string path = string.Empty;
             OleDbDataReader reader = null;

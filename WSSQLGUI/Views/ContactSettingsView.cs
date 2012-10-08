@@ -14,7 +14,7 @@ using MVCSharp.Core.Configuration.Views;
 namespace WSSQLGUI.Views
 {
     [View(typeof(ContactSettingsTask),ContactSettingsTask.ContactSettingsView)]
-    public partial class ContactSettingsView : WinUserControlView,IContactSettingsView
+    public partial class ContactSettingsView : BaseSettingsView,IContactSettingsView
     {
         public ContactSettingsView()
         {
