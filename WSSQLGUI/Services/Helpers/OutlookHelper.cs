@@ -170,8 +170,15 @@ namespace WSSQLGUI.Services.Helpers
         {
             if (_app == null)
                 return;
-            Outlook.NameSpace ns = _app.GetNamespace("MAPI");
-            ns.Logoff();
+            try
+            {
+                Outlook.NameSpace ns = _app.GetNamespace("MAPI");
+                ns.Logoff();
+            }
+            catch (Exception e)
+            {
+                WSSqlLogger.Instance.LogError(string.Format("LOGOFF: {0}",e.Message));
+            }
         }
 
         public void Dispose()

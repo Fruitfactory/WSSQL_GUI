@@ -18,6 +18,8 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         private static string OutlookProcessName = "OUTLOOK";
         private static string OutlookApplication = "Outlook.Application";
 
+        private bool _IsExistProcess = false;
+
         public OutlookFilePreview()
         {
             InitializeComponent();
@@ -33,9 +35,9 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             if (app == null)
                 return;
 
-            Outlook.MailItem mail = (Outlook.MailItem)app.Session.OpenSharedItem(filename);
+            Outlook.MailItem mail = (Outlook.MailItem)app.CreateItemFromTemplate(filename);
 
-            if(mail == null)
+            if (mail == null)
                 return;
             textBoxSubject.Text = mail.Subject;
             textBoxFrom.Text = mail.SenderName;
@@ -46,7 +48,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             if (mail.Attachments.Count > 0)
             {
                 StringBuilder str = new StringBuilder();
-                foreach (Outlook.Attachment att  in  mail.Attachments)
+                foreach (Outlook.Attachment att in mail.Attachments)
                 {
                     str.AppendLine(string.Format("{0};", att.DisplayName));
                 }
@@ -55,7 +57,10 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             else
                 tableLayoutPanel.RowStyles[3].Height = 0;
 
-            Marshal.ReleaseComObject(app);
+            Marshal.ReleaseComObject(mail);
+            CloseApplication(app);
+
+
         }
 
 
@@ -84,6 +89,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
                 if (outlook.Count() > 0)
                 {
                     ret = Marshal.GetActiveObject(OutlookApplication) as Outlook.Application;
+                    _IsExistProcess = true;
                 }
             }
             catch (Exception ex)
@@ -113,6 +119,16 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
             return ret;
         }
+
+        private void CloseApplication(Outlook.Application app)
+        {
+            if (!_IsExistProcess)
+            {
+                app.Quit();
+                Marshal.ReleaseComObject(app);
+            }
+        }
+
 
         #endregion
 
