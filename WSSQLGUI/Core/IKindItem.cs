@@ -14,6 +14,8 @@ namespace WSSQLGUI.Core
 			get;
 		}
 
+	    string Prefix { get; }
+
 		IView SettingsView
 		{
 			get;
@@ -37,6 +39,6 @@ namespace WSSQLGUI.Core
 
         void ConnectWithSettingsView(IView settingsView);
         void ConnectWithDataView(IView dataView);
-
+	    void OnInit();
 	}
 }

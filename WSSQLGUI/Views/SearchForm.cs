@@ -16,6 +16,7 @@ using MVCSharp.Core.Configuration.Views;
 using MVCSharp.Winforms;
 
 using WSSQLGUI.Controllers;
+using WSSQLGUI.Controllers.Tasks;
 using WSSQLGUI.Models;
 using WSSQLGUI.Services;
 using System.Text.RegularExpressions;

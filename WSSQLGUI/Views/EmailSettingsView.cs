@@ -10,6 +10,7 @@ using MVCSharp.Core;
 using MVCSharp.Winforms;
 using WSSQLGUI.Controllers;
 using MVCSharp.Core.Configuration.Views;
+using WSSQLGUI.Controllers.Tasks;
 
 namespace WSSQLGUI.Views
 {

@@ -78,6 +78,12 @@ namespace C4F.DevKit.PreviewHandler.Controls
                 case "css":
                     _scintilla.ConfigurationManager.Language = "CSS";
                     break;
+                case "cs":
+                    _scintilla.ConfigurationManager.Language = "cs";
+                    break;
+                case "vb":
+                    _scintilla.ConfigurationManager.Language = "vb";
+                    break;
             }
 
             

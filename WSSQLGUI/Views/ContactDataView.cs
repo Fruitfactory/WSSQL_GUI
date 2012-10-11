@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using MVCSharp.Core;
 using MVCSharp.Winforms;
 using WSSQLGUI.Controllers;
+using WSSQLGUI.Controllers.Tasks;
 using WSSQLGUI.Core;
 using MVCSharp.Core.Configuration.Views;
 using WSSQLGUI.Models;

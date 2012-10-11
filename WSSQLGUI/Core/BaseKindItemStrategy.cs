@@ -8,6 +8,7 @@ using WSSQLGUI.Services;
 using System.Data;
 using System.Data.OleDb;
 using System.Threading;
+using WSSQLGUI.Services.Helpers;
 
 namespace WSSQLGUI.Core
 {
@@ -20,6 +21,8 @@ namespace WSSQLGUI.Core
         protected ControllerBase _dataController;
         protected string _name = String.Empty;
         protected string _query = string.Empty;
+	    protected string _prefix = string.Empty;
+
 
 		protected virtual void DoQuery()
 		{
@@ -116,7 +119,8 @@ namespace WSSQLGUI.Core
 
 		public virtual void OnInit()
         {
-        
+            SettingsTaskType = TaskFinderHelper.Instance.GetSettingsTask(Prefix);
+            DataTaskType = TaskFinderHelper.Instance.GetDataTask(Prefix);
         }
 
         public virtual void ConnectWithSettingsView(IView settingsView)
@@ -157,6 +161,11 @@ namespace WSSQLGUI.Core
         {
             get { return _name; }
         }
+
+	    public string Prefix
+	    {
+            get { return _prefix; }
+	    }
 
         public IView SettingsView
         {

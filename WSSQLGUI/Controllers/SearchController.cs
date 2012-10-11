@@ -115,6 +115,7 @@ namespace WSSQLGUI.Controllers
                         continue;
                     if (string.IsNullOrEmpty(kind.Name))
                         continue;
+                    kind.OnInit();
                     list.Add(kind);
                     _listKind.Add(kind);
                 }

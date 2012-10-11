@@ -5,7 +5,7 @@ using System.Text;
 using MVCSharp.Core.Tasks;
 using MVCSharp.Core.Configuration.Tasks;
 
-namespace WSSQLGUI.Controllers
+namespace WSSQLGUI.Controllers.Tasks
 {
     internal class ContactSettingsTask : TaskBase
     {

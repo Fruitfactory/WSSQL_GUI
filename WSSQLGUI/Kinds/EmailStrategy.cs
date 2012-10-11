@@ -24,8 +24,7 @@ namespace WSSQLGUI.Kinds
             _queryAnd = " AND Contains(*,'{0}*')";
             ID = 1;
             _name = "E-Mail";
-            SettingsTaskType = typeof(EmailSettingsTask);
-            DataTaskType = typeof(EmailDataTask);
+            _prefix = "Email";
         }
 
         protected override void OnComplete(bool res)

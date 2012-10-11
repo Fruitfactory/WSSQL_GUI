@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using WSSQLGUI.Controllers;
+using WSSQLGUI.Controllers.Tasks;
 using WSSQLGUI.Views;
 using MVCSharp.Core.Configuration;
 using MVCSharp.Core.Tasks;

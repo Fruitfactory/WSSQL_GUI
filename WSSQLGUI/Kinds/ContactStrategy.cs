@@ -26,8 +26,7 @@ namespace WSSQLGUI.Kinds
             _queryAnd = " AND ( CONTAINS(System.Contact.FirstName,'\"{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\"') ) ";
             ID = 2;
             _name = "Contact";
-            SettingsTaskType = typeof (ContactSettingsTask);
-            DataTaskType = typeof (ContactDataTask);
+            _prefix = "Contact";
         }
 
 

@@ -84,19 +84,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AllFilesDataController.cs" />
-    <Compile Include="Controllers\AllFilesDataTask.cs" />
     <Compile Include="Controllers\AllFilesSettingsController.cs" />
-    <Compile Include="Controllers\AllFilesSettingsTask.cs" />
     <Compile Include="Controllers\ContactDataController.cs" />
-    <Compile Include="Controllers\ContactDataTask.cs" />
     <Compile Include="Controllers\ContactSettingsController.cs" />
-    <Compile Include="Controllers\ContactSettingsTask.cs" />
     <Compile Include="Controllers\EmailDataController.cs" />
-    <Compile Include="Controllers\EmailDataTask.cs" />
     <Compile Include="Controllers\EmailSettingsController.cs" />
-    <Compile Include="Controllers\EmailSettingsTask.cs" />
-    <Compile Include="Controllers\MainTask.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\Tasks\AllFilesDataTask.cs" />
+    <Compile Include="Controllers\Tasks\AllFilesSettingsTask.cs" />
+    <Compile Include="Controllers\Tasks\ContactDataTask.cs" />
+    <Compile Include="Controllers\Tasks\ContactSettingsTask.cs" />
+    <Compile Include="Controllers\Tasks\EmailDataTask.cs" />
+    <Compile Include="Controllers\Tasks\EmailSettingsTask.cs" />
+    <Compile Include="Controllers\Tasks\MainTask.cs" />
     <Compile Include="Controls\TextComplete\TextSearchComplete.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -116,6 +116,7 @@
     <Compile Include="Services\Helpers\EmailGroupReaderHelpers.cs" />
     <Compile Include="Services\Helpers\OutlookHelper.cs" />
     <Compile Include="Services\Helpers\SearchItemHelper.cs" />
+    <Compile Include="Services\Helpers\TaskFinderHelper.cs" />
     <Compile Include="Services\Helpers\TempFileManager.cs" />
     <Compile Include="Services\Interfaces\IOutlookHelper.cs" />
     <Compile Include="Logic.cs" />

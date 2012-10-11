@@ -5,9 +5,9 @@ using System.Text;
 using MVCSharp.Core.Configuration.Tasks;
 using MVCSharp.Core.Tasks;
 
-namespace WSSQLGUI.Controllers
+namespace WSSQLGUI.Controllers.Tasks
 {
-    class MainTask : TaskBase
+    internal class MainTask : TaskBase
     {
         [InteractionPoint(typeof(SearchController))]
         public const string Search = "Search";

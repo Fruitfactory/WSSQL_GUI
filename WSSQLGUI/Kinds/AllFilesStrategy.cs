@@ -31,10 +31,9 @@ namespace WSSQLGUI.Kinds
             _queryAnd = " AND Contains(*,'{0}*')";
             ID = 0;
             _name = "All Files";
-            SettingsTaskType = typeof(AllFilesSettingsTask);
-            DataTaskType = typeof(AllFilesDataTask);
-
+            _prefix = "AllFiles";
         }
+
 
         protected override void OnComplete(bool res)
         {
