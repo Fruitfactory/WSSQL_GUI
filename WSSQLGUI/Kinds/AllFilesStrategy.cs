@@ -11,13 +11,14 @@ using System.Data;
 using WSSQLGUI.Services.Enums;
 using WSSQLGUI.Services.Helpers;
 using MVCSharp.Core.Views;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSSQLGUI.Kinds
 {
     internal class AllFilesStrategy : BaseKindItemStrategy
     {
         private const string KindGroup = "email";
-        private const string InboxFolder = "Inbox";
+        private const string InboxFolder = "¬ход€щие";//"Inbox";
         private const string QueryForGroupEmails = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.Message.ConversationID,'{0}*') AND CONTAINS(System.ItemPathDisplay,'{1}*',1033)  ORDER BY System.Message.DateReceived DESC) ";
 
 
@@ -111,6 +112,7 @@ namespace WSSQLGUI.Kinds
             }
             catch (System.Data.OleDb.OleDbException oleDbException)
             {
+                WSSqlLogger.Instance.LogError(oleDbException.Message);
             }
             finally
             {

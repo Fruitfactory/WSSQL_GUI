@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.Threading;
 using WSSQLGUI.Services.Helpers;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSSQLGUI.Core
 {
@@ -28,7 +29,7 @@ namespace WSSQLGUI.Core
 		{
             if (string.IsNullOrEmpty(_query))
                 return;
-            bool result = true;
+            
             OleDbDataReader myDataReader = null;
             OleDbConnection myOleDbConnection = new OleDbConnection(_connectionString);
             OleDbCommand myOleDbCommand = new OleDbCommand(_query, myOleDbConnection);
@@ -45,8 +46,7 @@ namespace WSSQLGUI.Core
             }
             catch (System.Data.OleDb.OleDbException oleDbException)
             {
-                //MessageBox.Show(oleDbException.Message);
-                result = false;
+                WSSqlLogger.Instance.LogError(oleDbException.Message);
             }
             finally
             {
@@ -82,6 +82,10 @@ namespace WSSQLGUI.Core
 
         protected virtual void OnStart()
         {
+            if (DataView != null)
+                (DataView as IDataView).StartLoading();
+            if (SettingsView.Controller != null)
+                (SettingsView.Controller as BaseSettingsController).IsLoading = true;
             EventHandler temp = Start;
             if (temp != null)
             {
@@ -92,6 +96,11 @@ namespace WSSQLGUI.Core
 
         protected virtual void OnComplete(bool res)
         {
+            if (DataView != null)
+                (DataView as IDataView).FinishLoading();
+            if (SettingsView.Controller != null)
+                (SettingsView.Controller as BaseSettingsController).IsLoading = false;
+
             EventHandler<EventArgs<bool>> temp = Complete;
             if (temp != null)
             {

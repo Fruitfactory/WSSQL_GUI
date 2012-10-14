@@ -16,6 +16,7 @@ namespace WSSQLGUI.Core
         protected DelegateCommand _searchCommand;
         protected string _nameButton = "Search";
         protected bool _isError = false;
+	    protected bool _isLoading = false;
 
 		public virtual string ErrorProvider(string textForAnalyz)
 		{
@@ -46,12 +47,18 @@ namespace WSSQLGUI.Core
 			}
 		}
 
+	    public bool IsLoading
+	    {
+            get { return _isLoading; }
+            set { _isLoading = value; }
+	    }
+
 		public event EventHandler Search;
         public event EventHandler<EventArgs<bool>> Error;
 
         protected virtual bool OnCanSearch()
         {
-            return true;
+            return !_isLoading;
         }
 
         protected virtual void OnSearch()

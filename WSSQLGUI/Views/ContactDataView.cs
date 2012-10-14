@@ -137,5 +137,21 @@ namespace WSSQLGUI.Views
 
 
 
+
+
+        public void StartLoading()
+        {
+            
+        }
+
+        public void FinishLoading()
+        {
+            
+        }
+
+        public void SetData(IList<BaseSearchData> listData)
+        {
+            
+        }
     }
 }

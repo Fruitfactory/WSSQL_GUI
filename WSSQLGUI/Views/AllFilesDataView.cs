@@ -12,6 +12,7 @@ using WSSQLGUI.Controllers;
 using WSSQLGUI.Controllers.Tasks;
 using WSSQLGUI.Core;
 using MVCSharp.Core.Configuration.Views;
+using WSSQLGUI.Controls.PagingControl;
 
 namespace WSSQLGUI.Views
 {
@@ -20,12 +21,42 @@ namespace WSSQLGUI.Views
     {
 
         private BaseSearchData _current;
+        private PagingDataSource<BaseSearchData> _pagingDataView;  
+
 
         public AllFilesDataView()
         {
             InitializeComponent();
-            dataGridViewFiles.SelectionChanged += DataGridSelectionChanged;
+#region init paging
+
+            _pagingDataView = new PagingDataSource<BaseSearchData>();
+
+            var colName = new DataGridViewTextBoxColumn();
+            var colPath = new DataGridViewTextBoxColumn();
+            colName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colName.HeaderText = "Name";
+            colName.DataPropertyName = "Name";
+            colName.MinimumWidth = 150;
+            colName.Name = "columnName";
+            colName.ReadOnly = true;
+            colName.Width = 150;
             
+            colPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colPath.HeaderText = "Path";
+            colPath.DataPropertyName = "Path";
+            colPath.MinimumWidth = 200;
+            colPath.Name = "columnPath";
+            colPath.ReadOnly = true;
+            colPath.Width = 200;
+
+            _pagingDataView.AddColumn(colName);
+            _pagingDataView.AddColumn(colPath);
+
+            this.Controls.Add(_pagingDataView);
+            _pagingDataView.Dock = DockStyle.Fill;
+            _pagingDataView.SelectedChanged += DataGridSelectionChanged;
+
+            #endregion
         }
 
         public override IController Controller
@@ -60,11 +91,7 @@ namespace WSSQLGUI.Views
 
         public void SetData(object[] data,BaseSearchData addData)
         {
-            this.Invoke(new Action(() =>
-            {
-                int i = dataGridViewFiles.Rows.Add(data);
-                dataGridViewFiles.Rows[i].Tag = addData;
-            }), null);
+            _pagingDataView.AddData(addData);
         }
 
         public event EventHandler<Services.EventArgs<BaseSearchData>> SelectedItemChanged;
@@ -72,7 +99,7 @@ namespace WSSQLGUI.Views
 
         public void SetContextMenu(ContextMenuStrip contextMenu)
         {
-            dataGridViewFiles.ContextMenuStrip = contextMenu;
+            _pagingDataView.ContextMenuStrip = contextMenu;
         }
 
         public bool IsLoading
@@ -83,7 +110,7 @@ namespace WSSQLGUI.Views
 
         public void Clear()
         {
-            dataGridViewFiles.Rows.Clear();
+            _pagingDataView.ClearRows();
         }
 
         private void DataGridSelectionChanged(object sender, EventArgs e)
@@ -91,10 +118,10 @@ namespace WSSQLGUI.Views
             if (IsLoading)
                 return;
             
-            if (dataGridViewFiles.SelectedCells.Count == 0)
+            if (_pagingDataView.Selected == null)
                 return;
 
-            BaseSearchData si = dataGridViewFiles.SelectedRows[0].Tag as BaseSearchData;
+            BaseSearchData si = _pagingDataView.Selected;
             _current = si;
             EventHandler<Services.EventArgs<BaseSearchData>> temp = SelectedItemChanged;
             if (temp != null)
@@ -103,5 +130,21 @@ namespace WSSQLGUI.Views
             }
         }
 
+
+
+        public void StartLoading()
+        {
+            _pagingDataView.StartLoading();
+        }
+
+        public void FinishLoading()
+        {
+            Invoke(new Action(() => _pagingDataView.CompleteLoading()), null);
+        }
+
+        public void SetData(IList<BaseSearchData> listData)
+        {
+            
+        }
     }
 }

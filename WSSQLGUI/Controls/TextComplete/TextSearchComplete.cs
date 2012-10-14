@@ -44,20 +44,15 @@ namespace WSSQLGUI.Controls.TextComplete
 			_list.Width = this.Width;
 			this.Parent.Controls.Add(_list);
 		}
-		
-		
-		protected override void OnKeyPress(KeyPressEventArgs e)
-		{
-			base.OnKeyPress(e);
-			EventHandler<EventArgs<string>> temp = TextChanging;
-			if(temp != null)
-				temp(this,new EventArgs<string>(this.Text));		
-		}
-		
+
+
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
-			base.OnKeyDown(e); 
-			
+			base.OnKeyDown(e);
+            EventHandler<EventArgs<string>> temp = TextChanging;
+            if (temp != null)
+                temp(this, new EventArgs<string>(this.Text));
+
 			switch(e.KeyCode)
 			{
 				case Keys.Down:
@@ -127,6 +122,7 @@ namespace WSSQLGUI.Controls.TextComplete
             _list.Width = this.Width;
             _list.BackColor = this.BackColor;
             _list.BorderStyle = this.BorderStyle;
+            _list.Height = _list.Parent.Height - (Location.X + Height);
 
         }
 		#endregion

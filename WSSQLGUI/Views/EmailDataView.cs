@@ -147,5 +147,21 @@ namespace WSSQLGUI.Views
             dataGridViewEmail.Columns[3].Visible = dataGridViewEmail.Columns[4].Visible = checkBoxAttachments.Checked;
         }
 
+
+
+        public void StartLoading()
+        {
+            
+        }
+
+        public void FinishLoading()
+        {
+            
+        }
+
+        public void SetData(IList<BaseSearchData> listData)
+        {
+            
+        }
     }
 }

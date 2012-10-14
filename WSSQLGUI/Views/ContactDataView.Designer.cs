@@ -277,24 +277,24 @@
             // 
             // ColumnRecep
             // 
+            this.ColumnRecep.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.ColumnRecep.HeaderText = "Recepient";
             this.ColumnRecep.Name = "ColumnRecep";
             this.ColumnRecep.ReadOnly = true;
-            this.ColumnRecep.Width = 81;
             // 
             // ColumnSubject
             // 
+            this.ColumnSubject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.ColumnSubject.HeaderText = "Subject";
             this.ColumnSubject.Name = "ColumnSubject";
             this.ColumnSubject.ReadOnly = true;
-            this.ColumnSubject.Width = 68;
             // 
             // ColumnDate
             // 
+            this.ColumnDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.ColumnDate.HeaderText = "Date";
             this.ColumnDate.Name = "ColumnDate";
             this.ColumnDate.ReadOnly = true;
-            this.ColumnDate.Width = 55;
             // 
             // ContactDataView
             // 

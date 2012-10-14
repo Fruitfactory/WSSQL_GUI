@@ -97,6 +97,13 @@
     <Compile Include="Controllers\Tasks\EmailDataTask.cs" />
     <Compile Include="Controllers\Tasks\EmailSettingsTask.cs" />
     <Compile Include="Controllers\Tasks\MainTask.cs" />
+    <Compile Include="Controls\PagingControl\IPaggingDataSource.cs" />
+    <Compile Include="Controls\PagingControl\PagingDataSource.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PagingControl\PagingDataSource.designer.cs">
+      <DependentUpon>PagingDataSource.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TextComplete\TextSearchComplete.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -119,7 +126,6 @@
     <Compile Include="Services\Helpers\TaskFinderHelper.cs" />
     <Compile Include="Services\Helpers\TempFileManager.cs" />
     <Compile Include="Services\Interfaces\IOutlookHelper.cs" />
-    <Compile Include="Logic.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\Enums\TypeSearchItem.cs" />
     <Compile Include="Views\AllFilesDataView.cs">
@@ -181,6 +187,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\EventArgs.cs" />
     <Compile Include="Views\WSSqlViewsManager.cs" />
+    <EmbeddedResource Include="Controls\PagingControl\PagingDataSource.resx">
+      <DependentUpon>PagingDataSource.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\AllFilesDataView.resx">
       <DependentUpon>AllFilesDataView.cs</DependentUpon>
     </EmbeddedResource>
@@ -234,6 +243,14 @@
     <None Include="Resources\Copy %282%29 of bar.png" />
     <None Include="Resources\bar.png" />
     <None Include="Resources\TreeView_XP_Explorer_ParentNode.gif" />
+    <None Include="bin\Debug\Images\first.png" />
+    <None Include="bin\Debug\Images\last.png" />
+    <None Include="bin\Debug\Images\next.png" />
+    <None Include="bin\Debug\Images\previous1.png" />
+    <None Include="Resources\first.png" />
+    <None Include="Resources\last.png" />
+    <None Include="Resources\next.png" />
+    <None Include="Resources\previous.png" />
     <Content Include="Search.ico" />
   </ItemGroup>
   <ItemGroup>

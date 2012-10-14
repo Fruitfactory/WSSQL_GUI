@@ -31,46 +31,36 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchForm));
             this.label1 = new System.Windows.Forms.Label();
-            this.SearchTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.splitPanels = new System.Windows.Forms.SplitContainer();
-            this.previewControl = new C4F.DevKit.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl();
             this.buttonPreview = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.panelSettings = new System.Windows.Forms.Panel();
             this.comboBoxKinds = new System.Windows.Forms.ComboBox();
             this.labelKinds = new System.Windows.Forms.Label();
+            this.tableLayoutPanelHeader = new System.Windows.Forms.TableLayoutPanel();
+            this.previewControl = new C4F.DevKit.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl();
             this.contextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitPanels)).BeginInit();
             this.splitPanels.Panel2.SuspendLayout();
             this.splitPanels.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+            this.tableLayoutPanelHeader.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(40, 6);
+            this.label1.Location = new System.Drawing.Point(3, 3);
+            this.label1.Margin = new System.Windows.Forms.Padding(3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(129, 25);
+            this.label1.Size = new System.Drawing.Size(141, 25);
             this.label1.TabIndex = 0;
             this.label1.Text = "WSQL - GUI";
-            // 
-            // SearchTextBox
-            // 
-            this.SearchTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SearchTextBox.BackColor = System.Drawing.Color.Silver;
-            this.SearchTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.SearchTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.SearchTextBox.Location = new System.Drawing.Point(715, 8);
-            this.SearchTextBox.Name = "SearchTextBox";
-            this.SearchTextBox.Size = new System.Drawing.Size(215, 23);
-            this.SearchTextBox.TabIndex = 2;
-            this.SearchTextBox.Visible = false;
             // 
             // label2
             // 
@@ -109,16 +99,6 @@
             this.splitPanels.SplitterDistance = 485;
             this.splitPanels.TabIndex = 8;
             // 
-            // previewControl
-            // 
-            this.previewControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.previewControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.previewControl.FilePath = null;
-            this.previewControl.Location = new System.Drawing.Point(0, 0);
-            this.previewControl.Name = "previewControl";
-            this.previewControl.Size = new System.Drawing.Size(398, 319);
-            this.previewControl.TabIndex = 0;
-            // 
             // buttonPreview
             // 
             this.buttonPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -141,33 +121,66 @@
             // 
             // panelSettings
             // 
-            this.panelSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelSettings.Location = new System.Drawing.Point(235, 37);
+            this.panelSettings.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelSettings.Location = new System.Drawing.Point(150, 3);
             this.panelSettings.Name = "panelSettings";
-            this.panelSettings.Size = new System.Drawing.Size(695, 151);
+            this.tableLayoutPanelHeader.SetRowSpan(this.panelSettings, 3);
+            this.panelSettings.Size = new System.Drawing.Size(734, 157);
             this.panelSettings.TabIndex = 11;
             // 
             // comboBoxKinds
             // 
             this.comboBoxKinds.BackColor = System.Drawing.Color.Silver;
+            this.comboBoxKinds.Dock = System.Windows.Forms.DockStyle.Fill;
             this.comboBoxKinds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxKinds.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.comboBoxKinds.FormattingEnabled = true;
-            this.comboBoxKinds.Location = new System.Drawing.Point(43, 58);
+            this.comboBoxKinds.Location = new System.Drawing.Point(3, 70);
             this.comboBoxKinds.Name = "comboBoxKinds";
-            this.comboBoxKinds.Size = new System.Drawing.Size(163, 23);
+            this.comboBoxKinds.Size = new System.Drawing.Size(141, 23);
             this.comboBoxKinds.TabIndex = 12;
             this.comboBoxKinds.SelectedIndexChanged += new System.EventHandler(this.comboBoxKinds_SelectedIndexChanged);
             // 
             // labelKinds
             // 
             this.labelKinds.AutoSize = true;
-            this.labelKinds.Location = new System.Drawing.Point(43, 40);
+            this.labelKinds.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelKinds.Location = new System.Drawing.Point(3, 34);
+            this.labelKinds.Margin = new System.Windows.Forms.Padding(3);
             this.labelKinds.Name = "labelKinds";
-            this.labelKinds.Size = new System.Drawing.Size(163, 15);
+            this.labelKinds.Size = new System.Drawing.Size(141, 30);
             this.labelKinds.TabIndex = 13;
             this.labelKinds.Text = "Choose kind of file searching:";
+            // 
+            // tableLayoutPanelHeader
+            // 
+            this.tableLayoutPanelHeader.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanelHeader.ColumnCount = 2;
+            this.tableLayoutPanelHeader.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tableLayoutPanelHeader.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 83.33334F));
+            this.tableLayoutPanelHeader.Controls.Add(this.labelKinds, 0, 1);
+            this.tableLayoutPanelHeader.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanelHeader.Controls.Add(this.panelSettings, 1, 0);
+            this.tableLayoutPanelHeader.Controls.Add(this.comboBoxKinds, 0, 2);
+            this.tableLayoutPanelHeader.Location = new System.Drawing.Point(43, 12);
+            this.tableLayoutPanelHeader.Name = "tableLayoutPanelHeader";
+            this.tableLayoutPanelHeader.RowCount = 3;
+            this.tableLayoutPanelHeader.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelHeader.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelHeader.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelHeader.Size = new System.Drawing.Size(887, 163);
+            this.tableLayoutPanelHeader.TabIndex = 14;
+            // 
+            // previewControl
+            // 
+            this.previewControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.previewControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.previewControl.FilePath = null;
+            this.previewControl.Location = new System.Drawing.Point(0, 0);
+            this.previewControl.Name = "previewControl";
+            this.previewControl.Size = new System.Drawing.Size(398, 319);
+            this.previewControl.TabIndex = 0;
             // 
             // SearchForm
             // 
@@ -175,13 +188,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ClientSize = new System.Drawing.Size(969, 574);
-            this.Controls.Add(this.labelKinds);
-            this.Controls.Add(this.panelSettings);
+            this.Controls.Add(this.tableLayoutPanelHeader);
             this.Controls.Add(this.splitPanels);
-            this.Controls.Add(this.comboBoxKinds);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonPreview);
-            this.Controls.Add(this.SearchTextBox);
             this.Controls.Add(this.label2);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
@@ -195,6 +204,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitPanels)).EndInit();
             this.splitPanels.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+            this.tableLayoutPanelHeader.ResumeLayout(false);
+            this.tableLayoutPanelHeader.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -203,7 +214,6 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox SearchTextBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.SplitContainer splitPanels;
         private C4F.DevKit.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl previewControl;
@@ -214,6 +224,7 @@
         private System.Windows.Forms.ComboBox comboBoxKinds;
         public System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.Label labelKinds;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelHeader;
     }
 }
 

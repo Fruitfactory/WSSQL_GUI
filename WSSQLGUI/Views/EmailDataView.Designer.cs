@@ -30,13 +30,13 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridViewEmail = new System.Windows.Forms.DataGridView();
+            this.panelCheck = new System.Windows.Forms.Panel();
+            this.checkBoxAttachments = new System.Windows.Forms.CheckBox();
             this.ColumnRecepient = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnSubject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnAttachment = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ColumnPreview = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.panelCheck = new System.Windows.Forms.Panel();
-            this.checkBoxAttachments = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewEmail)).BeginInit();
             this.panelCheck.SuspendLayout();
             this.SuspendLayout();
@@ -78,44 +78,6 @@
             this.dataGridViewEmail.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewEmail_RowEnter);
             this.dataGridViewEmail.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewEmail_RowLeave);
             // 
-            // ColumnRecepient
-            // 
-            this.ColumnRecepient.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ColumnRecepient.HeaderText = "Recepient";
-            this.ColumnRecepient.Name = "ColumnRecepient";
-            this.ColumnRecepient.ReadOnly = true;
-            this.ColumnRecepient.Width = 81;
-            // 
-            // ColumnSubject
-            // 
-            this.ColumnSubject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ColumnSubject.HeaderText = "Subject";
-            this.ColumnSubject.Name = "ColumnSubject";
-            this.ColumnSubject.ReadOnly = true;
-            this.ColumnSubject.Width = 68;
-            // 
-            // ColumnDate
-            // 
-            this.ColumnDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ColumnDate.HeaderText = "Date";
-            this.ColumnDate.Name = "ColumnDate";
-            this.ColumnDate.ReadOnly = true;
-            this.ColumnDate.Width = 55;
-            // 
-            // ColumnAttachment
-            // 
-            this.ColumnAttachment.HeaderText = "Attachments";
-            this.ColumnAttachment.Name = "ColumnAttachment";
-            this.ColumnAttachment.Visible = false;
-            // 
-            // ColumnPreview
-            // 
-            this.ColumnPreview.HeaderText = "...";
-            this.ColumnPreview.Name = "ColumnPreview";
-            this.ColumnPreview.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.ColumnPreview.Text = "...";
-            this.ColumnPreview.Visible = false;
-            // 
             // panelCheck
             // 
             this.panelCheck.Controls.Add(this.checkBoxAttachments);
@@ -135,6 +97,42 @@
             this.checkBoxAttachments.Text = "Show Attachments";
             this.checkBoxAttachments.UseVisualStyleBackColor = true;
             this.checkBoxAttachments.CheckedChanged += new System.EventHandler(this.checkBoxAttachments_CheckedChanged);
+            // 
+            // ColumnRecepient
+            // 
+            this.ColumnRecepient.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColumnRecepient.HeaderText = "Recepient";
+            this.ColumnRecepient.Name = "ColumnRecepient";
+            this.ColumnRecepient.ReadOnly = true;
+            // 
+            // ColumnSubject
+            // 
+            this.ColumnSubject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColumnSubject.HeaderText = "Subject";
+            this.ColumnSubject.Name = "ColumnSubject";
+            this.ColumnSubject.ReadOnly = true;
+            // 
+            // ColumnDate
+            // 
+            this.ColumnDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColumnDate.HeaderText = "Date";
+            this.ColumnDate.Name = "ColumnDate";
+            this.ColumnDate.ReadOnly = true;
+            // 
+            // ColumnAttachment
+            // 
+            this.ColumnAttachment.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColumnAttachment.HeaderText = "Attachments";
+            this.ColumnAttachment.Name = "ColumnAttachment";
+            this.ColumnAttachment.Visible = false;
+            // 
+            // ColumnPreview
+            // 
+            this.ColumnPreview.HeaderText = "...";
+            this.ColumnPreview.Name = "ColumnPreview";
+            this.ColumnPreview.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.ColumnPreview.Text = "...";
+            this.ColumnPreview.Visible = false;
             // 
             // EmailDataView
             // 

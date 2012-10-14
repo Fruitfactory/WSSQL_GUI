@@ -51,7 +51,7 @@ namespace WSSQLGUI.Controllers
     	
     	private void DoSuggest()
     	{
-            var list = new List<string>();
+            List<string> list = null;
             var q = CreateQuery(_searchCriteria.Trim());
             OleDbConnection con = new OleDbConnection(_connectionString);
             OleDbDataReader reader = null;
@@ -65,6 +65,8 @@ namespace WSSQLGUI.Controllers
                     var name = reader[0].ToString();
                     var first = reader[1].ToString();
                     var last = reader[2].ToString();
+                    if (list == null)
+                        list = new List<string>();
                     list.Add(string.Format("{0} {1}",first,last));
                 }
             }

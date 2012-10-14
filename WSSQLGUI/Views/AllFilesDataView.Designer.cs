@@ -28,65 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridViewFiles = new System.Windows.Forms.DataGridView();
-            this.columnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.columnPath = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewFiles)).BeginInit();
             this.SuspendLayout();
-            // 
-            // dataGridViewFiles
-            // 
-            this.dataGridViewFiles.AllowUserToAddRows = false;
-            this.dataGridViewFiles.AllowUserToDeleteRows = false;
-            this.dataGridViewFiles.AllowUserToResizeRows = false;
-            this.dataGridViewFiles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dataGridViewFiles.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            this.dataGridViewFiles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.columnName,
-            this.columnPath});
-            this.dataGridViewFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewFiles.Location = new System.Drawing.Point(0, 0);
-            this.dataGridViewFiles.MultiSelect = false;
-            this.dataGridViewFiles.Name = "dataGridViewFiles";
-            this.dataGridViewFiles.ReadOnly = true;
-            this.dataGridViewFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewFiles.Size = new System.Drawing.Size(247, 196);
-            this.dataGridViewFiles.TabIndex = 0;
-            // 
-            // columnName
-            // 
-            this.columnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.columnName.HeaderText = "Name";
-            this.columnName.MinimumWidth = 150;
-            this.columnName.Name = "columnName";
-            this.columnName.ReadOnly = true;
-            this.columnName.Width = 150;
-            // 
-            // columnPath
-            // 
-            this.columnPath.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.columnPath.HeaderText = "Path";
-            this.columnPath.MinimumWidth = 200;
-            this.columnPath.Name = "columnPath";
-            this.columnPath.ReadOnly = true;
-            this.columnPath.Width = 200;
             // 
             // AllFilesDataView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.dataGridViewFiles);
             this.Name = "AllFilesDataView";
-            this.Size = new System.Drawing.Size(247, 196);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewFiles)).EndInit();
+            this.Size = new System.Drawing.Size(405, 274);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridViewFiles;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnPath;
     }
 }

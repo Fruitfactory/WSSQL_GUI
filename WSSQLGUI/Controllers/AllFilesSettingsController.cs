@@ -12,7 +12,7 @@ namespace WSSQLGUI.Controllers
 
         protected override bool OnCanSearch()
         {
-            return !_isError;
+            return !_isError && !_isLoading;
         }
 
 	}
