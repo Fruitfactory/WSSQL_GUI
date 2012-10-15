@@ -34,7 +34,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
                     viewer.Dock = DockStyle.Fill;
                     Controls.Add(viewer);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     throw new Exception("Source Preview Error");
                 }

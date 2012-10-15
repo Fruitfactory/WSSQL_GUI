@@ -66,7 +66,7 @@ namespace WSSQLGUI.Views
 
         private void StartSearch(object sender, EventArgs e)
         {
-            this.Cursor =  previewControl.Cursor = Cursors.AppStarting;
+            this.Cursor =  previewControl.Cursor = Cursors.WaitCursor;
             previewControl.UnloadPreview();
         }
 
@@ -78,13 +78,14 @@ namespace WSSQLGUI.Views
         private void ItemChanged(object sender, EventArgs e)
         {
             string filename = (Controller as SearchController).FileName;
-
+            string searchCriteria = (Controller as SearchController).SearchString;
             if (FileService.IsDirectory(filename) || !File.Exists(filename))
             {
+                previewControl.SearchCriteria = null;
                 previewControl.FilePath = string.Empty;
                 return;
             }
-
+            previewControl.SearchCriteria = searchCriteria;
             previewControl.FilePath = filename;
         }
 

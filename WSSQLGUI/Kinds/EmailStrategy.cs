@@ -70,6 +70,7 @@ namespace WSSQLGUI.Kinds
         {
             var searchCriteria = (SettingsView as IEmailSettingsView).SearchCriteria;
             var folder = (SettingsView as IEmailSettingsView).Folder;
+            SearchString = searchCriteria;
             string res = string.Empty;
             if (searchCriteria.IndexOf(' ') > -1)
             {

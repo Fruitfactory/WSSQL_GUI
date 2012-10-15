@@ -40,9 +40,7 @@ namespace WSSQLGUI.Services.Helpers
             }
             string url = reader[2].ToString();
 
-            DateTime res;
-            string date = reader[4].ToString();
-            DateTime.TryParse(date, out res);
+            DateTime res = reader.GetDateTime(4);
 
 
             return new EmailSearchData() { Subject = subject, Name = name, Path = url, Recepient = recep, Date = res };

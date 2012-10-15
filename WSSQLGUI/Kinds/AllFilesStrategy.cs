@@ -66,6 +66,7 @@ namespace WSSQLGUI.Kinds
         protected override string CreateSqlQuery()
         {
             var searchCriteria = (SettingsView as IAllFilesSettingsView).SearchCriteria;
+            SearchString = searchCriteria;
             string res = string.Empty;
             if (searchCriteria.IndexOf(' ') > -1)
             {

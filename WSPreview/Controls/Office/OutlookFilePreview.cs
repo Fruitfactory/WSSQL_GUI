@@ -10,11 +10,13 @@ using System.Text;
 using System.Windows.Forms;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
+using System.Text.RegularExpressions;
 
 namespace C4F.DevKit.PreviewHandler.Controls.Office
 {
     public partial class OutlookFilePreview : UserControl
     {
+        private static string AfterStrongTemplate = "<font style='background-color: yellow'><strong>{0}</strong></font>";
         private static string OutlookProcessName = "OUTLOOK";
         private static string OutlookApplication = "Outlook.Application";
 
@@ -28,6 +30,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
         #region public 
 
+        public string HitString { get; set; }
 
         public void LoadFile(string filename)
         {
@@ -43,7 +46,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             textBoxFrom.Text = mail.SenderName;
             textBoxTo.Text = mail.To;
             textBoxSend.Text = mail.ReceivedTime.ToString();
-            webBrowserContent.DocumentText = mail.HTMLBody;
+            webBrowserContent.DocumentText = HighlightSearchString(mail.HTMLBody);
 
             if (mail.Attachments.Count > 0)
             {
@@ -129,6 +132,18 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             }
         }
 
+        private string HighlightSearchString(string inputString)
+        {
+            if (HitString == null)
+                return inputString;
+            string result = inputString;
+            var itemArray = HitString.Trim().Split(' ');
+            foreach (var s in itemArray)
+            {
+                result = Regex.Replace(result, s, string.Format(AfterStrongTemplate, s));
+            }
+            return result;
+        }
 
         #endregion
 

@@ -87,6 +87,7 @@ namespace WSSQLGUI.Controllers
 
         public BaseSearchData CurrenItem { get; private set; }
         public string FileName { get; private set;}
+        public string SearchString { get { return _currentKind != null ? _currentKind.SearchString : null; } }
 
         #endregion
 

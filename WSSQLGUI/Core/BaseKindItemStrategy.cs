@@ -171,6 +171,8 @@ namespace WSSQLGUI.Core
             get { return _name; }
         }
 
+        public string SearchString { get; set; }
+
 	    public string Prefix
 	    {
             get { return _prefix; }

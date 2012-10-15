@@ -139,6 +139,7 @@
     <Compile Include="PreviewHandlerFramework\FileBasedPreviewHandlerControl.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PreviewHandlerFramework\ISearchWordHighlight.cs" />
     <Compile Include="PreviewHandlerFramework\PreviewHandler.cs" />
     <Compile Include="PreviewHandlerFramework\PreviewHandlerAttribute.cs" />
     <Compile Include="PreviewHandlerFramework\PreviewHandlerControl.cs">

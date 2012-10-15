@@ -15,21 +15,31 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
     [Guid("326A2452-981E-403B-9921-911011E677E6")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
-    public sealed class OutlookPreviewHandler : FileBasedPreviewHandler
+    public sealed class OutlookPreviewHandler : FileBasedPreviewHandler,ISearchWordHighlight
     {
+        protected string _hitString = null;
+
         protected override PreviewHandlerControl CreatePreviewHandlerControl()
         {
-            return new OutlookPreviewHandlerControl();
+            return new OutlookPreviewHandlerControl(this);
         }
 
-        private sealed class OutlookPreviewHandlerControl : FileBasedPreviewHandlerControl
+        public sealed class OutlookPreviewHandlerControl : FileBasedPreviewHandlerControl
         {
             private OutlookFilePreview _preview;
+            private OutlookPreviewHandler _parent;
+            public OutlookPreviewHandlerControl(OutlookPreviewHandler parent)
+            {
+                _parent = parent;
+            }
+
+
             public override void Load(FileInfo file)
             {
                 _preview = new OutlookFilePreview();
                 _preview.Dock = DockStyle.Fill;
                 Controls.Add(_preview);
+                _preview.HitString = _parent.HitString;
                 _preview.LoadFile(file.FullName);
             }
 
@@ -38,6 +48,12 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
                 Controls.Clear();
                 base.Unload();
             }
+        }
+
+        public string HitString
+        {
+            get { return _hitString; }
+            set { _hitString = value; }
         }
     }
 }

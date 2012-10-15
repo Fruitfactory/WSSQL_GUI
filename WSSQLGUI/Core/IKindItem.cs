@@ -14,6 +14,8 @@ namespace WSSQLGUI.Core
 			get;
 		}
 
+        string SearchString { get; set; }
+
 	    string Prefix { get; }
 
 		IView SettingsView

@@ -30,11 +30,18 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
         private const int WM_DESTROY = 0x0002;
 
         private string _filePath;
+        private string _searchCriteria;
         private object _comInstance = null;
 
         public PreviewHandlerHostControl()
         {
             InitializeComponent();
+        }
+
+        public string SearchCriteria
+        {
+            get { return _searchCriteria; }
+            set { _searchCriteria = value; }
         }
 
         /// <summary>
@@ -129,6 +136,8 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                 // Check if it is a stream or file handler
                 if (_comInstance is IInitializeWithFile)
                 {
+                    if (_comInstance is ISearchWordHighlight)
+                        ((ISearchWordHighlight) _comInstance).HitString = SearchCriteria;
                     ((IInitializeWithFile)_comInstance).Initialize(_filePath, 0);
                 }
                 else if (File.Exists(_filePath))

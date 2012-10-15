@@ -62,6 +62,7 @@ namespace WSSQLGUI.Kinds
         protected override string CreateSqlQuery()
         {
             var searchCriteria = (SettingsView as IContactSettingsView).SearchCriteria;
+            SearchString = searchCriteria;
             string res = String.Empty;
 
             if (searchCriteria.IndexOf(' ') > -1)
