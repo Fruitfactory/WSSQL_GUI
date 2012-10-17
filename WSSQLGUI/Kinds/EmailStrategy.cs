@@ -17,10 +17,11 @@ namespace WSSQLGUI.Kinds
 {
 	internal class EmailStrategy : BaseKindItemStrategy
 	{
+        private readonly string OrderTemplate = " ORDER BY System.Message.DateReceived DESC)";
 
         public EmailStrategy()
         {
-            _queryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(*,'{0}*') AND CONTAINS(System.ItemPathDisplay,'{1}*',1033) ORDER BY System.Message.DateReceived DESC) ";//¬ход€щие  //Inbox
+            _queryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) AND CONTAINS(*,'{1}*') ";//¬ход€щие  //Inbox
             _queryAnd = " AND Contains(*,'{0}*')";
             ID = 1;
             _name = "E-Mail";
@@ -78,15 +79,15 @@ namespace WSSQLGUI.Kinds
                 var list = searchCriteria.Split(' ').ToList();
                 if (list == null || list.Count == 1)
                     return string.Format(_queryTemplate, searchCriteria);
-                res = string.Format(_queryTemplate, list[0]);
+                res = string.Format(_queryTemplate,folder,list[0]);
                 for (int i = 1; i < list.Count; i++)
                 {
                     temp.Append(string.Format(_queryAnd, list[i]));
                 }
-                res += temp.ToString();// +groupOn;
+                res += temp.ToString() + OrderTemplate;
             }
             else
-                res = string.Format(_queryTemplate, searchCriteria,folder);// +groupOn;
+                res = string.Format(_queryTemplate, folder, searchCriteria) + OrderTemplate;
 
             return res;
         }

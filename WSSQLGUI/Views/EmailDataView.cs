@@ -121,6 +121,8 @@ namespace WSSQLGUI.Views
 
         private void dataGridViewEmail_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0)
+                return;
             DataGridViewRow row = dataGridViewEmail.Rows[e.RowIndex];
             if (e.ColumnIndex != 4 || row.Cells[3].Value == null)
                 return;

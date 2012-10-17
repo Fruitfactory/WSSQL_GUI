@@ -45,27 +45,30 @@ namespace WSSQLGUI.Controls.TextComplete
 			this.Parent.Controls.Add(_list);
 		}
 
+        protected override void  OnKeyPress(KeyPressEventArgs e)
+        {
+            base.OnKeyPress(e);
+            EventHandler<EventArgs<string>> temp = TextChanging;
+            if (temp != null)
+                temp(this, new EventArgs<string>(this.Text));	
+        }
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
-            EventHandler<EventArgs<string>> temp = TextChanging;
-            if (temp != null)
-                temp(this, new EventArgs<string>(this.Text));
 
 			switch(e.KeyCode)
 			{
 				case Keys.Down:
+                    if (_list.Items.Count > -1)
+                        _list.SelectedIndex = 0;
 					_list.Focus();
 					break;
 				case Keys.Escape:
 					_list.Visible = false;
 					Focus();
 					break;
-				default:
-					return;
 			}
-			
 		}
 		
 		#endregion
@@ -76,7 +79,6 @@ namespace WSSQLGUI.Controls.TextComplete
 		{
             UpdateLocationList();
 			_list.Visible = true;
-		    _list.SelectedIndex = -1;
 		}
 		
 		private void HideSuggest()
@@ -125,6 +127,7 @@ namespace WSSQLGUI.Controls.TextComplete
             _list.Height = _list.Parent.Height - (Location.X + Height);
 
         }
+
 		#endregion
 		
 		#region properties
