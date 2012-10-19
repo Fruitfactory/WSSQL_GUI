@@ -16,7 +16,7 @@ namespace WSSQLGUI.Controls.PagingControl
         private const int CountItemsInPage = 20;
         private const int MaxLinks = 5;
 
-        private List<T> _listDataSource = new List<T>();
+        private List<T> _listDataSource;
         private List<T> _currentDataSource = new List<T>(); 
         private List<PageEntity> _pages = new List<PageEntity>();
         private int _currentPageNumber = -1;
@@ -100,7 +100,9 @@ namespace WSSQLGUI.Controls.PagingControl
         public void StartLoading()
         {
             IsLoading = true;
-            //Todo: 
+            if(_listDataSource != null)
+                _listDataSource.Clear();
+            _listDataSource = null;
             foreach(var ctrl in Controls.OfType<Control>())
             {
                 ctrl.Enabled = false;
@@ -109,8 +111,6 @@ namespace WSSQLGUI.Controls.PagingControl
 
         public void CompleteLoading()
         {
-
-            //Todo:
             foreach (var ctrl in Controls.OfType<Control>())
             {
                 ctrl.Enabled = true;
@@ -127,16 +127,15 @@ namespace WSSQLGUI.Controls.PagingControl
 
         public void AddData(T data)
         {
-            if(_listDataSource == null)
-                return;
+            if (_listDataSource == null)
+            {
+                _listDataSource = new List<T>();
+            }
             _listDataSource.Add(data);
         }
 
         public void AddData(List<T> data)
         {
-            if (_listDataSource == null)
-                return;
-            _listDataSource.Clear();
             _listDataSource = data;
             UpdateData();
         }

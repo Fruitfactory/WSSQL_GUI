@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using WSSQLGUI.Core;
+using WSSQLGUI.Models;
 using WSSQLGUI.Views;
 using WSSQLGUI.Controllers;
 using System.Threading;
@@ -19,7 +20,7 @@ namespace WSSQLGUI.Kinds
     {
         private const string KindGroup = "email";
         private const string InboxFolder = "¬ход€щие";//"Inbox";
-        private const string QueryForGroupEmails = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.Message.ConversationID,'{0}*') AND CONTAINS(System.ItemPathDisplay,'{1}*',1033)  ORDER BY System.Message.DateReceived DESC) ";
+        private const string QueryForGroupEmails = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.Message.ConversationID,'{0}*')   ORDER BY System.Message.DateReceived DESC) ";//AND CONTAINS(System.ItemPathDisplay,'{1}*',1033)
 
 
         private  List<string> _listID = new List<string>(); 
@@ -92,7 +93,7 @@ namespace WSSQLGUI.Kinds
 
         private Tuple<string,string>  GroupEmail(string name,string id)
         {
-            var query = string.Format(QueryForGroupEmails, id,InboxFolder);
+            var query = string.Format(QueryForGroupEmails, id);//,InboxFolder
             int count = 0;
             string path = string.Empty;
             OleDbDataReader reader = null;
@@ -143,7 +144,7 @@ namespace WSSQLGUI.Kinds
                 return default(Tuple<int,string>);
             var item = groups.Items[0];
 
-            var res = new Tuple<int, string>(groups.Items.Count, groups.Items[0].Path);
+            var res = new Tuple<int, string>(groups.Items.Distinct(new EmailSearchDataComparer()).Count(), item.Path);
             return res;
         }
 

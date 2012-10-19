@@ -47,6 +47,24 @@ namespace WSSQLGUI.Models
             get;
             set;
         }
+
+        public string ConversationIndex { get; set; }
        
     }
+
+    internal class EmailSearchDataComparer : IEqualityComparer<EmailSearchData>
+    {
+        public bool Equals(EmailSearchData x, EmailSearchData y)
+        {
+            if (x.ConversationIndex == y.ConversationIndex)
+                return true;
+            return false;
+        }
+
+        public int GetHashCode(EmailSearchData obj)
+        {
+            return obj.ConversationIndex.GetHashCode();
+        }
+    }
+
 }
