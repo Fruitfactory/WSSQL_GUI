@@ -48,8 +48,11 @@ namespace WSSQLGUI.Views
             base.Initialize();
             if (Controller == null)
                 return;
-            if(buttonSearch.DataBindings.Count == 0)
+            if (buttonSearch.DataBindings.Count == 0)
+            {
                 commandManager.Bind((Controller as AllFilesSettingsController).SearchCommand, buttonSearch);
+                commandManager.Bind((Controller as AllFilesSettingsController).TestCommand, buttonTest); // only for testing
+            }
         }
 
         public string SearchCriteria

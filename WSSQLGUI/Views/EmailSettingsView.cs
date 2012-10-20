@@ -11,6 +11,7 @@ using MVCSharp.Winforms;
 using WSSQLGUI.Controllers;
 using MVCSharp.Core.Configuration.Views;
 using WSSQLGUI.Controllers.Tasks;
+using WSSQLGUI.Services;
 
 namespace WSSQLGUI.Views
 {
@@ -46,7 +47,17 @@ namespace WSSQLGUI.Views
             if(buttonSearch.DataBindings.Count == 0)
             	commandManager.Bind(contr.SearchCommand, buttonSearch);
             comboBoxFolder.DataSource = contr.GetFolders();
-
+            #region ti4ka
+            int index = -1;
+            if((index = comboBoxFolder.Items.IndexOf(HelperConst.Inbox1)) > -1)
+            {
+                comboBoxFolder.SelectedIndex = index;
+            }
+            else if((index = comboBoxFolder.Items.IndexOf(HelperConst.Inbox2)) > -1)
+            {
+                comboBoxFolder.SelectedIndex = index;
+            }
+            #endregion
         }
 
 

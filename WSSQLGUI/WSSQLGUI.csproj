@@ -104,6 +104,15 @@
     <Compile Include="Controls\PagingControl\PagingDataSource.designer.cs">
       <DependentUpon>PagingDataSource.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ProgressControl\IProgressManager.cs" />
+    <Compile Include="Controls\ProgressControl\ProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\ProgressControl\ProgressForm.Designer.cs">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ProgressControl\ProgressManager.cs" />
+    <Compile Include="Controls\ProgressControl\ProgressOperation.cs" />
     <Compile Include="Controls\TextComplete\TextSearchComplete.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -120,6 +129,7 @@
     <Compile Include="Models\ContactSearchData.cs" />
     <Compile Include="Models\EmailSearchData.cs" />
     <Compile Include="Models\SearchData.cs" />
+    <Compile Include="Services\HelperConst.cs" />
     <Compile Include="Services\Helpers\EmailGroupReaderHelpers.cs" />
     <Compile Include="Services\Helpers\OutlookHelper.cs" />
     <Compile Include="Services\Helpers\SearchItemHelper.cs" />
@@ -189,6 +199,9 @@
     <Compile Include="Views\WSSqlViewsManager.cs" />
     <EmbeddedResource Include="Controls\PagingControl\PagingDataSource.resx">
       <DependentUpon>PagingDataSource.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ProgressControl\ProgressForm.resx">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\AllFilesDataView.resx">
       <DependentUpon>AllFilesDataView.cs</DependentUpon>

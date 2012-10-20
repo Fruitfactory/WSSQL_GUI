@@ -34,6 +34,7 @@ namespace WSSQLGUI.Views
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.textBoxSearch = new System.Windows.Forms.TextBox();
             this.panelSearch = new System.Windows.Forms.Panel();
+            this.buttonTest = new System.Windows.Forms.Button();
             this.tabPageSearch.SuspendLayout();
             this.panelForText.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
@@ -44,12 +45,9 @@ namespace WSSQLGUI.Views
             // 
             this.tabPageSearch.Size = new System.Drawing.Size(320, 113);
             // 
-            // tabPageAdditional
-            // 
-            this.tabPageAdditional.Size = new System.Drawing.Size(262, 121);
-            // 
             // panelForText
             // 
+            this.panelForText.Controls.Add(this.buttonTest);
             this.panelForText.Controls.Add(this.panelSearch);
             this.panelForText.Size = new System.Drawing.Size(314, 94);
             // 
@@ -81,6 +79,15 @@ namespace WSSQLGUI.Views
             this.panelSearch.Size = new System.Drawing.Size(314, 30);
             this.panelSearch.TabIndex = 1;
             // 
+            // buttonTest
+            // 
+            this.buttonTest.Location = new System.Drawing.Point(6, 33);
+            this.buttonTest.Name = "buttonTest";
+            this.buttonTest.Size = new System.Drawing.Size(75, 23);
+            this.buttonTest.TabIndex = 2;
+            this.buttonTest.Text = "buttonTest";
+            this.buttonTest.UseVisualStyleBackColor = true;
+            // 
             // AllFilesSettingsView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -103,6 +110,7 @@ namespace WSSQLGUI.Views
         private System.Windows.Forms.ErrorProvider errorProvider;
         private TextBox textBoxSearch;
         private Panel panelSearch;
+        private Button buttonTest;
         
     }
 }
