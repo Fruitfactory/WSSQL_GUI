@@ -10,9 +10,11 @@ using System.Windows.Forms;
 
 namespace WSSQLGUI.Controls.ProgressControl
 {
-    public partial class ProgressForm : Form
+    internal partial class ProgressForm : Form, IProgressForm
     {
         private SynchronizationContext _currentContext;
+        private ProgressOperation _currentOperation;
+        private Action _cancelAction;
 
         public ProgressForm()
         {
@@ -20,15 +22,95 @@ namespace WSSQLGUI.Controls.ProgressControl
             _currentContext = SynchronizationContext.Current;
         }
 
-        public void SetMessage(string message)
-        {
-            labelMessage.Text = message;
-        }
+        #region implement IProgressForm
 
         public void CloseExt()
         {
             _currentContext.Send(state => Close(),null);    
         }
 
+        public void ProcessCommand(ProgressFormCommand cmd, object arg)
+        {
+            switch(cmd)
+            {
+                case ProgressFormCommand.Settings:
+                    ProcessSettings(arg);
+                    break;
+                case ProgressFormCommand.Activate:
+                    ProcessActivate();
+                    break;
+                case ProgressFormCommand.Progress:
+                    ProcessProgress(arg);
+                    break;
+            }
+        }
+
+        public FormWindowState State
+        {
+            get { return base.WindowState; }
+            set { base.WindowState = value; }
+        }
+
+        public new Point Location
+        {
+            get { return base.Location; }
+            set { base.Location = value; }
+        }
+
+        public new int Width
+        {
+            get { return base.Width; }
+            set { base.Width = value; }
+        }
+
+        public new int Height
+        {
+            get { return base.Height; }
+            set { base.Height = value; }
+        }
+
+        #endregion
+
+        #region private 
+
+        private void ProcessSettings(object arg)
+        {
+            ProgressOperation operation = arg as ProgressOperation;
+            if(operation == null)
+                return;
+            _currentOperation = operation;
+            TopMost = true;
+            labelMessage.Text = _currentOperation.Caption;
+            buttonCancel.Visible = _currentOperation.Canceled;
+            progress.Style = _currentOperation.Style;
+            if (_currentOperation.Style == ProgressBarStyle.Blocks)
+            {
+                progress.Minimum = _currentOperation.Min;
+                progress.Maximum = _currentOperation.Max;
+            }
+            _cancelAction = _currentOperation.CancelAction;
+            if(_cancelAction != null)
+            {
+                buttonCancel.Click += (o, e) => this.Invoke(_cancelAction);
+            }
+
+        }
+
+        private void ProcessActivate()
+        {
+            TopMost = false;
+            TopMost = true;
+            Activate();
+        }
+
+        private void ProcessProgress(object arg)
+        {
+            if(arg == null)
+                return;
+
+            _currentContext.Send(o => progress.Value = (int)o,arg);
+        }
+
+        #endregion
     }
 }

@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace WSSQLGUI.Core
 {
-	internal abstract class BaseSettingsController : ControllerBase
+	internal abstract class BaseSettingsController : ControllerBase, IBaseSettingsController
 	{
         protected DelegateCommand _searchCommand;
         protected string _nameButton = "Search";

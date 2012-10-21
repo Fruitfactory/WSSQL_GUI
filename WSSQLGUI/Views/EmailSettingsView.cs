@@ -11,6 +11,7 @@ using MVCSharp.Winforms;
 using WSSQLGUI.Controllers;
 using MVCSharp.Core.Configuration.Views;
 using WSSQLGUI.Controllers.Tasks;
+using WSSQLGUI.Core;
 using WSSQLGUI.Services;
 
 namespace WSSQLGUI.Views
@@ -45,8 +46,8 @@ namespace WSSQLGUI.Views
             if (contr == null)
                 return;
             if(buttonSearch.DataBindings.Count == 0)
-            	commandManager.Bind(contr.SearchCommand, buttonSearch);
-            comboBoxFolder.DataSource = contr.GetFolders();
+            	commandManager.Bind((contr as IBaseSettingsController).SearchCommand, buttonSearch);
+            comboBoxFolder.DataSource = (contr as IEmailSettings).GetFolders();
             #region ti4ka
             int index = -1;
             if((index = comboBoxFolder.Items.IndexOf(HelperConst.Inbox1)) > -1)

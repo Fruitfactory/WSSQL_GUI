@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using MVCSharp.Core;
 using MVCSharp.Core.Views;
+using WSSQLGUI.Controls.ProgressControl;
 using WSSQLGUI.Services;
 using System.Data;
 using System.Data.OleDb;
@@ -33,6 +35,13 @@ namespace WSSQLGUI.Core
             OleDbDataReader myDataReader = null;
             OleDbConnection myOleDbConnection = new OleDbConnection(_connectionString);
             OleDbCommand myOleDbCommand = new OleDbCommand(_query, myOleDbConnection);
+            ProgressManager.Instance.StartOperation(new ProgressOperation()
+                                                        {
+                                                            Caption = "Searching...",
+                                                            DelayTime = 2500,
+                                                            Style = ProgressBarStyle.Marquee,
+                                                            Canceled = false
+                                                        });
             try
             {
 
@@ -61,7 +70,7 @@ namespace WSSQLGUI.Core
                 {
                     myOleDbConnection.Close();
                 }
-                
+                ProgressManager.Instance.StopOperation();
             }
 		}
 

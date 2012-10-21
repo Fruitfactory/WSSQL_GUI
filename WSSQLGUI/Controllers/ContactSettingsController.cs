@@ -13,7 +13,7 @@ using Threading = System.Threading.Tasks;
 
 namespace WSSQLGUI.Controllers
 {
-    internal class ContactSettingsController : BaseSettingsController
+    internal class ContactSettingsController : BaseSettingsController, IContactSettingsController,IEmailSettings
     {
     	#region fields
     	private readonly string _query = "SELECT System.ItemName, System.Contact.FirstName, System.Contact.LastName FROM SystemIndex WHERE System.Kind = 'contact' AND ( CONTAINS(System.Contact.FirstName,'\"{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{1}*\"') )";

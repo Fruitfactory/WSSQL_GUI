@@ -11,6 +11,7 @@ using MVCSharp.Winforms;
 using WSSQLGUI.Controllers;
 using MVCSharp.Core.Configuration.Views;
 using WSSQLGUI.Controllers.Tasks;
+using WSSQLGUI.Core;
 using WSSQLGUI.Services;
 
 namespace WSSQLGUI.Views
@@ -45,11 +46,11 @@ namespace WSSQLGUI.Views
             if (contactController == null)
                 return;
             if (buttonSearch.DataBindings.Count == 0)
-                commandManager.Bind(contactController.SearchCommand, buttonSearch);
-            contactController.Suggest += (o, e) => Invoke(new Action<List<string>>(OnSuggest), new object[] { e.Value });
+                commandManager.Bind((contactController as IBaseSettingsController) .SearchCommand, buttonSearch);
+            (contactController as IContactSettingsController).Suggest += (o, e) => Invoke(new Action<List<string>>(OnSuggest), new object[] { e.Value });
             textSearchComplete.TextChanging +=
-                (o, e) => contactController.StartSuggesting(textSearchComplete.Text);
-            comboBoxFolder.DataSource = contactController.GetFolders();
+                (o, e) => (contactController as IContactSettingsController).StartSuggesting(textSearchComplete.Text);
+            comboBoxFolder.DataSource = (contactController as IEmailSettings).GetFolders();
             #region ti4ka
             int index = -1;
             if ((index = comboBoxFolder.Items.IndexOf(HelperConst.Inbox1)) > -1)

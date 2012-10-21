@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using WSSQLGUI.Controls.ProgressControl;
 using WSSQLGUI.Services.Interfaces;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Windows.Forms;
@@ -71,8 +72,12 @@ namespace WSSQLGUI.Services.Helpers
             string tempFilename = TempFileManager.Instance.GenerateTempFileName(itemsearch);
             if (string.IsNullOrEmpty(tempFilename))
                 return null;
-            if(!File.Exists(tempFilename))
+            if (!File.Exists(tempFilename))
+            {
+                ProgressManager.Instance.StartOperation(new ProgressOperation(){Caption = tempFilename,Canceled = false,DelayTime = 1500,Style = ProgressBarStyle.Marquee});
                 mailItem.SaveAs(tempFilename, Type.Missing);
+                ProgressManager.Instance.StopOperation();
+            }
 
             return tempFilename;
         }

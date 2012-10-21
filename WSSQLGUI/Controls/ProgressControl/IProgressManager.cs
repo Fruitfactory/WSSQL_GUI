@@ -10,5 +10,6 @@ namespace WSSQLGUI.Controls.ProgressControl
     {
         void StartOperation(ProgressOperation operation);
         void StopOperation();
+        void SetProgress(int value);
     }
 }

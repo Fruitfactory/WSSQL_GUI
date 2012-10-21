@@ -89,6 +89,9 @@
     <Compile Include="Controllers\ContactSettingsController.cs" />
     <Compile Include="Controllers\EmailDataController.cs" />
     <Compile Include="Controllers\EmailSettingsController.cs" />
+    <Compile Include="Controllers\IAllFilesSettingsController.cs" />
+    <Compile Include="Controllers\IContactSettingsController.cs" />
+    <Compile Include="Controllers\IEmailSettings.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\Tasks\AllFilesDataTask.cs" />
     <Compile Include="Controllers\Tasks\AllFilesSettingsTask.cs" />
@@ -104,6 +107,7 @@
     <Compile Include="Controls\PagingControl\PagingDataSource.designer.cs">
       <DependentUpon>PagingDataSource.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ProgressControl\IProgressForm.cs" />
     <Compile Include="Controls\ProgressControl\IProgressManager.cs" />
     <Compile Include="Controls\ProgressControl\ProgressForm.cs">
       <SubType>Form</SubType>
@@ -120,6 +124,7 @@
     <Compile Include="Core\BaseKindItemStrategy.cs" />
     <Compile Include="Core\BaseSearchData.cs" />
     <Compile Include="Core\BaseSettingsController.cs" />
+    <Compile Include="Core\IBaseSettingsController.cs" />
     <Compile Include="Core\IDataView.cs" />
     <Compile Include="Core\IKindItem.cs" />
     <Compile Include="Core\ISettingsView.cs" />

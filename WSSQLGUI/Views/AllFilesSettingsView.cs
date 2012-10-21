@@ -11,6 +11,7 @@ using MVCSharp.Winforms;
 using WSSQLGUI.Controllers;
 using MVCSharp.Core.Configuration.Views;
 using WSSQLGUI.Controllers.Tasks;
+using WSSQLGUI.Core;
 
 namespace WSSQLGUI.Views
 {
@@ -50,8 +51,8 @@ namespace WSSQLGUI.Views
                 return;
             if (buttonSearch.DataBindings.Count == 0)
             {
-                commandManager.Bind((Controller as AllFilesSettingsController).SearchCommand, buttonSearch);
-                commandManager.Bind((Controller as AllFilesSettingsController).TestCommand, buttonTest); // only for testing
+                commandManager.Bind((Controller as IBaseSettingsController).SearchCommand, buttonSearch);
+                commandManager.Bind((Controller as IAllFilesSettingsController).TestCommand, buttonTest); // only for testing
             }
         }
 

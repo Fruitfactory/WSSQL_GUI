@@ -87,6 +87,7 @@ namespace WSSQLGUI.Views
             this.buttonTest.TabIndex = 2;
             this.buttonTest.Text = "buttonTest";
             this.buttonTest.UseVisualStyleBackColor = true;
+            this.buttonTest.Visible = false;
             // 
             // AllFilesSettingsView
             // 

@@ -20,7 +20,7 @@ namespace WSSQLGUI.Controls.ProgressControl
         private readonly  AutoResetEvent _stopEvent = new AutoResetEvent(false);
         private Task _showTask;
         private Task _waitTask;
-        private ProgressForm _progressForm;
+        private IProgressForm _progressForm;
         private readonly Stack<ProgressOperation> _stackOperation = new Stack<ProgressOperation>();
         private ProgressOperation _currentOperation;
         private Form _mainForm;
@@ -61,9 +61,9 @@ namespace WSSQLGUI.Controls.ProgressControl
         private void StartWaiting()
         {
             var delayTime = _currentOperation.DelayTime;
+            _stopEvent.Reset();
             if(delayTime > 0)
             {
-                _stopEvent.Reset();
                 _waitTask = Task.Factory.StartNew(() =>
                                                       {
 
@@ -90,11 +90,10 @@ namespace WSSQLGUI.Controls.ProgressControl
             _showTask = Task.Factory.StartNew(() =>
                                                   {
                                                       _progressForm = new ProgressForm();
-                                                      _progressForm.WindowState = FormWindowState.Normal;
-                                                      _progressForm.SetMessage(_currentOperation.Name);
-                                                      _progressForm.TopMost = true;
+                                                      _progressForm.State = FormWindowState.Normal;
                                                       _progressForm.Location = CalcPosition();
-                                                      Application.Run(_progressForm);
+                                                      _progressForm.ProcessCommand(ProgressFormCommand.Settings, _currentOperation);
+                                                      Application.Run((Form)_progressForm);
                                                   });
             
         }
@@ -119,7 +118,14 @@ namespace WSSQLGUI.Controls.ProgressControl
             _progressForm = null;
             _showTask.Wait();
             _showTask = null;
-       }
+        }
+
+        public void SetProgress(int value)
+        {
+            if(_progressForm == null)
+                return;
+            _progressForm.ProcessCommand(ProgressFormCommand.Progress, value);          
+        }
 
         #endregion
     }

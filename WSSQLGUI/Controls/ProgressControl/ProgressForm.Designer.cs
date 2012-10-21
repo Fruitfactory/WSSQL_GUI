@@ -36,10 +36,9 @@
             // progress
             // 
             this.progress.Location = new System.Drawing.Point(12, 30);
-            this.progress.MarqueeAnimationSpeed = 15;
+            this.progress.MarqueeAnimationSpeed = 30;
             this.progress.Name = "progress";
             this.progress.Size = new System.Drawing.Size(231, 23);
-            this.progress.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progress.TabIndex = 0;
             // 
             // labelMessage
@@ -51,18 +50,20 @@
             // 
             // buttonCancel
             // 
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(168, 62);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Visible = false;
             // 
             // ProgressForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(250, 95);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.labelMessage);

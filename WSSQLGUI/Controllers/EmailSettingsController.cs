@@ -6,7 +6,7 @@ using WSSQLGUI.Services.Helpers;
 
 namespace WSSQLGUI.Controllers
 {
-	internal class EmailSettingsController : BaseSettingsController
+	internal class EmailSettingsController : BaseSettingsController, IEmailSettings
 	{
 		public List<string> GetFolders()
 		{
