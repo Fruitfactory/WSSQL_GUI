@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using WSUI.Service.Enums;
+using WSUI.Infrastructure.Service.Enums;
 
-namespace WSUI.Models
+namespace WSUI.Infrastructure.Models
 {
     class SearchItem
     {

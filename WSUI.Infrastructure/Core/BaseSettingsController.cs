@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using WSUI.Service;
+using WSUI.Infrastructure.Service;
 using System.Text.RegularExpressions;
-using WSUI.Services;
+using WSUI.Infrastructure.Services;
 
 
-namespace WSUI.Core
+namespace WSUI.Infrastructure.Core
 {
 	internal abstract class BaseSettingsController //: ControllerBase, IBaseSettingsController
 	{

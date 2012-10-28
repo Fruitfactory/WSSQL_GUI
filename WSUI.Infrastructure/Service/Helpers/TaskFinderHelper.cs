@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using WSUI.Core;
+using WSUI.Infrastructure.Core;
 
 
-namespace WSUI.Service.Helpers
+namespace WSUI.Infrastructure.Service.Helpers
 {
     internal class TaskFinderHelper
     {

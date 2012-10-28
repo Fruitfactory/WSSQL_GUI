@@ -1,7 +1,7 @@
 using System;
-using WSUI.Services;
+using WSUI.Infrastructure.Services;
 
-namespace WSUI.Core
+namespace WSUI.Infrastructure.Core
 {
     internal interface IBaseSettingsController
     {

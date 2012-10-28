@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WSUI.Controls.ProgressManager
+namespace WSUI.Infrastructure.Controls.ProgressManager
 {
     interface IProgressManager
     {

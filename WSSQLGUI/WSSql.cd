@@ -8,16 +8,16 @@
     </TypeIdentifier>
   </Class>
   <Class Name="WSSQLGUI.Controllers.SearchController">
-    <Position X="10.25" Y="3.5" Width="3" />
+    <Position X="10.75" Y="3.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>AIIAICAIAgAAiJgBEAAAYEAAAAIJgEIAAAAAAEBgAAA=</HashCode>
+      <HashCode>ACwADCAMAlCCAIgAEAJAYMAAAIIBAAIAAAAAAGBBIAA=</HashCode>
       <FileName>Controllers\SearchController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WSSQLGUI.Models.SearchItem">
     <Position X="10.25" Y="0.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAgAAAAAAAAAQAAAAAAAQAAQAAAABAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAgAAAAIAAAAQAAAAAAAQBAQAIAABAAAA=</HashCode>
       <FileName>Models\SearchItem.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -45,29 +45,29 @@
   <Class Name="WSSQLGUI.Views.SearchForm">
     <Position X="0.5" Y="5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>BABBCAAQACDBARAAQACEAAQCQAgAAQAACIAQAQAEAAA=</HashCode>
+      <HashCode>BABQCAgAgCAIARAAQACFAAgCAAAEAAAAAAASAAAUAAA=</HashCode>
       <FileName>Views\SearchForm.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WSSQLGUI.Services.Helpers.SearchItemHelper">
     <Position X="3.5" Y="5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAIAAAAAAAAAACAAAAAAAAQAAIAAAAAABAAABAAAA=</HashCode>
       <FileName>Services\Helpers\SearchItemHelper.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WSSQLGUI.Services.Helpers.OutlookHelper">
     <Position X="7.25" Y="3.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAEEAAAASAUAAAUCAAAAAAEAEAAAAAAQgAAACAAIAA=</HashCode>
+      <HashCode>BCAkMAgAQyAEAAAQCAAAAQAEIECAAgAAwgAAACEAIAA=</HashCode>
       <FileName>Services\Helpers\OutlookHelper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.1" />
   </Class>
   <Class Name="WSSQLGUI.Services.Helpers.TempFileManager">
-    <Position X="3.5" Y="7" Width="2.75" />
+    <Position X="3.5" Y="8" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAEEAAAAAAAEAEAAAAAAEAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <HashCode>AAAEEAAAAAAAEAEAAAIAAEAAAAAAAAABQAAEAQAAAAA=</HashCode>
       <FileName>Services\Helpers\TempFileManager.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -81,7 +81,7 @@
   <Enum Name="WSSQLGUI.Services.Enums.TypeSearchItem">
     <Position X="8" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAEAAAAAAAAAAEAAAA=</HashCode>
+      <HashCode>AAACAAAAACAAAAAACAAAAAAAAAAEAAAAAAAAAAEAAAA=</HashCode>
       <FileName>Services\Enums\TypeSearchItem.cs</FileName>
     </TypeIdentifier>
   </Enum>

@@ -4,11 +4,11 @@ using System.Data;
 using System.Data.OleDb;
 using System.Linq;
 using System.Text;
-using WSUI.Models;
+using WSUI.Infrastructure.Models;
 
-namespace WSUI.Service.Helpers
+namespace WSUI.Infrastructure.Service.Helpers
 {
-    internal class EmailGroupReaderHelpers
+    public class EmailGroupReaderHelpers
     {
         static public EmailData ReadGroups(IDataReader reader)
         {

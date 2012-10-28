@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using WSUI.Controls.ProgressManager;
-using WSUI.Service.Interfaces;
+using WSUI.Infrastructure.Controls.ProgressManager;
+using WSUI.Infrastructure.Service.Interfaces;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using C4F.DevKit.PreviewHandler.Service.Logger;
-using WSUI.Core;
-using WSUI.Models;
+using WSUI.Infrastructure.Core;
+using WSUI.Infrastructure.Models;
 
 
-namespace WSUI.Service.Helpers
+namespace WSUI.Infrastructure.Service.Helpers
 {
-    class OutlookHelper : IOutlookHelper, IDisposable
+    public class OutlookHelper : IOutlookHelper, IDisposable
     {
 #region static
         private static string OutlookProcessName = "OUTLOOK";
@@ -81,7 +81,7 @@ namespace WSUI.Service.Helpers
             return tempFilename;
         }
 
-        public string GetAttachmentTempFileName(WSUI.Core.BaseSearchData item)
+        public string GetAttachmentTempFileName(WSUI.Infrastructure.Core.BaseSearchData item)
         {
             if (item == null)
                 return null;

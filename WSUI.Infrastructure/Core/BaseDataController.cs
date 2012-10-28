@@ -4,7 +4,7 @@ using System.Text;
 
 
 
-namespace WSUI.Core
+namespace WSUI.Infrastructure.Core
 {
 	internal abstract class BaseDataController 
 	{

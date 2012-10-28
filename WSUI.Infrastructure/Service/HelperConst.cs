@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WSUI.Services
+namespace WSUI.Infrastructure.Services
 {
     internal class HelperConst
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace WSUI.Controls.ProgressManager
+namespace WSUI.Infrastructure.Controls.ProgressManager
 {
     class ProgressOperation
     {

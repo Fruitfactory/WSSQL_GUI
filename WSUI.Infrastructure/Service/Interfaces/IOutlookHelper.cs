@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WSUI.Service.Interfaces
+namespace WSUI.Infrastructure.Service.Interfaces
 {
     interface IOutlookHelper
     {
-        string GetEMailTempFileName(WSUI.Core.BaseSearchData itemsearch);
+        string GetEMailTempFileName(WSUI.Infrastructure.Core.BaseSearchData itemsearch);
 
-        string GetAttachmentTempFileName(WSUI.Core.BaseSearchData itemsearch);
+        string GetAttachmentTempFileName(WSUI.Infrastructure.Core.BaseSearchData itemsearch);
     }
 }

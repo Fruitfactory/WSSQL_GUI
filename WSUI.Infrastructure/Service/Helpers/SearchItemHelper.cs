@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using WSUI.Service.Enums;
-using WSUI.Models;
-using WSUI.Core;
+using WSUI.Infrastructure.Service.Enums;
+using WSUI.Infrastructure.Models;
+using WSUI.Infrastructure.Core;
 
-namespace WSUI.Service.Helpers
+namespace WSUI.Infrastructure.Service.Helpers
 {
-    class SearchItemHelper
+    public class SearchItemHelper
     {
         private const string FILEPREFIX = "file:";
         private const string FILEPREFIX1 = "file:///";

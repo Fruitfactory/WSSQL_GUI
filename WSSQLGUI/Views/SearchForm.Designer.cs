@@ -35,13 +35,13 @@
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.splitPanels = new System.Windows.Forms.SplitContainer();
+            this.previewControl = new C4F.DevKit.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl();
             this.buttonPreview = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.panelSettings = new System.Windows.Forms.Panel();
             this.comboBoxKinds = new System.Windows.Forms.ComboBox();
             this.labelKinds = new System.Windows.Forms.Label();
             this.tableLayoutPanelHeader = new System.Windows.Forms.TableLayoutPanel();
-            this.previewControl = new C4F.DevKit.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl();
             this.contextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitPanels)).BeginInit();
             this.splitPanels.Panel2.SuspendLayout();
@@ -98,6 +98,17 @@
             this.splitPanels.Size = new System.Drawing.Size(887, 319);
             this.splitPanels.SplitterDistance = 485;
             this.splitPanels.TabIndex = 8;
+            // 
+            // previewControl
+            // 
+            this.previewControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.previewControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.previewControl.FilePath = null;
+            this.previewControl.Location = new System.Drawing.Point(0, 0);
+            this.previewControl.Name = "previewControl";
+            this.previewControl.SearchCriteria = null;
+            this.previewControl.Size = new System.Drawing.Size(398, 319);
+            this.previewControl.TabIndex = 0;
             // 
             // buttonPreview
             // 
@@ -171,16 +182,6 @@
             this.tableLayoutPanelHeader.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelHeader.Size = new System.Drawing.Size(887, 163);
             this.tableLayoutPanelHeader.TabIndex = 14;
-            // 
-            // previewControl
-            // 
-            this.previewControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.previewControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.previewControl.FilePath = null;
-            this.previewControl.Location = new System.Drawing.Point(0, 0);
-            this.previewControl.Name = "previewControl";
-            this.previewControl.Size = new System.Drawing.Size(398, 319);
-            this.previewControl.TabIndex = 0;
             // 
             // SearchForm
             // 

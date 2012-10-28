@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using WSUI.Service.Enums;
+using WSUI.Infrastructure.Service.Enums;
 
-namespace WSUI.Core
+namespace WSUI.Infrastructure.Core
 {
-	internal class BaseSearchData
+	public class BaseSearchData
 	{
         public string Name
         {

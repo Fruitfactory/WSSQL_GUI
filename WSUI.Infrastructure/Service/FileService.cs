@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 
-namespace WSUI.Services
+namespace WSUI.Infrastructure.Services
 {
     class FileService
     {

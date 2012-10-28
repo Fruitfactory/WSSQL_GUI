@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace WSUI.Controls.ProgressManager
+namespace WSUI.Infrastructure.Controls.ProgressManager
 {
     internal enum ProgressFormCommand
     {

@@ -6,11 +6,11 @@ using System.Data;
 using System.Data.OleDb;
 using System.Threading;
 using C4F.DevKit.PreviewHandler.Service.Logger;
-using WSUI.Service;
-using WSUI.Service.Helpers;
-using WSUI.Services;
+using WSUI.Infrastructure.Service;
+using WSUI.Infrastructure.Service.Helpers;
+using WSUI.Infrastructure.Services;
 
-namespace WSUI.Core
+namespace WSUI.Infrastructure.Core
 {
 	internal abstract class BaseKindItemStrategy : IKindItem
 	{

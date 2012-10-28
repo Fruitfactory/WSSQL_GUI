@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using WSUI.Core;
+using WSUI.Infrastructure.Core;
 
-namespace WSUI.Models
+namespace WSUI.Infrastructure.Models
 {
-    internal class ContactSearchData : BaseSearchData
+    public class ContactSearchData : BaseSearchData
     {
         public string FirstName
         {

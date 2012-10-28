@@ -6,7 +6,7 @@ using System.IO;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 
 
-namespace WSUI.Service.Helpers
+namespace WSUI.Infrastructure.Service.Helpers
 {
     class TempFileManager
     {
@@ -55,7 +55,7 @@ namespace WSUI.Service.Helpers
         #region public 
 
 
-        public string GenerateTempFileName(WSUI.Core.BaseSearchData searchitem)
+        public string GenerateTempFileName(WSUI.Infrastructure.Core.BaseSearchData searchitem)
         {
             if (_tempFileList.ContainsKey(searchitem.ID))
             {
@@ -102,7 +102,7 @@ namespace WSUI.Service.Helpers
 
         #region private 
 
-        private string GetExtension(WSUI.Core.BaseSearchData searchItem)
+        private string GetExtension(WSUI.Infrastructure.Core.BaseSearchData searchItem)
         {
             string ext = null;
             switch (searchItem.Type)

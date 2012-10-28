@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using WSUI.Core;
+using WSUI.Infrastructure.Core;
 
 
-namespace WSUI.Models
+namespace WSUI.Infrastructure.Models
 {
 
    
-    internal class EmailData
+    public class EmailData
     {
         private List<EmailSearchData> _data = new List<EmailSearchData>();
 
@@ -22,7 +22,7 @@ namespace WSUI.Models
     }
 
     
-	internal class EmailSearchData : BaseSearchData
+	public class EmailSearchData : BaseSearchData
 	{
         public string Subject
         {
@@ -52,7 +52,7 @@ namespace WSUI.Models
        
     }
 
-    internal class EmailSearchDataComparer : IEqualityComparer<EmailSearchData>
+    public class EmailSearchDataComparer : IEqualityComparer<EmailSearchData>
     {
         public bool Equals(EmailSearchData x, EmailSearchData y)
         {
