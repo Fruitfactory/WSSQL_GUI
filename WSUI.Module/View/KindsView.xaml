@@ -9,7 +9,7 @@
         <ItemsControl ItemsSource="{Binding Path=KindsCollection,UpdateSourceTrigger=PropertyChanged}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Command="{Binding Path=ChooseCommand}" Content="{Binding Path=UIName}" Margin="3"></Button>
+                    <ToggleButton Command="{Binding Path=ChooseCommand}" Content="{Binding Path=UIName}" Margin="3" IsChecked="{Binding Toggle,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

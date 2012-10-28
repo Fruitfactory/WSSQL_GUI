@@ -31,16 +31,24 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.15*" />
             <ColumnDefinition Width="0.5*" />
-            <ColumnDefinition Width="1"/>
+            <ColumnDefinition Width="2"/>
             <ColumnDefinition Width="0.5*"/>
         </Grid.ColumnDefinitions>
-        <ContentControl Grid.Row="0" Grid.ColumnSpan="4" Margin="7"
+        <ContentControl Grid.Row="0" Grid.ColumnSpan="4" Margin="4"
                         cal:RegionManager.RegionName="SearchRegion"/>
-        <ContentControl Grid.Row="1" Grid.Column="0" Margin="7"
+        <ContentControl Grid.Row="1" Grid.Column="0" Margin="4"
                         cal:RegionManager.RegionName="StrategyRegion"/>
-        <ContentControl Grid.Row="1" Grid.Column="1" Margin="7"
+        <ContentControl Grid.Row="1" Grid.Column="1" Margin="4"
                         cal:RegionManager.RegionName="DataRegion"/>
-        <ContentControl Grid.Row="1" Grid.Column="3" Margin="7"
+        <ContentControl Grid.Row="1" Grid.Column="3" Margin="4"
                         cal:RegionManager.RegionName="PreviewRegion"/>
+        <!--<GridSplitter Grid.Row="1"
+                      Grid.Column="2"
+                      Width="2"
+                      HorizontalAlignment="Stretch"
+                      Background="LightBlue"
+                      ResizeBehavior="BasedOnAlignment"
+                      ResizeDirection="Columns" />-->
+        
     </Grid>
 </Controls:MetroWindow>

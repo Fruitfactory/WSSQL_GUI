@@ -8,14 +8,17 @@
              >
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.85*" />
+            <ColumnDefinition Width="0.15*"/>
+            <ColumnDefinition Width="0.55*" />
             <ColumnDefinition Width="0.15*" />
+            <ColumnDefinition Width="0.15*"/>
         </Grid.ColumnDefinitions>
 
         <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  Controls:TextboxHelper.Watermark="Enter Search Criteria"
-                Controls:TextboxHelper.ClearTextButton="True"/>
+                Controls:TextboxHelper.ClearTextButton="True"
+                 Grid.Column="1"/>
         <Button Command="{Binding Path=SearchCommand}" Content="Search" 
-                Grid.Column="1" HorizontalAlignment="Stretch"  />
+                Grid.Column="2" HorizontalAlignment="Stretch"  />
     </Grid>
 </Controls:MetroContentControl>

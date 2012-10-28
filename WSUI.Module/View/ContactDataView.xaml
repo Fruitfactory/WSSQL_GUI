@@ -7,6 +7,34 @@
              
              >
     <Grid>
-        <TextBlock>Contact Data View.  Just for Test!!</TextBlock>            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.75*"/>
+            <ColumnDefinition Width="0.25*"/>
+        </Grid.ColumnDefinitions>  
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="0.25*"/>
+        </Grid.RowDefinitions>
+        <Image Grid.Row="0" Grid.Column="0"/>
+        <StackPanel Grid.Row="0" Grid.Column="1"  Orientation="Vertical">
+            <ItemsControl>
+                
+            </ItemsControl>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2">
+            <TextBlock Text="Contact name:"  FontWeight="Bold"/>
+            <TextBlock Text="{Binding}" />
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2">
+            <TextBlock Text="Contact's emails: " Margin="4" FontStyle="Italic"></TextBlock>
+            <ListView ItemsSource="{Binding DataSource}">
+            
+            
+            </ListView>
+        </StackPanel>
+        
     </Grid>
 </Controls:MetroContentControl>

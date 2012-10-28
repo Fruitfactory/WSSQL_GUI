@@ -6,6 +6,11 @@
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              >
     <Grid>
-        <TextBlock >All files Data View. Just for test!!</TextBlock>
+        <ListView ItemsSource="{Binding DataSource}">
+            <GridView>
+                <GridViewColumn Header="Name" />
+                <GridViewColumn Header="Information"/>
+            </GridView>
+        </ListView>
     </Grid>
 </Controls:MetroContentControl>

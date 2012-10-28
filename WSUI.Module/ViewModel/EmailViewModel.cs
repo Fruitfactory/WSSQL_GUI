@@ -45,8 +45,9 @@ namespace WSUI.Module.ViewModel
             EmailSearchData si = new EmailSearchData()
             {
                 Subject = item.Subject,
-                Recepient = string.Format("{0} ({1})",
-                item.Recepient, groups.Items.Count),
+                Recepient = string.Format("{0}",
+                item.Recepient),
+                Count = groups.Items.Count.ToString(), 
                 Name = item.Name,
                 Path = item.Path,
                 Date = item.Date,
@@ -65,15 +66,13 @@ namespace WSUI.Module.ViewModel
             }
 
             //TODO: paste item to datacontroller;
-            //Dispatcher.CurrentDispatcher.Invoke(new Action(() => DataSource.Add(si)), null); 
             _listData.Add(si);
-            //DataSource.Add(si);
         }
 
         protected override string CreateQuery()
         {
             var searchCriteria = SearchString;
-            var folder = "Inbox";//"¬ход€щие";
+            var folder = "¬ход€щие";//"Inbox";//
             SearchString = searchCriteria;
             string res = string.Empty;
             if (searchCriteria.IndexOf(' ') > -1)

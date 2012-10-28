@@ -214,6 +214,8 @@ namespace WSUI.Module.ViewModel
             var newItem = _listItems.Find(item => item.Name == sendItem.Name);
             if(newItem == null)
                 return;
+            newItem.Toggle = true;
+            _listItems.ForEach(i => { if (i.Name != newItem.Name) i.Toggle = false; });
             Disconnect();
             _currentItem = newItem;
             Connect();
