@@ -5,6 +5,7 @@ using System.Data.OleDb;
 using System.Linq;
 using System.Text;
 using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSUI.Infrastructure.Core;
 using WSUI.Infrastructure.Models;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
@@ -61,6 +62,14 @@ namespace WSUI.Module.ViewModel
             else if (kind != null && IsEmail(kind) && _listID.Any(i => i == id))
                 return;
             TypeSearchItem type = SearchItemHelper.GetTypeItem(file);
+            BaseSearchData bs = new BaseSearchData()
+                                    {
+                                        Name =  name,
+                                        Path =  file,
+                                        Type = type,
+                                        ID = Guid.NewGuid()
+                                    };
+            _listData.Add(bs);
         }
 
         protected override string CreateQuery()

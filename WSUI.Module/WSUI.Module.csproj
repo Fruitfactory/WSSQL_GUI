@@ -73,6 +73,7 @@
     <Compile Include="Interface\ISettingsView.cs" />
     <Compile Include="Interface\IUIView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\AllFilesDataTemplateSelector.cs" />
     <Compile Include="ViewModel\AllFilesViewModel.cs" />
     <Compile Include="ViewModel\ContactViewModel.cs" />
     <Compile Include="ViewModel\EmailViewModel.cs" />
@@ -147,6 +148,16 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\document-excel.png" />
+    <Resource Include="Images\document-pdf.png" />
+    <Resource Include="Images\document-powerpoint.png" />
+    <Resource Include="Images\document-smiley-sad.png" />
+    <Resource Include="Images\document-word.png" />
+    <Resource Include="Images\document.png" />
+    <Resource Include="Images\mail.png" />
+    <Resource Include="Images\user.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

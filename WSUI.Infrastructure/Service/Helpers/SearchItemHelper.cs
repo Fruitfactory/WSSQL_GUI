@@ -18,7 +18,7 @@ namespace WSUI.Infrastructure.Service.Helpers
         #region public static 
         
 
-        public static TypeSearchItem GetTypeItem(string itemurl)
+        public static TypeSearchItem GetTypeItem(string itemurl,string tag = "")
         {
             if (itemurl.IndexOf(FILEPREFIX1) > -1)
             {
@@ -36,6 +36,8 @@ namespace WSUI.Infrastructure.Service.Helpers
             {
                 return TypeSearchItem.Email;
             }
+            else if( tag == "contact")
+                return TypeSearchItem.Contact;
             return TypeSearchItem.None;
         }
 
