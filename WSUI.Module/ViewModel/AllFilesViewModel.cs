@@ -4,7 +4,9 @@ using System.Data;
 using System.Data.OleDb;
 using System.Linq;
 using System.Text;
+using System.Windows.Input;
 using C4F.DevKit.PreviewHandler.Service.Logger;
+using Microsoft.Practices.Prism.Commands;
 using WSUI.Infrastructure.Core;
 using WSUI.Infrastructure.Models;
 using WSUI.Module.Core;
@@ -41,8 +43,20 @@ namespace WSUI.Module.ViewModel
             _name = "All Files";
             UIName = _name;
             _prefix = "AllFiles";
+            IsOpen = false;
+            FlyCommand = new DelegateCommand<object>( o =>
+                                                          {
+                                                              IsOpen = !IsOpen;
+                                                              OnPropertyChanged(() => IsOpen);
+                                                          },
+                                                          o => true);
 
         }
+
+        
+        public bool IsOpen { get; set; }
+        public ICommand FlyCommand { get; private set; }
+
 
 
         protected override void ReadData(IDataReader reader)

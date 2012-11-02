@@ -7,105 +7,11 @@
              xmlns:service="clr-namespace:WSUI.Module.Service"
              >
     <Controls:MetroContentControl.Resources>
-        <Style x:Key="InvisibleHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Visibility" Value="Collapsed" />
-        </Style>
-        
-        <Style x:Key="ImageStyle" TargetType="{x:Type Image}">
-            <Setter Property="Width"  Value="20"/>
-            <Setter Property="Height" Value="20"/>
-            <Setter Property="Margin" Value="5"/>
-        </Style>
-        
-        
-        <DataTemplate x:Key="NoneTemplate">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="0.5*"/>
-                    <ColumnDefinition Width="0.25*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Image Grid.Column="0" Source="..\Images\document-smiley-sad.png" Style="{StaticResource ImageStyle}"/>
-                <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
-                <TextBlock Text="{Binding Path=Path}" Grid.Column="2" Margin="5"/>
-            </Grid>
-        </DataTemplate>
-
-        <DataTemplate x:Key="EmailTemplate">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="0.5*"/>
-                    <ColumnDefinition Width="0.5*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                </Grid.RowDefinitions>
-                <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}"/>
-                <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
-                <TextBlock Text="{Binding Path=Path}" Grid.Column="2" Margin="5"/>
-            </Grid>
-        </DataTemplate>
-
-        <DataTemplate x:Key="UserTemplate">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="0.5*"/>
-                    <ColumnDefinition Width="0.5*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                </Grid.RowDefinitions>
-                <Image Grid.Column="0" Source="..\Images\user.png" Style="{StaticResource ImageStyle}"/>
-                <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
-                <TextBlock Text="{Binding Path=Path}" Grid.Column="2" Margin="5"/>
-            </Grid>
-        </DataTemplate>
-
-        <DataTemplate x:Key="FileTemplate">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="0.5*"/>
-                    <ColumnDefinition Width="0.5*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                </Grid.RowDefinitions>
-                <Image Grid.Column="0" Source="..\Images\document.png" Style="{StaticResource ImageStyle}"/>
-                <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
-                <TextBlock Text="{Binding Path=Path}" Grid.Column="2" Margin="5"/>
-            </Grid>
-        </DataTemplate>
-
-        <DataTemplate x:Key="AttachmentTemplate">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="0.5*"/>
-                    <ColumnDefinition Width="0.5*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                </Grid.RowDefinitions>
-                <Image Grid.Column="0" Source="..\Images\document.png" Style="{StaticResource ImageStyle}"/>
-                <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
-                <TextBlock Text="{Binding Path=Path}" Grid.Column="2" Margin="5"/>
-            </Grid>
-        </DataTemplate>
-        
-        <service:AllFilesDataTemplateSelector x:Key="templateSelector"
-            NoneTemplate="{StaticResource ResourceKey=NoneTemplate}"
-            EmailTemplate="{StaticResource ResourceKey=EmailTemplate}"
-            UserTemplate="{StaticResource ResourceKey=UserTemplate}"
-            FileTemplate="{StaticResource ResourceKey=FileTemplate}"
-            AttachmentTemplate="{StaticResource ResourceKey=AttachmentTemplate}"
-            />
-
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Service\ResourceTemplate.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Controls:MetroContentControl.Resources>
     <Grid>
         <ListBox ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"

@@ -17,8 +17,13 @@
         <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
                 Controls:TextboxHelper.Watermark="Enter Search Criteria"
                 Controls:TextboxHelper.ClearTextButton="True"
+                 VerticalAlignment="Top" HorizontalAlignment="Stretch"
                  Grid.Column="1"/>
             <Button Command="{Binding Path=SearchCommand}" Content="Search" 
-                    Grid.Column="2" HorizontalAlignment="Stretch" />
+                    Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+        <!--<Controls:Flyout  IsOpen="{Binding IsOpen,UpdateSourceTrigger=PropertyChanged}" Width="300" Grid.Column="0">
+            
+        </Controls:Flyout>
+        <Button Command="{Binding FlyCommand}" Content="Fly" Grid.Column="3" />-->
     </Grid>
 </Controls:MetroContentControl>

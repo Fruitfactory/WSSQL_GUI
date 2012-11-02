@@ -8,6 +8,9 @@ namespace WSUI.Infrastructure.Models
 {
     public class ContactSearchData : BaseSearchData
     {
+
+        private readonly List<string> _emailList = new List<string>();
+
         public string FirstName
         {
             get;
@@ -20,25 +23,13 @@ namespace WSUI.Infrastructure.Models
             set;
         }
 
-        public string EmailAddress
+        public List<string> EmailList
         {
-            get;
-            set;
-        }
-
-        public string EmailAddress2
-        {
-            get;
-            set;
-        }
-
-        public string EmailAddress3
-        {
-            get;
-            set;
-        }
-
+            get { return _emailList; }
+        } 
+        
         public string Foto { get; set; }
        
     }
+
 }

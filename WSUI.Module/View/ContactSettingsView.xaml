@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:localctrl="clr-namespace:WSUI.Module.View.Controls"
              
              >
     <Grid>
@@ -14,10 +15,16 @@
             <ColumnDefinition Width="0.15*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+        <!--<TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  Controls:TextboxHelper.Watermark="Enter Search Criteria"
                 Controls:TextboxHelper.ClearTextButton="True"
-                 Grid.Column="1"/>
+                 Grid.Column="1"/>-->
+        <localctrl:TextboxAutoComplete SearchText="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                       DataSource="{Binding Path=DataSourceSuggest,UpdateSourceTrigger=PropertyChanged}"
+                                       Height="22"
+                                       VerticalAlignment="Top" HorizontalAlignment="Stretch"
+                                       Grid.Column="1"
+                                       />
         <Button Command="{Binding Path=SearchCommand}" Content="Search" 
                 Grid.Column="2" HorizontalAlignment="Stretch"  />
     </Grid>

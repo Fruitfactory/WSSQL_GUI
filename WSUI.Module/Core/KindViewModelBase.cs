@@ -31,6 +31,7 @@ namespace WSUI.Module.Core
         protected readonly List<BaseSearchData> _listData = new List<BaseSearchData>();
         private object _lock = new object();
         private BaseSearchData _current = null;
+        private string _searchString = string.Empty;
 
         protected readonly IUnityContainer _container;
 
@@ -159,6 +160,8 @@ namespace WSUI.Module.Core
             return true;
         }
         
+        protected  virtual void OnSearchStringChanged()
+        {}
 
         #region IKindItem
 
@@ -167,7 +170,16 @@ namespace WSUI.Module.Core
             get { return _name; }
         }
 
-        public string SearchString { get; set; }
+        public string SearchString
+        {
+            get { return _searchString; }
+            set
+            {
+                _searchString = value;
+                OnSearchStringChanged();
+            }
+        }
+
         public string Prefix { get { return _prefix; } }
         public int ID { get; protected set; }
         public string UIName { get; protected set; }

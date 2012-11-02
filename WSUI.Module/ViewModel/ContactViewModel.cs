@@ -4,12 +4,16 @@ using System.Data;
 using System.Data.OleDb;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using System.Windows.Input;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Infrastructure.Models;
+using WSUI.Module.Service;
 
 namespace WSUI.Module.ViewModel
 {
@@ -18,6 +22,9 @@ namespace WSUI.Module.ViewModel
         private const string QueryContactEmail = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) AND CONTAINS(System.Message.FromAddress,'{1}*')  ORDER BY System.Message.DateReceived DESC) ";
         private string _currentEmail = string.Empty;
         private string _folder = string.Empty;
+        private ContactSearchData _contactData = null;
+
+        private ContactSuggestingService _contactSuggesting;
 
         public ContactViewModel(IUnityContainer container,ISettingsView<ContactViewModel> settingsView, IDataView<ContactViewModel> dataView )
             :base(container)
@@ -33,13 +40,41 @@ namespace WSUI.Module.ViewModel
             _name = "Contact";
             UIName = _name;
             _prefix = "Contact";
+            
+            EmailClickCommand = new DelegateCommand<object>(o => EmailClick(o), o => true);
+            _contactSuggesting = new ContactSuggestingService();
+            _contactSuggesting.Suggest += (o, e) =>
+                                              {
+                                                  if(DataSource == null)
+                                                      DataSourceSuggest = new List<string>();
+                                                  DataSourceSuggest.Clear();
+                                                  if (e.Value != null)
+                                                  {
+                                                      Application.Current.Dispatcher.BeginInvoke(
+                                                          new Action(
+                                                              () => e.Value.ForEach(s => DataSourceSuggest.Add(s))),
+                                                          null);
+                                                      OnPropertyChanged(() => DataSourceSuggest);
+                                                  }
+                                              };
+
         }
+
+        public ICommand EmailClickCommand { get; protected set; }
+
+        public ContactSearchData Contact
+        {
+            get { return _contactData; }
+        }
+
+        public List<string> DataSourceSuggest { get; set; }
 
 
         protected override void DoAdditionalQuery()
         {
             if (string.IsNullOrEmpty(_currentEmail))
                 return;
+            _folder = "¬ход€щие";
             var query = string.Format(QueryContactEmail, _folder, _currentEmail);
             OleDbDataReader myDataReader = null;
             OleDbConnection myOleDbConnection = new OleDbConnection(_connectionString);
@@ -87,14 +122,15 @@ namespace WSUI.Module.ViewModel
                 Path = string.Empty,
                 FirstName = first,
                 LastName = last,
-                EmailAddress = em1,
-                EmailAddress2 = em2,
-                EmailAddress3 = em3,
                 ID = Guid.NewGuid(),
                 Type = TypeSearchItem.Contact
             };
+            data.EmailList.Add(em1);
+            data.EmailList.Add(em2);
+            data.EmailList.Add(em3);
             _currentEmail = em1;
             data.Foto = OutlookHelper.Instance.GetContactFotoTempFileName(data);
+            _contactData = data;
         }
 
         protected override string CreateQuery()
@@ -121,14 +157,17 @@ namespace WSUI.Module.ViewModel
             return res;
         }
 
-        protected override void OnStart()
-        {
-            
-        }
-
         protected override void OnComplete(bool res)
         {
-            
+            base.OnComplete(res);
+            OnPropertyChanged(() => Contact);
+        }
+
+        protected override void OnSearchStringChanged()
+        {
+            if (string.IsNullOrEmpty(SearchString))
+                return;
+            _contactSuggesting.StartSuggesting(SearchString);
         }
 
         private void ReadContactEmail(IDataReader reader)
@@ -151,6 +190,15 @@ namespace WSUI.Module.ViewModel
             };
 
             //TODO: paste item to datacontroller;
+            _listData.Add(si);
+        }
+
+        private void EmailClick (object address)
+        {
+            var email = OutlookHelper.Instance.CreateNewEmail();
+            email.To = (string)address;
+            email.BodyFormat = Microsoft.Office.Interop.Outlook.OlBodyFormat.olFormatHTML;
+            email.Display(false);
         }
 
         #region IUIView
