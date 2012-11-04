@@ -14,18 +14,17 @@
             <ColumnDefinition Width="0.15*" />
             <ColumnDefinition Width="0.15*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-        <!--<TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                 Controls:TextboxHelper.Watermark="Enter Search Criteria"
-                Controls:TextboxHelper.ClearTextButton="True"
-                 Grid.Column="1"/>-->
         <localctrl:TextboxAutoComplete SearchText="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                        DataSource="{Binding Path=DataSourceSuggest,UpdateSourceTrigger=PropertyChanged}"
-                                       Height="22"
+                                       Height="24"
                                        VerticalAlignment="Top" HorizontalAlignment="Stretch"
                                        Grid.Column="1"
                                        />
         <Button Command="{Binding Path=SearchCommand}" Content="Search" 
-                Grid.Column="2" HorizontalAlignment="Stretch"  />
+                Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Top"  />
     </Grid>
 </Controls:MetroContentControl>

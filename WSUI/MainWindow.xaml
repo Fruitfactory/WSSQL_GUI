@@ -7,7 +7,7 @@
     
     xmlns:cal="http://www.codeplex.com/CompositeWPF"
     x:Class="WSUI.MainWindow"
-    Title="Windows Search" Height="450" Width="725" MinHeight="450" MinWidth="725">
+    Title="Windows Search" Height="650" Width="950" MinHeight="450" MinWidth="725">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

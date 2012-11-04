@@ -122,7 +122,12 @@
       <Name>WSUI.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\first.png" />
+    <Resource Include="Images\last.png" />
+    <Resource Include="Images\next.png" />
+    <Resource Include="Images\previous.png" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Service\ResourceTemplate.xaml">
       <SubType>Designer</SubType>

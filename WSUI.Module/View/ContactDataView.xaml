@@ -61,14 +61,18 @@
             <ItemsControl ItemsSource="{Binding Path=Contact.EmailList,UpdateSourceTrigger=PropertyChanged}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Style="{StaticResource LinkButton}" Command="{Binding Path=DataContext.EmailClickCommand,ElementName=this}" 
-                                CommandParameter="{Binding}" Content="{Binding}"></Button>
+                        <!--<Button Style="{StaticResource LinkButton}" Command="{Binding Path=DataContext.EmailClickCommand,ElementName=this}" 
+                                CommandParameter="{Binding}" Content="{Binding}"></Button>-->
+                        <TextBlock><Hyperlink Command="{Binding Path=DataContext.EmailClickCommand,ElementName=this}" CommandParameter="{Binding}" >
+                                <TextBlock Text="{Binding}"/>                        
+                            </Hyperlink>
+                        </TextBlock>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2" Margin="4">
-            <TextBlock Text="Contact name:"  FontWeight="Bold"/>
+            <TextBlock Text="Contact name:"  FontWeight="Bold" Margin="4"/>
             <TextBlock Text="{Binding Path=Contact.Name,UpdateSourceTrigger=PropertyChanged}" Margin="4" 
                        Foreground="Blue"/>
         </StackPanel>

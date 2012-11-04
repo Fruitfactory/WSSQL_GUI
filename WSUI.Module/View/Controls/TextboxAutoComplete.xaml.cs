@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace WSUI.Module.View.Controls
 {
@@ -44,10 +45,36 @@ namespace WSUI.Module.View.Controls
                                                       _textBox.Text = (string)_comboBox.SelectedValue;
                                                   }
                                               };
+            _comboBox.KeyDown += (o, e) =>
+                                     {
+                                         switch (e.Key)
+                                         {
+                                             case Key.Enter:
+                                                 _textBox.Text = _comboBox.SelectedValue as string;
+                                                 _comboBox.IsDropDownOpen = false;
+                                                 break;
+                                         }
+                                     };
 
             _textBox = new TextBox();
+            _textBox.KeyDown += (o, e) =>
+                                    {
+                                        switch(e.Key)
+                                        {
+                                            case Key.Down:
+                                                _comboBox.Focus();
+                                                break;
+                                            case Key.Escape:
+                                                _comboBox.IsDropDownOpen = false;
+                                                break;
+                                        }
+                                    };
+            //_textBox.LostFocus += (o, e) => _comboBox.IsDropDownOpen = false;
+
             Binding binding = new Binding("SearchText") { Source = this, Mode = BindingMode.TwoWay,UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged};
             _textBox.SetBinding(TextBox.TextProperty, binding);
+            _textBox.SetValue(TextboxHelper.WatermarkProperty, "Enter Search Criteria");
+            _textBox.SetValue(TextboxHelper.ClearTextButtonProperty,true);
             _controls.Add(_comboBox);
             _controls.Add(_textBox);
         }

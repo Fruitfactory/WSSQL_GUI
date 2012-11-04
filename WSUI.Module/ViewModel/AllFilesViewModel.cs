@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Data.OleDb;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
 using WSUI.Infrastructure.Core;
@@ -51,6 +55,12 @@ namespace WSUI.Module.ViewModel
                                                           },
                                                           o => true);
 
+
+            MoveFirstCommand = new DelegateCommand<object>(o => MoveToFirstInternal(),o => CanMoveLeft());
+            MovePreviousCommand = new DelegateCommand<object>( o => MoveToLeft(), o => CanMoveLeft());
+            MoveLastCoommand = new DelegateCommand<object>(o => MoveToLastInternal(), o => CanModeRight());
+            MoveNextCommand = new DelegateCommand<object>(o => MoveToRight(), o => CanModeRight());
+            LinkCommand = new DelegateCommand<object>(o => LinkClicked(o), o => true);
         }
 
         
@@ -113,6 +123,8 @@ namespace WSUI.Module.ViewModel
         {
             base.OnComplete(res);
             _listID.Clear();
+            Application.Current.Dispatcher.BeginInvoke(new Action(() => UpdateData()), null);
+            //UpdateData();
         }
 
         private Tuple<string, string> GroupEmail(string name, string id)
@@ -188,5 +200,234 @@ namespace WSUI.Module.ViewModel
         public IDataView<AllFilesViewModel> DataView { get; set; }
 
         #endregion
+
+        #region paging
+
+        public class PageEntity : INotifyPropertyChanged
+        {
+            private int _number = 0;
+            private bool _isVisited = false;
+            private bool _isVisible = false;
+
+
+            public int Number
+            {
+                get { return _number; }
+                set { _number = value; OnPropertyChanged("Number"); }
+            }
+
+            public string Name
+            {
+                get { return (_number + 1).ToString(); }
+            }
+
+            public bool IsVisited
+            {
+                get { return _isVisited; }
+                set { _isVisited = value; OnPropertyChanged("IsVisited"); }
+            }
+
+            public bool IsVisible
+            {
+                get { return _isVisible; }
+                set { _isVisible = value; OnPropertyChanged("IsVisible"); }
+            }
+
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            private void OnPropertyChanged(string property)
+            {
+                PropertyChangedEventHandler temp = PropertyChanged;
+                if (temp != null)
+                {
+                    temp(this,new PropertyChangedEventArgs(property));
+                }
+            }
+        }
+
+        private const int CountItemsInPage = 20;
+        private const int MaxLinks = 10;
+
+        private int _currentPageNumber = -1;
+        private int _pageCount;
+        private List<PageEntity> _pages = new List<PageEntity>();
+
+        public ObservableCollection<PageEntity> DataPage { get; set; }
+        public ObservableCollection<BaseSearchData> DataSourceOfPage { get; set; }
+        public string PageCount { get; set; }
+        public string CurrentPage { get; set; }
+
+        public ICommand MoveFirstCommand { get; private set; }
+        public ICommand MovePreviousCommand { get; private set; }
+        public ICommand MoveLastCoommand { get; private set; }
+        public ICommand MoveNextCommand { get; private set; }
+        public ICommand LinkCommand { get; private set; }
+
+
+        private void UpdateData()
+        {
+            if (DataSource == null)
+            {
+                _pageCount = 0;
+                _currentPageNumber = -1;
+            }
+            else
+            {
+                _pageCount = DataSource.Count / CountItemsInPage;
+                _pageCount += DataSource.Count % CountItemsInPage > 0 ? 1 : 0;
+                _pages.Clear();
+                for (int i = 0; i < _pageCount; i++)
+                {
+                    _pages.Add(new PageEntity()
+                    {
+                        Number = i,
+                        IsVisible = true,
+                        IsVisited = false
+                    });
+                }
+                _currentPageNumber = 0;
+                SetCurrentPageSource();
+                UpdateLinks();
+                UpdateLink();
+            }
+            UpdatedStatics();
+        }
+
+        private void SetCurrentPageSource()
+        {
+            if (_currentPageNumber >= _pageCount)
+                return;
+            int begin = _currentPageNumber * CountItemsInPage;
+            int count = (begin + CountItemsInPage) < DataSource.Count ? CountItemsInPage : DataSource.Count - begin;
+            if(DataSourceOfPage == null)
+                DataSourceOfPage = new ObservableCollection<BaseSearchData>();
+            DataSourceOfPage.Clear();
+            for (int i = begin; i < (begin + count);i++ )
+                DataSourceOfPage.Add(DataSource[i]);
+            UpdatedStatics();
+            OnPropertyChanged(() => DataSourceOfPage);
+        }
+
+        private void UpdateLinks()
+        {
+            if (_currentPageNumber >= _pageCount)
+                return;
+            // TODO add updating links
+            if(DataPage == null)
+                DataPage = new ObservableCollection<PageEntity>();
+            DataPage.Clear();
+            for (int i = 0; i < MaxLinks; i++)
+            {
+                if (i >= _pages.Count)
+                    break;
+                DataPage.Add(_pages[i]);
+            }
+            OnPropertyChanged(() => DataPage);
+        }
+
+        private void UpdateLink()
+        {
+            var page = _pages.Find(p => p.Number == _currentPageNumber);
+            if (page != null)
+            {
+                page.IsVisited = true;
+            }
+        }
+
+        private void UpdatedStatics()
+        {
+            PageCount = _pageCount.ToString();
+            CurrentPage = (_currentPageNumber + 1).ToString();
+            OnPropertyChanged(() => PageCount);
+            OnPropertyChanged(() => CurrentPage);
+        }
+
+        private void MoveToFirstInternal()
+        {
+            int start = 0;
+            
+            for (int i = 0; i < MaxLinks; i++)
+            {
+                DataPage[i] = _pages[start];
+                start++;
+            }
+            UpdatedStatics();
+            OnPropertyChanged(() => DataPage);
+        }
+
+        private void MoveToLastInternal()
+        {
+            int start = _pages[_pages.Count - 1].Number;
+            int max = _pages.Count > MaxLinks ? MaxLinks : _pages.Count;
+            
+            for (int i = MaxLinks - 1; i >= 0; i--)
+            {
+                DataPage[i] = _pages[start];
+                start--;
+            }
+            UpdatedStatics();
+            OnPropertyChanged(() => DataPage);
+        }
+
+        private void MoveToRight()
+        {
+            var curRight = DataPage[DataPage.Count - 1];
+            if (curRight.Number == _pages.Count - 1)
+                return;
+            int start = curRight.Number + 1;
+            for (int i = MaxLinks - 1; i >= 0; i--)
+            {
+                DataPage[i] = _pages[start];
+                start--;
+            }
+            UpdatedStatics();
+            OnPropertyChanged(() => DataPage);
+        }
+
+        private void MoveToLeft()
+        {
+            var curLeft = DataPage[0];
+            if (curLeft.Number == 0)
+                return;
+            int start = curLeft.Number - 1;
+            for (int i = 0; i < MaxLinks; i++)
+            {
+                DataPage[i] = _pages[start];
+                start++;
+            }
+            UpdatedStatics();
+            OnPropertyChanged(() => DataPage);
+        }
+
+
+        private bool CanMoveLeft()
+        {
+            return true;//DataPage != null && !(DataPage[0].Number == 0);
+        }
+
+        private bool CanModeRight()
+        {
+            return true;// DataPage != null && !(DataPage[DataPage.Count - 1].Number == _pageCount - 1);
+        }
+
+
+        private void LinkClicked(object id)
+        {
+            if (id == null)
+                return;
+            var idPage = (int)id;
+            _currentPageNumber = idPage;
+            var page = DataPage.ToList().Find(p => p.Number == idPage);
+            if (page != null)
+                page.IsVisited = true;
+            SetCurrentPageSource();
+            OnPropertyChanged(() => DataPage);
+        }
+
+
+        #endregion
+
+
     }
 }

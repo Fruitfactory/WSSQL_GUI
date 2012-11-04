@@ -5,20 +5,118 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:service="clr-namespace:WSUI.Module.Service"
+             x:Name="this"
              >
     <Controls:MetroContentControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Service\ResourceTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+
+            <Style x:Key="HyperlinkStyle" TargetType="{x:Type Hyperlink}">
+                <Setter Property="Foreground" Value="Blue" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=IsVisited}" Value="True">
+                        <Setter Property="Foreground" Value="BlueViolet" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            
+            
+            
         </ResourceDictionary>
     </Controls:MetroContentControl.Resources>
-    <Grid>
-        <ListBox ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
+    <DockPanel LastChildFill="True">
+        
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"></RowDefinition>
+                <RowDefinition Height="20"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" Grid.Row="0" Margin="0 2 5 0">Current</TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="0" Margin="0 2 5 0">Count</TextBlock>
+
+            <TextBlock Grid.Column="0" Grid.Row="1" Margin="0 2 5 0" Text="{Binding Path=CurrentPage,UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="1" Grid.Row="1" Margin="0 2 5 0" Text="{Binding Path=PageCount,UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Button Command="{Binding MoveFirstCommand}"  Grid.Column="2" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="4*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Image Source="..\Images\first.png" Width="16" ></Image>
+                    </Grid>
+                </Button.Content>
+            </Button>
+            <Button Command="{Binding MovePreviousCommand}"  Grid.Column="3" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="4*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Image Source="..\Images\previous.png" Width="16" ></Image>
+                    </Grid>
+                </Button.Content>
+            </Button>
+            <Button Command="{Binding MoveNextCommand}"  Grid.Column="5" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="4*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Image Source="..\Images\next.png" Width="16" ></Image>
+                    </Grid>
+                </Button.Content>
+            </Button>
+            <Button Command="{Binding MoveLastCoommand}"  Grid.Column="6" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="4*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Image Source="..\Images\Last.png" Width="16" ></Image>
+                    </Grid>
+                </Button.Content>
+            </Button>
+
+            <ItemsControl ItemsSource="{Binding Path=DataPage,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Focusable="False" 
+                        HorizontalAlignment="Center" VerticalAlignment="Center"    Grid.Column="4" Grid.RowSpan="2"             >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" IsItemsHost="True" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Margin="7 5 7 5">
+                            <Hyperlink Command="{Binding Path=DataContext.LinkCommand, ElementName=this}" CommandParameter="{Binding Number}" 
+                                        Style="{StaticResource ResourceKey=HyperlinkStyle}">
+                                <TextBlock Text="{Binding Name}"/>
+                            </Hyperlink>
+                        </TextBlock>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                
+            </ItemsControl>
+
+        </Grid>
+        <ListBox ItemsSource="{Binding Path=DataSourceOfPage,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  ItemTemplateSelector="{StaticResource templateSelector}"
                  SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  >
             
         </ListBox>
-    </Grid>
+    </DockPanel>
 </Controls:MetroContentControl>
