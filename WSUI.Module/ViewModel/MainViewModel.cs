@@ -16,7 +16,7 @@ using WSUI.Infrastructure;
 
 namespace WSUI.Module.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase, IMainViewModel
     {
         private DelegateCommand<object> _openFile;
         private List<IKindItem> _listItems;
@@ -193,12 +193,16 @@ namespace WSUI.Module.ViewModel
 
         private void OnStart(object sender, EventArgs e)
         {
-
+            EventHandler temp = Start;
+            if(temp != null)
+                temp(null, null);
         }
 
         private void OnComplete(object sender, EventArgs<bool> e)
         {
-
+            EventHandler temp = Complete;
+            if (temp != null)
+                temp(null, null);
         }
 
         private void OnError(object sender, EventArgs<bool> e)
@@ -224,5 +228,11 @@ namespace WSUI.Module.ViewModel
 
         #endregion
 
+        #region Implementation of IMainViewModel
+
+        public event EventHandler Start;
+        public event EventHandler Complete;
+
+        #endregion
     }
 }

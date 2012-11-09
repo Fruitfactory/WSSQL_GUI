@@ -53,10 +53,9 @@ namespace WSUI.Module.Interface
             get;
         }
 
-        ICommand ChooseCommand
-        {
-            get;
-        }
+        List<string> FolderList { get; set; }
+        string Folder { get; set; }
+        bool Enabled { get; set; }
 
         ICommand SearchCommand { get; }
 

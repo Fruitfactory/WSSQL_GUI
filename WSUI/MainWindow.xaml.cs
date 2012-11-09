@@ -14,17 +14,53 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro;
 using MahApps.Metro.Controls;
+using WSUI.Module.Interface;
+using WSUI.Infrastructure.Controls.ProgressAdorner;
 
 namespace WSUI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow //: Window
+    public partial class MainWindow : IMainView//: Window
     {
         public MainWindow()
         {
             InitializeComponent();
         }
+
+        #region Implementation of IMainView
+
+        public IMainViewModel Model
+        {
+            get { return DataContext as IMainViewModel; } 
+            set
+            {
+                if(value != null)
+                {
+                    DataContext = value;
+                    (DataContext as IMainViewModel).Start += OnStart;
+                    (DataContext as IMainViewModel).Complete += OnComplete;
+                }
+            }
+        }
+
+        #endregion
+
+
+        private void OnStart(object sender,  EventArgs e)
+        {
+            this.Cursor = Cursors.AppStarting;
+        }
+
+        private void OnComplete(object sender, EventArgs e)
+        {
+
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                                                                      {
+                                                                          Cursor = Cursors.Arrow;
+                                                                      }));
+        }
+
     }
 }

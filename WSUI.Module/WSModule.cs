@@ -36,11 +36,14 @@ namespace WSUI.Module
             region.Add(mmv.KindsView);
             region = _regionManager.Regions[RegionNames.PreviewRegion];
             region.Add(mmv.PreviewView);
+            mmv.PreviewView.Init();
         }
 
         private void RegistreInterfaces()
         {
             //TODO add interfaces and classes
+            _unityContainer.RegisterType<MainViewModel>(new ContainerControlledLifetimeManager());
+
             _unityContainer.RegisterType<IKindsView, KindsView>();
             _unityContainer.RegisterType<IPreviewView, PreviewView>();
             //all files;

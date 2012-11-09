@@ -74,7 +74,7 @@ namespace WSUI.Module.ViewModel
         {
             if (string.IsNullOrEmpty(_currentEmail))
                 return;
-            _folder = "Inbox";
+            _folder = Folder;
             var query = string.Format(QueryContactEmail, _folder, _currentEmail);
             OleDbDataReader myDataReader = null;
             OleDbConnection myOleDbConnection = new OleDbConnection(_connectionString);

@@ -27,7 +27,7 @@
             
         </ResourceDictionary>
     </Controls:MetroContentControl.Resources>
-    <DockPanel LastChildFill="True">
+    <DockPanel LastChildFill="True" IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}">
         
         <Grid DockPanel.Dock="Bottom">
             <Grid.RowDefinitions>

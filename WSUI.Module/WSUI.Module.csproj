@@ -73,11 +73,14 @@
     <Compile Include="Interface\IDataView.cs" />
     <Compile Include="Interface\IKindItem.cs" />
     <Compile Include="Interface\IKindsView.cs" />
+    <Compile Include="Interface\IMainView.cs" />
+    <Compile Include="Interface\IMainViewModel.cs" />
     <Compile Include="Interface\IPreviewView.cs" />
     <Compile Include="Interface\ISettingsView.cs" />
     <Compile Include="Interface\IUIView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AllFilesDataTemplateSelector.cs" />
+    <Compile Include="Service\HelperConst.cs" />
     <Compile Include="Service\ContactSuggestingService.cs" />
     <Compile Include="ViewModel\AllFilesViewModel.cs" />
     <Compile Include="ViewModel\ContactViewModel.cs" />

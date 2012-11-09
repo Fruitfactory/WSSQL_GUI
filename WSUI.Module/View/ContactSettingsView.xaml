@@ -7,7 +7,7 @@
              xmlns:localctrl="clr-namespace:WSUI.Module.View.Controls"
              
              >
-    <Grid>
+    <Grid Margin="7" IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.15*"/>
             <ColumnDefinition Width="0.55*" />
@@ -18,13 +18,41 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <localctrl:TextboxAutoComplete SearchText="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+        <TabControl Grid.Column="1" Grid.ColumnSpan="2">
+            <TabItem Header="Search">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.55*"/>
+                        <ColumnDefinition Width="0.15*"/>
+                    </Grid.ColumnDefinitions>
+                    <localctrl:TextboxAutoComplete SearchText="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                        DataSource="{Binding Path=DataSourceSuggest,UpdateSourceTrigger=PropertyChanged}"
                                        Height="24"
                                        VerticalAlignment="Top" HorizontalAlignment="Stretch"
-                                       Grid.Column="1"
+                                       Grid.Column="0"
                                        />
-        <Button Command="{Binding Path=SearchCommand}" Content="Search" 
-                Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Top"  />
+                    <Button Command="{Binding Path=SearchCommand}" Content="Search" 
+                        Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top"  />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Additional">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.15*"/>
+                        <ColumnDefinition Width="0.25*"/>
+                        <ColumnDefinition Width="0.50*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Folder:" Grid.Column="0" Margin="7 7 0 7"/>
+                    <ComboBox Grid.Column="1"  Margin="7 7 0 7" ItemsSource="{Binding FolderList}" 
+                              SelectedValue="{Binding Path=Folder,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+
+
+
     </Grid>
 </Controls:MetroContentControl>

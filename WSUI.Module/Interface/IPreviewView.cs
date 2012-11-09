@@ -14,5 +14,6 @@ namespace WSUI.Module.Interface
         }
 
         bool SetPreviewFile(string filename);
+        void Init();
     }
 }

@@ -6,7 +6,7 @@
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              mc:Ignorable="d" 
              >
-    <Grid>
+    <Grid Margin="7" IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.15*"/>
             <ColumnDefinition Width="0.55*" />
@@ -14,16 +14,23 @@
             <ColumnDefinition Width="0.15*"/>
         </Grid.ColumnDefinitions>
         
-        <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
-                Controls:TextboxHelper.Watermark="Enter Search Criteria"
-                Controls:TextboxHelper.ClearTextButton="True"
-                 VerticalAlignment="Top" HorizontalAlignment="Stretch"
-                 Grid.Column="1"/>
-            <Button Command="{Binding Path=SearchCommand}" Content="Search" 
-                    Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
-        <!--<Controls:Flyout  IsOpen="{Binding IsOpen,UpdateSourceTrigger=PropertyChanged}" Width="300" Grid.Column="0">
-            
-        </Controls:Flyout>
-        <Button Command="{Binding FlyCommand}" Content="Fly" Grid.Column="3" />-->
+        
+        <TabControl Grid.Column="1" Grid.ColumnSpan="2">
+            <TabItem Header="Search">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.55*"/>
+                        <ColumnDefinition Width="0.15*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
+                        Controls:TextboxHelper.Watermark="Enter Search Criteria"
+                        Controls:TextboxHelper.ClearTextButton="True"
+                         
+                         Grid.Column="0"/>
+                    <Button Command="{Binding Path=SearchCommand}" Content="Search" 
+                        Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Controls:MetroContentControl>

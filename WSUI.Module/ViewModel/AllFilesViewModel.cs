@@ -24,7 +24,7 @@ namespace WSUI.Module.ViewModel
     public class AllFilesViewModel : KindViewModelBase, IUView<AllFilesViewModel>
     {
         private const string KindGroup = "email";
-        private const string InboxFolder = "Inbox";
+        private const string InboxFolder = "¬ход€щие";
 
         private const string QueryForGroupEmails =
             "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.Message.ConversationID,'{0}*')   ORDER BY System.Message.DateReceived DESC) ";

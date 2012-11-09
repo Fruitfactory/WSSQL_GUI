@@ -9,6 +9,7 @@ using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.Unity;
 using WSUI.Module;
+using WSUI.Module.Interface;
 
 namespace WSUI
 {
@@ -45,6 +46,8 @@ namespace WSUI
             //base.InitializeModules();
             IModule module = Container.Resolve<WSUI.Module.WSModule>();
             module.Initialize();
+            var mvv = Container.Resolve<WSUI.Module.ViewModel.MainViewModel>();
+            (this.Shell as IMainView).Model = mvv;
         }
 
     }

@@ -12,7 +12,7 @@
         </Style>
         
     </Controls:MetroContentControl.Resources>
-    <Grid>
+    <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}">
         <ListView ItemsSource="{Binding Path=DataSource}" BorderThickness="0"
                   SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                   

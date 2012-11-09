@@ -11,11 +11,13 @@ using System.Windows.Threading;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
 using WSUI.Infrastructure.Core;
+using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
 using WSUI.Module.Interface;
 using Microsoft.Practices.Unity;
 using System.Windows;
 using System.Windows.Data;
+using WSUI.Module.Service;
 
 namespace WSUI.Module.Core
 {
@@ -40,6 +42,7 @@ namespace WSUI.Module.Core
             _container = container;
             ChooseCommand = new DelegateCommand<object>(o => OnChoose(), o => true);
             SearchCommand = new DelegateCommand<object>(o => Search(),o => CanSearch());
+            Enabled = true;
         }
 
 
@@ -109,6 +112,9 @@ namespace WSUI.Module.Core
             EventHandler temp = Start;
             if (temp != null)
                 temp(this,new EventArgs());
+            Enabled = false;
+            OnPropertyChanged(() => Enabled);
+            
         }
 
         protected virtual void OnComplete(bool res)
@@ -120,6 +126,8 @@ namespace WSUI.Module.Core
             Application.Current.Dispatcher.BeginInvoke(new Action(() => _listData.ForEach(s => DataSource.Add(s))), null);
 
             OnPropertyChanged(() => DataSource);
+            Enabled = true;
+            OnPropertyChanged(() => Enabled);
         }
 
         protected virtual void OnError(bool res)
@@ -201,5 +209,41 @@ namespace WSUI.Module.Core
 
         #endregion
 
+
+
+        public List<string> FolderList
+        {
+            get
+            {
+                var list = OutlookHelper.Instance.GetFolderList();
+                #region ti4ka
+                int index = -1;
+                if ((index = list.IndexOf(HelperConst.Inbox1)) > -1)
+                {
+                    Folder = list[index];
+                }
+                else if ((index = list.IndexOf(HelperConst.Inbox2)) > -1)
+                {
+                    Folder = list[index];
+                }
+                OnPropertyChanged(() => Folder);
+
+                #endregion
+
+                return list;
+            }
+            set { }
+        }
+
+        public string Folder
+        {
+            get; set; 
+        }
+
+
+        public bool Enabled
+        {
+            get; set;
+        }
     }
 }
