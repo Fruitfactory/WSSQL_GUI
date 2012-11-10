@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:service="clr-namespace:WSUI.Module.Service"
-             >
+             xmlns:service="clr-namespace:WSUI.Module.Service">
+
+    <service:DateToStringConverter x:Key="dateConverter" />
+    
     <Style x:Key="ImageStyle" TargetType="{x:Type Image}">
         <Setter Property="Width"  Value="16"/>
         <Setter Property="Height" Value="16"/>
@@ -13,83 +15,43 @@
 
 
     <DataTemplate x:Key="NoneTemplate">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="0.25*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Image Grid.Column="0" Source="..\Images\document-smiley-sad.png" Style="{StaticResource ImageStyle}"/>
+        <DockPanel LastChildFill="True">
+            <Image Grid.Column="0" Source="..\Images\document-smiley-sad.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
+            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
             <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
-            <TextBlock Text="{Binding Path=Path}" Grid.Column="2" Margin="5"/>
-        </Grid>
+        </DockPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="EmailTemplate">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="0.5*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-            </Grid.RowDefinitions>
-            <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}"/>
+        <DockPanel LastChildFill="True">
+            <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
+            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
             <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
-            <TextBlock Text="{Binding Path=Path}" Grid.Column="2" Margin="5"/>
-        </Grid>
+        </DockPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="UserTemplate">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="0.5*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-            </Grid.RowDefinitions>
-            <Image Grid.Column="0" Source="..\Images\user.png" Style="{StaticResource ImageStyle}"/>
+        <DockPanel LastChildFill="True">
+            <Image Grid.Column="0" Source="..\Images\user.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
+            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
             <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
-            <TextBlock Text="{Binding Path=Path}" Grid.Column="2" Margin="5"/>
-        </Grid>
+        </DockPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="FileTemplate">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="0.5*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-            </Grid.RowDefinitions>
-            <Image Grid.Column="0" Source="..\Images\document.png" Style="{StaticResource ImageStyle}"/>
+        <DockPanel LastChildFill="True">
+            <Image Grid.Column="0" Source="..\Images\document.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
+            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
             <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
-            <TextBlock Text="{Binding Path=Path}" Grid.Column="2" Margin="5"/>
-        </Grid>
+        </DockPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="AttachmentTemplate">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="0.5*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-            </Grid.RowDefinitions>
-            <Image Grid.Column="0" Source="..\Images\document.png" Style="{StaticResource ImageStyle}"/>
+        <DockPanel>
+            <Image Grid.Column="0" Source="..\Images\document.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
+            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
             <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
-            <TextBlock Text="{Binding Path=Path}" Grid.Column="2" Margin="5"/>
-        </Grid>
+        </DockPanel>
     </DataTemplate>
 
     <service:AllFilesDataTemplateSelector x:Key="templateSelector"

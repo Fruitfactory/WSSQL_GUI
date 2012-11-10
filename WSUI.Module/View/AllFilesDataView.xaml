@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:service="clr-namespace:WSUI.Module.Service"
+             
              x:Name="this"
              >
     <Controls:MetroContentControl.Resources>
@@ -27,7 +27,7 @@
             
         </ResourceDictionary>
     </Controls:MetroContentControl.Resources>
-    <DockPanel LastChildFill="True" IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}">
+    <DockPanel LastChildFill="True" >
         
         <Grid DockPanel.Dock="Bottom">
             <Grid.RowDefinitions>
@@ -91,8 +91,8 @@
                 </Button.Content>
             </Button>
 
-            <ItemsControl ItemsSource="{Binding Path=DataPage,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Focusable="False" 
-                        HorizontalAlignment="Center" VerticalAlignment="Center"    Grid.Column="4" Grid.RowSpan="2"             >
+            <ItemsControl ItemsSource="{Binding Path=DataPage,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                        HorizontalAlignment="Center" VerticalAlignment="Center"    Grid.Column="4" Grid.RowSpan="2"  >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" IsItemsHost="True" />
@@ -100,10 +100,10 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Margin="7 5 7 5">
+                        <TextBlock Margin="7 5 7 5" >
                             <Hyperlink Command="{Binding Path=DataContext.LinkCommand, ElementName=this}" CommandParameter="{Binding Number}" 
-                                        Style="{StaticResource ResourceKey=HyperlinkStyle}">
-                                <TextBlock Text="{Binding Name}"/>
+                                        Style="{StaticResource ResourceKey=HyperlinkStyle}" >
+                                <TextBlock Text="{Binding Name}" />
                             </Hyperlink>
                         </TextBlock>
                     </DataTemplate>

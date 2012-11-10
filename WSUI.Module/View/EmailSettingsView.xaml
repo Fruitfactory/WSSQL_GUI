@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              >
-    <Grid Margin="7" IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}">
+    <Grid Margin="7" IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.15*"/>
             <ColumnDefinition Width="0.55*" />

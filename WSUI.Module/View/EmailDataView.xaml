@@ -4,46 +4,41 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             
+             xmlns:service="clr-namespace:WSUI.Module.Service"
              >
     <Controls:MetroContentControl.Resources>
-        <Style x:Key="InvisibleHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Visibility" Value="Collapsed" />
-        </Style>
-        
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Service\ResourceTemplate.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+        </ResourceDictionary>
     </Controls:MetroContentControl.Resources>
-    <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}">
-        <ListView ItemsSource="{Binding Path=DataSource}" BorderThickness="0"
-                  SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                  
-                  >
-            <ListView.View>
-                <GridView ColumnHeaderContainerStyle="{StaticResource InvisibleHeaderStyle}">
-                    <GridViewColumn>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Vertical" Margin="2">
-                                    <TextBlock Text="{Binding Recepient}" FontWeight="Bold"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock FontStyle="Italic">Emails: </TextBlock>
-                                        <TextBlock Text="{Binding Count}" FontWeight="Bold" Foreground="Red"></TextBlock>
-                                    </StackPanel>
-                                </StackPanel>
-                            </DataTemplate>        
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Subject}">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Margin="2">
-                                    <TextBlock Text="{Binding Subject}" FontStyle="Italic" FontWeight="Bold"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Date}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+    
+    
+    <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
+        
+        <ListBox ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
+                      ItemTemplateSelector="{StaticResource templateSelector}"
+                      SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                      >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel LastChildFill="True">
+                        <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                            <TextBlock Text="{Binding Recepient}" FontWeight="Bold" Margin="5 3 5 3"/>
+                            <TextBlock Text="(" Margin="0 3 0 3"/>
+                            <TextBlock Text="{Binding Count}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3"></TextBlock>
+                            <TextBlock Text=")" Margin="0 3 0 3"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding Path=Date,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
+                        <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+
+        </ListBox>
     </Grid>
 </Controls:MetroContentControl>

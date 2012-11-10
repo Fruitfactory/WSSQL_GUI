@@ -14,6 +14,9 @@ namespace WSUI.Module.Interface
         }
 
         bool SetPreviewFile(string filename);
+        void SetSearchPattern(string pattern);
+        void ClearPreview();
+
         void Init();
     }
 }

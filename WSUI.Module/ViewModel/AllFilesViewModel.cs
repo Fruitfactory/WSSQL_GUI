@@ -18,13 +18,14 @@ using WSUI.Module.Interface;
 using Microsoft.Practices.Unity;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
+using WSUI.Module.Service;
 
 namespace WSUI.Module.ViewModel
 {
     public class AllFilesViewModel : KindViewModelBase, IUView<AllFilesViewModel>
     {
         private const string KindGroup = "email";
-        private const string InboxFolder = "¬ход€щие";
+        private const string InboxFolder = HelperConst.Inbox2;
 
         private const string QueryForGroupEmails =
             "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.Message.ConversationID,'{0}*')   ORDER BY System.Message.DateReceived DESC) ";
@@ -41,7 +42,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
             // init
             _queryTemplate =
-                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID FROM SystemIndex WHERE Contains(*,'{0}*')";
+                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified FROM SystemIndex WHERE Contains(*,'{0}*')";
             _queryAnd = " AND Contains(*,'{0}*')";
             ID = 0;
             _name = "All Files";
@@ -75,6 +76,8 @@ namespace WSUI.Module.ViewModel
             string file = reader[1].ToString();
             var kind = reader[2];
             string id = reader[3].ToString();
+            string display = reader[4].ToString();
+            var date = reader[5].ToString();
 
             if (kind != null && IsEmail(kind) && !_listID.Any(i => i == id))
             {
@@ -91,7 +94,9 @@ namespace WSUI.Module.ViewModel
                                         Name =  name,
                                         Path =  file,
                                         Type = type,
-                                        ID = Guid.NewGuid()
+                                        ID = Guid.NewGuid(),
+                                        Display = display,
+                                        DateModified = DateTime.Parse(date)
                                     };
             _listData.Add(bs);
         }
@@ -345,6 +350,8 @@ namespace WSUI.Module.ViewModel
 
         private void MoveToFirstInternal()
         {
+            if (_pages.Count == 0)
+                return;
             int start = 0;
             
             for (int i = 0; i < MaxLinks; i++)
@@ -358,10 +365,13 @@ namespace WSUI.Module.ViewModel
 
         private void MoveToLastInternal()
         {
+            if (_pages.Count == 0)
+                return;
+
             int start = _pages[_pages.Count - 1].Number;
             int max = _pages.Count > MaxLinks ? MaxLinks : _pages.Count;
-            
-            for (int i = MaxLinks - 1; i >= 0; i--)
+
+            for (int i = max - 1; i >= 0; i--)
             {
                 DataPage[i] = _pages[start];
                 start--;
@@ -372,6 +382,9 @@ namespace WSUI.Module.ViewModel
 
         private void MoveToRight()
         {
+            if (_pages.Count == 0)
+                return;
+
             var curRight = DataPage[DataPage.Count - 1];
             if (curRight.Number == _pages.Count - 1)
                 return;
@@ -387,6 +400,9 @@ namespace WSUI.Module.ViewModel
 
         private void MoveToLeft()
         {
+            if (_pages.Count == 0)
+                return;
+
             var curLeft = DataPage[0];
             if (curLeft.Number == 0)
                 return;

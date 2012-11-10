@@ -48,6 +48,17 @@ namespace WSUI.Module.View
             return true;
         }
 
+        public void SetSearchPattern(string pattern)
+        {
+            if (!string.IsNullOrEmpty(pattern))
+                _previewControl.SearchCriteria = pattern;
+        }
+
+        public void ClearPreview()
+        {
+            _previewControl.UnloadPreview();
+        }
+
         #endregion
 
 
@@ -85,5 +96,8 @@ namespace WSUI.Module.View
             resetPopup();
         }
 
+
+
+        
     }
 }

@@ -13,11 +13,15 @@ namespace WSUI.Infrastructure.Core
             set;
         }
 
+        public string Display { get; set; }
+
         public string Path
         {
             get;
             set;
         }
+
+        public DateTime DateModified { get; set; }
 
         public TypeSearchItem Type
         {

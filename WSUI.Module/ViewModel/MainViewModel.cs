@@ -145,6 +145,10 @@ namespace WSUI.Module.ViewModel
                 else if(view != null)
                     regionData.Activate(view);
             }
+
+            if (PreviewView != null)
+                PreviewView.ClearPreview();
+
         }
 
         private object GetView(object viewModel, string propertyName)
@@ -188,6 +192,7 @@ namespace WSUI.Module.ViewModel
             if (PreviewView != null)
             {
                 PreviewView.SetPreviewFile(filename);
+                PreviewView.SetSearchPattern(_currentItem != null ? _currentItem.SearchString : string.Empty);
             }
         }
 

@@ -7,7 +7,7 @@
              xmlns:localctrl="clr-namespace:WSUI.Module.View.Controls"
              
              >
-    <Grid Margin="7" IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}">
+    <Grid Margin="7" IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.15*"/>
             <ColumnDefinition Width="0.55*" />
@@ -25,12 +25,14 @@
                         <ColumnDefinition Width="0.55*"/>
                         <ColumnDefinition Width="0.15*"/>
                     </Grid.ColumnDefinitions>
+                    <Border BorderThickness="1" BorderBrush="Black">
                     <localctrl:TextboxAutoComplete SearchText="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                        DataSource="{Binding Path=DataSourceSuggest,UpdateSourceTrigger=PropertyChanged}"
                                        Height="24"
                                        VerticalAlignment="Top" HorizontalAlignment="Stretch"
                                        Grid.Column="0"
                                        />
+                    </Border>
                     <Button Command="{Binding Path=SearchCommand}" Content="Search" 
                         Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top"  />
                 </Grid>
