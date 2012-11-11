@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -36,8 +37,7 @@ namespace WSUI.Module.View.Controls
             InitializeComponent();
 
             _comboBox = new ComboBox();
-            _comboBox.IsSynchronizedWithCurrentItem = true;
-            _comboBox.IsTabStop = false;
+            //_comboBox.IsSynchronizedWithCurrentItem = true;
             _comboBox.SelectionChanged += (o, e) =>
                                               {
                                                   if (_comboBox.SelectedValue != null)
@@ -92,13 +92,13 @@ namespace WSUI.Module.View.Controls
         }
 
         public static readonly DependencyProperty DataSourceProperty =
-            DependencyProperty.Register("DataSource", typeof (List<string>),
+            DependencyProperty.Register("DataSource", typeof (ObservableCollection<string>),
                                         typeof (TextboxAutoComplete),
                                         new FrameworkPropertyMetadata(null, DataSourceChanged));
 
-        public List<string> DataSource
+        public ObservableCollection<string> DataSource
         {
-            get{ return (List<string>)GetValue(DataContextProperty);}
+            get { return (ObservableCollection<string>)GetValue(DataContextProperty); }
             set{SetValue(DataSourceProperty,value);}
         }
             
@@ -117,7 +117,8 @@ namespace WSUI.Module.View.Controls
                 return;
             }
 
-            _comboBox.ItemsSource = e.NewValue as List<string>;
+            _comboBox.ItemsSource = e.NewValue as ObservableCollection<string>;
+            _comboBox.SelectedIndex = -1;
             _comboBox.IsDropDownOpen = _comboBox.HasItems;
         }
 

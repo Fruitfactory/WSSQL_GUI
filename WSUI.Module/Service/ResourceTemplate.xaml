@@ -61,6 +61,11 @@
             FileTemplate="{StaticResource ResourceKey=FileTemplate}"
             AttachmentTemplate="{StaticResource ResourceKey=AttachmentTemplate}"
             />
-
+    
+    
+    <ContextMenu x:Key="contextMenu">
+        <MenuItem Header="Open file"  Command="{Binding OpenCommand}"/>
+    </ContextMenu>
+    
 
 </ResourceDictionary>

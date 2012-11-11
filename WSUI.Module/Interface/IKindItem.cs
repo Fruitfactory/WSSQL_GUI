@@ -58,6 +58,7 @@ namespace WSUI.Module.Interface
         bool Enabled { get; set; }
 
         ICommand SearchCommand { get; }
+        ICommand OpenCommand { get; }
 
         event EventHandler Start;
 

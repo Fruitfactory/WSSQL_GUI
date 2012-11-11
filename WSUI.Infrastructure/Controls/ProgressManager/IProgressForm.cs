@@ -5,7 +5,7 @@ using System.Text;
 
 namespace WSUI.Infrastructure.Controls.ProgressManager
 {
-    internal enum ProgressFormCommand
+    public enum ProgressFormCommand
     {
         None,
         Settings,
@@ -13,7 +13,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
         Progress
     }    
 
-    internal interface IProgressForm
+    public interface IProgressForm
     {
         void CloseExt();
         void ProcessCommand(ProgressFormCommand cmd, object arg);

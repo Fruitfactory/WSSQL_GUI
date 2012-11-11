@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 
 namespace WSUI.Infrastructure.Controls.ProgressManager
 {
-    class ProgressManager : IProgressManager
+    public class ProgressManager : IProgressManager
     {
         #region  fields
         private readonly static object _lockObject = new object();
@@ -17,19 +18,17 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
         private static ProgressManager _instance = null;
 
         private readonly  AutoResetEvent _stopEvent = new AutoResetEvent(false);
-        private Task _showTask;
         private Task _waitTask;
         private IProgressForm _progressForm;
         private readonly Stack<ProgressOperation> _stackOperation = new Stack<ProgressOperation>();
         private ProgressOperation _currentOperation;
-        //private Form _mainForm;
 
 
         #endregion
 
         private ProgressManager()
         {
-            //_mainForm = Form.FromHandle(Process.GetCurrentProcess().MainWindowHandle) as Form;
+            
         }
 
         public static ProgressManager Instance
@@ -85,22 +84,16 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
 
         private void ShowProgressForm()
         {
-            
-//            _showTask = Task.Factory.StartNew(() =>
-//                                                  {
-//                                                      _progressForm = new ProgressForm();
-//                                                      _progressForm.State = FormWindowState.Normal;
-//                                                      _progressForm.Location = CalcPosition();
-//                                                      _progressForm.ProcessCommand(ProgressFormCommand.Settings, _currentOperation);
-//                                                      Application.Run((Form)_progressForm);
-//                                                  });
-            
-        }
+            Application.Current.Dispatcher.BeginInvoke(new Action(() => 
+                                                  {
+                                                      _progressForm = new ProgressWindow();
+                                                      ((Window)_progressForm).Owner = Application.Current.MainWindow;
+                                                      _progressForm.ProcessCommand(ProgressFormCommand.Settings,
+                                                                                   _currentOperation);
+                                                      ((Window)_progressForm).ShowDialog();
+                                                  }));
 
-//        private Point CalcPosition()
-//        {
-//            return new Point( _mainForm.Location.X + ((_mainForm.Width - _progressForm.Width) / 2),  _mainForm.Location.Y + ((_mainForm.Height - _progressForm.Height) / 2) );
-//        }
+        }
 
         public void StopOperation()
         {
@@ -115,8 +108,6 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                 return;
             _progressForm.CloseExt();
             _progressForm = null;
-            _showTask.Wait();
-            _showTask = null;
         }
 
         public void SetProgress(int value)

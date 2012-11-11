@@ -3,7 +3,7 @@
 
 namespace WSUI.Infrastructure.Controls.ProgressManager
 {
-    class ProgressOperation
+    public class ProgressOperation
     {
         public string Caption { get; set; }
         public int DelayTime { get; set; }

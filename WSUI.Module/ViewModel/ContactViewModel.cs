@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.OleDb;
 using System.Linq;
@@ -45,16 +46,18 @@ namespace WSUI.Module.ViewModel
             _contactSuggesting = new ContactSuggestingService();
             _contactSuggesting.Suggest += (o, e) =>
                                               {
-                                                  if(DataSource == null)
-                                                      DataSourceSuggest = new List<string>();
-                                                  DataSourceSuggest.Clear();
+                                                  DataSourceSuggest = new ObservableCollection<string>();
                                                   if (e.Value != null)
                                                   {
                                                       Application.Current.Dispatcher.BeginInvoke(
                                                           new Action(
-                                                              () => e.Value.ForEach(s => DataSourceSuggest.Add(s))),
+                                                              () =>
+                                                                  {
+                                                                      e.Value.ForEach(s => DataSourceSuggest.Add(s));
+                                                                      OnPropertyChanged(() => DataSourceSuggest);
+                                                                  }),
                                                           null);
-                                                      OnPropertyChanged(() => DataSourceSuggest);
+                                                      
                                                   }
                                               };
 
@@ -67,7 +70,7 @@ namespace WSUI.Module.ViewModel
             get { return _contactData; }
         }
 
-        public List<string> DataSourceSuggest { get; set; }
+        public ObservableCollection<string> DataSourceSuggest { get; set; }
 
 
         protected override void DoAdditionalQuery()

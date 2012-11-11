@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             
+             xmlns:service="clr-namespace:WSUI.Module.Service"
              x:Name="this"
              >
     <Controls:MetroContentControl.Resources>
@@ -22,14 +22,14 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-            
-            
+
+            <service:IntToVisibilityConverter x:Key="inttovis" />
             
         </ResourceDictionary>
     </Controls:MetroContentControl.Resources>
     <DockPanel LastChildFill="True" >
-        
-        <Grid DockPanel.Dock="Bottom">
+
+        <Grid DockPanel.Dock="Bottom" Visibility="{Binding Path=DataContext.DataSource.Count,Converter={StaticResource inttovis},ElementName=this,UpdateSourceTrigger=PropertyChanged}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"></RowDefinition>
                 <RowDefinition Height="20"></RowDefinition>
@@ -92,7 +92,8 @@
             </Button>
 
             <ItemsControl ItemsSource="{Binding Path=DataPage,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                        HorizontalAlignment="Center" VerticalAlignment="Center"    Grid.Column="4" Grid.RowSpan="2"  >
+                        HorizontalAlignment="Center" VerticalAlignment="Center"    Grid.Column="4" Grid.RowSpan="2"  
+                          >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" IsItemsHost="True" />
@@ -115,6 +116,7 @@
         <ListBox ItemsSource="{Binding Path=DataSourceOfPage,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  ItemTemplateSelector="{StaticResource templateSelector}"
                  SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                 ContextMenu="{StaticResource ResourceKey=contextMenu}"
                  >
             
         </ListBox>

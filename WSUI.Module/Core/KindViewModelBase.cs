@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.OleDb;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
+using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Core;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
 using WSUI.Module.Interface;
 using Microsoft.Practices.Unity;
-using System.Windows;
 using System.Windows.Data;
 using WSUI.Module.Service;
+using Application = System.Windows.Application;
 
 namespace WSUI.Module.Core
 {
@@ -42,7 +45,10 @@ namespace WSUI.Module.Core
             _container = container;
             ChooseCommand = new DelegateCommand<object>(o => OnChoose(), o => true);
             SearchCommand = new DelegateCommand<object>(o => Search(),o => CanSearch());
+            OpenCommand = new DelegateCommand<object>(o => OpenFile(), o => CanOpenFile());
             Enabled = true;
+            DataSource = new ObservableCollection<BaseSearchData>();
+            //OnPropertyChanged(() => DataSource);
         }
 
 
@@ -54,7 +60,14 @@ namespace WSUI.Module.Core
             OleDbDataReader dataReader = null;
             OleDbConnection connection = new OleDbConnection(_connectionString);
             OleDbCommand cmd = new OleDbCommand(_query, connection);
-           
+
+            ProgressManager.Instance.StartOperation(new ProgressOperation()
+            {
+                Caption = "Searching...",
+                DelayTime = 2500,
+                Canceled = false
+            });
+
             try
             {
 
@@ -83,7 +96,7 @@ namespace WSUI.Module.Core
                 {
                     connection.Close();
                 }
-                
+                ProgressManager.Instance.StopOperation();
             }
         }
 
@@ -104,9 +117,8 @@ namespace WSUI.Module.Core
 
         protected virtual void OnStart()
         {
-            if(DataSource == null)
-                DataSource = new ObservableCollection<BaseSearchData>();
             DataSource.Clear();
+            OnPropertyChanged(() => DataSource);
             _listData.Clear();
 
             EventHandler temp = Start;
@@ -245,5 +257,31 @@ namespace WSUI.Module.Core
         {
             get; set;
         }
+
+
+        public ICommand OpenCommand { get; protected set; }
+
+
+        private void OpenFile()
+        {
+            var fileName = SearchItemHelper.GetFileName(Current);
+            if (string.IsNullOrEmpty(fileName) ||
+                FileService.IsDirectory(fileName))
+                return;
+            try
+            {
+                Process.Start(fileName);
+            }
+            catch (System.Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}","Start error",fileName,ex.Message));
+            }
+        }
+
+        private  bool CanOpenFile()
+        {
+            return Current != null;
+        }
+
     }
 }

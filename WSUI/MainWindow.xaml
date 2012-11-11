@@ -21,7 +21,14 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    
+
+    <Controls:MetroWindow.WindowCommands>
+        <Controls:WindowCommands>
+            <Button Content="Light" Click="Button_Click"/>
+            <Button Content="Dark"  Click="Button_Click_1"/>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.WindowCommands>
+
     <AdornerDecorator>
         <Grid Margin="7" x:Name="grid">
             <Grid.RowDefinitions>

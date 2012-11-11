@@ -7,7 +7,7 @@ using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSUI.Infrastructure.Services
 {
-    class FileService
+    public class FileService
     {
         #region public
 

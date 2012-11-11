@@ -98,8 +98,15 @@ namespace WSUI.Infrastructure.Service.Helpers
             string tempFileName = TempFileManager.Instance.GenerateTempFileName(item);
             if (string.IsNullOrEmpty(tempFileName))
                 return null;
-            att.SaveAsFile(tempFileName);
-
+            try
+            {
+                att.SaveAsFile(tempFileName);
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1} - {2}", "Save error: ", tempFileName, ex.Message));
+                return null;
+            }
             return tempFileName;
         }
 

@@ -21,6 +21,7 @@
         <ListBox ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
                       ItemTemplateSelector="{StaticResource templateSelector}"
                       SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                      ContextMenu="{StaticResource ResourceKey=contextMenu}"
                       >
             <ListBox.ItemTemplate>
                 <DataTemplate>

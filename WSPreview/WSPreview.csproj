@@ -203,6 +203,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="Resources\TreeView_XP_Explorer_ParentNode.gif" />
     <None Include="StrongNameKey.pfx" />
   </ItemGroup>
