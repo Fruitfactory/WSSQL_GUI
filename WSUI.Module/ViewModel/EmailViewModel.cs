@@ -11,6 +11,7 @@ using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using Microsoft.Practices.Unity;
+using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
@@ -92,6 +93,12 @@ namespace WSUI.Module.ViewModel
                 res = string.Format(_queryTemplate, folder, searchCriteria) + OrderTemplate;
 
             return res;
+        }
+
+        protected override void OnInit()
+        {
+            base.OnInit();
+            _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
         }
 
         #region IUIView

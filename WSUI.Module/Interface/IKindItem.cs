@@ -69,5 +69,7 @@ namespace WSUI.Module.Interface
         event EventHandler<EventArgs<BaseSearchData>> CurrentItemChanged;
 
         event EventHandler Choose;
+
+        void Init();
     }
 }

@@ -14,6 +14,7 @@ using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
 using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Core;
+using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
 using WSUI.Module.Interface;
@@ -37,6 +38,7 @@ namespace WSUI.Module.Core
         private object _lock = new object();
         private BaseSearchData _current = null;
         private string _searchString = string.Empty;
+        protected Dictionary<TypeSearchItem, ICommandStrategy> _commandStrategies;
 
         protected readonly IUnityContainer _container;
 
@@ -183,6 +185,12 @@ namespace WSUI.Module.Core
         protected  virtual void OnSearchStringChanged()
         {}
 
+        protected virtual void OnInit()
+        {
+            _commandStrategies  = new Dictionary<TypeSearchItem, ICommandStrategy>();
+        }
+
+
         #region IKindItem
 
         public string Name
@@ -217,6 +225,11 @@ namespace WSUI.Module.Core
         {
             get { return _current; }
             set { _current = value; OnCurrentItemChanged(_current);}
+        }
+
+        public void Init()
+        {
+            OnInit();
         }
 
         #endregion

@@ -15,6 +15,7 @@ using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Infrastructure.Models;
 using WSUI.Module.Service;
+using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
@@ -203,6 +204,13 @@ namespace WSUI.Module.ViewModel
             email.BodyFormat = Microsoft.Office.Interop.Outlook.OlBodyFormat.olFormatHTML;
             email.Display(false);
         }
+
+        protected override void OnInit()
+        {
+            base.OnInit();
+            _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
+        }
+
 
         #region IUIView
 

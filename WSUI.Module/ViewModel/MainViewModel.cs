@@ -91,6 +91,7 @@ namespace WSUI.Module.ViewModel
                         continue;
                     if (string.IsNullOrEmpty(kind.Name))
                         continue;
+                    kind.Init();
                     kind.Choose += (o, e) => OnChoose(o);
                     _listItems.Add(kind);
                 }

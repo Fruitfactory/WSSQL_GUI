@@ -156,6 +156,17 @@ namespace WSUI.Infrastructure.Service.Helpers
             return newMail;
         }
 
+        public Outlook.MailItem GetEmailItem(BaseSearchData data)
+        {
+            if (data == null)
+                return null;
+            string mapiUrl = data.Path;
+            string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
+            Outlook.MailItem mailItem = GetMailItem(entryID);
+            return mailItem;
+        }
+
+
         public List<string> GetFolderList()
         {
             List<string> res = new List<string>();

@@ -3,7 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:service="clr-namespace:WSUI.Module.Service">
+             xmlns:service="clr-namespace:WSUI.Module.Service"
+             xmlns:ctrl="clr-namespace:WSUI.Infrastructure.Controls;assembly=WSUI.Infrastructure"                   
+                    
+                    >
 
     <service:DateToStringConverter x:Key="dateConverter" />
     
@@ -18,7 +21,8 @@
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\document-smiley-sad.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
+            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  
+                                                    Grid.Column="1"   Margin="5"/>
         </DockPanel>
     </DataTemplate>
 
@@ -26,7 +30,9 @@
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
+            <!--<TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>-->
+            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  
+                                                    Grid.Column="1"   Margin="5"/>
         </DockPanel>
     </DataTemplate>
 
@@ -34,7 +40,8 @@
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\user.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
+            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  
+                                                    Grid.Column="1"   Margin="5"/>
         </DockPanel>
     </DataTemplate>
 
@@ -42,7 +49,8 @@
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\document.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
+            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  
+                                                    Grid.Column="1"   Margin="5"/>
         </DockPanel>
     </DataTemplate>
 
@@ -50,7 +58,8 @@
         <DockPanel>
             <Image Grid.Column="0" Source="..\Images\document.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>
+            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  
+                                                    Grid.Column="1"   Margin="5"/>
         </DockPanel>
     </DataTemplate>
 

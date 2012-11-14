@@ -56,6 +56,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\HightliteTextBlock.xaml.cs">
+      <DependentUpon>HightliteTextBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HightliteTextBlockBase.cs" />
     <Compile Include="Controls\ProgressAdorner\ProgressAdorner.cs" />
     <Compile Include="Controls\ProgressManager\IProgressForm.cs" />
     <Compile Include="Controls\ProgressManager\IProgressManager.cs" />
@@ -96,6 +100,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\HightliteTextBlock.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\ProgressManager\ProgressWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

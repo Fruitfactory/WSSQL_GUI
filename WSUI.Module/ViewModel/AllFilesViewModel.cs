@@ -19,6 +19,7 @@ using Microsoft.Practices.Unity;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Service;
+using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
@@ -195,6 +196,13 @@ namespace WSUI.Module.ViewModel
                 return (value as Array).Cast<string>().Any(i => i.IndexOf(KindGroup) > -1);
             }
             return false;
+        }
+
+        protected override void OnInit()
+        {
+            base.OnInit();
+            _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
+            _commandStrategies.Add(TypeSearchItem.File, CommadStrategyFactory.CreateStrategy(TypeSearchItem.File, this));
         }
 
 
