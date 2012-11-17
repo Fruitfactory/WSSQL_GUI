@@ -5,13 +5,30 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              >
-    <StackPanel Orientation="Vertical" >
-        <ItemsControl ItemsSource="{Binding Path=KindsCollection,UpdateSourceTrigger=PropertyChanged}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <ToggleButton Command="{Binding Path=ChooseCommand}" Content="{Binding Path=UIName}" Margin="3" IsChecked="{Binding Toggle,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </StackPanel>
+    <Controls:MetroContentControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Controls:MetroContentControl.Resources>
+    
+    <!--<Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>-->    
+    
+        <StackPanel Orientation="Vertical" Width="100">
+            <ItemsControl ItemsSource="{Binding Path=KindsCollection,UpdateSourceTrigger=PropertyChanged}" 
+                          >
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ToggleButton Command="{Binding Path=ChooseCommand}" Content="{Binding Path=UIName}" Margin="1" IsChecked="{Binding Toggle,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                      />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    <!--</Grid>-->
 </Controls:MetroContentControl>

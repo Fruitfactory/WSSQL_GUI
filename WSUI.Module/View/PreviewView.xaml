@@ -8,24 +8,46 @@
              mc:Ignorable="d" 
              SizeChanged="MetroContentControl_SizeChanged"
              >
+    <Controls:MetroContentControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Controls:MetroContentControl.Resources>
     <Grid x:Name="grid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
+        <ItemsControl Grid.Row="0" ItemsSource="{Binding Path=Commands,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Command="{Binding}" ToolTip="{Binding Path=Tooltip}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="24" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{Binding Path=Icon}" Width="24" Height="24" Grid.Column="0"/>
+                            <TextBlock Text="{Binding Path=Caption}" Grid.Column="1"/>
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            
+            
+        </ItemsControl>
+        
         <WindowsFormsHost Grid.Row="1" x:Name="_preview">
             <preview:PreviewHandlerHostControl x:Name="_previewControl">
             </preview:PreviewHandlerHostControl >
         </WindowsFormsHost>
-        <Popup Name="popup" IsOpen="False" 
-               VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-               PlacementTarget="{Binding ElementName=_previewControl}" 
-               AllowsTransparency="True"
-               >
-            <Grid Background="Gray" Opacity="0.75">
-                <TextBlock>Test</TextBlock>
-            </Grid>
-        </Popup>    
     </Grid>
 </Controls:MetroContentControl>

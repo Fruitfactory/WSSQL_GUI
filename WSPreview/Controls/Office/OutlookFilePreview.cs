@@ -20,6 +20,9 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         private static string OutlookProcessName = "OUTLOOK";
         private static string OutlookApplication = "Outlook.Application";
 
+        private static string PageTemplate =
+            "<html><body leftmargin='0' style='font: bold 11; font-family: Microsoft Sans Serif'>{0}</body></html>";
+
         private bool _IsExistProcess = false;
 
         public OutlookFilePreview()
@@ -43,7 +46,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             if (mail == null)
                 return;
             textBoxSubject.Text = mail.Subject;
-            textBoxFrom.Text = mail.SenderName;
+            webFrom.DocumentText = HighlightSearchString(string.Format(PageTemplate, mail.SenderName));
             textBoxTo.Text = mail.To;
             textBoxSend.Text = mail.ReceivedTime.ToString();
             webBrowserContent.DocumentText = HighlightSearchString(mail.HTMLBody);

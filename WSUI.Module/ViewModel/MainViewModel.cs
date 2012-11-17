@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Reflection;
 using System.Text;
 using System.Windows.Input;
@@ -61,6 +62,11 @@ namespace WSUI.Module.ViewModel
             get; protected set;
         }
 
+        public ObservableCollection<IWSCommand> Commands
+        {
+            get { return _currentItem != null ? _currentItem.Commands : null; }
+        } 
+
         public virtual void Init()
         {
             _listItems = new List<IKindItem>();
@@ -93,6 +99,8 @@ namespace WSUI.Module.ViewModel
                         continue;
                     kind.Init();
                     kind.Choose += (o, e) => OnChoose(o);
+                    if (kind is INotifyPropertyChanged)
+                        (kind as INotifyPropertyChanged).PropertyChanged += (o, e) => OnPropertyChanged(e.PropertyName);
                     _listItems.Add(kind);
                 }
             }
@@ -149,6 +157,7 @@ namespace WSUI.Module.ViewModel
 
             if (PreviewView != null)
                 PreviewView.ClearPreview();
+            OnPropertyChanged(() => Commands);
 
         }
 

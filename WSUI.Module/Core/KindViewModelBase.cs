@@ -39,6 +39,7 @@ namespace WSUI.Module.Core
         private BaseSearchData _current = null;
         private string _searchString = string.Empty;
         protected Dictionary<TypeSearchItem, ICommandStrategy> _commandStrategies;
+        private ICommandStrategy _currentStrategy;
 
         protected readonly IUnityContainer _container;
 
@@ -224,12 +225,26 @@ namespace WSUI.Module.Core
         public BaseSearchData Current
         {
             get { return _current; }
-            set { _current = value; OnCurrentItemChanged(_current);}
+            set
+            {
+                _current = value; 
+                OnCurrentItemChanged(_current);
+                ChooseStrategy();
+
+            }
         }
 
         public void Init()
         {
             OnInit();
+        }
+
+        public ObservableCollection<IWSCommand> Commands
+        {
+            get
+            {
+                return _currentStrategy != null ? _currentStrategy.Commands : null;
+            }
         }
 
         #endregion
@@ -295,6 +310,19 @@ namespace WSUI.Module.Core
         {
             return Current != null;
         }
+
+
+        private void ChooseStrategy()
+        {
+            if(Current == null)
+                return;
+            if(!_commandStrategies.ContainsKey(Current.Type))
+                return;
+            _currentStrategy = _commandStrategies[Current.Type];
+            
+            OnPropertyChanged(() => Commands);
+        }
+
 
     }
 }

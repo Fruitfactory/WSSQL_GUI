@@ -137,17 +137,17 @@
     <Compile Include="PreviewHandlerFramework\COMInterop\RECT.cs" />
     <Compile Include="PreviewHandlerFramework\FileBasedPreviewHandler.cs" />
     <Compile Include="PreviewHandlerFramework\FileBasedPreviewHandlerControl.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="PreviewHandlerFramework\ISearchWordHighlight.cs" />
     <Compile Include="PreviewHandlerFramework\PreviewHandler.cs" />
     <Compile Include="PreviewHandlerFramework\PreviewHandlerAttribute.cs" />
     <Compile Include="PreviewHandlerFramework\PreviewHandlerControl.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="PreviewHandlerFramework\StreamBasedPreviewHandler.cs" />
     <Compile Include="PreviewHandlerFramework\StreamBasedPreviewHandlerControl.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="PreviewHandlerHost\PreviewHandlerHostControl.cs">
       <SubType>UserControl</SubType>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Controls;
+using System.Windows.Input;
 using WSUI.Module.Interface;
 
 namespace WSUI.Module.Core
@@ -25,12 +26,17 @@ namespace WSUI.Module.Core
             
         }
 
-        protected virtual Image GetIcon()
+        protected virtual string GetIcon()
         {
             return null;
         }
 
         protected virtual string GetCaption()
+        {
+            return string.Empty;
+        }
+
+        protected virtual string GetTooltip()
         {
             return string.Empty;
         }
@@ -47,13 +53,17 @@ namespace WSUI.Module.Core
             return OnCanExecute();
         }
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
 
         #endregion
 
         #region Implementation of IWSCommand
 
-        public Image Icon 
+        public string Icon 
         { 
             get { return GetIcon(); } 
         }
@@ -61,6 +71,11 @@ namespace WSUI.Module.Core
         public string Caption
         {
             get { return GetCaption(); }
+        }
+
+        public string Tooltip
+        {
+            get { return GetTooltip(); }
         }
 
         #endregion

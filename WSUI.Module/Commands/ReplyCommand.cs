@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Office.Interop.Outlook;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
@@ -28,13 +29,25 @@ namespace WSUI.Module.Commands
             var mail = OutlookHelper.Instance.GetEmailItem(itemSearch);
             if (mail != null)
             {
-                mail.Reply();
+                var replymail = mail.Reply();
+                replymail.Display(false);
+                mail.Close(OlInspectorClose.olDiscard);
             }
         }
 
         protected override string GetCaption()
         {
             return "Reply";
+        }
+
+        protected override string GetIcon()
+        {
+            return @"pack://application:,,,/WSUI.Module;component/Images/reply.png";
+        }
+
+        protected override string GetTooltip()
+        {
+            return "Reply email";
         }
 
     }

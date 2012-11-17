@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
@@ -44,6 +46,16 @@ namespace WSUI.Module.Commands
         protected override string GetCaption()
         {
             return "Open";
+        }
+
+        protected override string GetIcon()
+        {
+            return @"pack://application:,,,/WSUI.Module;component/Images/fileopen.png";
+        }
+
+        protected override string GetTooltip()
+        {
+            return "Open file";
         }
 
     }

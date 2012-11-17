@@ -54,7 +54,6 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers.PreviewHandlers
                         new string[] { msiFile.FileName, msiFile.Size, msiFile.Version },
                         _iconProvider.GetIconIndexForFile(msiFile.FileName)));
                 }
-
                 Controls.Add(listView);
             }
 

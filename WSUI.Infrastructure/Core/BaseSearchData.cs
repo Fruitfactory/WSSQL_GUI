@@ -34,5 +34,7 @@ namespace WSUI.Infrastructure.Core
             get;
             set;
         }
+
+        public object Tag { get; set; }
 	}
 }

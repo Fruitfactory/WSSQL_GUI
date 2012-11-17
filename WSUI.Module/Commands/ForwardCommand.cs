@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Office.Interop.Outlook;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
@@ -28,7 +29,9 @@ namespace WSUI.Module.Commands
             var mail = OutlookHelper.Instance.GetEmailItem(searchItem);
             if (mail != null)
             {
-                mail.Forward();
+                var forwardmail = mail.Forward();
+                forwardmail.Display(false);
+                mail.Close(OlInspectorClose.olDiscard);
             }
         }
 
@@ -36,5 +39,16 @@ namespace WSUI.Module.Commands
         {
             return "Forward";
         }
+
+        protected override string GetIcon()
+        {
+            return @"pack://application:,,,/WSUI.Module;component/Images/forward.png";
+        }
+
+        protected override string GetTooltip()
+        {
+            return "Forward email";
+        }
+
     }
 }

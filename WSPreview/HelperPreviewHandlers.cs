@@ -19,16 +19,29 @@ namespace C4F.DevKit.PreviewHandler
         private static string HKLMWinSdk32 = "SOFTWARE\\Microsoft\\Microsoft SDKs\\Windows";
         private static string HKLMWinSdk64 = "SOFTWARE\\Wow6432Node\\Microsoft\\Microsoft SDKs\\Windows";
         private static string InstallationFolder = "InstallationFolder";
+
+        private static Dictionary<string, Type> _handlersDictionary = null;
+
         #endregion
 
-        public static Dictionary<string, Type> HandlersDictionary { get; set; }
+        public static Dictionary<string, Type> HandlersDictionary
+        {
+            get
+            {
+                if (_handlersDictionary == null)
+                {
+                    InitDictiohary();
+                }
+                return _handlersDictionary;
+            }
+        }
 
 
-        static HelperPreviewHandlers()
+        private static void InitDictiohary()
         {
             Assembly assembly = Assembly.GetAssembly(typeof(PreviewHandler.PreviewHandlerFramework.PreviewHandler));
             var listTypes = assembly.GetTypes().Where(type => type.IsSealed && (type.IsSubclassOf(typeof(C4F.DevKit.PreviewHandler.PreviewHandlerFramework.FileBasedPreviewHandler)) || type.IsSubclassOf(typeof(C4F.DevKit.PreviewHandler.PreviewHandlerFramework.StreamBasedPreviewHandler)))).ToList();
-            HandlersDictionary = new Dictionary<string,Type>();
+            _handlersDictionary = new Dictionary<string, Type>();
             foreach (var type in listTypes)
             {
                 object[] attr = (object[])type.GetCustomAttributes(typeof(PreviewHandlerAttribute), true);
@@ -38,7 +51,8 @@ namespace C4F.DevKit.PreviewHandler
                 string[] exts = prewAttr.Extension.Split(';');
                 foreach (var ext in exts)
                 {
-                    HandlersDictionary.Add(ext,type);
+                    if(!_handlersDictionary.ContainsKey(ext))
+                        _handlersDictionary.Add(ext, type);
                 }
             }
         }

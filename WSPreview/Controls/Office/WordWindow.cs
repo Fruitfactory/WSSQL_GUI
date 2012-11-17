@@ -98,6 +98,5 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             SaveOfficeSettings();
             _app.Visible = true;
         }
-
     }
 }

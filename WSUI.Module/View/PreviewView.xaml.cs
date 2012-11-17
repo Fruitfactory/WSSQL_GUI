@@ -80,15 +80,15 @@ namespace WSUI.Module.View
 
         private void resetPopup()
         {
-            var offset = popup.HorizontalOffset;
-            popup.HorizontalOffset = offset + 1;
-            popup.HorizontalOffset = offset;
+            //var offset = popup.HorizontalOffset;
+            //popup.HorizontalOffset = offset + 1;
+            //popup.HorizontalOffset = offset;
 
-            // Resizing
-            popup.Width = grid.ActualWidth;
-            popup.Height = grid.ActualHeight;
-            //popup.PlacementRectangle = new Rect(0,0, _previewControl.Width,_previewControl.Height);
-            popup.Placement = PlacementMode.Relative;
+            //// Resizing
+            //popup.Width = grid.ActualWidth;
+            //popup.Height = grid.ActualHeight;
+            ////popup.PlacementRectangle = new Rect(0,0, _previewControl.Width,_previewControl.Height);
+            //popup.Placement = PlacementMode.Relative;
         }
 
         private void MetroContentControl_SizeChanged(object sender, SizeChangedEventArgs e)

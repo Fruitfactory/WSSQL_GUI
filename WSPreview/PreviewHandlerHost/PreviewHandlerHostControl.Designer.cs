@@ -33,6 +33,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
             // 
             // lblMessage
             // 
+            this.lblMessage.BackColor = System.Drawing.Color.Transparent;
             this.lblMessage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblMessage.Location = new System.Drawing.Point(0, 0);
             this.lblMessage.Name = "lblMessage";

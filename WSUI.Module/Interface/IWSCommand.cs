@@ -8,7 +8,7 @@ namespace WSUI.Module.Interface
 {
     public interface IWSCommand : ICommand
     {
-        Image Icon
+        string Icon
         {
             get;
         }
@@ -17,5 +17,7 @@ namespace WSUI.Module.Interface
         {
             get;
         }
+
+        string Tooltip { get; }
     }
 }

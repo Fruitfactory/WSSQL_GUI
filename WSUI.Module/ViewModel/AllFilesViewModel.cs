@@ -79,13 +79,14 @@ namespace WSUI.Module.ViewModel
             string id = reader[3].ToString();
             string display = reader[4].ToString();
             var date = reader[5].ToString();
-
+            string tag = string.Empty;
             if (kind != null && IsEmail(kind) && !_listID.Any(i => i == id))
             {
                 var newValue = GroupEmail(name, id);
                 _listID.Add(id);
                 name = newValue.Item1;
                 file = newValue.Item2;
+                tag = newValue.Item3;
             }
             else if (kind != null && IsEmail(kind) && _listID.Any(i => i == id))
                 return;
@@ -97,7 +98,8 @@ namespace WSUI.Module.ViewModel
                                         Type = type,
                                         ID = Guid.NewGuid(),
                                         Display = display,
-                                        DateModified = DateTime.Parse(date)
+                                        DateModified = DateTime.Parse(date),
+                                        Tag = tag
                                     };
             _listData.Add(bs);
         }
@@ -133,11 +135,12 @@ namespace WSUI.Module.ViewModel
             //UpdateData();
         }
 
-        private Tuple<string, string> GroupEmail(string name, string id)
+        private Tuple<string, string,string> GroupEmail(string name, string id)
         {
             var query = string.Format(QueryForGroupEmails, id); //,InboxFolder
             int count = 0;
             string path = string.Empty;
+            string r = string.Empty;
             OleDbDataReader reader = null;
             OleDbConnection con = new OleDbConnection(_connectionString);
             OleDbCommand cmd = new OleDbCommand(query, con);
@@ -151,6 +154,7 @@ namespace WSUI.Module.ViewModel
                     var resg = ReadGroup(reader);
                     count = resg.Item1;
                     path = resg.Item2;
+                    r = resg.Item3;
                     break;
                 }
             }
@@ -175,17 +179,17 @@ namespace WSUI.Module.ViewModel
             }
 
 
-            return new Tuple<string, string>(string.Format("{0}, ({1})", name, count), path);
+            return new Tuple<string, string,string>(string.Format("{0}, ({1})", name, count), path,r);
         }
 
-        private Tuple<int, string> ReadGroup(IDataReader reader)
+        private Tuple<int, string,string> ReadGroup(IDataReader reader)
         {
             var groups = EmailGroupReaderHelpers.ReadGroups(reader);
             if (groups == null)
-                return default(Tuple<int, string>);
+                return default(Tuple<int, string,string>);
             var item = groups.Items[0];
-
-            var res = new Tuple<int, string>(groups.Items.Distinct(new EmailSearchDataComparer()).Count(), item.Path);
+            
+            var res = new Tuple<int, string,string>(groups.Items.Distinct(new EmailSearchDataComparer()).Count(), item.Path,item.Recepient);
             return res;
         }
 

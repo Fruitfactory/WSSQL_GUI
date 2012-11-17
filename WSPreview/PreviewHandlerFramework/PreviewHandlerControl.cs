@@ -8,11 +8,11 @@ using System.Windows.Forms;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlerFramework
 {
-    public abstract class PreviewHandlerControl : Form
+    public abstract class PreviewHandlerControl : Control
     {
         protected PreviewHandlerControl()
         {
-            base.FormBorderStyle = FormBorderStyle.None;
+            
         }
 
         public new abstract void Load(FileInfo file);
