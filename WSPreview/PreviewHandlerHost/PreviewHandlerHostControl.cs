@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using C4F.DevKit.PreviewHandler.PInvoke;
 using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.InteropServices;
@@ -27,11 +28,10 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
     public partial class PreviewHandlerHostControl : UserControl
     {
 
-        private const int WM_DESTROY = 0x0002;
-
         private string _filePath;
         private string _searchCriteria;
         private object _comInstance = null;
+        private bool _registreHandler = true;
 
         public PreviewHandlerHostControl()
         {
@@ -91,7 +91,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                 ((IPreviewHandler)_comInstance).Unload();
                 _comInstance = null;
             }
-
+            _registreHandler = true;
             RECT r;
             r.top = 0;
             r.bottom = this.Height;
@@ -124,6 +124,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                     WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", lblMessage.Text, _filePath));
                     return;
                 }
+                _registreHandler = false;
             } 
             else
                 comType = Type.GetTypeFromCLSID(new Guid(handler.ID));
@@ -196,15 +197,30 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
         {
             switch (m.Msg)
             {
-                case WM_DESTROY:
+                case WindowAPI.WM_DESTROY:
                     if (_comInstance != null)
                     {
                         ((IPreviewHandler)_comInstance).Unload();
                         _comInstance = null;
                     }
                     break;
+                case WindowAPI.WM_SIZE:
+                    if(_registreHandler)
+                        WindowAPI.EnumChildWindows(this.Handle, SendSizeMessage, m.LParam);
+                    break;
+
             }
             base.WndProc(ref m);
+        }
+
+
+        private bool SendSizeMessage(IntPtr hWnd, IntPtr lParam)
+        {
+            if (hWnd != IntPtr.Zero)
+            {
+                WindowAPI.SendMessage(hWnd, WindowAPI.WM_SIZE, IntPtr.Zero, lParam);
+            }
+            return true;
         }
 
 

@@ -95,7 +95,7 @@ namespace WSUI.Infrastructure.Controls
             }
 
             var textlbock = textBlock;
-            MatchCollection mCol = Regex.Matches(Text, string.Format(@"({0})", Hightlight), RegexOptions.IgnoreCase);
+            MatchCollection mCol = Regex.Matches(Text, string.Format(@"({0})", Regex.Escape(Hightlight)), RegexOptions.IgnoreCase);
             if (mCol.Count == 0)
             {
                 textlbock.Text = this.Text;
@@ -107,7 +107,7 @@ namespace WSUI.Infrastructure.Controls
             for (int i = 0; i < mCol.Count; i++)
             {
                 var m = mCol[i];
-                var sub = Text.Substring(last, m.Index);
+                var sub = Text.Substring(last, m.Index - last);
                 Run r = new Run(sub);
                 textlbock.Inlines.Add(r);
                 sub = Text.Substring(m.Index, m.Length);
@@ -116,9 +116,12 @@ namespace WSUI.Infrastructure.Controls
                 textlbock.Inlines.Add(r);
                 last += (m.Index + m.Length);
             }
-            var temp = Text.Substring(last, Text.Length - last);
-            Run run = new Run(temp);
-            textlbock.Inlines.Add(run);
+            if (last < Text.Length)
+            {
+                var temp = Text.Substring(last, Text.Length - last);
+                Run run = new Run(temp);
+                textlbock.Inlines.Add(run);
+            }
 
             base.OnRender(drawingContext);
         }

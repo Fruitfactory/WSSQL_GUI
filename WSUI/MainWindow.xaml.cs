@@ -72,5 +72,11 @@ namespace WSUI
             ThemeManager.ChangeTheme(this, ThemeManager.DefaultAccents.First(a => a.Name == "Blue"), Theme.Dark);
         }
 
+        public override void EndInit()
+        {
+            base.EndInit();
+            this.InvalidateVisual();
+        }
+
     }
 }

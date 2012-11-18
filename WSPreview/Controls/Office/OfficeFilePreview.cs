@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using C4F.DevKit.PreviewHandler.PInvoke;
 
 namespace C4F.DevKit.PreviewHandler.Controls.Office
 {

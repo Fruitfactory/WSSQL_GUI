@@ -152,6 +152,8 @@ namespace WSUI.Infrastructure.Service.Helpers
 
         public Outlook.MailItem CreateNewEmail()
         {
+            if (!IsOutlookAlive())
+                ReopenOutlook(ref _app);
             var newMail = (Microsoft.Office.Interop.Outlook.MailItem)_app.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olMailItem);
             return newMail;
         }

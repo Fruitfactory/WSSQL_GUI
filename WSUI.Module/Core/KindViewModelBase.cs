@@ -316,9 +316,12 @@ namespace WSUI.Module.Core
         {
             if(Current == null)
                 return;
-            if(!_commandStrategies.ContainsKey(Current.Type))
-                return;
-            _currentStrategy = _commandStrategies[Current.Type];
+            if (!_commandStrategies.ContainsKey(Current.Type))
+            {
+                _currentStrategy = null;
+            }
+            else
+                _currentStrategy = _commandStrategies[Current.Type];
             
             OnPropertyChanged(() => Commands);
         }

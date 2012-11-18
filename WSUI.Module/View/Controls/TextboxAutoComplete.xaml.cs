@@ -61,9 +61,6 @@ namespace WSUI.Module.View.Controls
                                     {
                                         switch(e.Key)
                                         {
-                                            case Key.Down:
-                                                _comboBox.Focus();
-                                                break;
                                             case Key.Escape:
                                                 _comboBox.IsDropDownOpen = false;
                                                 break;
@@ -77,6 +74,7 @@ namespace WSUI.Module.View.Controls
             _textBox.SetValue(TextboxHelper.ClearTextButtonProperty,true);
             _controls.Add(_comboBox);
             _controls.Add(_textBox);
+            Canvas.SetZIndex(_textBox,100);
         }
 
         public static readonly DependencyProperty SearchTextProperty =

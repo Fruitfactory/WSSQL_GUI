@@ -143,7 +143,8 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             var itemArray = HitString.Trim().Split(' ');
             foreach (var s in itemArray)
             {
-                result = Regex.Replace(result, s, string.Format(AfterStrongTemplate, s),RegexOptions.IgnoreCase);
+                var escape = Regex.Escape(s);
+                result = Regex.Replace(result, Regex.Escape(s), string.Format(AfterStrongTemplate, s), RegexOptions.IgnoreCase);
             }
             return result;
         }

@@ -8,6 +8,19 @@ namespace C4F.DevKit.PreviewHandler.PInvoke
 {
     class WindowAPI
     {
+
+        public const int WM_DESTROY = 0x0002;
+        public const int WM_SIZE = 0x0005;
+
+        public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool EnumChildWindows(IntPtr hwndParent, EnumWindowsProc lpEnumFunc, IntPtr lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+
+
         /// <summary>
         /// SetWindowPos Flags
         /// </summary>

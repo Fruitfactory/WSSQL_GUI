@@ -28,5 +28,15 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerFramework
         {
             return Path.GetTempPath() + Guid.NewGuid().ToString("N") + extension;
         }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            if (Controls.Count > 0)
+            {
+                Controls[0].Bounds = this.ClientRectangle;
+            }
+        }
+
     }
 }

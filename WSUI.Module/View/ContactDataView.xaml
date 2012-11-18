@@ -58,7 +58,7 @@
                        Grid.ColumnSpan="2"/>
                         <Ellipse Name="Circle"
                  Grid.Column="0"
-                 Stroke="DarkGray"
+                 Stroke="Black"
                  Width="20"
                  Height="20"
                  HorizontalAlignment="Center"
@@ -153,7 +153,8 @@
                        Foreground="Blue"/>
         </StackPanel>
 
-        <Expander Header="Details" Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2">
+        <Expander Header="Details" Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"
+                 >
             <StackPanel Orientation="Vertical" >
                 <TextBlock Text="Contact's emails: " Margin="4" FontStyle="Italic" FontWeight="Bold" FontSize="14"></TextBlock>
                 <ListBox ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
