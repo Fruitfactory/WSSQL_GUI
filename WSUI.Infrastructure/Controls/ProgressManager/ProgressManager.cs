@@ -98,7 +98,8 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
         public void StopOperation()
         {
             _stopEvent.Set();
-            _currentOperation = _stackOperation.Pop();
+            if(_stackOperation.Count > 0)
+                _currentOperation = _stackOperation.Pop();
             CloseProgressForm();
         }
 

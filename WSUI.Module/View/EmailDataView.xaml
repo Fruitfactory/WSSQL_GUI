@@ -32,7 +32,7 @@
                         <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                             <!--<TextBlock Text="{Binding Recepient}" FontWeight="Bold" Margin="5 3 5 3"/>-->
-                            <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  FontWeightLabel="Bold"
+                            <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  FontStyleLabel="Italic"
                                                        Margin="5 3 5 3"/>
                             <TextBlock Text="(" Margin="0 3 0 3"/>
                             <TextBlock Text="{Binding Count}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3"></TextBlock>

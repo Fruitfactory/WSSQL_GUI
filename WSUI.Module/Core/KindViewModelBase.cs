@@ -22,6 +22,7 @@ using Microsoft.Practices.Unity;
 using System.Windows.Data;
 using WSUI.Module.Service;
 using Application = System.Windows.Application;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace WSUI.Module.Core
 {
@@ -49,6 +50,7 @@ namespace WSUI.Module.Core
             ChooseCommand = new DelegateCommand<object>(o => OnChoose(), o => true);
             SearchCommand = new DelegateCommand<object>(o => Search(),o => CanSearch());
             OpenCommand = new DelegateCommand<object>(o => OpenFile(), o => CanOpenFile());
+            KeyDownCommand = new DelegateCommand<KeyEventArgs>(KeyDown, o => true);
             Enabled = true;
             DataSource = new ObservableCollection<BaseSearchData>();
             //OnPropertyChanged(() => DataSource);
@@ -216,6 +218,7 @@ namespace WSUI.Module.Core
         public ObservableCollection<BaseSearchData> DataSource { get; protected set; }
         public ICommand ChooseCommand { get; protected set; }
         public ICommand SearchCommand { get; protected set; }
+        public ICommand KeyDownCommand { get; protected set; }
         public event EventHandler Start;
         public event EventHandler<EventArgs<bool>> Complete;
         public event EventHandler<EventArgs<bool>> Error;
@@ -324,6 +327,19 @@ namespace WSUI.Module.Core
                 _currentStrategy = _commandStrategies[Current.Type];
             
             OnPropertyChanged(() => Commands);
+        }
+
+        protected virtual void KeyDown(object args)
+        {
+            if (args == null || !(args is KeyEventArgs))
+                return;
+            var keys = args as KeyEventArgs;
+            switch (keys.Key)
+            {
+                case Key.Enter:
+                    SearchCommand.Execute(null);
+                    break;
+            }
         }
 
 

@@ -91,6 +91,7 @@
     <Compile Include="Service\DateToStringConverter.cs" />
     <Compile Include="Service\HelperConst.cs" />
     <Compile Include="Service\ContactSuggestingService.cs" />
+    <Compile Include="Service\KeyDownBehavior.cs" />
     <Compile Include="Strategy\CommadStrategyFactory.cs" />
     <Compile Include="Strategy\EmailCommandStrategy.cs" />
     <Compile Include="Strategy\FileCommandStrategy.cs" />

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             >
+                              xmlns:Service="clr-namespace:WSUI.Module.Service">
     <Grid Margin="7" IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.15*"/>
@@ -24,6 +24,7 @@
                     <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                         Controls:TextboxHelper.Watermark="Enter Search Criteria"
                         Controls:TextboxHelper.ClearTextButton="True"
+                             Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
                         Grid.Column="0"/>
                         <Button Command="{Binding Path=SearchCommand}" Content="Search" HorizontalAlignment="Stretch"
                             Grid.Column="1" />

@@ -43,6 +43,7 @@ namespace WSUI.Module.View.Controls
                                                   if (_comboBox.SelectedValue != null)
                                                   {
                                                       _textBox.Text = (string)_comboBox.SelectedValue;
+                                                      _textBox.Focus();
                                                   }
                                               };
             _comboBox.KeyDown += (o, e) =>
@@ -54,6 +55,7 @@ namespace WSUI.Module.View.Controls
                                                  _comboBox.IsDropDownOpen = false;
                                                  break;
                                          }
+                                         OnKeyDownFired(e);
                                      };
 
             _textBox = new TextBox();
@@ -65,6 +67,7 @@ namespace WSUI.Module.View.Controls
                                                 _comboBox.IsDropDownOpen = false;
                                                 break;
                                         }
+                                        OnKeyDownFired(e);
                                     };
             //_textBox.LostFocus += (o, e) => _comboBox.IsDropDownOpen = false;
 
@@ -139,5 +142,16 @@ namespace WSUI.Module.View.Controls
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnKeyDownFired(KeyEventArgs e)
+        {
+            if(!PresentationSource.CurrentSources.OfType<PresentationSource>().Any())
+                return;
+            KeyEventArgs args = new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.CurrentSources.OfType<PresentationSource>().ElementAt(0), 0, e.Key);
+            args.RoutedEvent = UIElement.KeyDownEvent;
+            RaiseEvent(args);
+
+        }
+
     }
 }

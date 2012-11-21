@@ -30,7 +30,7 @@
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <ctrl:HightliteTextBlock Text="{Binding Path=Tag}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}" DockPanel.Dock="Left"
-                                     Margin="5" FontWeightLabel="Bold"/>
+                                     Margin="5" FontStyleLabel="Italic"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
             <!--<TextBlock Text="{Binding Path=Name}" Grid.Column="1" Margin="5"/>-->
             <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  

@@ -60,6 +60,7 @@ namespace WSUI.Module.Interface
         
         ICommand SearchCommand { get; }
         ICommand OpenCommand { get; }
+        ICommand KeyDownCommand { get; }
 
         event EventHandler Start;
 

@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:localctrl="clr-namespace:WSUI.Module.View.Controls"
-             
-             >
+                              xmlns:Service="clr-namespace:WSUI.Module.Service">
     <Grid Margin="7" IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.15*"/>
@@ -28,6 +27,7 @@
                     <Border BorderThickness="1" BorderBrush="Black">
                     <localctrl:TextboxAutoComplete SearchText="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                        DataSource="{Binding Path=DataSourceSuggest,UpdateSourceTrigger=PropertyChanged}"
+                                                   Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
                                        Height="24"
                                        VerticalAlignment="Top" HorizontalAlignment="Stretch"
                                        Grid.Column="0"

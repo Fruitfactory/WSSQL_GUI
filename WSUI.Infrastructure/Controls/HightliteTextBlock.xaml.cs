@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WSUI.Infrastructure.Controls
 {
@@ -108,22 +98,29 @@ namespace WSUI.Infrastructure.Controls
             {
                 var m = mCol[i];
                 var sub = Text.Substring(last, m.Index - last);
-                Run r = new Run(sub);
-                textlbock.Inlines.Add(r);
+                textlbock.Inlines.Add(GenerateRun(sub));
                 sub = Text.Substring(m.Index, m.Length);
-                r = new Run(sub);
-                r.Background = new SolidColorBrush(BackgroundColor);
-                textlbock.Inlines.Add(r);
+                textlbock.Inlines.Add(GenerateRun(sub,true));
                 last += (m.Index + m.Length);
             }
             if (last < Text.Length)
             {
                 var temp = Text.Substring(last, Text.Length - last);
-                Run run = new Run(temp);
-                textlbock.Inlines.Add(run);
+                textlbock.Inlines.Add(GenerateRun(temp));
             }
 
             base.OnRender(drawingContext);
+        }
+
+        private Run GenerateRun(string text, bool isBold = false)
+        {
+            Run run = new Run(text);
+            run.FontStyle = FontStyleLabel;
+            if (isBold)
+            {
+                run.FontWeight = FontWeights.ExtraBold;
+            }
+            return run;
         }
 
     }
