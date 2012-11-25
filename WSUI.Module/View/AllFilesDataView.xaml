@@ -36,22 +36,21 @@
                 <RowDefinition Height="20"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
-            
-            <TextBlock Grid.Column="0" Grid.Row="0" Margin="0 2 5 0">Current</TextBlock>
-            <TextBlock Grid.Column="1" Grid.Row="0" Margin="0 2 5 0">Count</TextBlock>
 
-            <TextBlock Grid.Column="0" Grid.Row="1" Margin="0 2 5 0" Text="{Binding Path=CurrentPage,UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Grid.Column="1" Grid.Row="1" Margin="0 2 5 0" Text="{Binding Path=PageCount,UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="0 2 5 0" Text="{Binding Path=CurrentPage,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="6" Grid.Row="0" Grid.RowSpan="2" Margin="0 2 5 0" Text="{Binding Path=PageCount,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" />
 
-            <Button Command="{Binding MoveFirstCommand}"  Grid.Column="2" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Command="{Binding MoveFirstCommand}"  Grid.Column="1" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Button.Content>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -61,7 +60,7 @@
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Command="{Binding MovePreviousCommand}"  Grid.Column="3" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Command="{Binding MovePreviousCommand}"  Grid.Column="2" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Button.Content>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -71,7 +70,7 @@
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Command="{Binding MoveNextCommand}"  Grid.Column="5" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Command="{Binding MoveNextCommand}"  Grid.Column="4" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Button.Content>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -81,7 +80,7 @@
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Command="{Binding MoveLastCoommand}"  Grid.Column="6" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Command="{Binding MoveLastCoommand}"  Grid.Column="5" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Button.Content>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -93,7 +92,7 @@
             </Button>
 
             <ItemsControl ItemsSource="{Binding Path=DataPage,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                        HorizontalAlignment="Center" VerticalAlignment="Center"    Grid.Column="4" Grid.RowSpan="2"  
+                        HorizontalAlignment="Center" VerticalAlignment="Center"    Grid.Column="3" Grid.RowSpan="2"  
                           >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

@@ -22,14 +22,23 @@ namespace WSUI.Module.Commands
         protected override bool OnCanExecute()
         {
             if (_kindItem != null && _kindItem.Current != null &&
-                _kindItem.Current.Type == TypeSearchItem.File)
+                (_kindItem.Current.Type == TypeSearchItem.File || _kindItem.Current.Type == TypeSearchItem.Attachment))
                 return true;
             return false;
         }
 
         protected override void OnExecute()
         {
-            var fileName = SearchItemHelper.GetFileName(_kindItem.Current);
+            string fileName = string.Empty;
+            switch (_kindItem.Current.Type)
+            {
+                case TypeSearchItem.File:
+                    fileName = SearchItemHelper.GetFileName(_kindItem.Current);
+                    break;
+                case TypeSearchItem.Attachment:
+                    fileName = TempFileManager.Instance.GenerateTempFileName(_kindItem.Current) ?? OutlookHelper.Instance.GetAttachmentTempFileName(_kindItem.Current);
+                    break;
+            }
             if (string.IsNullOrEmpty(fileName) ||
                 FileService.IsDirectory(fileName))
                 return;

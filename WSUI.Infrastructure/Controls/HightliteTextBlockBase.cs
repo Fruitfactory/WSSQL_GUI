@@ -42,7 +42,7 @@ namespace WSUI.Infrastructure.Controls
         }
 
         public static readonly DependencyProperty HightlightProperty =
-            DependencyProperty.Register("Hightlight", typeof(string), typeof(HightliteTextBlockBase), new UIPropertyMetadata(string.Empty, UpdateControlCallBack));
+            DependencyProperty.Register("Hightlight", typeof(string), typeof(HightliteTextBlockBase), new UIPropertyMetadata(string.Empty));
 
         public string Hightlight
         {

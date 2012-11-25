@@ -39,6 +39,7 @@ namespace WSUI.Module.ViewModel
             kindView.Model = this;
             PreviewView = previewView;
             previewView.Model = this;
+            MainDataSource = new List<BaseSearchData>();
         }
 
 
@@ -98,6 +99,7 @@ namespace WSUI.Module.ViewModel
                     if (string.IsNullOrEmpty(kind.Name))
                         continue;
                     kind.Init();
+                    kind.Parent = this;
                     kind.Choose += (o, e) => OnChoose(o);
                     if (kind is INotifyPropertyChanged)
                         (kind as INotifyPropertyChanged).PropertyChanged += (o, e) => OnPropertyChanged(e.PropertyName);
@@ -236,9 +238,14 @@ namespace WSUI.Module.ViewModel
             newItem.Toggle = true;
             _listItems.ForEach(i => { if (i.Name != newItem.Name) i.Toggle = false; });
             Disconnect();
+            string searchString = string.Empty;
+            if(_currentItem  != null)
+                searchString = _currentItem.SearchString;
             _currentItem = newItem;
             Connect();
             CurrentKindChanged(_currentItem);
+            _currentItem.FilterData();
+            _currentItem.SearchString = searchString;
         }
 
         #endregion
@@ -247,6 +254,7 @@ namespace WSUI.Module.ViewModel
 
         public event EventHandler Start;
         public event EventHandler Complete;
+        public List<BaseSearchData> MainDataSource { get; protected set; }
 
         #endregion
     }

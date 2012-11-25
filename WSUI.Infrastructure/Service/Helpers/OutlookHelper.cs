@@ -73,9 +73,9 @@ namespace WSUI.Infrastructure.Service.Helpers
                 return null;
             if (!File.Exists(tempFilename))
             {
-                ProgressManager.Instance.StartOperation(new ProgressOperation(){Caption = tempFilename,Canceled = false,DelayTime = 1500});
+                //ProgressManager.Instance.StartOperation(new ProgressOperation() { Caption = "Saving an Email...", Canceled = false, DelayTime = 2500 });
                 mailItem.SaveAs(tempFilename, Type.Missing);
-                ProgressManager.Instance.StopOperation();
+                //ProgressManager.Instance.StopOperation();
             }
 
             return tempFilename;
@@ -100,7 +100,9 @@ namespace WSUI.Infrastructure.Service.Helpers
                 return null;
             try
             {
+                ProgressManager.Instance.StartOperation(new ProgressOperation() { Caption = "Saving an Attachment...", Canceled = false, DelayTime = 2500 });
                 att.SaveAsFile(tempFileName);
+                ProgressManager.Instance.StopOperation();
             }
             catch (Exception ex)
             {
@@ -224,6 +226,27 @@ namespace WSUI.Infrastructure.Service.Helpers
             return sbEID.ToString();
         }
 
+        public string GetCalendarTempFileName(BaseSearchData itemSearch)
+        {
+            if(itemSearch == null)
+                return string.Empty;
+            string mapiUrl = itemSearch.Path;
+            string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
+            Outlook.AppointmentItem appointmentItem = GetAppointment(entryID);
+            if (appointmentItem == null)
+            {
+                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}","Appointment not found",itemSearch.Path));
+                return null;
+            }
+            string tempFile = TempFileManager.Instance.GenerateTempFileName(itemSearch);
+            if (string.IsNullOrEmpty(tempFile))
+                return null;
+            if (!File.Exists(tempFile))
+            {
+                appointmentItem.SaveAs(tempFile,Outlook.OlSaveAsType.olHTML);
+            }
+            return tempFile;
+        }
 
         #endregion
 
@@ -321,6 +344,36 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             return att;
         }
+
+        private Outlook.AppointmentItem GetAppointment(string id)
+        {
+            if (_app == null)
+                return null;
+            Outlook.AppointmentItem appointItem = null;
+            try
+            {
+                if(!IsOutlookAlive())
+                    ReopenOutlook(ref _app);
+                Outlook.NameSpace ns = _app.GetNamespace("MAPI");
+                Outlook.MAPIFolder calendarFolder = ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderCalendar);
+                Outlook.Items calendarItems = calendarFolder.Items;
+                foreach (Outlook.AppointmentItem calendarItem in calendarItems)
+                {
+                    if (calendarItem.EntryID == id)
+                    {
+                        appointItem = calendarItem;
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+            return appointItem;
+        }
+
+
 
         /// <summary>
         /// after preview Outlook can close, that why I check Outlook process. If it closed, I create new instance

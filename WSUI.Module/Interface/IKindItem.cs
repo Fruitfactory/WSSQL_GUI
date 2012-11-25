@@ -53,6 +53,8 @@ namespace WSUI.Module.Interface
             get;
         }
 
+        IMainViewModel Parent { get; set; }
+
         List<string> FolderList { get; set; }
         string Folder { get; set; }
         bool Enabled { get; set; }
@@ -73,5 +75,6 @@ namespace WSUI.Module.Interface
         event EventHandler Choose;
 
         void Init();
+        void FilterData();
     }
 }

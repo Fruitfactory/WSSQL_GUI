@@ -18,6 +18,8 @@ namespace WSUI.Module.Strategy
                     strategy = new EmailCommandStrategy(kindItem);
                     break;
                 case TypeSearchItem.File:
+                case TypeSearchItem.Attachment:
+                case TypeSearchItem.FileAll:
                     strategy = new FileCommandStrategy(kindItem);
                     break;
             }

@@ -8,7 +8,7 @@ using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSUI.Infrastructure.Service.Helpers
 {
-    class TempFileManager
+    public class TempFileManager
     {
 
         #region static 
@@ -116,6 +116,9 @@ namespace WSUI.Infrastructure.Service.Helpers
                     break;
                 case Enums.TypeSearchItem.Contact:
                     ext = Path.GetExtension(searchItem.Path);
+                    break;
+                case Enums.TypeSearchItem.Calendar:
+                    ext = ".html";
                     break;
             }
             return ext;

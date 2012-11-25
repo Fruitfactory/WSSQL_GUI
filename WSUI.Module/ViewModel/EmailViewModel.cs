@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Threading;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using WSUI.Infrastructure.Models;
@@ -12,6 +13,7 @@ using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using Microsoft.Practices.Unity;
 using WSUI.Module.Strategy;
+using System.Collections.ObjectModel;
 
 namespace WSUI.Module.ViewModel
 {
@@ -19,7 +21,7 @@ namespace WSUI.Module.ViewModel
     {
         private const string OrderTemplate = " ORDER BY System.Message.DateReceived DESC)";
 
-        public EmailViewModel(IUnityContainer container, ISettingsView<EmailViewModel> settingsView, IDataView<EmailViewModel> dataView )
+        public EmailViewModel(IUnityContainer container, ISettingsView<EmailViewModel> settingsView, IDataView<EmailViewModel> dataView)
             :base(container)
         {
             SettingsView = settingsView;
@@ -29,11 +31,15 @@ namespace WSUI.Module.ViewModel
 
             _queryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) AND CONTAINS(*,'{1}*') ";//¬ход€щие  //Inbox
             _queryAnd = " AND Contains(*,'{0}*')";
-            ID = 1;
-            _name = "E-Mail";
+            ID = 2;
+            _name = "Email";
             UIName = _name;
             _prefix = "Email";
+            DataSourceMail = new ObservableCollection<EmailSearchData>();
         }
+
+
+        public ObservableCollection<EmailSearchData> DataSourceMail { get; private set; }
 
 
         protected override void ReadData(IDataReader reader)
@@ -73,7 +79,7 @@ namespace WSUI.Module.ViewModel
         protected override string CreateQuery()
         {
             var searchCriteria = SearchString;
-            var folder = Folder;// "Inbox";//"¬ход€щие";////
+            var folder = Folder;
             SearchString = searchCriteria;
             string res = string.Empty;
             if (searchCriteria.IndexOf(' ') > -1)
@@ -99,6 +105,46 @@ namespace WSUI.Module.ViewModel
         {
             base.OnInit();
             _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
+        }
+
+        protected override void OnFilterData()
+        {
+            if (_parentViewModel == null || _parentViewModel.MainDataSource.Count == 0)
+                return;
+            DataSourceMail.Clear();
+            _parentViewModel.MainDataSource.ForEach(item =>
+                                                        {
+                                                            if (item.Type == TypeSearchItem.Email && item is EmailSearchData)
+                                                            {
+                                                                DataSourceMail.Add(item as EmailSearchData);
+                                                            }
+                                                        });
+            OnPropertyChanged(() => DataSourceMail);
+        }
+
+
+        protected override void OnStart()
+        {
+            DataSourceMail.Clear();
+            OnPropertyChanged(() => DataSourceMail);
+            _listData.Clear();
+
+            FireStart();
+            Enabled = false;
+            OnPropertyChanged(() => Enabled);
+        }
+
+        protected override void OnComplete(bool res)
+        {
+            FireComplete(res);
+            Application.Current.Dispatcher.BeginInvoke(new Action(() => _listData.ForEach(s =>
+                                                                                              {
+                                                                                                  DataSourceMail.Add((EmailSearchData)s);
+                                                                                              })), null);
+            OnPropertyChanged(() => DataSourceMail);
+            Enabled = true;
+            OnPropertyChanged(() => Enabled);
+
         }
 
         #region IUIView

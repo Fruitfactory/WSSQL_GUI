@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using WSUI.Infrastructure.Core;
 
 namespace WSUI.Module.Interface
 {
@@ -9,5 +10,6 @@ namespace WSUI.Module.Interface
     {
         event EventHandler Start;
         event EventHandler Complete;
+        List<BaseSearchData> MainDataSource { get; }
     }
 }

@@ -41,122 +41,46 @@
                             </Style.Triggers>
             </Style>
 
-            <ControlTemplate x:Key="SimpleExpanderButtonTemp" 
-             TargetType="{x:Type ToggleButton}">
-                <Border x:Name="ExpanderButtonBorder"
-                    Background="{TemplateBinding Background}"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}"
-                    Padding="{TemplateBinding Padding}"
-                    >
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Rectangle Fill="Transparent"
-                       Grid.ColumnSpan="2"/>
-                        <Ellipse Name="Circle"
-                 Grid.Column="0"
-                 Stroke="Black"
-                 Width="20"
-                 Height="20"
-                 HorizontalAlignment="Center"
-                 VerticalAlignment="Center"
-                 />
-                        <Path x:Name="Sign"
-              Grid.Column="0"
-              Data="M 0,5 H 10 M 5,0 V 10 Z"
-              Stroke="#FF666666"
-              Width="10"
-              Height="10"
-              StrokeThickness="2"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              RenderTransformOrigin="0.5,0.5"
-              >
-                            <Path.RenderTransform>
-                                <RotateTransform Angle="0"/>
-                            </Path.RenderTransform>
-                        </Path>
-                        <ContentPresenter x:Name="HeaderContent"
-                          Grid.Column="1"
-                          Margin="4,0,0,0"
-                          ContentSource="Content"/>
-                    </Grid>
-                </Border>
-                <ControlTemplate.Triggers>
-                    <!--Change the sign to minus when toggled-->
-                    <Trigger Property="IsChecked"
-                 Value="True">
-                        <Setter Property="Data" 
-               TargetName="Sign" Value="M 0,5 H 10 Z"/>
-                    </Trigger>
-
-                    <!-- MouseOver, Pressed behaviours-->
-                    <Trigger Property="IsMouseOver"
-                         Value="true">
-                        <Setter Property="Stroke"
-                            Value="#FF3C7FB1"
-                            TargetName="Circle"/>
-                        <Setter Property="Stroke"
-                            Value="#222"
-                            TargetName="Sign"/>
-                    </Trigger>
-                    <Trigger Property="IsPressed"
-                         Value="true">
-                        <Setter Property="Stroke"
-                            Value="#FF526C7B"
-                            TargetName="Circle"/>
-                        <Setter Property="StrokeThickness"
-                            Value="1.5"
-                            TargetName="Circle"/>
-                        <Setter Property="Stroke"
-                            Value="#FF003366"
-                            TargetName="Sign"/>
-                    </Trigger>
-                </ControlTemplate.Triggers>
-            </ControlTemplate>
+           
 
         </ResourceDictionary>
     </Controls:MetroContentControl.Resources>
-    <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.60*"/>
-            <ColumnDefinition Width="0.40*"/>
-        </Grid.ColumnDefinitions>  
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="0.25*"/>
-            <RowDefinition Height="0.25*"/>
-            <RowDefinition Height="0.25*"/>
-        </Grid.RowDefinitions>
-        <Image Grid.Row="0" Grid.Column="0" Source="{Binding Contact.Foto,UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
-        <StackPanel Grid.Row="0" Grid.Column="1"  Orientation="Vertical" Margin="5">
-            <ItemsControl ItemsSource="{Binding Path=Contact.EmailList,UpdateSourceTrigger=PropertyChanged}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <!--<Button Style="{StaticResource LinkButton}" Command="{Binding Path=DataContext.EmailClickCommand,ElementName=this}" 
-                                CommandParameter="{Binding}" Content="{Binding}"></Button>-->
-                        <TextBlock><Hyperlink Command="{Binding Path=DataContext.EmailClickCommand,ElementName=this}" CommandParameter="{Binding}" >
+    <Expander Header="{Binding Path=Contact.Name,UpdateSourceTrigger=PropertyChanged}" 
+                Style="{StaticResource ResourceKey=ExpanderStyleMetro}"  Visibility="{Binding Visible,UpdateSourceTrigger=PropertyChanged}">
+            <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.60*"/>
+                    <ColumnDefinition Width="0.40*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="0.25*"/>
+                    <RowDefinition Height="0.25*"/>
+                </Grid.RowDefinitions>
+                <Image Grid.Row="0" Grid.Column="0" Source="{Binding Contact.Foto,UpdateSourceTrigger=PropertyChanged}" Margin="1"/>
+                <StackPanel Grid.Row="0" Grid.Column="1"  Orientation="Vertical" Margin="5">
+                    <ItemsControl ItemsSource="{Binding Path=Contact.EmailList,UpdateSourceTrigger=PropertyChanged}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock><Hyperlink Command="{Binding Path=DataContext.EmailClickCommand,ElementName=this}" CommandParameter="{Binding}" >
                                 <TextBlock Text="{Binding}"/>                        
                             </Hyperlink>
                         </TextBlock>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2" Margin="4">
-            <TextBlock Text="Contact name:"  FontWeight="Bold" Margin="4"/>
-            <TextBlock Text="{Binding Path=Contact.Name,UpdateSourceTrigger=PropertyChanged}" Margin="4" 
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2" Margin="4">
+                    <TextBlock Text="Contact name:"  FontWeight="Bold" Margin="4"/>
+                    <TextBlock Text="{Binding Path=Contact.Name,UpdateSourceTrigger=PropertyChanged}" Margin="4" 
                        Foreground="Blue"/>
-        </StackPanel>
+                </StackPanel>
 
-        <Expander Header="Details" Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"
-                 >
-            <StackPanel Orientation="Vertical" >
-                <TextBlock Text="Contact's emails: " Margin="4" FontStyle="Italic" FontWeight="Bold" FontSize="14"></TextBlock>
+
+
+            <StackPanel Orientation="Vertical"  Grid.Row="2" Grid.Column="0"  Grid.ColumnSpan="2" >
                 <ListBox ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
                           ItemTemplateSelector="{StaticResource templateSelector}"
                           SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
@@ -165,8 +89,8 @@
 
                 </ListBox>
             </StackPanel>
+            </Grid>
         </Expander>
 
 
-    </Grid>
 </Controls:MetroContentControl>

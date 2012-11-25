@@ -17,7 +17,8 @@ namespace WSUI.Module.Commands
 
         protected override bool OnCanExecute()
         {
-            if (_kindItem != null && _kindItem.Current != null && _kindItem.Current.Type == TypeSearchItem.File)
+            if (_kindItem != null && _kindItem.Current != null && 
+                (_kindItem.Current.Type == TypeSearchItem.File || _kindItem.Current.Type == TypeSearchItem.Attachment))
                 return true;
             return false;
         }
@@ -26,7 +27,17 @@ namespace WSUI.Module.Commands
         {
             try
             {
-                string filename = SearchItemHelper.GetFileName(_kindItem.Current);
+                string filename = string.Empty;
+                switch (_kindItem.Current.Type)
+                {
+                    case TypeSearchItem.File:
+                        filename = SearchItemHelper.GetFileName(_kindItem.Current);
+                        break;
+                    case TypeSearchItem.Attachment:
+                        filename = TempFileManager.Instance.GenerateTempFileName(_kindItem.Current) ?? OutlookHelper.Instance.GetAttachmentTempFileName(_kindItem.Current);
+                        break;
+                }
+                
                 if (string.IsNullOrEmpty(filename))
                     return;
                 var mail = OutlookHelper.Instance.CreateNewEmail();

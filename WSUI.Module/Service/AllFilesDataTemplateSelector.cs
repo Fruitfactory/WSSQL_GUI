@@ -16,6 +16,8 @@ namespace WSUI.Module.Service
         public DataTemplate UserTemplate { get; set; }
         public DataTemplate FileTemplate { get; set; }
         public DataTemplate AttachmentTemplate { get; set; }
+        public DataTemplate PictureTemplate { get; set; }
+        public DataTemplate CalendarTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
@@ -32,6 +34,10 @@ namespace WSUI.Module.Service
                     return FileTemplate;
                 case TypeSearchItem.Attachment:
                     return AttachmentTemplate;
+                case TypeSearchItem.Picture:
+                    return PictureTemplate;
+                case TypeSearchItem.Calendar:
+                    return CalendarTemplate;
                 default:
                     return NoneTemplate;
             }

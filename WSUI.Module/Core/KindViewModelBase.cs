@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.OleDb;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,6 +42,7 @@ namespace WSUI.Module.Core
         private string _searchString = string.Empty;
         protected Dictionary<TypeSearchItem, ICommandStrategy> _commandStrategies;
         private ICommandStrategy _currentStrategy;
+        protected IMainViewModel _parentViewModel;
 
         protected readonly IUnityContainer _container;
 
@@ -53,7 +55,6 @@ namespace WSUI.Module.Core
             KeyDownCommand = new DelegateCommand<KeyEventArgs>(KeyDown, o => true);
             Enabled = true;
             DataSource = new ObservableCollection<BaseSearchData>();
-            //OnPropertyChanged(() => DataSource);
         }
 
 
@@ -117,7 +118,25 @@ namespace WSUI.Module.Core
 
         protected virtual string CreateQuery()
         {
-            return string.Empty;
+            var searchCriteria = SearchString;
+            string res = string.Empty;
+            if (searchCriteria.IndexOf(' ') > -1)
+            {
+                StringBuilder temp = new StringBuilder();
+                var list = searchCriteria.Split(' ').ToList();
+                if (list == null || list.Count == 1)
+                    return searchCriteria;
+                res = string.Format(_queryTemplate, list[0]);
+                for (int i = 1; i < list.Count; i++)
+                {
+                    temp.Append(string.Format(_queryAnd, list[i]));
+                }
+                res += temp.ToString();
+            }
+            else
+                res = string.Format(_queryTemplate, searchCriteria);
+
+            return res;
         }
 
         protected virtual void OnStart()
@@ -126,9 +145,7 @@ namespace WSUI.Module.Core
             OnPropertyChanged(() => DataSource);
             _listData.Clear();
 
-            EventHandler temp = Start;
-            if (temp != null)
-                temp(this,new EventArgs());
+           FireStart();
             Enabled = false;
             OnPropertyChanged(() => Enabled);
             
@@ -136,12 +153,8 @@ namespace WSUI.Module.Core
 
         protected virtual void OnComplete(bool res)
         {
-            EventHandler<EventArgs<bool>> temp = Complete;
-            if(temp != null)
-                temp(this,new EventArgs<bool>(res));
-
-            Application.Current.Dispatcher.BeginInvoke(new Action(() => _listData.ForEach(s => DataSource.Add(s))), null);
-
+            FireComplete(res);
+            Application.Current.Dispatcher.BeginInvoke(new Action(() => _listData.ForEach(s => { DataSource.Add(s); _parentViewModel.MainDataSource.Add(s);})), null);
             OnPropertyChanged(() => DataSource);
             Enabled = true;
             OnPropertyChanged(() => Enabled);
@@ -193,6 +206,24 @@ namespace WSUI.Module.Core
             _commandStrategies  = new Dictionary<TypeSearchItem, ICommandStrategy>();
         }
 
+        protected virtual void OnFilterData()
+        {
+           
+        }
+
+        protected void FireStart()
+        {
+            EventHandler temp = Start;
+            if (temp != null)
+                temp(this, new EventArgs());
+        }
+
+        protected  void FireComplete(bool res)
+        {
+            EventHandler<EventArgs<bool>> temp = Complete;
+            if (temp != null)
+                temp(this, new EventArgs<bool>(res));
+        }
 
         #region IKindItem
 
@@ -208,9 +239,14 @@ namespace WSUI.Module.Core
             {
                 _searchString = value;
                 OnSearchStringChanged();
+                OnPropertyChanged(() => SearchString);
             }
         }
-
+        public IMainViewModel Parent
+        {
+            get { return _parentViewModel; }
+            set { _parentViewModel = value; }
+        }
         public string Prefix { get { return _prefix; } }
         public int ID { get; protected set; }
         public string UIName { get; protected set; }
@@ -240,6 +276,11 @@ namespace WSUI.Module.Core
         public void Init()
         {
             OnInit();
+        }
+
+        public void FilterData()
+        {
+            OnFilterData();
         }
 
         public ObservableCollection<IWSCommand> Commands

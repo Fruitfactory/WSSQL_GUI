@@ -24,8 +24,8 @@
 
     <Controls:MetroWindow.WindowCommands>
         <Controls:WindowCommands>
-            <Button Content="Light" Click="Button_Click"/>
-            <Button Content="Dark"  Click="Button_Click_1"/>
+            <!--<Button Content="Light" Click="Button_Click"/>
+            <Button Content="Dark"  Click="Button_Click_1"/>-->
         </Controls:WindowCommands>
     </Controls:MetroWindow.WindowCommands>
 
@@ -36,15 +36,15 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.15*" />
+                <ColumnDefinition Width="0.2*" />
                 <ColumnDefinition Width="0.5*" />
                 <ColumnDefinition Width="2"/>
                 <ColumnDefinition Width="0.5*"/>
             </Grid.ColumnDefinitions>
-            <ContentControl Grid.Row="0" Grid.ColumnSpan="4" Margin="4"
+            <ContentControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Margin="4"
                             cal:RegionManager.RegionName="SearchRegion"/>
             <ContentControl Grid.Row="1" Grid.Column="0" Margin="4 4 0 4"
-                            cal:RegionManager.RegionName="StrategyRegion" HorizontalAlignment="Right"/>
+                            cal:RegionManager.RegionName="StrategyRegion" HorizontalAlignment="Stretch"/>
             <ContentControl Grid.Row="1" Grid.Column="1" Margin="0 4 0 4"
                             cal:RegionManager.RegionName="DataRegion"/>
             <ContentControl Grid.Row="1" Grid.Column="3" Margin="0 4 4 4"

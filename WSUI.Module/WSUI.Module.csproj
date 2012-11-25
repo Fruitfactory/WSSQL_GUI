@@ -96,6 +96,7 @@
     <Compile Include="Strategy\EmailCommandStrategy.cs" />
     <Compile Include="Strategy\FileCommandStrategy.cs" />
     <Compile Include="ViewModel\AllFilesViewModel.cs" />
+    <Compile Include="ViewModel\AttachmentViewModel.cs" />
     <Compile Include="ViewModel\ContactViewModel.cs" />
     <Compile Include="ViewModel\EmailViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -104,6 +105,12 @@
     </Compile>
     <Compile Include="View\AllFilesSettingsView.xaml.cs">
       <DependentUpon>AllFilesSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AttachmentDataView.xaml.cs">
+      <DependentUpon>AttachmentDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AttachmentSettingsView.xaml.cs">
+      <DependentUpon>AttachmentSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ContactDataView.xaml.cs">
       <DependentUpon>ContactDataView.xaml</DependentUpon>
@@ -157,6 +164,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\AttachmentDataView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AttachmentSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ContactDataView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -204,6 +219,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\attachment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\contact.png" />
+    <Resource Include="Images\date.png" />
+    <Resource Include="Images\pictures.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

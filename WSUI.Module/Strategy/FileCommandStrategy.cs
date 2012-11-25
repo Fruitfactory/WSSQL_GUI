@@ -13,7 +13,7 @@ namespace WSUI.Module.Strategy
         public FileCommandStrategy(IKindItem kindItem)
             :base(kindItem)
         {
-            Type = TypeSearchItem.File;
+            Type = TypeSearchItem.File | TypeSearchItem.Attachment;
         }
 
         protected override void OnInit()

@@ -29,9 +29,10 @@ namespace WSUI.Module.ViewModel
         private const string InboxFolder = HelperConst.Inbox2;
 
         private const string QueryForGroupEmails =
-            "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.Message.ConversationID,'{0}*')   ORDER BY System.Message.DateReceived DESC) ";
+            "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) AND CONTAINS(System.Message.ConversationID,'{1}*')   ORDER BY System.Message.DateReceived DESC) ";
 
         private List<string> _listID = new List<string>();
+        private string _folder = string.Empty;
 
         public AllFilesViewModel(IUnityContainer container, ISettingsView<AllFilesViewModel> settingsView,
                                  IDataView<AllFilesViewModel> dataView)
@@ -46,7 +47,7 @@ namespace WSUI.Module.ViewModel
                 "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified FROM SystemIndex WHERE Contains(*,'{0}*')";
             _queryAnd = " AND Contains(*,'{0}*')";
             ID = 0;
-            _name = "All Files";
+            _name = "Everething";
             UIName = _name;
             _prefix = "AllFiles";
             IsOpen = false;
@@ -75,7 +76,7 @@ namespace WSUI.Module.ViewModel
         {
             string name = reader[0].ToString();
             string file = reader[1].ToString();
-            var kind = reader[2];
+            var kind = reader[2] as object[];
             string id = reader[3].ToString();
             string display = reader[4].ToString();
             var date = reader[5].ToString();
@@ -83,64 +84,46 @@ namespace WSUI.Module.ViewModel
             if (kind != null && IsEmail(kind) && !_listID.Any(i => i == id))
             {
                 var newValue = GroupEmail(name, id);
+                if(newValue == null)
+                    return;
                 _listID.Add(id);
-                name = newValue.Item1;
-                file = newValue.Item2;
-                tag = newValue.Item3;
+                TypeSearchItem type = SearchItemHelper.GetTypeItem(file);
+                newValue.Type = type;
+                _listData.Add(newValue);
             }
-            else if (kind != null && IsEmail(kind) && _listID.Any(i => i == id))
+            else if (kind != null && IsEmail(value: kind) && _listID.Any(i => i == id))
                 return;
-            TypeSearchItem type = SearchItemHelper.GetTypeItem(file);
-            BaseSearchData bs = new BaseSearchData()
-                                    {
-                                        Name =  name,
-                                        Path =  file,
-                                        Type = type,
-                                        ID = Guid.NewGuid(),
-                                        Display = display,
-                                        DateModified = DateTime.Parse(date),
-                                        Tag = tag
-                                    };
-            _listData.Add(bs);
-        }
-
-        protected override string CreateQuery()
-        {
-            var searchCriteria = SearchString;
-            string res = string.Empty;
-            if (searchCriteria.IndexOf(' ') > -1)
-            {
-                StringBuilder temp = new StringBuilder();
-                var list = searchCriteria.Split(' ').ToList();
-                if (list == null || list.Count == 1)
-                    return searchCriteria;
-                res = string.Format(_queryTemplate, list[0]);
-                for (int i = 1; i < list.Count; i++)
-                {
-                    temp.Append(string.Format(_queryAnd, list[i]));
-                }
-                res += temp.ToString();
-            }
             else
-                res = string.Format(_queryTemplate, searchCriteria);
-
-            return res;
+            {
+                TypeSearchItem type = SearchItemHelper.GetTypeItem(file,kind != null && kind.Length > 0 ? kind[0].ToString() : string.Empty);
+                BaseSearchData bs = new BaseSearchData()
+                                        {
+                                            Name = name,
+                                            Path = file,
+                                            Type = type,
+                                            ID = Guid.NewGuid(),
+                                            Display = display,
+                                            DateModified = DateTime.Parse(date),
+                                            Tag = tag
+                                        };
+                _listData.Add(bs);
+            }
         }
 
         protected override void OnComplete(bool res)
         {
-            base.OnComplete(res);
+            if(_parentViewModel != null && _parentViewModel.MainDataSource  != null)
+                _parentViewModel.MainDataSource.Clear();
             _listID.Clear();
+            base.OnComplete(res);
+
             Application.Current.Dispatcher.BeginInvoke(new Action(() => UpdateData()), null);
-            //UpdateData();
         }
 
-        private Tuple<string, string,string> GroupEmail(string name, string id)
+        private EmailSearchData GroupEmail(string name, string id)
         {
-            var query = string.Format(QueryForGroupEmails, id); //,InboxFolder
-            int count = 0;
-            string path = string.Empty;
-            string r = string.Empty;
+            var query = string.Format(QueryForGroupEmails, _folder, id); //,InboxFolder
+            EmailSearchData data = null;
             OleDbDataReader reader = null;
             OleDbConnection con = new OleDbConnection(_connectionString);
             OleDbCommand cmd = new OleDbCommand(query, con);
@@ -151,10 +134,7 @@ namespace WSUI.Module.ViewModel
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    var resg = ReadGroup(reader);
-                    count = resg.Item1;
-                    path = resg.Item2;
-                    r = resg.Item3;
+                    data = ReadGroup(reader);
                     break;
                 }
             }
@@ -179,18 +159,39 @@ namespace WSUI.Module.ViewModel
             }
 
 
-            return new Tuple<string, string,string>(string.Format("{0}, ({1})", name, count), path,r);
+            return data;
         }
 
-        private Tuple<int, string,string> ReadGroup(IDataReader reader)
+        private EmailSearchData ReadGroup(IDataReader reader)
         {
             var groups = EmailGroupReaderHelpers.ReadGroups(reader);
             if (groups == null)
-                return default(Tuple<int, string,string>);
+                return null;
             var item = groups.Items[0];
-            
-            var res = new Tuple<int, string,string>(groups.Items.Distinct(new EmailSearchDataComparer()).Count(), item.Path,item.Recepient);
-            return res;
+            TypeSearchItem type = SearchItemHelper.GetTypeItem(item.Path);
+            EmailSearchData si = new EmailSearchData()
+            {
+                Subject = item.Subject,
+                Recepient = string.Format("{0}",
+                item.Recepient),
+                Count = groups.Items.Count.ToString(),
+                Name = item.Name,
+                Path = item.Path,
+                Date = item.Date,
+                Type = type,
+                ID = Guid.NewGuid()
+            };
+            try
+            {
+
+                si.Attachments = OutlookHelper.Instance.GetAttachments(item);
+
+            }
+            catch (Exception e)
+            {
+                WSSqlLogger.Instance.LogError(e.Message);
+            }
+            return si;
         }
 
         private bool IsEmail(object value)
@@ -206,7 +207,14 @@ namespace WSUI.Module.ViewModel
         {
             base.OnInit();
             _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
-            _commandStrategies.Add(TypeSearchItem.File, CommadStrategyFactory.CreateStrategy(TypeSearchItem.File, this));
+            var fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.File, this);
+            _commandStrategies.Add(TypeSearchItem.File, fileAttach);
+            _commandStrategies.Add(TypeSearchItem.Attachment,fileAttach);
+            var list = OutlookHelper.Instance.GetFolderList();
+            if (list.IndexOf(HelperConst.Inbox1) > -1)
+                _folder = HelperConst.Inbox1;
+            else if (list.IndexOf(HelperConst.Inbox2) > -1)
+                _folder = HelperConst.Inbox2;
         }
 
 

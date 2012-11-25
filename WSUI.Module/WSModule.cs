@@ -55,6 +55,10 @@ namespace WSUI.Module
             //contact;
             _unityContainer.RegisterType<ISettingsView<ContactViewModel>, ContactSettingsView>();
             _unityContainer.RegisterType<IDataView<ContactViewModel>, ContactDataView>();
+            //attachment
+            _unityContainer.RegisterType<ISettingsView<AttachmentViewModel>, AttachmentSettingsView>();
+            _unityContainer.RegisterType<IDataView<AttachmentViewModel>, AttachmentDataView>();
+
         }
 
     }

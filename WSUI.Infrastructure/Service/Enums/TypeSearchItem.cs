@@ -5,12 +5,16 @@ using System.Text;
 
 namespace WSUI.Infrastructure.Service.Enums
 {
+    [Flags]
     public enum TypeSearchItem
     {
-        File,
-        Email,
-        Attachment,
-        Contact,
-        None
+        None = 0x00,
+        File = 0x01,
+        Email = 0x02,
+        Attachment = 0x04,
+        Contact = 0x08,
+        Picture = 0x10,
+        Calendar = 0x20,
+        FileAll = File | Attachment | Picture 
     }
 }

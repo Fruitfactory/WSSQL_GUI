@@ -4,31 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                              HorizontalContentAlignment="Stretch"
              >
-    <Controls:MetroContentControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Controls:MetroContentControl.Resources>
-    
-    <!--<Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>-->    
-    
-        <StackPanel Orientation="Vertical" Width="100">
-            <ItemsControl ItemsSource="{Binding Path=KindsCollection,UpdateSourceTrigger=PropertyChanged}" 
-                          >
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <ToggleButton Command="{Binding Path=ChooseCommand}" Content="{Binding Path=UIName}" Margin="1" IsChecked="{Binding Toggle,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                      />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
-    <!--</Grid>-->
+    <DockPanel HorizontalAlignment="Stretch" x:Name="panel" Margin="40 0 0 0">
+        
+        <ItemsControl ItemsSource="{Binding Path=KindsCollection,UpdateSourceTrigger=PropertyChanged}" 
+                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ToggleButton Command="{Binding Path=ChooseCommand}" Content="{Binding Path=UIName}"
+                                  HorizontalContentAlignment="Right" Margin="0 2 0 2" FontSize="16" Width="{Binding ElementName=panel,Path=Width}"
+                                  IsChecked="{Binding Toggle,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DockPanel>
 </Controls:MetroContentControl>

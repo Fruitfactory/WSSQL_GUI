@@ -28,7 +28,7 @@ namespace WSUI.Module.ViewModel
 
         private ContactSuggestingService _contactSuggesting;
 
-        public ContactViewModel(IUnityContainer container,ISettingsView<ContactViewModel> settingsView, IDataView<ContactViewModel> dataView )
+        public ContactViewModel(IUnityContainer container, ISettingsView<ContactViewModel> settingsView, IDataView<ContactViewModel> dataView)
             :base(container)
         {
             SettingsView = settingsView;
@@ -38,8 +38,8 @@ namespace WSUI.Module.ViewModel
 
             _queryTemplate = "SELECT TOP 1 System.ItemName, System.Contact.FirstName, System.Contact.LastName,System.Contact.EmailAddress,System.Contact.EmailAddress2,System.Contact.EmailAddress3 FROM SystemIndex WHERE System.Kind = 'contact' AND ( CONTAINS(System.Contact.FirstName,'\"{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\"') )";
             _queryAnd = " AND ( CONTAINS(System.Contact.FirstName,'\"{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\"') ) ";
-            ID = 2;
-            _name = "Contact";
+            ID = 1;
+            _name = "People";
             UIName = _name;
             _prefix = "Contact";
             
@@ -73,10 +73,15 @@ namespace WSUI.Module.ViewModel
 
         public ObservableCollection<string> DataSourceSuggest { get; set; }
 
+        public Visibility Visible
+        {
+            get { return _contactData != null ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
 
         protected override void DoAdditionalQuery()
         {
-            if (string.IsNullOrEmpty(_currentEmail))
+            if (string.IsNullOrEmpty(_currentEmail)) 
                 return;
             _folder = Folder;
             var query = string.Format(QueryContactEmail, _folder, _currentEmail);
@@ -165,6 +170,7 @@ namespace WSUI.Module.ViewModel
         {
             base.OnComplete(res);
             OnPropertyChanged(() => Contact);
+            OnPropertyChanged(() => Visible);
         }
 
         protected override void OnSearchStringChanged()
@@ -184,11 +190,12 @@ namespace WSUI.Module.ViewModel
             EmailSearchData si = new EmailSearchData()
             {
                 Subject = item.Subject,
-                Recepient = string.Format("{0} ({1})",
-                item.Recepient, groups.Items.Count),
+                Recepient = string.Format("{0}",
+                item.Recepient),
                 Name = item.Name,
                 Path = item.Path,
                 Date = item.Date,
+                Count = groups.Items.Count.ToString(),
                 Type = type,
                 ID = Guid.NewGuid()
             };

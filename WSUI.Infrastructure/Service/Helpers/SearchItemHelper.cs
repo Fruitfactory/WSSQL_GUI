@@ -20,7 +20,11 @@ namespace WSUI.Infrastructure.Service.Helpers
 
         public static TypeSearchItem GetTypeItem(string itemurl,string tag = "")
         {
-            if (itemurl.IndexOf(FILEPREFIX1) > -1)
+            if( tag == "contact")
+                return TypeSearchItem.Contact;
+            else if(tag == "calendar")
+                return TypeSearchItem.Calendar;
+            else if (itemurl.IndexOf(FILEPREFIX1) > -1)
             {
                 return TypeSearchItem.File;
             }
@@ -32,12 +36,14 @@ namespace WSUI.Infrastructure.Service.Helpers
             {
                 return TypeSearchItem.Attachment;
             }
+            else if (tag == "picture")
+                return TypeSearchItem.Picture;
             else if (itemurl.IndexOf(MAPIPREFIX) > -1)
             {
                 return TypeSearchItem.Email;
             }
-            else if( tag == "contact")
-                return TypeSearchItem.Contact;
+            
+
             return TypeSearchItem.None;
         }
 
@@ -52,6 +58,8 @@ namespace WSUI.Infrastructure.Service.Helpers
                     return OutlookHelper.Instance.GetEMailTempFileName(item);
                 case TypeSearchItem.Attachment:
                     return OutlookHelper.Instance.GetAttachmentTempFileName(item);
+                case TypeSearchItem.Calendar:
+                    return OutlookHelper.Instance.GetCalendarTempFileName(item);    
                 case TypeSearchItem.File:
                     return GetFileName(item.Path);
                 default:
