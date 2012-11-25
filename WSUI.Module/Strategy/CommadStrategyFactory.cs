@@ -20,6 +20,7 @@ namespace WSUI.Module.Strategy
                 case TypeSearchItem.File:
                 case TypeSearchItem.Attachment:
                 case TypeSearchItem.FileAll:
+                case TypeSearchItem.Picture:
                     strategy = new FileCommandStrategy(kindItem);
                     break;
             }

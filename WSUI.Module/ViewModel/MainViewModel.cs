@@ -201,10 +201,15 @@ namespace WSUI.Module.ViewModel
         {
             _currentData = args.Value;
             var filename = SearchItemHelper.GetFileName(_currentData);
-            if (PreviewView != null)
+            if (PreviewView != null )
             {
-                PreviewView.SetPreviewFile(filename);
-                PreviewView.SetSearchPattern(_currentItem != null ? _currentItem.SearchString : string.Empty);
+                if (!string.IsNullOrEmpty(filename))
+                {
+                    PreviewView.SetPreviewFile(filename);
+                    PreviewView.SetSearchPattern(_currentItem != null ? _currentItem.SearchString : string.Empty);
+                }
+                else 
+                    PreviewView.ClearPreview();
             }
         }
 

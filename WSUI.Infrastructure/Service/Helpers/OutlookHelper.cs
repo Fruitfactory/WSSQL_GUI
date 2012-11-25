@@ -357,14 +357,9 @@ namespace WSUI.Infrastructure.Service.Helpers
                 Outlook.NameSpace ns = _app.GetNamespace("MAPI");
                 Outlook.MAPIFolder calendarFolder = ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderCalendar);
                 Outlook.Items calendarItems = calendarFolder.Items;
-                foreach (Outlook.AppointmentItem calendarItem in calendarItems)
-                {
-                    if (calendarItem.EntryID == id)
-                    {
-                        appointItem = calendarItem;
-                        break;
-                    }
-                }
+
+                appointItem = calendarItems.OfType<Outlook.AppointmentItem>().ToList().Find(a => a.EntryID == id);
+
             }
             catch (Exception ex)
             {

@@ -207,9 +207,11 @@ namespace WSUI.Module.ViewModel
         {
             base.OnInit();
             _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
-            var fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.File, this);
+            var fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
             _commandStrategies.Add(TypeSearchItem.File, fileAttach);
             _commandStrategies.Add(TypeSearchItem.Attachment,fileAttach);
+            _commandStrategies.Add(TypeSearchItem.Picture, fileAttach);
+            _commandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
             var list = OutlookHelper.Instance.GetFolderList();
             if (list.IndexOf(HelperConst.Inbox1) > -1)
                 _folder = HelperConst.Inbox1;

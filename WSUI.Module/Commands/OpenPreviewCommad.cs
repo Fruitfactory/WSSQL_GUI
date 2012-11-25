@@ -21,8 +21,9 @@ namespace WSUI.Module.Commands
 
         protected override bool OnCanExecute()
         {
+
             if (_kindItem != null && _kindItem.Current != null &&
-                (_kindItem.Current.Type == TypeSearchItem.File || _kindItem.Current.Type == TypeSearchItem.Attachment))
+                ((_kindItem.Current.Type & TypeSearchItem.FileAll) == _kindItem.Current.Type))
                 return true;
             return false;
         }
@@ -33,6 +34,8 @@ namespace WSUI.Module.Commands
             switch (_kindItem.Current.Type)
             {
                 case TypeSearchItem.File:
+                case TypeSearchItem.Picture:
+                case TypeSearchItem.FileAll:
                     fileName = SearchItemHelper.GetFileName(_kindItem.Current);
                     break;
                 case TypeSearchItem.Attachment:

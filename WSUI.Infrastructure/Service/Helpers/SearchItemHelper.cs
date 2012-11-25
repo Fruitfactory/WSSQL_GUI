@@ -24,6 +24,12 @@ namespace WSUI.Infrastructure.Service.Helpers
                 return TypeSearchItem.Contact;
             else if(tag == "calendar")
                 return TypeSearchItem.Calendar;
+            else if (itemurl.IndexOf(MAPIPREFIX) > -1 && itemurl.LastIndexOf(ATSUFFIX) > -1) 
+            {
+                return TypeSearchItem.Attachment;
+            }
+            else if (tag == "picture")
+                return TypeSearchItem.Picture;
             else if (itemurl.IndexOf(FILEPREFIX1) > -1)
             {
                 return TypeSearchItem.File;
@@ -32,12 +38,6 @@ namespace WSUI.Infrastructure.Service.Helpers
             {
                 return TypeSearchItem.File;
             }
-            else if (itemurl.IndexOf(MAPIPREFIX) > -1 && itemurl.LastIndexOf(ATSUFFIX) > -1) 
-            {
-                return TypeSearchItem.Attachment;
-            }
-            else if (tag == "picture")
-                return TypeSearchItem.Picture;
             else if (itemurl.IndexOf(MAPIPREFIX) > -1)
             {
                 return TypeSearchItem.Email;
@@ -61,6 +61,7 @@ namespace WSUI.Infrastructure.Service.Helpers
                 case TypeSearchItem.Calendar:
                     return OutlookHelper.Instance.GetCalendarTempFileName(item);    
                 case TypeSearchItem.File:
+                case TypeSearchItem.Picture:
                     return GetFileName(item.Path);
                 default:
                     return null;
