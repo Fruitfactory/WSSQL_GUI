@@ -16,7 +16,7 @@
         </ResourceDictionary>
     </Controls:MetroContentControl.Resources>
             <Grid>
-        <ListBox ItemsSource="{Binding Path=DataSourceAttachment,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+        <ListBox ItemsSource="{Binding Path=DataSourceAttachment,UpdateSourceTrigger=PropertyChanged}"
                  ItemTemplateSelector="{StaticResource templateSelector}"
                  SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  ContextMenu="{StaticResource ResourceKey=contextMenu}"
