@@ -9,7 +9,7 @@
     <DockPanel HorizontalAlignment="Stretch" x:Name="panel" Margin="40 0 0 0">
         
         <ItemsControl ItemsSource="{Binding Path=KindsCollection,UpdateSourceTrigger=PropertyChanged}" 
-                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <ToggleButton Command="{Binding Path=ChooseCommand}" Content="{Binding Path=UIName}"

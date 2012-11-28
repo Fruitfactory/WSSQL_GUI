@@ -43,6 +43,7 @@ namespace WSUI.Module.Core
         protected Dictionary<TypeSearchItem, ICommandStrategy> _commandStrategies;
         private ICommandStrategy _currentStrategy;
         protected IMainViewModel _parentViewModel;
+        protected volatile bool _isInterupt = false;
 
         protected readonly IUnityContainer _container;
 
@@ -82,6 +83,8 @@ namespace WSUI.Module.Core
                 while (dataReader.Read())
                 {
                     ReadData(dataReader);
+                    if (_isInterupt)
+                        break;
                 }
 
             }
@@ -141,8 +144,6 @@ namespace WSUI.Module.Core
 
         protected virtual void OnStart()
         {
-            DataSource.Clear();
-            OnPropertyChanged(() => DataSource);
             _listData.Clear();
 
            FireStart();
@@ -209,6 +210,12 @@ namespace WSUI.Module.Core
         protected virtual void OnFilterData()
         {
            
+        }
+
+        protected  void ClearDaraSource()
+        {
+            DataSource.Clear();
+            OnPropertyChanged(() => DataSource);
         }
 
         protected void FireStart()

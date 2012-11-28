@@ -27,10 +27,11 @@ namespace WSUI.Module.ViewModel
     {
         private const string KindGroup = "email";
         private const string InboxFolder = HelperConst.Inbox2;
-
+        private int _lastID = 0;
         private const string QueryForGroupEmails =
             "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) AND CONTAINS(System.Message.ConversationID,'{1}*')   ORDER BY System.Message.DateReceived DESC) ";
 
+        private int _countAdded = 0;
         private List<string> _listID = new List<string>();
         private string _folder = string.Empty;
 
@@ -44,7 +45,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
             // init
             _queryTemplate =
-                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified FROM SystemIndex WHERE Contains(*,'{0}*')";
+                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Search.EntryID FROM SystemIndex WHERE System.Search.EntryID > {1} AND Contains(*,'{0}*')";
             _queryAnd = " AND Contains(*,'{0}*')";
             ID = 0;
             _name = "Everething";
@@ -70,8 +71,6 @@ namespace WSUI.Module.ViewModel
         public bool IsOpen { get; set; }
         public ICommand FlyCommand { get; private set; }
 
-
-
         protected override void ReadData(IDataReader reader)
         {
             string name = reader[0].ToString();
@@ -80,6 +79,7 @@ namespace WSUI.Module.ViewModel
             string id = reader[3].ToString();
             string display = reader[4].ToString();
             var date = reader[5].ToString();
+            int.TryParse(reader[6].ToString(), out _lastID);
             string tag = string.Empty;
             if (kind != null && IsEmail(kind) && !_listID.Any(i => i == id))
             {
@@ -90,6 +90,7 @@ namespace WSUI.Module.ViewModel
                 TypeSearchItem type = SearchItemHelper.GetTypeItem(file);
                 newValue.Type = type;
                 _listData.Add(newValue);
+                _countAdded++;
             }
             else if (kind != null && IsEmail(value: kind) && _listID.Any(i => i == id))
                 return;
@@ -107,17 +108,61 @@ namespace WSUI.Module.ViewModel
                                             Tag = tag
                                         };
                 _listData.Add(bs);
+                _countAdded++;
             }
+            if (_countAdded == CountItemsInPage)
+                _isInterupt = true;
+        }
+
+        protected override string CreateQuery()
+        {
+            _countAdded = 0;
+            _isInterupt = false;
+            var searchCriteria = SearchString;
+            string res = string.Empty;
+            if (searchCriteria.IndexOf(' ') > -1)
+            {
+                StringBuilder temp = new StringBuilder();
+                var list = searchCriteria.Split(' ').ToList();
+                if (list == null || list.Count == 1)
+                    return searchCriteria;
+                res = string.Format(_queryTemplate, list[0],_lastID);
+                for (int i = 1; i < list.Count; i++)
+                {
+                    temp.Append(string.Format(_queryAnd, list[i]));
+                }
+                res += temp.ToString();
+            }
+            else
+                res = string.Format(_queryTemplate, searchCriteria,  _lastID);
+
+            return res;
         }
 
         protected override void OnComplete(bool res)
         {
-            if(_parentViewModel != null && _parentViewModel.MainDataSource  != null)
-                _parentViewModel.MainDataSource.Clear();
-            _listID.Clear();
+            
             base.OnComplete(res);
 
             Application.Current.Dispatcher.BeginInvoke(new Action(() => UpdateData()), null);
+        }
+
+        protected override void OnSearchStringChanged()
+        {
+            _lastID = 0;
+            _currentPageNumber = 0;
+            if(DataPage != null)
+                DataPage.Clear();
+            if(DataSourceOfPage  != null)
+                DataSourceOfPage.Clear();
+            DataSource.Clear();
+            _listID.Clear();
+            OnPropertyChanged(() => DataSource);
+            OnPropertyChanged(() => DataPage);
+            OnPropertyChanged(() => DataSourceOfPage);
+            if (_parentViewModel != null && _parentViewModel.MainDataSource != null)
+                _parentViewModel.MainDataSource.Clear();
+            ClearDaraSource();
         }
 
         private EmailSearchData GroupEmail(string name, string id)
@@ -183,9 +228,7 @@ namespace WSUI.Module.ViewModel
             };
             try
             {
-
                 si.Attachments = OutlookHelper.Instance.GetAttachments(item);
-
             }
             catch (Exception e)
             {
@@ -273,7 +316,7 @@ namespace WSUI.Module.ViewModel
             }
         }
 
-        private const int CountItemsInPage = 20;
+        private const int CountItemsInPage = 25;
         private const int MaxLinks = 10;
 
         private int _currentPageNumber = -1;
@@ -313,7 +356,7 @@ namespace WSUI.Module.ViewModel
                         IsVisited = false
                     });
                 }
-                _currentPageNumber = 0;
+                _currentPageNumber = _pageCount - 1;
                 SetCurrentPageSource();
                 UpdateLinks();
                 UpdateLink();
@@ -344,12 +387,13 @@ namespace WSUI.Module.ViewModel
             if(DataPage == null)
                 DataPage = new ObservableCollection<PageEntity>();
             DataPage.Clear();
-            for (int i = 0; i < MaxLinks; i++)
+            for (int i = _pageCount > MaxLinks ? _pageCount - MaxLinks : 0; i < (_pageCount > MaxLinks ? _pageCount : MaxLinks) ; i++)
             {
-                if (i >= _pages.Count)
+                if (i >= _pageCount)
                     break;
                 DataPage.Add(_pages[i]);
             }
+            
             OnPropertyChanged(() => DataPage);
         }
 
@@ -406,11 +450,30 @@ namespace WSUI.Module.ViewModel
         {
             if (_pages.Count == 0)
                 return;
-
             var curRight = DataPage[DataPage.Count - 1];
-            if (curRight.Number == _pages.Count - 1)
+
+            if (curRight.Number == _pageCount - 1 )
+            {
+                Search();
+            }
+            else 
+            {
+                int start = curRight.Number + 1;
+                for (int i = MaxLinks - 1; i >= 0; i--)
+                {
+                    DataPage[i] = _pages[start];
+                    start--;
+                }
+                UpdatedStatics();
+                OnPropertyChanged(() => DataPage);
+            }
+        }
+
+        private void MoveRightStep(int number)
+        {
+            if (number == _pages.Count - 1)
                 return;
-            int start = curRight.Number + 1;
+            int start = number + 1;
             for (int i = MaxLinks - 1; i >= 0; i--)
             {
                 DataPage[i] = _pages[start];

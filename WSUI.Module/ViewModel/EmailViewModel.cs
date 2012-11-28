@@ -125,6 +125,7 @@ namespace WSUI.Module.ViewModel
 
         protected override void OnStart()
         {
+            ClearDaraSource();
             DataSourceMail.Clear();
             OnPropertyChanged(() => DataSourceMail);
             _listData.Clear();

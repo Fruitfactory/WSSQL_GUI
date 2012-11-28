@@ -166,6 +166,12 @@ namespace WSUI.Module.ViewModel
             return res;
         }
 
+        protected override void OnStart()
+        {
+            ClearDaraSource();
+            base.OnStart();
+        }
+
         protected override void OnComplete(bool res)
         {
             base.OnComplete(res);

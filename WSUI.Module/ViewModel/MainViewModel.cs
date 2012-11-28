@@ -25,7 +25,7 @@ namespace WSUI.Module.ViewModel
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;
         private IKindItem _currentItem = null;
-        
+        private bool _enabled = true;
         private const string Interface = "WSUI.Module.Interface.IKindItem";
 
         private BaseSearchData _currentData = null;
@@ -81,6 +81,16 @@ namespace WSUI.Module.ViewModel
 
             }
             
+        }
+
+        public bool Enabled
+        {
+            get { return _enabled; }
+            set 
+            {
+                _enabled = value;
+                OnPropertyChanged(() => Enabled);
+            }
         }
 
         #region private
@@ -218,6 +228,7 @@ namespace WSUI.Module.ViewModel
             EventHandler temp = Start;
             if(temp != null)
                 temp(null, null);
+            Enabled = false;
         }
 
         private void OnComplete(object sender, EventArgs<bool> e)
@@ -225,6 +236,7 @@ namespace WSUI.Module.ViewModel
             EventHandler temp = Complete;
             if (temp != null)
                 temp(null, null);
+            Enabled = true;
         }
 
         private void OnError(object sender, EventArgs<bool> e)
@@ -250,7 +262,8 @@ namespace WSUI.Module.ViewModel
             Connect();
             CurrentKindChanged(_currentItem);
             _currentItem.FilterData();
-            _currentItem.SearchString = searchString;
+            if(!string.IsNullOrEmpty(searchString) && searchString != _currentItem.SearchString)
+                _currentItem.SearchString = searchString;
         }
 
         #endregion

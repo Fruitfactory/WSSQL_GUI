@@ -84,6 +84,7 @@ namespace WSUI.Module.ViewModel
 
         protected override void OnStart()
         {
+            ClearDaraSource();
             DataSourceAttachment.Clear();
             OnPropertyChanged(() => DataSourceAttachment);
             _listData.Clear();
