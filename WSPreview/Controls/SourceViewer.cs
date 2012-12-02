@@ -31,13 +31,14 @@ namespace C4F.DevKit.PreviewHandler.Controls
 
         public void LoadFile(string filename)
         {
-            if(_scintilla == null)
+            if (_scintilla == null)
                 return;
-            _scintilla.Text = File.ReadAllText(filename);
             _scintilla.UndoRedo.EmptyUndoBuffer();
             _scintilla.Modified = false;
             ConfigureScintilla();
             SetLanguage(filename);
+            var result = File.ReadAllLines(filename);
+            _scintilla.Text = result.ToString();
         }
 
 #endregion

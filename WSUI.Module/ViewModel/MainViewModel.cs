@@ -4,10 +4,14 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
+using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Core;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
@@ -210,16 +214,38 @@ namespace WSUI.Module.ViewModel
         private void OnCurrentItemChanged(object sender, EventArgs<BaseSearchData> args)
         {
             _currentData = args.Value;
-            var filename = SearchItemHelper.GetFileName(_currentData);
-            if (PreviewView != null )
+
+            try
             {
-                if (!string.IsNullOrEmpty(filename))
+                ProgressManager.Instance.StartOperation(new ProgressOperation()
+                                                            {
+                                                                Caption = "Loading...",
+                                                                DelayTime = 250,
+                                                                Canceled = false,
+                                                                Location =  Application.Current.MainWindow.PointToScreen(new Point(0, 0)),
+                                                                Size = new Size(Application.Current.MainWindow.ActualWidth, Application.Current.MainWindow.ActualHeight)
+                                                            });
+                var filename = SearchItemHelper.GetFileName(_currentData);
+                if (PreviewView != null)
                 {
-                    PreviewView.SetPreviewFile(filename);
-                    PreviewView.SetSearchPattern(_currentItem != null ? _currentItem.SearchString : string.Empty);
+                    if (!string.IsNullOrEmpty(filename))
+                    {
+                        PreviewView.SetPreviewFile(filename);
+                        PreviewView.SetSearchPattern(_currentItem != null
+                                                        ? _currentItem.SearchString
+                                                        : string.Empty);
+                    }
+                    else
+                        PreviewView.ClearPreview();
                 }
-                else 
-                    PreviewView.ClearPreview();
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+            finally
+            {
+                ProgressManager.Instance.StopOperation();
             }
         }
 

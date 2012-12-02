@@ -1,20 +1,29 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
 namespace WSUI.Infrastructure.Controls
 {
     /// <summary>
-    /// Interaction logic for HightliteTextBlock.xaml
+    /// Interaction logic for HightliteHyperlink.xaml
     /// </summary>
-    public partial class HightliteTextBlock : HightliteTextBlockBase
+    public partial class HightliteHyperlink
     {
-        public HightliteTextBlock()
+        public HightliteHyperlink()
         {
             InitializeComponent();
         }
-
 
         protected override void OnRender(DrawingContext drawingContext)
         {
@@ -57,6 +66,7 @@ namespace WSUI.Infrastructure.Controls
         {
             Run run = new Run(text);
             run.FontStyle = FontStyleLabel;
+            run.Foreground = ForegroundColor;
             if (isBold)
             {
                 run.FontWeight = FontWeights.ExtraBold;

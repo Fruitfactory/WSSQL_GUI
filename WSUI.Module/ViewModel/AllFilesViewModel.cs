@@ -59,7 +59,7 @@ namespace WSUI.Module.ViewModel
                                                           },
                                                           o => true);
 
-
+            EmailClickCommand = new DelegateCommand<object>(o => EmailClick(o), o => true);
             MoveFirstCommand = new DelegateCommand<object>(o => MoveToFirstInternal(),o => CanMoveLeft());
             MovePreviousCommand = new DelegateCommand<object>( o => MoveToLeft(), o => CanMoveLeft());
             MoveLastCoommand = new DelegateCommand<object>(o => MoveToLastInternal(), o => CanModeRight());
@@ -70,6 +70,7 @@ namespace WSUI.Module.ViewModel
         
         public bool IsOpen { get; set; }
         public ICommand FlyCommand { get; private set; }
+        public ICommand EmailClickCommand { get; protected set; }
 
         protected override void ReadData(IDataReader reader)
         {
@@ -246,6 +247,20 @@ namespace WSUI.Module.ViewModel
             return false;
         }
 
+        private void EmailClick(object obj)
+        {
+            var data = obj as BaseSearchData;
+            var ci = OutlookHelper.Instance.GetContact(data.Name);
+            if (ci == null || ci.Email1Address == null 
+                || ci.Email1Address.Length == 0)
+                return;
+            var email = OutlookHelper.Instance.CreateNewEmail();
+            email.To = (string)ci.Email1Address;
+            email.BodyFormat = Microsoft.Office.Interop.Outlook.OlBodyFormat.olFormatHTML;
+            email.Display(false);
+        }
+
+
         protected override void OnInit()
         {
             base.OnInit();
@@ -370,11 +385,12 @@ namespace WSUI.Module.ViewModel
                 return;
             int begin = _currentPageNumber * CountItemsInPage;
             int count = (begin + CountItemsInPage) < DataSource.Count ? CountItemsInPage : DataSource.Count - begin;
-            if(DataSourceOfPage == null)
-                DataSourceOfPage = new ObservableCollection<BaseSearchData>();
-            DataSourceOfPage.Clear();
+            var list = new ObservableCollection<BaseSearchData>();
             for (int i = begin; i < (begin + count);i++ )
-                DataSourceOfPage.Add(DataSource[i]);
+                list.Add(DataSource[i]);
+            if(DataSourceOfPage != null && DataSourceOfPage.Count > 0)
+                DataSourceOfPage.Clear();
+            DataSourceOfPage = new ObservableCollection<BaseSearchData>(list.OrderBy(i => i.Type));
             UpdatedStatics();
             OnPropertyChanged(() => DataSourceOfPage);
         }
@@ -431,7 +447,7 @@ namespace WSUI.Module.ViewModel
 
         private void MoveToLastInternal()
         {
-            if (_pages.Count == 0)
+            if (_pages.Count == 0 || _pages.Count < MaxLinks)
                 return;
 
             int start = _pages[_pages.Count - 1].Number;

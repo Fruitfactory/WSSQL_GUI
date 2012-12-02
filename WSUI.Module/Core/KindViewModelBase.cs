@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -59,11 +60,11 @@ namespace WSUI.Module.Core
         }
 
 
-        protected virtual void DoQuery()
+        protected virtual void DoQuery(object rect)
         {
             if (string.IsNullOrEmpty(_query))
                 return;
-
+            Rect r = (Rect) rect;
             OleDbDataReader dataReader = null;
             OleDbConnection connection = new OleDbConnection(_connectionString);
             OleDbCommand cmd = new OleDbCommand(_query, connection);
@@ -72,7 +73,9 @@ namespace WSUI.Module.Core
             {
                 Caption = "Searching...",
                 DelayTime = 2500,
-                Canceled = false
+                Canceled = false,
+                Location = new Point(r.Left,r.Top),
+                Size = new Size(r.Width,r.Height)
             });
 
             try
@@ -187,8 +190,10 @@ namespace WSUI.Module.Core
         protected virtual void Search()
         {
             OnStart();
-
-            Task thread = new Task(() => DoQuery());
+            Rect rect = new Rect();
+            rect.Location = Application.Current.MainWindow.PointToScreen(new Point(0, 0));
+            rect.Size = new Size(Application.Current.MainWindow.ActualWidth, Application.Current.MainWindow.ActualHeight);
+            Task thread = new Task(() => DoQuery(rect));
             Task thread2 = thread.ContinueWith((t) => DoAdditionalQuery());
             _query = CreateQuery();
             thread.Start();

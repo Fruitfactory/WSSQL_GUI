@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace WSUI.Infrastructure.Controls.ProgressManager
 {
@@ -20,22 +21,20 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
     /// </summary>
     public partial class ProgressWindow : IProgressForm
     {
-        private SynchronizationContext _currentContext;
         private ProgressOperation _currentOperation;
         private Action _cancelAction;
 
-        
+
         public ProgressWindow()
         {
             InitializeComponent();
-            _currentContext = SynchronizationContext.Current;
         }
 
         #region Implementation of IProgressForm
 
         public void CloseExt()
         {
-            _currentContext.Send(state => Close(), null); 
+            DispatcherOperation dispatcherOperation = this.Dispatcher.BeginInvoke(new Action(Close));
         }
 
         public void ProcessCommand(ProgressFormCommand cmd, object arg)
@@ -54,8 +53,16 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
             }
         }
 
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public int Width
+        {
+            get { return (int)base.Width; }
+            set { base.Width = value; }
+        }
+        public int Height
+        {
+            get { return (int)base.Height; }
+            set { base.Height = value; }
+        }
 
         #endregion
 
@@ -66,18 +73,9 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                 return;
             _currentOperation = operation;
             textLabel.Text = _currentOperation.Caption;
-            //buttonCancel.Visible = _currentOperation.Canceled;
-            //progress.Style = _currentOperation.Style;
-            //if (_currentOperation.Style == ProgressBarStyle.Blocks)
-            //{
-            //    progress.Minimum = _currentOperation.Min;
-            //    progress.Maximum = _currentOperation.Max;
-            //}
+            Left = ((operation.Size.Width - this.Width)/2) + operation.Location.X;
+            Top = ((operation.Size.Height - this.Height)/2) + operation.Location.Y;
             _cancelAction = _currentOperation.CancelAction;
-            //if (_cancelAction != null)
-            //{
-            //    buttonCancel.Click += (o, e) => this.Invoke(_cancelAction);
-            //}
         }
 
         private void ProcessActivate()
@@ -89,7 +87,6 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
         {
             if (arg == null)
                 return;
-            //_currentContext.Send(o => progress.Value = (int)o, arg);
         }
 
     }

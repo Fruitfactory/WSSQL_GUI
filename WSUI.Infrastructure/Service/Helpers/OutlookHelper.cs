@@ -100,9 +100,9 @@ namespace WSUI.Infrastructure.Service.Helpers
                 return null;
             try
             {
-                ProgressManager.Instance.StartOperation(new ProgressOperation() { Caption = "Saving an Attachment...", Canceled = false, DelayTime = 2500 });
+                //ProgressManager.Instance.StartOperation(new ProgressOperation() { Caption = "Saving an Attachment...", Canceled = false, DelayTime = 2500 });
                 att.SaveAsFile(tempFileName);
-                ProgressManager.Instance.StopOperation();
+                //ProgressManager.Instance.StopOperation();
             }
             catch (Exception ex)
             {
@@ -247,6 +247,41 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             return tempFile;
         }
+
+        public Outlook.ContactItem GetContact(string fullname)
+        {
+            if (_app == null)
+                return null;
+            Outlook.ContactItem ci = null;
+            try
+            {
+                if (!IsOutlookAlive())
+                    ReopenOutlook(ref _app);
+                Outlook.NameSpace ns = _app.GetNamespace("MAPI");
+                Outlook.MAPIFolder contacts =
+                        ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderContacts);
+
+                if (contacts == null)
+                    return null;
+
+                string[] split = fullname.Split(' ');
+                if (split.Length <= 1)
+                    return null;
+
+                ci =
+                    contacts.Items.OfType<Outlook.ContactItem>().ToList().Find(
+                        c => (c.FirstName == split[0].Trim() && c.LastName == split[1].Trim())
+                            || (c.FirstName == split[1].Trim() && c.LastName == split[0].Trim())
+                            );
+
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+            return ci;            
+        }
+    
 
         #endregion
 

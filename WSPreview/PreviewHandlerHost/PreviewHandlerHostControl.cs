@@ -33,6 +33,23 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
         private object _comInstance = null;
         private bool _registreHandler = true;
 
+
+        public event EventHandler StartLoad;
+
+        private void OnStartLoad(EventArgs e)
+        {
+            EventHandler handler = StartLoad;
+            if (handler != null) handler(this, e);
+        }
+
+        public event EventHandler StopLoad;
+
+        private void OnStopLoad(EventArgs e)
+        {
+            EventHandler handler = StopLoad;
+            if (handler != null) handler(this, e);
+        }
+
         public PreviewHandlerHostControl()
         {
             InitializeComponent();
@@ -54,8 +71,12 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
             get { return _filePath; }
             set { 
                 _filePath = value;
-                if(value != null && !IsDesignTime())
+                if (value != null && !IsDesignTime())
+                {
+                    OnStartLoad(null);
                     GeneratePreview();
+                    OnStopLoad(null);
+                }
             }
         }
 

@@ -7,10 +7,10 @@
     <DockPanel LastChildFill="True">
         <TextBlock TextWrapping="Wrap"  x:Name="textBlock"   
                    
-                        FontSize="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlock}},Path=FontSizeLabel}"
-                        FontStyle="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlock}},Path=FontStyleLabel}" 
-                        FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlock}},Path=FontWeightLabel}"
-                        Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlock}},Path=ForegroundColor}"
-                   />
+                        FontSize="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontSizeLabel}"
+                        FontStyle="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontStyleLabel}" 
+                        FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontWeightLabel}"
+                        Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=ForegroundColor}"
+                    />
     </DockPanel>
 </local:HightliteTextBlockBase>

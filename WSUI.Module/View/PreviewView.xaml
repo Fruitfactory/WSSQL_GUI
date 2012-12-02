@@ -11,17 +11,28 @@
     <Controls:MetroContentControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Controls:MetroContentControl.Resources>
     <Grid x:Name="grid" IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <ItemsControl Grid.Row="0" ItemsSource="{Binding Path=Commands,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+        <!--<Controls:ProgressIndicator Grid.Row="0"  ProgressColour="{StaticResource AccentColorBrush}"
+                                                    Height="6" Visibility="Visible" HorizontalAlignment="Stretch"
+                                                    />-->
+
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Path=Commands,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
@@ -45,9 +56,17 @@
             
         </ItemsControl>
         
-        <WindowsFormsHost Grid.Row="1" x:Name="_preview">
+        <WindowsFormsHost Grid.Row="2" x:Name="_preview">
             <preview:PreviewHandlerHostControl x:Name="_previewControl">
             </preview:PreviewHandlerHostControl >
         </WindowsFormsHost>
+
+        <Popup Name="popup" IsOpen="False" PlacementTarget="{Binding ElementName=grid}" 
+               >
+            <Border BorderBrush="Red" BorderThickness="3">
+                <TextBlock Text="Loading..."/>
+            </Border>
+        </Popup>
+
     </Grid>
 </Controls:MetroContentControl>

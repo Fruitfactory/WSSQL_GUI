@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using C4F.DevKit.PreviewHandler.PreviewHandlerHost;
+using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Module.Interface;
 using WSUI.Module.Service;
 using WSUI.Module.ViewModel;
@@ -64,18 +65,7 @@ namespace WSUI.Module.View
 
         public void Init()
         {
-            //OverlayStyle style = OverlayStyle.WPF;
-            //if (style == OverlayStyle.WPF)
-            //{
-            //    PreviewWindow wbo = new PreviewWindow(_previewTarget);
-            //    //_previewControl = wbo.Preview;
-
-            //}
-            //else if (style == OverlayStyle.WinForms)
-            //{
-            //    PreviewOverlayWF wbo = new PreviewOverlayWF(_previewTarget);
-            //    _previewControl = wbo.Preview;
-            //}
+           
         }
 
         private void resetPopup()
@@ -87,8 +77,8 @@ namespace WSUI.Module.View
             //// Resizing
             //popup.Width = grid.ActualWidth;
             //popup.Height = grid.ActualHeight;
-            ////popup.PlacementRectangle = new Rect(0,0, _previewControl.Width,_previewControl.Height);
-            //popup.Placement = PlacementMode.Relative;
+            ////popup.PlacementRectangle = new Rect(0, 0, grid.Width, grid.Height);
+            //popup.Placement = PlacementMode.Center;
         }
 
         private void MetroContentControl_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -17,9 +17,6 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
     {
         void CloseExt();
         void ProcessCommand(ProgressFormCommand cmd, object arg);
-
-        //FormWindowState State { get; set; }
-        //Point Location { get; set; }
         int Width { get; set; }
         int Height { get; set; }
     }

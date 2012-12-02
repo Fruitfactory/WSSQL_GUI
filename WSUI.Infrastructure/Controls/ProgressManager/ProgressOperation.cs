@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 
 
 namespace WSUI.Infrastructure.Controls.ProgressManager
@@ -13,5 +14,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
         public int Max { get; set; }
         public int Min { get; set; }
         public bool Canceled { get; set; } // button Cancel
+        public Point Location { get; set; }
+        public Size Size { get; set; }
     }
 }

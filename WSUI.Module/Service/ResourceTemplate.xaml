@@ -32,14 +32,6 @@
     </DataTemplate>
 
     <DataTemplate x:Key="EmailTemplate">
-        <!--<DockPanel LastChildFill="True">
-            <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Tag}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}" DockPanel.Dock="Left"
-                                     Margin="5" FontStyleLabel="Italic"/>
-            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  
-                                                    Grid.Column="1"   Margin="5"/>
-        </DockPanel>-->
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
@@ -51,7 +43,8 @@
             </StackPanel>
             <TextBlock Text="{Binding Path=Date,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
             <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                       Margin="5"/>
+                                                       Margin="5">
+            </ctrl:HightliteTextBlock>
         </DockPanel>
     </DataTemplate>
 
@@ -59,8 +52,19 @@
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\user.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                    Grid.Column="1"   Margin="5"/>
+            <ctrl:HightliteHyperlink Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                                                        Grid.Column="1"   Margin="5">
+                <ctrl:HightliteHyperlink.Style>
+                    <Style TargetType="ctrl:HightliteTextBlockBase">
+                        <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Blue"/>
+                        <Style.Triggers>
+                            <Trigger Property="Control.IsMouseOver" Value="True">
+                                <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Red" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ctrl:HightliteHyperlink.Style>
+            </ctrl:HightliteHyperlink>
         </DockPanel>
     </DataTemplate>
 
