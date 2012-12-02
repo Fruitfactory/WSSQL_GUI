@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSSQLGUI", "WSSQLGUI\WSSQLGUI.csproj", "{C57272B7-6456-4FAA-9094-C3DC1ADCAD46}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSPreview", "WSPreview\WSPreview.csproj", "{3E9F9F18-B9AD-4DDE-A5D6-F71B75C737D2}"

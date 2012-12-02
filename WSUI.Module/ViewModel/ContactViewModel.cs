@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using WSUI.Infrastructure.Service.Enums;
@@ -81,8 +82,12 @@ namespace WSUI.Module.ViewModel
 
         protected override void DoAdditionalQuery()
         {
-            if (string.IsNullOrEmpty(_currentEmail)) 
+            if (string.IsNullOrEmpty(_currentEmail))
+            {
+                WSSqlLogger.Instance.LogWarning("Email address not found.");
+                base.DoAdditionalQuery();
                 return;
+            }
             _folder = Folder;
             var query = string.Format(QueryContactEmail, _folder, _currentEmail);
             OleDbDataReader myDataReader = null;

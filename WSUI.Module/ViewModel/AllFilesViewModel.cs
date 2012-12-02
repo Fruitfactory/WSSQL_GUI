@@ -381,7 +381,7 @@ namespace WSUI.Module.ViewModel
 
         private void SetCurrentPageSource()
         {
-            if (_currentPageNumber >= _pageCount)
+            if (_currentPageNumber < 0 ||  _currentPageNumber >= _pageCount)
                 return;
             int begin = _currentPageNumber * CountItemsInPage;
             int count = (begin + CountItemsInPage) < DataSource.Count ? CountItemsInPage : DataSource.Count - begin;
