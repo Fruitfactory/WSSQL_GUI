@@ -133,7 +133,7 @@ namespace WSUI.Module.ViewModel
                 case "email":
                     string fromAddress = string.Empty;
                     if(from != null)
-                        fromAddress = from.FirstOrDefault(str => str.IndexOf(SearchString) > -1);
+                        fromAddress = from.FirstOrDefault(str => str.IndexOf(SearchString,StringComparison.CurrentCultureIgnoreCase) > -1);
                     EmailSearchData si = new EmailSearchData()
                     {
                         Subject = subject,
