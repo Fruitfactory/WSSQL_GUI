@@ -10,7 +10,7 @@ namespace WSUI.Infrastructure.Models
     {
 
         private readonly List<string> _emailList = new List<string>();
-
+        private  readonly List<EmailSearchData> _emails = new List<EmailSearchData>(); 
         public string FirstName
         {
             get;
@@ -30,6 +30,11 @@ namespace WSUI.Infrastructure.Models
         
         public string Foto { get; set; }
        
+        public List<EmailSearchData> Emails
+        {
+            get { return _emails; }
+        }
+
     }
 
 }

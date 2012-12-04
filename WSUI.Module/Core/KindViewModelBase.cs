@@ -149,7 +149,7 @@ namespace WSUI.Module.Core
         {
             _listData.Clear();
 
-           FireStart();
+            FireStart();
             Enabled = false;
             OnPropertyChanged(() => Enabled);
             

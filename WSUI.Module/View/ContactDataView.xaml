@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:service="clr-namespace:WSUI.Module.Service"
              x:Name="this"
                               
              >
@@ -13,39 +14,62 @@
                 <ResourceDictionary Source="..\Service\ResourceTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <Style
-                x:Key="LinkButton"
-                TargetType="Button">
-                            <Setter
-                    Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate
-                            TargetType="Button">
-                                        <TextBlock
-                                TextDecorations="Underline">
-                            <ContentPresenter /></TextBlock>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter
-                    Property="Foreground"
-                    Value="Blue" />
-                            <Style.Triggers>
-                                <Trigger
-                        Property="IsMouseOver"
-                        Value="true">
-                                    <Setter
-                            Property="Foreground"
-                            Value="Red" />
-                                </Trigger>
-                            </Style.Triggers>
-            </Style>
+            <DataTemplate x:Key="ContactTemplate">
+                <Expander Header="{Binding Path=Name,UpdateSourceTrigger=PropertyChanged}" 
+                Style="{StaticResource ResourceKey=ExpanderStyleMetro}"  Visibility="{Binding Visible,UpdateSourceTrigger=PropertyChanged}">
+                    <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.60*"/>
+                            <ColumnDefinition Width="0.40*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="0.25*"/>
+                            <RowDefinition Height="0.25*"/>
+                        </Grid.RowDefinitions>
+                        <Image Grid.Row="0" Grid.Column="0" Source="{Binding Foto,UpdateSourceTrigger=PropertyChanged}" Margin="1"/>
+                        <StackPanel Grid.Row="0" Grid.Column="1"  Orientation="Vertical" Margin="5">
+                            <ItemsControl ItemsSource="{Binding Path=EmailList,UpdateSourceTrigger=PropertyChanged}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock><Hyperlink Command="{Binding Path=DataContext.EmailClickCommand,ElementName=this}" CommandParameter="{Binding}" >
+                                <TextBlock Text="{Binding}"/>                        
+                            </Hyperlink>
+                        </TextBlock>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2" Margin="4">
+                            <TextBlock Text="Contact name:"  FontWeight="Bold" Margin="4"/>
+                            <TextBlock Text="{Binding Path=Name,UpdateSourceTrigger=PropertyChanged}" Margin="4" 
+                       Foreground="Blue"/>
+                        </StackPanel>
 
-           
+
+
+                        <StackPanel Orientation="Vertical"  Grid.Row="2" Grid.Column="0"  Grid.ColumnSpan="2" >
+                            <ListBox ItemsSource="{Binding Emails,UpdateSourceTrigger=PropertyChanged}"
+                          ItemTemplateSelector="{StaticResource templateSelector}"
+                          
+                          ><!--SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"-->
+
+
+                            </ListBox>
+                        </StackPanel>
+                    </Grid>
+                </Expander>
+            </DataTemplate>
+
+            <service:ContactDataTemplateSelector x:Key="contactTemplateSelector"  
+                                                EmailTemplate="{StaticResource ResourceKey=EmailTemplate}"
+                                                ContactTemplate="{StaticResource ResourceKey=ContactTemplate}" />
 
         </ResourceDictionary>
     </Controls:MetroContentControl.Resources>
-    <Expander Header="{Binding Path=Contact.Name,UpdateSourceTrigger=PropertyChanged}" 
+    <!--<Expander Header="{Binding Path=Contact.Name,UpdateSourceTrigger=PropertyChanged}" 
                 Style="{StaticResource ResourceKey=ExpanderStyleMetro}"  Visibility="{Binding Visible,UpdateSourceTrigger=PropertyChanged}">
             <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
                 <Grid.ColumnDefinitions>
@@ -90,7 +114,14 @@
                 </ListBox>
             </StackPanel>
             </Grid>
-        </Expander>
+        </Expander>-->
+    <Grid>
+        <ListBox ItemsSource="{Binding Path=DataSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                 ItemTemplateSelector="{StaticResource contactTemplateSelector}"
+                 SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
+                 >
 
-
+        </ListBox>
+    </Grid>
 </Controls:MetroContentControl>

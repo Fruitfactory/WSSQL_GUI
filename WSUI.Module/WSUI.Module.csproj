@@ -88,6 +88,7 @@
     <Compile Include="Interface\IWSCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AllFilesDataTemplateSelector.cs" />
+    <Compile Include="Service\ContactDataTemplateSelector.cs" />
     <Compile Include="Service\DateToStringConverter.cs" />
     <Compile Include="Service\HelperConst.cs" />
     <Compile Include="Service\ContactSuggestingService.cs" />

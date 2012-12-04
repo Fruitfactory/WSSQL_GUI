@@ -51,6 +51,8 @@ namespace WSUI.Infrastructure.Models
         }
 
         public string ConversationIndex { get; set; }
+
+        public string From { get; set; }
        
     }
 

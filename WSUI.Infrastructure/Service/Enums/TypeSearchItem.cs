@@ -9,8 +9,8 @@ namespace WSUI.Infrastructure.Service.Enums
     public enum TypeSearchItem
     {
         None = 0x00,
-        Contact = 0x01,
-        Email = 0x02,
+        Email = 0x01,
+        Contact = 0x02,
         Attachment = 0x04,
         File = 0x08,
         Picture = 0x10,
