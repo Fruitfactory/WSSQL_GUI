@@ -136,6 +136,8 @@ namespace WSUI.Module.ViewModel
                     string fromAddress = string.Empty;
                     if(from != null)
                         fromAddress = from.FirstOrDefault(str => str.IndexOf(SearchString,StringComparison.CurrentCultureIgnoreCase) > -1 && Regex.IsMatch(str,EmailPattern,RegexOptions.IgnoreCase));
+                    if (string.IsNullOrEmpty(fromAddress))
+                        break;
                     EmailSearchData si = new EmailSearchData()
                     {
                         Subject = subject,
