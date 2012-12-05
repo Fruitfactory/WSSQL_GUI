@@ -6,6 +6,7 @@ using System.Data.OleDb;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using C4F.DevKit.PreviewHandler.Service.Logger;
@@ -25,11 +26,12 @@ namespace WSUI.Module.ViewModel
     public class ContactViewModel : KindViewModelBase,IUView<ContactViewModel>
     {
         private const string QueryContactEmail = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) AND CONTAINS(System.Message.FromAddress,'{1}*')  ORDER BY System.Message.DateReceived DESC) ";
+        private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
         private string _currentEmail = string.Empty;
         private string _folder = string.Empty;
         private ContactSearchData _contactData = null;
         private string _queryByAddress =
-            " OR (System.Kind = 'email' AND System.Message.FromAddress LIKE '%{0}%' )"; //CONTAINS(System.Message.FromAddress,'*{0}*')
+            " OR (System.Kind = 'email' AND System.Message.FromAddress LIKE '%{0}%')"; //CONTAINS(System.Message.FromAddress,'*{0}*')  AND CONTAINS(System.ItemPathDisplay,'{0}*',1033))
 
         private string _queryContactWhere =
             " (System.Kind = 'contact' AND {1}( CONTAINS(System.Contact.FirstName,'\"{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\"') ){2}";
@@ -133,7 +135,7 @@ namespace WSUI.Module.ViewModel
                 case "email":
                     string fromAddress = string.Empty;
                     if(from != null)
-                        fromAddress = from.FirstOrDefault(str => str.IndexOf(SearchString,StringComparison.CurrentCultureIgnoreCase) > -1);
+                        fromAddress = from.FirstOrDefault(str => str.IndexOf(SearchString,StringComparison.CurrentCultureIgnoreCase) > -1 && Regex.IsMatch(str,EmailPattern,RegexOptions.IgnoreCase));
                     EmailSearchData si = new EmailSearchData()
                     {
                         Subject = subject,

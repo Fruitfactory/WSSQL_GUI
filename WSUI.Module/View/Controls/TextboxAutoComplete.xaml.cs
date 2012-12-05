@@ -55,7 +55,7 @@ namespace WSUI.Module.View.Controls
                                                  _comboBox.IsDropDownOpen = false;
                                                  break;
                                          }
-                                         OnKeyDownFired(e);
+                                         //OnKeyDownFired(e);
                                      };
 
             _textBox = new TextBox();
@@ -67,7 +67,7 @@ namespace WSUI.Module.View.Controls
                                                 _comboBox.IsDropDownOpen = false;
                                                 break;
                                         }
-                                        OnKeyDownFired(e);
+                                        //OnKeyDownFired(e);
                                     };
             //_textBox.LostFocus += (o, e) => _comboBox.IsDropDownOpen = false;
 

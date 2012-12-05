@@ -62,6 +62,7 @@ namespace WSUI.Module.Core
 
         protected virtual void DoQuery(object rect)
         {
+            WSSqlLogger.Instance.LogInfo("Begin query!");
             if (string.IsNullOrEmpty(_query))
                 return;
             Rect r = (Rect) rect;
@@ -109,6 +110,7 @@ namespace WSUI.Module.Core
                     connection.Close();
                 }
                 ProgressManager.Instance.StopOperation();
+                WSSqlLogger.Instance.LogInfo("End query!");
             }
         }
 

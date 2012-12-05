@@ -163,3 +163,5 @@ pip-log.txt
 .DS_Store
 /Output
 /Routput
+/WSSQLGUI.suo
+/WSSQLGUI.v11.suo
