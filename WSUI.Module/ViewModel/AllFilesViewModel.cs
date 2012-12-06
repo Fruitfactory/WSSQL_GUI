@@ -45,10 +45,10 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
             // init
             _queryTemplate =
-                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Search.EntryID FROM SystemIndex WHERE System.Search.EntryID > {1} AND Contains(*,'{0}*')";
+                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Search.EntryID > {1} AND Contains(*,'{0}*')";
             _queryAnd = " AND Contains(*,'{0}*')";
             ID = 0;
-            _name = "Everething";
+            _name = "Everything";
             UIName = _name;
             _prefix = "AllFiles";
             IsOpen = false;
@@ -95,7 +95,7 @@ namespace WSUI.Module.ViewModel
             }
             else if (kind != null && IsEmail(value: kind) && _listID.Any(i => i == id))
                 return;
-            else
+            else 
             {
                 TypeSearchItem type = SearchItemHelper.GetTypeItem(file,kind != null && kind.Length > 0 ? kind[0].ToString() : string.Empty);
                 BaseSearchData bs = new BaseSearchData()

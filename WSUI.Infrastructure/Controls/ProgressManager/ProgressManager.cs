@@ -107,6 +107,10 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
 
         private void ShowSplash()
         {
+            lock(_lockObject)
+               if(_currentOperation == null)
+                    return;
+            
             _progressForm = new ProgressWindow();
             ((Window) _progressForm).Topmost = true;
             

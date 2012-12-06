@@ -37,8 +37,7 @@ namespace C4F.DevKit.PreviewHandler.Controls
             _scintilla.Modified = false;
             ConfigureScintilla();
             SetLanguage(filename);
-            var result = File.ReadAllLines(filename);
-            _scintilla.Text = result.ToString();
+            _scintilla.Text = File.ReadAllText(filename);
         }
 
 #endregion
