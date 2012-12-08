@@ -25,7 +25,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
 
             _queryTemplate =
-                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified FROM SystemIndex WHERE Contains(*,'{0}*')";
+                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified FROM SystemIndex WHERE Contains(System.ItemUrl,'at') AND (System.ItemName LIKE '%{0}%' OR  Contains(System.Search.Contents,'{0}*'))"; //Contains(System.ItemName,'{0}*')  OR System.Search.Contents
             _queryAnd = " AND Contains(*,'{0}*')";
             ID = 3;
             _name = "Attachments";

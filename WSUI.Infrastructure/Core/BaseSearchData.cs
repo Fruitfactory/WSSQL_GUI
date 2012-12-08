@@ -36,5 +36,7 @@ namespace WSUI.Infrastructure.Core
         }
 
         public object Tag { get; set; }
+
+        public string Count { get; set; }
 	}
 }

@@ -33,6 +33,7 @@ namespace WSUI.Module.ViewModel
 
         private int _countAdded = 0;
         private List<string> _listID = new List<string>();
+        private List<string> _listName = new List<string>();
         private string _folder = string.Empty;
 
         public AllFilesViewModel(IUnityContainer container, ISettingsView<AllFilesViewModel> settingsView,
@@ -45,7 +46,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
             // init
             _queryTemplate =
-                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Search.EntryID > {1} AND Contains(*,'{0}*')";
+                "GROUP ON System.ItemName OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Search.EntryID > {1} AND Contains(*,'{0}*'){2} ORDER BY System.Search.EntryID ASC)";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))
             _queryAnd = " AND Contains(*,'{0}*')";
             ID = 0;
             _name = "Everything";
@@ -74,6 +75,62 @@ namespace WSUI.Module.ViewModel
 
         protected override void ReadData(IDataReader reader)
         {
+            var group = new List<GroupData>();
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                if (reader.GetFieldType(i).ToString() != "System.Data.IDataReader")
+                    continue;
+                OleDbDataReader itemsReader = reader.GetValue(i) as OleDbDataReader;
+
+                while (itemsReader.Read())
+                {
+                    group.Add(ReadGroupData(itemsReader));
+                }
+            }
+
+            if (group == null || group.Count == 0)
+                return;
+            var groupItem = group[0];
+            string tag = string.Empty;
+            if (groupItem.Kind != null && IsEmail(groupItem.Kind) && !_listID.Any(it => it == groupItem.ID))
+            {
+                var newValue = GroupEmail(groupItem.Name, groupItem.ID);
+                if (newValue == null)
+                    return;
+                _listID.Add(groupItem.ID);
+                TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File);
+                newValue.Type = type;
+                _listData.Add(newValue);
+                _countAdded++;
+            }
+            else if (groupItem.Kind != null && IsEmail(value: groupItem.Kind) && _listID.Any(it => it == groupItem.ID))
+                return;
+            else if (!_listName.Any(it => it == groupItem.Name))
+            {
+                _listName.Add(groupItem.Name);
+                TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File, groupItem.Kind != null && groupItem.Kind.Length > 0 ? groupItem.Kind[0].ToString() : string.Empty);
+                BaseSearchData bs = new BaseSearchData()
+                {
+                    Name = groupItem.Name,
+                    Path = groupItem.File,
+                    Type = type,
+                    ID = Guid.NewGuid(),
+                    Display = groupItem.Display,
+                    DateModified = DateTime.Parse(groupItem.Date),
+                    Tag = tag,
+                    Count = group.Count.ToString()
+                };
+                _listData.Add(bs);
+                _countAdded++;
+            }
+            if (_countAdded == CountItemsInPage)
+                _isInterupt = true;
+
+        }
+
+
+        private GroupData ReadGroupData(IDataReader reader)
+        {
             string name = reader[0].ToString();
             string file = reader[1].ToString();
             var kind = reader[2] as object[];
@@ -81,38 +138,17 @@ namespace WSUI.Module.ViewModel
             string display = reader[4].ToString();
             var date = reader[5].ToString();
             int.TryParse(reader[6].ToString(), out _lastID);
-            string tag = string.Empty;
-            if (kind != null && IsEmail(kind) && !_listID.Any(i => i == id))
+            
+            return new GroupData()
             {
-                var newValue = GroupEmail(name, id);
-                if(newValue == null)
-                    return;
-                _listID.Add(id);
-                TypeSearchItem type = SearchItemHelper.GetTypeItem(file);
-                newValue.Type = type;
-                _listData.Add(newValue);
-                _countAdded++;
-            }
-            else if (kind != null && IsEmail(value: kind) && _listID.Any(i => i == id))
-                return;
-            else 
-            {
-                TypeSearchItem type = SearchItemHelper.GetTypeItem(file,kind != null && kind.Length > 0 ? kind[0].ToString() : string.Empty);
-                BaseSearchData bs = new BaseSearchData()
-                                        {
-                                            Name = name,
-                                            Path = file,
-                                            Type = type,
-                                            ID = Guid.NewGuid(),
-                                            Display = display,
-                                            DateModified = DateTime.Parse(date),
-                                            Tag = tag
-                                        };
-                _listData.Add(bs);
-                _countAdded++;
-            }
-            if (_countAdded == CountItemsInPage)
-                _isInterupt = true;
+                Name = name,
+                File = file,
+                Kind = kind,
+                ID = id,
+                Display = display,
+                Date = date
+            };
+
         }
 
         protected override string CreateQuery()
@@ -127,15 +163,15 @@ namespace WSUI.Module.ViewModel
                 var list = searchCriteria.Split(' ').ToList();
                 if (list == null || list.Count == 1)
                     return searchCriteria;
-                res = string.Format(_queryTemplate, list[0],_lastID);
+                res = string.Format(_queryTemplate, list[0],_lastID," ");
                 for (int i = 1; i < list.Count; i++)
                 {
                     temp.Append(string.Format(_queryAnd, list[i]));
                 }
-                res += temp.ToString();
+                res += temp.ToString() + ")";
             }
             else
-                res = string.Format(_queryTemplate, searchCriteria,  _lastID);
+                res = string.Format(_queryTemplate, searchCriteria,  _lastID,"");
 
             return res;
         }
@@ -158,6 +194,7 @@ namespace WSUI.Module.ViewModel
                 DataSourceOfPage.Clear();
             DataSource.Clear();
             _listID.Clear();
+            _listName.Clear();
             OnPropertyChanged(() => DataSource);
             OnPropertyChanged(() => DataPage);
             OnPropertyChanged(() => DataSourceOfPage);
@@ -546,5 +583,18 @@ namespace WSUI.Module.ViewModel
         #endregion
 
 
+        class  GroupData
+        {
+            public string Name;
+            public string File;
+            public object[] Kind;
+            public string ID;
+            public string Display;
+            public string Date;
+
+        }
+
+
     }
+
 }

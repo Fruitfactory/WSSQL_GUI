@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -48,20 +49,27 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             textBoxSubject.Text = mail.Subject;
             webFrom.DocumentText = HighlightSearchString(string.Format(PageTemplate, mail.SenderName));
             textBoxTo.Text = mail.To;
+            if (!string.IsNullOrEmpty(mail.CC))
+                textBoxCC.Text = mail.CC;
+            else
+                tableLayoutPanel.RowStyles[3].Height = 0;
             textBoxSend.Text = mail.ReceivedTime.ToString();
             webBrowserContent.DocumentText = HighlightSearchString(mail.HTMLBody);
 
             if (mail.Attachments.Count > 0)
             {
-                StringBuilder str = new StringBuilder();
                 foreach (Outlook.Attachment att in mail.Attachments)
                 {
-                    str.AppendLine(string.Format("{0};", att.DisplayName));
+                    var ext = Path.GetExtension(att.DisplayName);
+                    ext = ext.Substring(1, ext.Length - 1);
+                    int index = imageList.Images.IndexOfKey(string.Format("{0}.{1}", ext, "png"));
+                    var item = new ListViewItem(att.DisplayName,index < 0 ? 0 : index);
+                    listViewAttachments.Items.Add(item);
                 }
-                textBoxAttachments.Text = str.ToString();
+                
             }
             else
-                tableLayoutPanel.RowStyles[3].Height = 0;
+                tableLayoutPanel.RowStyles[4].Height = 0;
 
             Marshal.ReleaseComObject(mail);
             CloseApplication(app);

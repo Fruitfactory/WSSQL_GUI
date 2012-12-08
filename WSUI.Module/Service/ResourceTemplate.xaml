@@ -26,8 +26,11 @@
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\document-smiley-sad.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                    Grid.Column="1"   Margin="5"/>
+            <StackPanel Orientation="Horizontal">
+                <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                                                        Grid.Column="1"   Margin="5"/>
+                <TextBlock Text="{Binding Count}" FontWeight="Bold" Foreground="Red" Margin="5"></TextBlock>
+            </StackPanel>
         </DockPanel>
     </DataTemplate>
 
@@ -87,8 +90,11 @@
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\document.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                    Grid.Column="1"   Margin="5"/>
+            <StackPanel Orientation="Horizontal">
+                <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                                                        Grid.Column="1"   Margin="5"/>
+                <TextBlock Text="{Binding Count}" FontWeight="Bold" Foreground="Red" Margin="5"></TextBlock>
+            </StackPanel>
         </DockPanel>
     </DataTemplate>
 
@@ -96,8 +102,11 @@
         <DockPanel>
             <Image Grid.Column="0" Source="..\Images\attachment.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                    Grid.Column="1"   Margin="5"/>
+            <StackPanel Orientation="Horizontal">
+                <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                                                        Grid.Column="1"   Margin="5"/>
+                <TextBlock Text="{Binding Count}" FontWeight="Bold" Foreground="Red" Margin="5"></TextBlock>
+            </StackPanel>
         </DockPanel>
     </DataTemplate>
 
@@ -105,8 +114,11 @@
         <DockPanel>
             <Image Grid.Column="0" Source="..\Images\date.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  
-                                                    Grid.Column="1"   Margin="5"/>
+            <StackPanel Orientation="Horizontal">
+                <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                                                        Grid.Column="1"   Margin="5"/>
+                <TextBlock Text="{Binding Count}" FontWeight="Bold" Foreground="Red" Margin="5"></TextBlock>
+            </StackPanel>
         </DockPanel>
     </DataTemplate>
 
@@ -114,8 +126,11 @@
         <DockPanel>
             <Image Grid.Column="0" Source="..\Images\pictures.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                    Grid.Column="1"   Margin="5"/>
+            <StackPanel Orientation="Horizontal">
+                <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                                                        Grid.Column="1"   Margin="5"/>
+                <TextBlock Text="{Binding Count}" FontWeight="Bold" Foreground="Red" Margin="5"></TextBlock>
+            </StackPanel>
         </DockPanel>
     </DataTemplate>
 

@@ -42,8 +42,6 @@ namespace WSUI.Infrastructure.Models
             set;
         }
 
-        public string Count { get; set; }
-
         public List<string> Attachments
         {
             get;
