@@ -5,7 +5,7 @@
              xmlns:local="clr-namespace:WSUI.Infrastructure.Controls"
              >
     <DockPanel LastChildFill="True">
-        <TextBlock TextWrapping="Wrap"  x:Name="textBlock"   
+        <TextBlock TextTrimming="CharacterEllipsis"  x:Name="textBlock"   
                    
                         FontSize="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontSizeLabel}"
                         FontStyle="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontStyleLabel}" 

@@ -72,7 +72,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel.Size = new System.Drawing.Size(623, 452);
@@ -109,7 +109,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label3.ForeColor = System.Drawing.Color.Gray;
-            this.label3.Location = new System.Drawing.Point(3, 150);
+            this.label3.Location = new System.Drawing.Point(3, 170);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(40, 13);
             this.label3.TabIndex = 4;
@@ -119,10 +119,10 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             // 
             this.tableLayoutPanel.SetColumnSpan(this.webBrowserContent, 2);
             this.webBrowserContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowserContent.Location = new System.Drawing.Point(3, 173);
+            this.webBrowserContent.Location = new System.Drawing.Point(3, 193);
             this.webBrowserContent.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowserContent.Name = "webBrowserContent";
-            this.webBrowserContent.Size = new System.Drawing.Size(617, 276);
+            this.webBrowserContent.Size = new System.Drawing.Size(617, 256);
             this.webBrowserContent.TabIndex = 5;
             // 
             // textBoxTo
@@ -142,7 +142,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             this.textBoxSend.BackColor = System.Drawing.Color.White;
             this.textBoxSend.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxSend.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxSend.Location = new System.Drawing.Point(89, 153);
+            this.textBoxSend.Location = new System.Drawing.Point(89, 173);
             this.textBoxSend.Multiline = true;
             this.textBoxSend.Name = "textBoxSend";
             this.textBoxSend.ReadOnly = true;
@@ -194,12 +194,14 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             // 
             // listViewAttachments
             // 
+            this.listViewAttachments.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listViewAttachments.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewAttachments.LargeImageList = this.imageList;
             this.listViewAttachments.Location = new System.Drawing.Point(86, 120);
             this.listViewAttachments.Margin = new System.Windows.Forms.Padding(0);
+            this.listViewAttachments.MultiSelect = false;
             this.listViewAttachments.Name = "listViewAttachments";
-            this.listViewAttachments.Size = new System.Drawing.Size(537, 30);
+            this.listViewAttachments.Size = new System.Drawing.Size(537, 50);
             this.listViewAttachments.SmallImageList = this.imageList;
             this.listViewAttachments.StateImageList = this.imageList;
             this.listViewAttachments.TabIndex = 12;

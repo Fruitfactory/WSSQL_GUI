@@ -133,9 +133,7 @@ namespace WSUI.Module.ViewModel
                     _listData.Add(data);
                     break;
                 case "email":
-                    string fromAddress = string.Empty;
-                    if(from != null)
-                        fromAddress = from.FirstOrDefault(str => str.IndexOf(SearchString,StringComparison.CurrentCultureIgnoreCase) > -1 && Regex.IsMatch(str,EmailPattern,RegexOptions.IgnoreCase));
+                    string fromAddress = GetEmailAddress(from);
                     if (string.IsNullOrEmpty(fromAddress))
                         break;
                     EmailSearchData si = new EmailSearchData()
@@ -171,20 +169,22 @@ namespace WSUI.Module.ViewModel
                     var where1 = string.Format(_queryContactWhere, arr[0], "", ")");
                     return string.Format("{0}{1}", _queryTemplate, where1) + string.Format(_queryByAddress, arr[0]);
                 }
+                var address = new StringBuilder(string.Format(_queryByAddress, arr[0]));
                 var where2 = string.Format(_queryContactWhere, arr[0], "(", "");
-                res = string.Format(_queryTemplate, arr[0]);
+                res += _queryTemplate + where2;
                 for (int i = 1; i < arr.Count; i++)
                 {
                     strBuilder.Append(string.Format(_queryAnd, arr[i]));
+                    address.Append(string.Format(_queryByAddress, arr[i]));
                 }
-                res += strBuilder.ToString();
+                res += strBuilder.ToString() + address.ToString();
             }
             else
             {
                 var where = string.Format(_queryContactWhere, SearchString, "", ")");
-                res = string.Format("{0}{1}", _queryTemplate, where);
+                res = string.Format("{0}{1}", _queryTemplate, where) + string.Format(_queryByAddress, SearchString);
             }
-            return res + string.Format(_queryByAddress, SearchString);
+            return res;
         }
 
         protected override void OnStart()
@@ -311,6 +311,36 @@ namespace WSUI.Module.ViewModel
         }
 
         #endregion
+
+
+        private string GetEmailAddress(string[] from)
+        {
+            string fromAddress = string.Empty;
+            if (from != null)
+            {
+                var arr = SearchString.Split(' ');
+                if (arr != null && arr.Length > 0)
+                {
+                    foreach (var s in arr)
+                    {
+                        fromAddress =
+                        from.FirstOrDefault(
+                            str =>
+                            str.IndexOf(s, StringComparison.CurrentCultureIgnoreCase) > -1 &&
+                            Regex.IsMatch(str, EmailPattern, RegexOptions.IgnoreCase));
+                        if (!string.IsNullOrEmpty(fromAddress))
+                            break;
+                    }
+                }
+                else
+                    fromAddress =
+                        from.FirstOrDefault(
+                            str =>
+                            str.IndexOf(SearchString, StringComparison.CurrentCultureIgnoreCase) > -1 &&
+                            Regex.IsMatch(str, EmailPattern, RegexOptions.IgnoreCase));
+            }
+            return fromAddress;
+        }
 
     }
 }

@@ -46,4 +46,23 @@ namespace WSUI.Module.Service
         #endregion
     }
 
+    [ValueConversion(typeof(string),typeof(string))]
+    public class CountToFormatStringConvert : IValueConverter
+    {
+        #region Implementation of IValueConverter
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int count = 0;
+            int.TryParse(value as string, out count);
+            return count <= 1 ? string.Empty : string.Format("[{0}]", count);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+
+        #endregion
+    }
 }
