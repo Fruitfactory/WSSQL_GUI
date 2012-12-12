@@ -126,7 +126,7 @@ namespace WSUI.Module.Core
 
         protected virtual string CreateQuery()
         {
-            var searchCriteria = SearchString;
+            var searchCriteria = SearchString.Trim();
             string res = string.Empty;
             if (searchCriteria.IndexOf(' ') > -1)
             {

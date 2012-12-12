@@ -78,7 +78,7 @@ namespace WSUI.Module.ViewModel
 
         protected override string CreateQuery()
         {
-            var searchCriteria = SearchString;
+            var searchCriteria = SearchString.Trim();
             var folder = Folder;
             SearchString = searchCriteria;
             string res = string.Empty;

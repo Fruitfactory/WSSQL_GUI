@@ -25,6 +25,8 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             "<html><body leftmargin='0' style='font: bold 11; font-family: Microsoft Sans Serif'>{0}</body></html>";
 
         private bool _IsExistProcess = false;
+        private string _filename = string.Empty;
+        private  readonly Dictionary<string,string> _dictTempFile = new Dictionary<string, string>();
 
         public OutlookFilePreview()
         {
@@ -38,6 +40,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
         public void LoadFile(string filename)
         {
+            _filename = filename;
             Outlook.Application app = GetApplication();
             if (app == null)
                 return;
@@ -77,6 +80,10 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
         }
 
+        public void Unload()
+        {
+            DeleteAllTempFile();
+        }
 
         #endregion
 
@@ -157,7 +164,76 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             return result;
         }
 
+        private Outlook.MailItem GetMail(Outlook.Application app,string filename)
+        {
+            Outlook.MailItem mail = (Outlook.MailItem)app.CreateItemFromTemplate(filename);
+
+            if (mail == null)
+                return null;
+            return mail;
+        }
+
+        private string GetTempFileName(string filename)
+        {
+            if (_dictTempFile.ContainsKey(filename))
+                return _dictTempFile[filename];
+            string path = string.Format("{0}{1}", Path.GetTempPath(), filename);
+            _dictTempFile.Add(filename,path);
+            return path;
+        }
+
+        private void DeleteAllTempFile()
+        {
+            if (_dictTempFile.Count == 0)
+                return;
+
+            foreach (var pair in _dictTempFile)
+            {
+                if(File.Exists(pair.Value))
+                    File.Delete(pair.Value);
+            }
+            _dictTempFile.Clear();
+        }
+
         #endregion
+
+        private void listViewAttachments_ItemActivate(object sender, EventArgs e)
+        {
+            if(listViewAttachments.SelectedItems.Count == 0)
+                return;
+            
+            Outlook.Application app = GetApplication();
+            if (app == null)
+                return ;
+            Outlook.MailItem mail = GetMail(app, _filename);
+            if(mail == null)
+                return;
+            
+            if (mail.Attachments.Count == 0)
+                return;
+            string currentname = listViewAttachments.SelectedItems[0].Text;
+            string path = string.Empty;
+            foreach (Outlook.Attachment att in mail.Attachments)
+            {
+                if (att.DisplayName == currentname)
+                {
+                    path = GetTempFileName(currentname);
+                    att.SaveAsFile(path);
+                    break;
+                }
+            }
+            if (File.Exists(path))
+                try
+                {
+                    Process.Start(path);
+                }
+                catch (Exception ex)
+                {
+                    WSSqlLogger.Instance.LogError(ex.Message);
+                }
+            Marshal.ReleaseComObject(mail);
+            CloseApplication(app);
+        }
 
 
 

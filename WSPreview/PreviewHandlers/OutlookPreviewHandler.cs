@@ -46,6 +46,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
             public override void Unload()
             {
                 Controls.Clear();
+                _preview.Unload();
                 base.Unload();
             }
         }

@@ -46,8 +46,8 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
             // init
             _queryTemplate =
-                "GROUP ON System.ItemName OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Search.EntryID > {1} AND Contains(*,'{0}*'){2} ORDER BY System.Search.EntryID ASC)";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))
-            _queryAnd = " AND Contains(*,'{0}*')";
+                "GROUP ON System.ItemName OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Search.EntryID > {1} AND Contains(*,{0}) ORDER BY System.Search.EntryID ASC)";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))
+            _queryAnd = " AND \"{0}\"";
             ID = 0;
             _name = "Everything";
             UIName = _name;
@@ -155,23 +155,22 @@ namespace WSUI.Module.ViewModel
         {
             _countAdded = 0;
             _isInterupt = false;
-            var searchCriteria = SearchString;
+            var searchCriteria = SearchString.Trim();
             string res = string.Empty;
+            string andClause = string.Empty;
             if (searchCriteria.IndexOf(' ') > -1)
             {
                 StringBuilder temp = new StringBuilder();
                 var list = searchCriteria.Split(' ').ToList();
-                if (list == null || list.Count == 1)
-                    return searchCriteria;
-                res = string.Format(_queryTemplate, list[0],_lastID," ");
+
+                temp.Append(string.Format("'\"{0}\"", list[0]));
                 for (int i = 1; i < list.Count; i++)
                 {
                     temp.Append(string.Format(_queryAnd, list[i]));
                 }
-                res += temp.ToString() + ")";
+                andClause = temp.ToString() + "'";
             }
-            else
-                res = string.Format(_queryTemplate, searchCriteria,  _lastID,"");
+            res = string.Format(_queryTemplate,  string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'",searchCriteria) : andClause,  _lastID);
 
             return res;
         }

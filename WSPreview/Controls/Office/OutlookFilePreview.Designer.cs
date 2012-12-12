@@ -194,8 +194,12 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             // 
             // listViewAttachments
             // 
+            this.listViewAttachments.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.listViewAttachments.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listViewAttachments.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewAttachments.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewAttachments.HotTracking = true;
+            this.listViewAttachments.HoverSelection = true;
             this.listViewAttachments.LargeImageList = this.imageList;
             this.listViewAttachments.Location = new System.Drawing.Point(86, 120);
             this.listViewAttachments.Margin = new System.Windows.Forms.Padding(0);
@@ -207,6 +211,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             this.listViewAttachments.TabIndex = 12;
             this.listViewAttachments.UseCompatibleStateImageBehavior = false;
             this.listViewAttachments.View = System.Windows.Forms.View.SmallIcon;
+            this.listViewAttachments.ItemActivate += new System.EventHandler(this.listViewAttachments_ItemActivate);
             // 
             // imageList
             // 

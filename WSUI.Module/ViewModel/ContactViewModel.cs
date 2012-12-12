@@ -157,7 +157,7 @@ namespace WSUI.Module.ViewModel
 
         protected override string CreateQuery()
         {
-            var searchCriteria = SearchString;
+            var searchCriteria = SearchString.Trim();
             string res = String.Empty;
 
             if (searchCriteria.IndexOf(' ') > -1)
