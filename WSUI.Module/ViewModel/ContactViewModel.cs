@@ -181,8 +181,8 @@ namespace WSUI.Module.ViewModel
             }
             else
             {
-                var where = string.Format(_queryContactWhere, SearchString, "", ")");
-                res = string.Format("{0}{1}", _queryTemplate, where) + string.Format(_queryByAddress, SearchString);
+                var where = string.Format(_queryContactWhere, searchCriteria, "", ")");
+                res = string.Format("{0}{1}", _queryTemplate, where) + string.Format(_queryByAddress, searchCriteria);
             }
             return res;
         }
@@ -318,7 +318,7 @@ namespace WSUI.Module.ViewModel
             string fromAddress = string.Empty;
             if (from != null)
             {
-                var arr = SearchString.Split(' ');
+                var arr = SearchString.Trim().Split(' ');
                 if (arr != null && arr.Length > 0)
                 {
                     foreach (var s in arr)
@@ -336,7 +336,7 @@ namespace WSUI.Module.ViewModel
                     fromAddress =
                         from.FirstOrDefault(
                             str =>
-                            str.IndexOf(SearchString, StringComparison.CurrentCultureIgnoreCase) > -1 &&
+                            str.IndexOf(SearchString.Trim(), StringComparison.CurrentCultureIgnoreCase) > -1 &&
                             Regex.IsMatch(str, EmailPattern, RegexOptions.IgnoreCase));
             }
             return fromAddress;
