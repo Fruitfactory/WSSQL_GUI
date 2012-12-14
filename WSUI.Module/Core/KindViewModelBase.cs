@@ -128,21 +128,20 @@ namespace WSUI.Module.Core
         {
             var searchCriteria = SearchString.Trim();
             string res = string.Empty;
+            string andClause = string.Empty;
             if (searchCriteria.IndexOf(' ') > -1)
             {
                 StringBuilder temp = new StringBuilder();
                 var list = searchCriteria.Split(' ').ToList();
-                if (list == null || list.Count == 1)
-                    return searchCriteria;
-                res = string.Format(_queryTemplate, list[0]);
+
+                temp.Append(string.Format("'\"{0}\"", list[0]));
                 for (int i = 1; i < list.Count; i++)
                 {
                     temp.Append(string.Format(_queryAnd, list[i]));
                 }
-                res += temp.ToString();
+                andClause = temp.ToString() + "'";
             }
-            else
-                res = string.Format(_queryTemplate, searchCriteria);
+            res = string.Format(_queryTemplate, string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'", searchCriteria) : andClause);
 
             return res;
         }

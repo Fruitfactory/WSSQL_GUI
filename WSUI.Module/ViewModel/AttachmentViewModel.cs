@@ -25,8 +25,8 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
 
             _queryTemplate =
-                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified FROM SystemIndex WHERE Contains(System.ItemUrl,'at') AND (System.ItemName LIKE '%{0}%' OR  Contains(System.Search.Contents,'{0}*'))"; //Contains(System.ItemName,'{0}*')  OR System.Search.Contents
-            _queryAnd = " AND Contains(*,'{0}*')";
+                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified FROM SystemIndex WHERE Contains(System.ItemUrl,'at') AND (System.ItemName LIKE '%{0}%' OR  Contains(System.Search.Contents,{1}))"; //Contains(System.ItemName,'{0}*')  OR System.Search.Contents
+            _queryAnd = " AND \"{0}\"";
             ID = 3;
             _name = "Attachments";
             UIName = _name;
@@ -58,6 +58,28 @@ namespace WSUI.Module.ViewModel
             };
             _listData.Add(bs);
 
+        }
+
+        protected override string CreateQuery()
+        {
+            var searchCriteria = SearchString.Trim();
+            string res = string.Empty;
+            string andClause = string.Empty;
+            if (searchCriteria.IndexOf(' ') > -1)
+            {
+                StringBuilder temp = new StringBuilder();
+                var list = searchCriteria.Split(' ').ToList();
+
+                temp.Append(string.Format("'\"{0}\"", list[0]));
+                for (int i = 1; i < list.Count; i++)
+                {
+                    temp.Append(string.Format(_queryAnd, list[i]));
+                }
+                andClause = temp.ToString() + "'";
+            }
+            res = string.Format(_queryTemplate, searchCriteria, string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'", searchCriteria) : andClause);
+
+            return res;
         }
 
         protected override void OnInit()

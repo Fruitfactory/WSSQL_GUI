@@ -29,8 +29,8 @@ namespace WSUI.Module.ViewModel
             DataView = dataView;
             DataView.Model = this;
 
-            _queryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) AND CONTAINS(*,'{1}*') ";//¬ход€щие  //Inbox
-            _queryAnd = " AND Contains(*,'{0}*')";
+            _queryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) AND CONTAINS(*,{1}) ";//¬ход€щие  //Inbox
+            _queryAnd = " AND \"{0}\"";
             ID = 2;
             _name = "Email";
             UIName = _name;
@@ -78,27 +78,26 @@ namespace WSUI.Module.ViewModel
 
         protected override string CreateQuery()
         {
-            var searchCriteria = SearchString.Trim();
             var folder = Folder;
-            SearchString = searchCriteria;
+            var searchCriteria = SearchString.Trim();
             string res = string.Empty;
+            string andClause = string.Empty;
             if (searchCriteria.IndexOf(' ') > -1)
             {
                 StringBuilder temp = new StringBuilder();
                 var list = searchCriteria.Split(' ').ToList();
-                if (list == null || list.Count == 1)
-                    return string.Format(_queryTemplate, searchCriteria);
-                res = string.Format(_queryTemplate, folder, list[0]);
+
+                temp.Append(string.Format("'\"{0}\"", list[0]));
                 for (int i = 1; i < list.Count; i++)
                 {
                     temp.Append(string.Format(_queryAnd, list[i]));
                 }
-                res += temp.ToString() + OrderTemplate;
+                andClause = temp.ToString() + "'";
             }
-            else
-                res = string.Format(_queryTemplate, folder, searchCriteria) + OrderTemplate;
+            res = string.Format(_queryTemplate, folder, string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'", searchCriteria) : andClause) + OrderTemplate;
 
             return res;
+
         }
 
         protected override void OnInit()
