@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 
 
 namespace WSUI.Infrastructure.Controls.ProgressManager
@@ -81,6 +82,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                                                               }
                                                               
                                                               ShowProgressForm();
+                                                              WSSqlLogger.Instance.LogInfo("Show progress delay > 0 ----------------------------------");
                                                               System.Diagnostics.Debug.WriteLine(
                                                                   "Show progress delay > 0 ----------------------------------");
                                                           });
@@ -90,6 +92,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                 {
                     
                     ShowProgressForm();
+                    WSSqlLogger.Instance.LogInfo("Show progress delay == 0 ----------------------------------");
                     System.Diagnostics.Debug.WriteLine("Show progress delay == 0 ----------------------------------");
                 }
             }
@@ -120,8 +123,10 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                                                        ((Window) _progressForm).Dispatcher.InvokeShutdown();
                                                        System.Diagnostics.Debug.WriteLine(
                                                            "Close dialog ----------------------------------");
+                                                       WSSqlLogger.Instance.LogInfo("Close dialog  ----------------------------------");
                                                    };
             System.Diagnostics.Debug.WriteLine("Show dialog ----------------------------------");
+            WSSqlLogger.Instance.LogInfo("Show dialog  ----------------------------------");
             ((Window)_progressForm).Show();
             System.Windows.Threading.Dispatcher.Run();
         }
@@ -139,6 +144,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                 }
             }
             System.Diagnostics.Debug.WriteLine("Stop progress ----------------------------------");
+            WSSqlLogger.Instance.LogInfo("Stop progress  ----------------------------------");
             CloseProgressForm();
         }
 

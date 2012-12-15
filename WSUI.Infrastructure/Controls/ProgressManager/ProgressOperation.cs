@@ -16,5 +16,12 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
         public bool Canceled { get; set; } // button Cancel
         public Point Location { get; set; }
         public Size Size { get; set; }
+
+
+        public override string ToString()
+        {
+            return string.Format("Type={0}\tCaption={1}\t{2}\t{3}", GetType().Name, Caption, DelayTime, Size);
+        }
+
     }
 }

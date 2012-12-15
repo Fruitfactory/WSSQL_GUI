@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSUI.Infrastructure.Controls.ProgressManager
 {
@@ -43,6 +44,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
             {
                 case ProgressFormCommand.Settings:
                     ProcessSettings(arg);
+                    WSSqlLogger.Instance.LogInfo(arg.ToString());
                     break;
                 case ProgressFormCommand.Activate:
                     ProcessActivate();

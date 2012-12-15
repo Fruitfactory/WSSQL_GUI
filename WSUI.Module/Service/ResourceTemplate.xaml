@@ -22,32 +22,64 @@
         <Setter Property="Margin" Value="5"/>
     </Style>
 
+    <Style x:Key="NameStyleWidthColumn" TargetType="ColumnDefinition">
+        <Setter Property="Width" Value="150" />
+        <Setter Property="MinWidth" Value="100" />
+    </Style>
+
+    <Style x:Key="CountStyleWidthColumn" TargetType="ColumnDefinition">
+        <Setter Property="Width" Value="30" />
+    </Style>
+
+    <Style x:Key="SubjectStyleWidthColumn" TargetType="ColumnDefinition">
+        <Setter Property="Width" Value="300" />
+    </Style>
+
+    <Style x:Key="FromStyleWidthColumn" TargetType="ColumnDefinition">
+        <Setter Property="Width" Value="150" />
+    </Style>
+
 
     <DataTemplate x:Key="NoneTemplate">
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\document-smiley-sad.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <StackPanel Orientation="Horizontal">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Style="{StaticResource NameStyleWidthColumn}" />
+                    <ColumnDefinition Style="{StaticResource CountStyleWidthColumn}"/>
+                </Grid.ColumnDefinitions>
                 <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                        Grid.Column="1"   Margin="5"/>
-                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"></TextBlock>
-            </StackPanel>
+                                                        Grid.Column="0"   Margin="5"/>
+                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
+                           Grid.Column="1"></TextBlock>
+            </Grid>
         </DockPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="EmailTemplate">
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Style="{StaticResource NameStyleWidthColumn}" />
+                    <ColumnDefinition Style="{StaticResource CountStyleWidthColumn}"/>
+                    <ColumnDefinition Style="{StaticResource SubjectStyleWidthColumn}" />
+                    <ColumnDefinition Style="{StaticResource FromStyleWidthColumn}" />
+                </Grid.ColumnDefinitions>
+                <!--to-->
                 <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  FontStyleLabel="Italic"
-                                                       Margin="5 3 5 3"/>
-                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3"></TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" >
-                <!--<ctrl:HightliteTextBlock Text="{Binding Path=From}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  FontStyleLabel="Italic"
-                                                         Margin="5 3 5 3"/>-->
+                                                Grid.Column="0" Margin="5 3 5 3"/>
+                <!--count of items-->
+                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3"
+                           Grid.Column="1"></TextBlock>
+                
+                <!--subject-->
+                <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                                            Grid.Column="2"           Margin="5" Width="300"></ctrl:HightliteTextBlock>
+                <!--from -->
                 <ctrl:HightliteHyperlink Text="{Binding Path=From}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                          Margin="5">
+                                                Grid.Column="3"        Margin="5">
                     <ctrl:HightliteHyperlink.Style>
                         <Style TargetType="ctrl:HightliteTextBlockBase">
                             <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Blue"/>
@@ -59,79 +91,104 @@
                         </Style>
                     </ctrl:HightliteHyperlink.Style>
                 </ctrl:HightliteHyperlink>
-                <TextBlock Text="{Binding Path=Date,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5"/>
-            </StackPanel>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                       Margin="5" Width="300">
-            </ctrl:HightliteTextBlock>
+            </Grid>
+            <!-- date of item-->
+            <TextBlock Text="{Binding Path=Date,Converter={StaticResource dateConverter}}"  Margin="5" DockPanel.Dock="Right"/>
         </DockPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="UserTemplate">
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\user.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
-            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <ctrl:HightliteHyperlink Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                        Grid.Column="1"   Margin="5">
-                <ctrl:HightliteHyperlink.Style>
-                    <Style TargetType="ctrl:HightliteTextBlockBase">
-                        <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Blue"/>
-                        <Style.Triggers>
-                            <Trigger Property="Control.IsMouseOver" Value="True">
-                                <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Red" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ctrl:HightliteHyperlink.Style>
-            </ctrl:HightliteHyperlink>
+            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Margin="5" DockPanel.Dock="Right"/>
+            
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Style="{StaticResource NameStyleWidthColumn}" />
+                </Grid.ColumnDefinitions>
+                <ctrl:HightliteHyperlink Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                                                        Grid.Column="0"   Margin="5">
+                    <ctrl:HightliteHyperlink.Style>
+                        <Style TargetType="ctrl:HightliteTextBlockBase">
+                            <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Blue"/>
+                            <Style.Triggers>
+                                <Trigger Property="Control.IsMouseOver" Value="True">
+                                    <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Red" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ctrl:HightliteHyperlink.Style>
+                </ctrl:HightliteHyperlink>
+            </Grid>
         </DockPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="FileTemplate">
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\document.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
-            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" DockPanel.Dock="Right"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Style="{StaticResource NameStyleWidthColumn}" />
+                    <ColumnDefinition Style="{StaticResource CountStyleWidthColumn}"/>
+                </Grid.ColumnDefinitions>
                 <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                        Grid.Column="1"   Margin="5"/>
-                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"></TextBlock>
-            </StackPanel>
+                                                        Grid.Column="0"   Margin="5"/>
+                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
+                           Grid.Column="1"></TextBlock>
+            </Grid>
+            
         </DockPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="AttachmentTemplate">
         <DockPanel>
             <Image Grid.Column="0" Source="..\Images\attachment.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
-            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Margin="5" DockPanel.Dock="Right"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Style="{StaticResource NameStyleWidthColumn}" />
+                    <ColumnDefinition Style="{StaticResource CountStyleWidthColumn}"/>
+                </Grid.ColumnDefinitions>
                 <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                        Grid.Column="1"   Margin="5"/>
-                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"></TextBlock>
-            </StackPanel>
+                                                        Grid.Column="0"   Margin="5"/>
+                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
+                           Grid.Column="1"></TextBlock>
+            </Grid>
         </DockPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="CalendarTemplate">
         <DockPanel>
             <Image Grid.Column="0" Source="..\Images\date.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
-            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" DockPanel.Dock="Right"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Style="{StaticResource NameStyleWidthColumn}" />
+                    <ColumnDefinition Style="{StaticResource CountStyleWidthColumn}"/>
+                </Grid.ColumnDefinitions>
                 <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                        Grid.Column="1"   Margin="5"/>
-                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"></TextBlock>
-            </StackPanel>
+                                                        Grid.Column="0"   Margin="5"/>
+                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
+                           Grid.Column="1"></TextBlock>
+            </Grid>
         </DockPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="PictureTemplate">
         <DockPanel>
             <Image Grid.Column="0" Source="..\Images\pictures.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
-            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-            <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Margin="5" DockPanel.Dock="Right"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Style="{StaticResource NameStyleWidthColumn}" />
+                    <ColumnDefinition Style="{StaticResource CountStyleWidthColumn}"/>
+                </Grid.ColumnDefinitions>
                 <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                        Grid.Column="1"   Margin="5"/>
-                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"></TextBlock>
-            </StackPanel>
+                                                        Grid.Column="0"   Margin="5"/>
+                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
+                           Grid.Column="1"></TextBlock>
+            </Grid>
         </DockPanel>
     </DataTemplate>
 
