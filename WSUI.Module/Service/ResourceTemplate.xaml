@@ -60,6 +60,7 @@
     <DataTemplate x:Key="EmailTemplate">
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
+            <TextBlock Text="{Binding Path=Date,Converter={StaticResource dateConverter}}"  Margin="5" DockPanel.Dock="Right"/>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Style="{StaticResource NameStyleWidthColumn}" />
@@ -92,8 +93,6 @@
                     </ctrl:HightliteHyperlink.Style>
                 </ctrl:HightliteHyperlink>
             </Grid>
-            <!-- date of item-->
-            <TextBlock Text="{Binding Path=Date,Converter={StaticResource dateConverter}}"  Margin="5" DockPanel.Dock="Right"/>
         </DockPanel>
     </DataTemplate>
 

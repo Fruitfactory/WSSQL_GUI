@@ -84,7 +84,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                                                               ShowProgressForm();
                                                               WSSqlLogger.Instance.LogInfo("Show progress delay > 0 ----------------------------------");
                                                               System.Diagnostics.Debug.WriteLine(
-                                                                  "Show progress delay > 0 ----------------------------------");
+                                                                  ">>>Show progress delay > 0");
                                                           });
 
                 }
@@ -92,7 +92,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                 {
                     
                     ShowProgressForm();
-                    WSSqlLogger.Instance.LogInfo("Show progress delay == 0 ----------------------------------");
+                    WSSqlLogger.Instance.LogInfo(">>>Show progress delay == 0");
                     System.Diagnostics.Debug.WriteLine("Show progress delay == 0 ----------------------------------");
                 }
             }
@@ -118,17 +118,24 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                 _progressForm = new ProgressWindow();
                 ((Window) _progressForm).Topmost = true;
 
-                _progressForm.ProcessCommand(ProgressFormCommand.Settings, _currentOperation);
-                ((Window) _progressForm).Closed += (o, e) =>
-                                                       {
-                                                           ((Window) _progressForm).Dispatcher.InvokeShutdown();
-                                                           System.Diagnostics.Debug.WriteLine(
-                                                               "Close dialog ----------------------------------");
-                                                           WSSqlLogger.Instance.LogInfo(
-                                                               "Close dialog  ----------------------------------");
-                                                       };
-                System.Diagnostics.Debug.WriteLine("Show dialog ----------------------------------");
-                WSSqlLogger.Instance.LogInfo("Show dialog  ----------------------------------");
+                try
+                {
+                    _progressForm.ProcessCommand(ProgressFormCommand.Settings, _currentOperation);
+                    ((Window)_progressForm).Closed += (o, e) =>
+                                                           {
+                                                               ((Window)_progressForm).Dispatcher.InvokeShutdown();
+                                                               System.Diagnostics.Debug.WriteLine(
+                                                                   "Close dialog ----------------------------------");
+                                                               WSSqlLogger.Instance.LogInfo(
+                                                                   ">>>Close dialog");
+                                                           };
+                    System.Diagnostics.Debug.WriteLine("Show dialog ----------------------------------");
+                    WSSqlLogger.Instance.LogInfo(">>>Show dialog");
+                }
+                catch (Exception ex)
+                {
+                    WSSqlLogger.Instance.LogError(ex.Message);
+                }
             }
             ((Window)_progressForm).Show();
             System.Windows.Threading.Dispatcher.Run();
@@ -147,7 +154,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                 }
             }
             System.Diagnostics.Debug.WriteLine("Stop progress ----------------------------------");
-            WSSqlLogger.Instance.LogInfo("Stop progress  ----------------------------------");
+            WSSqlLogger.Instance.LogInfo(">>>Stop progress");
             CloseProgressForm();
         }
 
