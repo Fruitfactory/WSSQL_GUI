@@ -643,6 +643,10 @@ namespace C4F.DevKit.PreviewHandler
 
         private void RecalcPageLocation()
         {
+            if(PageSize.Height >= int.MaxValue || PageSize.Height <= int.MinValue
+                || PageSize.Width >= int.MaxValue || PageSize.Width <= int.MinValue)
+                return;
+
             if (PageSize.Width < ClientBounds.Width && PageSize.Height > ClientBounds.Height)
                 //Center vertically
                 _pageLocation = new Point((ClientBounds.Width - PageSize.Width) / 2 + Margin.Left, Margin.Top - vsb.Value);
