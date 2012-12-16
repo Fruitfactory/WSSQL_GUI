@@ -230,10 +230,10 @@ namespace WSUI.Module.ViewModel
                 {
                     if (!string.IsNullOrEmpty(filename))
                     {
-                        PreviewView.SetPreviewFile(filename);
                         PreviewView.SetSearchPattern(_currentItem != null
-                                                        ? _currentItem.SearchString
-                                                        : string.Empty);
+                                ? _currentItem.SearchString
+                                : string.Empty);
+                        PreviewView.SetPreviewFile(filename);
                     }
                     else
                         PreviewView.ClearPreview();

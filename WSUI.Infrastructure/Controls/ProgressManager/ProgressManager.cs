@@ -110,23 +110,26 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
 
         private void ShowSplash()
         {
-            lock(_lockObject)
-               if(_currentOperation == null)
+            lock (_lockObject)
+            {
+                if (_currentOperation == null)
                     return;
-            
-            _progressForm = new ProgressWindow();
-            ((Window) _progressForm).Topmost = true;
-            
-            _progressForm.ProcessCommand(ProgressFormCommand.Settings, _currentOperation);
-            ((Window) _progressForm).Closed += (o, e) =>
-                                                   {
-                                                       ((Window) _progressForm).Dispatcher.InvokeShutdown();
-                                                       System.Diagnostics.Debug.WriteLine(
-                                                           "Close dialog ----------------------------------");
-                                                       WSSqlLogger.Instance.LogInfo("Close dialog  ----------------------------------");
-                                                   };
-            System.Diagnostics.Debug.WriteLine("Show dialog ----------------------------------");
-            WSSqlLogger.Instance.LogInfo("Show dialog  ----------------------------------");
+
+                _progressForm = new ProgressWindow();
+                ((Window) _progressForm).Topmost = true;
+
+                _progressForm.ProcessCommand(ProgressFormCommand.Settings, _currentOperation);
+                ((Window) _progressForm).Closed += (o, e) =>
+                                                       {
+                                                           ((Window) _progressForm).Dispatcher.InvokeShutdown();
+                                                           System.Diagnostics.Debug.WriteLine(
+                                                               "Close dialog ----------------------------------");
+                                                           WSSqlLogger.Instance.LogInfo(
+                                                               "Close dialog  ----------------------------------");
+                                                       };
+                System.Diagnostics.Debug.WriteLine("Show dialog ----------------------------------");
+                WSSqlLogger.Instance.LogInfo("Show dialog  ----------------------------------");
+            }
             ((Window)_progressForm).Show();
             System.Windows.Threading.Dispatcher.Run();
         }

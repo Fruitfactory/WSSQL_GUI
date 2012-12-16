@@ -47,7 +47,7 @@ namespace WSUI.Module.ViewModel
             // init
             _queryTemplate =
                 "GROUP ON System.ItemName OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Search.EntryID > {1} AND Contains(*,{0}) ORDER BY System.Search.EntryID ASC)";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))
-            _queryAnd = " AND \"{0}\"";
+            _queryAnd = " AND \"{0}\""; //" AND \"{0}\"";
             ID = 0;
             _name = "Everything";
             UIName = _name;
