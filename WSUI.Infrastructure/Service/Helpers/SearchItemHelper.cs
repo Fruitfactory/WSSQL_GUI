@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using WSUI.Infrastructure.Service.Enums;
@@ -47,7 +48,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             return TypeSearchItem.None;
         }
 
-        public static string GetFileName(BaseSearchData item)
+        public static string GetFileName(BaseSearchData item, bool forPreview = true)
         {
             if (item == null)
                 return null;
@@ -62,7 +63,7 @@ namespace WSUI.Infrastructure.Service.Helpers
                     return OutlookHelper.Instance.GetCalendarTempFileName(item);    
                 case TypeSearchItem.File:
                 case TypeSearchItem.Picture:
-                    return GetFileName(item.Path);
+                    return forPreview ? GetNormalizeFilename(item, GetFileName(item.Path)) : GetFileName(item.Path);
                 default:
                     return null;
             }
@@ -85,6 +86,23 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             return null;
         }
+
+        private static string GetNormalizeFilename(BaseSearchData item, string filename)
+        {
+            var ext = Path.GetExtension(filename);
+            string normalFilename = string.Empty;
+            switch (ext)
+            {
+                case ".pdf":
+                    normalFilename = TempFileManager.Instance.GenerateTempFileNameWithCopy(item, filename);
+                    break;
+                default:
+                    normalFilename = filename;
+                    break;
+            }
+            return normalFilename;
+        }
+
 
         #endregion
 

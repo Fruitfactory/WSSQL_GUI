@@ -78,5 +78,11 @@ namespace WSUI
             this.InvalidateVisual();
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            (DataContext as IMainViewModel).Clear();
+            base.OnClosed(e);
+        }
+
     }
 }

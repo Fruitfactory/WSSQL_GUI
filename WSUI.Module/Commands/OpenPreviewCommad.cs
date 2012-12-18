@@ -36,7 +36,7 @@ namespace WSUI.Module.Commands
                 case TypeSearchItem.File:
                 case TypeSearchItem.Picture:
                 case TypeSearchItem.FileAll:
-                    fileName = SearchItemHelper.GetFileName(_kindItem.Current);
+                    fileName = SearchItemHelper.GetFileName(_kindItem.Current,false);
                     break;
                 case TypeSearchItem.Attachment:
                     fileName = TempFileManager.Instance.GenerateTempFileName(_kindItem.Current) ?? OutlookHelper.Instance.GetAttachmentTempFileName(_kindItem.Current);

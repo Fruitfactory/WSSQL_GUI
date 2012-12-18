@@ -300,6 +300,12 @@ namespace WSUI.Module.ViewModel
         public event EventHandler Complete;
         public List<BaseSearchData> MainDataSource { get; protected set; }
 
+        public void Clear()
+        {
+            TempFileManager.Instance.ClearTempFolder();
+        }
+
+
         #endregion
     }
 }
