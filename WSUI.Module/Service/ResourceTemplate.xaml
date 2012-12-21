@@ -32,11 +32,11 @@
     </Style>
 
     <Style x:Key="SubjectStyleWidthColumn" TargetType="ColumnDefinition">
-        <Setter Property="Width" Value="300" />
+        <Setter Property="Width" Value="250" />
     </Style>
 
     <Style x:Key="FromStyleWidthColumn" TargetType="ColumnDefinition">
-        <Setter Property="Width" Value="150" />
+        <Setter Property="Width" Value="200" />
     </Style>
 
 
