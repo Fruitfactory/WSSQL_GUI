@@ -31,7 +31,6 @@ namespace WSUI.Module.ViewModel
             _name = "Attachments";
             UIName = _name;
             _prefix = "Attachment";
-            DataSourceAttachment = new ObservableCollection<BaseSearchData>();
         }
 
         protected override void ReadData(System.Data.IDataReader reader)
@@ -89,46 +88,14 @@ namespace WSUI.Module.ViewModel
             _commandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
         }
 
-        //protected override void OnFilterData()
-        //{
-        //    if (_parentViewModel == null || _parentViewModel.MainDataSource.Count == 0)
-        //        return;
-        //    DataSourceAttachment.Clear();
-        //    _parentViewModel.MainDataSource.ForEach(item =>
-        //    {
-        //        if (item.Type == TypeSearchItem.Attachment && item is BaseSearchData)
-        //        {
-        //            DataSourceAttachment.Add(item as BaseSearchData);
-        //        }
-        //    });
-        //    OnPropertyChanged(() => DataSourceAttachment);
-        //}
-
         protected override void OnStart()
         {
             base.OnStart();
-            DataSourceAttachment.Clear();
-            OnPropertyChanged(() => DataSourceAttachment);
             FireStart();
             Enabled = false;
             OnPropertyChanged(() => Enabled);
         }
 
-        //protected override void OnComplete(bool res)
-        //{
-        //    FireComplete(res);
-            
-        //    Application.Current.Dispatcher.BeginInvoke(new Action(() => _listData.ForEach(s =>
-        //                                                                                      {
-        //                                                                                          DataSourceAttachment.Add(s); 
-        //                                                                                      })), null);
-        //    OnPropertyChanged(() => DataSourceAttachment);
-        //    Enabled = true;
-        //    OnPropertyChanged(() => Enabled);
-        //    _listData.Clear();
-        //}
-
-        public ObservableCollection<BaseSearchData> DataSourceAttachment { get; private set; }
 
         public ISettingsView<AttachmentViewModel> SettingsView
         {

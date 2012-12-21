@@ -187,6 +187,12 @@ namespace WSUI.Module.ViewModel
             return res;
         }
 
+        protected override void OnStart()
+        {
+            ClearDataSource();
+            base.OnStart();
+        }
+
         protected override void OnComplete(bool res)
         {
             _listData.OrderBy(b => b.Type);

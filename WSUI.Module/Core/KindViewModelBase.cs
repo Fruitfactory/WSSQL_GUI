@@ -151,7 +151,6 @@ namespace WSUI.Module.Core
         protected virtual void OnStart()
         {
             _listData.Clear();
-            ClearDataSource();
             FireStart();
             Enabled = false;
             OnPropertyChanged(() => Enabled);
