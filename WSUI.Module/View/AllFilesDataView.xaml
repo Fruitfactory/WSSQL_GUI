@@ -117,7 +117,7 @@
             </ItemsControl>
 
         </Grid>
-        <ListBox ItemsSource="{Binding Path=DataSourceOfPage,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+        <ListBox ItemsSource="{Binding Path=DataSourceOfPage,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                  ItemTemplateSelector="{StaticResource templateSelector}"
                  SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  ContextMenu="{StaticResource ResourceKey=contextMenu}"

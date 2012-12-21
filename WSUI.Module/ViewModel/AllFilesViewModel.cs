@@ -45,9 +45,9 @@ namespace WSUI.Module.ViewModel
             DataView = dataView;
             DataView.Model = this;
             // init
-            _queryTemplate =
+            QueryTemplate =
                 "GROUP ON System.ItemName OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Search.EntryID > {1} AND Contains(*,{0}) ORDER BY System.Search.EntryID ASC)";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))
-            _queryAnd = " AND \"{0}\""; //" AND \"{0}\"";
+            QueryAnd = " AND \"{0}\""; //" AND \"{0}\"";
             ID = 0;
             _name = "Everything";
             UIName = _name;
@@ -166,40 +166,49 @@ namespace WSUI.Module.ViewModel
                 temp.Append(string.Format("'\"{0}\"", list[0]));
                 for (int i = 1; i < list.Count; i++)
                 {
-                    temp.Append(string.Format(_queryAnd, list[i]));
+                    temp.Append(string.Format(QueryAnd, list[i]));
                 }
                 andClause = temp.ToString() + "'";
             }
-            res = string.Format(_queryTemplate,  string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'",searchCriteria) : andClause,  _lastID);
+            res = string.Format(QueryTemplate,  string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'",searchCriteria) : andClause,  _lastID);
 
             return res;
         }
 
         protected override void OnComplete(bool res)
         {
-            
             base.OnComplete(res);
-
-            Application.Current.Dispatcher.BeginInvoke(new Action(() => UpdateData()), null);
+            Application.Current.Dispatcher.BeginInvoke(new Action(UpdateData), null);
         }
 
         protected override void OnSearchStringChanged()
         {
-            _lastID = 0;
-            _currentPageNumber = 0;
-            if(DataPage != null)
-                DataPage.Clear();
-            if(DataSourceOfPage  != null)
-                DataSourceOfPage.Clear();
-            DataSource.Clear();
-            _listID.Clear();
-            _listName.Clear();
+            ClearSearchingInfo();
+            ClearDataSource();
             OnPropertyChanged(() => DataSource);
             OnPropertyChanged(() => DataPage);
             OnPropertyChanged(() => DataSourceOfPage);
             if (_parentViewModel != null && _parentViewModel.MainDataSource != null)
                 _parentViewModel.MainDataSource.Clear();
-            ClearDaraSource();
+            
+        }
+
+        protected override void OnFilterData()
+        {
+            ClearSearchingInfo();
+            base.OnFilterData();
+        }
+
+        private void ClearSearchingInfo()
+        {
+            _lastID = 0;
+            _currentPageNumber = 0;
+            if (DataPage != null)
+                DataPage.Clear();
+            if (DataSourceOfPage != null)
+                DataSourceOfPage.Clear();
+            _listID.Clear();
+            _listName.Clear();
         }
 
         private EmailSearchData GroupEmail(string name, string id)
@@ -207,7 +216,7 @@ namespace WSUI.Module.ViewModel
             var query = string.Format(QueryForGroupEmails, _folder, id); //,InboxFolder
             EmailSearchData data = null;
             OleDbDataReader reader = null;
-            OleDbConnection con = new OleDbConnection(_connectionString);
+            OleDbConnection con = new OleDbConnection(ConnectionString);
             OleDbCommand cmd = new OleDbCommand(query, con);
             try
             {
@@ -401,11 +410,11 @@ namespace WSUI.Module.ViewModel
                 for (int i = 0; i < _pageCount; i++)
                 {
                     _pages.Add(new PageEntity()
-                    {
-                        Number = i,
-                        IsVisible = true,
-                        IsVisited = false
-                    });
+                                    {
+                                        Number = i,
+                                        IsVisible = true,
+                                        IsVisited = false
+                                    });
                 }
                 _currentPageNumber = _pageCount - 1;
                 SetCurrentPageSource();

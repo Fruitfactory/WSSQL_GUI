@@ -30,9 +30,9 @@ namespace WSUI.Module.Core
 {
     public abstract class KindViewModelBase : ViewModelBase, IKindItem
     {
-        protected readonly string _connectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
-        protected string _queryTemplate;
-        protected string _queryAnd;
+        protected readonly string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
+        protected string QueryTemplate;
+        protected string QueryAnd;
         protected string _name = string.Empty;
         protected string _query = string.Empty;
         protected string _prefix = string.Empty;
@@ -47,6 +47,8 @@ namespace WSUI.Module.Core
         protected volatile bool _isInterupt = false;
 
         protected readonly IUnityContainer _container;
+
+        protected readonly object Lock = new object();
 
         protected KindViewModelBase(IUnityContainer container)
         {
@@ -67,7 +69,7 @@ namespace WSUI.Module.Core
                 return;
             Rect r = (Rect) rect;
             OleDbDataReader dataReader = null;
-            OleDbConnection connection = new OleDbConnection(_connectionString);
+            OleDbConnection connection = new OleDbConnection(ConnectionString);
             OleDbCommand cmd = new OleDbCommand(_query, connection);
 
             ProgressManager.Instance.StartOperation(new ProgressOperation()
@@ -137,11 +139,11 @@ namespace WSUI.Module.Core
                 temp.Append(string.Format("'\"{0}\"", list[0]));
                 for (int i = 1; i < list.Count; i++)
                 {
-                    temp.Append(string.Format(_queryAnd, list[i]));
+                    temp.Append(string.Format(QueryAnd, list[i]));
                 }
                 andClause = temp.ToString() + "'";
             }
-            res = string.Format(_queryTemplate, string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'", searchCriteria) : andClause);
+            res = string.Format(QueryTemplate, string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'", searchCriteria) : andClause);
 
             return res;
         }
@@ -149,7 +151,7 @@ namespace WSUI.Module.Core
         protected virtual void OnStart()
         {
             _listData.Clear();
-
+            ClearDataSource();
             FireStart();
             Enabled = false;
             OnPropertyChanged(() => Enabled);
@@ -159,10 +161,14 @@ namespace WSUI.Module.Core
         protected virtual void OnComplete(bool res)
         {
             FireComplete(res);
-            Application.Current.Dispatcher.BeginInvoke(new Action(() => _listData.ForEach(s => { DataSource.Add(s); _parentViewModel.MainDataSource.Add(s);})), null);
+            Application.Current.Dispatcher.BeginInvoke(new Action(() => 
+            {
+                _listData.ForEach(s => DataSource.Add(s));
+            }), null);
             OnPropertyChanged(() => DataSource);
             Enabled = true;
             OnPropertyChanged(() => Enabled);
+            
         }
 
         protected virtual void OnError(bool res)
@@ -215,10 +221,13 @@ namespace WSUI.Module.Core
 
         protected virtual void OnFilterData()
         {
-           
+            if (string.IsNullOrEmpty(SearchString))
+                return;
+            ClearDataSource();
+            Search();
         }
 
-        protected  void ClearDaraSource()
+        protected  void ClearDataSource()
         {
             DataSource.Clear();
             OnPropertyChanged(() => DataSource);
@@ -231,11 +240,19 @@ namespace WSUI.Module.Core
                 temp(this, new EventArgs());
         }
 
-        protected  void FireComplete(bool res)
+        protected void FireComplete(bool res)
         {
             EventHandler<EventArgs<bool>> temp = Complete;
             if (temp != null)
                 temp(this, new EventArgs<bool>(res));
+        }
+
+        protected void ClearMainDataSource()
+        {
+            if(_parentViewModel.MainDataSource == null 
+              || _parentViewModel.MainDataSource.Count == 0)
+                return;
+            _parentViewModel.MainDataSource.Clear();
         }
 
         #region IKindItem

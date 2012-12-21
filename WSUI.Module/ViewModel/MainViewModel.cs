@@ -287,9 +287,11 @@ namespace WSUI.Module.ViewModel
             _currentItem = newItem;
             Connect();
             CurrentKindChanged(_currentItem);
-            _currentItem.FilterData();
-            if(!string.IsNullOrEmpty(searchString) && searchString != _currentItem.SearchString)
+            if (!string.IsNullOrEmpty(searchString) && searchString != _currentItem.SearchString)
+            {
                 _currentItem.SearchString = searchString;
+                _currentItem.FilterData();
+            }
         }
 
         #endregion

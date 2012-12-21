@@ -46,8 +46,8 @@ namespace WSUI.Module.ViewModel
             DataView = dataView;
             DataView.Model = this;
 
-            _queryTemplate = "SELECT TOP 10 System.ItemName, System.Contact.FirstName, System.Contact.LastName,System.Contact.EmailAddress,System.Contact.EmailAddress2,System.Contact.EmailAddress3, System.Subject,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Kind,System.Message.FromAddress FROM SystemIndex WHERE ";
-            _queryAnd = " OR ( CONTAINS(System.Contact.FirstName,'\"{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\"') ))) ";
+            QueryTemplate = "SELECT TOP 10 System.ItemName, System.Contact.FirstName, System.Contact.LastName,System.Contact.EmailAddress,System.Contact.EmailAddress2,System.Contact.EmailAddress3, System.Subject,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Kind,System.Message.FromAddress FROM SystemIndex WHERE ";
+            QueryAnd = " OR ( CONTAINS(System.Contact.FirstName,'\"{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\"') ))) ";
             ID = 1;
             _name = "People";
             UIName = _name;
@@ -167,14 +167,14 @@ namespace WSUI.Module.ViewModel
                 if (arr == null || arr.Count == 1)
                 {
                     var where1 = string.Format(_queryContactWhere, arr[0], "", ")");
-                    return string.Format("{0}{1}", _queryTemplate, where1) + string.Format(_queryByAddress, arr[0]);
+                    return string.Format("{0}{1}", QueryTemplate, where1) + string.Format(_queryByAddress, arr[0]);
                 }
                 var address = new StringBuilder(string.Format(_queryByAddress, arr[0]));
                 var where2 = string.Format(_queryContactWhere, arr[0], "(", "");
-                res += _queryTemplate + where2;
+                res += QueryTemplate + where2;
                 for (int i = 1; i < arr.Count; i++)
                 {
-                    strBuilder.Append(string.Format(_queryAnd, arr[i]));
+                    strBuilder.Append(string.Format(QueryAnd, arr[i]));
                     address.Append(string.Format(_queryByAddress, arr[i]));
                 }
                 res += strBuilder.ToString() + address.ToString();
@@ -182,17 +182,9 @@ namespace WSUI.Module.ViewModel
             else
             {
                 var where = string.Format(_queryContactWhere, searchCriteria, "", ")");
-                res = string.Format("{0}{1}", _queryTemplate, where) + string.Format(_queryByAddress, searchCriteria);
+                res = string.Format("{0}{1}", QueryTemplate, where) + string.Format(_queryByAddress, searchCriteria);
             }
             return res;
-        }
-
-        protected override void OnStart()
-        {
-            ClearDaraSource();
-            if(_parentViewModel != null)
-                _parentViewModel.MainDataSource.Clear();
-            base.OnStart();
         }
 
         protected override void OnComplete(bool res)
@@ -221,7 +213,7 @@ namespace WSUI.Module.ViewModel
             _folder = Folder;
             var query = string.Format(QueryContactEmail, _folder, _currentEmail);
             OleDbDataReader myDataReader = null;
-            OleDbConnection myOleDbConnection = new OleDbConnection(_connectionString);
+            OleDbConnection myOleDbConnection = new OleDbConnection(ConnectionString);
             OleDbCommand myOleDbCommand = new OleDbCommand(query, myOleDbConnection);
             try
             {

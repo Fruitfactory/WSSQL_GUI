@@ -29,8 +29,8 @@ namespace WSUI.Module.ViewModel
             DataView = dataView;
             DataView.Model = this;
 
-            _queryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) AND CONTAINS(*,{1}) ";//¬ход€щие  //Inbox
-            _queryAnd = " AND \"{0}\"";
+            QueryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) AND CONTAINS(*,{1}) ";//¬ход€щие  //Inbox
+            QueryAnd = " AND \"{0}\"";
             ID = 2;
             _name = "Email";
             UIName = _name;
@@ -90,11 +90,11 @@ namespace WSUI.Module.ViewModel
                 temp.Append(string.Format("'\"{0}\"", list[0]));
                 for (int i = 1; i < list.Count; i++)
                 {
-                    temp.Append(string.Format(_queryAnd, list[i]));
+                    temp.Append(string.Format(QueryAnd, list[i]));
                 }
                 andClause = temp.ToString() + "'";
             }
-            res = string.Format(_queryTemplate, folder, string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'", searchCriteria) : andClause) + OrderTemplate;
+            res = string.Format(QueryTemplate, folder, string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'", searchCriteria) : andClause) + OrderTemplate;
 
             return res;
 
@@ -106,25 +106,11 @@ namespace WSUI.Module.ViewModel
             _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
         }
 
-        protected override void OnFilterData()
-        {
-            if (_parentViewModel == null || _parentViewModel.MainDataSource.Count == 0)
-                return;
-            DataSourceMail.Clear();
-            _parentViewModel.MainDataSource.ForEach(item =>
-                                                        {
-                                                            if (item.Type == TypeSearchItem.Email && item is EmailSearchData)
-                                                            {
-                                                                DataSourceMail.Add(item as EmailSearchData);
-                                                            }
-                                                        });
-            OnPropertyChanged(() => DataSourceMail);
-        }
-
-
         protected override void OnStart()
         {
-            ClearDaraSource();
+            base.OnStart();
+            ClearDataSource();
+            ClearMainDataSource();
             DataSourceMail.Clear();
             OnPropertyChanged(() => DataSourceMail);
             _listData.Clear();
@@ -134,18 +120,18 @@ namespace WSUI.Module.ViewModel
             OnPropertyChanged(() => Enabled);
         }
 
-        protected override void OnComplete(bool res)
-        {
-            FireComplete(res);
-            Application.Current.Dispatcher.BeginInvoke(new Action(() => _listData.ForEach(s =>
-                                                                                              {
-                                                                                                  DataSourceMail.Add((EmailSearchData)s);
-                                                                                              })), null);
-            OnPropertyChanged(() => DataSourceMail);
-            Enabled = true;
-            OnPropertyChanged(() => Enabled);
+        //protected override void OnComplete(bool res)
+        //{
+        //    FireComplete(res);
+        //    Application.Current.Dispatcher.BeginInvoke(new Action(() => _listData.ForEach(s =>
+        //                                                                                      {
+        //                                                                                          DataSourceMail.Add((EmailSearchData)s);
+        //                                                                                      })), null);
+        //    OnPropertyChanged(() => DataSourceMail);
+        //    Enabled = true;
+        //    OnPropertyChanged(() => Enabled);
 
-        }
+        //}
 
         #region IUIView
 

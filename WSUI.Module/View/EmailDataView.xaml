@@ -21,7 +21,7 @@
     
     <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
 
-        <ListBox ItemsSource="{Binding DataSourceMail,UpdateSourceTrigger=PropertyChanged}"
+        <ListBox ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
                       ItemTemplateSelector="{StaticResource templateSelector}"
                       SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                       ContextMenu="{StaticResource ResourceKey=contextMenu}"
