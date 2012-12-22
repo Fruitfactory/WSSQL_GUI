@@ -29,7 +29,7 @@ namespace WSUI.Module.ViewModel
         private const string InboxFolder = HelperConst.Inbox2;
         private int _lastID = 0;
         private const string QueryForGroupEmails =
-            "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email'  AND CONTAINS(System.Message.ConversationID,'{1}*')   ORDER BY System.Message.DateReceived DESC) ";//AND CONTAINS(System.ItemPathDisplay,'{0}*',1033)
+            "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email'  AND CONTAINS(System.Message.ConversationID,'{0}*')   ORDER BY System.Message.DateReceived DESC) ";//AND CONTAINS(System.ItemPathDisplay,'{0}*',1033)
 
         private int _countAdded = 0;
         private List<string> _listID = new List<string>();
@@ -63,7 +63,7 @@ namespace WSUI.Module.ViewModel
             EmailClickCommand = new DelegateCommand<object>(o => EmailClick(o), o => true);
             MoveFirstCommand = new DelegateCommand<object>(o => MoveToFirstInternal(),o => CanMoveLeft());
             MovePreviousCommand = new DelegateCommand<object>( o => MoveToLeft(), o => CanMoveLeft());
-            MoveLastCoommand = new DelegateCommand<object>(o => MoveToLastInternal(), o => CanModeRight());
+            MoveLastCommand = new DelegateCommand<object>(o => MoveToLastInternal(), o => CanModeRight());
             MoveNextCommand = new DelegateCommand<object>(o => MoveToRight(), o => CanModeRight());
             LinkCommand = new DelegateCommand<object>(o => LinkClicked(o), o => true);
         }
@@ -213,7 +213,7 @@ namespace WSUI.Module.ViewModel
 
         private EmailSearchData GroupEmail(string name, string id)
         {
-            var query = string.Format(QueryForGroupEmails, _folder, id); //,InboxFolder
+            var query = string.Format(QueryForGroupEmails, id);
             EmailSearchData data = null;
             OleDbDataReader reader = null;
             OleDbConnection con = new OleDbConnection(ConnectionString);
@@ -390,7 +390,7 @@ namespace WSUI.Module.ViewModel
 
         public ICommand MoveFirstCommand { get; private set; }
         public ICommand MovePreviousCommand { get; private set; }
-        public ICommand MoveLastCoommand { get; private set; }
+        public ICommand MoveLastCommand { get; private set; }
         public ICommand MoveNextCommand { get; private set; }
         public ICommand LinkCommand { get; private set; }
 

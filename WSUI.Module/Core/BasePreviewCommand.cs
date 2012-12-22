@@ -9,16 +9,16 @@ namespace WSUI.Module.Core
 {
     public abstract class BasePreviewCommand : IWSCommand
     {
-        protected IKindItem _kindItem;
+        protected IKindItem KindItem;
 
         protected BasePreviewCommand(IKindItem kindItem)
         {
-            _kindItem = kindItem;
+            KindItem = kindItem;
         }
 
         protected virtual bool OnCanExecute()
         {
-            return _kindItem != null;
+            return KindItem != null;
         }
 
         protected virtual void OnExecute()

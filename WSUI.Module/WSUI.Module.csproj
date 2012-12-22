@@ -93,6 +93,7 @@
     <Compile Include="Service\HelperConst.cs" />
     <Compile Include="Service\ContactSuggestingService.cs" />
     <Compile Include="Service\KeyDownBehavior.cs" />
+    <Compile Include="Service\NameToImageConvert.cs" />
     <Compile Include="Strategy\CommadStrategyFactory.cs" />
     <Compile Include="Strategy\EmailCommandStrategy.cs" />
     <Compile Include="Strategy\FileCommandStrategy.cs" />
@@ -225,6 +226,17 @@
     <Resource Include="Images\contact.png" />
     <Resource Include="Images\date.png" />
     <Resource Include="Images\pictures.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\cpp.png" />
+    <Resource Include="Images\java.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\html.png" />
+    <Resource Include="Images\xml.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\txt.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

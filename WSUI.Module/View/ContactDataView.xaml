@@ -53,7 +53,7 @@
                         <StackPanel Orientation="Vertical"  Grid.Row="2" Grid.Column="0"  Grid.ColumnSpan="2" >
                             <ListBox ItemsSource="{Binding Emails,UpdateSourceTrigger=PropertyChanged}"
                           ItemTemplateSelector="{StaticResource templateSelector}"
-                          
+                          SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ElementName=this}"
                           ><!--SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"-->
 
 

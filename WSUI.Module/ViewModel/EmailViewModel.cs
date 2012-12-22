@@ -20,6 +20,8 @@ namespace WSUI.Module.ViewModel
     public class EmailViewModel : KindViewModelBase,IUView<EmailViewModel>
     {
         private const string OrderTemplate = " ORDER BY System.Message.DateReceived DESC)";
+        private const string FilterByFolder = " AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) ";
+
 
         public EmailViewModel(IUnityContainer container, ISettingsView<EmailViewModel> settingsView, IDataView<EmailViewModel> dataView)
             :base(container)
@@ -29,13 +31,14 @@ namespace WSUI.Module.ViewModel
             DataView = dataView;
             DataView.Model = this;
 
-            QueryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) AND CONTAINS(*,{1}) ";//¬ход€щие  //Inbox
+            QueryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' {0}AND CONTAINS(*,{1}) ";//¬ход€щие  //Inbox
             QueryAnd = " AND \"{0}\"";
             ID = 2;
             _name = "Email";
             UIName = _name;
             _prefix = "Email";
             DataSourceMail = new ObservableCollection<EmailSearchData>();
+            Folder = OutlookHelper.AllFolders;
         }
 
 
@@ -94,7 +97,7 @@ namespace WSUI.Module.ViewModel
                 }
                 andClause = temp.ToString() + "'";
             }
-            res = string.Format(QueryTemplate, folder, string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'", searchCriteria) : andClause) + OrderTemplate;
+            res = string.Format(QueryTemplate, folder != OutlookHelper.AllFolders ? string.Format(FilterByFolder,folder) : string.Empty , string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'", searchCriteria) : andClause) + OrderTemplate;
 
             return res;
 
@@ -119,19 +122,6 @@ namespace WSUI.Module.ViewModel
             Enabled = false;
             OnPropertyChanged(() => Enabled);
         }
-
-        //protected override void OnComplete(bool res)
-        //{
-        //    FireComplete(res);
-        //    Application.Current.Dispatcher.BeginInvoke(new Action(() => _listData.ForEach(s =>
-        //                                                                                      {
-        //                                                                                          DataSourceMail.Add((EmailSearchData)s);
-        //                                                                                      })), null);
-        //    OnPropertyChanged(() => DataSourceMail);
-        //    Enabled = true;
-        //    OnPropertyChanged(() => Enabled);
-
-        //}
 
         #region IUIView
 

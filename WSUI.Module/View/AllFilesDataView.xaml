@@ -83,7 +83,7 @@
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Command="{Binding MoveLastCoommand}"  Grid.Column="5" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center"
+            <Button Command="{Binding MoveLastCommand}"  Grid.Column="5" Grid.RowSpan="2" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center"
                     IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}">
                 <Button.Content>
                     <Grid>

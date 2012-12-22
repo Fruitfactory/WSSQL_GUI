@@ -22,8 +22,8 @@ namespace WSUI.Module.Commands
         protected override bool OnCanExecute()
         {
 
-            if (_kindItem != null && _kindItem.Current != null &&
-                ((_kindItem.Current.Type & TypeSearchItem.FileAll) == _kindItem.Current.Type))
+            if (KindItem != null && KindItem.Current != null &&
+                ((KindItem.Current.Type & TypeSearchItem.FileAll) == KindItem.Current.Type))
                 return true;
             return false;
         }
@@ -31,15 +31,15 @@ namespace WSUI.Module.Commands
         protected override void OnExecute()
         {
             string fileName = string.Empty;
-            switch (_kindItem.Current.Type)
+            switch (KindItem.Current.Type)
             {
                 case TypeSearchItem.File:
                 case TypeSearchItem.Picture:
                 case TypeSearchItem.FileAll:
-                    fileName = SearchItemHelper.GetFileName(_kindItem.Current,false);
+                    fileName = SearchItemHelper.GetFileName(KindItem.Current,false);
                     break;
                 case TypeSearchItem.Attachment:
-                    fileName = TempFileManager.Instance.GenerateTempFileName(_kindItem.Current) ?? OutlookHelper.Instance.GetAttachmentTempFileName(_kindItem.Current);
+                    fileName = TempFileManager.Instance.GenerateTempFileName(KindItem.Current) ?? OutlookHelper.Instance.GetAttachmentTempFileName(KindItem.Current);
                     break;
             }
             if (string.IsNullOrEmpty(fileName) ||

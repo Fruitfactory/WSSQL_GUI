@@ -15,7 +15,8 @@
 
     <service:DateToStringConverter x:Key="dateConverter" />
     <service:CountToFormatStringConvert x:Key="countConverter" />
-    
+    <service:NameToImageConvert x:Key="nameConverter" />
+        
     <Style x:Key="ImageStyle" TargetType="{x:Type Image}">
         <Setter Property="Width"  Value="16"/>
         <Setter Property="Height" Value="16"/>
@@ -123,8 +124,8 @@
     </DataTemplate>
 
     <DataTemplate x:Key="FileTemplate">
-        <DockPanel LastChildFill="True">
-            <Image Grid.Column="0" Source="..\Images\document.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
+        <DockPanel LastChildFill="True"><!--"..\Images\document.png"-->
+            <Image Grid.Column="0" Source="{Binding Path=Name,Converter={StaticResource ResourceKey=nameConverter}}" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" DockPanel.Dock="Right"/>
             <Grid>
                 <Grid.ColumnDefinitions>

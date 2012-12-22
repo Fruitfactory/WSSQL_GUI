@@ -17,15 +17,15 @@ namespace WSUI.Module.Commands
 
         protected override bool OnCanExecute()
         {
-            if (_kindItem != null && _kindItem.Current != null && 
-                _kindItem.Current.Type == TypeSearchItem.Email)
+            if (KindItem != null && KindItem.Current != null && 
+                KindItem.Current.Type == TypeSearchItem.Email)
                 return true;
             return false;
         }
 
         protected override void OnExecute()
         {
-            var itemSearch = _kindItem.Current;
+            var itemSearch = KindItem.Current;
             var mail = OutlookHelper.Instance.GetEmailItem(itemSearch);
             if (mail != null)
             {

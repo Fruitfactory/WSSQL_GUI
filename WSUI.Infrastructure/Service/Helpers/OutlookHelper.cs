@@ -27,6 +27,8 @@ namespace WSUI.Infrastructure.Service.Helpers
         private const string ATSUFFIX = "/at=";
         private const int IDLENGHT = 24;
 
+        public const string AllFolders = "All folders";
+
 #region fields
         
         private bool _disposed;
@@ -189,6 +191,7 @@ namespace WSUI.Infrastructure.Service.Helpers
                 WSSqlLogger.Instance.LogError(ex.Message);
                 return res;
             }
+            res.Insert(0,OutlookHelper.AllFolders);
             return res;
         }
 

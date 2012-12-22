@@ -357,7 +357,6 @@ namespace C4F.DevKit.PreviewHandler
             if (_pdfDoc != null)
             {
                 _pdfDoc.NextPage();
-                    
                 _pdfDoc.RenderPage(pageViewControl1.Handle);
                 Render();
                     

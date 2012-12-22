@@ -329,20 +329,6 @@ namespace WSUI.Module.Core
             get
             {
                 var list = OutlookHelper.Instance.GetFolderList();
-                #region ti4ka
-                int index = -1;
-                if ((index = list.IndexOf(HelperConst.Inbox1)) > -1)
-                {
-                    Folder = list[index];
-                }
-                else if ((index = list.IndexOf(HelperConst.Inbox2)) > -1)
-                {
-                    Folder = list[index];
-                }
-                OnPropertyChanged(() => Folder);
-
-                #endregion
-
                 return list;
             }
             set { }
