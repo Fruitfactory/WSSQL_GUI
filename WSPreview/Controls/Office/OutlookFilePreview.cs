@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -24,13 +25,42 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         private static string PageTemplate =
             "<html><body leftmargin='0' style='font: bold 11; font-family: Microsoft Sans Serif'>{0}</body></html>";
 
+        private const string ExtOfImage = "png";
+
+
+
+        #region pattern for html
+
+        private const string PageBegin = @"<html><head><title></title><style type='text/css'>.style1{width: 15%;color: gray;}.style2{width: 85%;}</style></head><body style='font-family: Arial, Helvetica, sans-serif'>";
+        private const string TableBegin = @"<table style='width: 100%; table-layout: auto;'>";
+        private const string SubjectRow = @"<tr><td class='style1' style='color: #0c0202; font-size: large; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
+        private const string SenderRow = @"<tr><td class='style1' style='color: #0c0202; font-size: medium; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
+        private const string ToRow = @"<tr><td class='style1'>To:</td><td class='style2'>{0}</td></tr>";
+        private const string CCRow = @"<tr><td class='style1'>CC:</td><td class='style2'>{0}</td></tr>";
+        private const string AttachmentsRow = @"<tr><td class='style1'>Attachments:</td><td class='style2'>{0}</td></tr>";
+        private const string SendRow = @"<tr><td class='style1'>Send:</td><td class='style2'>{0}</td></tr>";
+        private const string EmailRow = @"<tr style='margin: 25px 10px 10px 10px'><td colspan='2' >{0}</td></tr>";
+        private const string TableEnd = @"</table>";
+        private const string PageEnd = @"</body></html>";
+
+        private const string LinkTemplate = @"<img src='{1}' width='16' height='16' /><a href='{0}'>{0}</a>&nbsp;&nbsp;&nbsp;";
+
+        #endregion
+
+
+
+
         private bool _IsExistProcess = false;
         private string _filename = string.Empty;
-        private  readonly Dictionary<string,string> _dictTempFile = new Dictionary<string, string>();
+        private readonly Dictionary<string,string> _dictTempFile = new Dictionary<string, string>();
+        private readonly Dictionary<string,string> _dictImage = new Dictionary<string, string>(); 
+
+
 
         public OutlookFilePreview()
         {
             InitializeComponent();
+            webEmail.Navigating += (sender, args) => OnNavigating(args);
         }
 
 
@@ -49,30 +79,38 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
             if (mail == null)
                 return;
-            textBoxSubject.Text = mail.Subject;
-            webFrom.DocumentText = HighlightSearchString(string.Format(PageTemplate, mail.SenderName));
-            textBoxTo.Text = mail.To;
+           
+            string page = PageBegin + TableBegin;
+
+            page += string.Format(SubjectRow, mail.Subject);
+            page += string.Format(SenderRow, mail.SenderName);
+            page += string.Format(ToRow, mail.To);
             if (!string.IsNullOrEmpty(mail.CC))
-                textBoxCC.Text = mail.CC;
-            else
-                tableLayoutPanel.RowStyles[3].Height = 0;
-            textBoxSend.Text = mail.ReceivedTime.ToString();
-            webBrowserContent.DocumentText = HighlightSearchString(mail.HTMLBody);
+                page += string.Format(CCRow, mail.CC);
 
             if (mail.Attachments.Count > 0)
             {
+                var tempFolder = Path.GetDirectoryName(filename);
+                
+                var urls = string.Empty;
                 foreach (Outlook.Attachment att in mail.Attachments)
                 {
-                    var ext = Path.GetExtension(att.DisplayName);
-                    ext = ext.Substring(1, ext.Length - 1);
-                    int index = imageList.Images.IndexOfKey(string.Format("{0}.{1}", ext, "png"));
-                    var item = new ListViewItem(att.DisplayName,index < 0 ? 0 : index);
-                    listViewAttachments.Items.Add(item);
+                    // TODO add fynctionality, if we don't have image for samo file ext (need to show blank image)
+                    var destname = GetAttachmentValue(att, tempFolder);
+                    if(!string.IsNullOrEmpty(destname))
+                        urls += string.Format(LinkTemplate, att.DisplayName,destname);
                 }
-                
+                page += string.Format(AttachmentsRow, urls);
             }
-            else
-                tableLayoutPanel.RowStyles[4].Height = 0;
+
+            page += string.Format(SendRow, mail.ReceivedTime.ToString());
+            page += string.Format(EmailRow, mail.HTMLBody);
+
+
+            page += TableEnd + PageEnd;
+
+            webEmail.DocumentText = HighlightSearchString(page);
+
 
             Marshal.ReleaseComObject(mail);
             CloseApplication(app);
@@ -197,10 +235,59 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
         #endregion
 
-        private void listViewAttachments_ItemActivate(object sender, EventArgs e)
+        private string GetAttachmentValue(Outlook.Attachment att, string tempFolder)
         {
-            if(listViewAttachments.SelectedItems.Count == 0)
-                return;
+            List<string> resourceArray = Assembly.GetExecutingAssembly().GetManifestResourceNames().Where(s => s.EndsWith(ExtOfImage)).ToList();
+            var ext = Path.GetExtension(att.DisplayName);
+            ext = ext.Substring(1, ext.Length - 1);
+            var key = string.Format("{0}.{1}", ext, ExtOfImage);
+            var name = resourceArray.FirstOrDefault(s => s.EndsWith(key));
+            if (string.IsNullOrEmpty(name))
+                return string.Empty;
+            string destname = string.Empty;
+            if (!_dictImage.ContainsKey(name))
+            {
+                var imagename = name.Substring(name.IndexOf(string.Format("{0}.{1}", ext, ExtOfImage)));
+                destname = string.Format("{0}\\{1}", tempFolder, imagename);
+                Copy(name, destname);
+                _dictImage.Add(name, destname);
+            }
+            else
+            {
+                destname = _dictImage[name];
+            }
+            return destname;
+        }
+
+        private bool Copy(string sourceName, string destFileName)
+        {
+            bool res = false;
+            string saveAsName = destFileName;
+            FileInfo fileInfoOutputFile = new FileInfo(saveAsName);
+
+            if (fileInfoOutputFile.Exists)
+            {
+
+            }
+            
+            using(FileStream streamToOutputFile = fileInfoOutputFile.OpenWrite())
+            using (Stream streamToResourceFile = Assembly.GetExecutingAssembly().GetManifestResourceStream(sourceName))
+            {
+                const int size = 4096;
+                byte[] bytes = new byte[4096];
+                int numBytes;
+                while ((numBytes = streamToResourceFile.Read(bytes, 0, size)) > 0)
+                {
+                    streamToOutputFile.Write(bytes, 0, numBytes);
+                }
+                res = true;
+            }
+
+            return res;
+        }
+
+        private void OnNavigating(WebBrowserNavigatingEventArgs args)
+        {
             
             Outlook.Application app = GetApplication();
             if (app == null)
@@ -211,7 +298,8 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             
             if (mail.Attachments.Count == 0)
                 return;
-            string currentname = listViewAttachments.SelectedItems[0].Text;
+            string currentname = args.Url.LocalPath;
+            
             string path = string.Empty;
             foreach (Outlook.Attachment att in mail.Attachments)
             {
@@ -225,6 +313,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             if (File.Exists(path))
                 try
                 {
+                    args.Cancel = true;
                     Process.Start(path);
                 }
                 catch (Exception ex)
@@ -233,6 +322,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
                 }
             Marshal.ReleaseComObject(mail);
             CloseApplication(app);
+            
         }
 
 

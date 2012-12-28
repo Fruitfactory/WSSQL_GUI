@@ -250,6 +250,68 @@
   <ItemGroup>
     <None Include="Resources\tshadowtopright.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\aac.png" />
+    <EmbeddedResource Include="Images\ai.png" />
+    <EmbeddedResource Include="Images\aiff.png" />
+    <EmbeddedResource Include="Images\avi.png" />
+    <EmbeddedResource Include="Images\bmp.png" />
+    <EmbeddedResource Include="Images\c.png" />
+    <EmbeddedResource Include="Images\cpp.png" />
+    <EmbeddedResource Include="Images\css.png" />
+    <EmbeddedResource Include="Images\dat.png" />
+    <EmbeddedResource Include="Images\dmg.png" />
+    <EmbeddedResource Include="Images\doc.png" />
+    <EmbeddedResource Include="Images\docx.png" />
+    <EmbeddedResource Include="Images\dotx.png" />
+    <EmbeddedResource Include="Images\dwg.png" />
+    <EmbeddedResource Include="Images\dxf.png" />
+    <EmbeddedResource Include="Images\eps.png" />
+    <EmbeddedResource Include="Images\exe.png" />
+    <EmbeddedResource Include="Images\flv.png" />
+    <EmbeddedResource Include="Images\gif.png" />
+    <EmbeddedResource Include="Images\h.png" />
+    <EmbeddedResource Include="Images\hpp.png" />
+    <EmbeddedResource Include="Images\html.png" />
+    <EmbeddedResource Include="Images\ics.png" />
+    <EmbeddedResource Include="Images\iso.png" />
+    <EmbeddedResource Include="Images\java.png" />
+    <EmbeddedResource Include="Images\jpg.png" />
+    <EmbeddedResource Include="Images\key.png" />
+    <EmbeddedResource Include="Images\mid.png" />
+    <EmbeddedResource Include="Images\mp3.png" />
+    <EmbeddedResource Include="Images\mp4.png" />
+    <EmbeddedResource Include="Images\mpg.png" />
+    <EmbeddedResource Include="Images\odf.png" />
+    <EmbeddedResource Include="Images\ods.png" />
+    <EmbeddedResource Include="Images\odt.png" />
+    <EmbeddedResource Include="Images\otp.png" />
+    <EmbeddedResource Include="Images\ots.png" />
+    <EmbeddedResource Include="Images\ott.png" />
+    <EmbeddedResource Include="Images\pdf.png" />
+    <EmbeddedResource Include="Images\php.png" />
+    <EmbeddedResource Include="Images\png.png" />
+    <EmbeddedResource Include="Images\ppt.png" />
+    <EmbeddedResource Include="Images\psd.png" />
+    <EmbeddedResource Include="Images\py.png" />
+    <EmbeddedResource Include="Images\qt.png" />
+    <EmbeddedResource Include="Images\rar.png" />
+    <EmbeddedResource Include="Images\rb.png" />
+    <EmbeddedResource Include="Images\rtf.png" />
+    <EmbeddedResource Include="Images\sql.png" />
+    <EmbeddedResource Include="Images\tga.png" />
+    <EmbeddedResource Include="Images\tgz.png" />
+    <EmbeddedResource Include="Images\tiff.png" />
+    <EmbeddedResource Include="Images\txt.png" />
+    <EmbeddedResource Include="Images\wav.png" />
+    <EmbeddedResource Include="Images\xls.png" />
+    <EmbeddedResource Include="Images\xlsx.png" />
+    <EmbeddedResource Include="Images\xml.png" />
+    <EmbeddedResource Include="Images\yml.png" />
+    <EmbeddedResource Include="Images\zip.png" />
+    <EmbeddedResource Include="Images\_blank.png" />
+    <EmbeddedResource Include="Images\_page.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
