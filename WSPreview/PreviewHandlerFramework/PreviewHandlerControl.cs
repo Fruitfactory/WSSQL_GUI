@@ -15,8 +15,8 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerFramework
             
         }
 
-        public new abstract void Load(FileInfo file);
-        public new abstract void Load(Stream stream);
+        public abstract void Load(FileInfo file);
+        public abstract void Load(Stream stream);
 
         public virtual void Unload()
         {

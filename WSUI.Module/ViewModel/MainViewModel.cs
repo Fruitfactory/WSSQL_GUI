@@ -25,7 +25,6 @@ namespace WSUI.Module.ViewModel
     {
         private DelegateCommand<object> _openFile;
         private List<IKindItem> _listItems;
-        private ObservableCollection<IKindItem> _colItems;
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;
         private IKindItem _currentItem = null;

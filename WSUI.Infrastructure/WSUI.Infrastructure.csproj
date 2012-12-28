@@ -73,14 +73,7 @@
     <Compile Include="Controls\ProgressManager\ProgressWindow.xaml.cs">
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Core\BaseDataController.cs" />
-    <Compile Include="Core\BaseKindItemStrategy.cs" />
     <Compile Include="Core\BaseSearchData.cs" />
-    <Compile Include="Core\BaseSettingsController.cs" />
-    <Compile Include="Core\IBaseSettingsController.cs" />
-    <Compile Include="Core\IDataView.cs" />
-    <Compile Include="Core\IKindItem.cs" />
-    <Compile Include="Core\ISettingsView.cs" />
     <Compile Include="Models\ContactSearchData.cs" />
     <Compile Include="Models\EmailSearchData.cs" />
     <Compile Include="Models\SearchData.cs" />

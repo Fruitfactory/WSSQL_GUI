@@ -17,7 +17,6 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
     [ComVisible(true)]
     public sealed class OutlookPreviewHandler : FileBasedPreviewHandler,ISearchWordHighlight
     {
-        protected string _hitString = null;
 
         protected override PreviewHandlerControl CreatePreviewHandlerControl()
         {
@@ -53,8 +52,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 
         public string HitString
         {
-            get { return _hitString; }
-            set { _hitString = value; }
+            get; set;
         }
     }
 }

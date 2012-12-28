@@ -55,12 +55,12 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
             }
         }
 
-        public int Width
+        public new int Width
         {
             get { return (int)base.Width; }
             set { base.Width = value; }
         }
-        public int Height
+        public new int Height
         {
             get { return (int)base.Height; }
             set { base.Height = value; }

@@ -18,16 +18,11 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 {
     public partial class OutlookFilePreview : UserControl
     {
-        private static string AfterStrongTemplate = "<font style='background-color: yellow'><strong>{0}</strong></font>";
-        private static string OutlookProcessName = "OUTLOOK";
-        private static string OutlookApplication = "Outlook.Application";
-
-        private static string PageTemplate =
-            "<html><body leftmargin='0' style='font: bold 11; font-family: Microsoft Sans Serif'>{0}</body></html>";
+        private const string AfterStrongTemplate = "<font style='background-color: yellow'><strong>{0}</strong></font>";
+        private const string OutlookProcessName = "OUTLOOK";
+        private const string OutlookApplication = "Outlook.Application";
 
         private const string ExtOfImage = "png";
-
-
 
         #region pattern for html
 

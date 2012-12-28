@@ -118,8 +118,8 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                     return;
 
                 _progressForm = new ProgressWindow();
-                IntPtr childHandle = new WindowInteropHelper((Window) _progressForm).Handle;
-                WindowAPI.SetParent(childHandle, _currentOperation.MainHandle);
+                var wih = new WindowInteropHelper((Window)_progressForm);
+                wih.Owner = _currentOperation.MainHandle;
                 try
                 {
                     _progressForm.ProcessCommand(ProgressFormCommand.Settings, _currentOperation);

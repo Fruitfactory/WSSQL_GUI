@@ -83,7 +83,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.ImageControl
                 {
                     int H = _image.Height;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     base.OnPaintBackground(e);
                     return;
