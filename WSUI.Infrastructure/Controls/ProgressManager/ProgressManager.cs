@@ -7,7 +7,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 using C4F.DevKit.PreviewHandler.Service.Logger;
+using C4F.DevKit.PreviewHandler.PInvoke;
 
 
 namespace WSUI.Infrastructure.Controls.ProgressManager
@@ -116,19 +118,12 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                     return;
 
                 _progressForm = new ProgressWindow();
-                ((Window) _progressForm).Topmost = true;
-
+                IntPtr childHandle = new WindowInteropHelper((Window) _progressForm).Handle;
+                WindowAPI.SetParent(childHandle, _currentOperation.MainHandle);
                 try
                 {
                     _progressForm.ProcessCommand(ProgressFormCommand.Settings, _currentOperation);
-                    ((Window)_progressForm).Closed += (o, e) =>
-                                                           {
-                                                               ((Window)_progressForm).Dispatcher.InvokeShutdown();
-                                                               System.Diagnostics.Debug.WriteLine(
-                                                                   "Close dialog ----------------------------------");
-                                                               WSSqlLogger.Instance.LogInfo(
-                                                                   ">>>Close dialog");
-                                                           };
+                    ((Window) _progressForm).Closed += OnClosedForm;
                     System.Diagnostics.Debug.WriteLine("Show dialog ----------------------------------");
                     WSSqlLogger.Instance.LogInfo(">>>Show dialog");
                 }
@@ -139,6 +134,16 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
             }
             ((Window)_progressForm).Show();
             System.Windows.Threading.Dispatcher.Run();
+        }
+
+
+        private void OnClosedForm(object sender,EventArgs args)
+        {
+            ((Window) _progressForm).Dispatcher.InvokeShutdown();
+            System.Diagnostics.Debug.WriteLine(
+                "Close dialog ----------------------------------");
+            WSSqlLogger.Instance.LogInfo(
+                ">>>Close dialog");
         }
 
         public void StopOperation()

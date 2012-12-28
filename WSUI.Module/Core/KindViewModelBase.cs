@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Threading;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
@@ -62,12 +63,17 @@ namespace WSUI.Module.Core
         }
 
 
-        protected virtual void DoQuery(object rect)
+        protected virtual void DoQuery(object mwi)
         {
             WSSqlLogger.Instance.LogInfo("Begin query!");
             if (string.IsNullOrEmpty(_query))
                 return;
-            Rect r = (Rect) rect;
+            var mainWnd = mwi as MainWindowInfo;
+            if(mainWnd == null)
+            {
+                WSSqlLogger.Instance.LogInfo("Information about Main Window is empty.");
+                return;
+            }
             OleDbDataReader dataReader = null;
             OleDbConnection connection = new OleDbConnection(ConnectionString);
             OleDbCommand cmd = new OleDbCommand(_query, connection);
@@ -77,8 +83,9 @@ namespace WSUI.Module.Core
                 Caption = "Searching...",
                 DelayTime = 2500,
                 Canceled = false,
-                Location = new Point(r.Left,r.Top),
-                Size = new Size(r.Width,r.Height)
+                Location = new Point(mainWnd.MainWindowRect.Left,mainWnd.MainWindowRect.Top),
+                Size = new Size(mainWnd.MainWindowRect.Width,mainWnd.MainWindowRect.Height),
+                MainHandle = mainWnd.MainWindowHandle
             });
 
             try
@@ -196,10 +203,13 @@ namespace WSUI.Module.Core
         protected virtual void Search()
         {
             OnStart();
+            MainWindowInfo mwi = new MainWindowInfo();
             Rect rect = new Rect();
             rect.Location = Application.Current.MainWindow.PointToScreen(new Point(0, 0));
             rect.Size = new Size(Application.Current.MainWindow.ActualWidth, Application.Current.MainWindow.ActualHeight);
-            Task thread = new Task(() => DoQuery(rect));
+            mwi.MainWindowRect = rect;
+            mwi.MainWindowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
+            Task thread = new Task(() => DoQuery(mwi));
             Task thread2 = thread.ContinueWith((t) => DoAdditionalQuery());
             _query = CreateQuery();
             thread.Start();

@@ -16,7 +16,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
         public bool Canceled { get; set; } // button Cancel
         public Point Location { get; set; }
         public Size Size { get; set; }
-
+        public IntPtr MainHandle { get; set; }
 
         public override string ToString()
         {

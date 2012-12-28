@@ -93,6 +93,7 @@
     <Compile Include="Service\HelperConst.cs" />
     <Compile Include="Service\ContactSuggestingService.cs" />
     <Compile Include="Service\KeyDownBehavior.cs" />
+    <Compile Include="Service\MainWindowInfo.cs" />
     <Compile Include="Service\NameToImageConvert.cs" />
     <Compile Include="Strategy\CommadStrategyFactory.cs" />
     <Compile Include="Strategy\EmailCommandStrategy.cs" />

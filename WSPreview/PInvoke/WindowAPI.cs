@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace C4F.DevKit.PreviewHandler.PInvoke
 {
-    class WindowAPI
+    public class WindowAPI
     {
 
         public const int WM_DESTROY = 0x0002;
