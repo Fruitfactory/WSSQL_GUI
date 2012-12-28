@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using C4F.DevKit.PreviewHandler.Service.Logger;
-using C4F.DevKit.PreviewHandler.PInvoke;
-
 
 namespace WSUI.Infrastructure.Controls.ProgressManager
 {

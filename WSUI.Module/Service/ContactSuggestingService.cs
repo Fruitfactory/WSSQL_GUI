@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
-using System.Linq;
-using System.Text;
-using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
 using System.Threading.Tasks;
 

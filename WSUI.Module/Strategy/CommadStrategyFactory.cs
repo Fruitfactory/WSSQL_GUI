@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using WSUI.Infrastructure.Service.Enums;
-using WSUI.Module.Core;
 using WSUI.Module.Interface;
 
 namespace WSUI.Module.Strategy

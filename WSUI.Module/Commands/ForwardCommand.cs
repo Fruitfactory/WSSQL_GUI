@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Office.Interop.Outlook;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Module.Core;

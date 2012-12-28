@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Windows;
 using Microsoft.Practices.Unity;
 using WSUI.Infrastructure.Core;
-using WSUI.Infrastructure.Models;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;

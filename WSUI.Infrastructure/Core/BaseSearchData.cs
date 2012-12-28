@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using WSUI.Infrastructure.Service.Enums;
 
 namespace WSUI.Infrastructure.Core

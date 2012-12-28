@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Service.Interfaces;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Diagnostics;
