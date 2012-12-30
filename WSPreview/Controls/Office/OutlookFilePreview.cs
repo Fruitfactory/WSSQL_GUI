@@ -203,7 +203,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
         private string HighlightSearchString(string inputString)
         {
-            if (HitString == null)
+            if (string.IsNullOrEmpty(HitString) || string.IsNullOrEmpty(inputString))
                 return inputString;
             string result = inputString;
             var itemArray = GetWordsList(HitString.Trim());
