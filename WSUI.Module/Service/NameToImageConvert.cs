@@ -12,7 +12,7 @@ namespace WSUI.Module.Service
     public class ImageHelper
     {
         public const string DefaultKey = "Default";
-        private static Lazy<ImageHelper> _instance = new Lazy<ImageHelper>(() =>
+        private static readonly Lazy<ImageHelper> _instance = new Lazy<ImageHelper>(() =>
                                                                                {
                                                                                    var obj = new ImageHelper();
                                                                                    obj.Init();

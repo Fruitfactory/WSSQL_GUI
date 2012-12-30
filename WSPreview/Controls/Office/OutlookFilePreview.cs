@@ -38,7 +38,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         private const string TableEnd = @"</table>";
         private const string PageEnd = @"</body></html>";
 
-        private const string LinkTemplate = @"<img src='{1}' width='16' height='16' /><a href='{0}'>{0}</a>&nbsp;&nbsp;&nbsp;";
+        private const string LinkTemplate = @"<img src='{1}' width='16' height='16' /><a href='{0}'>{2}</a>&nbsp;&nbsp;&nbsp;";
 
         #endregion
 
@@ -74,11 +74,11 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
            
             string page = PageBegin + TableBegin;
 
-            page += string.Format(SubjectRow, mail.Subject);
-            page += string.Format(SenderRow, mail.SenderName);
-            page += string.Format(ToRow, mail.To);
+            page += string.Format(SubjectRow, HighlightSearchString(mail.Subject));
+            page += string.Format(SenderRow, HighlightSearchString( mail.SenderName));
+            page += string.Format(ToRow, HighlightSearchString(mail.To));
             if (!string.IsNullOrEmpty(mail.CC))
-                page += string.Format(CCRow, mail.CC);
+                page += string.Format(CCRow, HighlightSearchString(mail.CC));
 
             if (mail.Attachments.Count > 0)
             {
@@ -90,18 +90,18 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
                     // TODO add fynctionality, if we don't have image for samo file ext (need to show blank image)
                     var destname = GetAttachmentValue(att, tempFolder);
                     if(!string.IsNullOrEmpty(destname))
-                        urls += string.Format(LinkTemplate, att.DisplayName,destname);
+                        urls += string.Format(LinkTemplate, att.DisplayName, destname, HighlightSearchString(att.DisplayName));
                 }
                 page += string.Format(AttachmentsRow, urls);
             }
 
             page += string.Format(SendRow, mail.ReceivedTime.ToString());
-            page += string.Format(EmailRow, mail.HTMLBody);
+            page += string.Format(EmailRow, HighlightSearchString(mail.HTMLBody));
 
 
             page += TableEnd + PageEnd;
 
-            webEmail.DocumentText = HighlightSearchString(page);
+            webEmail.DocumentText = page;
 
 
             Marshal.ReleaseComObject(mail);
@@ -255,11 +255,20 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             var key = string.Format("{0}.{1}", ext, ExtOfImage);
             var name = resourceArray.FirstOrDefault(s => s.EndsWith(key));
             if (string.IsNullOrEmpty(name))
-                return string.Empty;
+            {
+                return ReturnKeyImage(resourceArray, "_blank", tempFolder);
+            }
+            return ReturnKeyImage(resourceArray,ext,tempFolder);
+        }
+
+        private string ReturnKeyImage(List<string> keysList, string key,string tempFolder)
+        {
+            var k = string.Format("{0}.{1}", key, ExtOfImage);
+            var name = keysList.FirstOrDefault(s => s.EndsWith(k));
             string destname = string.Empty;
             if (!_dictImage.ContainsKey(name))
             {
-                var imagename = name.Substring(name.IndexOf(string.Format("{0}.{1}", ext, ExtOfImage)));
+                var imagename = name.Substring(name.IndexOf(string.Format("{0}.{1}", key, ExtOfImage)));
                 destname = string.Format("{0}\\{1}", tempFolder, imagename);
                 Copy(name, destname);
                 _dictImage.Add(name, destname);

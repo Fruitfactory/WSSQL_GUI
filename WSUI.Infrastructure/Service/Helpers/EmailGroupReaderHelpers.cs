@@ -14,7 +14,6 @@ namespace WSUI.Infrastructure.Service.Helpers
             {
                 if (reader.GetFieldType(i).ToString() != "System.Data.IDataReader")
                     continue;
-                //WSSqlLogger.Instance.LogInfo(reader.GetName(i));
                 OleDbDataReader itemsReader = reader.GetValue(i) as OleDbDataReader;
                 while (itemsReader.Read())
                 {
@@ -37,7 +36,10 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             string url = reader[2].ToString();
 
-            DateTime res = reader.GetDateTime(4);
+            var datetime = reader[4]; 
+            DateTime res;
+            DateTime.TryParse(datetime.ToString(), out res);
+
             string conversationIndex = reader[6] as string;
 
             return new EmailSearchData() { Subject = subject, Name = name, Path = url, Recepient = recep, Date = res,ConversationIndex = conversationIndex};

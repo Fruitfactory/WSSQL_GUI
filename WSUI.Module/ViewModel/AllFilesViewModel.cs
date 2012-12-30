@@ -46,7 +46,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
             // init
             QueryTemplate =
-                "GROUP ON System.ItemName OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Search.EntryID > {1} AND (Contains(System.Search.Contents,{0}) OR Contains(*,{0})) ORDER BY System.Search.EntryID ASC)";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))
+                "GROUP ON System.ItemName OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Search.EntryID > {1} AND (Contains(System.Search.Contents,{0}) OR Contains(*,{0}) ) ORDER BY System.Search.EntryID ASC)";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})
             QueryAnd = " AND \"{0}\""; //" AND \"{0}\"";
             ID = 0;
             _name = "Everything";
