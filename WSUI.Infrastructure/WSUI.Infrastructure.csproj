@@ -90,6 +90,10 @@
     <Compile Include="Service\Helpers\TaskFinderHelper.cs" />
     <Compile Include="Service\Helpers\TempFileManager.cs" />
     <Compile Include="Service\Interfaces\IOutlookHelper.cs" />
+    <Compile Include="Service\Rules\BaseRule.cs" />
+    <Compile Include="Service\Rules\IRule.cs" />
+    <Compile Include="Service\Rules\QuoteRule.cs" />
+    <Compile Include="Service\Rules\WordRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WSPreview\WSPreview.csproj">

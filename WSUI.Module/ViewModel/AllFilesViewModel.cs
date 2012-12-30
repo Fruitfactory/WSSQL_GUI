@@ -12,6 +12,7 @@ using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
 using WSUI.Infrastructure.Core;
 using WSUI.Infrastructure.Models;
+using WSUI.Infrastructure.Service.Rules;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using Microsoft.Practices.Unity;
@@ -99,7 +100,7 @@ namespace WSUI.Module.ViewModel
                 _listID.Add(groupItem.ID);
                 TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File);
                 newValue.Type = type;
-                _listData.Add(newValue);
+                ListData.Add(newValue);
                 _countAdded++;
             }
             else if (groupItem.Kind != null && IsEmail(value: groupItem.Kind) && _listID.Any(it => it == groupItem.ID))
@@ -119,11 +120,11 @@ namespace WSUI.Module.ViewModel
                     Tag = tag,
                     Count = group.Count.ToString()
                 };
-                _listData.Add(bs);
+                ListData.Add(bs);
                 _countAdded++;
             }
             if (_countAdded == CountItemsInPage)
-                _isInterupt = true;
+                IsInterupt = true;
 
         }
 
@@ -153,23 +154,14 @@ namespace WSUI.Module.ViewModel
         protected override string CreateQuery()
         {
             _countAdded = 0;
-            _isInterupt = false;
+            IsInterupt = false;
+
             var searchCriteria = SearchString.Trim();
             string res = string.Empty;
-            string andClause = string.Empty;
-            if (searchCriteria.IndexOf(' ') > -1)
-            {
-                StringBuilder temp = new StringBuilder();
-                var list = searchCriteria.Split(' ').ToList();
+            
+            ProcessSearchCriteria(searchCriteria);           
 
-                temp.Append(string.Format("'\"{0}\"", list[0]));
-                for (int i = 1; i < list.Count; i++)
-                {
-                    temp.Append(string.Format(QueryAnd, list[i]));
-                }
-                andClause = temp.ToString() + "'";
-            }
-            res = string.Format(QueryTemplate,  string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'",searchCriteria) : andClause,  _lastID);
+            res = string.Format(QueryTemplate,  string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'",_listW[0]) : _andClause,  _lastID);
 
             return res;
         }
@@ -187,8 +179,8 @@ namespace WSUI.Module.ViewModel
             OnPropertyChanged(() => DataSource);
             OnPropertyChanged(() => DataPage);
             OnPropertyChanged(() => DataSourceOfPage);
-            if (_parentViewModel != null && _parentViewModel.MainDataSource != null)
-                _parentViewModel.MainDataSource.Clear();
+            if (ParentViewModel != null && ParentViewModel.MainDataSource != null)
+                ParentViewModel.MainDataSource.Clear();
             
         }
 
@@ -308,12 +300,12 @@ namespace WSUI.Module.ViewModel
         protected override void OnInit()
         {
             base.OnInit();
-            _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
+            CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
             var fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
-            _commandStrategies.Add(TypeSearchItem.File, fileAttach);
-            _commandStrategies.Add(TypeSearchItem.Attachment,fileAttach);
-            _commandStrategies.Add(TypeSearchItem.Picture, fileAttach);
-            _commandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
+            CommandStrategies.Add(TypeSearchItem.File, fileAttach);
+            CommandStrategies.Add(TypeSearchItem.Attachment,fileAttach);
+            CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
+            CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
             var list = OutlookHelper.Instance.GetFolderList();
             if (list.IndexOf(HelperConst.Inbox1) > -1)
                 _folder = HelperConst.Inbox1;

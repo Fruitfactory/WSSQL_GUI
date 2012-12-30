@@ -16,6 +16,7 @@ using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Core;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
+using WSUI.Infrastructure.Service.Rules;
 using WSUI.Infrastructure.Services;
 using WSUI.Module.Interface;
 using Microsoft.Practices.Unity;
@@ -34,22 +35,25 @@ namespace WSUI.Module.Core
         protected string _query = string.Empty;
         protected string _prefix = string.Empty;
         protected bool _toggle = false;
-        protected readonly List<BaseSearchData> _listData = new List<BaseSearchData>();
+        protected readonly List<BaseSearchData> ListData = new List<BaseSearchData>();
         private object _lock = new object();
         private BaseSearchData _current = null;
         private string _searchString = string.Empty;
-        protected Dictionary<TypeSearchItem, ICommandStrategy> _commandStrategies;
+        protected Dictionary<TypeSearchItem, ICommandStrategy> CommandStrategies;
         private ICommandStrategy _currentStrategy;
-        protected IMainViewModel _parentViewModel;
-        protected volatile bool _isInterupt = false;
+        protected IMainViewModel ParentViewModel;
+        protected volatile bool IsInterupt = false;
 
-        protected readonly IUnityContainer _container;
+        protected readonly IUnityContainer Container;
+        protected List<IRule> RuleCollection;   
 
         protected readonly object Lock = new object();
+        protected string _andClause;
+        protected List<string> _listW;
 
         protected KindViewModelBase(IUnityContainer container)
         {
-            _container = container;
+            Container = container;
             ChooseCommand = new DelegateCommand<object>(o => OnChoose(), o => true);
             SearchCommand = new DelegateCommand<object>(o => Search(),o => CanSearch());
             OpenCommand = new DelegateCommand<object>(o => OpenFile(), o => CanOpenFile());
@@ -92,7 +96,7 @@ namespace WSUI.Module.Core
                 while (dataReader.Read())
                 {
                     ReadData(dataReader);
-                    if (_isInterupt)
+                    if (IsInterupt)
                         break;
                 }
 
@@ -133,27 +137,40 @@ namespace WSUI.Module.Core
         {
             var searchCriteria = SearchString.Trim();
             string res = string.Empty;
-            string andClause = string.Empty;
-            if (searchCriteria.IndexOf(' ') > -1)
-            {
-                StringBuilder temp = new StringBuilder();
-                var list = searchCriteria.Split(' ').ToList();
+            
+            ProcessSearchCriteria(searchCriteria);
 
-                temp.Append(string.Format("'\"{0}\"", list[0]));
-                for (int i = 1; i < list.Count; i++)
-                {
-                    temp.Append(string.Format(QueryAnd, list[i]));
-                }
-                andClause = temp.ToString() + "'";
-            }
-            res = string.Format(QueryTemplate, string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'", searchCriteria) : andClause);
+            res = string.Format(QueryTemplate, string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause);
 
             return res;
         }
 
+        protected void ProcessSearchCriteria(string searchCriteria)
+        {
+            _andClause = string.Empty;
+            _listW = new List<string>();
+
+            foreach (var rule in RuleCollection.OrderBy(i => i.Priority))
+            {
+                _listW.AddRange(rule.ApplyRule(searchCriteria));
+                searchCriteria = rule.ClearCriteriaAccordingRule(searchCriteria);
+            }
+
+            if (_listW.Count > 1)
+            {
+                StringBuilder temp = new StringBuilder();
+                temp.Append(string.Format("'\"{0}\"", _listW[0]));
+                for (int i = 1; i < _listW.Count; i++)
+                {
+                    temp.Append(string.Format(QueryAnd, _listW[i]));
+                }
+                _andClause = temp.ToString() + "'";
+            }
+        }
+
         protected virtual void OnStart()
         {
-            _listData.Clear();
+            ListData.Clear();
             FireStart();
             Enabled = false;
             OnPropertyChanged(() => Enabled);
@@ -165,7 +182,7 @@ namespace WSUI.Module.Core
             FireComplete(res);
             Application.Current.Dispatcher.BeginInvoke(new Action(() => 
             {
-                _listData.ForEach(s => DataSource.Add(s));
+                ListData.ForEach(s => DataSource.Add(s));
             }), null);
             OnPropertyChanged(() => DataSource);
             Enabled = true;
@@ -211,7 +228,7 @@ namespace WSUI.Module.Core
             thread.Start();
         }
 
-        protected  virtual  bool CanSearch()
+        protected virtual bool CanSearch()
         {
             return true;
         }
@@ -221,7 +238,11 @@ namespace WSUI.Module.Core
 
         protected virtual void OnInit()
         {
-            _commandStrategies  = new Dictionary<TypeSearchItem, ICommandStrategy>();
+            CommandStrategies  = new Dictionary<TypeSearchItem, ICommandStrategy>();
+            RuleCollection = new List<IRule>();
+            RuleCollection.Add(new QuoteRule());
+            RuleCollection.Add(new WordRule());
+            RuleCollection.ForEach(rule => rule.InitRule());
         }
 
         protected virtual void OnFilterData()
@@ -254,10 +275,10 @@ namespace WSUI.Module.Core
 
         protected void ClearMainDataSource()
         {
-            if(_parentViewModel.MainDataSource == null 
-              || _parentViewModel.MainDataSource.Count == 0)
+            if(ParentViewModel.MainDataSource == null 
+              || ParentViewModel.MainDataSource.Count == 0)
                 return;
-            _parentViewModel.MainDataSource.Clear();
+            ParentViewModel.MainDataSource.Clear();
         }
 
         #region IKindItem
@@ -279,8 +300,8 @@ namespace WSUI.Module.Core
         }
         public IMainViewModel Parent
         {
-            get { return _parentViewModel; }
-            set { _parentViewModel = value; }
+            get { return ParentViewModel; }
+            set { ParentViewModel = value; }
         }
         public string Prefix { get { return _prefix; } }
         public int ID { get; protected set; }
@@ -381,12 +402,12 @@ namespace WSUI.Module.Core
         {
             if(Current == null)
                 return;
-            if (!_commandStrategies.ContainsKey(Current.Type))
+            if (!CommandStrategies.ContainsKey(Current.Type))
             {
                 _currentStrategy = null;
             }
             else
-                _currentStrategy = _commandStrategies[Current.Type];
+                _currentStrategy = CommandStrategies[Current.Type];
             
             OnPropertyChanged(() => Commands);
         }

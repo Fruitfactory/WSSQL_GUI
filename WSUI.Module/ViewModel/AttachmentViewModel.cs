@@ -51,7 +51,7 @@ namespace WSUI.Module.ViewModel
                 DateModified = DateTime.Parse(date),
                 Tag = tag
             };
-            _listData.Add(bs);
+            ListData.Add(bs);
 
         }
 
@@ -59,20 +59,10 @@ namespace WSUI.Module.ViewModel
         {
             var searchCriteria = SearchString.Trim();
             string res = string.Empty;
-            string andClause = string.Empty;
-            if (searchCriteria.IndexOf(' ') > -1)
-            {
-                StringBuilder temp = new StringBuilder();
-                var list = searchCriteria.Split(' ').ToList();
+           
+            ProcessSearchCriteria(searchCriteria);
 
-                temp.Append(string.Format("'\"{0}\"", list[0]));
-                for (int i = 1; i < list.Count; i++)
-                {
-                    temp.Append(string.Format(QueryAnd, list[i]));
-                }
-                andClause = temp.ToString() + "'";
-            }
-            res = string.Format(QueryTemplate, searchCriteria, string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'", searchCriteria) : andClause);
+            res = string.Format(QueryTemplate, _listW[0], string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause);
 
             return res;
         }
@@ -81,7 +71,7 @@ namespace WSUI.Module.ViewModel
         {
             base.OnInit();
             var fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
-            _commandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
+            CommandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
         }
 
         protected override void OnStart()

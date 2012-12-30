@@ -73,7 +73,7 @@ namespace WSUI.Module.ViewModel
             }
 
             //TODO: paste item to datacontroller;
-            _listData.Add(si);
+            ListData.Add(si);
         }
 
         protected override string CreateQuery()
@@ -81,20 +81,10 @@ namespace WSUI.Module.ViewModel
             var folder = Folder;
             var searchCriteria = SearchString.Trim();
             string res = string.Empty;
-            string andClause = string.Empty;
-            if (searchCriteria.IndexOf(' ') > -1)
-            {
-                StringBuilder temp = new StringBuilder();
-                var list = searchCriteria.Split(' ').ToList();
+            
+            ProcessSearchCriteria(searchCriteria);
 
-                temp.Append(string.Format("'\"{0}\"", list[0]));
-                for (int i = 1; i < list.Count; i++)
-                {
-                    temp.Append(string.Format(QueryAnd, list[i]));
-                }
-                andClause = temp.ToString() + "'";
-            }
-            res = string.Format(QueryTemplate, folder != OutlookHelper.AllFolders ? string.Format(FilterByFolder,folder) : string.Empty , string.IsNullOrEmpty(andClause) ? string.Format("'\"{0}\"'", searchCriteria) : andClause) + OrderTemplate;
+            res = string.Format(QueryTemplate, folder != OutlookHelper.AllFolders ? string.Format(FilterByFolder,folder) : string.Empty , string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause) + OrderTemplate;
 
             return res;
 
@@ -103,7 +93,7 @@ namespace WSUI.Module.ViewModel
         protected override void OnInit()
         {
             base.OnInit();
-            _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
+            CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
         }
 
         protected override void OnStart()
@@ -113,7 +103,7 @@ namespace WSUI.Module.ViewModel
             ClearMainDataSource();
             DataSourceMail.Clear();
             OnPropertyChanged(() => DataSourceMail);
-            _listData.Clear();
+            ListData.Clear();
 
             FireStart();
             Enabled = false;

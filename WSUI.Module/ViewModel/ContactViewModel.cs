@@ -130,7 +130,7 @@ namespace WSUI.Module.ViewModel
                     data.Foto = OutlookHelper.Instance.GetContactFotoTempFileName(data);
                     _contactData = data;
                     GetEmailsForContact(data);
-                    _listData.Add(data);
+                    ListData.Add(data);
                     break;
                 case "email":
                     string fromAddress = GetEmailAddress(from);
@@ -149,7 +149,7 @@ namespace WSUI.Module.ViewModel
                         ID = Guid.NewGuid(),
                         From = fromAddress
                     };
-                    _listData.Add(si);
+                    ListData.Add(si);
                     break;
             }
 
@@ -195,7 +195,7 @@ namespace WSUI.Module.ViewModel
 
         protected override void OnComplete(bool res)
         {
-            _listData.OrderBy(b => b.Type);
+            ListData.OrderBy(b => b.Type);
             base.OnComplete(res);
             OnPropertyChanged(() => Contact);
             OnPropertyChanged(() => Visible);
@@ -292,7 +292,7 @@ namespace WSUI.Module.ViewModel
         protected override void OnInit()
         {
             base.OnInit();
-            _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
+            CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
         }
 
 
