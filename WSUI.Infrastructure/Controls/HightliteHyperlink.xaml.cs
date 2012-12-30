@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
+using WSUI.Infrastructure.Service.Helpers;
 
 namespace WSUI.Infrastructure.Controls
 {
@@ -25,7 +26,7 @@ namespace WSUI.Infrastructure.Controls
             }
 
             var textlbock = textBlock;
-            MatchCollection mCol = Regex.Matches(Text, string.Format(@"({0})", Regex.Escape(Hightlight)), RegexOptions.IgnoreCase);
+            var mCol = HelperFunctions.GetMatches(Text, Hightlight); //Regex.Matches(Text, string.Format(@"({0})", Regex.Escape(Hightlight)), RegexOptions.IgnoreCase);
             if (mCol.Count == 0)
             {
                 textlbock.Text = this.Text;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
+using WSUI.Infrastructure.Service.Rules;
 using WSUI.Infrastructure.Services;
 using System.Threading.Tasks;
 
@@ -72,8 +73,11 @@ namespace WSUI.Module.Service
         {
             var searchCriteria = criteria;
 
+            IRule rule = new WordRule();
+            rule.InitRule();
+            var crit = string.Join(" ", rule.ApplyRule(searchCriteria));
             string res = string.Empty;
-            res = string.Format(_query, searchCriteria, searchCriteria);
+            res = string.Format(_query, crit, crit);
 
             return res;
         }

@@ -85,6 +85,7 @@
     <Compile Include="Service\FileService.cs" />
     <Compile Include="Service\HelperConst.cs" />
     <Compile Include="Service\Helpers\EmailGroupReaderHelpers.cs" />
+    <Compile Include="Service\Helpers\HelperFunctions.cs" />
     <Compile Include="Service\Helpers\OutlookHelper.cs" />
     <Compile Include="Service\Helpers\SearchItemHelper.cs" />
     <Compile Include="Service\Helpers\TaskFinderHelper.cs" />

@@ -13,7 +13,7 @@ namespace WSUI.Infrastructure.Service.Rules
         public override void InitRule()
         {
             base.InitRule();
-            Rule = @"(?<group>\w*)";
+            Rule = @"(?<group>\w+)";
             Priority = 2;
         }
     }

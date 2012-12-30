@@ -21,7 +21,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         private const string AfterStrongTemplate = "<font style='background-color: yellow'><strong>{0}</strong></font>";
         private const string OutlookProcessName = "OUTLOOK";
         private const string OutlookApplication = "Outlook.Application";
-
+        private const string WordRegex = @"(?<word>\w+)";
         private const string ExtOfImage = "png";
 
         #region pattern for html
@@ -34,16 +34,13 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         private const string CCRow = @"<tr><td class='style1'>CC:</td><td class='style2'>{0}</td></tr>";
         private const string AttachmentsRow = @"<tr><td class='style1'>Attachments:</td><td class='style2'>{0}</td></tr>";
         private const string SendRow = @"<tr><td class='style1'>Send:</td><td class='style2'>{0}</td></tr>";
-        private const string EmailRow = @"<tr style='margin: 25px 10px 10px 10px'><td colspan='2' >{0}</td></tr>";
+        private const string EmailRow = @"<tr style='margin: 25px 10px 10px 10px'><td colspan='2' ><hr />{0}</td></tr>";
         private const string TableEnd = @"</table>";
         private const string PageEnd = @"</body></html>";
 
         private const string LinkTemplate = @"<img src='{1}' width='16' height='16' /><a href='{0}'>{0}</a>&nbsp;&nbsp;&nbsp;";
 
         #endregion
-
-
-
 
         private bool _IsExistProcess = false;
         private string _filename = string.Empty;
@@ -182,17 +179,37 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
                 Marshal.ReleaseComObject(app);
             }
         }
+        
+        public static string[] GetWordsList(string inputSequence)
+        {
+            if (string.IsNullOrEmpty(inputSequence))
+                return new string[] { inputSequence };
+
+            MatchCollection col = Regex.Matches(inputSequence, WordRegex);
+            if (col.Count == 0)
+                return new string[] { inputSequence };
+
+            var list = new List<string>();
+            for (int i = 0; i < col.Count; i++)
+            {
+                var item = col[i];
+                if (string.IsNullOrEmpty(item.Value))
+                    continue;
+                list.Add(item.Value);
+            }
+
+            return list.ToArray();
+        }
 
         private string HighlightSearchString(string inputString)
         {
             if (HitString == null)
                 return inputString;
             string result = inputString;
-            var itemArray = HitString.Trim().Split(' ');
+            var itemArray = GetWordsList(HitString.Trim());
             foreach (var s in itemArray)
             {
-                var escape = Regex.Escape(s);
-                result = Regex.Replace(result, Regex.Escape(s), string.Format(AfterStrongTemplate, s), RegexOptions.IgnoreCase);
+                result = Regex.Replace(result, string.Format(@"\b({0})\b",Regex.Escape(s)), string.Format(AfterStrongTemplate, s), RegexOptions.IgnoreCase);
             }
             return result;
         }
