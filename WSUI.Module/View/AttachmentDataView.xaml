@@ -1,4 +1,4 @@
-﻿<Controls:MetroContentControl  x:Class="WSUI.Module.View.AttachmentDataView"
+﻿<UserControl  x:Class="WSUI.Module.View.AttachmentDataView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,13 +8,13 @@
              xmlns:service="clr-namespace:WSUI.Module.Service"
                                x:Name="this"
              >
-    <Controls:MetroContentControl.Resources>
+    <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Service\ResourceTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </Controls:MetroContentControl.Resources>
+    </UserControl.Resources>
             <Grid>
         <ListBox ItemsSource="{Binding Path=DataSource,UpdateSourceTrigger=PropertyChanged}"
                  ItemTemplateSelector="{StaticResource templateSelector}"
@@ -24,4 +24,4 @@
 
         </ListBox>
     </Grid>
-</Controls:MetroContentControl >
+</UserControl >

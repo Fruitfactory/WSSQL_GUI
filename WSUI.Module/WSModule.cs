@@ -1,4 +1,6 @@
-﻿using Microsoft.Practices.Prism.Modularity;
+﻿using System.Diagnostics;
+using C4F.DevKit.PreviewHandler.Service.Logger;
+using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using WSUI.Infrastructure;
@@ -22,18 +24,28 @@ namespace WSUI.Module
         public void Initialize()
         {
             RegistreInterfaces();
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
             //TODO add view to regions
             var mmv = _unityContainer.Resolve<MainViewModel>();
             mmv.Init();
+            watch.Stop();
+            WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "Initialize <mmv.Init()>", watch.ElapsedMilliseconds));
+            watch = new Stopwatch();
+            watch.Start();
             IRegion region = _regionManager.Regions[RegionNames.StrategyRegion];
             region.Add(mmv.KindsView);
             region = _regionManager.Regions[RegionNames.PreviewRegion];
             region.Add(mmv.PreviewView);
             mmv.PreviewView.Init();
+            watch.Stop();
+            WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "Initialize <PreviewView.Init()>", watch.ElapsedMilliseconds));
         }
 
         private void RegistreInterfaces()
         {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
             //TODO add interfaces and classes
             _unityContainer.RegisterType<MainViewModel>(new ContainerControlledLifetimeManager());
 
@@ -51,7 +63,8 @@ namespace WSUI.Module
             //attachment
             _unityContainer.RegisterType<ISettingsView<AttachmentViewModel>, AttachmentSettingsView>();
             _unityContainer.RegisterType<IDataView<AttachmentViewModel>, AttachmentDataView>();
-
+            watch.Stop();
+            WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces",watch.ElapsedMilliseconds));
         }
 
     }

@@ -19,7 +19,7 @@ namespace WSUI.Infrastructure.Service.Helpers
 #region static
         private static string OutlookProcessName = "OUTLOOK";
         private static string OutlookApplication = "Outlook.Application";
-        private static OutlookHelper _instance= null;
+        //private static OutlookHelper _instance= null;
         private static readonly object _lockObject = new object();
 #endregion
 
@@ -34,6 +34,11 @@ namespace WSUI.Infrastructure.Service.Helpers
         private Outlook.Application _app;
 #endregion
 
+        private static readonly Lazy<OutlookHelper> _instance = new Lazy<OutlookHelper>(() =>
+                                                                                   {
+                                                                                       var obj = new OutlookHelper();
+                                                                                       return obj;
+                                                                                   });
 
         private OutlookHelper()
         {
@@ -45,13 +50,7 @@ namespace WSUI.Infrastructure.Service.Helpers
         {
             get
             {
-                lock (_lockObject)
-                {
-                    if (_instance == null)
-                        _instance = new OutlookHelper();
-
-                    return _instance;
-                }
+                return _instance.Value;
             }
         }
 

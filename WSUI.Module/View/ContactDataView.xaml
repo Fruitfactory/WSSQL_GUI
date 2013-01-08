@@ -1,4 +1,4 @@
-﻿<Controls:MetroContentControl x:Class="WSUI.Module.View.ContactDataView"
+﻿<UserControl x:Class="WSUI.Module.View.ContactDataView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,7 +8,7 @@
              x:Name="this"
                               
              >
-    <Controls:MetroContentControl.Resources>
+    <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Service\ResourceTemplate.xaml" />
@@ -68,7 +68,7 @@
                                                 ContactTemplate="{StaticResource ResourceKey=ContactTemplate}" />
 
         </ResourceDictionary>
-    </Controls:MetroContentControl.Resources>
+    </UserControl.Resources>
     <!--<Expander Header="{Binding Path=Contact.Name,UpdateSourceTrigger=PropertyChanged}" 
                 Style="{StaticResource ResourceKey=ExpanderStyleMetro}"  Visibility="{Binding Visible,UpdateSourceTrigger=PropertyChanged}">
             <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
@@ -124,4 +124,4 @@
 
         </ListBox>
     </Grid>
-</Controls:MetroContentControl>
+</UserControl>

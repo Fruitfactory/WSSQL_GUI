@@ -1,4 +1,4 @@
-﻿<Controls:MetroContentControl x:Class="WSUI.Module.View.EmailSettingsView"
+﻿<UserControl x:Class="WSUI.Module.View.EmailSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -39,11 +39,11 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="Folder:" Grid.Column="0" Margin="7 7 0 7"/>
-                    <ComboBox Grid.Column="1"  Margin="7 7 0 7" ItemsSource="{Binding FolderList}" 
+                    <ComboBox Grid.Column="1"  Margin="7 7 0 7" ItemsSource="{Binding FolderList,Mode=OneTime,IsAsync=True}" 
                               SelectedValue="{Binding Path=Folder,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                     
                 </Grid>
             </TabItem>
         </TabControl>
     </Grid>
-</Controls:MetroContentControl>
+</UserControl>

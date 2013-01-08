@@ -1,4 +1,4 @@
-﻿<Controls:MetroContentControl x:Class="WSUI.Module.View.AllFilesDataView"
+﻿<UserControl x:Class="WSUI.Module.View.AllFilesDataView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,7 +8,7 @@
              xmlns:service="clr-namespace:WSUI.Module.Service"
              x:Name="this"
              >
-    <Controls:MetroContentControl.Resources>
+    <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Service\ResourceTemplate.xaml" />
@@ -27,7 +27,7 @@
             <service:IntToVisibilityConverter x:Key="inttovis" />
             
         </ResourceDictionary>
-    </Controls:MetroContentControl.Resources>
+    </UserControl.Resources>
     <DockPanel LastChildFill="True" >
 
         <Grid DockPanel.Dock="Bottom" Visibility="{Binding Path=DataContext.DataSource.Count,Converter={StaticResource inttovis},ElementName=this,UpdateSourceTrigger=PropertyChanged}">
@@ -126,4 +126,4 @@
             
         </ListBox>
     </DockPanel>
-</Controls:MetroContentControl>
+</UserControl>

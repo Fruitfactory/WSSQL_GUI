@@ -306,11 +306,11 @@ namespace WSUI.Module.ViewModel
             CommandStrategies.Add(TypeSearchItem.Attachment,fileAttach);
             CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
-            var list = OutlookHelper.Instance.GetFolderList();
-            if (list.IndexOf(HelperConst.Inbox1) > -1)
-                _folder = HelperConst.Inbox1;
-            else if (list.IndexOf(HelperConst.Inbox2) > -1)
-                _folder = HelperConst.Inbox2;
+            //var list = OutlookHelper.Instance.GetFolderList();
+            //if (list.IndexOf(HelperConst.Inbox1) > -1)
+            //    _folder = HelperConst.Inbox1;
+            //else if (list.IndexOf(HelperConst.Inbox2) > -1)
+            //    _folder = HelperConst.Inbox2;
         }
 
 

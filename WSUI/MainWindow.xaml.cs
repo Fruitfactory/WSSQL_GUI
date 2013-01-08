@@ -22,7 +22,7 @@ namespace WSUI
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : IMainView//: Window
+    public partial class MainWindow : MetroWindow, IMainView//: Window
     {
         public MainWindow()
         {

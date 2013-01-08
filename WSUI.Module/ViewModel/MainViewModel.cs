@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
@@ -71,17 +74,17 @@ namespace WSUI.Module.ViewModel
 
         public virtual void Init()
         {
-            _listItems = new List<IKindItem>();
-            KindsCollection = new ObservableCollection<IKindItem>();
-            GetAllKinds();
-            if (_listItems.Count > 0)
-            {
-                _listItems.ForEach(k => KindsCollection.Add(k));
-                OnChoose(_listItems[0]);
-                OnPropertyChanged(() => KindsCollection);
-
-            }
-            
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                                                                      {
+                                                                          InitializeInThread();
+                                                                          if (_listItems.Count > 0)
+                                                                          {
+                                                                              _listItems.ForEach(k => KindsCollection.Add(k));
+                                                                              OnChoose(_listItems[0]);
+                                                                          }
+                                                                          OnPropertyChanged(() => KindsCollection);
+                                                                          
+                                                                      }), null);
         }
 
         public bool Enabled
@@ -95,6 +98,13 @@ namespace WSUI.Module.ViewModel
         }
 
         #region private
+
+        private void InitializeInThread()
+        {
+            _listItems = new List<IKindItem>();
+            KindsCollection = new ObservableCollection<IKindItem>();
+            GetAllKinds();
+        }
 
         private void GetAllKinds()
         {
@@ -306,5 +316,6 @@ namespace WSUI.Module.ViewModel
 
 
         #endregion
+
     }
 }

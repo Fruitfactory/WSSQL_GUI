@@ -182,6 +182,11 @@ namespace WSUI.Module.Core
             FireComplete(res);
             Application.Current.Dispatcher.BeginInvoke(new Action(() => 
             {
+                if (ListData.Count == 0)
+                {
+                    var message = new BaseSearchData() {Name = string.Format("Search for'{0}' returned no matches. Try different keywords.", SearchString),Type = TypeSearchItem.None};
+                    ListData.Add(message);
+                }
                 ListData.ForEach(s => DataSource.Add(s));
             }), null);
             OnPropertyChanged(() => DataSource);

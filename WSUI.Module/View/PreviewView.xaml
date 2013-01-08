@@ -1,4 +1,4 @@
-﻿<Controls:MetroContentControl x:Class="WSUI.Module.View.PreviewView"
+﻿<UserControl x:Class="WSUI.Module.View.PreviewView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              SizeChanged="MetroContentControl_SizeChanged"
              >
-    <Controls:MetroContentControl.Resources>
+    <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
@@ -20,7 +20,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </Controls:MetroContentControl.Resources>
+    </UserControl.Resources>
     <Grid x:Name="grid" IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -69,4 +69,4 @@
         </Popup>
 
     </Grid>
-</Controls:MetroContentControl>
+</UserControl>
