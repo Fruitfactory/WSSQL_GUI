@@ -48,7 +48,9 @@ namespace WSUI.Infrastructure.Models
         public string ConversationIndex { get; set; }
 
         public string From { get; set; }
-       
+
+        public string LastId { get; set; }
+
     }
 
     public class EmailSearchDataComparer : IEqualityComparer<EmailSearchData>

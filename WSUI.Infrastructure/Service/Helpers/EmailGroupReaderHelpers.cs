@@ -41,8 +41,9 @@ namespace WSUI.Infrastructure.Service.Helpers
             DateTime.TryParse(datetime.ToString(), out res);
 
             string conversationIndex = reader[6] as string;
+            string entryId = reader[7].ToString();
 
-            return new EmailSearchData() { Subject = subject, Name = name, Path = url, Recepient = recep, Date = res,ConversationIndex = conversationIndex};
+            return new EmailSearchData() { Subject = subject, Name = name, Path = url, Recepient = recep, Date = res,ConversationIndex = conversationIndex,LastId = entryId};
 
         }
     }

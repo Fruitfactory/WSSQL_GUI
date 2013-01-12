@@ -43,6 +43,7 @@ namespace WSUI.Module.Core
         private ICommandStrategy _currentStrategy;
         protected IMainViewModel ParentViewModel;
         protected volatile bool IsInterupt = false;
+        protected volatile bool ShowMessageNoMatches = true;
 
         protected readonly IUnityContainer Container;
         protected List<IRule> RuleCollection;   
@@ -174,7 +175,6 @@ namespace WSUI.Module.Core
             FireStart();
             Enabled = false;
             OnPropertyChanged(() => Enabled);
-            
         }
 
         protected virtual void OnComplete(bool res)
@@ -182,7 +182,7 @@ namespace WSUI.Module.Core
             FireComplete(res);
             Application.Current.Dispatcher.BeginInvoke(new Action(() => 
             {
-                if (ListData.Count == 0)
+                if (ListData.Count == 0 && ShowMessageNoMatches)
                 {
                     var message = new BaseSearchData() {Name = string.Format("Search for'{0}' returned no matches. Try different keywords.", SearchString),Type = TypeSearchItem.None};
                     ListData.Add(message);

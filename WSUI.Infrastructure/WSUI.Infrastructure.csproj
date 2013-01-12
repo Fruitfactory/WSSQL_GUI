@@ -95,6 +95,7 @@
     <Compile Include="Service\Rules\IRule.cs" />
     <Compile Include="Service\Rules\QuoteRule.cs" />
     <Compile Include="Service\Rules\WordRule.cs" />
+    <Compile Include="Service\ScrollData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WSPreview\WSPreview.csproj">

@@ -41,11 +41,13 @@
     
     <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
 
-        <ListBox ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
+        <ListBox x:Name="listBox" ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
                       ItemTemplateSelector="{StaticResource templateSelector}"
                       SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                       ContextMenu="{StaticResource ResourceKey=contextMenu}"
+                      ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
                       >
+            
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <DockPanel LastChildFill="True">

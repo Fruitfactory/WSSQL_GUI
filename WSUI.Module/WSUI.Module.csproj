@@ -83,6 +83,7 @@
     <Compile Include="Interface\IMainView.cs" />
     <Compile Include="Interface\IMainViewModel.cs" />
     <Compile Include="Interface\IPreviewView.cs" />
+    <Compile Include="Interface\IScrollableView.cs" />
     <Compile Include="Interface\ISettingsView.cs" />
     <Compile Include="Interface\IUIView.cs" />
     <Compile Include="Interface\IWSCommand.cs" />
