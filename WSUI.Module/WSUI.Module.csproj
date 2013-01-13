@@ -74,12 +74,15 @@
     <Compile Include="Commands\ReplyCommand.cs" />
     <Compile Include="Core\BaseCommandStrategy.cs" />
     <Compile Include="Core\BasePreviewCommand.cs" />
+    <Compile Include="Core\KindNameAttribute.cs" />
     <Compile Include="Core\KindViewModelBase.cs" />
+    <Compile Include="Core\LazyKind.cs" />
     <Compile Include="Core\ViewModelBase.cs" />
     <Compile Include="Interface\ICommandStrategy.cs" />
     <Compile Include="Interface\IDataView.cs" />
     <Compile Include="Interface\IKindItem.cs" />
     <Compile Include="Interface\IKindsView.cs" />
+    <Compile Include="Interface\ILazyKind.cs" />
     <Compile Include="Interface\IMainView.cs" />
     <Compile Include="Interface\IMainViewModel.cs" />
     <Compile Include="Interface\IPreviewView.cs" />

@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
@@ -25,7 +21,7 @@ namespace WSUI.Module.ViewModel
     public class MainViewModel : ViewModelBase, IMainViewModel
     {
         private DelegateCommand<object> _openFile;
-        private List<IKindItem> _listItems;
+        private List<LazyKind> _listItems;
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;
         private IKindItem _currentItem = null;
@@ -62,9 +58,10 @@ namespace WSUI.Module.ViewModel
             get { return _openFile ?? (_openFile = new DelegateCommand<object>(o => OpenFile(), o => CanOpenFile())); }
         }
 
-        public ObservableCollection<IKindItem> KindsCollection
+        public ObservableCollection<LazyKind> KindsCollection
         {
-            get; protected set;
+            get;
+            protected set;
         }
 
         public ObservableCollection<IWSCommand> Commands
@@ -80,7 +77,7 @@ namespace WSUI.Module.ViewModel
                                                                           if (_listItems.Count > 0)
                                                                           {
                                                                               _listItems.ForEach(k => KindsCollection.Add(k));
-                                                                              OnChoose(_listItems[0]);
+                                                                              OnChoose(_listItems[0].Kind);
                                                                           }
                                                                           OnPropertyChanged(() => KindsCollection);
                                                                           
@@ -101,29 +98,21 @@ namespace WSUI.Module.ViewModel
 
         private void InitializeInThread()
         {
-            _listItems = new List<IKindItem>();
-            KindsCollection = new ObservableCollection<IKindItem>();
+            _listItems = new List<LazyKind>();
+            KindsCollection = new ObservableCollection<LazyKind>();
             GetAllKinds();
         }
 
         private void GetAllKinds()
         {
             var currentAssembly = Assembly.GetExecutingAssembly();
-            var list = new List<IKindItem>();
             foreach (var type in currentAssembly.GetTypes())
             {
                 if (type.IsClass && !type.IsAbstract && type.GetInterface(Interface, true) != null)
                 {
-                    var kind = (IKindItem) _container.Resolve(type, null);
-                    if (kind == null)
-                        continue;
-                    if (string.IsNullOrEmpty(kind.Name))
-                        continue;
-                    kind.Init();
-                    kind.Parent = this;
-                    kind.Choose += (o, e) => OnChoose(o);
-                    if (kind is INotifyPropertyChanged)
-                        (kind as INotifyPropertyChanged).PropertyChanged += (o, e) => OnPropertyChanged(e.PropertyName);
+
+                    var kind = new LazyKind(_container,type,this,OnChoose,OnPropertyChanged);
+                    kind.Initialize();
                     _listItems.Add(kind);
                 }
             }
@@ -282,16 +271,16 @@ namespace WSUI.Module.ViewModel
             var sendItem = sender as IKindItem;
             if(sendItem == null)
                 return;
-            var newItem = _listItems.Find(item => item.Name == sendItem.Name);
+            var newItem = _listItems.Find(item => item.UIName == sendItem.UIName);
             if(newItem == null)
                 return;
             newItem.Toggle = true;
-            _listItems.ForEach(i => { if (i.Name != newItem.Name) i.Toggle = false; });
+            _listItems.ForEach(i => { if (i.UIName != newItem.UIName) i.Toggle = false; });
             Disconnect();
             string searchString = string.Empty;
             if(_currentItem  != null)
                 searchString = _currentItem.SearchString;
-            _currentItem = newItem;
+            _currentItem = newItem.Kind;
             Connect();
             CurrentKindChanged(_currentItem);
             if (!string.IsNullOrEmpty(searchString) && searchString != _currentItem.SearchString)

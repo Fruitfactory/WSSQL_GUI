@@ -23,6 +23,7 @@ using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
+    [KindNameId("Everything",0)]
     public class AllFilesViewModel : KindViewModelBase, IUView<AllFilesViewModel>
     {
         private const string KindGroup = "email";

@@ -314,6 +314,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             catch (Exception ex)
             {
                 WSSqlLogger.Instance.LogError(ex.Message);
+                //System.Windows.MessageBox.Show(String.Format("Get Process: {0}", ex.Message));
             }
 
             return ret;
@@ -334,6 +335,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             catch (Exception ex)
             {
                 WSSqlLogger.Instance.LogError(ex.Message);
+                System.Windows.MessageBox.Show(String.Format("Create Process: {0}", ex.Message));
             }
 
             return ret;

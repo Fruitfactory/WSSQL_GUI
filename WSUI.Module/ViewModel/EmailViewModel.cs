@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 
 namespace WSUI.Module.ViewModel
 {
+    [KindNameId("Email",2)]
     public class EmailViewModel : KindViewModelBase, IUView<EmailViewModel>, IScrollableView
     {
         private const string OrderTemplate = " ORDER BY System.Message.DateReceived DESC)";

@@ -20,6 +20,7 @@ using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
+    [KindNameId("People", 1)]
     public class ContactViewModel : KindViewModelBase,IUView<ContactViewModel>
     {
         private const string QueryContactEmail = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' {0}AND CONTAINS(System.Message.FromAddress,'{1}*')  ORDER BY System.Message.DateReceived DESC) ";

@@ -39,8 +39,8 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="Folder:" Grid.Column="0" Margin="7 7 0 7"/>
-                    <ComboBox Grid.Column="1"  Margin="7 7 0 7" ItemsSource="{Binding FolderList,Mode=OneTime,IsAsync=True}" 
-                              SelectedValue="{Binding Path=Folder,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    <ComboBox Grid.Column="1"  Margin="7 7 0 7" ItemsSource="{Binding FolderList,Mode=OneTime}" 
+                              SelectedValue="{Binding Path=Folder,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/><!--,IsAsync=True-->
                     
                 </Grid>
             </TabItem>

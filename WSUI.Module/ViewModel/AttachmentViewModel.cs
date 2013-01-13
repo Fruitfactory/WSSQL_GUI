@@ -11,6 +11,7 @@ using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
+    [KindNameId("Attachments", 3)]
     public class AttachmentViewModel : KindViewModelBase, IUView<AttachmentViewModel>
     {
         public AttachmentViewModel(IUnityContainer container, ISettingsView<AttachmentViewModel> settingsView, IDataView<AttachmentViewModel> dataView ) : base(container)
