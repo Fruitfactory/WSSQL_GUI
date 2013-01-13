@@ -172,14 +172,13 @@ namespace WSUI.Module.Core
         protected virtual void OnStart()
         {
             ListData.Clear();
-            FireStart();
             Enabled = false;
             OnPropertyChanged(() => Enabled);
+            FireStart();
         }
 
         protected virtual void OnComplete(bool res)
         {
-            FireComplete(res);
             Application.Current.Dispatcher.BeginInvoke(new Action(() => 
             {
                 if (ListData.Count == 0 && ShowMessageNoMatches)
@@ -192,7 +191,7 @@ namespace WSUI.Module.Core
             OnPropertyChanged(() => DataSource);
             Enabled = true;
             OnPropertyChanged(() => Enabled);
-            
+            FireComplete(res);
         }
 
         protected virtual void OnError(bool res)

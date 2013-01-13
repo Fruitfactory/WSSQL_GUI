@@ -40,8 +40,10 @@ namespace WSUI.Infrastructure.Service.Helpers
             DateTime res;
             DateTime.TryParse(datetime.ToString(), out res);
 
-            string conversationIndex = reader[6] as string;
-            string entryId = reader[7].ToString();
+            string conversationIndex = reader[5] as string;
+            string entryId = string.Empty;
+            if(reader.FieldCount > 7)
+                entryId = reader[7].ToString();
 
             return new EmailSearchData() { Subject = subject, Name = name, Path = url, Recepient = recep, Date = res,ConversationIndex = conversationIndex,LastId = entryId};
 

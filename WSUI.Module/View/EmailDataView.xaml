@@ -59,14 +59,16 @@
                                 <ColumnDefinition Style="{StaticResource CountStyleWidthColumn}"/>
                                 <ColumnDefinition Style="{StaticResource SubjectStyleWidthColumn}" />
                             </Grid.ColumnDefinitions>
-                            <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  FontStyleLabel="Italic"
-                                                       Margin="5 3 5 3" Grid.Column="0"/>
-                            <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3" Grid.Column="1"></TextBlock>
-                        
+                            <!--<StackPanel Orientation="Horizontal">-->
+                                <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  FontStyleLabel="Italic"
+                                                           Margin="5 3 5 3" Grid.Column="0"/>
+                                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3" Grid.Column="1"></TextBlock>
 
-                            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  
+                                
+                                <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  
                                                        Margin="5" Grid.Column="2"/>
-
+                                <!--<TextBlock Text="{Binding Path=Path}"/>
+                            </StackPanel>-->
                         </Grid>
                     </DockPanel>
                 </DataTemplate>

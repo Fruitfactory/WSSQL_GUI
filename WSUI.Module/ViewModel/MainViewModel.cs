@@ -247,18 +247,18 @@ namespace WSUI.Module.ViewModel
 
         private void OnStart(object sender, EventArgs e)
         {
-            EventHandler temp = Start;
+            var temp = Start;
             if(temp != null)
-                temp(null, null);
-            Enabled = false;
+                temp(this,null);
+            Enabled = _currentItem.Enabled;
         }
 
         private void OnComplete(object sender, EventArgs<bool> e)
         {
-            EventHandler temp = Complete;
+            var temp = Complete;
             if (temp != null)
-                temp(null, null);
-            Enabled = true;
+                temp(this,null);
+            Enabled = _currentItem.Enabled;
         }
 
         private void OnError(object sender, EventArgs<bool> e)

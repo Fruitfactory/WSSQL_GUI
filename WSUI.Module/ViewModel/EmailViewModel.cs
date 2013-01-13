@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,7 @@ namespace WSUI.Module.ViewModel
         private const string FilterByFolder = " AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) ";
         private const int CountFirstProcess = 45;
         private const int CountSecondAndOtherProcess = 7;
-
+        private readonly List<string> _listID = new List<string>();
         private int _lastId;
         private int _countAdded;
         private int _countProcess;
@@ -61,6 +62,9 @@ namespace WSUI.Module.ViewModel
             if (groups == null)
                 return;
             var item = groups.Items[0];
+
+            if (_listID.Any(s => s == item.ConversationIndex))
+                return;
             TypeSearchItem type = SearchItemHelper.GetTypeItem(item.Path);
             EmailSearchData si = new EmailSearchData()
             {
@@ -76,17 +80,17 @@ namespace WSUI.Module.ViewModel
             };
             try
             {
-
                 si.Attachments = OutlookHelper.Instance.GetAttachments(item);
-
             }
             catch (Exception e)
             {
                 WSSqlLogger.Instance.LogError(e.Message);
             }
-
+            
             int.TryParse(item.LastId, out _lastId);
+
             //TODO: paste item to datacontroller;
+            _listID.Add(item.ConversationIndex);
             ListData.Add(si);
             _countAdded++;
             if (_countAdded == _countProcess)
@@ -121,6 +125,7 @@ namespace WSUI.Module.ViewModel
             ClearDataSource();
             ClearMainDataSource();
             _countProcess = CountFirstProcess;
+            _listID.Clear();
             _lastId = 0;
             ShowMessageNoMatches = true;
         }
@@ -128,6 +133,7 @@ namespace WSUI.Module.ViewModel
         protected override void OnFilterData()
         {
             _countProcess = CountFirstProcess;
+            _listID.Clear();
             _lastId = 0;
             ShowMessageNoMatches = true;
             base.OnFilterData();

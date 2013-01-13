@@ -206,7 +206,7 @@ namespace WSUI.Module.ViewModel
         {
             if (string.IsNullOrEmpty(SearchString))
                 return;
-            _contactSuggesting.StartSuggesting(SearchString);
+            //_contactSuggesting.StartSuggesting(SearchString);
         }
 
         private void GetEmailsForContact(ContactSearchData data)
