@@ -95,15 +95,14 @@ namespace WSUI.Infrastructure.Service.Helpers
                 return null;
             try
             {
-                if(!File.Exists(filename))
-                    throw new FileNotFoundException("File doesn't exist",filename);
-
-                File.Copy(filename,tempFilename);
+                if (!File.Exists(filename))
+                    throw new FileNotFoundException("File doesn't exist", filename);
+                CopyFile(filename,tempFilename);    
                 _tempFileList.Add(searchitem.ID, tempFilename);
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "Copy file", tempFilename,ex.Message));
+                WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "Copy file", tempFilename, ex.Message));
                 return null;
             }
             return tempFilename;
@@ -134,6 +133,40 @@ namespace WSUI.Infrastructure.Service.Helpers
 
 
         #region private 
+
+
+        private void CopyFile(string source, string destination)
+        {
+            FileStream fileSource = null;
+            FileStream fileDestination = null;
+            try
+            {
+                fileSource = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                fileDestination = new FileStream(destination, FileMode.Create, FileAccess.Write, FileShare.None);
+                int numBytes;
+                const int size = 4096;
+                byte[] buffer = new byte[size];
+                while ((numBytes = fileSource.Read(buffer, 0, size)) > 0)
+                {
+                    fileDestination.Write(buffer, 0, numBytes);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+            finally
+            {
+                if(fileSource !=  null)
+                    fileSource.Close();
+                if (fileDestination != null)
+                {
+                    fileDestination.Flush();
+                    fileDestination.Close();
+                }
+            }
+        }
 
         private string GetExtension(WSUI.Infrastructure.Core.BaseSearchData searchItem)
         {
