@@ -7,6 +7,7 @@ namespace WSUI.Module.Service
 {
     public class ContactDataTemplateSelector : DataTemplateSelector
     {
+        public DataTemplate NoneTemplate { get; set; }
         public DataTemplate EmailTemplate { get; set; }
         public DataTemplate ContactTemplate { get; set; }
         
@@ -19,6 +20,8 @@ namespace WSUI.Module.Service
                     return EmailTemplate;
                 case TypeSearchItem.Contact:
                     return ContactTemplate;
+                default:
+                    return NoneTemplate;
             }
             return null;
         }
