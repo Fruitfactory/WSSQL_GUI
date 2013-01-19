@@ -47,6 +47,8 @@ namespace WSUI.Infrastructure.Models
 
         public string ConversationIndex { get; set; }
 
+        public string ConversationId { get; set; }
+
         public string From { get; set; }
 
         public string LastId { get; set; }

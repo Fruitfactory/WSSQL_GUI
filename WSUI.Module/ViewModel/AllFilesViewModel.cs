@@ -28,7 +28,7 @@ namespace WSUI.Module.ViewModel
     {
         private const string KindGroup = "email";
         private const string InboxFolder = HelperConst.Inbox2;
-        private int _lastID = 0;
+        private int _lastID;
         private const string QueryForGroupEmails =
             "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email'  AND CONTAINS(System.Message.ConversationID,'{0}*')   ORDER BY System.Message.DateReceived DESC) ";//AND CONTAINS(System.ItemPathDisplay,'{0}*',1033)
 
@@ -47,7 +47,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
             // init
             QueryTemplate =
-                "GROUP ON System.ItemName OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Search.EntryID > {1} AND (Contains(System.Search.Contents,{0})  ) ORDER BY System.Search.EntryID ASC)";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})
+                "GROUP ON System.ItemName OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Search.EntryID < {1} AND (Contains(System.Search.Contents,{0}) OR Contains(*,{0})) ORDER BY System.DateCreated DESC)";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})   , System.Search.EntryID DESC
             QueryAnd = " AND \"{0}\""; //" AND \"{0}\"";
             ID = 0;
             _name = "Everything";
@@ -60,7 +60,7 @@ namespace WSUI.Module.ViewModel
                                                               OnPropertyChanged(() => IsOpen);
                                                           },
                                                           o => true);
-
+            _lastID = int.MaxValue;
             EmailClickCommand = new DelegateCommand<object>(o => EmailClick(o), o => true);
             MoveFirstCommand = new DelegateCommand<object>(o => MoveToFirstInternal(),o => CanMoveLeft());
             MovePreviousCommand = new DelegateCommand<object>( o => MoveToLeft(), o => CanMoveLeft());
@@ -193,7 +193,7 @@ namespace WSUI.Module.ViewModel
 
         private void ClearSearchingInfo()
         {
-            _lastID = 0;
+            _lastID = int.MaxValue;
             _currentPageNumber = 0;
             if (DataPage != null)
                 DataPage.Clear();

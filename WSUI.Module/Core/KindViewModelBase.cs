@@ -183,10 +183,17 @@ namespace WSUI.Module.Core
             {
                 if (ListData.Count == 0 && ShowMessageNoMatches)
                 {
-                    var message = new BaseSearchData() {Name = string.Format("Search for'{0}' returned no matches. Try different keywords.", SearchString),Type = TypeSearchItem.None};
+                    var message = new BaseSearchData() { Name = string.Format("Search for'{0}' returned no matches. Try different keywords.", SearchString), Type = TypeSearchItem.None };
                     ListData.Add(message);
+                    ListData.ForEach(s => DataSource.Add(s));
                 }
-                ListData.ForEach(s => DataSource.Add(s));
+                else
+                {
+                    
+                    ListData.ForEach(s => DataSource.Add(s));
+                    //DataSource =
+                    //    new ObservableCollection<BaseSearchData>(DataSource.OrderByDescending(d => d.DateModified));
+                }
             }), null);
             OnPropertyChanged(() => DataSource);
             Enabled = true;

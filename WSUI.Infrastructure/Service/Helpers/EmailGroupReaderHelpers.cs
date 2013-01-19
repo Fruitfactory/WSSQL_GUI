@@ -19,6 +19,14 @@ namespace WSUI.Infrastructure.Service.Helpers
                 {
                     d.Items.Add(ReadItem(itemsReader));
                 }
+                d.Items.Sort((e1,e2) =>
+                                 {
+                                     return e1.Date > e2.Date
+                                                ? -1
+                                                : e1.Date < e1.Date
+                                                      ? 1
+                                                      : 0;
+                                 });
             }
 
             return d;

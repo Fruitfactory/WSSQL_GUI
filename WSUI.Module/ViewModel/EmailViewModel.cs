@@ -22,14 +22,17 @@ namespace WSUI.Module.ViewModel
     [KindNameId("Email",2)]
     public class EmailViewModel : KindViewModelBase, IUView<EmailViewModel>, IScrollableView
     {
-        private const string OrderTemplate = " ORDER BY System.Message.DateReceived DESC)";
+        private const string OrderTemplate = " ORDER BY System.Message.DateReceived DESC";//, System.Search.EntryID DECS
         private const string FilterByFolder = " AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) ";
         private const int CountFirstProcess = 45;
         private const int CountSecondAndOtherProcess = 7;
         private readonly List<string> _listID = new List<string>();
-        private int _lastId;
+        private readonly List<EmailSearchData> _listEmails = new List<EmailSearchData>(); 
         private int _countAdded;
         private int _countProcess;
+        private DateTime _lastDate;
+        private object _lock = new object();
+
 
         public ICommand ScrollChangeCommand { get; protected set; }
 
@@ -41,58 +44,60 @@ namespace WSUI.Module.ViewModel
             DataView = dataView;
             DataView.Model = this;
 
-            QueryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email' AND System.Search.EntryID > {2} {0}AND CONTAINS(*,{1}) ";//Входящие  //Inbox
+            //QueryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email' AND System.Search.EntryID > {2} {0}AND CONTAINS(*,{1}) ";//Входящие  //Inbox
+            QueryTemplate = "SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email' AND System.Message.DateReceived < '{2}' {0}AND CONTAINS(*,{1}) ";//Входящие  //Inbox
             QueryAnd = " AND \"{0}\"";
             ID = 2;
             _name = "Email";
             UIName = _name;
             _prefix = "Email";
-            DataSourceMail = new ObservableCollection<EmailSearchData>();
             Folder = OutlookHelper.AllFolders;
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
         }
 
-
-        public ObservableCollection<EmailSearchData> DataSourceMail { get; private set; }
-
-
         protected override void ReadData(IDataReader reader)
         {
-            var groups = EmailGroupReaderHelpers.ReadGroups(reader);
-            if (groups == null)
-                return;
-            var item = groups.Items[0];
+            //var groups = EmailGroupReaderHelpers.ReadGroups(reader);
+            //if (groups == null)
+            //    return;
+            //var item = groups.Items[0];
 
-            if (_listID.Any(s => s == item.ConversationIndex))
-                return;
-            TypeSearchItem type = SearchItemHelper.GetTypeItem(item.Path);
-            EmailSearchData si = new EmailSearchData()
-            {
-                Subject = item.Subject,
-                Recepient = string.Format("{0}",
-                item.Recepient),
-                Count = groups.Items.Count.ToString(),
-                Name = item.Name,
-                Path = item.Path,
-                Date = item.Date,
-                Type = type,
-                ID = Guid.NewGuid()
-            };
-            try
-            {
-                si.Attachments = OutlookHelper.Instance.GetAttachments(item);
-            }
-            catch (Exception e)
-            {
-                WSSqlLogger.Instance.LogError(e.Message);
-            }
+            //if (_listID.Any(s => s == item.ConversationIndex))
+            //    return;
+            //TypeSearchItem type = SearchItemHelper.GetTypeItem(item.Path);
+            //EmailSearchData si = new EmailSearchData()
+            //{
+            //    Subject = item.Subject,
+            //    Recepient = string.Format("{0}",
+            //    item.Recepient),
+            //    Count = groups.Items.Count.ToString(),
+            //    Name = item.Name,
+            //    Path = item.Path,
+            //    Date = item.Date,
+            //    DateModified = item.Date,
+            //    Type = type,
+            //    ID = Guid.NewGuid()
+            //};
+            //try
+            //{
+            //    si.Attachments = OutlookHelper.Instance.GetAttachments(item);
+            //}
+            //catch (Exception e)
+            //{
+            //    WSSqlLogger.Instance.LogError(e.Message);
+            //}
             
-            int.TryParse(item.LastId, out _lastId);
+            //int.TryParse(item.LastId, out _lastId);
+
+
+            var item = GetData(reader);
+          
 
             //TODO: paste item to datacontroller;
-            _listID.Add(item.ConversationIndex);
-            ListData.Add(si);
-            _countAdded++;
+            
+            //ListData.Add(item);
+            _listEmails.Add(item);
+            _countAdded = _listEmails.GroupBy(e => e.ConversationIndex).Count();
             if (_countAdded == _countProcess)
                 IsInterupt = true;
         }
@@ -107,7 +112,7 @@ namespace WSUI.Module.ViewModel
 
             ProcessSearchCriteria(searchCriteria);
 
-            res = string.Format(QueryTemplate, folder != OutlookHelper.AllFolders ? string.Format(FilterByFolder, folder) : string.Empty, string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause, _lastId) + OrderTemplate;
+            res = string.Format(QueryTemplate, folder != OutlookHelper.AllFolders ? string.Format(FilterByFolder, folder) : string.Empty, string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause, FormatDate(ref _lastDate)) + OrderTemplate;
 
             return res;
 
@@ -125,38 +130,57 @@ namespace WSUI.Module.ViewModel
             ClearDataSource();
             ClearMainDataSource();
             _countProcess = CountFirstProcess;
-            _listID.Clear();
-            _lastId = 0;
+            lock (_lock)
+                _listID.Clear();
+            _lastDate = DateTime.Now;
             ShowMessageNoMatches = true;
         }
 
         protected override void OnFilterData()
         {
             _countProcess = CountFirstProcess;
-            _listID.Clear();
-            _lastId = 0;
+            lock(_lock)
+                _listID.Clear();
+            _lastDate = DateTime.Now;
             ShowMessageNoMatches = true;
             base.OnFilterData();
         }
 
         protected override void OnComplete(bool res)
         {
+
+            var groups = _listEmails.GroupBy(e => e.ConversationIndex);
+            lock (_lock)
+            {
+                foreach (var group in groups)
+                {
+                    var email = group.OrderByDescending(e => e.Date).FirstOrDefault();
+
+                    if (_listID.Any(s => s == email.ConversationIndex))
+                        continue;
+                    _listID.Add(email.ConversationIndex);
+                    email.Type = SearchItemHelper.GetTypeItem(email.Path);
+                    try
+                    {
+                        email.Attachments = OutlookHelper.Instance.GetAttachments(email);
+                    }
+                    catch (Exception ex)
+                    {
+                        WSSqlLogger.Instance.LogError(ex.Message);
+                    }
+                    email.Count = group.Count().ToString();
+                    ListData.Add(email);
+                }
+            }
             base.OnComplete(res);
             _countProcess = CountSecondAndOtherProcess;
         }
 
         protected override void OnStart()
         {
-            //base.OnStart();
-            //ClearDataSource();
-            //ClearMainDataSource();
-            DataSourceMail.Clear();
-            OnPropertyChanged(() => DataSourceMail);
             ListData.Clear();
-
+            _listEmails.Clear();
             FireStart();
-            //Enabled = false;
-            //OnPropertyChanged(() => Enabled);
         }
 
         private void OnScroll(object args)
@@ -164,11 +188,53 @@ namespace WSUI.Module.ViewModel
             var scrollArgs = args as ScrollData;
             System.Diagnostics.Debug.WriteLine(scrollArgs.ToString());
             var result = scrollArgs.VerticalOffset * 100 / scrollArgs.ScrollableHeight;
-            if (result > 75)
+            if (result > 95)
             {
                 ShowMessageNoMatches = false;
                 Search();
             }
+        }
+
+        private string FormatDate(ref DateTime date)
+        {
+            return date.ToString("yyyy/MM/dd hh:mm:ss").Replace('.', '/');
+        }
+
+        private EmailSearchData GetData(IDataReader reader)
+        {
+            string subject = reader[0].ToString();
+            string name = reader[1].ToString();
+            var recArr = reader[3] as string[];
+            string recep = string.Empty;
+            if (recArr != null && recArr.Length > 0)
+            {
+                recep = recArr[0];
+            }
+            string url = reader[2].ToString();
+
+            var datetime = reader[4];
+            DateTime res;
+            DateTime.TryParse(datetime.ToString(), out res);
+
+            string conversationid = reader[5].ToString();
+            string conversationIndex = reader[6].ToString();
+            string entryId = string.Empty;
+            if (reader.FieldCount > 7)
+                entryId = reader[7].ToString();
+            var item = new EmailSearchData()
+                           {
+                               Subject = subject,
+                               Name = name,
+                               Recepient = recep,
+                               Path = url,
+                               Date = res,
+                               DateModified = res,
+                               ID = Guid.NewGuid(),
+                               ConversationId = conversationid,
+                               ConversationIndex = OutlookHelper.Instance.EIDFromEncodeStringWDS30(conversationIndex)
+                           };
+            _lastDate = res;
+            return item;
         }
 
 
