@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.OleDb;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -46,6 +47,8 @@ namespace WSUI.Module.Core
         protected readonly object Lock = new object();
         protected string _andClause;
         protected List<string> _listW;
+        protected IScrollBehavior ScrollBehavior =  null;
+
 
         private volatile bool _isQueryRun = false;
         private object _lock = new object();
@@ -61,6 +64,7 @@ namespace WSUI.Module.Core
             ChooseCommand = new DelegateCommand<object>(o => OnChoose(), o => true);
             SearchCommand = new DelegateCommand<object>(o => Search(),o => CanSearch());
             OpenCommand = new DelegateCommand<object>(o => OpenFile(), o => CanOpenFile());
+            OpenFolderCommand = new DelegateCommand<object>(o => OpenFolder(), o => CanOpenFile());
             KeyDownCommand = new DelegateCommand<KeyEventArgs>(KeyDown, o => true);
             Enabled = true;
             DataSource = new ObservableCollection<BaseSearchData>();
@@ -427,12 +431,12 @@ namespace WSUI.Module.Core
 
         public ICommand OpenCommand { get; protected set; }
 
+        public ICommand OpenFolderCommand { get; protected set; }
 
-        private void OpenFile()
+
+        private void OpenItemFile(string fileName)
         {
-            var fileName = SearchItemHelper.GetFileName(Current);
-            if (string.IsNullOrEmpty(fileName) ||
-                FileService.IsDirectory(fileName))
+            if (string.IsNullOrEmpty(fileName))
                 return;
             try
             {
@@ -449,6 +453,22 @@ namespace WSUI.Module.Core
             return Current != null;
         }
 
+        private void OpenFolder()
+        {
+            var filename = SearchItemHelper.GetFileName(Current);
+            filename = Path.GetDirectoryName(filename);
+            OpenItemFile(filename);
+        }
+
+
+        private void OpenFile()
+        {
+            var fileName = SearchItemHelper.GetFileName(Current);
+            if(FileService.IsDirectory(fileName))
+                return;
+            
+            OpenItemFile(fileName);
+        }
 
         private void ChooseStrategy()
         {

@@ -16,10 +16,11 @@
         </ResourceDictionary>
     </UserControl.Resources>
             <Grid>
-        <ListBox ItemsSource="{Binding Path=DataSource,UpdateSourceTrigger=PropertyChanged}"
+        <ListBox x:Name="listBox" ItemsSource="{Binding Path=DataSource,UpdateSourceTrigger=PropertyChanged}"
                  ItemTemplateSelector="{StaticResource templateSelector}"
                  SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  ContextMenu="{StaticResource ResourceKey=contextMenu}"
+                 ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
                  >
 
         </ListBox>

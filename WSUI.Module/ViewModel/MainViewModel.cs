@@ -21,6 +21,7 @@ namespace WSUI.Module.ViewModel
     public class MainViewModel : ViewModelBase, IMainViewModel
     {
         private DelegateCommand<object> _openFile;
+        private DelegateCommand<object> _openFolder;
         private List<LazyKind> _listItems;
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;
@@ -51,11 +52,6 @@ namespace WSUI.Module.ViewModel
         public IPreviewView PreviewView
         {
             get; protected set;
-        }
-
-        public ICommand OpenCommand
-        {
-            get { return _openFile ?? (_openFile = new DelegateCommand<object>(o => OpenFile(), o => CanOpenFile())); }
         }
 
         public ObservableCollection<LazyKind> KindsCollection
@@ -124,20 +120,6 @@ namespace WSUI.Module.ViewModel
                     return 1;
                 return 0;
             });
-        }
-
-        private void OpenFile()
-        {
-            //var filename = SearchItemHelper.GetFileName(_currentData);
-            //if (PreviewView != null)
-            //{
-            //    PreviewView.SetPreviewFile(filename);
-            //}
-        }
-
-        private bool CanOpenFile()
-        {
-            return _currentData != null;
         }
 
         private void CurrentKindChanged(object kindItem)

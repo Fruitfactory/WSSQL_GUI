@@ -204,6 +204,7 @@
     
     <ContextMenu x:Key="contextMenu">
         <MenuItem Header="Open file"  Command="{Binding OpenCommand}"/>
+        <MenuItem Header="Open folder"  Command="{Binding OpenFolderCommand}"/>
     </ContextMenu>
 
 

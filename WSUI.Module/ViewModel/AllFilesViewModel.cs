@@ -43,7 +43,6 @@ namespace WSUI.Module.ViewModel
         private int _countProcess;
         private string _lastName = string.Empty;
         private readonly object _lockObjcet = new object();
-    
 
         public ICommand ScrollChangeCommand { get; protected set; }
 
@@ -240,12 +239,9 @@ namespace WSUI.Module.ViewModel
         private void OnScroll(object args)
         {
             var scrollArgs = args as ScrollData;
-            System.Diagnostics.Debug.WriteLine(scrollArgs.ToString());
-            var result = scrollArgs.VerticalOffset * 100 / scrollArgs.ScrollableHeight;
-            if (result > 85)
+            if (scrollArgs != null && ScrollBehavior != null)
             {
-                ShowMessageNoMatches = false;
-                Search();
+                ScrollBehavior.NeedSearch(scrollArgs);
             }
         }
 
@@ -353,6 +349,12 @@ namespace WSUI.Module.ViewModel
             CommandStrategies.Add(TypeSearchItem.Attachment,fileAttach);
             CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
+            ScrollBehavior = new ScrollBehavior() {CountFirstProcess = 35, CountSecondProcess = 7,LimitReaction = 85};
+            ScrollBehavior.SearchGo += () =>
+                                           {
+                                               ShowMessageNoMatches = false;
+                                               Search();
+                                           };
         }
 
 

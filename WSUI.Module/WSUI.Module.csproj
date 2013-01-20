@@ -87,6 +87,7 @@
     <Compile Include="Interface\IMainViewModel.cs" />
     <Compile Include="Interface\IPreviewView.cs" />
     <Compile Include="Interface\IScrollableView.cs" />
+    <Compile Include="Interface\IScrollBehavior.cs" />
     <Compile Include="Interface\ISettingsView.cs" />
     <Compile Include="Interface\IUIView.cs" />
     <Compile Include="Interface\IWSCommand.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Service\KeyDownBehavior.cs" />
     <Compile Include="Service\MainWindowInfo.cs" />
     <Compile Include="Service\NameToImageConvert.cs" />
+    <Compile Include="Service\ScrollBehavior.cs" />
     <Compile Include="Strategy\CommadStrategyFactory.cs" />
     <Compile Include="Strategy\EmailCommandStrategy.cs" />
     <Compile Include="Strategy\FileCommandStrategy.cs" />

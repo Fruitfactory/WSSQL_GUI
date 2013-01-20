@@ -10,6 +10,7 @@ using System.Windows.Input;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
+using WSUI.Infrastructure.Service;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
@@ -21,7 +22,7 @@ using WSUI.Module.Strategy;
 namespace WSUI.Module.ViewModel
 {
     [KindNameId("People", 1)]
-    public class ContactViewModel : KindViewModelBase,IUView<ContactViewModel>
+    public class ContactViewModel : KindViewModelBase,IUView<ContactViewModel>, IScrollableView
     {
         private const string QueryContactEmail = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' {0}AND CONTAINS(System.Message.FromAddress,'{1}*')  ORDER BY System.Message.DateReceived DESC) ";
         private const string FilterByFolder = "AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) ";
@@ -72,6 +73,7 @@ namespace WSUI.Module.ViewModel
                                                       
                                                   }
                                               };
+            ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
 
         }
 
@@ -294,6 +296,12 @@ namespace WSUI.Module.ViewModel
         {
             base.OnInit();
             CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
+            ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 45, CountSecondProcess = 5, LimitReaction = 75 };
+            ScrollBehavior.SearchGo += () =>
+            {
+                ShowMessageNoMatches = false;
+                Search();
+            };
         }
 
 
@@ -341,5 +349,19 @@ namespace WSUI.Module.ViewModel
             return fromAddress;
         }
 
+        #region Implementation of IScrollableView
+
+        public ICommand ScrollChangeCommand { get; private set; }
+
+        #endregion
+
+        private void OnScroll(object args)
+        {
+            var scrollArgs = args as ScrollData;
+            if (scrollArgs != null && ScrollBehavior != null)
+            {
+                ScrollBehavior.NeedSearch(scrollArgs);
+            }
+        }
     }
 }

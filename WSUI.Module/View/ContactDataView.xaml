@@ -117,10 +117,11 @@
             </Grid>
         </Expander>-->
     <Grid>
-        <ListBox ItemsSource="{Binding Path=DataSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+        <ListBox x:Name="listBox" ItemsSource="{Binding Path=DataSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                  ItemTemplateSelector="{StaticResource contactTemplateSelector}"
                  SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
+                 ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
                  >
 
         </ListBox>

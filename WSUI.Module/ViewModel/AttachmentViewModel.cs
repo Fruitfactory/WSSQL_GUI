@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Windows.Input;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using WSUI.Infrastructure.Core;
+using WSUI.Infrastructure.Service;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
+using WSUI.Module.Service;
 using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
     [KindNameId("Attachments", 3)]
-    public class AttachmentViewModel : KindViewModelBase, IUView<AttachmentViewModel>
+    public class AttachmentViewModel : KindViewModelBase, IUView<AttachmentViewModel>, IScrollableView
     {
         public AttachmentViewModel(IUnityContainer container, ISettingsView<AttachmentViewModel> settingsView, IDataView<AttachmentViewModel> dataView ) : base(container)
         {
@@ -28,6 +32,7 @@ namespace WSUI.Module.ViewModel
             _name = "Attachments";
             UIName = _name;
             _prefix = "Attachment";
+            ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
         }
 
         protected override void ReadData(System.Data.IDataReader reader)
@@ -73,6 +78,12 @@ namespace WSUI.Module.ViewModel
             base.OnInit();
             var fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
             CommandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
+            ScrollBehavior = new ScrollBehavior(){CountFirstProcess = 45, CountSecondProcess = 5,LimitReaction = 75};
+            ScrollBehavior.SearchGo += () =>
+                                           {
+                                               ShowMessageNoMatches = false;
+                                               Search();
+                                           };
         }
 
         protected override void OnStart()
@@ -92,6 +103,21 @@ namespace WSUI.Module.ViewModel
         public IDataView<AttachmentViewModel> DataView
         {
             get; set;
+        }
+
+        #region Implementation of IScrollableView
+
+        public ICommand ScrollChangeCommand { get; private set; }
+
+        #endregion
+
+        private void OnScroll(object args)
+        {
+            var scrollArgs = args as ScrollData;
+            if (scrollArgs != null && ScrollBehavior != null)
+            {
+                ScrollBehavior.NeedSearch(scrollArgs);
+            }
         }
     }
 }

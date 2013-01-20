@@ -14,6 +14,7 @@ using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using Microsoft.Practices.Unity;
+using WSUI.Module.Service;
 using WSUI.Module.Strategy;
 using System.Collections.ObjectModel;
 
@@ -87,6 +88,13 @@ namespace WSUI.Module.ViewModel
         {
             base.OnInit();
             CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
+            ScrollBehavior = new ScrollBehavior() {CountFirstProcess = 45,CountSecondProcess = 7 ,LimitReaction = 85};
+            ScrollBehavior.SearchGo += () =>
+                                           {
+                                               ShowMessageNoMatches = false;
+                                               Search();
+                                               
+                                           };
         }
 
         protected override void OnSearchStringChanged()
@@ -94,7 +102,7 @@ namespace WSUI.Module.ViewModel
             base.OnSearchStringChanged();
             ClearDataSource();
             ClearMainDataSource();
-            _countProcess = CountFirstProcess;
+            _countProcess = ScrollBehavior.CountFirstProcess;
             lock (_lock)
                 _listID.Clear();
             _lastDate = DateTime.Now;
@@ -103,7 +111,7 @@ namespace WSUI.Module.ViewModel
 
         protected override void OnFilterData()
         {
-            _countProcess = CountFirstProcess;
+            _countProcess = ScrollBehavior.CountFirstProcess;
             lock(_lock)
                 _listID.Clear();
             _lastDate = DateTime.Now;
@@ -138,7 +146,7 @@ namespace WSUI.Module.ViewModel
                 }
             }
             base.OnComplete(res);
-            _countProcess = CountSecondAndOtherProcess;
+            _countProcess = ScrollBehavior.CountSecondProcess;
         }
 
         protected override void OnStart()
@@ -151,12 +159,9 @@ namespace WSUI.Module.ViewModel
         private void OnScroll(object args)
         {
             var scrollArgs = args as ScrollData;
-            System.Diagnostics.Debug.WriteLine(scrollArgs.ToString());
-            var result = scrollArgs.VerticalOffset * 100 / scrollArgs.ScrollableHeight;
-            if (result > 95)
+            if (scrollArgs != null && ScrollBehavior != null)
             {
-                ShowMessageNoMatches = false;
-                Search();
+                ScrollBehavior.NeedSearch(scrollArgs);
             }
         }
 
