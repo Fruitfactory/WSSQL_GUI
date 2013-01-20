@@ -12,6 +12,7 @@ using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
 using WSUI.Infrastructure.Core;
 using WSUI.Infrastructure.Models;
+using WSUI.Infrastructure.Service;
 using WSUI.Infrastructure.Service.Rules;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
@@ -24,18 +25,27 @@ using WSUI.Module.Strategy;
 namespace WSUI.Module.ViewModel
 {
     [KindNameId("Everything",0)]
-    public class AllFilesViewModel : KindViewModelBase, IUView<AllFilesViewModel>
+    public class AllFilesViewModel : KindViewModelBase, IUView<AllFilesViewModel>, IScrollableView
     {
         private const string KindGroup = "email";
-        private const string InboxFolder = HelperConst.Inbox2;
-        private int _lastID;
+        private DateTime _lastDate;
         private const string QueryForGroupEmails =
             "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email'  AND CONTAINS(System.Message.ConversationID,'{0}*')   ORDER BY System.Message.DateReceived DESC) ";//AND CONTAINS(System.ItemPathDisplay,'{0}*',1033)
 
+        private const string OrLikeTemplate = " OR System.ItemName LIKE '%{0}%'";
+        private const int CountFirstProcess = 35;
+        private const int CountSecondAndOtherProcess = 7;
         private int _countAdded = 0;
         private List<string> _listID = new List<string>();
         private List<string> _listName = new List<string>();
         private string _folder = string.Empty;
+        private readonly List<GroupData> _listEverething = new List<GroupData>();
+        private int _countProcess;
+        private string _lastName = string.Empty;
+        private readonly object _lockObjcet = new object();
+    
+
+        public ICommand ScrollChangeCommand { get; protected set; }
 
         public AllFilesViewModel(IUnityContainer container, ISettingsView<AllFilesViewModel> settingsView,
                                  IDataView<AllFilesViewModel> dataView)
@@ -47,7 +57,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
             // init
             QueryTemplate =
-                "GROUP ON System.ItemName OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Search.EntryID < {1} AND (Contains(System.Search.Contents,{0}) OR Contains(*,{0})) ORDER BY System.DateCreated DESC)";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})   , System.Search.EntryID DESC
+                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0}) {2} ) ORDER BY System.DateCreated DESC";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})   , System.Search.EntryID DESC
             QueryAnd = " AND \"{0}\""; //" AND \"{0}\"";
             ID = 0;
             _name = "Everything";
@@ -60,13 +70,10 @@ namespace WSUI.Module.ViewModel
                                                               OnPropertyChanged(() => IsOpen);
                                                           },
                                                           o => true);
-            _lastID = int.MaxValue;
+            _lastDate = DateTime.Now;
+            ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
+
             EmailClickCommand = new DelegateCommand<object>(o => EmailClick(o), o => true);
-            MoveFirstCommand = new DelegateCommand<object>(o => MoveToFirstInternal(),o => CanMoveLeft());
-            MovePreviousCommand = new DelegateCommand<object>( o => MoveToLeft(), o => CanMoveLeft());
-            MoveLastCommand = new DelegateCommand<object>(o => MoveToLastInternal(), o => CanModeRight());
-            MoveNextCommand = new DelegateCommand<object>(o => MoveToRight(), o => CanModeRight());
-            LinkCommand = new DelegateCommand<object>(o => LinkClicked(o), o => true);
         }
 
         
@@ -76,57 +83,24 @@ namespace WSUI.Module.ViewModel
 
         protected override void ReadData(IDataReader reader)
         {
-            var group = new List<GroupData>();
-            for (int i = 0; i < reader.FieldCount; i++)
-            {
-                if (reader.GetFieldType(i).ToString() != "System.Data.IDataReader")
-                    continue;
-                OleDbDataReader itemsReader = reader.GetValue(i) as OleDbDataReader;
+           
+            var item = ReadGroupData(reader);
 
-                while (itemsReader.Read())
-                {
-                    group.Add(ReadGroupData(itemsReader));
-                }
+            if(!string.IsNullOrEmpty(item.ID) && _listID.Any(id => id == item.ID))
+                return;
+            
+            if(!string.IsNullOrEmpty(item.ID))
+                _listID.Add(item.ID);
+
+            _listEverething.Add(item);
+            if (_lastName != item.Name)
+            {
+                _countAdded++;
+                _lastName = item.Name;
             }
 
-            if (group == null || group.Count == 0)
-                return;
-            var groupItem = group[0];
-            string tag = string.Empty;
-            if (groupItem.Kind != null && IsEmail(groupItem.Kind) && !_listID.Any(it => it == groupItem.ID))
-            {
-                var newValue = GroupEmail(groupItem.Name, groupItem.ID);
-                if (newValue == null)
-                    return;
-                _listID.Add(groupItem.ID);
-                TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File);
-                newValue.Type = type;
-                ListData.Add(newValue);
-                _countAdded++;
-            }
-            else if (groupItem.Kind != null && IsEmail(value: groupItem.Kind) && _listID.Any(it => it == groupItem.ID))
-                return;
-            else if (!_listName.Any(it => it == groupItem.Name))
-            {
-                _listName.Add(groupItem.Name);
-                TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File, groupItem.Kind != null && groupItem.Kind.Length > 0 ? groupItem.Kind[0].ToString() : string.Empty);
-                BaseSearchData bs = new BaseSearchData()
-                {
-                    Name = groupItem.Name,
-                    Path = groupItem.File,
-                    Type = type,
-                    ID = Guid.NewGuid(),
-                    Display = groupItem.Display,
-                    DateModified = DateTime.Parse(groupItem.Date),
-                    Tag = tag,
-                    Count = group.Count.ToString()
-                };
-                ListData.Add(bs);
-                _countAdded++;
-            }
-            if (_countAdded == CountItemsInPage)
+            if (_countAdded == _countProcess)
                 IsInterupt = true;
-
         }
 
 
@@ -138,8 +112,9 @@ namespace WSUI.Module.ViewModel
             string id = reader[3].ToString();
             string display = reader[4].ToString();
             var date = reader[5].ToString();
-            int.TryParse(reader[6].ToString(), out _lastID);
-            
+            DateTime temp;
+            DateTime.TryParse(date, out temp);
+            _lastDate = temp;
             return new GroupData()
             {
                 Name = name,
@@ -147,7 +122,7 @@ namespace WSUI.Module.ViewModel
                 Kind = kind,
                 ID = id,
                 Display = display,
-                Date = date
+                Date = temp
             };
 
         }
@@ -160,17 +135,79 @@ namespace WSUI.Module.ViewModel
             var searchCriteria = SearchString.Trim();
             string res = string.Empty;
             
-            ProcessSearchCriteria(searchCriteria);           
+            ProcessSearchCriteria(searchCriteria);
 
-            res = string.Format(QueryTemplate,  string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'",_listW[0]) : _andClause,  _lastID);
+            res = string.Format(QueryTemplate, string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause, FormatDate(ref _lastDate), LikeCriteria());//LikeCriteria()
 
             return res;
         }
 
+        private string LikeCriteria()
+        {
+            if (_listW.Count == 0)
+                return string.Empty;
+            var temp = new StringBuilder();
+            _listW.ForEach(str => temp.Append(string.Format(OrLikeTemplate,str)));
+            return temp.ToString();
+        }
+
+        protected override void OnStart()
+        {
+            ListData.Clear();
+            _listEverething.Clear();
+            FireStart();
+            //base.OnStart();
+        }
+
         protected override void OnComplete(bool res)
         {
+            var groups = _listEverething.GroupBy(i => i.Name);
+            lock (_lockObjcet)
+            {
+                foreach (var group in groups)
+                {
+                    var item = group.OrderByDescending(i => i.Date).FirstOrDefault();
+                    int count = group.Count();
+                    var groupItem = item;
+                    string tag = string.Empty;
+                    if (groupItem.Kind != null && IsEmail(groupItem.Kind)) // && !_listID.Any(it => it == groupItem.ID)
+                    {
+                        var newValue = GroupEmail(groupItem.Name, groupItem.ID);
+                        if (newValue == null)
+                            return;
+                        //_listID.Add(groupItem.ID);
+                        TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File);
+                        newValue.Type = type;
+                        ListData.Add(newValue);
+                    }
+                    else if (groupItem.Kind != null && IsEmail(value: groupItem.Kind) &&
+                             _listID.Any(it => it == groupItem.ID))
+                        return;
+                    else if (!_listName.Any(it => it == groupItem.Name))
+                    {
+                        _listName.Add(groupItem.Name);
+                        TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File,
+                                                                           groupItem.Kind != null &&
+                                                                           groupItem.Kind.Length > 0
+                                                                               ? groupItem.Kind[0].ToString()
+                                                                               : string.Empty);
+                        BaseSearchData bs = new BaseSearchData()
+                                                {
+                                                    Name = groupItem.Name,
+                                                    Path = groupItem.File,
+                                                    Type = type,
+                                                    ID = Guid.NewGuid(),
+                                                    Display = groupItem.Display,
+                                                    DateModified = groupItem.Date,
+                                                    Tag = tag,
+                                                    Count = count.ToString()
+                                                };
+                        ListData.Add(bs);
+                    }
+                }
+            }
             base.OnComplete(res);
-            Application.Current.Dispatcher.BeginInvoke(new Action(UpdateData), null);
+            _countProcess = CountSecondAndOtherProcess;
         }
 
         protected override void OnSearchStringChanged()
@@ -178,8 +215,6 @@ namespace WSUI.Module.ViewModel
             ClearSearchingInfo();
             ClearDataSource();
             OnPropertyChanged(() => DataSource);
-            OnPropertyChanged(() => DataPage);
-            OnPropertyChanged(() => DataSourceOfPage);
             if (ParentViewModel != null && ParentViewModel.MainDataSource != null)
                 ParentViewModel.MainDataSource.Clear();
             
@@ -193,14 +228,25 @@ namespace WSUI.Module.ViewModel
 
         private void ClearSearchingInfo()
         {
-            _lastID = int.MaxValue;
-            _currentPageNumber = 0;
-            if (DataPage != null)
-                DataPage.Clear();
-            if (DataSourceOfPage != null)
-                DataSourceOfPage.Clear();
-            _listID.Clear();
-            _listName.Clear();
+            lock (_lockObjcet)
+            {
+                _lastDate = DateTime.Now;
+                _countProcess = CountFirstProcess;
+                _listID.Clear();
+                _listName.Clear();
+            }
+        }
+
+        private void OnScroll(object args)
+        {
+            var scrollArgs = args as ScrollData;
+            System.Diagnostics.Debug.WriteLine(scrollArgs.ToString());
+            var result = scrollArgs.VerticalOffset * 100 / scrollArgs.ScrollableHeight;
+            if (result > 85)
+            {
+                ShowMessageNoMatches = false;
+                Search();
+            }
         }
 
         private EmailSearchData GroupEmail(string name, string id)
@@ -307,11 +353,6 @@ namespace WSUI.Module.ViewModel
             CommandStrategies.Add(TypeSearchItem.Attachment,fileAttach);
             CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
-            //var list = OutlookHelper.Instance.GetFolderList();
-            //if (list.IndexOf(HelperConst.Inbox1) > -1)
-            //    _folder = HelperConst.Inbox1;
-            //else if (list.IndexOf(HelperConst.Inbox2) > -1)
-            //    _folder = HelperConst.Inbox2;
         }
 
 
@@ -323,266 +364,6 @@ namespace WSUI.Module.ViewModel
 
         #endregion
 
-        #region paging
-
-        public class PageEntity : INotifyPropertyChanged
-        {
-            private int _number = 0;
-            private bool _isVisited = false;
-            private bool _isVisible = false;
-
-
-            public int Number
-            {
-                get { return _number; }
-                set { _number = value; OnPropertyChanged("Number"); }
-            }
-
-            public string Name
-            {
-                get { return (_number + 1).ToString(); }
-            }
-
-            public bool IsVisited
-            {
-                get { return _isVisited; }
-                set { _isVisited = value; OnPropertyChanged("IsVisited"); }
-            }
-
-            public bool IsVisible
-            {
-                get { return _isVisible; }
-                set { _isVisible = value; OnPropertyChanged("IsVisible"); }
-            }
-
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            private void OnPropertyChanged(string property)
-            {
-                PropertyChangedEventHandler temp = PropertyChanged;
-                if (temp != null)
-                {
-                    temp(this,new PropertyChangedEventArgs(property));
-                }
-            }
-        }
-
-        private const int CountItemsInPage = 25;
-        private const int MaxLinks = 10;
-
-        private int _currentPageNumber = -1;
-        private int _pageCount;
-        private List<PageEntity> _pages = new List<PageEntity>();
-
-        public ObservableCollection<PageEntity> DataPage { get; set; }
-        public ObservableCollection<BaseSearchData> DataSourceOfPage { get; set; }
-        public string PageCount { get; set; }
-        public string CurrentPage { get; set; }
-
-        public ICommand MoveFirstCommand { get; private set; }
-        public ICommand MovePreviousCommand { get; private set; }
-        public ICommand MoveLastCommand { get; private set; }
-        public ICommand MoveNextCommand { get; private set; }
-        public ICommand LinkCommand { get; private set; }
-
-
-        private void UpdateData()
-        {
-            if (DataSource == null)
-            {
-                _pageCount = 0;
-                _currentPageNumber = -1;
-            }
-            else
-            {
-                _pageCount = DataSource.Count / CountItemsInPage;
-                _pageCount += DataSource.Count % CountItemsInPage > 0 ? 1 : 0;
-                _pages.Clear();
-                for (int i = 0; i < _pageCount; i++)
-                {
-                    _pages.Add(new PageEntity()
-                                    {
-                                        Number = i,
-                                        IsVisible = true,
-                                        IsVisited = false
-                                    });
-                }
-                _currentPageNumber = _pageCount - 1;
-                SetCurrentPageSource();
-                UpdateLinks();
-                UpdateLink();
-            }
-            UpdatedStatics();
-        }
-
-        private void SetCurrentPageSource()
-        {
-            if (_currentPageNumber < 0 ||  _currentPageNumber >= _pageCount)
-                return;
-            int begin = _currentPageNumber * CountItemsInPage;
-            int count = (begin + CountItemsInPage) < DataSource.Count ? CountItemsInPage : DataSource.Count - begin;
-            var list = new ObservableCollection<BaseSearchData>();
-            for (int i = begin; i < (begin + count);i++ )
-                list.Add(DataSource[i]);
-            if(DataSourceOfPage != null && DataSourceOfPage.Count > 0)
-                DataSourceOfPage.Clear();
-            DataSourceOfPage = new ObservableCollection<BaseSearchData>(list.OrderBy(i => i.Type));
-            UpdatedStatics();
-            OnPropertyChanged(() => DataSourceOfPage);
-        }
-
-        private void UpdateLinks()
-        {
-            if (_currentPageNumber >= _pageCount)
-                return;
-            // TODO add updating links
-            if(DataPage == null)
-                DataPage = new ObservableCollection<PageEntity>();
-            DataPage.Clear();
-            for (int i = _pageCount > MaxLinks ? _pageCount - MaxLinks : 0; i < (_pageCount > MaxLinks ? _pageCount : MaxLinks) ; i++)
-            {
-                if (i >= _pageCount)
-                    break;
-                DataPage.Add(_pages[i]);
-            }
-            
-            OnPropertyChanged(() => DataPage);
-        }
-
-        private void UpdateLink()
-        {
-            var page = _pages.Find(p => p.Number == _currentPageNumber);
-            if (page != null)
-            {
-                page.IsVisited = true;
-            }
-        }
-
-        private void UpdatedStatics()
-        {
-            PageCount = _pageCount.ToString();
-            CurrentPage = (_currentPageNumber + 1).ToString();
-            OnPropertyChanged(() => PageCount);
-            OnPropertyChanged(() => CurrentPage);
-        }
-
-        private void MoveToFirstInternal()
-        {
-            if (_pages.Count == 0)
-                return;
-            int start = 0;
-            
-            for (int i = 0; i < MaxLinks; i++)
-            {
-                DataPage[i] = _pages[start];
-                start++;
-            }
-            UpdatedStatics();
-            OnPropertyChanged(() => DataPage);
-        }
-
-        private void MoveToLastInternal()
-        {
-            if (_pages.Count == 0 || _pages.Count < MaxLinks)
-                return;
-
-            int start = _pages[_pages.Count - 1].Number;
-            int max = _pages.Count > MaxLinks ? MaxLinks : _pages.Count;
-
-            for (int i = max - 1; i >= 0; i--)
-            {
-                DataPage[i] = _pages[start];
-                start--;
-            }
-            UpdatedStatics();
-            OnPropertyChanged(() => DataPage);
-        }
-
-        private void MoveToRight()
-        {
-            if (_pages.Count == 0)
-                return;
-            var curRight = DataPage[DataPage.Count - 1];
-
-            if (curRight.Number == _pageCount - 1 )
-            {
-                Search();
-            }
-            else 
-            {
-                int start = curRight.Number + 1;
-                for (int i = MaxLinks - 1; i >= 0; i--)
-                {
-                    DataPage[i] = _pages[start];
-                    start--;
-                }
-                UpdatedStatics();
-                OnPropertyChanged(() => DataPage);
-            }
-        }
-
-        private void MoveRightStep(int number)
-        {
-            if (number == _pages.Count - 1)
-                return;
-            int start = number + 1;
-            for (int i = MaxLinks - 1; i >= 0; i--)
-            {
-                DataPage[i] = _pages[start];
-                start--;
-            }
-            UpdatedStatics();
-            OnPropertyChanged(() => DataPage);
-        }
-
-        private void MoveToLeft()
-        {
-            if (_pages.Count == 0)
-                return;
-
-            var curLeft = DataPage[0];
-            if (curLeft.Number == 0)
-                return;
-            int start = curLeft.Number - 1;
-            for (int i = 0; i < MaxLinks; i++)
-            {
-                DataPage[i] = _pages[start];
-                start++;
-            }
-            UpdatedStatics();
-            OnPropertyChanged(() => DataPage);
-        }
-
-
-        private bool CanMoveLeft()
-        {
-            return true;//DataPage != null && !(DataPage[0].Number == 0);
-        }
-
-        private bool CanModeRight()
-        {
-            return true;// DataPage != null && !(DataPage[DataPage.Count - 1].Number == _pageCount - 1);
-        }
-
-
-        private void LinkClicked(object id)
-        {
-            if (id == null)
-                return;
-            var idPage = (int)id;
-            _currentPageNumber = idPage;
-            var page = DataPage.ToList().Find(p => p.Number == idPage);
-            if (page != null)
-                page.IsVisited = true;
-            SetCurrentPageSource();
-            OnPropertyChanged(() => DataPage);
-        }
-
-
-        #endregion
-
-
         class  GroupData
         {
             public string Name;
@@ -590,7 +371,7 @@ namespace WSUI.Module.ViewModel
             public object[] Kind;
             public string ID;
             public string Display;
-            public string Date;
+            public DateTime Date;
 
         }
 

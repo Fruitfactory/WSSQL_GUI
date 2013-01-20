@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Threading;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 
@@ -11,18 +12,21 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
     {
         private ProgressOperation _currentOperation;
         private Action _cancelAction;
-
+        private SynchronizationContext _currentContext;
 
         public ProgressWindow()
         {
             InitializeComponent();
+            _currentContext = SynchronizationContext.Current;
         }
 
         #region Implementation of IProgressForm
 
         public void CloseExt()
         {
-            DispatcherOperation dispatcherOperation = this.Dispatcher.BeginInvoke(new Action(Close));
+            //DispatcherOperation dispatcherOperation = this.Dispatcher.BeginInvoke(new Action(Close));
+            if (_currentContext != null)
+                _currentContext.Send(state => Close(), null);
         }
 
         public void ProcessCommand(ProgressFormCommand cmd, object arg)

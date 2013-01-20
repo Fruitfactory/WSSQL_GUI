@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Threading;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSUI.Infrastructure.Controls.ProgressManager
@@ -111,6 +112,8 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                 if (_currentOperation == null)
                     return;
 
+                SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(Dispatcher.CurrentDispatcher));
+
                 _progressForm = new ProgressWindow();
                 var wih = new WindowInteropHelper((Window)_progressForm);
                 wih.Owner = _currentOperation.MainHandle;
@@ -133,7 +136,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
 
         private void OnClosedForm(object sender,EventArgs args)
         {
-            ((Window) _progressForm).Dispatcher.InvokeShutdown();
+            ((Window) _progressForm).Dispatcher.BeginInvokeShutdown(DispatcherPriority.Background);
             System.Diagnostics.Debug.WriteLine(
                 "Close dialog ----------------------------------");
             WSSqlLogger.Instance.LogInfo(

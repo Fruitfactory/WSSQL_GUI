@@ -43,8 +43,6 @@ namespace WSUI.Module.ViewModel
             SettingsView.Model = this;
             DataView = dataView;
             DataView.Model = this;
-
-            //QueryTemplate = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email' AND System.Search.EntryID > {2} {0}AND CONTAINS(*,{1}) ";//¬ход€щие  //Inbox
             QueryTemplate = "SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email' AND System.Message.DateReceived < '{2}' {0}AND CONTAINS(*,{1}) ";//¬ход€щие  //Inbox
             QueryAnd = " AND \"{0}\"";
             ID = 2;
@@ -57,39 +55,6 @@ namespace WSUI.Module.ViewModel
 
         protected override void ReadData(IDataReader reader)
         {
-            //var groups = EmailGroupReaderHelpers.ReadGroups(reader);
-            //if (groups == null)
-            //    return;
-            //var item = groups.Items[0];
-
-            //if (_listID.Any(s => s == item.ConversationIndex))
-            //    return;
-            //TypeSearchItem type = SearchItemHelper.GetTypeItem(item.Path);
-            //EmailSearchData si = new EmailSearchData()
-            //{
-            //    Subject = item.Subject,
-            //    Recepient = string.Format("{0}",
-            //    item.Recepient),
-            //    Count = groups.Items.Count.ToString(),
-            //    Name = item.Name,
-            //    Path = item.Path,
-            //    Date = item.Date,
-            //    DateModified = item.Date,
-            //    Type = type,
-            //    ID = Guid.NewGuid()
-            //};
-            //try
-            //{
-            //    si.Attachments = OutlookHelper.Instance.GetAttachments(item);
-            //}
-            //catch (Exception e)
-            //{
-            //    WSSqlLogger.Instance.LogError(e.Message);
-            //}
-            
-            //int.TryParse(item.LastId, out _lastId);
-
-
             var item = GetData(reader);
           
 
@@ -193,11 +158,6 @@ namespace WSUI.Module.ViewModel
                 ShowMessageNoMatches = false;
                 Search();
             }
-        }
-
-        private string FormatDate(ref DateTime date)
-        {
-            return date.ToString("yyyy/MM/dd hh:mm:ss").Replace('.', '/');
         }
 
         private EmailSearchData GetData(IDataReader reader)

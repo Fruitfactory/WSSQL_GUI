@@ -6,6 +6,7 @@ using System.Data.OleDb;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -36,21 +37,23 @@ namespace WSUI.Module.Core
         protected string _prefix = string.Empty;
         protected bool _toggle = false;
         protected readonly List<BaseSearchData> ListData = new List<BaseSearchData>();
-        private object _lock = new object();
-        private BaseSearchData _current = null;
-        private string _searchString = string.Empty;
         protected Dictionary<TypeSearchItem, ICommandStrategy> CommandStrategies;
-        private ICommandStrategy _currentStrategy;
         protected IMainViewModel ParentViewModel;
         protected volatile bool IsInterupt = false;
         protected volatile bool ShowMessageNoMatches = true;
-
         protected readonly IUnityContainer Container;
-        protected List<IRule> RuleCollection;   
-
+        protected List<IRule> RuleCollection;
         protected readonly object Lock = new object();
         protected string _andClause;
         protected List<string> _listW;
+
+        private volatile bool _isQueryRun = false;
+        private object _lock = new object();
+        private BaseSearchData _current = null;
+        private string _searchString = string.Empty;
+        private ICommandStrategy _currentStrategy;
+        private ManualResetEvent _eventForContinue;
+
 
         protected KindViewModelBase(IUnityContainer container)
         {
@@ -63,12 +66,15 @@ namespace WSUI.Module.Core
             DataSource = new ObservableCollection<BaseSearchData>();
         }
 
-
         protected virtual void DoQuery(object mwi)
         {
+            _isQueryRun = true;
             WSSqlLogger.Instance.LogInfo("Begin query!");
             if (string.IsNullOrEmpty(_query))
+            {
+                _eventForContinue.Set();
                 return;
+            }
             var mainWnd = mwi as MainWindowInfo;
             if(mainWnd == null)
             {
@@ -88,7 +94,8 @@ namespace WSUI.Module.Core
                 Size = new Size(mainWnd.MainWindowRect.Width,mainWnd.MainWindowRect.Height),
                 MainHandle = mainWnd.MainWindowHandle
             });
-
+            var watch = new Stopwatch();
+            watch.Start();
             try
             {
 
@@ -120,13 +127,23 @@ namespace WSUI.Module.Core
                     connection.Close();
                 }
                 ProgressManager.Instance.StopOperation();
-                WSSqlLogger.Instance.LogInfo("End query!");
+                watch.Stop();
+                System.Diagnostics.Debug.WriteLine("DoQuery {0}",watch.ElapsedMilliseconds);
+                WSSqlLogger.Instance.LogInfo("End query! Elapsed: " + watch.ElapsedMilliseconds.ToString());
+                _eventForContinue.Set();
             }
         }
 
         protected virtual void DoAdditionalQuery()
         {
+            _eventForContinue.WaitOne();
+            var watch = new Stopwatch();
+            watch.Start();
             OnComplete(true);
+            watch.Stop();
+            System.Diagnostics.Debug.WriteLine("DoAdditionalQuery {0}", watch.ElapsedMilliseconds);
+            WSSqlLogger.Instance.LogInfo("End additionl query! Elapsed: " + watch.ElapsedMilliseconds.ToString());
+            _isQueryRun = false;
         }
 
         protected virtual void ReadData(IDataReader reader)
@@ -169,6 +186,13 @@ namespace WSUI.Module.Core
             }
         }
 
+
+        protected string FormatDate(ref DateTime date)
+        {
+            return date.ToString("yyyy/MM/dd hh:mm:ss").Replace('.', '/');
+        }
+
+
         protected virtual void OnStart()
         {
             ListData.Clear();
@@ -183,7 +207,7 @@ namespace WSUI.Module.Core
             {
                 if (ListData.Count == 0 && ShowMessageNoMatches)
                 {
-                    var message = new BaseSearchData() { Name = string.Format("Search for'{0}' returned no matches. Try different keywords.", SearchString), Type = TypeSearchItem.None };
+                    var message = new BaseSearchData() { Name = string.Format("Search for '{0}' returned no matches. Try different keywords.", SearchString), Type = TypeSearchItem.None };
                     ListData.Add(message);
                     ListData.ForEach(s => DataSource.Add(s));
                 }
@@ -191,8 +215,6 @@ namespace WSUI.Module.Core
                 {
                     
                     ListData.ForEach(s => DataSource.Add(s));
-                    //DataSource =
-                    //    new ObservableCollection<BaseSearchData>(DataSource.OrderByDescending(d => d.DateModified));
                 }
             }), null);
             OnPropertyChanged(() => DataSource);
@@ -226,6 +248,12 @@ namespace WSUI.Module.Core
 
         protected virtual void Search()
         {
+            if (_isQueryRun)
+            {
+                WSSqlLogger.Instance.LogWarning("Query have already started");
+                return;
+            }
+                
             OnStart();
             MainWindowInfo mwi = new MainWindowInfo();
             Rect rect = new Rect();
@@ -233,10 +261,19 @@ namespace WSUI.Module.Core
             rect.Size = new Size(Application.Current.MainWindow.ActualWidth, Application.Current.MainWindow.ActualHeight);
             mwi.MainWindowRect = rect;
             mwi.MainWindowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
-            Task thread = new Task(() => DoQuery(mwi));
-            Task thread2 = thread.ContinueWith((t) => DoAdditionalQuery());
+            //Task thread = new Task(() => DoQuery(mwi),TaskCreationOptions.None);
+            //Task thread2 = thread.ContinueWith((t) => DoAdditionalQuery());
             _query = CreateQuery();
+            //thread.Start();
+            if(_eventForContinue == null)
+                _eventForContinue = new ManualResetEvent(false);
+            var thread = new Thread(() => DoQuery(mwi));
+            thread.Priority = ThreadPriority.Highest;
+            var thread2 = new Thread(DoAdditionalQuery);
+            thread2.Priority = ThreadPriority.Highest;
             thread.Start();
+            _eventForContinue.Reset();
+            thread2.Start();
         }
 
         protected virtual bool CanSearch()
@@ -244,7 +281,7 @@ namespace WSUI.Module.Core
             return true;
         }
         
-        protected  virtual void OnSearchStringChanged()
+        protected virtual void OnSearchStringChanged()
         {}
 
         protected virtual void OnInit()

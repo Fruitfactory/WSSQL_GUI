@@ -30,7 +30,7 @@
     </UserControl.Resources>
     <DockPanel LastChildFill="True" >
 
-        <Grid DockPanel.Dock="Bottom" Visibility="{Binding Path=DataContext.DataSource.Count,Converter={StaticResource inttovis},ElementName=this,UpdateSourceTrigger=PropertyChanged}">
+        <!--<Grid DockPanel.Dock="Bottom" Visibility="{Binding Path=DataContext.DataSource.Count,Converter={StaticResource inttovis},ElementName=this,UpdateSourceTrigger=PropertyChanged}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"></RowDefinition>
                 <RowDefinition Height="20"></RowDefinition>
@@ -116,12 +116,13 @@
                 
             </ItemsControl>
 
-        </Grid>
-        <ListBox ItemsSource="{Binding Path=DataSourceOfPage,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+        </Grid>-->
+        <ListBox x:Name="listBox" ItemsSource="{Binding Path=DataSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                  ItemTemplateSelector="{StaticResource templateSelector}"
                  SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  ContextMenu="{StaticResource ResourceKey=contextMenu}"
                  IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
+                 ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
                  >
             
         </ListBox>
