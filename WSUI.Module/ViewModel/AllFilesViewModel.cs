@@ -56,7 +56,9 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
             // init
             QueryTemplate =
-                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0}) {2} ) ORDER BY System.DateCreated DESC";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})   , System.Search.EntryID DESC
+                "GROUP ON System.DateCreated  ORDER BY System.DateCreated DESC  OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0}) {2} ))";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})
+            //QueryTemplate =
+                //"SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0}) {2} ) ORDER BY System.DateCreated DESC";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})   , System.Search.EntryID DESC
             QueryAnd = " AND \"{0}\""; //" AND \"{0}\"";
             ID = 0;
             _name = "Everything";
@@ -83,23 +85,58 @@ namespace WSUI.Module.ViewModel
         protected override void ReadData(IDataReader reader)
         {
            
-            var item = ReadGroupData(reader);
-
-            if(!string.IsNullOrEmpty(item.ID) && _listID.Any(id => id == item.ID))
-                return;
-            
-            if(!string.IsNullOrEmpty(item.ID))
-                _listID.Add(item.ID);
-
-            _listEverething.Add(item);
-            if (_lastName != item.Name)
+          
+            var group = new List<GroupData>();
+            for (int i = 0; i < reader.FieldCount; i++)
             {
-                _countAdded++;
-                _lastName = item.Name;
+                if (reader.GetFieldType(i).ToString() != "System.Data.IDataReader")
+                    continue;
+                OleDbDataReader itemsReader = reader.GetValue(i) as OleDbDataReader;
+
+                while (itemsReader.Read())
+                {
+                    group.Add(ReadGroupData(itemsReader));
+                }
             }
 
+            if (group == null || group.Count == 0)
+                return;
+            var groupItem = group[0];
+            string tag = string.Empty;
+            if (groupItem.Kind != null && IsEmail(groupItem.Kind) && !_listID.Any(it => it == groupItem.ID))
+            {
+                var newValue = GroupEmail(groupItem.Name, groupItem.ID);
+                if (newValue == null)
+                    return;
+                _listID.Add(groupItem.ID);
+                TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File);
+                newValue.Type = type;
+                ListData.Add(newValue);
+                _countAdded++;
+            }
+            else if (groupItem.Kind != null && IsEmail(value: groupItem.Kind) && _listID.Any(it => it == groupItem.ID))
+                return;
+            else if (!_listName.Any(it => it == groupItem.Name))
+            {
+                _listName.Add(groupItem.Name);
+                TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File, groupItem.Kind != null && groupItem.Kind.Length > 0 ? groupItem.Kind[0].ToString() : string.Empty);
+                BaseSearchData bs = new BaseSearchData()
+                {
+                    Name = groupItem.Name,
+                    Path = groupItem.File,
+                    Type = type,
+                    ID = Guid.NewGuid(),
+                    Display = groupItem.Display,
+                    DateModified = groupItem.Date,
+                    Tag = tag,
+                    Count = group.Count.ToString()
+                };
+                ListData.Add(bs);
+                _countAdded++;
+            }
             if (_countAdded == _countProcess)
                 IsInterupt = true;
+
         }
 
 
@@ -160,51 +197,7 @@ namespace WSUI.Module.ViewModel
 
         protected override void OnComplete(bool res)
         {
-            var groups = _listEverething.GroupBy(i => i.Name);
-            lock (_lockObjcet)
-            {
-                foreach (var group in groups)
-                {
-                    var item = group.OrderByDescending(i => i.Date).FirstOrDefault();
-                    int count = group.Count();
-                    var groupItem = item;
-                    string tag = string.Empty;
-                    if (groupItem.Kind != null && IsEmail(groupItem.Kind)) // && !_listID.Any(it => it == groupItem.ID)
-                    {
-                        var newValue = GroupEmail(groupItem.Name, groupItem.ID);
-                        if (newValue == null)
-                            return;
-                        //_listID.Add(groupItem.ID);
-                        TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File);
-                        newValue.Type = type;
-                        ListData.Add(newValue);
-                    }
-                    else if (groupItem.Kind != null && IsEmail(value: groupItem.Kind) &&
-                             _listID.Any(it => it == groupItem.ID))
-                        return;
-                    else if (!_listName.Any(it => it == groupItem.Name))
-                    {
-                        _listName.Add(groupItem.Name);
-                        TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File,
-                                                                           groupItem.Kind != null &&
-                                                                           groupItem.Kind.Length > 0
-                                                                               ? groupItem.Kind[0].ToString()
-                                                                               : string.Empty);
-                        BaseSearchData bs = new BaseSearchData()
-                                                {
-                                                    Name = groupItem.Name,
-                                                    Path = groupItem.File,
-                                                    Type = type,
-                                                    ID = Guid.NewGuid(),
-                                                    Display = groupItem.Display,
-                                                    DateModified = groupItem.Date,
-                                                    Tag = tag,
-                                                    Count = count.ToString()
-                                                };
-                        ListData.Add(bs);
-                    }
-                }
-            }
+          
             base.OnComplete(res);
             _countProcess = CountSecondAndOtherProcess;
         }
@@ -280,10 +273,7 @@ namespace WSUI.Module.ViewModel
                 {
                     con.Close();
                 }
-
             }
-
-
             return data;
         }
 
