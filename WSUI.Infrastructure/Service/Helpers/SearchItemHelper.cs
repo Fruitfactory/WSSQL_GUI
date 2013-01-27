@@ -18,11 +18,11 @@ namespace WSUI.Infrastructure.Service.Helpers
         {
             if( tag == "contact")
                 return TypeSearchItem.Contact;
-            else if(tag == "calendar")
-                return TypeSearchItem.Calendar;
-            else if (itemurl.IndexOf(MAPIPREFIX) > -1 && itemurl.LastIndexOf(ATSUFFIX) > -1) 
-            {
+            else if(itemurl.IndexOf(MAPIPREFIX) > -1 && itemurl.LastIndexOf(ATSUFFIX) > -1)
                 return TypeSearchItem.Attachment;
+            else if (tag == "calendar") 
+            {
+                return TypeSearchItem.Calendar;
             }
             else if (tag == "picture")
                 return TypeSearchItem.Picture;

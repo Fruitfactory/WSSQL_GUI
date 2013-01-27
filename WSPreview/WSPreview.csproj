@@ -88,6 +88,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\Calendar\CalendarIcsPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Calendar\CalendarIcsPreview.Designer.cs">
+      <DependentUpon>CalendarIcsPreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Calendar\FileIcsProperty.cs" />
+    <Compile Include="Controls\Calendar\IIcsFileProperty.cs" />
+    <Compile Include="Controls\Calendar\ParseAttribute.cs" />
+    <Compile Include="Controls\Calendar\ParserIcs.cs" />
     <Compile Include="Controls\GDI.cs" />
     <Compile Include="Controls\ImageControl\PicturePreviewControl.cs">
       <SubType>UserControl</SubType>
@@ -169,6 +179,7 @@
     <Compile Include="PreviewHandlers\BinPreviewHandler.cs" />
     <Compile Include="PreviewHandlers\CsvPreviewHandler.cs" />
     <Compile Include="PreviewHandlers\FileTypeIconProvider.cs" />
+    <Compile Include="PreviewHandlers\IcsPreviewHandler.cs" />
     <Compile Include="PreviewHandlers\ImagePreviewHandler.cs" />
     <Compile Include="PreviewHandlers\InternetExplorerPreviewHandler.cs" />
     <Compile Include="PreviewHandlers\IsfPreviewHandler.cs" />
@@ -191,6 +202,9 @@
     <Compile Include="Service\Logger\WSSqlLogger.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\Calendar\CalendarIcsPreview.resx">
+      <DependentUpon>CalendarIcsPreview.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ImageControl\PicturePreviewControl.resx">
       <DependentUpon>PicturePreviewControl.cs</DependentUpon>
     </EmbeddedResource>

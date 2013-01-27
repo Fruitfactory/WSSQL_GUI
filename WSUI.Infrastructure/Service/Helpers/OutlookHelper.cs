@@ -62,7 +62,7 @@ namespace WSUI.Infrastructure.Service.Helpers
                 return null;
             string mapiUrl = itemsearch.Path;
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
-            Outlook.MailItem mailItem = GetMailItem(entryID);
+            dynamic mailItem = GetMailItem(entryID);
             if (mailItem == null)
             {
                 WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Mail not found", itemsearch.Path));
@@ -88,7 +88,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             string mapi = item.Path;
             string entryID = EIDFromEncodeStringWDS30(mapi.Substring(mapi.IndexOf(ATSUFFIX) - IDLENGHT, IDLENGHT));
             string fileNameAttach = mapi.Substring(mapi.LastIndexOf(':') + 1);
-            Outlook.MailItem mi = GetMailItem(entryID);
+            dynamic mi = GetMailItem(entryID);
             Outlook.Attachment att = GetAttacment(mi, fileNameAttach);
             if (att == null)
             {
@@ -119,7 +119,7 @@ namespace WSUI.Infrastructure.Service.Helpers
                 return null;
             string mapiUrl = itemsearch.Path;
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
-            Outlook.MailItem mi = GetMailItem(entryID);
+            dynamic mi = GetMailItem(entryID);
             if (mi == null)
                 return list;
             foreach (Outlook.Attachment att in mi.Attachments)
@@ -233,7 +233,7 @@ namespace WSUI.Infrastructure.Service.Helpers
                 return string.Empty;
             string mapiUrl = itemSearch.Path;
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
-            Outlook.AppointmentItem appointmentItem = GetAppointment(entryID);
+            dynamic appointmentItem = GetAppointment(entryID);
             if (appointmentItem == null)
             {
                 WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}","Appointment not found",itemSearch.Path));
@@ -341,11 +341,11 @@ namespace WSUI.Infrastructure.Service.Helpers
             return ret;
         }
 
-        private Outlook.MailItem GetMailItem(string entryID)
+        private dynamic GetMailItem(string entryID)
         {
             if (_app == null)
                 return null;
-            Outlook.MailItem mi = null;
+            dynamic mi = null;
             try
             {
                 if (!IsOutlookAlive())
@@ -362,7 +362,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             return mi;
         }
 
-        private Outlook.Attachment GetAttacment(Outlook.MailItem mail,string filename)
+        private Outlook.Attachment GetAttacment(dynamic mail,string filename)
         {
             Outlook.Attachment att = null;
             if (mail == null)
@@ -371,10 +371,14 @@ namespace WSUI.Infrastructure.Service.Helpers
             {
                 if (mail.Attachments.Count == 0)
                     return null;
-                var listAttachment = mail.Attachments.OfType<Outlook.Attachment>().Where(a => a.FileName == filename).ToList();
-                if (listAttachment.Count == 0)
-                    return null;
-                att = listAttachment[0];
+                foreach (Outlook.Attachment attach in mail.Attachments)
+                {
+                    if (attach.FileName == filename)
+                    {
+                        att = attach;
+                        break;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -383,20 +387,30 @@ namespace WSUI.Infrastructure.Service.Helpers
             return att;
         }
 
-        private Outlook.AppointmentItem GetAppointment(string id)
+        private dynamic GetAppointment(string id)
         {
             if (_app == null)
                 return null;
-            Outlook.AppointmentItem appointItem = null;
+            dynamic appointItem = null;
             try
             {
                 if(!IsOutlookAlive())
                     ReopenOutlook(ref _app);
                 Outlook.NameSpace ns = _app.GetNamespace("MAPI");
-                Outlook.MAPIFolder calendarFolder = ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderCalendar);
-                Outlook.Items calendarItems = calendarFolder.Items;
+                //Outlook.MAPIFolder calendarFolder = ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderCalendar);
+                //Outlook.Items calendarItems = calendarFolder.Items;
 
-                appointItem = calendarItems.OfType<Outlook.AppointmentItem>().ToList().Find(a => a.EntryID == id);
+                //appointItem = calendarItems.OfType<Outlook.AppointmentItem>().ToList().Find(a => a.EntryID == id);
+                //foreach (Outlook.AppointmentItem calendarItem in calendarItems)
+                //{
+                //    if (calendarItem.EntryID == id)
+                //    {
+                //        appointItem = calendarItem;
+                //        break;
+                //    }
+                //}
+
+                appointItem = ns.GetItemFromID(id, Type.Missing);
 
             }
             catch (Exception ex)
