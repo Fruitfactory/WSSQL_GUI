@@ -203,7 +203,9 @@ xcopy $(SolutionDir)Toolkits\Scintilla\SciLexer.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\Scintilla\SciLexer64.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\Scintilla\ScintillaNET.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\Interop\Word\Microsoft.Office.Interop.Word.dll $(TargetDir) /F /R /Y /I
-xcopy $(SolutionDir)Toolkits\Interop\Office\Office.dll $(TargetDir) /F /R /Y /I</PostBuildEvent>
+xcopy $(SolutionDir)Toolkits\Interop\Office\Office.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\GflSdk\lib\libgfl340.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\GflSdk\lib\libgfle340.dll $(TargetDir) /F /R /Y /I</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

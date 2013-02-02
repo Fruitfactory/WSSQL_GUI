@@ -326,6 +326,12 @@
     <EmbeddedResource Include="Images\_blank.png" />
     <EmbeddedResource Include="Images\_page.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GflWrapper\GflWrapper.vcxproj">
+      <Project>{3D329622-7422-4675-A268-822622C35712}</Project>
+      <Name>GflWrapper</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

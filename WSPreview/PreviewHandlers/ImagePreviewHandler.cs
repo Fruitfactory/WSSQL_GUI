@@ -10,7 +10,7 @@ using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("WSSQL Image Preview Handler", ".jpg;.png;.bmp", "{69D9AF89-B056-433B-8F92-E9A3585E533E}")]
+    [PreviewHandler("WSSQL Image Preview Handler", ".jpg;.png;.bmp;.psd;.gif;.tiff;.jpeg;.ico;.tga;.wmf;.cur;.dib", "{69D9AF89-B056-433B-8F92-E9A3585E533E}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.ImagePreviewHandler")]
     [Guid("9251B469-BF27-410E-ABD4-D3F7A47AD7C6")]
     [ClassInterface(ClassInterfaceType.None)]

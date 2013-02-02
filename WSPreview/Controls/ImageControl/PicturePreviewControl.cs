@@ -6,6 +6,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using GflWrapper;
+
 
 namespace C4F.DevKit.PreviewHandler.Controls.ImageControl
 {
@@ -23,7 +25,12 @@ namespace C4F.DevKit.PreviewHandler.Controls.ImageControl
                 zoomPictureBox.Image = null;
                 return;
             }
-            zoomPictureBox.Image = new Bitmap(filename);
+            GflImageWrapper image = new GflImageWrapper(filename);
+
+            if (!image.IsSupportExt())
+                return;
+
+            zoomPictureBox.Image = image.GetImage();
             labelZoomCurrent.Text = string.Format("{0}x", zoomPictureBox.Zoom.ToString());
             trackZoom.Value = (int)zoomPictureBox.Zoom;
         }
