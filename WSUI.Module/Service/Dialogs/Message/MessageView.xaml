@@ -1,0 +1,55 @@
+﻿<Controls:MetroWindow x:Class="WSUI.Module.Service.Dialogs.Message.MessageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ctrl="clr-namespace:WSUI.Module.Service.Dialogs.Message"  
+             
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" mc:Ignorable="d" 
+             WindowStyle="ToolWindow" WindowState="Normal" ResizeMode="NoResize"
+                      MinWidth="400" MinHeight="100" MaxWidth="450" MaxHeight="150"
+                      Title="{Binding Title}" 
+                      WindowStartupLocation="CenterScreen"         
+             >
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <ctrl:MessageImageToPictureConvert x:Key="imageconv" />
+            
+            
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="45"></RowDefinition>
+        </Grid.RowDefinitions> 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.25*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Orientation="Vertical" VerticalAlignment="Center" Margin="5">
+            <Image Source="{Binding Icon,Converter={StaticResource imageconv}}" Width="48" Height="48"  />
+        </StackPanel>   
+        <DockPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="7" LastChildFill="True">
+            <TextBlock TextWrapping="Wrap" Text="{Binding Message}" />
+        </DockPanel>
+        
+        <StackPanel   Grid.Column="1" Grid.Row="2"  Margin="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Margin="3"  x:Name="btnOkYes" Width="75" Visibility="Collapsed" Click="btnOkYes_Click"/>
+            <Button Margin="3" x:Name="btnNo"  Width="75" Visibility="Collapsed" Click="btnNo_Click" />
+            <Button Margin="3" x:Name="btnCancel"  Width="75" Visibility="Collapsed" Click="btnCancel_Click"/>
+        </StackPanel>
+        
+    </Grid>
+</Controls:MetroWindow>

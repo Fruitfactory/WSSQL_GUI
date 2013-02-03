@@ -93,7 +93,7 @@ namespace GflWrapper {
 			if(!error)
 			{
 				HBITMAP hBmp = nullptr;
-				//convert to hbitmap, because if we copy pixels data to managed bitmap, as a result color are weard;
+				//convert to hbitmap, because if we copy pixels data to managed bitmap -  color madness;
 				gflConvertBitmapIntoDDB(bitmap,&hBmp);
 
 				IntPtr ptrHBmp =  IntPtr(hBmp);

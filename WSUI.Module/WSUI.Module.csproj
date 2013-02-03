@@ -95,6 +95,13 @@
     <Compile Include="Service\AllFilesDataTemplateSelector.cs" />
     <Compile Include="Service\ContactDataTemplateSelector.cs" />
     <Compile Include="Service\DateToStringConverter.cs" />
+    <Compile Include="Service\Dialogs\Interfaces\IMessageModel.cs" />
+    <Compile Include="Service\Dialogs\Message\MessageBoxService.cs" />
+    <Compile Include="Service\Dialogs\Message\MessageImageToPictureConvert.cs" />
+    <Compile Include="Service\Dialogs\Message\MessageModel.cs" />
+    <Compile Include="Service\Dialogs\Message\MessageView.xaml.cs">
+      <DependentUpon>MessageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Service\HelperConst.cs" />
     <Compile Include="Service\ContactSuggestingService.cs" />
     <Compile Include="Service\KeyDownBehavior.cs" />
@@ -161,6 +168,10 @@
     <Resource Include="Images\previous.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Service\Dialogs\Message\MessageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Service\ResourceTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -244,6 +255,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\txt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\banned.png" />
+    <Resource Include="Images\error.png" />
+    <Resource Include="Images\information.png" />
+    <Resource Include="Images\question.png" />
+    <Resource Include="Images\warning.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
