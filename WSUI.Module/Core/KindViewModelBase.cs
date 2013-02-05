@@ -31,6 +31,9 @@ namespace WSUI.Module.Core
     public abstract class KindViewModelBase : ViewModelBase, IKindItem
     {
         protected readonly string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
+        protected const string OrLikeTemplate = " AND System.ItemName LIKE '%{0}%'";
+
+
         protected string QueryTemplate;
         protected string QueryAnd;
         protected string _name = string.Empty;
@@ -190,6 +193,20 @@ namespace WSUI.Module.Core
             }
         }
 
+        protected string LikeCriteria()
+        {
+            if (_listW.Count == 0)
+                return string.Empty;
+            var temp = new StringBuilder();
+
+            temp.Append(string.Format("System.ItemName LIKE '%{0}%'", _listW[0]));
+
+            if (_listW.Count > 1)
+                for (int i = 1; i < _listW.Count; i++)
+                    temp.Append(string.Format(OrLikeTemplate, _listW.ElementAt(i)));
+
+            return temp.ToString();
+        }
 
         protected string FormatDate(ref DateTime date)
         {

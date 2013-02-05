@@ -33,7 +33,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
 
             QueryTemplate =
-                "GROUP ON System.Message.DateReceived  ORDER BY System.Message.DateReceived DESC  OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.Message.DateReceived FROM SystemIndex WHERE Contains(System.ItemUrl,'at') AND System.Message.DateReceived < '{2}'  AND (System.ItemName LIKE '%{0}%' OR  Contains(System.Search.Contents,{1})))"; //Contains(System.ItemName,'{0}*')  OR System.Search.Contents  AND System.DateCreated < '{2}'
+                "GROUP ON System.Message.DateReceived  ORDER BY System.Message.DateReceived DESC  OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.Message.DateReceived FROM SystemIndex WHERE Contains(System.ItemUrl,'at') AND System.Message.DateReceived < '{2}'  AND ( ( {0} ) OR  Contains(System.Search.Contents,{1})))"; //Contains(System.ItemName,'{0}*')  OR System.Search.Contents  AND System.DateCreated < '{2}'
             QueryAnd = " AND \"{0}\"";
             ID = 3;
             _name = "Attachments";
@@ -82,7 +82,7 @@ namespace WSUI.Module.ViewModel
            
             ProcessSearchCriteria(searchCriteria);
 
-            res = string.Format(QueryTemplate, _listW[0], string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause,FormatDate(ref _lastDate));//,FormatDate(ref _lastDate)
+            res = string.Format(QueryTemplate, LikeCriteria(), string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause,FormatDate(ref _lastDate));//,FormatDate(ref _lastDate)
 
             return res;
         }

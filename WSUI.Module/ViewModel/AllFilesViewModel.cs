@@ -32,7 +32,7 @@ namespace WSUI.Module.ViewModel
         private const string QueryForGroupEmails =
             "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email'  AND CONTAINS(System.Message.ConversationID,'{0}*')   ORDER BY System.Message.DateReceived DESC) ";//AND CONTAINS(System.ItemPathDisplay,'{0}*',1033)
 
-        private const string OrLikeTemplate = " OR System.ItemName LIKE '%{0}%'";
+       
         private const int CountFirstProcess = 35;
         private const int CountSecondAndOtherProcess = 7;
         private int _countAdded = 0;
@@ -56,7 +56,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
             // init
             QueryTemplate =
-                "GROUP ON System.DateCreated  ORDER BY System.DateCreated DESC  OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0}) {2} ))";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})
+                "GROUP ON System.DateCreated  ORDER BY System.DateCreated DESC  OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0}) OR ( {2} ) ))";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})
             //QueryTemplate =
                 //"SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0}) {2} ) ORDER BY System.DateCreated DESC";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})   , System.Search.EntryID DESC
             QueryAnd = " AND \"{0}\""; //" AND \"{0}\"";
@@ -176,15 +176,6 @@ namespace WSUI.Module.ViewModel
             res = string.Format(QueryTemplate, string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause, FormatDate(ref _lastDate), LikeCriteria());//LikeCriteria()
 
             return res;
-        }
-
-        private string LikeCriteria()
-        {
-            if (_listW.Count == 0)
-                return string.Empty;
-            var temp = new StringBuilder();
-            _listW.ForEach(str => temp.Append(string.Format(OrLikeTemplate,str)));
-            return temp.ToString();
         }
 
         protected override void OnStart()
