@@ -26,8 +26,9 @@ namespace WSUI.Module.Service.Dialogs.Message
 
         public MessageView(IMessageModel messageModel)
         {
-            InitializeComponent();
             _model = messageModel;
+            DataContext = _model;
+            InitializeComponent();
             InitView();
 
         }
@@ -35,7 +36,6 @@ namespace WSUI.Module.Service.Dialogs.Message
 
         private void InitView()
         {
-            DataContext = _model;
             switch (_model.Button)
             {
                 case MessageBoxButton.OK:

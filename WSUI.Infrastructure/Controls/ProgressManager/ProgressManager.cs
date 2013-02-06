@@ -129,7 +129,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                     WSSqlLogger.Instance.LogError(ex.Message);
                 }
             }
-            ((Window)_progressForm).Show();
+            ((Window)_progressForm).ShowDialog();
             System.Windows.Threading.Dispatcher.Run();
         }
 

@@ -82,6 +82,7 @@ namespace WSUI.Module.Core
                 _eventForContinue.Set();
                 return;
             }
+            WSSqlLogger.Instance.LogInfo(string.Format("QUERY: {0}",_query));
             var mainWnd = mwi as MainWindowInfo;
             if(mainWnd == null)
             {
@@ -228,6 +229,7 @@ namespace WSUI.Module.Core
             {
                 if (ListData.Count == 0 && ShowMessageNoMatches)
                 {
+                    DataSource.Clear();
                     var message = new BaseSearchData() { Name = string.Format("Search for '{0}' returned no matches. Try different keywords.", SearchString), Type = TypeSearchItem.None };
                     ListData.Add(message);
                     ListData.ForEach(s => DataSource.Add(s));
