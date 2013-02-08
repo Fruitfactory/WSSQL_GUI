@@ -249,7 +249,7 @@ namespace WSUI.Module.ViewModel
             }
             catch (System.Data.OleDb.OleDbException oleDbException)
             {
-                WSSqlLogger.Instance.LogError(oleDbException.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {2}", "GroupEmail", oleDbException.Message));
             }
             finally
             {
@@ -293,7 +293,7 @@ namespace WSUI.Module.ViewModel
             }
             catch (Exception e)
             {
-                WSSqlLogger.Instance.LogError(e.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {2}", "ReadGroup - AllFiles", e.Message));
             }
             return si;
         }

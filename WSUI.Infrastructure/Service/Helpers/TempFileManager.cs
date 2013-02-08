@@ -123,7 +123,7 @@ namespace WSUI.Infrastructure.Service.Helpers
                     }
                     catch (Exception ex)
                     {
-                        WSSqlLogger.Instance.LogError(ex.Message);
+                        WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "ClearTempFolder", ex.Message));
                     }
                 }
             }
@@ -154,7 +154,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "CopyFile", ex.Message));
             }
             finally
             {

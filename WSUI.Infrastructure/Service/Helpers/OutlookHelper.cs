@@ -186,7 +186,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolderList", ex.Message));
                 return res;
             }
             res.Insert(0,OutlookHelper.AllFolders);
@@ -278,7 +278,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.Message));
             }
             return ci;            
         }
@@ -313,7 +313,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetFromProcess", ex.Message));
                 //System.Windows.MessageBox.Show(String.Format("Get Process: {0}", ex.Message));
             }
 
@@ -334,8 +334,8 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
-                System.Windows.MessageBox.Show(String.Format("Create Process: {0}", ex.Message));
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "CreateOutlookApplication", ex.Message));
+                //System.Windows.MessageBox.Show(String.Format("Create Process: {0}", ex.Message));
             }
 
             return ret;
@@ -357,7 +357,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetMailItem", ex.Message));
             }
             return mi;
         }
@@ -382,7 +382,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetAttachment", ex.Message));
             }
             return att;
         }
@@ -397,25 +397,13 @@ namespace WSUI.Infrastructure.Service.Helpers
                 if(!IsOutlookAlive())
                     ReopenOutlook(ref _app);
                 Outlook.NameSpace ns = _app.GetNamespace("MAPI");
-                //Outlook.MAPIFolder calendarFolder = ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderCalendar);
-                //Outlook.Items calendarItems = calendarFolder.Items;
-
-                //appointItem = calendarItems.OfType<Outlook.AppointmentItem>().ToList().Find(a => a.EntryID == id);
-                //foreach (Outlook.AppointmentItem calendarItem in calendarItems)
-                //{
-                //    if (calendarItem.EntryID == id)
-                //    {
-                //        appointItem = calendarItem;
-                //        break;
-                //    }
-                //}
 
                 appointItem = ns.GetItemFromID(id, Type.Missing);
 
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetAppointment", ex.Message));
             }
             return appointItem;
         }
@@ -437,7 +425,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "IsOutlookAlive", ex.Message));
             }
 
             return res;
@@ -482,7 +470,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             catch (Exception e)
             {
-                WSSqlLogger.Instance.LogError(e.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetOutlookFolders", e.Message));
             }
         }
 
@@ -510,7 +498,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.Message));
             }
             return ci;
         }

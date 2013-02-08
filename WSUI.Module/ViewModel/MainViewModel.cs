@@ -219,7 +219,7 @@ namespace WSUI.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {2}", "OnCurrentImageChanged", ex.Message));
             }
             finally
             {

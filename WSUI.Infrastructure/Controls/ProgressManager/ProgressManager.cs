@@ -126,7 +126,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                 }
                 catch (Exception ex)
                 {
-                    WSSqlLogger.Instance.LogError(ex.Message);
+                    WSSqlLogger.Instance.LogError(string.Format("{0} - {1}","ShowSplash",ex.Message));
                 }
             }
             ((Window)_progressForm).ShowDialog();

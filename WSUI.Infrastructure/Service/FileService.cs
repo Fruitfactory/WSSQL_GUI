@@ -19,7 +19,7 @@ namespace WSUI.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "ISDirectory", ex.Message));
                 return true;
             }
         }

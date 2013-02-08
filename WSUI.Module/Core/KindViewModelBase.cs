@@ -111,15 +111,22 @@ namespace WSUI.Module.Core
                 dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    ReadData(dataReader);
-                    if (IsInterupt)
-                        break;
+                    try
+                    {
+                        ReadData(dataReader);
+                        if (IsInterupt)
+                            break;
+                    }
+                    catch (Exception ex)
+                    {
+                        WSSqlLogger.Instance.LogError(String.Format("{0} - {1}","DoQuery _ main cycle", ex.Message));
+                    }
                 }
 
             }
             catch (System.Data.OleDb.OleDbException oleDbException)
             {
-                WSSqlLogger.Instance.LogError(oleDbException.Message);
+                WSSqlLogger.Instance.LogError(String.Format("{0} - {1}","DoQuery",oleDbException.Message));
             }
             finally
             {
@@ -463,7 +470,7 @@ namespace WSUI.Module.Core
             }
             catch (System.Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}","Start error",fileName,ex.Message));
+                WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "OpenItemFile", fileName, ex.Message));
             }
         }
 

@@ -139,7 +139,7 @@ namespace WSUI.Module.ViewModel
                     }
                     catch (Exception ex)
                     {
-                        WSSqlLogger.Instance.LogError(ex.Message);
+                        WSSqlLogger.Instance.LogError(string.Format("{0} - {2}", "OnComplete - Email", ex.Message));
                     }
                     email.Count = group.Count().ToString();
                     ListData.Add(email);
