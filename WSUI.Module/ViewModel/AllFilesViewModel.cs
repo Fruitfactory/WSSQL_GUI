@@ -108,14 +108,18 @@ namespace WSUI.Module.ViewModel
                 var newValue = GroupEmail(groupItem.Name, groupItem.ID);
                 if (newValue == null)
                     return;
-                _listID.Add(groupItem.ID);
+                _listID.Add(newValue.ConversationId);
                 TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File);
                 newValue.Type = type;
                 ListData.Add(newValue);
                 _countAdded++;
+                WSSqlLogger.Instance.LogInfo(string.Format("ConversationId =  {0}", newValue.ConversationId));
             }
             else if (groupItem.Kind != null && IsEmail(value: groupItem.Kind) && _listID.Any(it => it == groupItem.ID))
+            {
+                //WSSqlLogger.Instance.LogInfo(string.Format("ConversationId =  {0}", groupItem.ID));
                 return;
+            }
             else if (!_listName.Any(it => it == groupItem.Name))
             {
                 _listName.Add(groupItem.Name);
@@ -285,6 +289,7 @@ namespace WSUI.Module.ViewModel
                 Path = item.Path,
                 Date = item.Date,
                 Type = type,
+                ConversationId = item.ConversationId,
                 ID = Guid.NewGuid()
             };
             try

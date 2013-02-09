@@ -464,8 +464,16 @@ namespace WSUI.Infrastructure.Service.Helpers
                     return;
                 foreach (var subfolder in folder.Folders.OfType<Outlook.MAPIFolder>())
                 {
-                    res.Add(subfolder.Name);
-                    GetOutlookFolders(subfolder, res);
+                    try
+                    {
+
+                        res.Add(subfolder.Name);
+                        GetOutlookFolders(subfolder, res);
+                    }
+                    catch (Exception e)
+                    {
+                        WSSqlLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders",subfolder.Name, e.Message));
+                    }
                 }
             }
             catch (Exception e)
