@@ -133,13 +133,14 @@ namespace WSUI.Module.ViewModel
                         continue;
                     _listID.Add(email.ConversationIndex);
                     email.Type = SearchItemHelper.GetTypeItem(email.Path);
+                    WSSqlLogger.Instance.LogError(string.Format("ConversationIndex = {0}",email.ConversationId));
                     try
                     {
                         email.Attachments = OutlookHelper.Instance.GetAttachments(email);
                     }
                     catch (Exception ex)
                     {
-                        WSSqlLogger.Instance.LogError(string.Format("{0} - {2}", "OnComplete - Email", ex.Message));
+                        WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "OnComplete - Email", ex.Message));
                     }
                     email.Count = group.Count().ToString();
                     ListData.Add(email);
