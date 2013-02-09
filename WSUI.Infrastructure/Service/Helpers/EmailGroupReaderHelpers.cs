@@ -1,13 +1,91 @@
 ﻿using System;
 using System.Data;
 using System.Data.OleDb;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 using WSUI.Infrastructure.Models;
+using WSUI.Infrastructure.Service.Enums;
 
 namespace WSUI.Infrastructure.Service.Helpers
 {
     public class EmailGroupReaderHelpers
     {
-        static public EmailData ReadGroups(IDataReader reader)
+        private const string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
+        private const string QueryForGroupEmails =
+    "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email'  AND CONTAINS(System.Message.ConversationID,'{0}*')   ORDER BY System.Message.DateReceived DESC) ";//AND CONTAINS(System.ItemPathDisplay,'{0}*',1033)
+
+
+        public static EmailSearchData GroupEmail(string id)
+        {
+            var query = string.Format(QueryForGroupEmails, id);
+            EmailSearchData data = null;
+            OleDbDataReader reader = null;
+            OleDbConnection con = new OleDbConnection(ConnectionString);
+            OleDbCommand cmd = new OleDbCommand(query, con);
+            try
+            {
+
+                con.Open();
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    data = ReadGroup(reader);
+                    break;
+                }
+            }
+            catch (System.Data.OleDb.OleDbException oleDbException)
+            {
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {2}", "GroupEmail", oleDbException.Message));
+            }
+            finally
+            {
+                // Always call Close when done reading.
+                if (reader != null)
+                {
+                    reader.Close();
+                    reader.Dispose();
+                }
+                // Close the connection when done with it.
+                if (con.State == System.Data.ConnectionState.Open)
+                {
+                    con.Close();
+                }
+            }
+            return data;
+        }
+
+        public static EmailSearchData ReadGroup(IDataReader reader)
+        {
+            var groups = EmailGroupReaderHelpers.ReadGroups(reader);
+            if (groups == null)
+                return null;
+            var item = groups.Items[0];
+            TypeSearchItem type = SearchItemHelper.GetTypeItem(item.Path);
+            EmailSearchData si = new EmailSearchData()
+            {
+                Subject = item.Subject,
+                Recepient = string.Format("{0}",
+                item.Recepient),
+                Count = groups.Items.Count.ToString(),
+                Name = item.Name,
+                Path = item.Path,
+                Date = item.Date,
+                Type = type,
+                ConversationId = item.ConversationId,
+                ID = Guid.NewGuid()
+            };
+            try
+            {
+                si.Attachments = OutlookHelper.Instance.GetAttachments(item);
+            }
+            catch (Exception e)
+            {
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {2}", "ReadGroup - AllFiles", e.Message));
+            }
+            return si;
+        }
+
+
+        public static EmailData ReadGroups(IDataReader reader)
         {
             EmailData d = new EmailData();
             for (int i = 0; i < reader.FieldCount; i++)

@@ -105,7 +105,7 @@ namespace WSUI.Module.ViewModel
             string tag = string.Empty;
             if (groupItem.Kind != null && IsEmail(groupItem.Kind) && !_listID.Any(it => it == groupItem.ID))
             {
-                var newValue = GroupEmail(groupItem.Name, groupItem.ID);
+                var newValue = EmailGroupReaderHelpers.GroupEmail(groupItem.ID);
                 if (newValue == null)
                     return;
                 _listID.Add(newValue.ConversationId);
@@ -231,76 +231,6 @@ namespace WSUI.Module.ViewModel
             {
                 ScrollBehavior.NeedSearch(scrollArgs);
             }
-        }
-
-        private EmailSearchData GroupEmail(string name, string id)
-        {
-            var query = string.Format(QueryForGroupEmails, id);
-            EmailSearchData data = null;
-            OleDbDataReader reader = null;
-            OleDbConnection con = new OleDbConnection(ConnectionString);
-            OleDbCommand cmd = new OleDbCommand(query, con);
-            try
-            {
-
-                con.Open();
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    data = ReadGroup(reader);
-                    break;
-                }
-            }
-            catch (System.Data.OleDb.OleDbException oleDbException)
-            {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {2}", "GroupEmail", oleDbException.Message));
-            }
-            finally
-            {
-                // Always call Close when done reading.
-                if (reader != null)
-                {
-                    reader.Close();
-                    reader.Dispose();
-                }
-                // Close the connection when done with it.
-                if (con.State == System.Data.ConnectionState.Open)
-                {
-                    con.Close();
-                }
-            }
-            return data;
-        }
-
-        private EmailSearchData ReadGroup(IDataReader reader)
-        {
-            var groups = EmailGroupReaderHelpers.ReadGroups(reader);
-            if (groups == null)
-                return null;
-            var item = groups.Items[0];
-            TypeSearchItem type = SearchItemHelper.GetTypeItem(item.Path);
-            EmailSearchData si = new EmailSearchData()
-            {
-                Subject = item.Subject,
-                Recepient = string.Format("{0}",
-                item.Recepient),
-                Count = groups.Items.Count.ToString(),
-                Name = item.Name,
-                Path = item.Path,
-                Date = item.Date,
-                Type = type,
-                ConversationId = item.ConversationId,
-                ID = Guid.NewGuid()
-            };
-            try
-            {
-                si.Attachments = OutlookHelper.Instance.GetAttachments(item);
-            }
-            catch (Exception e)
-            {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {2}", "ReadGroup - AllFiles", e.Message));
-            }
-            return si;
         }
 
         private bool IsEmail(object value)

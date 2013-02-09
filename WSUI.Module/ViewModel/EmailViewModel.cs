@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.OleDb;
 using System.Linq;
 using System.Text;
 using System.Windows.Controls;
@@ -23,12 +24,13 @@ namespace WSUI.Module.ViewModel
     [KindNameId("Email",2)]
     public class EmailViewModel : KindViewModelBase, IUView<EmailViewModel>, IScrollableView
     {
+        
         private const string OrderTemplate = " ORDER BY System.Message.DateReceived DESC";//, System.Search.EntryID DECS
         private const string FilterByFolder = " AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) ";
         private const int CountFirstProcess = 45;
         private const int CountSecondAndOtherProcess = 7;
         private readonly List<string> _listID = new List<string>();
-        private readonly List<EmailSearchData> _listEmails = new List<EmailSearchData>(); 
+        private readonly List<EmailLessData> _listEmails = new List<EmailLessData>(); 
         private int _countAdded;
         private int _countProcess;
         private DateTime _lastDate;
@@ -44,7 +46,8 @@ namespace WSUI.Module.ViewModel
             SettingsView.Model = this;
             DataView = dataView;
             DataView.Model = this;
-            QueryTemplate = "SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email' AND System.Message.DateReceived < '{2}' {0}AND CONTAINS(*,{1}) ";//Входящие  //Inbox
+            //QueryTemplate = "SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email' AND System.Message.DateReceived < '{2}' {0}AND CONTAINS(*,{1}) ";//Входящие  //Inbox
+            QueryTemplate = "SELECT System.Message.ConversationID,System.Message.DateReceived FROM SystemIndex WHERE System.Kind = 'email' AND System.Message.DateReceived < '{2}' {0}AND CONTAINS(*,{1}) ";//Входящие  //Inbox
             QueryAnd = " AND \"{0}\"";
             ID = 2;
             _name = "Email";
@@ -127,11 +130,12 @@ namespace WSUI.Module.ViewModel
             {
                 foreach (var group in groups)
                 {
-                    var email = group.OrderByDescending(e => e.Date).FirstOrDefault();
-
-                    if (_listID.Any(s => s == email.ConversationId))
+                    var data = group.FirstOrDefault();
+                    if (_listID.Any(s => s == data.ConversationId))
                         continue;
-                    _listID.Add(email.ConversationIndex);
+                    var email = EmailGroupReaderHelpers.GroupEmail(data.ConversationId);
+
+                    _listID.Add(email.ConversationId);
                     email.Type = SearchItemHelper.GetTypeItem(email.Path);
                     WSSqlLogger.Instance.LogError(string.Format("ConversationIndex = {0}",email.ConversationId));
                     try
@@ -166,39 +170,14 @@ namespace WSUI.Module.ViewModel
             }
         }
 
-        private EmailSearchData GetData(IDataReader reader)
+        private EmailLessData GetData(IDataReader reader)
         {
-            string subject = reader[0].ToString();
-            string name = reader[1].ToString();
-            var recArr = reader[3] as string[];
-            string recep = string.Empty;
-            if (recArr != null && recArr.Length > 0)
-            {
-                recep = recArr[0];
-            }
-            string url = reader[2].ToString();
-
-            var datetime = reader[4];
+            string conversationid = reader[0].ToString();
+            var datetime = reader[1];
             DateTime res;
             DateTime.TryParse(datetime.ToString(), out res);
 
-            string conversationid = reader[5].ToString();
-            string conversationIndex = reader[6].ToString();
-            string entryId = string.Empty;
-            if (reader.FieldCount > 7)
-                entryId = reader[7].ToString();
-            var item = new EmailSearchData()
-                           {
-                               Subject = subject,
-                               Name = name,
-                               Recepient = recep,
-                               Path = url,
-                               Date = res,
-                               DateModified = res,
-                               ID = Guid.NewGuid(),
-                               ConversationId = conversationid,
-                               ConversationIndex = OutlookHelper.Instance.EIDFromEncodeStringWDS30(conversationIndex)
-                           };
+            var item = new EmailLessData() {ConversationId = conversationid};
             _lastDate = res;
             return item;
         }
@@ -219,6 +198,11 @@ namespace WSUI.Module.ViewModel
         }
 
         #endregion
+
+        class EmailLessData
+        {
+            public string ConversationId { get; set; }
+        }
 
     }
 }
