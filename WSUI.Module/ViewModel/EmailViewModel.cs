@@ -146,7 +146,6 @@ namespace WSUI.Module.ViewModel
                     {
                         WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "OnComplete - Email", ex.Message));
                     }
-                    email.Count = group.Count().ToString();
                     ListData.Add(email);
                 }
             }
