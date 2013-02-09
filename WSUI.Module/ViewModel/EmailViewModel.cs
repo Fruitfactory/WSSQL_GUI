@@ -63,7 +63,7 @@ namespace WSUI.Module.ViewModel
             
             //ListData.Add(item);
             _listEmails.Add(item);
-            _countAdded = _listEmails.GroupBy(e => e.ConversationIndex).Count();
+            _countAdded = _listEmails.GroupBy(e => e.ConversationId).Count();
             if (_countAdded == _countProcess)
                 IsInterupt = true;
         }
@@ -122,14 +122,14 @@ namespace WSUI.Module.ViewModel
         protected override void OnComplete(bool res)
         {
 
-            var groups = _listEmails.GroupBy(e => e.ConversationIndex);
+            var groups = _listEmails.GroupBy(e => e.ConversationId);
             lock (_lock)
             {
                 foreach (var group in groups)
                 {
                     var email = group.OrderByDescending(e => e.Date).FirstOrDefault();
 
-                    if (_listID.Any(s => s == email.ConversationIndex))
+                    if (_listID.Any(s => s == email.ConversationId))
                         continue;
                     _listID.Add(email.ConversationIndex);
                     email.Type = SearchItemHelper.GetTypeItem(email.Path);
