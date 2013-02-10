@@ -38,7 +38,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.ImageControl
         private void trackZoom_ValueChanged(object sender, EventArgs e)
         {
             zoomPictureBox.Zoom = trackZoom.Value;
-            labelZoomCurrent.Text = string.Format("{0}x", trackZoom.Value.ToString());
+            labelZoomCurrent.Text = string.Format("{0}x", zoomPictureBox.Zoom.ToString());
         }
 
     }

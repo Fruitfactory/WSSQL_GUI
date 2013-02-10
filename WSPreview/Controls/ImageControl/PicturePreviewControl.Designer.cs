@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.panelBottom = new System.Windows.Forms.Panel();
+            this.labelZoomCurrent = new System.Windows.Forms.Label();
+            this.labelZoom = new System.Windows.Forms.Label();
+            this.trackZoom = new System.Windows.Forms.TrackBar();
             this.panel = new System.Windows.Forms.Panel();
             this.zoomPictureBox = new C4F.DevKit.PreviewHandler.Controls.ImageControl.ZoomPictureBox();
-            this.trackZoom = new System.Windows.Forms.TrackBar();
-            this.labelZoom = new System.Windows.Forms.Label();
-            this.labelZoomCurrent = new System.Windows.Forms.Label();
             this.panelBottom.SuspendLayout();
-            this.panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).BeginInit();
+            this.panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelBottom
@@ -50,6 +50,33 @@
             this.panelBottom.Size = new System.Drawing.Size(304, 56);
             this.panelBottom.TabIndex = 0;
             // 
+            // labelZoomCurrent
+            // 
+            this.labelZoomCurrent.AutoSize = true;
+            this.labelZoomCurrent.Location = new System.Drawing.Point(191, 7);
+            this.labelZoomCurrent.Name = "labelZoomCurrent";
+            this.labelZoomCurrent.Size = new System.Drawing.Size(0, 13);
+            this.labelZoomCurrent.TabIndex = 2;
+            // 
+            // labelZoom
+            // 
+            this.labelZoom.AutoSize = true;
+            this.labelZoom.Location = new System.Drawing.Point(4, 7);
+            this.labelZoom.Name = "labelZoom";
+            this.labelZoom.Size = new System.Drawing.Size(37, 13);
+            this.labelZoom.TabIndex = 1;
+            this.labelZoom.Text = "Zoom:";
+            // 
+            // trackZoom
+            // 
+            this.trackZoom.LargeChange = 1;
+            this.trackZoom.Location = new System.Drawing.Point(47, 6);
+            this.trackZoom.Name = "trackZoom";
+            this.trackZoom.Size = new System.Drawing.Size(138, 45);
+            this.trackZoom.TabIndex = 0;
+            this.trackZoom.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.trackZoom.ValueChanged += new System.EventHandler(this.trackZoom_ValueChanged);
+            // 
             // panel
             // 
             this.panel.Controls.Add(this.zoomPictureBox);
@@ -62,7 +89,7 @@
             // zoomPictureBox
             // 
             this.zoomPictureBox.AutoScroll = true;
-            this.zoomPictureBox.AutoScrollMargin = new System.Drawing.Size(304, 288);
+            this.zoomPictureBox.AutoScrollMargin = new System.Drawing.Size(304, 262);
             this.zoomPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.zoomPictureBox.Image = null;
             this.zoomPictureBox.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
@@ -72,32 +99,6 @@
             this.zoomPictureBox.TabIndex = 0;
             this.zoomPictureBox.Text = "zoomPictureBox1";
             this.zoomPictureBox.Zoom = 1F;
-            // 
-            // trackZoom
-            // 
-            this.trackZoom.Location = new System.Drawing.Point(47, 6);
-            this.trackZoom.Name = "trackZoom";
-            this.trackZoom.Size = new System.Drawing.Size(138, 45);
-            this.trackZoom.TabIndex = 0;
-            this.trackZoom.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.trackZoom.ValueChanged += new System.EventHandler(this.trackZoom_ValueChanged);
-            // 
-            // labelZoom
-            // 
-            this.labelZoom.AutoSize = true;
-            this.labelZoom.Location = new System.Drawing.Point(4, 7);
-            this.labelZoom.Name = "labelZoom";
-            this.labelZoom.Size = new System.Drawing.Size(37, 13);
-            this.labelZoom.TabIndex = 1;
-            this.labelZoom.Text = "Zoom:";
-            // 
-            // labelZoomCurrent
-            // 
-            this.labelZoomCurrent.AutoSize = true;
-            this.labelZoomCurrent.Location = new System.Drawing.Point(191, 7);
-            this.labelZoomCurrent.Name = "labelZoomCurrent";
-            this.labelZoomCurrent.Size = new System.Drawing.Size(0, 13);
-            this.labelZoomCurrent.TabIndex = 2;
             // 
             // PicturePreviewControl
             // 
@@ -109,8 +110,8 @@
             this.Size = new System.Drawing.Size(304, 318);
             this.panelBottom.ResumeLayout(false);
             this.panelBottom.PerformLayout();
-            this.panel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).EndInit();
+            this.panel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

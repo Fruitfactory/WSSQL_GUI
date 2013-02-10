@@ -163,6 +163,10 @@ namespace WSUI.Module.ViewModel
             int size;
             int.TryParse(strsize, out size);
             string tag = string.Empty;
+            DateTime last;
+            DateTime.TryParse(date, out last);
+            _lastDate = last;
+
             TypeSearchItem type = SearchItemHelper.GetTypeItem(file, kind != null && kind.Length > 0 ? kind[0].ToString() : string.Empty);
             if (type != TypeSearchItem.Attachment)
                 return null;
@@ -173,7 +177,7 @@ namespace WSUI.Module.ViewModel
                 Type = type,
                 ID = Guid.NewGuid(),
                 Display = display,
-                DateModified = DateTime.Parse(date),
+                DateModified = last,
                 Tag = tag,
                 Size = size
             };
