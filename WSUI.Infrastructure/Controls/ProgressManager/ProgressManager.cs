@@ -100,6 +100,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
         {
             
             _uiThread = new Thread(ShowSplash);
+            _uiThread.IsBackground = true;
             _uiThread.Name = "ShowSplash";
             _uiThread.SetApartmentState(ApartmentState.STA);
             _uiThread.Start();
