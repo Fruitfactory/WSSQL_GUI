@@ -25,6 +25,7 @@ namespace WSUI.Module.ViewModel
         private int _countProcess;
         private DateTime _lastDate;
         private List<BaseSearchData> _list = new List<BaseSearchData>();
+        private List<string> _listId = new List<string>();
         private object _lock = new object();
 
         public AttachmentViewModel(IUnityContainer container, ISettingsView<AttachmentViewModel> settingsView, IDataView<AttachmentViewModel> dataView ) : base(container)
@@ -87,14 +88,16 @@ namespace WSUI.Module.ViewModel
         protected override void OnStart()
         {
             _list.Clear();
-            base.OnStart();
+            ListData.Clear();
+            //base.OnStart();
             FireStart();
-            Enabled = false;
-            OnPropertyChanged(() => Enabled);
+            //Enabled = false;
+            //OnPropertyChanged(() => Enabled);
         }
 
         protected override void OnSearchStringChanged()
         {
+            _listId.Clear();
             _countProcess = ScrollBehavior.CountFirstProcess;
             _lastDate = DateTime.Now;
             ClearDataSource();
@@ -104,6 +107,7 @@ namespace WSUI.Module.ViewModel
 
         protected override void OnFilterData()
         {
+            _listId.Clear();
             base.OnFilterData();
             _countProcess = ScrollBehavior.CountFirstProcess;
             _lastDate = DateTime.Now;
@@ -117,7 +121,10 @@ namespace WSUI.Module.ViewModel
                 foreach (var group in groups)
                 {
                     var item = group.FirstOrDefault();
+                    if(_listId.Any(i => i == item.Tag.ToString())) // TODO temporary solution doesn't react on last DateTime
+                        continue;
                     item.Count = group.Count().ToString();
+                    _listId.Add(item.Tag.ToString());
                     ListData.Add(item);
                 }                
             }
@@ -156,13 +163,12 @@ namespace WSUI.Module.ViewModel
             string name = reader[0].ToString();
             string file = reader[1].ToString();
             var kind = reader[2] as object[];
-            string id = reader[3].ToString();
+            string tag = reader[3].ToString();
             string display = reader[4].ToString();
             var date = reader[5].ToString();
             var strsize = reader[6].ToString();
             int size;
             int.TryParse(strsize, out size);
-            string tag = string.Empty;
             DateTime last;
             DateTime.TryParse(date, out last);
             _lastDate = last;
