@@ -131,7 +131,7 @@ namespace WSUI.Module.ViewModel
                 foreach (var group in groups)
                 {
                     var data = group.FirstOrDefault();
-                    if (_listID.Any(s => s == data.ConversationId))
+                    if (string.IsNullOrEmpty(data.ConversationId) || _listID.Any(s => s == data.ConversationId))
                         continue;
                     var email = EmailGroupReaderHelpers.GroupEmail(data.ConversationId);
 

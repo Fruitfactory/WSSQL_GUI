@@ -62,4 +62,26 @@ namespace WSUI.Module.Service
 
         #endregion
     }
+
+    [ValueConversion(typeof(int),typeof(string))]
+    public class SizebytesToStringConverter: IValueConverter
+    {
+        #region Implementation of IValueConverter
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int size = (int) value;
+            string result = string.Format("Size: {0} bytes", size);
+            return result;
+
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+
+        #endregion
+    }
+
 }

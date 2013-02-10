@@ -16,6 +16,7 @@
     <service:DateToStringConverter x:Key="dateConverter" />
     <service:CountToFormatStringConvert x:Key="countConverter" />
     <service:NameToImageConvert x:Key="nameConverter" />
+    <service:SizebytesToStringConverter x:Key="sizeConverter"  />
         
     <Style x:Key="ImageStyle" TargetType="{x:Type Image}">
         <Setter Property="Width"  Value="16"/>
@@ -122,6 +123,14 @@
 
     <DataTemplate x:Key="FileTemplate">
         <DockPanel LastChildFill="True"><!--"..\Images\document.png"-->
+            <DockPanel.ToolTip>
+                <ToolTip>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding Path=Path}" />
+                        <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
+                    </StackPanel>
+                </ToolTip>
+            </DockPanel.ToolTip>
             <Image  Source="{Binding Path=Name,Converter={StaticResource ResourceKey=nameConverter}}" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" DockPanel.Dock="Right"/>
             <Grid>
@@ -140,6 +149,14 @@
 
     <DataTemplate x:Key="AttachmentTemplate">
         <DockPanel>
+            <DockPanel.ToolTip>
+                <ToolTip>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding Path=Path}" />
+                        <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
+                    </StackPanel>
+                </ToolTip>
+            </DockPanel.ToolTip>
             <Image Grid.Column="0" Source="..\Images\attachment.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Margin="5" DockPanel.Dock="Right"/>
             <Grid>
@@ -174,6 +191,14 @@
 
     <DataTemplate x:Key="PictureTemplate">
         <DockPanel>
+            <DockPanel.ToolTip>
+                <ToolTip>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding Path=Path}" />
+                        <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
+                    </StackPanel>
+                </ToolTip>
+            </DockPanel.ToolTip>
             <Image Grid.Column="0" Source="..\Images\pictures.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Margin="5" DockPanel.Dock="Right"/>
             <Grid>
