@@ -225,7 +225,7 @@ namespace WSUI.Module.Core
         protected virtual void OnStart()
         {
             ListData.Clear();
-            Enabled = false;
+            //Enabled = false;
             OnPropertyChanged(() => Enabled);
             FireStart();
         }
@@ -248,7 +248,7 @@ namespace WSUI.Module.Core
                 }
             }), null);
             OnPropertyChanged(() => DataSource);
-            Enabled = true;
+            //Enabled = true;
             OnPropertyChanged(() => Enabled);
             FireComplete(res);
         }
