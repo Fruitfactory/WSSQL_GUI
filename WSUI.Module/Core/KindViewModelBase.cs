@@ -92,7 +92,7 @@ namespace WSUI.Module.Core
             OleDbDataReader dataReader = null;
             OleDbConnection connection = new OleDbConnection(ConnectionString);
             OleDbCommand cmd = new OleDbCommand(_query, connection);
-
+            cmd.CommandTimeout = 0;
             ProgressManager.Instance.StartOperation(new ProgressOperation()
             {
                 Caption = "Searching...",
@@ -108,7 +108,13 @@ namespace WSUI.Module.Core
             {
 
                 connection.Open();
+
+                var watchOleDbCommand = new Stopwatch();
+                watchOleDbCommand.Start();
                 dataReader = cmd.ExecuteReader();
+                watchOleDbCommand.Stop();
+                WSSqlLogger.Instance.LogInfo("dataReader = cmd.ExecuteReader(); Elapsed: " + watchOleDbCommand.ElapsedMilliseconds.ToString());
+
                 while (dataReader.Read())
                 {
                     try
@@ -207,7 +213,7 @@ namespace WSUI.Module.Core
                 return string.Empty;
             var temp = new StringBuilder();
 
-            temp.Append(string.Format("System.ItemName LIKE '%{0}%'", _listW[0]));
+            temp.Append(string.Format("\"System.ItemName\" LIKE '%{0}%'", _listW[0]));
 
             if (_listW.Count > 1)
                 for (int i = 1; i < _listW.Count; i++)
