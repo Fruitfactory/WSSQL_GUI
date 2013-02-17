@@ -39,8 +39,17 @@ namespace WSUI.Infrastructure.Controls
             for (int i = 0; i < mCol.Count; i++)
             {
                 var m = mCol[i];
-                var sub = Text.Substring(last, m.Index - last);
-                textlbock.Inlines.Add(GenerateRun(sub));
+                string sub;
+                if (m.Index - last < 0)
+                {
+                    sub = Text.Substring(m.Index, m.Length);
+                    textlbock.Inlines.Add(GenerateRun(sub));
+                }
+                else
+                {
+                    sub = Text.Substring(last, m.Index - last);
+                    textlbock.Inlines.Add(GenerateRun(sub));
+                }
                 sub = Text.Substring(m.Index, m.Length);
                 textlbock.Inlines.Add(GenerateRun(sub, true));
                 last = (m.Index + m.Length);
