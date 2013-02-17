@@ -105,10 +105,24 @@ namespace WSUI.Module.ViewModel
             string tag = string.Empty;
             if (groupItem.Kind != null && IsEmail(groupItem.Kind) && !_listID.Any(it => it == groupItem.ID))
             {
-                var newValue = EmailGroupReaderHelpers.GroupEmail(groupItem.ID);
+                EmailSearchData newValue = null;
+                if (string.IsNullOrEmpty(groupItem.ID))
+                {
+                    newValue = new EmailSearchData() 
+                    {
+                        Name = groupItem.Name,
+                        Display = groupItem.Display,
+                        Path = groupItem.File,
+                        Date = groupItem.Date,
+                        Subject = groupItem.Display
+                    };
+                }
+                else
+                    newValue = EmailGroupReaderHelpers.GroupEmail(groupItem.ID);
                 if (newValue == null)
                     return;
-                _listID.Add(newValue.ConversationId);
+                if(!string.IsNullOrEmpty(newValue.ConversationId))
+                    _listID.Add(newValue.ConversationId);
                 TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File);
                 newValue.Type = type;
                 ListData.Add(newValue);
