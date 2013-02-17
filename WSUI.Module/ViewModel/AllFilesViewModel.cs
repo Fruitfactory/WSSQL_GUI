@@ -105,20 +105,9 @@ namespace WSUI.Module.ViewModel
             string tag = string.Empty;
             if (groupItem.Kind != null && IsEmail(groupItem.Kind) && !_listID.Any(it => it == groupItem.ID))
             {
-                EmailSearchData newValue = null;
-                if (string.IsNullOrEmpty(groupItem.ID))
-                {
-                    newValue = new EmailSearchData() 
-                    {
-                        Name = groupItem.Name,
-                        Display = groupItem.Display,
-                        Path = groupItem.File,
-                        Date = groupItem.Date,
-                        Subject = groupItem.Display
-                    };
-                }
-                else
-                    newValue = EmailGroupReaderHelpers.GroupEmail(groupItem.ID);
+                EmailSearchData newValue = string.IsNullOrEmpty(groupItem.ID) ? EmailGroupReaderHelpers.FindEmailDetailsByPath(groupItem.File)
+                    : EmailGroupReaderHelpers.GroupEmail(groupItem.ID);
+
                 if (newValue == null)
                     return;
                 if(!string.IsNullOrEmpty(newValue.ConversationId))

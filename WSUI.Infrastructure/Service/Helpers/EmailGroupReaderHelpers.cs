@@ -13,6 +13,47 @@ namespace WSUI.Infrastructure.Service.Helpers
         private const string QueryForGroupEmails =
     "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email'  AND CONTAINS(System.Message.ConversationID,'{0}*')   ORDER BY System.Message.DateReceived DESC) ";//AND CONTAINS(System.ItemPathDisplay,'{0}*',1033)
 
+        private const string QueryForEmailDetails =
+            "SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email'  AND CONTAINS(System.ItemUrl,'{0}*')   ORDER BY System.Message.DateReceived DESC";
+
+
+        public static EmailSearchData FindEmailDetailsByPath(string path)
+        {
+            var query = string.Format(QueryForEmailDetails, path);
+            EmailSearchData data = null;
+            OleDbDataReader reader = null;
+            OleDbConnection con = new OleDbConnection(ConnectionString);
+            OleDbCommand cmd = new OleDbCommand(query, con);
+            try
+            {
+
+                con.Open();
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    data = ReadItem(reader);
+                    break;
+                }
+            }
+            catch (System.Data.OleDb.OleDbException oleDbException)
+            {
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {2}", "FindEmailDetailsByPath", oleDbException.Message));
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                    reader.Dispose();
+                }
+                if (con.State == System.Data.ConnectionState.Open)
+                {
+                    con.Close();
+                }
+            }
+            return data;
+        }
+
 
         public static EmailSearchData GroupEmail(string id)
         {
@@ -38,13 +79,11 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             finally
             {
-                // Always call Close when done reading.
                 if (reader != null)
                 {
                     reader.Close();
                     reader.Dispose();
                 }
-                // Close the connection when done with it.
                 if (con.State == System.Data.ConnectionState.Open)
                 {
                     con.Close();
@@ -109,6 +148,10 @@ namespace WSUI.Infrastructure.Service.Helpers
 
             return d;
         }
+
+
+
+
 
         private static EmailSearchData ReadItem(IDataReader reader)
         {
