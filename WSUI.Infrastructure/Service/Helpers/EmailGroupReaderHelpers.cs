@@ -4,6 +4,7 @@ using System.Data.OleDb;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using WSUI.Infrastructure.Models;
 using WSUI.Infrastructure.Service.Enums;
+using WSUI.Infrastructure.Core;
 
 namespace WSUI.Infrastructure.Service.Helpers
 {
@@ -17,40 +18,23 @@ namespace WSUI.Infrastructure.Service.Helpers
             "SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email'  AND CONTAINS(System.ItemUrl,'{0}*')   ORDER BY System.Message.DateReceived DESC";
 
 
-        public static EmailSearchData FindEmailDetailsByPath(string path)
+        public static EmailSearchData FindEmailDetails(string path)
         {
-            var query = string.Format(QueryForEmailDetails, path);
             EmailSearchData data = null;
-            OleDbDataReader reader = null;
-            OleDbConnection con = new OleDbConnection(ConnectionString);
-            OleDbCommand cmd = new OleDbCommand(query, con);
-            try
-            {
 
-                con.Open();
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    data = ReadItem(reader);
-                    break;
-                }
-            }
-            catch (System.Data.OleDb.OleDbException oleDbException)
+            var mail = OutlookHelper.Instance.GetEmailItem(new BaseSearchData() { Path = path });
+            if (mail != null)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {2}", "FindEmailDetailsByPath", oleDbException.Message));
-            }
-            finally
-            {
-                if (reader != null)
+                data = new EmailSearchData()
                 {
-                    reader.Close();
-                    reader.Dispose();
-                }
-                if (con.State == System.Data.ConnectionState.Open)
-                {
-                    con.Close();
-                }
+                    Subject = mail.Subject,
+                    Recepient = mail.To,
+                    Date = mail.ReceivedTime,
+                    Path = path
+                };
+                data.Attachments = OutlookHelper.Instance.GetAttachments((BaseSearchData)data);
             }
+
             return data;
         }
 
