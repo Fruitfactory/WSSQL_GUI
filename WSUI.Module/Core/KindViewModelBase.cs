@@ -31,7 +31,7 @@ namespace WSUI.Module.Core
     public abstract class KindViewModelBase : ViewModelBase, IKindItem
     {
         protected readonly string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
-        protected const string OrLikeTemplate = " AND Contains(\"System.ItemName\",'\"*{0}*\"') ";
+        protected const string OrLikeTemplate = " AND Contains(System.ItemName,'\"*{0}*\"') ";
 
 
         protected string QueryTemplate;
@@ -51,7 +51,7 @@ namespace WSUI.Module.Core
         protected string _andClause;
         protected List<string> _listW;
         protected IScrollBehavior ScrollBehavior =  null;
-
+        protected int TopQueryResult = 100;
 
         private volatile bool _isQueryRun = false;
         private object _lock = new object();
@@ -213,7 +213,7 @@ namespace WSUI.Module.Core
                 return string.Empty;
             var temp = new StringBuilder();
 
-            temp.Append(string.Format("Contains(\"System.ItemName\",'\"*{0}*\"') ", _listW[0]));
+            temp.Append(string.Format("Contains(System.ItemName,'\"*{0}*\"') ", _listW[0]));
 
             if (_listW.Count > 1)
                 for (int i = 1; i < _listW.Count; i++)

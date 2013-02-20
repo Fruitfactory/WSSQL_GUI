@@ -47,7 +47,7 @@ namespace WSUI.Module.ViewModel
             DataView = dataView;
             DataView.Model = this;
             //QueryTemplate = "SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email' AND System.Message.DateReceived < '{2}' {0}AND CONTAINS(*,{1}) ";//Входящие  //Inbox
-            QueryTemplate = "SELECT System.Message.ConversationID,System.Message.DateReceived FROM SystemIndex WHERE System.Kind = 'email' AND System.Message.DateReceived < '{2}' {0}AND CONTAINS(*,{1}) ";//Входящие  //Inbox
+            QueryTemplate = "SELECT TOP {3} System.Message.ConversationID,System.Message.DateReceived FROM SystemIndex WHERE System.Kind = 'email' AND System.Message.DateReceived < '{2}' {0}AND CONTAINS(*,{1}) ";//Входящие  //Inbox
             QueryAnd = " AND \"{0}\"";
             ID = 2;
             _name = "Email";
@@ -81,7 +81,7 @@ namespace WSUI.Module.ViewModel
 
             ProcessSearchCriteria(searchCriteria);
 
-            res = string.Format(QueryTemplate, folder != OutlookHelper.AllFolders ? string.Format(FilterByFolder, folder) : string.Empty, string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause, FormatDate(ref _lastDate)) + OrderTemplate;
+            res = string.Format(QueryTemplate, folder != OutlookHelper.AllFolders ? string.Format(FilterByFolder, folder) : string.Empty, string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause, FormatDate(ref _lastDate),TopQueryResult) + OrderTemplate;
 
             return res;
 
