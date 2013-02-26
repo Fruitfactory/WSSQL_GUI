@@ -56,7 +56,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
             // init
             QueryTemplate =
-                "GROUP ON TOP {3} System.DateCreated  ORDER BY System.DateCreated DESC  OVER (SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Search.EntryID,System.Size FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0},1033) OR ( {2} ) ))";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})
+                "GROUP ON TOP {3} System.DateCreated  ORDER BY System.DateCreated DESC  OVER (SELECT TOP 50 System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Search.EntryID,System.Size FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0},1033) OR ( {2} ) ))";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})
             //QueryTemplate =
                 //"SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0}) {2} ) ORDER BY System.DateCreated DESC";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})   , System.Search.EntryID DESC
             QueryAnd = " AND \"{0}\""; //" AND \"{0}\"";
@@ -140,8 +140,8 @@ namespace WSUI.Module.ViewModel
                 ListData.Add(bs);
                 _countAdded++;
             }
-            if (_countAdded == _countProcess)
-                IsInterupt = true;
+            //if (_countAdded == _countProcess)
+            //    IsInterupt = true;
 
         }
 
@@ -202,6 +202,7 @@ namespace WSUI.Module.ViewModel
           
             base.OnComplete(res);
             _countProcess = CountSecondAndOtherProcess;
+            TopQueryResult = ScrollBehavior.CountSecondProcess;
         }
 
         protected override void OnSearchStringChanged()
@@ -226,6 +227,7 @@ namespace WSUI.Module.ViewModel
             {
                 _lastDate = DateTime.Now;
                 _countProcess = CountFirstProcess;
+                TopQueryResult = ScrollBehavior.CountFirstProcess;
                 _listID.Clear();
                 _listName.Clear();
             }
@@ -272,7 +274,7 @@ namespace WSUI.Module.ViewModel
             CommandStrategies.Add(TypeSearchItem.Attachment,fileAttach);
             CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
-            ScrollBehavior = new ScrollBehavior() {CountFirstProcess = 35, CountSecondProcess = 7,LimitReaction = 85};
+            ScrollBehavior = new ScrollBehavior() {CountFirstProcess = 75, CountSecondProcess = 25,LimitReaction = 85};
             ScrollBehavior.SearchGo += () =>
                                            {
                                                ShowMessageNoMatches = false;

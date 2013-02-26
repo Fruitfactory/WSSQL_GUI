@@ -51,7 +51,7 @@ namespace WSUI.Module.Core
         protected string _andClause;
         protected List<string> _listW;
         protected IScrollBehavior ScrollBehavior =  null;
-        protected int TopQueryResult = 100;
+        protected int TopQueryResult = 250;
 
         private volatile bool _isQueryRun = false;
         private object _lock = new object();

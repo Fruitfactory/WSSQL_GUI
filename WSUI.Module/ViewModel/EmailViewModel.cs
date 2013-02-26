@@ -106,6 +106,7 @@ namespace WSUI.Module.ViewModel
             ClearDataSource();
             ClearMainDataSource();
             _countProcess = ScrollBehavior.CountFirstProcess;
+            //TopQueryResult = ScrollBehavior.CountFirstProcess;
             lock (_lock)
                 _listID.Clear();
             _lastDate = DateTime.Now;
@@ -115,6 +116,7 @@ namespace WSUI.Module.ViewModel
         protected override void OnFilterData()
         {
             _countProcess = ScrollBehavior.CountFirstProcess;
+            //TopQueryResult = ScrollBehavior.CountFirstProcess;
             lock(_lock)
                 _listID.Clear();
             _lastDate = DateTime.Now;
@@ -151,6 +153,7 @@ namespace WSUI.Module.ViewModel
             }
             base.OnComplete(res);
             _countProcess = ScrollBehavior.CountSecondProcess;
+            //TopQueryResult = ScrollBehavior.CountSecondProcess;
         }
 
         protected override void OnStart()
