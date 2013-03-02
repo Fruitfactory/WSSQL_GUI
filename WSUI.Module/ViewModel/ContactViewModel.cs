@@ -39,6 +39,8 @@ namespace WSUI.Module.ViewModel
             " (System.Kind = 'contact' AND {1}( CONTAINS(System.Contact.FirstName,'\"{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\"') ){2}";
         private ContactSuggestingService _contactSuggesting;
 
+        private readonly List<BaseSearchData> _listContacts = new List<BaseSearchData>(); 
+
         private int _countAdded = 0;
         private int _countProcess;
         private DateTime _lastDate;
@@ -100,77 +102,44 @@ namespace WSUI.Module.ViewModel
 
         protected override void ReadData(IDataReader reader)
         {
-
-            var group = new List<BaseSearchData>();
-            for (int i = 0; i < reader.FieldCount; i++)
-            {
-                if (reader.GetFieldType(i).ToString() != "System.Data.IDataReader")
-                    continue;
-                OleDbDataReader itemsReader = reader.GetValue(i) as OleDbDataReader;
-
-                while (itemsReader.Read())
-                {
-                    var item = ReadGroupData(itemsReader);
-                    if (item != null)
-                        group.Add(item);
-                }
-            }
-
-            if (group.Count > 0)
-            {
-                ProcessContactData(group.OfType<ContactSearchData>());
-                ProcessEmailData(group.OfType<EmailSearchData>());
-            }
-            if (_countAdded == _countProcess)
-                IsInterupt = true;
+            var item = ReadContactData(reader);
+            _listContacts.Add(item);
         }
 
         protected override string CreateQuery()
         {
             _countAdded = 0;
-            var searchCriteria = SearchString.Trim();
-            string res = String.Empty;
-
-            if (searchCriteria.IndexOf(' ') > -1)
-            {
-                StringBuilder strBuilder = new StringBuilder();
-                var arr = searchCriteria.Split(' ').ToList();
-                if (arr == null || arr.Count == 1)
-                {
-                    var where1 = string.Format(_queryContactWhere, arr[0], "", ")");
-                    return string.Format("{0}{1}", QueryTemplate, where1) + string.Format(_queryByAddress, arr[0]);
-                }
-                var address = new StringBuilder(string.Format(_queryByAddress, arr[0]));
-                var where2 = string.Format(_queryContactWhere, arr[0], "(", "");
-                res += QueryTemplate + where2;
-                for (int i = 1; i < arr.Count; i++)
-                {
-                    strBuilder.Append(string.Format(QueryAnd, arr[i]));
-                    address.Append(string.Format(_queryByAddress, arr[i]));
-                }
-                res += strBuilder.ToString() + address.ToString();
-            }
-            else
-            {
-                var where = string.Format(_queryContactWhere, searchCriteria, "", ")");
-                res = string.Format("{0}{1}", QueryTemplate, where) + string.Format(_queryByAddress, searchCriteria);
-            }
-            res += string.Format( " AND System.Message.DateReceived < '{0}'  ORDER BY System.DateCreated DESC )", FormatDate(ref _lastDate));
+            string res = ContactHelpers.GetContactQuery(SearchString.Trim(), FormatDate(ref _lastDate), TopQueryResult);
             return res;
+        }
+
+        protected override void OnStart()
+        {
+            _listContacts.Clear();
+            base.OnStart();
         }
 
         protected override void OnComplete(bool res)
         {
+            if (_listContacts.Count > 0)
+            {
+                ProcessContactData(_listContacts.OfType<ContactSearchData>());
+                ProcessEmailData(_listContacts.OfType<EmailSearchData>());
+                _lastDate = _listContacts[_listContacts.Count - 1].DateModified;
+            }
+
             ListData.OrderBy(b => b.Type);
             base.OnComplete(res);
             OnPropertyChanged(() => Contact);
             OnPropertyChanged(() => Visible);
             _countProcess = ScrollBehavior.CountSecondProcess;
+            TopQueryResult = ScrollBehavior.CountSecondProcess;
         }
 
         protected override void OnSearchStringChanged()
         {
             _countProcess = ScrollBehavior.CountFirstProcess;
+            TopQueryResult = ScrollBehavior.CountFirstProcess;
             _lastDate = DateTime.Now;
             if (string.IsNullOrEmpty(SearchString))
                 return;
@@ -182,6 +151,7 @@ namespace WSUI.Module.ViewModel
         {
             base.OnFilterData();
             _countProcess = ScrollBehavior.CountFirstProcess;
+            TopQueryResult = ScrollBehavior.CountFirstProcess;
             _lastDate = DateTime.Now;
         }
 
@@ -270,7 +240,7 @@ namespace WSUI.Module.ViewModel
         {
             base.OnInit();
             CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
-            ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 45, CountSecondProcess = 5, LimitReaction = 75 };
+            ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 300, CountSecondProcess = 100, LimitReaction = 75 };
             ScrollBehavior.SearchGo += () =>
             {
                 ShowMessageNoMatches = false;
@@ -339,62 +309,43 @@ namespace WSUI.Module.ViewModel
         }
 
 
-        private BaseSearchData ReadGroupData(IDataReader reader)
+        private BaseSearchData ReadContactData(IDataReader reader)
         {
             if (reader == null)
                 return null;
-            string itemname = reader[0].ToString();
-            string first = reader[1].ToString();
-            string last = reader[2].ToString();
-            string em1 = reader[3].ToString();
-            string em2 = reader[4].ToString();
-            string em3 = reader[5].ToString();
-            string subject = reader[6].ToString();
-            string url = reader[7].ToString();
-            var to = reader[8] as string[];
-            string d = reader[9].ToString();
-            DateTime date = DateTime.Today;
-            DateTime.TryParse(d, out date);
-            var kind = reader[10] as string[];
-            var from = reader[11] as string[];
-            var created = reader[12].ToString();
-            DateTime.TryParse(created, out _lastDate);
+            ContactItem item = new ContactItem();
+            ReadGroupData(reader, item);
 
 
-
-            switch (kind[0])
+            switch (item.Kind[0])
             {
                 case "contact":
                     ContactSearchData data = new ContactSearchData()
                     {
-                        Name = itemname,
+                        Name = item.ItemName,
                         Path = string.Empty,
-                        FirstName = first,
-                        LastName = last,
+                        FirstName = item.FirstName,
+                        LastName = item.LastName,
                         ID = Guid.NewGuid(),
                         Type = TypeSearchItem.Contact
                     };
-                    data.EmailList.Add(em1);
-                    data.EmailList.Add(em2);
-                    data.EmailList.Add(em3);
-                    //_currentEmail = em1;
+                    data.EmailList.Add(item.EmailAddress);
+                    data.EmailList.Add(item.EmailAddress2);
+                    data.EmailList.Add(item.EmailAddress3);
                     data.Foto = OutlookHelper.Instance.GetContactFotoTempFileName(data);
-                    //_contactData = data;
-                    //GetEmailsForContact(data);
-
                     return data;
                 case "email":
-                    string fromAddress = GetEmailAddress(from);
+                    string fromAddress = GetEmailAddress(item.FromAddress);
                     if (string.IsNullOrEmpty(fromAddress))
                         break;
                     EmailSearchData si = new EmailSearchData()
                     {
-                        Subject = subject,
+                        Subject = item.Subject,
                         Recepient = string.Format("{0}",
-                        to != null && to.Length > 0 ? to[0] : string.Empty),
-                        Name = itemname,
-                        Path = url,
-                        Date = date,
+                        item.ToAddress != null && item.ToAddress.Length > 0 ? item.ToAddress[0] : string.Empty),
+                        Name = item.ItemName,
+                        Path = item.ItemUrl,
+                        Date = item.DateReceived,
                         Count = string.Empty,
                         Type = TypeSearchItem.Email,
                         ID = Guid.NewGuid(),
