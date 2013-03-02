@@ -12,6 +12,7 @@ namespace WSUI.Infrastructure.Service.Enums
         File = 0x08,
         Picture = 0x10,
         Calendar = 0x20,
-        FileAll = File | Attachment | Picture 
+        FileAll = File | Attachment | Picture,
+        Command = 0x30
     }
 }

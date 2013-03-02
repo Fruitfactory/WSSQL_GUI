@@ -10,5 +10,6 @@ namespace WSUI.Module.Interface
         event EventHandler Complete;
         List<BaseSearchData> MainDataSource { get; }
         void Clear();
+        void SelectKind(string name);
     }
 }

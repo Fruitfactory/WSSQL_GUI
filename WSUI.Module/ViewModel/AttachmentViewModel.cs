@@ -18,7 +18,7 @@ using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId("Attachments", 3)]
+    [KindNameId(KindsConstName.Attachments, 3)]
     public class AttachmentViewModel : KindViewModelBase, IUView<AttachmentViewModel>, IScrollableView
     {
         private int _countAdded = 0;

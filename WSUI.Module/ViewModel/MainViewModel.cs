@@ -285,6 +285,17 @@ namespace WSUI.Module.ViewModel
             TempFileManager.Instance.ClearTempFolder();
         }
 
+        public void SelectKind(string name)
+        {
+            if(string.IsNullOrEmpty(name))
+                return;
+
+            var lazyKind = _listItems.Find(lk => lk.UIName == name);
+            if (lazyKind != null)
+            {
+                OnChoose(lazyKind.Kind);
+            }
+        }
 
         #endregion
 

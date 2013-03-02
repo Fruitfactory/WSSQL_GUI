@@ -4,8 +4,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Data.OleDb;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using C4F.DevKit.PreviewHandler.Service.Logger;
@@ -18,13 +20,15 @@ using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using Microsoft.Practices.Unity;
 using WSUI.Infrastructure.Service.Enums;
+using WSUI.Infrastructure.Attributes;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Service;
 using WSUI.Module.Strategy;
+using System.Diagnostics;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId("Everything",0)]
+    [KindNameId(KindsConstName.Everything,0)]
     public class AllFilesViewModel : KindViewModelBase, IUView<AllFilesViewModel>, IScrollableView
     {
         private const string KindGroup = "email";
@@ -55,11 +59,11 @@ namespace WSUI.Module.ViewModel
             DataView = dataView;
             DataView.Model = this;
             // init
-            QueryTemplate =
-                "GROUP ON TOP {3} System.DateCreated  ORDER BY System.DateCreated DESC  OVER (SELECT TOP 50 System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Search.EntryID,System.Size FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0},1033) OR ( {2} ) ))";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})
             //QueryTemplate =
-                //"SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Search.EntryID FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0}) {2} ) ORDER BY System.DateCreated DESC";//OR (System.Kind == 'email' AND Contains(*,'{0}*'))  OR Contains(*,{0})   , System.Search.EntryID DESC
-            QueryAnd = " AND \"{0}\""; //" AND \"{0}\"";
+            //    "GROUP ON TOP {3} System.ItemName OVER( GROUP ON System.Message.ConversationID OVER (SELECT TOP 75 System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Subject,System.Message.ToAddress,System.Message.DateReceived,System.Size FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0},1033) OR ( {2} ) )))";
+            QueryTemplate =
+                "SELECT TOP {3} System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Subject,System.Message.ToAddress,System.Message.DateReceived,System.Size FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0},1033) OR ( {2} ) ) ORDER BY System.DateCreated DESC";
+            QueryAnd = " AND \"{0}\""; 
             ID = 0;
             _name = "Everything";
             UIName = _name;
@@ -73,7 +77,7 @@ namespace WSUI.Module.ViewModel
                                                           o => true);
             _lastDate = DateTime.Now;
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
-
+            TopQueryResult = 50;
             EmailClickCommand = new DelegateCommand<object>(o => EmailClick(o), o => true);
         }
 
@@ -84,93 +88,12 @@ namespace WSUI.Module.ViewModel
 
         protected override void ReadData(IDataReader reader)
         {
-            var group = new List<GroupData>();
-            for (int i = 0; i < reader.FieldCount; i++)
+            GroupData data = new GroupData();
+            ReadGroupData(reader, data);
+            if (data.ItemName.Length > 0)
             {
-                if (reader.GetFieldType(i).ToString() != "System.Data.IDataReader")
-                    continue;
-                OleDbDataReader itemsReader = reader.GetValue(i) as OleDbDataReader;
-
-                while (itemsReader.Read())
-                {
-                    group.Add(ReadGroupData(itemsReader));
-                }
+                _listEverething.Add(data);                    
             }
-
-            if (group == null || group.Count == 0)
-                return;
-            var groupItem = group[0];
-            string tag = string.Empty;
-            if (groupItem.Kind != null && IsEmail(groupItem.Kind) && !_listID.Any(it => it == groupItem.ID))
-            {
-                EmailSearchData newValue = string.IsNullOrEmpty(groupItem.ID) ? EmailGroupReaderHelpers.FindEmailDetails(groupItem.File)
-                    : EmailGroupReaderHelpers.GroupEmail(groupItem.ID);
-
-                if (newValue == null)
-                    return;
-                if(!string.IsNullOrEmpty(newValue.ConversationId))
-                    _listID.Add(newValue.ConversationId);
-                TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File);
-                newValue.Type = type;
-                ListData.Add(newValue);
-                _countAdded++;
-                WSSqlLogger.Instance.LogInfo(string.Format("ConversationId =  {0}", newValue.ConversationId));
-            }
-            else if (groupItem.Kind != null && IsEmail(value: groupItem.Kind) && _listID.Any(it => it == groupItem.ID))
-            {
-                //WSSqlLogger.Instance.LogInfo(string.Format("ConversationId =  {0}", groupItem.ID));
-                return;
-            }
-            else if (!_listName.Any(it => it == groupItem.Name))
-            {
-                _listName.Add(groupItem.Name);
-                TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.File, groupItem.Kind != null && groupItem.Kind.Length > 0 ? groupItem.Kind[0].ToString() : string.Empty);
-                BaseSearchData bs = new BaseSearchData()
-                {
-                    Name = groupItem.Name,
-                    Path = groupItem.File,
-                    Type = type,
-                    ID = Guid.NewGuid(),
-                    Display = groupItem.Display,
-                    DateModified = groupItem.Date,
-                    Tag = tag,
-                    Count = group.Count.ToString(),
-                    Size = groupItem.Size
-                };
-                ListData.Add(bs);
-                _countAdded++;
-            }
-            //if (_countAdded == _countProcess)
-            //    IsInterupt = true;
-
-        }
-
-
-        private GroupData ReadGroupData(IDataReader reader)
-        {
-            string name = reader[0].ToString();
-            string file = reader[1].ToString();
-            var kind = reader[2] as object[];
-            string id = reader[3].ToString();
-            string display = reader[4].ToString();
-            var date = reader[5].ToString();
-            DateTime temp;
-            DateTime.TryParse(date, out temp);
-            string strSize = reader[7].ToString();
-            int size;
-            int.TryParse(strSize, out size);
-
-            _lastDate = temp;
-            return new GroupData()
-            {
-                Name = name,
-                File = file,
-                Kind = kind,
-                ID = id,
-                Display = display,
-                Date = temp,
-                Size = size
-            };
 
         }
 
@@ -193,16 +116,89 @@ namespace WSUI.Module.ViewModel
         {
             ListData.Clear();
             _listEverething.Clear();
+            _listContacts.Clear();
             FireStart();
+            if (_isFirstTime)
+            {
+                _resetEvent.Reset();
+                RunContactQuery();
+            }
+            else
+            {
+                _resetEvent.Set();
+            }
+               
             //base.OnStart();
         }
 
         protected override void OnComplete(bool res)
         {
-          
+            _resetEvent.WaitOne();
+            var watchGroup = new Stopwatch();
+            watchGroup.Start();
+            GetContactResult();
+            var grouping = _listEverething.GroupBy(i => i.ConversationID);
+            foreach (var item in grouping)
+            {
+                var ordered = item.OrderByDescending(i => i.DateCreated);
+                if (item.Key != null)
+                {
+                    var itemE = ordered.ElementAt(0);
+                    EmailSearchData newValue = new EmailSearchData()
+                    {
+                        Subject = itemE.Subject,
+                        ConversationId = itemE.ConversationID,
+                        Count = ordered.Count().ToString(),
+                        Date = itemE.DateReceived,
+                        DateModified = itemE.DateCreated,
+                        Recepient = itemE.ToAddress.Length > 0 ? itemE.ToAddress[0] : string.Empty,
+                        Display = itemE.ItemNameDisplay,
+                        Path = itemE.ItemUrl,
+                        ID = Guid.NewGuid(),
+                        Name = itemE.ItemNameDisplay,
+                        Size = itemE.Size
+                    };
+
+                    TypeSearchItem type = SearchItemHelper.GetTypeItem(itemE.ItemUrl);
+                    newValue.Type = type;
+                    ListData.Add(newValue);
+                    _countAdded++;
+                }
+                else
+                {
+                    var groupByName = item.GroupBy(i => i.ItemName);
+                    foreach (var itemByName in groupByName)
+                    {
+                        if(!itemByName.Any())
+                            continue;
+                        var fileItem = itemByName.ElementAt(0);
+
+                        TypeSearchItem type = SearchItemHelper.GetTypeItem(fileItem.ItemUrl, fileItem.Kind != null && fileItem.Kind.Length > 0 ? fileItem.Kind[0].ToString() : string.Empty);
+                        BaseSearchData bs = new BaseSearchData()
+                        {
+                            Name = fileItem.ItemName,
+                            Path = fileItem.ItemUrl,
+                            Type = type,
+                            ID = Guid.NewGuid(),
+                            Display = fileItem.ItemNameDisplay,
+                            DateModified = fileItem.DateCreated,
+                            Tag = "",
+                            Count = itemByName.Count().ToString(),
+                            Size = fileItem.Size
+                        };
+                        ListData.Add(bs);
+                        _countAdded++;
+                    }
+                }
+            }
+            watchGroup.Stop();
+            WSSqlLogger.Instance.LogInfo("Grouping (Everything) Elapsed: " + watchGroup.ElapsedMilliseconds.ToString());
+            if(_listEverething.Count > 0)
+                _lastDate = _listEverething[_listEverething.Count-1].DateCreated;
             base.OnComplete(res);
             _countProcess = CountSecondAndOtherProcess;
             TopQueryResult = ScrollBehavior.CountSecondProcess;
+            _isFirstTime = false;
         }
 
         protected override void OnSearchStringChanged()
@@ -228,6 +224,7 @@ namespace WSUI.Module.ViewModel
                 _lastDate = DateTime.Now;
                 _countProcess = CountFirstProcess;
                 TopQueryResult = ScrollBehavior.CountFirstProcess;
+                _isFirstTime = true;
                 _listID.Clear();
                 _listName.Clear();
             }
@@ -251,19 +248,56 @@ namespace WSUI.Module.ViewModel
             return false;
         }
 
-        private void EmailClick(object obj)
+        private void GetContactResult()
         {
-            var data = obj as BaseSearchData;
-            var ci = OutlookHelper.Instance.GetContact(data.Name);
-            if (ci == null || ci.Email1Address == null 
-                || ci.Email1Address.Length == 0)
+            if(_listContacts == null || _listContacts.Count == 0)
                 return;
-            var email = OutlookHelper.Instance.CreateNewEmail();
-            email.To = (string)ci.Email1Address;
-            email.BodyFormat = Microsoft.Office.Interop.Outlook.OlBodyFormat.olFormatHTML;
-            email.Display(false);
+            _listContacts.ForEach(c => ListData.Add(c));
         }
 
+        private void EmailClick(object obj)
+        {
+            if(CommandElementClick(obj))
+                return;
+            if(EmailElementClick(obj))
+                return;
+        }
+
+        private bool EmailElementClick(object obj )
+        {
+            string adr = string.Empty;
+            if (obj is string)
+                adr = (string)obj;
+            else if (obj is EmailSearchData)
+            {
+                adr = (obj as EmailSearchData).From;
+            }
+            else if (obj is ContactSearchData)
+            {
+                var data = obj as ContactSearchData;
+                var ci = OutlookHelper.Instance.GetContact(data.Name);
+                if (ci == null || ci.Email1Address == null
+                    || ci.Email1Address.Length == 0)
+                    return false;
+                adr = ci.Email1Address;
+            }
+            if (string.IsNullOrEmpty(adr))
+                return false;
+            var email = OutlookHelper.Instance.CreateNewEmail();
+            email.To = adr;
+            email.BodyFormat = Microsoft.Office.Interop.Outlook.OlBodyFormat.olFormatHTML;
+            email.Display(false);
+
+            return true;
+        }
+
+        private bool CommandElementClick(object obj)
+        {
+            if (!(obj is CommandSearchData))
+                return false;
+            Parent.SelectKind(KindsConstName.People);
+            return true;
+        }
 
         protected override void OnInit()
         {
@@ -274,12 +308,13 @@ namespace WSUI.Module.ViewModel
             CommandStrategies.Add(TypeSearchItem.Attachment,fileAttach);
             CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
-            ScrollBehavior = new ScrollBehavior() {CountFirstProcess = 75, CountSecondProcess = 25,LimitReaction = 85};
+            ScrollBehavior = new ScrollBehavior() {CountFirstProcess = 300, CountSecondProcess = 100,LimitReaction = 85};
             ScrollBehavior.SearchGo += () =>
                                            {
                                                ShowMessageNoMatches = false;
                                                Search();
                                            };
+            TopQueryResult = ScrollBehavior.CountFirstProcess;
         }
 
 
@@ -291,15 +326,171 @@ namespace WSUI.Module.ViewModel
 
         #endregion
 
-        class  GroupData
+        #region  for people query
+        
+        private ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly List<BaseSearchData> _listContacts = new List<BaseSearchData>();
+        private volatile bool _isFirstTime = true;
+
+
+        private void RunContactQuery()
         {
-            public string Name;
-            public string File;
-            public object[] Kind;
-            public string ID;
-            public string Display;
-            public DateTime Date;
-            public int Size;
+            var thread = new Thread(DoContactQuery);
+            thread.Priority = ThreadPriority.Highest;
+            thread.Start();
+        }
+
+        private void DoContactQuery()
+        {
+            string query = GetContactQuery(SearchString);
+            OleDbDataReader dataReader = null;
+            OleDbConnection connection = new OleDbConnection(ConnectionString);
+            OleDbCommand cmd = new OleDbCommand(query, connection);
+            cmd.CommandTimeout = 0;
+            var watch = new Stopwatch();
+            watch.Start();
+            try
+            {
+                connection.Open();
+                var watchOleDbCommand = new Stopwatch();
+                watchOleDbCommand.Start();
+                dataReader = cmd.ExecuteReader();
+                watchOleDbCommand.Stop();
+                WSSqlLogger.Instance.LogInfo("dataReaderContact = cmd.ExecuteReader(); Elapsed: " + watchOleDbCommand.ElapsedMilliseconds.ToString());
+                while (dataReader.Read())
+                {
+                    try
+                    {
+                        ReadContactData(dataReader);
+                    }
+                    catch (Exception ex)
+                    {
+                        WSSqlLogger.Instance.LogError(String.Format("{0} - {1}", "DoContactQuery", ex.Message));
+                    }
+                }
+                if (_listContacts.Count > 0)
+                {
+                    CommandSearchData commandSearchData = new CommandSearchData()
+                                                {
+                                                    Name = "more",
+                                                    Type = TypeSearchItem.Command,
+                                                    ID = Guid.NewGuid()
+                                                };
+                    _listContacts.Add(commandSearchData);
+                }
+            }
+            catch (System.Data.OleDb.OleDbException oleDbException)
+            {
+                WSSqlLogger.Instance.LogError(String.Format("{0} - {1}", "DoContactQuery", oleDbException.Message));
+            }
+            finally
+            {
+                // Always call Close when done reading.
+                if (dataReader != null)
+                {
+                    dataReader.Close();
+                    dataReader.Dispose();
+                }
+                // Close the connection when done with it.
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+                watch.Stop();
+                WSSqlLogger.Instance.LogInfo("End query! Elapsed: " + watch.ElapsedMilliseconds.ToString());
+                _resetEvent.Set();
+            }
+
+
+        }
+
+        private void ReadContactData(OleDbDataReader dataReader)
+        {
+            var item = ReadRawContactData(dataReader);
+            _listContacts.Add(item);
+        }
+
+        private string GetContactQuery(string searchCriteria)
+        {
+            return ContactHelpers.GetContactQuery(SearchString,FormatDate(ref _lastDate));
+        }
+
+        private BaseSearchData ReadRawContactData(IDataReader reader)
+        {
+            var data = new ContactItem();
+            ReadGroupData(reader,data);
+            switch (data.Kind[0])
+            {
+                case "contact":
+                    ContactSearchData item = new ContactSearchData()
+                    {
+                        Name = data.ItemName,
+                        Path = string.Empty,
+                        FirstName = data.FirstName,
+                        LastName = data.LastName,
+                        ID = Guid.NewGuid(),
+                        Type = TypeSearchItem.Contact
+                    };
+                    item.EmailList.Add(data.EmailAddress);
+                    item.EmailList.Add(data.EmailAddress2);
+                    item.EmailList.Add(data.EmailAddress3);
+                    item.Foto = OutlookHelper.Instance.GetContactFotoTempFileName(item);
+                    return item;
+                case "email":
+                    string fromAddress = ContactHelpers.GetEmailAddress(data.FromAddress,SearchString);
+                    if (string.IsNullOrEmpty(fromAddress))
+                        break;
+                    EmailSearchData si = new EmailSearchData()
+                    {
+                        Subject = data.Subject,
+                        Recepient = string.Format("{0}",
+                        data.ToAddress != null && data.ToAddress.Length > 0 ? data.ToAddress[0] : string.Empty),
+                        Name = data.ItemName,
+                        Path = data.ItemUrl,
+                        Date = data.DateReceived,
+                        Count = string.Empty,
+                        Type = TypeSearchItem.Email,
+                        ID = Guid.NewGuid(),
+                        From = fromAddress
+                    };
+
+                    return si;
+            }
+            return null;
+        }
+
+
+        #endregion
+        
+
+
+        class  GroupData : ISearchData
+        {
+            [FieldIndex(0)]
+            public string ItemName { get; set; }
+            [FieldIndex(1)]
+            public string ItemUrl { get; set; }
+            [FieldIndex(2)]
+            public object[] Kind { get; set; }
+            [FieldIndex(3)]
+            public string ConversationID { get; set; }
+            [FieldIndex(4)]
+            public string ItemNameDisplay { get; set; }
+            [FieldIndex(5)]
+            public DateTime DateCreated { get; set; }
+            [FieldIndex(6)]
+            public string Subject { get; set; }
+            [FieldIndex(7)]
+            public string[] ToAddress { get; set; }
+            [FieldIndex(8)]
+            public DateTime DateReceived { get; set; }
+            [FieldIndex(9)]
+            public int Size { get; set; }
+
+            public override string ToString()
+            {
+                return string.Format("{0}\t\t{1}:dd:MM:yyyy\t\t{2}", ItemName, DateCreated, ItemUrl);
+            }
         }
 
 

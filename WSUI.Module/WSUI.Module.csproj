@@ -75,6 +75,7 @@
     <Compile Include="Core\BaseCommandStrategy.cs" />
     <Compile Include="Core\BasePreviewCommand.cs" />
     <Compile Include="Core\KindNameAttribute.cs" />
+    <Compile Include="Core\KindsConstName.cs" />
     <Compile Include="Core\KindViewModelBase.cs" />
     <Compile Include="Core\LazyKind.cs" />
     <Compile Include="Core\ViewModelBase.cs" />
@@ -88,12 +89,14 @@
     <Compile Include="Interface\IPreviewView.cs" />
     <Compile Include="Interface\IScrollableView.cs" />
     <Compile Include="Interface\IScrollBehavior.cs" />
+    <Compile Include="Interface\ISearchData.cs" />
     <Compile Include="Interface\ISettingsView.cs" />
     <Compile Include="Interface\IUIView.cs" />
     <Compile Include="Interface\IWSCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AllFilesDataTemplateSelector.cs" />
     <Compile Include="Service\ContactDataTemplateSelector.cs" />
+    <Compile Include="Service\ContactHelpers.cs" />
     <Compile Include="Service\DateToStringConverter.cs" />
     <Compile Include="Service\Dialogs\Interfaces\IMessageModel.cs" />
     <Compile Include="Service\Dialogs\Message\MessageBoxService.cs" />
@@ -262,6 +265,12 @@
     <Resource Include="Images\information.png" />
     <Resource Include="Images\question.png" />
     <Resource Include="Images\warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\more.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\more1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

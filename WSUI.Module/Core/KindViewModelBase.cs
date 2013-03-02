@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.OleDb;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,9 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using C4F.DevKit.PreviewHandler.Service.Logger;
+using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Prism.Commands;
+using WSUI.Infrastructure.Attributes;
 using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Core;
 using WSUI.Infrastructure.Service.Enums;
@@ -31,7 +34,7 @@ namespace WSUI.Module.Core
     public abstract class KindViewModelBase : ViewModelBase, IKindItem
     {
         protected readonly string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
-        protected const string OrLikeTemplate = " AND Contains(System.ItemName,'\"*{0}*\"') ";
+        protected const string OrLikeTemplate = " AND Contains(System.ItemName,'\"{0}\"') ";
 
 
         protected string QueryTemplate;
@@ -51,7 +54,7 @@ namespace WSUI.Module.Core
         protected string _andClause;
         protected List<string> _listW;
         protected IScrollBehavior ScrollBehavior =  null;
-        protected int TopQueryResult = 250;
+        protected int TopQueryResult = 100;
 
         private volatile bool _isQueryRun = false;
         private object _lock = new object();
@@ -163,7 +166,7 @@ namespace WSUI.Module.Core
             OnComplete(true);
             watch.Stop();
             System.Diagnostics.Debug.WriteLine("DoAdditionalQuery {0}", watch.ElapsedMilliseconds);
-            WSSqlLogger.Instance.LogInfo("End additionl query! Elapsed: " + watch.ElapsedMilliseconds.ToString());
+            WSSqlLogger.Instance.LogInfo("End additional query! Elapsed: " + watch.ElapsedMilliseconds.ToString());
             _isQueryRun = false;
         }
 
@@ -171,6 +174,31 @@ namespace WSUI.Module.Core
         {
             
         }
+
+        protected  virtual void ReadGroupData(IDataReader reader, ISearchData data)
+        {
+
+            foreach (var pi in data.GetType().GetProperties().Where(pi => pi.GetCustomAttributes(typeof(FieldIndexAttribute),false).Length > 0))
+            {
+                uint index =
+                    ((FieldIndexAttribute[]) pi.GetCustomAttributes(typeof (FieldIndexAttribute), false))[0].Index;
+                if (index < reader.FieldCount)
+                {
+                    object obj = reader[(int)index];
+                    if (obj is Array)
+                    {
+                        pi.SetValue(data, obj, null);    
+                    }
+                    else if (!reader.IsDBNull((int)index))
+                    {
+                        var value = Convert.ChangeType(obj, pi.PropertyType, CultureInfo.InvariantCulture);
+                        pi.SetValue(data, value, null);    
+                    }
+                    
+                }
+            }
+        }
+
 
         protected virtual string CreateQuery()
         {
@@ -213,7 +241,7 @@ namespace WSUI.Module.Core
                 return string.Empty;
             var temp = new StringBuilder();
 
-            temp.Append(string.Format("Contains(System.ItemName,'\"*{0}*\"') ", _listW[0]));
+            temp.Append(string.Format("Contains(System.ItemName,'\"{0}\"') ", _listW[0]));
 
             if (_listW.Count > 1)
                 for (int i = 1; i < _listW.Count; i++)
@@ -297,10 +325,7 @@ namespace WSUI.Module.Core
             rect.Size = new Size(Application.Current.MainWindow.ActualWidth, Application.Current.MainWindow.ActualHeight);
             mwi.MainWindowRect = rect;
             mwi.MainWindowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
-            //Task thread = new Task(() => DoQuery(mwi),TaskCreationOptions.None);
-            //Task thread2 = thread.ContinueWith((t) => DoAdditionalQuery());
             _query = CreateQuery();
-            //thread.Start();
             if(_eventForContinue == null)
                 _eventForContinue = new ManualResetEvent(false);
             var thread = new Thread(() => DoQuery(mwi));
