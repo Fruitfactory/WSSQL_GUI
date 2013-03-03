@@ -215,27 +215,25 @@
     </DataTemplate>
     
     <DataTemplate x:Key="CommandTemplate">
-        <DockPanel LastChildFill="True">
-            <Image Grid.Column="0" Source="..\Images\more1.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
-            <ctrl:HightliteHyperlink Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                       Margin="5">
-                <ctrl:HightliteHyperlink.Style>
-                    <Style TargetType="ctrl:HightliteTextBlockBase">
-                        <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Blue"/>
-                        <Style.Triggers>
-                            <Trigger Property="Control.IsMouseOver" Value="True">
-                                <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Red" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ctrl:HightliteHyperlink.Style>
-            </ctrl:HightliteHyperlink>
-        </DockPanel>
+        <StackPanel HorizontalAlignment="Stretch" Background="AliceBlue">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <Image Grid.Column="0" Source="..\Images\more1.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
+                <ctrl:HightliteHyperlink Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                                                           Margin="5">
+                    <ctrl:HightliteHyperlink.Style>
+                        <Style TargetType="ctrl:HightliteTextBlockBase">
+                            <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Blue"/>
+                            <Style.Triggers>
+                                <Trigger Property="Control.IsMouseOver" Value="True">
+                                    <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Red" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ctrl:HightliteHyperlink.Style>
+                </ctrl:HightliteHyperlink>
+            </StackPanel>
+        </StackPanel>
     </DataTemplate>
-    
-    
-
-
 
     <service:AllFilesDataTemplateSelector x:Key="templateSelector"
             NoneTemplate="{StaticResource ResourceKey=NoneTemplate}"

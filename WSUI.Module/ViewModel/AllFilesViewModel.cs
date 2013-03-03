@@ -1,21 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Data;
 using System.Data.OleDb;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Windows;
 using System.Windows.Input;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
 using WSUI.Infrastructure.Core;
 using WSUI.Infrastructure.Models;
 using WSUI.Infrastructure.Service;
-using WSUI.Infrastructure.Service.Rules;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using Microsoft.Practices.Unity;
@@ -59,8 +53,6 @@ namespace WSUI.Module.ViewModel
             DataView = dataView;
             DataView.Model = this;
             // init
-            //QueryTemplate =
-            //    "GROUP ON TOP {3} System.ItemName OVER( GROUP ON System.Message.ConversationID OVER (SELECT TOP 75 System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Subject,System.Message.ToAddress,System.Message.DateReceived,System.Size FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0},1033) OR ( {2} ) )))";
             QueryTemplate =
                 "SELECT TOP {3} System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Subject,System.Message.ToAddress,System.Message.DateReceived,System.Size FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0},1033) OR ( {2} ) ) ORDER BY System.DateCreated DESC";
             QueryAnd = " AND \"{0}\""; 
