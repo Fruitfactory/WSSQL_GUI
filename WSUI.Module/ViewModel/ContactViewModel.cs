@@ -26,17 +26,17 @@ namespace WSUI.Module.ViewModel
     [KindNameId(KindsConstName.People, 1)]
     public class ContactViewModel : KindViewModelBase,IUView<ContactViewModel>, IScrollableView
     {
-        private const string QueryContactEmail = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' {0}AND CONTAINS(System.Message.FromAddress,'{1}*')  ORDER BY System.Message.DateReceived DESC) ";
+        private const string QueryContactEmail = "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex FROM SystemIndex WHERE System.Kind = 'email' {0}AND CONTAINS(System.Message.FromAddress,'\"*{1}*\"')  ORDER BY System.Message.DateReceived DESC) ";
         private const string FilterByFolder = "AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) ";
-        private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
+        private const string EmailPattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";//@"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
         private string _currentEmail = string.Empty;
         private string _folder = string.Empty;
         private ContactSearchData _contactData = null;
         private string _queryByAddress =
-            " OR (System.Kind = 'email' AND System.Message.FromAddress LIKE '%{0}%')"; //CONTAINS(System.Message.FromAddress,'*{0}*')  AND CONTAINS(System.ItemPathDisplay,'{0}*',1033))
+            " OR (System.Kind = 'email' AND CONTAINS(System.Message.FromAddress, '\"*{0}*\"')"; //CONTAINS(System.Message.FromAddress,'*{0}*')  AND CONTAINS(System.ItemPathDisplay,'{0}*',1033))
 
         private string _queryContactWhere =
-            " (System.Kind = 'contact' AND {1}( CONTAINS(System.Contact.FirstName,'\"{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\"') ){2}";
+            " (System.Kind = 'contact' AND {1}( CONTAINS(System.Contact.FirstName,'\"*{0}*\"') OR CONTAINS(System.Contact.LastName,'\"*{0}*\"') ){2}";
         private ContactSuggestingService _contactSuggesting;
 
         private readonly List<BaseSearchData> _listContacts = new List<BaseSearchData>(); 
@@ -125,7 +125,8 @@ namespace WSUI.Module.ViewModel
             {
                 ProcessContactData(_listContacts.OfType<ContactSearchData>());
                 ProcessEmailData(_listContacts.OfType<EmailSearchData>());
-                _lastDate = _listContacts[_listContacts.Count - 1].DateModified;
+                var list = _listContacts.OfType<BaseSearchData>().ToList();
+                _lastDate = list.ElementAt(list.Count - 1).DateModified;
             }
 
             ListData.OrderBy(b => b.Type);
@@ -160,7 +161,12 @@ namespace WSUI.Module.ViewModel
             if (string.IsNullOrEmpty(_currentEmail))
             {
                 WSSqlLogger.Instance.LogWarning("Email address not found.");
-                base.DoAdditionalQuery();
+                //base.DoAdditionalQuery();
+                return;
+            }
+            if (!Regex.IsMatch(_currentEmail, EmailPattern, RegexOptions.IgnoreCase))
+            {
+                WSSqlLogger.Instance.LogWarning("Not Email address.");
                 return;
             }
             _folder = Folder;
@@ -366,7 +372,8 @@ namespace WSUI.Module.ViewModel
                 var item = group.ElementAt(0);
                 _currentEmail = item.EmailList.Count > 0 ? item.EmailList[0] : string.Empty;
                 _contactData = item;
-                GetEmailsForContact(item);
+                if(!string.IsNullOrEmpty(_currentEmail))
+                    GetEmailsForContact(item);
                 item.Count = group.Count().ToString();
                 if (!DataSource.OfType<ContactSearchData>().Any(c => c.FirstName == item.FirstName && c.LastName == item.LastName))
                 {

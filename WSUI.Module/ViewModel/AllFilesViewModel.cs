@@ -328,7 +328,6 @@ namespace WSUI.Module.ViewModel
         private void RunContactQuery()
         {
             var thread = new Thread(DoContactQuery);
-            thread.Priority = ThreadPriority.Highest;
             thread.Start();
         }
 
@@ -337,6 +336,7 @@ namespace WSUI.Module.ViewModel
             string query = GetContactQuery(SearchString);
             OleDbDataReader dataReader = null;
             OleDbConnection connection = new OleDbConnection(ConnectionString);
+            WSSqlLogger.Instance.LogInfo("SQL Query for Contact: " + query);
             OleDbCommand cmd = new OleDbCommand(query, connection);
             cmd.CommandTimeout = 0;
             var watch = new Stopwatch();
@@ -399,7 +399,8 @@ namespace WSUI.Module.ViewModel
         private void ReadContactData(OleDbDataReader dataReader)
         {
             var item = ReadRawContactData(dataReader);
-            _listContacts.Add(item);
+            if(item != null)
+                _listContacts.Add(item);
         }
 
         private string GetContactQuery(string searchCriteria)

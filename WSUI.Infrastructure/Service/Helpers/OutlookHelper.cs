@@ -268,13 +268,26 @@ namespace WSUI.Infrastructure.Service.Helpers
                 string[] split = fullname.Split(' ');
                 if (split.Length <= 1)
                     return null;
-
-                ci =
-                    contacts.Items.OfType<Outlook.ContactItem>().ToList().Find(
-                        c => (c.FirstName == split[0].Trim() && c.LastName == split[1].Trim())
-                            || (c.FirstName == split[1].Trim() && c.LastName == split[0].Trim())
-                            );
-
+                foreach (var item in ns.Folders.OfType<Outlook.Folder>())
+                {
+                    try
+                    {
+                        foreach (var fol in item.Folders.OfType<Outlook.Folder>())
+                        {
+                            if (string.IsNullOrEmpty(fol.AddressBookName))
+                                continue;
+                            foreach (var contact in fol.Items.OfType<Outlook.ContactItem>())
+                            {
+                                if (contact != null && (contact.FirstName == split[0].Trim() && contact.LastName == split[1].Trim()) || (contact.FirstName == split[1].Trim() && contact.LastName == split[0].Trim()))
+                                {
+                                    ci = contact;
+                                    return ci;
+                                } 
+                            }
+                        }
+                    }
+                    catch (Exception) { }
+                }
             }
             catch (Exception ex)
             {

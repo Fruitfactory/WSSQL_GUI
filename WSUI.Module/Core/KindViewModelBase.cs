@@ -86,25 +86,11 @@ namespace WSUI.Module.Core
                 return;
             }
             WSSqlLogger.Instance.LogInfo(string.Format("QUERY: {0}",_query));
-            var mainWnd = mwi as MainWindowInfo;
-            if(mainWnd == null)
-            {
-                WSSqlLogger.Instance.LogInfo("Information about Main Window is empty.");
-                return;
-            }
             OleDbDataReader dataReader = null;
             OleDbConnection connection = new OleDbConnection(ConnectionString);
             OleDbCommand cmd = new OleDbCommand(_query, connection);
             cmd.CommandTimeout = 0;
-            ProgressManager.Instance.StartOperation(new ProgressOperation()
-            {
-                Caption = "Searching...",
-                DelayTime = 2500,
-                Canceled = false,
-                Location = new Point(mainWnd.MainWindowRect.Left,mainWnd.MainWindowRect.Top),
-                Size = new Size(mainWnd.MainWindowRect.Width,mainWnd.MainWindowRect.Height),
-                MainHandle = mainWnd.MainWindowHandle
-            });
+            
             var watch = new Stopwatch();
             watch.Start();
             try
@@ -150,7 +136,7 @@ namespace WSUI.Module.Core
                 {
                     connection.Close();
                 }
-                ProgressManager.Instance.StopOperation();
+                
                 watch.Stop();
                 System.Diagnostics.Debug.WriteLine("DoQuery {0}",watch.ElapsedMilliseconds);
                 WSSqlLogger.Instance.LogInfo("End query! Elapsed: " + watch.ElapsedMilliseconds.ToString());
@@ -285,6 +271,7 @@ namespace WSUI.Module.Core
             //Enabled = true;
             OnPropertyChanged(() => Enabled);
             FireComplete(res);
+            ProgressManager.Instance.StopOperation();
         }
 
         protected virtual void OnError(bool res)
@@ -335,6 +322,15 @@ namespace WSUI.Module.Core
             thread.Start();
             _eventForContinue.Reset();
             thread2.Start();
+            ProgressManager.Instance.StartOperation(new ProgressOperation()
+            {
+                Caption = "Searching...",
+                DelayTime = 2500,
+                Canceled = false,
+                Location = new Point(mwi.MainWindowRect.Left, mwi.MainWindowRect.Top),
+                Size = new Size(mwi.MainWindowRect.Width, mwi.MainWindowRect.Height),
+                MainHandle = mwi.MainWindowHandle
+            });
         }
 
         protected virtual bool CanSearch()
