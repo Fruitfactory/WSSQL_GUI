@@ -389,7 +389,7 @@ namespace WSUI.Module.ViewModel
                     connection.Close();
                 }
                 watch.Stop();
-                WSSqlLogger.Instance.LogInfo("End query! Elapsed: " + watch.ElapsedMilliseconds.ToString());
+                WSSqlLogger.Instance.LogInfo("End query contact! Elapsed: " + watch.ElapsedMilliseconds.ToString());
                 _resetEvent.Set();
             }
 
@@ -454,8 +454,6 @@ namespace WSUI.Module.ViewModel
 
         #endregion
         
-
-
         class  GroupData : ISearchData
         {
             [FieldIndex(0)]
