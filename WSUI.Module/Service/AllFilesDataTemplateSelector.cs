@@ -18,6 +18,9 @@ namespace WSUI.Module.Service
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
+            if (item == null)
+                return NoneTemplate;
+
             var bs = item as BaseSearchData;
             switch (bs.Type)
             {
