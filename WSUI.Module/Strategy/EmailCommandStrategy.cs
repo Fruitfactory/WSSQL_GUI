@@ -16,7 +16,9 @@ namespace WSUI.Module.Strategy
         protected override void OnInit()
         {
             base.OnInit();
+            _listCommand.Add(new OpenEmailCommand(_kindItem));
             _listCommand.Add(new ReplyCommand(_kindItem));
+            _listCommand.Add(new ReplyAllCommand(_kindItem));
             _listCommand.Add(new ForwardCommand(_kindItem));
         }
 

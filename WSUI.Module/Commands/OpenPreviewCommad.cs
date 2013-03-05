@@ -36,6 +36,10 @@ namespace WSUI.Module.Commands
                 case TypeSearchItem.Attachment:
                     fileName = TempFileManager.Instance.GenerateTempFileName(KindItem.Current) ?? OutlookHelper.Instance.GetAttachmentTempFileName(KindItem.Current);
                     break;
+                case TypeSearchItem.Email:
+                    fileName = TempFileManager.Instance.GenerateTempFileName(KindItem.Current);
+                    break;
+
             }
             if (string.IsNullOrEmpty(fileName) ||
                 FileService.IsDirectory(fileName))

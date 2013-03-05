@@ -70,7 +70,9 @@
   <ItemGroup>
     <Compile Include="Commands\EmailCommand.cs" />
     <Compile Include="Commands\ForwardCommand.cs" />
+    <Compile Include="Commands\OpenEmailCommand.cs" />
     <Compile Include="Commands\OpenPreviewCommad.cs" />
+    <Compile Include="Commands\ReplyAllCommand.cs" />
     <Compile Include="Commands\ReplyCommand.cs" />
     <Compile Include="Core\BaseCommandStrategy.cs" />
     <Compile Include="Core\BasePreviewCommand.cs" />
@@ -271,6 +273,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\more1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\openemail.png" />
+    <Resource Include="Images\replayall.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
