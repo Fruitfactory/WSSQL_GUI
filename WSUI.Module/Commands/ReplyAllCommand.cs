@@ -3,6 +3,7 @@ using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSUI.Module.Commands
 {
@@ -25,11 +26,18 @@ namespace WSUI.Module.Commands
         {
             var itemSearch = KindItem.Current;
             var mail = OutlookHelper.Instance.GetEmailItem(itemSearch);
-            if (mail != null)
+            if (mail != null && mail is MailItem)
             {
-                var replymail = mail.ReplyAll();
-                replymail.Display(false);
-                mail.Close(OlInspectorClose.olDiscard);
+                try
+                {
+                    var replymail = ((MailItem)mail).ReplyAll();
+                    replymail.Display(false);
+                    mail.Close(OlInspectorClose.olDiscard);
+                }
+                catch (System.Exception ex)
+                {
+                    WSSqlLogger.Instance.LogError(ex.Message);
+                }
             }
         }
 
