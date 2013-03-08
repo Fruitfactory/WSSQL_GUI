@@ -10,18 +10,17 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Globalization;
 using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using C4F.DevKit.PreviewHandler.Service.CsvHelper;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("MSDN Magazine CSV Preview Handler", "", "{5F1DA711-99CA-4C7B-B314-90DD9D23E525}")]
+    [PreviewHandler("MSDN Magazine CSV Preview Handler", ".csv", "{5F1DA711-99CA-4C7B-B314-90DD9D23E525}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.CsvPreviewHandler")]
     [Guid("9834EBE8-DA5E-465E-9C51-3B5E4F13C015")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
     public sealed class CsvPreviewHandler : StreamBasedPreviewHandler
     {
-        
-
         protected override PreviewHandlerControl CreatePreviewHandlerControl()
         {
             return new CsvPreviewHandlerControl();
@@ -29,8 +28,6 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 
         private sealed class CsvPreviewHandlerControl : StreamBasedPreviewHandlerControl
         {
-            private readonly static char[] _mostUsefulSeparator = new char[] { ',', ';', '\t', ':' ,'|'};
-
             public override void Load(Stream stream)
             {
                 DataGridView grid = new DataGridView();
@@ -47,53 +44,17 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
                 table.Locale = CultureInfo.CurrentCulture;
                 table.TableName = stream is FileStream ? ((FileStream)stream).Name : "CSV";
 
-                List<string[]> lines = new List<string[]>();
-                int maxFields = 0;
-
                 using (StreamReader reader = new StreamReader(stream))
                 {
                     string line = reader.ReadLine();
                     if(line == null)
                         return table;
-                    char sep = GetSeparator(line);
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        line = line.Trim();
-                        if (line.Length > 0)
-                        {
-                            string[] parts = line.Split(sep);
-                            maxFields = Math.Max(maxFields, parts.Length);
-                            lines.Add(parts);
-                        }
-                    }
+                    char sep = CSV.GetSeparator(line);
+                    CSV.LoadDataTable(reader, true, true, sep);
                 }
-
-                if (lines.Count > 0 && maxFields > 0)
-                {
-                    for (int i = 0; i < maxFields; i++) table.Columns.Add("Column " + i);
-                    foreach (object[] line in lines)
-                    {
-                        table.Rows.Add(line);
-                    }
-                }
-
                 return table;
             }
 
-            private static char GetSeparator(string line)
-            {
-                int index = -1;
-                char ch = ',';
-                foreach (var sep in _mostUsefulSeparator)
-                {
-                    if((index = line.IndexOf(sep)) > -1)
-                    {
-                        ch = sep;
-                        break;
-                    }
-                }
-                return ch;
-            }
         }
     }
 }

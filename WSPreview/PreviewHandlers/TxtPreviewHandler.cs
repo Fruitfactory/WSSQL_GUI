@@ -8,7 +8,7 @@ using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("WSSQL TXT Preview Handler", ".txt;.csv", "{24B7E73C-C49F-488A-86AD-2FA2E3232E06}")]
+    [PreviewHandler("WSSQL TXT Preview Handler", ".txt", "{24B7E73C-C49F-488A-86AD-2FA2E3232E06}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.TxtPreviewHandler")]
     [Guid("D12FC8ED-130D-4D85-9EA0-59AD9C843F63")]
     [ClassInterface(ClassInterfaceType.None)]

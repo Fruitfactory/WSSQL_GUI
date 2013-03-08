@@ -199,6 +199,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Service\CsvHelper\CSV.cs" />
+    <Compile Include="Service\CsvHelper\CSVReader.cs" />
+    <Compile Include="Service\CsvHelper\CSVWriter.cs" />
     <Compile Include="Service\Logger\WSSqlLogger.cs" />
   </ItemGroup>
   <ItemGroup>
