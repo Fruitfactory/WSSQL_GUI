@@ -50,7 +50,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
                     if(line == null)
                         return table;
                     char sep = CSV.GetSeparator(line);
-                    CSV.LoadDataTable(reader, true, true, sep);
+                    CSV.LoadDataTable(reader, false, true, sep);
                 }
                 return table;
             }
