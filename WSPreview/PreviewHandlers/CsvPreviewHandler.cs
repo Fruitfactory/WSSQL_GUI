@@ -30,8 +30,10 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
         {
             public override void Load(Stream stream)
             {
+                BindingSource bs = new BindingSource();
                 DataGridView grid = new DataGridView();
-                grid.DataSource = ParseCsv(stream);
+                bs.DataSource = ParseCsv(stream);
+                grid.DataSource = bs;
                 grid.ReadOnly = true;
                 grid.Dock = DockStyle.Fill;
                 grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -41,16 +43,17 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
             private static DataTable ParseCsv(Stream stream)
             {
                 DataTable table = new DataTable();
-                table.Locale = CultureInfo.CurrentCulture;
-                table.TableName = stream is FileStream ? ((FileStream)stream).Name : "CSV";
 
                 using (StreamReader reader = new StreamReader(stream))
                 {
-                    string line = reader.ReadLine();
-                    if(line == null)
-                        return table;
-                    char sep = CSV.GetSeparator(line);
-                    CSV.LoadDataTable(reader, true, true, sep);
+                    //string line = reader.ReadLine();
+                    //if(line == null)
+                    //    return table;
+                    //char sep = CSV.GetSeparator(line);
+                    table = CSV.LoadDataTable(reader, true, true);
+                    table.Locale = CultureInfo.CurrentCulture;
+                    table.TableName = stream is FileStream ? ((FileStream)stream).Name : "CSV";
+
                 }
                 return table;
             }
