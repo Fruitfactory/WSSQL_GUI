@@ -98,6 +98,12 @@
     <Compile Include="Controls\Calendar\IIcsFileProperty.cs" />
     <Compile Include="Controls\Calendar\ParseAttribute.cs" />
     <Compile Include="Controls\Calendar\ParserIcs.cs" />
+    <Compile Include="Controls\CsvControl\CsvPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\CsvControl\CsvPreview.Designer.cs">
+      <DependentUpon>CsvPreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\GDI.cs" />
     <Compile Include="Controls\ImageControl\PicturePreviewControl.cs">
       <SubType>UserControl</SubType>
@@ -207,6 +213,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Controls\Calendar\CalendarIcsPreview.resx">
       <DependentUpon>CalendarIcsPreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\CsvControl\CsvPreview.resx">
+      <DependentUpon>CsvPreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ImageControl\PicturePreviewControl.resx">
       <DependentUpon>PicturePreviewControl.cs</DependentUpon>
