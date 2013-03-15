@@ -2,14 +2,12 @@
 using System.IO;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using System.Reflection;
-using System.Globalization;
 using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 using C4F.DevKit.PreviewHandler.Controls;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("WSSQL Source Preview Handler", ".c;.cpp;.h;.hpp;.java;.bat;.asm;.html;.htm;.css;.cs;.vb;.sql;.ini", "{61AE389A-C926-46A1-9170-CD1A348388B9}")]
+    [PreviewHandler("WSSQL Source Preview Handler", ".c;.cpp;.h;.hpp;.java;.bat;.asm;.html;.htm;.css;.cs;.vb;.sql;.ini;.js;.config;.csproj;.sln", "{61AE389A-C926-46A1-9170-CD1A348388B9}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.SourcePreviewHandler")]
     [Guid("28E58D5E-2FDB-4D8F-92CF-1DF9519DF0FA")]
     [ClassInterface(ClassInterfaceType.None)]

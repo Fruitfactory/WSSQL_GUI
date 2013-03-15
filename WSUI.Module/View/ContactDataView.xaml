@@ -65,7 +65,7 @@
 
             <service:ContactDataTemplateSelector x:Key="contactTemplateSelector"  
                                                 EmailTemplate="{StaticResource ResourceKey=EmailTemplate}"
-                                                ContactTemplate="{StaticResource ResourceKey=ContactTemplate}" 
+                                                ContactTemplate="{StaticResource ResourceKey=UserTemplate}" 
                                                 NoneTemplate="{StaticResource ResourceKey=NoneTemplate}"/>
 
         </ResourceDictionary>

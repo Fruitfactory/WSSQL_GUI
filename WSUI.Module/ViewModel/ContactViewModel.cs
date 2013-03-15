@@ -233,6 +233,11 @@ namespace WSUI.Module.ViewModel
             {
                 adr = (address as EmailSearchData).From;
             }
+            else if (address is ContactSearchData)
+            {
+                var contact = (ContactSearchData) address;
+                adr = contact.EmailList != null && contact.EmailList.Count > 0 ? contact.EmailList[0] : string.Empty;
+            }
 
             if(string.IsNullOrEmpty(adr))
                 return;
@@ -353,7 +358,7 @@ namespace WSUI.Module.ViewModel
                         Path = item.ItemUrl,
                         Date = item.DateReceived,
                         Count = string.Empty,
-                        Type = TypeSearchItem.Email,
+                        Type = TypeSearchItem.Contact,
                         ID = Guid.NewGuid(),
                         From = fromAddress
                     };
@@ -385,7 +390,7 @@ namespace WSUI.Module.ViewModel
 
         private void ProcessEmailData(IEnumerable<EmailSearchData> listData )
         {
-            var groups = listData.GroupBy(e => e.Subject);
+            var groups = listData.GroupBy(e => e.From);
             foreach (var group in groups)
             {
                 var item = group.ElementAt(0);

@@ -63,67 +63,11 @@ namespace WSUI.Module.ViewModel
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
         }
 
-        /*protected override void ReadData(IDataReader reader)
-        {
-            var group = new List<EmailGroupData>();
-            for (int i = 0; i < reader.FieldCount; i++)
-            {
-                if (reader.GetFieldType(i).ToString() != "System.Data.IDataReader")
-                    continue;
-                OleDbDataReader itemsReader = reader.GetValue(i) as OleDbDataReader;
-                while (itemsReader.Read())
-                {
-                    EmailGroupData item = new EmailGroupData();
-                    ReadGroupData(itemsReader, item);
-                    if (item.Subject.Length > 0)
-                    {
-                        group.Add(item);
-                    }
-                }
-            }
-            if (group == null || group.Count == 0)
-                return;
-            var groupItem = group[0];
-            DateTime minDateInGroup = group[group.Count - 1].DateReceived;
-            string tag = string.Empty;
-            EmailSearchData newValue = new EmailSearchData()
-            {
-                Subject = groupItem.Subject,
-                ConversationId = groupItem.ConversationId,
-                Count = group.Count.ToString(),
-                Date = groupItem.DateReceived,
-                DateModified = groupItem.DateReceived,
-                Recepient = groupItem.ToAddress.Length > 0 ? groupItem.ToAddress[0] : string.Empty,
-                Display = groupItem.ItemName,
-                Path = groupItem.ItemUrl,
-                ID = Guid.NewGuid(),
-                Name = groupItem.ItemName
-            };
-
-            TypeSearchItem type = SearchItemHelper.GetTypeItem(groupItem.ItemUrl);
-            newValue.Type = type;
-            try
-            {
-                //newValue.Attachments = OutlookHelper.Instance.GetAttachments(newValue);
-            }
-            catch (Exception e)
-            {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {2}", "ReadData - Everething", e.Message));
-            }
-            ListData.Add(newValue);
-            _countAdded++;
-            //WSSqlLogger.Instance.LogInfo(string.Format("ConversationId =  {0}", newValue.ConversationId));
-            _lastDate = _lastDate.GetMinDate(minDateInGroup);
-
-            //if (_countAdded == _countProcess)
-            //    IsInterupt = true;
-        }*/
-
         protected override void ReadData(IDataReader reader)
         {
             EmailGroupData item = new EmailGroupData();
             ReadGroupData(reader, item);
-            if (item.Subject.Length > 0)
+            if (item != null && !string.IsNullOrEmpty(item.Subject))
             {
                 _listEmails.Add(item);
             }

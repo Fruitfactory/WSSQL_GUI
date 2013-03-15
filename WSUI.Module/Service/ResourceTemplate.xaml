@@ -17,6 +17,7 @@
     <service:CountToFormatStringConvert x:Key="countConverter" />
     <service:NameToImageConvert x:Key="nameConverter" />
     <service:SizebytesToStringConverter x:Key="sizeConverter"  />
+    <service:ObjectToNameConverter x:Key="objectConverter" />
         
     <Style x:Key="ImageStyle" TargetType="{x:Type Image}">
         <Setter Property="Width"  Value="16"/>
@@ -98,13 +99,13 @@
     <DataTemplate x:Key="UserTemplate">
         <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\user.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
-            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Margin="5" DockPanel.Dock="Right"/>
+            <!--<TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Margin="5" DockPanel.Dock="Right"/>-->
             
-            <Grid>
+            <!--<Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Style="{StaticResource NameStyleWidthColumn}" />
-                </Grid.ColumnDefinitions>
-                <ctrl:HightliteHyperlink Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>-->
+                <ctrl:HightliteHyperlink Text="{Binding Converter={StaticResource objectConverter}}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                                         Grid.Column="0"   Margin="5">
                     <ctrl:HightliteHyperlink.Style>
                         <Style TargetType="ctrl:HightliteTextBlockBase">
@@ -117,7 +118,7 @@
                         </Style>
                     </ctrl:HightliteHyperlink.Style>
                 </ctrl:HightliteHyperlink>
-            </Grid>
+            <!--</Grid>-->
         </DockPanel>
     </DataTemplate>
 

@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using WSUI.Infrastructure.Core;
+using WSUI.Infrastructure.Models;
 
 namespace WSUI.Module.Service
 {
@@ -83,5 +85,38 @@ namespace WSUI.Module.Service
 
         #endregion
     }
+
+    [ValueConversion(typeof(BaseSearchData),typeof(string))]
+    public class ObjectToNameConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string result = string.Empty;
+            var contact = value as ContactSearchData;
+            if (contact != null)
+            {
+                
+                result = string.Format("{0} {1} ({2})", contact.FirstName, contact.LastName,
+                                       contact.EmailList != null && contact.EmailList.Count > 0
+                                           ? contact.EmailList[0]
+                                           : string.Empty);
+
+                return result;
+            }
+            var email = value as EmailSearchData;
+            if (email != null)
+            {
+                result = string.Format("{0} ({1})", email.From, email.From);
+                return result;
+            }
+            return result;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 
 }
