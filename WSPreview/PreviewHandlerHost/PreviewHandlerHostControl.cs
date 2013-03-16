@@ -4,6 +4,7 @@ using System.Reflection;
 using System.ComponentModel;
 using System.Drawing;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using C4F.DevKit.PreviewHandler.PInvoke;
 using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
@@ -106,7 +107,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
         private void GeneratePreview()
         {
           
-            lblMessage.Visible = false;
+            webMessage.Visible = false;
             if (_comInstance != null)
             {
                 ((IPreviewHandler)_comInstance).Unload();
@@ -140,9 +141,10 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                     comType = HelperPreviewHandlers.HandlersDictionary[ext];
                 if (comType == null)
                 {
-                    lblMessage.Visible = true;
-                    lblMessage.Text = "No Preview Available";
-                    WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", lblMessage.Text, _filePath));
+                    webMessage.Visible = true;
+                    var str = Regex.Replace(Properties.Resources.NoPreview, "replace", ext);
+                    webMessage.DocumentText = str;
+                    WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "No Preview", _filePath));
                     return;
                 }
                 _registreHandler = false;
@@ -192,9 +194,9 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
             catch(Exception ex)
             {
                 _comInstance = null;
-                lblMessage.Visible = true;
-                lblMessage.Text = "Preview Generation Failed - " + ex.Message;
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", lblMessage.Text, ex.Message));
+                webMessage.Visible = true;
+                webMessage.DocumentText = Regex.Replace(Properties.Resources.Error1,"replace",ex.Message);
+                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "Error", ex.Message));
             }
 
         }

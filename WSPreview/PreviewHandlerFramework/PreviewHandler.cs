@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
@@ -81,11 +82,9 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerFramework
                 catch(Exception exc)
                 {
                     _previewControl.Controls.Clear();
-                    TextBox text = new TextBox();
-                    text.ReadOnly = true;
-                    text.Multiline = true;
+                    WebBrowser text = new WebBrowser();
                     text.Dock = DockStyle.Fill;
-                    text.Text = exc.ToString();
+                    text.DocumentText = Regex.Replace(Properties.Resources.Error1, "replace", exc.Message);
                     _previewControl.Controls.Add(text);
                 }
                 UpdateWindowBounds();

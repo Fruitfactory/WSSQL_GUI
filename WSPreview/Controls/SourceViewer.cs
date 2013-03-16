@@ -67,6 +67,7 @@ namespace C4F.DevKit.PreviewHandler.Controls
                     _scintilla.ConfigurationManager.Language = "cpp";
                     break;
                 case "java":
+                case "js":
                     _scintilla.ConfigurationManager.Language = "js";
                     break;
                 case "bat":
