@@ -123,7 +123,7 @@ namespace WSUI.Module.ViewModel
         {
             EmailGroupData item = new EmailGroupData();
             ReadGroupData(reader, item);
-            if (item.Subject.Length > 0)
+            if (item != null && !string.IsNullOrEmpty(item.Subject))
             {
                 _listEmails.Add(item);
             }
