@@ -28,26 +28,24 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
         /// </summary>
         private void InitializeComponent()
         {
-            this.lblMessage = new System.Windows.Forms.Label();
+            this.webMessage = new System.Windows.Forms.WebBrowser();
             this.SuspendLayout();
             // 
-            // lblMessage
+            // webMessage
             // 
-            this.lblMessage.BackColor = System.Drawing.Color.Transparent;
-            this.lblMessage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMessage.Location = new System.Drawing.Point(0, 0);
-            this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(148, 148);
-            this.lblMessage.TabIndex = 0;
-            this.lblMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblMessage.Visible = false;
+            this.webMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webMessage.Location = new System.Drawing.Point(0, 0);
+            this.webMessage.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webMessage.Name = "webMessage";
+            this.webMessage.Size = new System.Drawing.Size(148, 148);
+            this.webMessage.TabIndex = 0;
             // 
             // PreviewHandlerHostControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Controls.Add(this.lblMessage);
+            this.Controls.Add(this.webMessage);
             this.Name = "PreviewHandlerHostControl";
             this.Size = new System.Drawing.Size(148, 148);
             this.Resize += new System.EventHandler(this.Control_Resize);
@@ -57,7 +55,8 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
 
         #endregion
 
-        private System.Windows.Forms.Label lblMessage;
+        private System.Windows.Forms.WebBrowser webMessage;
+
 
 
     }

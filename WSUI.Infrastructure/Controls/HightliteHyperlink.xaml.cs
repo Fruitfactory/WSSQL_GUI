@@ -26,7 +26,7 @@ namespace WSUI.Infrastructure.Controls
             }
 
             var textlbock = textBlock;
-            var mCol = HelperFunctions.GetMatches(Text, Hightlight); //Regex.Matches(Text, string.Format(@"({0})", Regex.Escape(Hightlight)), RegexOptions.IgnoreCase);
+            var mCol = HelperFunctions.GetMatches(Text, Hightlight);
             if (mCol.Count == 0)
             {
                 textlbock.Text = this.Text;
@@ -42,7 +42,7 @@ namespace WSUI.Infrastructure.Controls
                 textlbock.Inlines.Add(GenerateRun(sub));
                 sub = Text.Substring(m.Index, m.Length);
                 textlbock.Inlines.Add(GenerateRun(sub, true));
-                last += (m.Index + m.Length);
+                last = (m.Index + m.Length);
             }
             if (last < Text.Length)
             {

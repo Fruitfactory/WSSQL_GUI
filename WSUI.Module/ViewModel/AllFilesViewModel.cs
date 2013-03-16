@@ -300,7 +300,7 @@ namespace WSUI.Module.ViewModel
             CommandStrategies.Add(TypeSearchItem.Attachment,fileAttach);
             CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
-            ScrollBehavior = new ScrollBehavior() {CountFirstProcess = 300, CountSecondProcess = 100,LimitReaction = 85};
+            ScrollBehavior = new ScrollBehavior() {CountFirstProcess = 300, CountSecondProcess = 100,LimitReaction = 99};
             ScrollBehavior.SearchGo += () =>
                                            {
                                                ShowMessageNoMatches = false;
@@ -362,6 +362,17 @@ namespace WSUI.Module.ViewModel
                 }
                 if (_listContacts.Count > 0)
                 {
+                    var temp = _listContacts.OfType<ContactSearchData>().ToList();
+                    var emails = _listContacts.OfType<EmailSearchData>().GroupBy(em => em.From).ToList();
+                    _listContacts.Clear();
+                    _listContacts.AddRange(temp);
+                    foreach (var email in emails)
+                    {
+                        if(!email.Any())
+                            continue;
+                        _listContacts.Add(email.ElementAt(0));
+                    }
+
                     CommandSearchData commandSearchData = new CommandSearchData()
                                                 {
                                                     Name = "more",
@@ -405,7 +416,7 @@ namespace WSUI.Module.ViewModel
 
         private string GetContactQuery(string searchCriteria)
         {
-            return ContactHelpers.GetContactQuery(SearchString,FormatDate(ref _lastDate));
+            return ContactHelpers.GetContactQuery(SearchString,FormatDate(ref _lastDate),25);
         }
 
         private BaseSearchData ReadRawContactData(IDataReader reader)
@@ -427,7 +438,7 @@ namespace WSUI.Module.ViewModel
                     item.EmailList.Add(data.EmailAddress);
                     item.EmailList.Add(data.EmailAddress2);
                     item.EmailList.Add(data.EmailAddress3);
-                    item.Foto = OutlookHelper.Instance.GetContactFotoTempFileName(item);
+                    //item.Foto = OutlookHelper.Instance.GetContactFotoTempFileName(item);
                     return item;
                 case "email":
                     string fromAddress = ContactHelpers.GetEmailAddress(data.FromAddress,SearchString);
@@ -442,7 +453,7 @@ namespace WSUI.Module.ViewModel
                         Path = data.ItemUrl,
                         Date = data.DateReceived,
                         Count = string.Empty,
-                        Type = TypeSearchItem.Email,
+                        Type = TypeSearchItem.Contact,
                         ID = Guid.NewGuid(),
                         From = fromAddress
                     };
