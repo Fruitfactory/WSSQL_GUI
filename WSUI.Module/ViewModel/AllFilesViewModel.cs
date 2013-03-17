@@ -267,11 +267,7 @@ namespace WSUI.Module.ViewModel
             else if (obj is ContactSearchData)
             {
                 var data = obj as ContactSearchData;
-                var ci = OutlookHelper.Instance.GetContact(data.Name);
-                if (ci == null || ci.Email1Address == null
-                    || ci.Email1Address.Length == 0)
-                    return false;
-                adr = ci.Email1Address;
+                adr = data.EmailList != null && data.EmailList.Count > 0 ? data.EmailList[0] : string.Empty;
             }
             if (string.IsNullOrEmpty(adr))
                 return false;
@@ -362,6 +358,7 @@ namespace WSUI.Module.ViewModel
                 }
                 if (_listContacts.Count > 0)
                 {
+                    bool isMore = false;
                     var temp = _listContacts.OfType<ContactSearchData>().ToList();
                     var emails = _listContacts.OfType<EmailSearchData>().GroupBy(em => em.From).ToList();
                     _listContacts.Clear();
@@ -370,16 +367,25 @@ namespace WSUI.Module.ViewModel
                     {
                         if(!email.Any())
                             continue;
+                        if (_listContacts.Count == 5)
+                        {
+                            isMore = true;
+                            break;
+                        }
                         _listContacts.Add(email.ElementAt(0));
                     }
 
-                    CommandSearchData commandSearchData = new CommandSearchData()
-                                                {
-                                                    Name = "more",
-                                                    Type = TypeSearchItem.Command,
-                                                    ID = Guid.NewGuid()
-                                                };
-                    _listContacts.Add(commandSearchData);
+                    if (isMore)
+                    {
+                        CommandSearchData commandSearchData = new CommandSearchData()
+                        {
+                            Name = "more",
+                            Type = TypeSearchItem.Command,
+                            ID = Guid.NewGuid()
+                        };
+                        _listContacts.Add(commandSearchData);
+                    }
+                        
                 }
             }
             catch (System.Data.OleDb.OleDbException oleDbException)
@@ -416,7 +422,7 @@ namespace WSUI.Module.ViewModel
 
         private string GetContactQuery(string searchCriteria)
         {
-            return ContactHelpers.GetContactQuery(SearchString,FormatDate(ref _lastDate),25);
+            return ContactHelpers.GetContactQuery(SearchString,FormatDate(ref _lastDate),200);
         }
 
         private BaseSearchData ReadRawContactData(IDataReader reader)
