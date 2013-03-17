@@ -216,7 +216,7 @@
     </DataTemplate>
     
     <DataTemplate x:Key="CommandTemplate">
-        <DockPanel HorizontalAlignment="Stretch" Background="AliceBlue" LastChildFill="True">
+        <DockPanel LastChildFill="True">
             <Image Grid.Column="0" Source="..\Images\more1.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <ctrl:HightliteHyperlink Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
