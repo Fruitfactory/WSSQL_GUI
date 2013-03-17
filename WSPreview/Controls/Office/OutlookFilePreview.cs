@@ -46,6 +46,9 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         private const string LocationRow = @"<tr><td class='style1'>Location: </td><td class='style2'><a href='{0}'>{0}</a></td></tr>";
         private const string MailTo = @"<a href='mailto:{0}'>{0}</a> "; 
 
+        // meeting
+        private const string TopicRow = @"<tr><td class='style1'>Topic:</td><td class='style2'>{0}</td></tr>";
+
 
         private const string LinkTemplate = @"<img src='{1}' width='16' height='16' /><a href='{0}'>{2}</a>&nbsp;&nbsp;&nbsp;";
 
@@ -92,6 +95,10 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             {
                 page = GetPreviewForAppointment(mail as Outlook.AppointmentItem,filename);
             }
+            else if (mail is Outlook.MeetingItem)
+            {
+                page = GetPreviewForMeeting(mail as Outlook.MeetingItem, filename);
+            }
 
             webEmail.DocumentText = page;
 
@@ -100,92 +107,6 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
         }
 
-        private string GetPreviewForEmail(Outlook.MailItem mail,string filename)
-        {
-            string page = PageBegin + TableBegin;
-
-            page += string.Format(SubjectRow, HighlightSearchString(mail.Subject));
-            page += string.Format(SenderRow, HighlightSearchString(mail.SenderName));
-            page += string.Format(ToRow, HighlightSearchString(mail.To));
-            if (!string.IsNullOrEmpty(mail.CC))
-                page += string.Format(CCRow, HighlightSearchString(mail.CC));
-
-            if (mail.Attachments.Count > 0)
-            {
-                var tempFolder = Path.GetDirectoryName(filename);
-
-                var urls = string.Empty;
-                foreach (Outlook.Attachment att in mail.Attachments)
-                {
-                    // TODO add fynctionality, if we don't have image for samo file ext (need to show blank image)
-                    var destname = GetAttachmentValue(att, tempFolder);
-                    if (!string.IsNullOrEmpty(destname))
-                        urls += string.Format(LinkTemplate, att.DisplayName, destname, HighlightSearchString(att.DisplayName));
-                }
-                page += string.Format(AttachmentsRow, urls);
-            }
-
-            page += string.Format(SendRow, mail.ReceivedTime.ToString());
-            page += string.Format(EmailRow, HighlightSearchString(mail.HTMLBody));
-
-
-            page += TableEnd + PageEnd;
-
-            return page;
-        }
-
-        private string GetPreviewForAppointment(Outlook.AppointmentItem appointment,string filename)
-        {
-            string page = PageBegin + TableBegin;
-            page += string.Format(SubjectRow, HighlightSearchString(appointment.Subject));
-
-            if (appointment.Attachments.Count > 0)
-            {
-                var tempFolder = Path.GetDirectoryName(filename);
-
-                var urls = string.Empty;
-                foreach (Outlook.Attachment att in appointment.Attachments)
-                {
-                    // TODO add fynctionality, if we don't have image for samo file ext (need to show blank image)
-                    var destname = GetAttachmentValue(att, tempFolder);
-                    if (!string.IsNullOrEmpty(destname))
-                        urls += string.Format(LinkTemplate, att.DisplayName, destname, HighlightSearchString(att.DisplayName));
-                }
-                page += string.Format(AttachmentsRow, urls);
-            }
-
-            page += string.Format(StartRow, appointment.Start.ToString());
-            page += string.Format(EndRow, appointment.End.ToString());
-            page += string.Format(LocationRow, appointment.Location);
-            page += string.Format(RequiredRow, GetMailTo(appointment.RequiredAttendees.Split(';')));
-            //page += string.Format(EmailRow, HighlightSearchString(appointment.Body));
-
-
-            page += TableEnd + PageEnd;
-
-            return page;
-        }
-
-        private string GetMailTo(string[] mails)
-        {
-            if (mails == null || mails.Length == 0)
-                return string.Empty;
-            string mailtostring = string.Empty;
-            foreach (var mail in mails)
-            {
-                if(IsEmail(mail))
-                    mailtostring += string.Format(MailTo, mail);
-                else
-                    mailtostring += string.Format("{0}; ",mail);
-            }
-            return mailtostring;
-        }
-
-        private bool IsEmail(string email)
-        {
-            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-            return regex.IsMatch(email);
-        }
 
 
         public void Unload()
@@ -321,6 +242,97 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
                     File.Delete(pair.Value);
             }
             _dictTempFile.Clear();
+        }
+
+        private string GetBeginingOfPreview(dynamic item, string filename)
+        {
+            string page = PageBegin + TableBegin;
+            page += string.Format(SubjectRow, HighlightSearchString(item.Subject));
+            return page;
+        }
+
+        private string GetAttachments(dynamic item, string filename)
+        {
+            if (item.Attachments.Count > 0)
+            {
+                var tempFolder = Path.GetDirectoryName(filename);
+
+                var urls = string.Empty;
+                foreach (Outlook.Attachment att in item.Attachments)
+                {
+                    // TODO add fynctionality, if we don't have image for samo file ext (need to show blank image)
+                    var destname = GetAttachmentValue(att, tempFolder);
+                    if (!string.IsNullOrEmpty(destname))
+                        urls += string.Format(LinkTemplate, att.DisplayName, destname, HighlightSearchString(att.DisplayName));
+                }
+                return string.Format(AttachmentsRow, urls);
+            }
+            return null;
+        }
+
+        private string GetPreviewForEmail(Outlook.MailItem mail, string filename)
+        {
+            string page = GetBeginingOfPreview(mail, filename);
+
+            page += string.Format(SenderRow, HighlightSearchString(mail.SenderName));
+            if (!string.IsNullOrEmpty(mail.CC))
+                page += string.Format(CCRow, HighlightSearchString(mail.CC));
+            page += string.Format(ToRow, HighlightSearchString(mail.To));
+            page += string.Format(SendRow, mail.ReceivedTime.ToString());
+            page += GetAttachments(mail, filename);
+            page += string.Format(EmailRow, HighlightSearchString(mail.HTMLBody));
+
+            page += TableEnd + PageEnd;
+
+            return page;
+        }
+
+        private string GetPreviewForAppointment(Outlook.AppointmentItem appointment, string filename)
+        {
+            string page = GetBeginingOfPreview(appointment, filename);
+
+            page += string.Format(StartRow, appointment.Start.ToString());
+            page += string.Format(EndRow, appointment.End.ToString());
+            page += string.Format(LocationRow, appointment.Location);
+            page += string.Format(RequiredRow, GetMailTo(appointment.RequiredAttendees.Split(';')));
+            page += GetAttachments(appointment, filename);
+            //page += string.Format(EmailRow, HighlightSearchString(appointment.Body));
+
+
+            page += TableEnd + PageEnd;
+
+            return page;
+        }
+
+        private string GetMailTo(string[] mails)
+        {
+            if (mails == null || mails.Length == 0)
+                return string.Empty;
+            string mailtostring = string.Empty;
+            foreach (var mail in mails)
+            {
+                if (IsEmail(mail))
+                    mailtostring += string.Format(MailTo, mail);
+                else
+                    mailtostring += string.Format("{0}; ", mail);
+            }
+            return mailtostring;
+        }
+
+        private bool IsEmail(string email)
+        {
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            return regex.IsMatch(email);
+        }
+
+        private string GetPreviewForMeeting(Outlook.MeetingItem meeting,string filename)
+        {
+            string page = GetBeginingOfPreview(meeting, filename);
+            page += string.Format(TopicRow, meeting.ConversationTopic);
+            page += string.Format(SendRow, GetMailTo(new string[]{meeting.SenderName}));
+            page += GetAttachments(meeting, filename);
+            page += TableEnd + PageEnd;
+            return page;
         }
 
         #endregion
