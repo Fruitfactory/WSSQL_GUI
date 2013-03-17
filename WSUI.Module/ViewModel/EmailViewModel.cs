@@ -148,7 +148,7 @@ namespace WSUI.Module.ViewModel
                         Count = group.Count().ToString(),
                         Date = data.DateReceived,
                         DateModified = data.DateReceived,
-                        Recepient = data.ToAddress.Length > 0 ? data.ToAddress[0] : string.Empty,
+                        Recepient = data.ToAddress != null && data.ToAddress.Length > 0 ? data.ToAddress[0] : string.Empty,
                         Display = data.ItemName,
                         Path = data.ItemUrl,
                         ID = Guid.NewGuid(),

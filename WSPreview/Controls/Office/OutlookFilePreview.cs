@@ -173,9 +173,18 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             string mailtostring = string.Empty;
             foreach (var mail in mails)
             {
-                mailtostring += string.Format(MailTo, mail);
+                if(IsEmail(mail))
+                    mailtostring += string.Format(MailTo, mail);
+                else
+                    mailtostring += string.Format("{0}; ",mail);
             }
             return mailtostring;
+        }
+
+        private bool IsEmail(string email)
+        {
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            return regex.IsMatch(email);
         }
 
 
