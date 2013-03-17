@@ -98,13 +98,14 @@
 
     <DataTemplate x:Key="UserTemplate">
         <DockPanel LastChildFill="True">
+            <DockPanel.ToolTip>
+                <ToolTip>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding Path=Tag}" />
+                    </StackPanel>
+                </ToolTip>
+            </DockPanel.ToolTip>
             <Image Grid.Column="0" Source="..\Images\user.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
-            <!--<TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Margin="5" DockPanel.Dock="Right"/>-->
-            
-            <!--<Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>-->
                 <ctrl:HightliteHyperlink Text="{Binding Converter={StaticResource objectConverter}}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                                         Grid.Column="0"   Margin="5">
                     <ctrl:HightliteHyperlink.Style>
@@ -118,7 +119,6 @@
                         </Style>
                     </ctrl:HightliteHyperlink.Style>
                 </ctrl:HightliteHyperlink>
-            <!--</Grid>-->
         </DockPanel>
     </DataTemplate>
 

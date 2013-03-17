@@ -360,7 +360,9 @@ namespace WSUI.Module.ViewModel
                         Count = string.Empty,
                         Type = TypeSearchItem.Contact,
                         ID = Guid.NewGuid(),
-                        From = fromAddress
+                        From = fromAddress,
+                        Tag = "Click to email recipient"
+
                     };
 
                     return si;

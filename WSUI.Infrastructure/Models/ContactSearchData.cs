@@ -8,6 +8,13 @@ namespace WSUI.Infrastructure.Models
 
         private readonly List<string> _emailList = new List<string>();
         private  readonly List<EmailSearchData> _emails = new List<EmailSearchData>(); 
+
+        public ContactSearchData()
+        {
+            Tag = "Click to email recipient";
+        }
+
+
         public string FirstName
         {
             get;

@@ -34,9 +34,18 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         private const string CCRow = @"<tr><td class='style1'>CC:</td><td class='style2'>{0}</td></tr>";
         private const string AttachmentsRow = @"<tr><td class='style1'>Attachments:</td><td class='style2'>{0}</td></tr>";
         private const string SendRow = @"<tr><td class='style1'>Send:</td><td class='style2'>{0}</td></tr>";
+        
         private const string EmailRow = @"<tr style='margin: 25px 10px 10px 10px'><td colspan='2' ><hr />{0}</td></tr>";
         private const string TableEnd = @"</table>";
         private const string PageEnd = @"</body></html>";
+
+        //appointment
+        private const string StartRow = @"<tr><td class='style1'>Start:</td><td class='style2'>{0}</td></tr>";
+        private const string EndRow = @"<tr><td class='style1'>End:</td><td class='style2'>{0}</td></tr>";
+        private const string RequiredRow = @"<tr><td class='style1'>Required Attendees:</td><td class='style2'>{0}</td></tr>";
+        private const string LocationRow = @"<tr><td class='style1'>Location: </td><td class='style2'><a href='{0}'>{0}</a></td></tr>";
+        private const string MailTo = @"<a href='mailto:{0}'>{0}</a> "; 
+
 
         private const string LinkTemplate = @"<img src='{1}' width='16' height='16' /><a href='{0}'>{2}</a>&nbsp;&nbsp;&nbsp;";
 
@@ -67,15 +76,36 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             if (app == null)
                 return;
 
-            Outlook.MailItem mail = (Outlook.MailItem)app.CreateItemFromTemplate(filename);
+            //Outlook.MailItem mail = (Outlook.MailItem)app.CreateItemFromTemplate(filename);
+            var mail = app.CreateItemFromTemplate(filename);
 
             if (mail == null)
                 return;
-           
+
+            string page = string.Empty;
+
+            if (mail is Outlook.MailItem)
+            {
+                page = GetPreviewForEmail(mail as Outlook.MailItem,filename);
+            }
+            else if (mail is Outlook.AppointmentItem)
+            {
+                page = GetPreviewForAppointment(mail as Outlook.AppointmentItem,filename);
+            }
+
+            webEmail.DocumentText = page;
+
+            Marshal.ReleaseComObject(mail);
+            CloseApplication(app);
+
+        }
+
+        private string GetPreviewForEmail(Outlook.MailItem mail,string filename)
+        {
             string page = PageBegin + TableBegin;
 
             page += string.Format(SubjectRow, HighlightSearchString(mail.Subject));
-            page += string.Format(SenderRow, HighlightSearchString( mail.SenderName));
+            page += string.Format(SenderRow, HighlightSearchString(mail.SenderName));
             page += string.Format(ToRow, HighlightSearchString(mail.To));
             if (!string.IsNullOrEmpty(mail.CC))
                 page += string.Format(CCRow, HighlightSearchString(mail.CC));
@@ -83,13 +113,13 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             if (mail.Attachments.Count > 0)
             {
                 var tempFolder = Path.GetDirectoryName(filename);
-                
+
                 var urls = string.Empty;
                 foreach (Outlook.Attachment att in mail.Attachments)
                 {
                     // TODO add fynctionality, if we don't have image for samo file ext (need to show blank image)
                     var destname = GetAttachmentValue(att, tempFolder);
-                    if(!string.IsNullOrEmpty(destname))
+                    if (!string.IsNullOrEmpty(destname))
                         urls += string.Format(LinkTemplate, att.DisplayName, destname, HighlightSearchString(att.DisplayName));
                 }
                 page += string.Format(AttachmentsRow, urls);
@@ -101,14 +131,53 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
             page += TableEnd + PageEnd;
 
-            webEmail.DocumentText = page;
-
-
-            Marshal.ReleaseComObject(mail);
-            CloseApplication(app);
-
-
+            return page;
         }
+
+        private string GetPreviewForAppointment(Outlook.AppointmentItem appointment,string filename)
+        {
+            string page = PageBegin + TableBegin;
+            page += string.Format(SubjectRow, HighlightSearchString(appointment.Subject));
+
+            if (appointment.Attachments.Count > 0)
+            {
+                var tempFolder = Path.GetDirectoryName(filename);
+
+                var urls = string.Empty;
+                foreach (Outlook.Attachment att in appointment.Attachments)
+                {
+                    // TODO add fynctionality, if we don't have image for samo file ext (need to show blank image)
+                    var destname = GetAttachmentValue(att, tempFolder);
+                    if (!string.IsNullOrEmpty(destname))
+                        urls += string.Format(LinkTemplate, att.DisplayName, destname, HighlightSearchString(att.DisplayName));
+                }
+                page += string.Format(AttachmentsRow, urls);
+            }
+
+            page += string.Format(StartRow, appointment.Start.ToString());
+            page += string.Format(EndRow, appointment.End.ToString());
+            page += string.Format(LocationRow, appointment.Location);
+            page += string.Format(RequiredRow, GetMailTo(appointment.RequiredAttendees.Split(';')));
+            //page += string.Format(EmailRow, HighlightSearchString(appointment.Body));
+
+
+            page += TableEnd + PageEnd;
+
+            return page;
+        }
+
+        private string GetMailTo(string[] mails)
+        {
+            if (mails == null || mails.Length == 0)
+                return string.Empty;
+            string mailtostring = string.Empty;
+            foreach (var mail in mails)
+            {
+                mailtostring += string.Format(MailTo, mail);
+            }
+            return mailtostring;
+        }
+
 
         public void Unload()
         {
@@ -214,9 +283,9 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             return result;
         }
 
-        private Outlook.MailItem GetMail(Outlook.Application app,string filename)
+        private dynamic GetMail(Outlook.Application app,string filename)
         {
-            Outlook.MailItem mail = (Outlook.MailItem)app.CreateItemFromTemplate(filename);
+            dynamic mail = app.CreateItemFromTemplate(filename);
 
             if (mail == null)
                 return null;
@@ -309,18 +378,52 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
         private void OnNavigating(WebBrowserNavigatingEventArgs args)
         {
+            string path = string.Empty;
+            switch (args.Url.Scheme)
+            {
+                case "https":
+                case "mailto":
+                case "http":
+                    path = args.Url.AbsoluteUri;
+                    break;
+                case "about":
+                    path = GetPathForEmail(args.Url);
+                    break;
+            }
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                try
+                {
+                    args.Cancel = true;
+                    Process.Start(path);
+                }
+                catch (Exception ex)
+                {
+                    WSSqlLogger.Instance.LogError(ex.Message);
+                }
+            }
+            else
+            {
+                WSSqlLogger.Instance.LogInfo("Path is empty. Outlook Preview");
+            }
+           
             
+        }
+
+        private string GetPathForEmail(Uri url)
+        {
             Outlook.Application app = GetApplication();
             if (app == null)
-                return ;
-            Outlook.MailItem mail = GetMail(app, _filename);
-            if(mail == null)
-                return;
-            
+                return string.Empty;
+            dynamic mail = GetMail(app, _filename);
+            if (mail == null)
+                return string.Empty;
+
             if (mail.Attachments.Count == 0)
-                return;
-            string currentname = args.Url.LocalPath;
-            
+                return string.Empty;
+            string currentname = url.LocalPath;
+
             string path = string.Empty;
             foreach (Outlook.Attachment att in mail.Attachments)
             {
@@ -331,21 +434,10 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
                     break;
                 }
             }
-            if (File.Exists(path))
-                try
-                {
-                    args.Cancel = true;
-                    Process.Start(path);
-                }
-                catch (Exception ex)
-                {
-                    WSSqlLogger.Instance.LogError(ex.Message);
-                }
             Marshal.ReleaseComObject(mail);
             CloseApplication(app);
-            
+            return File.Exists(path) ? path : string.Empty;
         }
-
 
 
     }
