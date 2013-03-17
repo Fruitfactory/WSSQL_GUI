@@ -216,9 +216,9 @@
     </DataTemplate>
     
     <DataTemplate x:Key="CommandTemplate">
-        <StackPanel HorizontalAlignment="Stretch" Background="AliceBlue">
+        <DockPanel HorizontalAlignment="Stretch" Background="AliceBlue" LastChildFill="True">
+            <Image Grid.Column="0" Source="..\Images\more1.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <Image Grid.Column="0" Source="..\Images\more1.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
                 <ctrl:HightliteHyperlink Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                                            Margin="5">
                     <ctrl:HightliteHyperlink.Style>
@@ -233,7 +233,7 @@
                     </ctrl:HightliteHyperlink.Style>
                 </ctrl:HightliteHyperlink>
             </StackPanel>
-        </StackPanel>
+        </DockPanel>
     </DataTemplate>
 
     <service:AllFilesDataTemplateSelector x:Key="templateSelector"
