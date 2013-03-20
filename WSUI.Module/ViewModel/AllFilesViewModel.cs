@@ -447,7 +447,7 @@ namespace WSUI.Module.ViewModel
                     //item.Foto = OutlookHelper.Instance.GetContactFotoTempFileName(item);
                     return item;
                 case "email":
-                    string fromAddress = ContactHelpers.GetEmailAddress(data.FromAddress,SearchString);
+                    string fromAddress = ContactHelpers.GetEmailAddress(data.FromAddress,SearchString) ?? ContactHelpers.GetEmailAddress(data.CcAddress,SearchString) ?? ContactHelpers.GetEmailAddress(data.ToAddress,SearchString);
                     if (string.IsNullOrEmpty(fromAddress))
                         break;
                     EmailSearchData si = new EmailSearchData()

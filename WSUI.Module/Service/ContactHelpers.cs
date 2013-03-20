@@ -10,11 +10,11 @@ namespace WSUI.Module.Service
     public class ContactHelpers
     {
         private static readonly string QueryByAddress =
-          " OR (System.Kind = 'email' AND CONTAINS(System.Message.FromAddress,'\"{0}*\" OR \"*{0}*\"'))"; 
+          " OR (System.Kind = 'email' AND (CONTAINS(System.Message.FromAddress,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Message.CcAddress,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Message.ToAddress,'\"{0}*\" OR \"*{0}*\"') ))"; 
         private static readonly string QueryContactWhere =
-            " (System.Kind = 'contact' AND {1}( CONTAINS(System.Contact.FirstName,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\" OR \"*{0}*\"') ){2}"; 
+            " (System.Kind = 'contact' AND {1}( CONTAINS(System.Contact.FirstName,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\" OR \"*{0}*\"') ){2}";
 
-        private static readonly string QueryTemplate = "SELECT TOP {0} System.ItemName, System.Contact.FirstName, System.Contact.LastName,System.Contact.EmailAddress,System.Contact.EmailAddress2,System.Contact.EmailAddress3, System.Subject,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Kind,System.Message.FromAddress, System.DateCreated  FROM SystemIndex WHERE ";
+        private static readonly string QueryTemplate = "SELECT TOP {0} System.ItemName, System.Contact.FirstName, System.Contact.LastName,System.Contact.EmailAddress,System.Contact.EmailAddress2,System.Contact.EmailAddress3, System.Subject,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Kind,System.Message.FromAddress, System.DateCreated,System.Message.CcAddress  FROM SystemIndex WHERE ";
         private static readonly string QueryAnd = " OR ( CONTAINS(System.Contact.FirstName,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\" OR \"*{0}*\"') ))) ";
 
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
@@ -56,7 +56,7 @@ namespace WSUI.Module.Service
 
         public static string GetEmailAddress(string[] from, string searchCriteria)
         {
-            string fromAddress = string.Empty;
+            string fromAddress = null;
             if (from != null)
             {
                 var arr = searchCriteria.Trim().Split(' ');
@@ -114,6 +114,9 @@ namespace WSUI.Module.Service
         public string[] FromAddress { get; set; }
         [FieldIndex(12)]
         public DateTime DateCreated { get; set; }
+        [FieldIndex(13)]
+        public string[] CcAddress { get; set; }
+
     }
 
 
