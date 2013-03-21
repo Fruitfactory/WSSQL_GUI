@@ -123,8 +123,8 @@ namespace WSUI.Module.ViewModel
         {
             if (_listContacts.Count > 0)
             {
-                ProcessContactData(_listContacts.OfType<ContactSearchData>());
-                ProcessEmailData(_listContacts.OfType<EmailSearchData>());
+                ProcessContactData(_listContacts.OfType<BaseSearchData>());
+                //ProcessEmailData(_listContacts.OfType<EmailSearchData>());
                 var list = _listContacts.OfType<BaseSearchData>().ToList();
                 if(list.Count > 0)
                     _lastDate = list.ElementAt(list.Count - 1).DateModified;
@@ -252,7 +252,7 @@ namespace WSUI.Module.ViewModel
         {
             base.OnInit();
             CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
-            ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 400, CountSecondProcess = 100, LimitReaction = 75 };
+            ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 400, CountSecondProcess = 100, LimitReaction = 99 };
             ScrollBehavior.SearchGo += () =>
             {
                 ShowMessageNoMatches = false;
@@ -334,7 +334,7 @@ namespace WSUI.Module.ViewModel
                 case "contact":
                     ContactSearchData data = new ContactSearchData()
                     {
-                        Name = item.ItemName,
+                        Name = item.EmailAddress,
                         Path = string.Empty,
                         FirstName = item.FirstName,
                         LastName = item.LastName,
@@ -355,7 +355,7 @@ namespace WSUI.Module.ViewModel
                         Subject = item.Subject,
                         Recepient = string.Format("{0}",
                         item.ToAddress != null && item.ToAddress.Length > 0 ? item.ToAddress[0] : string.Empty),
-                        Name = item.ItemName,
+                        Name = fromAddress,
                         Path = item.ItemUrl,
                         Date = item.DateReceived,
                         Count = string.Empty,
@@ -371,23 +371,16 @@ namespace WSUI.Module.ViewModel
             return null;
         }
 
-        private void ProcessContactData(IEnumerable<ContactSearchData> listData)
+        private void ProcessContactData(IEnumerable<BaseSearchData> listData)
         {
-            var groups = listData.GroupBy(c => c.LastName);
+            var groups = listData.GroupBy(c => c.Name);
 
             foreach (var group in groups)
             {
                 var item = group.ElementAt(0);
-                _currentEmail = item.EmailList.Count > 0 ? item.EmailList[0] : string.Empty;
-                _contactData = item;
-                if(!string.IsNullOrEmpty(_currentEmail))
-                    GetEmailsForContact(item);
-                item.Count = group.Count().ToString();
-                if (!DataSource.OfType<ContactSearchData>().Any(c => c.FirstName == item.FirstName && c.LastName == item.LastName))
-                {
-                    ListData.Add(item);
-                    _countAdded++;
-                }
+                
+                ListData.Add(item);
+                _countAdded++;
             }
         }
 

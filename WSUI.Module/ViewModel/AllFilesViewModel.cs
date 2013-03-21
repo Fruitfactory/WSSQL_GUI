@@ -359,20 +359,18 @@ namespace WSUI.Module.ViewModel
                 if (_listContacts.Count > 0)
                 {
                     bool isMore = false;
-                    var temp = _listContacts.OfType<ContactSearchData>().ToList();
-                    var emails = _listContacts.OfType<EmailSearchData>().GroupBy(em => em.From).ToList();
+                    var contacts = _listContacts.OfType<BaseSearchData>().GroupBy(em => em.Name).ToList();
                     _listContacts.Clear();
-                    _listContacts.AddRange(temp);
-                    foreach (var email in emails)
+                    foreach (var contact in contacts)
                     {
-                        if(!email.Any())
+                        if (!contact.Any())
                             continue;
                         if (_listContacts.Count == 5)
                         {
                             isMore = true;
                             break;
                         }
-                        _listContacts.Add(email.ElementAt(0));
+                        _listContacts.Add(contact.ElementAt(0));
                     }
 
                     if (isMore)
@@ -429,24 +427,12 @@ namespace WSUI.Module.ViewModel
         {
             var data = new ContactItem();
             ReadGroupData(reader,data);
-            if (data.CcAddress != null)
-            {
-                WSSqlLogger.Instance.LogInfo("CCAddress :" + string.Join(",",data.CcAddress));
-            }
-            if (data.FromAddress != null)
-            {
-                WSSqlLogger.Instance.LogInfo("FromAddress :" + string.Join(",", data.FromAddress));
-            }
-            if (data.ToAddress != null)
-            {
-                WSSqlLogger.Instance.LogInfo("ToAddress :" + string.Join(",", data.ToAddress));
-            }
             switch (data.Kind[0])
             {
                 case "contact":
                     ContactSearchData item = new ContactSearchData()
                     {
-                        Name = data.ItemName,
+                        Name = data.EmailAddress,
                         Path = string.Empty,
                         FirstName = data.FirstName,
                         LastName = data.LastName,
@@ -467,7 +453,7 @@ namespace WSUI.Module.ViewModel
                         Subject = data.Subject,
                         Recepient = string.Format("{0}",
                         data.ToAddress != null && data.ToAddress.Length > 0 ? data.ToAddress[0] : string.Empty),
-                        Name = data.ItemName,
+                        Name = fromAddress,
                         Path = data.ItemUrl,
                         Date = data.DateReceived,
                         Count = string.Empty,
