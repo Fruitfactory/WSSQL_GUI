@@ -123,9 +123,8 @@ namespace WSUI.Module.ViewModel
         {
             if (_listContacts.Count > 0)
             {
-                ProcessContactData(_listContacts.OfType<BaseSearchData>());
-                //ProcessEmailData(_listContacts.OfType<EmailSearchData>());
                 var list = _listContacts.OfType<BaseSearchData>().ToList();
+                ProcessContactData(list);
                 if(list.Count > 0)
                     _lastDate = list.ElementAt(list.Count - 1).DateModified;
             }
@@ -277,9 +276,9 @@ namespace WSUI.Module.ViewModel
 
             foreach (var group in groups)
             {
-                var item = group.ElementAt(0);
-                
-                ListData.Add(item);
+                if (!group.Any())
+                    continue;
+                ListData.Add(group.ElementAt(0));
                 _countAdded++;
             }
         }
