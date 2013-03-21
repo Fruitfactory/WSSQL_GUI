@@ -126,7 +126,8 @@ namespace WSUI.Module.ViewModel
                 ProcessContactData(_listContacts.OfType<ContactSearchData>());
                 ProcessEmailData(_listContacts.OfType<EmailSearchData>());
                 var list = _listContacts.OfType<BaseSearchData>().ToList();
-                _lastDate = list.ElementAt(list.Count - 1).DateModified;
+                if(list.Count > 0)
+                    _lastDate = list.ElementAt(list.Count - 1).DateModified;
             }
 
             ListData.OrderBy(b => b.Type);
@@ -346,7 +347,7 @@ namespace WSUI.Module.ViewModel
                     data.Foto = OutlookHelper.Instance.GetContactFotoTempFileName(data);
                     return data;
                 case "email":
-                    string fromAddress = GetEmailAddress(item.FromAddress);
+                    string fromAddress = ContactHelpers.GetEmailAddress(item.FromAddress, SearchString) ?? ContactHelpers.GetEmailAddress(item.CcAddress, SearchString) ?? ContactHelpers.GetEmailAddress(item.ToAddress, SearchString);
                     if (string.IsNullOrEmpty(fromAddress))
                         break;
                     EmailSearchData si = new EmailSearchData()

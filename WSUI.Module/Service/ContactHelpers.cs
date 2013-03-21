@@ -10,7 +10,7 @@ namespace WSUI.Module.Service
     public class ContactHelpers
     {
         private static readonly string QueryByAddress =
-          " OR (System.Kind = 'email' AND (CONTAINS(System.Message.FromAddress,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Message.CcAddress,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Message.ToAddress,'\"{0}*\" OR \"*{0}*\"') ))"; 
+          " OR (System.Kind = 'email' AND (CONTAINS(System.Message.FromAddress,'\"{0}*\"') OR CONTAINS(System.Message.CcAddress,'\"{0}*\"') OR CONTAINS(System.Message.ToAddress,'\"{0}*\"') OR CONTAINS(*,'\"{0}*\"') ))"; 
         private static readonly string QueryContactWhere =
             " (System.Kind = 'contact' AND {1}( CONTAINS(System.Contact.FirstName,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\" OR \"*{0}*\"') ){2}";
 

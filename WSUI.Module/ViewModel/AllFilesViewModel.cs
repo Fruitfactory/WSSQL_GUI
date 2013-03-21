@@ -429,6 +429,18 @@ namespace WSUI.Module.ViewModel
         {
             var data = new ContactItem();
             ReadGroupData(reader,data);
+            if (data.CcAddress != null)
+            {
+                WSSqlLogger.Instance.LogInfo("CCAddress :" + string.Join(",",data.CcAddress));
+            }
+            if (data.FromAddress != null)
+            {
+                WSSqlLogger.Instance.LogInfo("FromAddress :" + string.Join(",", data.FromAddress));
+            }
+            if (data.ToAddress != null)
+            {
+                WSSqlLogger.Instance.LogInfo("ToAddress :" + string.Join(",", data.ToAddress));
+            }
             switch (data.Kind[0])
             {
                 case "contact":
