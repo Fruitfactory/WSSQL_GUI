@@ -156,75 +156,6 @@ namespace WSUI.Module.ViewModel
             TopQueryResult = ScrollBehavior.CountFirstProcess;
             _lastDate = DateTime.Now;
         }
-
-        private void GetEmailsForContact(ContactSearchData data)
-        {
-            if (string.IsNullOrEmpty(_currentEmail))
-            {
-                WSSqlLogger.Instance.LogWarning("Email address not found.");
-                //base.DoAdditionalQuery();
-                return;
-            }
-            if (!Regex.IsMatch(_currentEmail, EmailPattern, RegexOptions.IgnoreCase))
-            {
-                WSSqlLogger.Instance.LogWarning("Not Email address.");
-                return;
-            }
-            _folder = Folder;
-            var query = string.Format(QueryContactEmail, _folder != OutlookHelper.AllFolders ? string.Format(FilterByFolder,_folder) : string.Empty, _currentEmail);
-            OleDbDataReader myDataReader = null;
-            OleDbConnection myOleDbConnection = new OleDbConnection(ConnectionString);
-            OleDbCommand myOleDbCommand = new OleDbCommand(query, myOleDbConnection);
-            try
-            {
-                myOleDbConnection.Open();
-                myDataReader = myOleDbCommand.ExecuteReader();
-                while (myDataReader.Read())
-                {
-                    data.Emails.Add(ReadContactEmail(myDataReader));
-                }
-
-            }
-            finally
-            {
-                if (myDataReader != null)
-                {
-                    myDataReader.Close();
-                    myDataReader.Dispose();
-                }
-                if (myOleDbConnection.State == System.Data.ConnectionState.Open)
-                {
-                    myOleDbConnection.Close();
-                }
-
-            }
-        }
-
-
-        private EmailSearchData ReadContactEmail(IDataReader reader)
-        {
-            var groups = EmailGroupReaderHelpers.ReadGroups(reader);
-            if (groups == null)
-                return null;
-            var item = groups.Items[0];
-            TypeSearchItem type = SearchItemHelper.GetTypeItem(item.Path);
-            EmailSearchData si = new EmailSearchData()
-            {
-                Subject = item.Subject,
-                Recepient = string.Format("{0}",
-                item.Recepient),
-                Name = item.Name,
-                Path = item.Path,
-                Date = item.Date,
-                Count = groups.Items.Count.ToString(),
-                Type = type,
-                ID = Guid.NewGuid()
-            };
-            return si;
-            //TODO: paste item to datacontroller;
-            //_listData.Add(si);
-        }
-
         private void EmailClick (object address)
         {
             string adr = string.Empty;
@@ -274,37 +205,6 @@ namespace WSUI.Module.ViewModel
         }
 
         #endregion
-
-
-        private string GetEmailAddress(string[] from)
-        {
-            string fromAddress = string.Empty;
-            if (from != null)
-            {
-                var arr = SearchString.Trim().Split(' ');
-                if (arr != null && arr.Length > 0)
-                {
-                    foreach (var s in arr)
-                    {
-                        fromAddress =
-                        from.FirstOrDefault(
-                            str =>
-                            str.IndexOf(s, StringComparison.CurrentCultureIgnoreCase) > -1 &&
-                            Regex.IsMatch(str, EmailPattern, RegexOptions.IgnoreCase));
-                        if (!string.IsNullOrEmpty(fromAddress))
-                            break;
-                    }
-                }
-                else
-                    fromAddress =
-                        from.FirstOrDefault(
-                            str =>
-                            str.IndexOf(SearchString.Trim(), StringComparison.CurrentCultureIgnoreCase) > -1 &&
-                            Regex.IsMatch(str, EmailPattern, RegexOptions.IgnoreCase));
-            }
-            return fromAddress;
-        }
-
         #region Implementation of IScrollableView
 
         public ICommand ScrollChangeCommand { get; private set; }
@@ -384,16 +284,5 @@ namespace WSUI.Module.ViewModel
             }
         }
 
-        private void ProcessEmailData(IEnumerable<EmailSearchData> listData )
-        {
-            var groups = listData.GroupBy(e => e.From);
-            foreach (var group in groups)
-            {
-                var item = group.ElementAt(0);
-                item.Count = group.Count().ToString();
-                ListData.Add(item);
-                _countAdded++;
-            }
-        }
     }
 }
