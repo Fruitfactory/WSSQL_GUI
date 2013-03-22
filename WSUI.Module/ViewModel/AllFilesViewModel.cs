@@ -359,7 +359,7 @@ namespace WSUI.Module.ViewModel
                 if (_listContacts.Count > 0)
                 {
                     bool isMore = false;
-                    var contacts = _listContacts.OfType<BaseSearchData>().GroupBy(em => em.Name).ToList();
+                    var contacts = _listContacts.OfType<BaseSearchData>().GroupBy(em => em.Name.ToLower()).ToList();
                     _listContacts.Clear();
                     foreach (var contact in contacts)
                     {

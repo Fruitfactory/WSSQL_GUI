@@ -272,7 +272,7 @@ namespace WSUI.Module.ViewModel
 
         private void ProcessContactData(IEnumerable<BaseSearchData> listData)
         {
-            var groups = listData.GroupBy(c => c.Name);
+            var groups = listData.GroupBy(c => c.Name.ToLower());
 
             foreach (var group in groups)
             {
