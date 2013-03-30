@@ -6,6 +6,13 @@ namespace WSUI.Module.Core
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
+        
+        public ViewModelBase()
+        {
+            Host = HostType.Unknown;
+        }
+
+
         protected virtual void OnPropertyChanged(string property)
         {
             PropertyChangedEventHandler handler = this.PropertyChanged;
@@ -30,5 +37,7 @@ namespace WSUI.Module.Core
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public HostType Host { get; protected set; }
     }
 }

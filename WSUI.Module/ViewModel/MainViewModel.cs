@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
@@ -15,6 +16,7 @@ using WSUI.Infrastructure.Services;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Infrastructure;
+using Application = System.Windows.Application;
 
 namespace WSUI.Module.ViewModel
 {
@@ -41,6 +43,7 @@ namespace WSUI.Module.ViewModel
             PreviewView = previewView;
             previewView.Model = this;
             MainDataSource = new List<BaseSearchData>();
+            Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
         }
 
 
@@ -67,17 +70,15 @@ namespace WSUI.Module.ViewModel
 
         public virtual void Init()
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                                                                      {
-                                                                          InitializeInThread();
-                                                                          if (_listItems.Count > 0)
-                                                                          {
-                                                                              _listItems.ForEach(k => KindsCollection.Add(k));
-                                                                              OnChoose(_listItems[0].Kind);
-                                                                          }
-                                                                          OnPropertyChanged(() => KindsCollection);
-                                                                          
-                                                                      }), null);
+            switch(Host)
+            {
+                case HostType.Plugin:
+                    InitializeInThread();
+                    break;
+                default:
+                    Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
+                    break;
+            }
         }
 
         public bool Enabled
@@ -97,6 +98,12 @@ namespace WSUI.Module.ViewModel
             _listItems = new List<LazyKind>();
             KindsCollection = new ObservableCollection<LazyKind>();
             GetAllKinds();
+            if (_listItems.Count > 0)
+            {
+                _listItems.ForEach(k => KindsCollection.Add(k));
+                OnChoose(_listItems[0].Kind);
+            }
+            OnPropertyChanged(() => KindsCollection);
         }
 
         private void GetAllKinds()
@@ -195,13 +202,14 @@ namespace WSUI.Module.ViewModel
 
             try
             {
+                Tuple<Point, Size> mwi = GetMainWindowInfo();
                 ProgressManager.Instance.StartOperation(new ProgressOperation()
                                                             {
                                                                 Caption = "Loading...",
                                                                 DelayTime = 250,
                                                                 Canceled = false,
-                                                                Location =  Application.Current.MainWindow.PointToScreen(new Point(0, 0)),
-                                                                Size = new Size(Application.Current.MainWindow.ActualWidth, Application.Current.MainWindow.ActualHeight)
+                                                                Location =  mwi.Item1,
+                                                                Size = mwi.Item2
                                                             });
                 var filename = SearchItemHelper.GetFileName(_currentData);
                 if (PreviewView != null)
@@ -270,6 +278,30 @@ namespace WSUI.Module.ViewModel
                 _currentItem.SearchString = searchString;
                 _currentItem.FilterData();
             }
+        }
+
+        private Tuple<Point,Size> GetMainWindowInfo()
+        {
+            Point pt = new Point();
+            Size sz = new Size();
+            switch (Host)
+            {
+                case HostType.Application:
+                    pt = Application.Current.MainWindow.PointToScreen(new Point(0, 0));
+                    sz = new Size(Application.Current.MainWindow.ActualWidth, Application.Current.MainWindow.ActualHeight);
+                    
+                    break;
+                case HostType.Plugin:
+                    FormCollection formsCollection = System.Windows.Forms.Application.OpenForms;
+                    if (formsCollection.Count > 0)
+                    {
+                        pt = new Point(formsCollection[0].DesktopLocation.X,formsCollection[0].DesktopLocation.Y);
+                        sz = new Size(formsCollection[0].DesktopBounds.Width, formsCollection[0].DesktopBounds.Height);                    
+                    }
+                    break;
+            }
+            
+            return new Tuple<Point, Size>(pt,sz);
         }
 
         #endregion

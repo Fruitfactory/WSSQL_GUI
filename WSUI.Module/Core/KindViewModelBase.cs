@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using C4F.DevKit.PreviewHandler.Service.Logger;
@@ -74,6 +75,7 @@ namespace WSUI.Module.Core
             KeyDownCommand = new DelegateCommand<KeyEventArgs>(KeyDown, o => true);
             Enabled = true;
             DataSource = new ObservableCollection<BaseSearchData>();
+            Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
         }
 
         protected virtual void DoQuery(object mwi)
@@ -306,12 +308,7 @@ namespace WSUI.Module.Core
             }
                 
             OnStart();
-            MainWindowInfo mwi = new MainWindowInfo();
-            Rect rect = new Rect();
-            rect.Location = Application.Current.MainWindow.PointToScreen(new Point(0, 0));
-            rect.Size = new Size(Application.Current.MainWindow.ActualWidth, Application.Current.MainWindow.ActualHeight);
-            mwi.MainWindowRect = rect;
-            mwi.MainWindowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
+            MainWindowInfo mwi = GetWindowInfo();
             _query = CreateQuery();
             if(_eventForContinue == null)
                 _eventForContinue = new ManualResetEvent(false);
@@ -550,6 +547,33 @@ namespace WSUI.Module.Core
             }
         }
 
+        private MainWindowInfo GetWindowInfo()
+        {
+            MainWindowInfo mwi = new MainWindowInfo();
+            Rect rect = new Rect();
+            switch (Host)
+            {
+                case HostType.Application:
+                    rect.Location = Application.Current.MainWindow.PointToScreen(new Point(0, 0));
+                    rect.Size = new Size(Application.Current.MainWindow.ActualWidth, Application.Current.MainWindow.ActualHeight);
+                    mwi.MainWindowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
+                    break;
+                case HostType.Plugin:
+                    FormCollection formsCollection = System.Windows.Forms.Application.OpenForms;
+                    if (formsCollection.Count > 0)
+                    {
+                        rect = new Rect(formsCollection[0].DesktopLocation.X, formsCollection[0].DesktopLocation.Y,
+                            formsCollection[0].DesktopBounds.Size.Width, formsCollection[0].DesktopBounds.Size.Height);
+                        mwi.MainWindowHandle = formsCollection[0].Handle;
+                    }
+                    int i = 0;
+                    break;
+            }
+            mwi.MainWindowRect = rect;
+
+
+            return mwi;
+        }
 
     }
 }

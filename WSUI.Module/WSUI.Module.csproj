@@ -76,6 +76,7 @@
     <Compile Include="Commands\ReplyCommand.cs" />
     <Compile Include="Core\BaseCommandStrategy.cs" />
     <Compile Include="Core\BasePreviewCommand.cs" />
+    <Compile Include="Core\HostType.cs" />
     <Compile Include="Core\KindNameAttribute.cs" />
     <Compile Include="Core\KindsConstName.cs" />
     <Compile Include="Core\KindViewModelBase.cs" />
