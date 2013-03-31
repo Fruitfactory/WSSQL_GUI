@@ -44,12 +44,14 @@
     <IncludePath>$(SolutionDir)Toolkits\GflSdk\include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Output\</OutDir>
     <IntDir>$(SolutionDir)Output\$(Configuration)\</IntDir>
+    <LinkKeyFile>$(ProjectDir)GflWrapperSign.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)Toolkits\GflSdk\include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)ROutput\</OutDir>
     <IntDir>$(SolutionDir)ROutput\$(Configuration)\</IntDir>
+    <LinkKeyFile>$(ProjectDir)GflWrapperSign.snk</LinkKeyFile>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.ico" />
+    <None Include="GflWrapperSign.snk" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />

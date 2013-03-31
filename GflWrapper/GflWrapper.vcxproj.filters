@@ -40,6 +40,7 @@
     <None Include="app.ico">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="GflWrapperSign.snk" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">

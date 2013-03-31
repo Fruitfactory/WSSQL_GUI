@@ -19,6 +19,7 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyCopyrightAttribute("Copyright (c) Microsoft 2013")];
 [assembly:AssemblyTrademarkAttribute("")];
 [assembly:AssemblyCultureAttribute("")];
+[assembly:AssemblyKeyFileAttribute("GflWrapperSign.snk")];
 
 //
 // Version information for an assembly consists of the following four values:
