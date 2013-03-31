@@ -26,9 +26,6 @@ namespace WSUI.Control
         {
             base.InitializeShell();
             _elementHost.Child = (UIElement)this.Shell;
-            //Application.Current.RootVisual = this.Shell;
-            //App.Current.MainWindow = (Window)this.Shell;
-            //App.Current.MainWindow.Show();
         }
 
         protected override IModuleCatalog CreateModuleCatalog()
@@ -36,11 +33,6 @@ namespace WSUI.Control
             var catalog = new ModuleCatalog();
             catalog.AddModule(typeof(WSUI.Module.WSModule));
             return base.CreateModuleCatalog();
-        }
-
-        protected override void ConfigureModuleCatalog()
-        {
-            var catalog = (ModuleCatalog)this.ModuleCatalog;
         }
 
         protected override void InitializeModules()

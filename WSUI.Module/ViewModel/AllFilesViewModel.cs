@@ -420,7 +420,7 @@ namespace WSUI.Module.ViewModel
 
         private string GetContactQuery(string searchCriteria)
         {
-            return ContactHelpers.GetContactQuery(SearchString,FormatDate(ref _lastDate),200);
+            return ContactHelpers.GetContactQuery(SearchString,FormatDate(ref _lastDate),250);
         }
 
         private BaseSearchData ReadRawContactData(IDataReader reader)

@@ -22,8 +22,6 @@ namespace WSUI.Module.ViewModel
 {
     public class MainViewModel : ViewModelBase, IMainViewModel
     {
-        private DelegateCommand<object> _openFile;
-        private DelegateCommand<object> _openFolder;
         private List<LazyKind> _listItems;
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;

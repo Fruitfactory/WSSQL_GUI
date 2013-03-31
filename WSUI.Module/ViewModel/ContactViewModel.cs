@@ -32,11 +32,6 @@ namespace WSUI.Module.ViewModel
         private string _currentEmail = string.Empty;
         private string _folder = string.Empty;
         private ContactSearchData _contactData = null;
-        private string _queryByAddress =
-            " OR (System.Kind = 'email' AND CONTAINS(System.Message.FromAddress, '\"*{0}*\"')"; //CONTAINS(System.Message.FromAddress,'*{0}*')  AND CONTAINS(System.ItemPathDisplay,'{0}*',1033))
-
-        private string _queryContactWhere =
-            " (System.Kind = 'contact' AND {1}( CONTAINS(System.Contact.FirstName,'\"*{0}*\"') OR CONTAINS(System.Contact.LastName,'\"*{0}*\"') ){2}";
         private ContactSuggestingService _contactSuggesting;
 
         private readonly List<BaseSearchData> _listContacts = new List<BaseSearchData>(); 
