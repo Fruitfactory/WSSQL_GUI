@@ -7,6 +7,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Globalization;
 using System.Reflection;
 using WSUI.Control;
+using Microsoft.Win32;
 
 namespace WSUIOutlookPlugin
 {
@@ -67,6 +68,9 @@ namespace WSUIOutlookPlugin
             // 
             // formWebPaneItem
             // 
+            this.formWebPaneItem.AlwaysShowHeader = true;
+            this.formWebPaneItem.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
+            this.formWebPaneItem.CloseButton = true;
             this.formWebPaneItem.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.WebViewPane;
             this.formWebPaneItem.FormClassName = "WSUIOutlookPlugin.WSUIForm";
             this.formWebPaneItem.UseOfficeThemeForBackground = true;
@@ -109,6 +113,7 @@ namespace WSUIOutlookPlugin
             // 
             this.AddinName = "WS Plugin (Windows  Search)";
             this.SupportedApps = AddinExpress.MSO.ADXOfficeHostApp.ohaOutlook;
+            this.AddinStartupComplete += new AddinExpress.MSO.ADXEvents_EventHandler(this.WSUIAddinModule_AddinStartupComplete);
 
         }
         #endregion
@@ -443,6 +448,96 @@ namespace WSUIOutlookPlugin
         {
             DoHideWebViewPane();
         }
+
+        private void WSUIAddinModule_AddinStartupComplete(object sender, EventArgs e)
+        {
+            Outlook.NameSpace oNS = null;
+            Outlook.MAPIFolder ppallf= null;
+            Outlook.MAPIFolder pf = null;
+            Outlook.MAPIFolder fs = null;
+            try
+            {
+                oNS = OutlookApp.GetNamespace("mapi");
+                //ppallf = oNS.GetDefaultFolder(Outlook.OlDefaultFolders.olPublicFoldersAllPublicFolders);
+                 pf = oNS.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox);
+                 //fs = oNS.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderSyncIssues);
+                if (ppallf != null && pf != null && fs != null)
+                {
+                    SaveDefaultFoldersEntryIDToRegistry(pf.EntryID, "", "");
+                }
+            }
+            finally
+            {
+                if (oNS != null)
+                    Marshal.ReleaseComObject(oNS);
+                if (ppallf != null)
+                    Marshal.ReleaseComObject(ppallf);
+                if (pf != null)
+                    Marshal.ReleaseComObject(pf);
+                if (fs != null)
+                    Marshal.ReleaseComObject(fs);
+                
+            }
+        }
+
+        internal void SaveDefaultFoldersEntryIDToRegistry(string PublicFoldersEntryID,
+                string PublicFoldersAllPublicFoldersEntryID,
+                string FolderSyncIssuesEntryID)
+        {
+            RegistryKey ModuleKey = null;
+            RegistryKey ADXXOLKey = null;
+            RegistryKey WebViewPaneSpecialFoldersKey = null;
+            try
+            {
+                ModuleKey = Registry.CurrentUser.OpenSubKey(this.RegistryKey, true);
+                if (ModuleKey != null)
+                {
+                    ADXXOLKey = ModuleKey.CreateSubKey("ADXXOL");
+                    if (ADXXOLKey != null)
+                    {
+                        WebViewPaneSpecialFoldersKey =
+                            ADXXOLKey.CreateSubKey
+                            ("FoldersForExcludingFromUseWebViewPaneLayout");
+                        if (WebViewPaneSpecialFoldersKey != null)
+                        {
+                            if (PublicFoldersEntryID.Length >= 0)
+                            {
+                                WebViewPaneSpecialFoldersKey.
+                                    SetValue("PublicFolders",
+                                    PublicFoldersEntryID);
+                            }
+                            if (PublicFoldersAllPublicFoldersEntryID.Length >= 0)
+                            {
+                                WebViewPaneSpecialFoldersKey.
+                                    SetValue("PublicFoldersAllPublicFolders",
+                                    PublicFoldersAllPublicFoldersEntryID);
+                            }
+                            if (FolderSyncIssuesEntryID.Length >= 0)
+                            {
+                                WebViewPaneSpecialFoldersKey.
+                                    SetValue("FolderSyncIssues",
+                                    FolderSyncIssuesEntryID);
+                            }
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if (ModuleKey != null)
+                {
+                    ModuleKey.Close();
+                }
+                if (WebViewPaneSpecialFoldersKey != null)
+                {
+                    WebViewPaneSpecialFoldersKey.Close();
+                }
+                if (ADXXOLKey != null)
+                {
+                    ADXXOLKey.Close();
+                }
+            }
+        } 
 
     }
 }

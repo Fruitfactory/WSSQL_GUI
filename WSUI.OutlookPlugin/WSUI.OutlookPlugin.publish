@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishConfiguration version="1.2" activeTab="0" lastOpenedMSI="">
+  <application version="1.0.0.0">
+    <signingOptions>
+      <certificatePath>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\Toolkits\ClickOnceKey\WSUIOutlookPluginKey.pfx</certificatePath>
+    </signingOptions>
+    <deploymentOptions>
+      <providerURL>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\ClickOnce\wsui.outlookplugin.application</providerURL>
+      <runAfterInstalling>false</runAfterInstalling>
+    </deploymentOptions>
+    <preferences>
+      <showErrors>true</showErrors>
+      <showGUI>true</showGUI>
+      <generateLogFile>false</generateLogFile>
+      <showRegMsg>true</showRegMsg>
+      <showRunningApplicationsWarning>true</showRunningApplicationsWarning>
+    </preferences>
+    <prerequisites createSetupProgram="true" installFromVendor="true" />
+  </application>
+</publishConfiguration>

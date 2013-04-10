@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSUI.Control", "WSUI.Contro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSUI.OutlookPlugin", "WSUI.OutlookPlugin\WSUI.OutlookPlugin.csproj", "{6169FA5D-89FA-44D3-9801-CEFE8FC8755D}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "WSUI.OutlookPluginSetup(1.0.0)", "WSUI.OutlookPlugin\WSUI.OutlookPluginSetup\1.0.0\WSUI.OutlookPluginSetup(1.0.0).vdproj", "{6BA8E8A1-148B-4B21-8CD3-84823ECD401D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,18 @@ Global
 		{6169FA5D-89FA-44D3-9801-CEFE8FC8755D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6169FA5D-89FA-44D3-9801-CEFE8FC8755D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6169FA5D-89FA-44D3-9801-CEFE8FC8755D}.Release|Win32.ActiveCfg = Release|Any CPU
+		{6BA8E8A1-148B-4B21-8CD3-84823ECD401D}.Debug|Any CPU.ActiveCfg = Debug
+		{6BA8E8A1-148B-4B21-8CD3-84823ECD401D}.Debug|Any CPU.Build.0 = Debug
+		{6BA8E8A1-148B-4B21-8CD3-84823ECD401D}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{6BA8E8A1-148B-4B21-8CD3-84823ECD401D}.Debug|Mixed Platforms.Build.0 = Debug
+		{6BA8E8A1-148B-4B21-8CD3-84823ECD401D}.Debug|Win32.ActiveCfg = Debug
+		{6BA8E8A1-148B-4B21-8CD3-84823ECD401D}.Debug|Win32.Build.0 = Debug
+		{6BA8E8A1-148B-4B21-8CD3-84823ECD401D}.Release|Any CPU.ActiveCfg = Release
+		{6BA8E8A1-148B-4B21-8CD3-84823ECD401D}.Release|Any CPU.Build.0 = Release
+		{6BA8E8A1-148B-4B21-8CD3-84823ECD401D}.Release|Mixed Platforms.ActiveCfg = Release
+		{6BA8E8A1-148B-4B21-8CD3-84823ECD401D}.Release|Mixed Platforms.Build.0 = Release
+		{6BA8E8A1-148B-4B21-8CD3-84823ECD401D}.Release|Win32.ActiveCfg = Release
+		{6BA8E8A1-148B-4B21-8CD3-84823ECD401D}.Release|Win32.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
