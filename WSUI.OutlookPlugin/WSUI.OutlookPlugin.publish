@@ -5,7 +5,7 @@
       <certificatePath>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\Toolkits\ClickOnceKey\WSUIOutlookPluginKey.pfx</certificatePath>
     </signingOptions>
     <deploymentOptions>
-      <providerURL>https://github.com/Fruitfactory/WSSQL_GUI/raw/master/ClickOnce/wsui.application</providerURL>
+      <providerURL>https://github.com/Fruitfactory/WSSQL_GUI/raw/master/ClickOnce/</providerURL>
       <runAfterInstalling>false</runAfterInstalling>
     </deploymentOptions>
     <preferences>
