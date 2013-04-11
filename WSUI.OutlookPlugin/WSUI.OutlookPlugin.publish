@@ -5,7 +5,7 @@
       <certificatePath>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\Toolkits\ClickOnceKey\WSUIOutlookPluginKey.pfx</certificatePath>
     </signingOptions>
     <deploymentOptions>
-      <providerURL>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\ClickOnce\wsui.outlookplugin.application</providerURL>
+      <providerURL>https://github.com/Fruitfactory/WSSQL_GUI/raw/master/ClickOnce/wsui.application</providerURL>
       <runAfterInstalling>false</runAfterInstalling>
     </deploymentOptions>
     <preferences>
@@ -15,6 +15,9 @@
       <showRegMsg>true</showRegMsg>
       <showRunningApplicationsWarning>true</showRunningApplicationsWarning>
     </preferences>
-    <prerequisites createSetupProgram="true" installFromVendor="true" />
+    <prerequisites createSetupProgram="true" installFromVendor="true">
+      <product code=".NETFramework,Version=v4.0" displayName="Microsoft .NET Framework 4 (x86 and x64)" />
+      <product code="Microsoft.Visual.C++.10.0.x86" displayName="Visual C++ 2010 Runtime Libraries (x86)" />
+    </prerequisites>
   </application>
 </publishConfiguration>
