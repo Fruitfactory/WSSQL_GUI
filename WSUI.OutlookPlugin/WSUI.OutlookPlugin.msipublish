@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishConfiguration version="1.0" lastOpenedMSI="C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\Output\WSUI.OutlookPluginSetup.msi">
+  <application version="1.0.0" language="1033" publishingLocation=".\MSIPublish\" installationUrl="" customActionLocation="" customActionClassName="">
+    <signingOptions />
+    <preferences showInstallUI="true" showUninstallUI="false" webPage="" showDownloaderWindow="true" showRunningApplicationsWarning="true" />
+    <prerequisites createSetupProgram="false" installFromVendor="false" />
+    <ftp userName="" passive="0" anonimous="0" />
+  </application>
+</publishConfiguration>
