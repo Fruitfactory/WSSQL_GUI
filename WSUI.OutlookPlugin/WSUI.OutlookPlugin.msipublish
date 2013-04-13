@@ -1,9 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <publishConfiguration version="1.0" lastOpenedMSI="C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\Output\WSUI.OutlookPluginSetup.msi">
-  <application version="1.0.0" language="1033" publishingLocation=".\MSIPublish\" installationUrl="" customActionLocation="" customActionClassName="">
-    <signingOptions />
-    <preferences showInstallUI="true" showUninstallUI="false" webPage="" showDownloaderWindow="true" showRunningApplicationsWarning="true" />
-    <prerequisites createSetupProgram="false" installFromVendor="false" />
+  <application version="1.0.0" language="1033" publishingLocation="C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\ClickTwice" installationUrl="https://raw.github.com/Fruitfactory/WSSQL_GUI/master/ClickTwice/" customActionLocation="" customActionClassName="">
+    <signingOptions>
+      <certificatePath>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\WSUI.OutlookPlugin\wsuiclicktwice.pfx</certificatePath>
+    </signingOptions>
+    <iconPath>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\WSUI\Search.ico</iconPath>
+    <preferences showInstallUI="true" showUninstallUI="true" webPage="" showDownloaderWindow="true" showRunningApplicationsWarning="true" />
+    <prerequisites createSetupProgram="false" installFromVendor="false">
+      <product code=".NETFramework,Version=v4.0" displayName="Microsoft .NET Framework 4 (x86 and x64)" />
+      <product code="Microsoft.Visual.C++.10.0.x86" displayName="Visual C++ 2010 Runtime Libraries (x86)" />
+    </prerequisites>
     <ftp userName="" passive="0" anonimous="0" />
   </application>
 </publishConfiguration>
