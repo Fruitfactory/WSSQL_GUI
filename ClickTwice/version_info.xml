@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <application name="wsui.outlookplugin">
   <product language="1033">
-    <version name="1.0.0" installationUrl="https://www.dropbox.com/home/WSUI/ClickTwice/" productCode="{6169FA5D-89FA-44D3-9801-CEFE8FC8755D}" updateType="directLink">
+    <version name="1.0.0" installationUrl="https://www.dropbox.com/sh/y0tdgw9tjcmvvt1/t6zfSqMCMp/ClickTwice/" productCode="{6169FA5D-89FA-44D3-9801-CEFE8FC8755D}" updateType="directLink">
       <files msi="WSUI.OutlookPluginSetup" customActionAssembly="" customActionClass="">
         <file>WSUI.OutlookPluginSetup.msi</file>
       </files>
