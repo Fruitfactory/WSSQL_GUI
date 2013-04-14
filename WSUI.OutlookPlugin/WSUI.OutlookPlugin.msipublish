@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <publishConfiguration version="1.0" lastOpenedMSI="C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\Output\WSUI.OutlookPluginSetup.msi">
-  <application version="1.0.0" language="1033" publishingLocation="C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\ClickTwice" installationUrl="https://www.dropbox.com/sh/y0tdgw9tjcmvvt1/t6zfSqMCMp/ClickTwice" customActionLocation="" customActionClassName="">
+  <application version="1.0.0" language="1033" publishingLocation="C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\ClickTwice" installationUrl="https://s3.amazonaws.com/wsui/clicktwice/" customActionLocation="" customActionClassName="">
     <signingOptions>
       <certificatePath>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\WSUI.OutlookPlugin\wsuiclicktwice.pfx</certificatePath>
     </signingOptions>
