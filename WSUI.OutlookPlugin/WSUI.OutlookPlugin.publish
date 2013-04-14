@@ -15,9 +15,6 @@
       <showRegMsg>true</showRegMsg>
       <showRunningApplicationsWarning>true</showRunningApplicationsWarning>
     </preferences>
-    <prerequisites createSetupProgram="true" installFromVendor="true">
-      <product code=".NETFramework,Version=v4.0" displayName="Microsoft .NET Framework 4 (x86 and x64)" />
-      <product code="Microsoft.Visual.C++.10.0.x86" displayName="Visual C++ 2010 Runtime Libraries (x86)" />
-    </prerequisites>
+    <prerequisites createSetupProgram="false" installFromVendor="true" />
   </application>
 </publishConfiguration>
