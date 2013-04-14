@@ -5,7 +5,7 @@
       <certificatePath>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\Toolkits\ClickOnceKey\WSUIOutlookPluginKey.pfx</certificatePath>
     </signingOptions>
     <deploymentOptions>
-      <providerURL>https://s3.amazonaws.com/wsui/clickonce/</providerURL>
+      <providerURL>http://wsui.s3.amazonaws.com/clickonce/</providerURL>
       <runAfterInstalling>false</runAfterInstalling>
     </deploymentOptions>
     <preferences>

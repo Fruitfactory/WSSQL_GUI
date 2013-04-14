@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <configuration>
-  <application name="WSUIOutlookPlugin" publisher="Default Company" version="1.0.0.0" providerUrl="https://s3.amazonaws.com/wsui/clickonce/" minimumVersion="" culture="neutral" icon="" publicKeyToken="15f1467d04923bad" processorArchitecture="x86">
+  <application name="WSUIOutlookPlugin" publisher="Default Company" version="1.0.0.0" providerUrl="http://wsui.s3.amazonaws.com/clickonce/" minimumVersion="" culture="neutral" icon="" publicKeyToken="15f1467d04923bad" processorArchitecture="x86">
     <supportedApps>4</supportedApps>
     <registerForComInterop />
   </application>
