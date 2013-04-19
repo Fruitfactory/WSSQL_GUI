@@ -8,7 +8,7 @@
         <beforeApplicationStartup />
       </update>
     </subscription>
-    <deploymentProvider codebase="http://fruitfactory.github.io/WSSQL_GUI/downloads/clickonce/" />
+    <deploymentProvider codebase="http://fruitfactory.github.io/WSSQL_GUI/downloads/clickonce/wsui.outlookplugin.application" />
   </deployment>
   <compatibleFrameworks xmlns="urn:schemas-microsoft-com:clickonce.v2">
     <framework targetVersion="4.0" profile="Full" supportedRuntime="4.0.30319" />
