@@ -54,7 +54,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
             // init
             QueryTemplate =
-                "SELECT TOP {3} System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Subject,System.Message.ToAddress,System.Message.DateReceived,System.Size FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(System.Search.Contents,{0},1033) OR ( {2} ) ) ORDER BY System.DateCreated DESC";
+                "SELECT TOP {3} System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Subject,System.Message.ToAddress,System.Message.DateReceived,System.Size FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(*,{0},1033) OR ( {2} ) ) ORDER BY System.DateCreated DESC";//System.Search.Contents
             QueryAnd = " AND \"{0}\""; 
             ID = 0;
             _name = "Everything";
@@ -147,7 +147,7 @@ namespace WSUI.Module.ViewModel
                         Display = itemE.ItemNameDisplay,
                         Path = itemE.ItemUrl,
                         ID = Guid.NewGuid(),
-                        Name = itemE.ItemNameDisplay,
+                        Name = itemE.Subject,
                         Size = itemE.Size
                     };
 
@@ -439,11 +439,14 @@ namespace WSUI.Module.ViewModel
                         ID = Guid.NewGuid(),
                         Type = TypeSearchItem.Contact
                     };
-                    item.EmailList.Add(data.EmailAddress);
-                    item.EmailList.Add(data.EmailAddress2);
-                    item.EmailList.Add(data.EmailAddress3);
+                    if(!string.IsNullOrEmpty(data.EmailAddress))
+                        item.EmailList.Add(data.EmailAddress);
+                    if(!string.IsNullOrEmpty(data.EmailAddress2))
+                        item.EmailList.Add(data.EmailAddress2);
+                    if(!string.IsNullOrEmpty(data.EmailAddress3))
+                        item.EmailList.Add(data.EmailAddress3);
                     //item.Foto = OutlookHelper.Instance.GetContactFotoTempFileName(item);
-                    return item;
+                    return item.EmailList.Count > 0 && !string.IsNullOrEmpty(item.Name) ? item : null;
                 case "email":
                     string fromAddress = ContactHelpers.GetEmailAddress(data.FromAddress,SearchString) ?? ContactHelpers.GetEmailAddress(data.CcAddress,SearchString) ?? ContactHelpers.GetEmailAddress(data.ToAddress,SearchString);
                     if (string.IsNullOrEmpty(fromAddress))

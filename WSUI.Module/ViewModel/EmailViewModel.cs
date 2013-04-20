@@ -152,7 +152,7 @@ namespace WSUI.Module.ViewModel
                         Display = data.ItemName,
                         Path = data.ItemUrl,
                         ID = Guid.NewGuid(),
-                        Name = data.ItemName
+                        Name = data.Subject
                     };
 
                     TypeSearchItem type = SearchItemHelper.GetTypeItem(data.ItemUrl);
