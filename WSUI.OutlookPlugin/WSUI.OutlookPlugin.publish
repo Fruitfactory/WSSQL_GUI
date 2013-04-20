@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<publishConfiguration version="1.2" activeTab="1" lastOpenedMSI="C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\Output\WSUI.OutlookPluginSetup.msi">
+<publishConfiguration version="1.2" activeTab="0" lastOpenedMSI="C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\Output\WSUI.OutlookPluginSetup.msi">
   <application version="1.0.0.0">
     <signingOptions>
       <certificatePath>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI\Toolkits\ClickOnceKey\WSUIOutlookPluginKey.pfx</certificatePath>
     </signingOptions>
     <deploymentOptions>
-      <providerURL>http://wsui.s3.amazonaws.com/clickonce/</providerURL>
+      <providerURL>http://fruitfactory.github.io/WSSQL_GUI/downloads/clickonce/</providerURL>
       <runAfterInstalling>false</runAfterInstalling>
     </deploymentOptions>
     <preferences>
