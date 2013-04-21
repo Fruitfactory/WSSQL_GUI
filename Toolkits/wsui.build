@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project name="WSUI">
+  
+  <property name="project.name" value="WSOutlookPlugin" />
+  <property name="project.build.type" value="Release" unless="${property::exists('project.build.type')}"/>
+  
+  <property name="solution" value="WSSQLGUI.sln" />
+  <property name="outlookplugin.project" value="WSUI.OutlookPlugin.csproj" />
+  
+  <property name="working.dir" value="${path::get-full-path('..')}"/>
+  <property name="build.tools.dir" value="${working.dir}\Toolkits" />
+  <property name="source.directory" value="${working.dir}" />
+  <property name="bin.dir" value="${working.dir}\ROutput" />
+  
+  <target name="cleanROutput" unless="${target::has-executed('cleanROutput')}">
+    <echo message="Clean Routput directory" />
+    <delete dir="${bin.dir}" failonerror="false"  if="${directory::exists(bin.dir)}"/>
+  </target>
+  
+  <target name="createROutput" unless="${target::has-executed('createROutput')}">
+      <echo message="Create ROutput directory" />
+      <mkdir dir="${bin.dir}" failonerror="true" unless="${directory::exists(bin.dir)}"/>
+  </target>
+  
+  <target name="compilesolution" depends="cleanROutput, createROutput">
+    <echo message="Compiling Solution:" />
+
+    <exec program="msbuild.exe"  basedir="C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319"
+			  commandline='"${source.directory}\${solution}" /p:Platform="Any CPU" /p:Configuration=${project.build.type} /t:Rebuild /v:m /m' workingdir="." />
+  </target>
+
+
+</project>

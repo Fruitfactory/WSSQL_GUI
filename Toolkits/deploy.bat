@@ -1,0 +1,2 @@
+go compilesolution Release
+pause
