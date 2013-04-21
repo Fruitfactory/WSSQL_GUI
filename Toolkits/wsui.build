@@ -22,12 +22,19 @@
       <mkdir dir="${bin.dir}" failonerror="true" unless="${directory::exists(bin.dir)}"/>
   </target>
   
-  <target name="compilesolution" depends="cleanROutput, createROutput">
+  <!--<target name="compilesolution" depends="cleanROutput, createROutput">
     <echo message="Compiling Solution:" />
 
     <exec program="msbuild.exe"  basedir="C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319"
 			  commandline='"${source.directory}\${solution}" /p:Platform="Any CPU" /p:Configuration=${project.build.type} /p:OutputDir=${bin.dir} /t:Rebuild /v:m /m' workingdir="." />
-  </target>
+  </target>-->
 
+  <target name="compilesolution" depends="cleanROutput, createROutput">
+    <echo message="Compiling Solution:" />
+
+    <exec program="devenv.com"  basedir="C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE"
+			  commandline='"${source.directory}\${solution}" /Build "${project.build.type}|Mixed Platforms" /Out "${bin.dir}\Build_WSUI_Solution.log" ' workingdir="." />
+  </target>
+  
 
 </project>
