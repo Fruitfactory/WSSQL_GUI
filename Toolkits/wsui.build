@@ -26,7 +26,7 @@
     <echo message="Compiling Solution:" />
 
     <exec program="msbuild.exe"  basedir="C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319"
-			  commandline='"${source.directory}\${solution}" /p:Platform="Any CPU" /p:Configuration=${project.build.type} /t:Rebuild /v:m /m' workingdir="." />
+			  commandline='"${source.directory}\${solution}" /p:Platform="Any CPU" /p:Configuration=${project.build.type} /p:OutputDir=${bin.dir} /t:Rebuild /v:m /m' workingdir="." />
   </target>
 
 
