@@ -168,3 +168,7 @@ hr {
         display: none;
     }
 }
+
+.metrouicss .image-container {
+  width: 900px;
+}
