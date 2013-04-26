@@ -4,12 +4,17 @@ using System.Linq;
 using System.Text;
 using log4net;
 using log4net.Config;
+using System.Reflection;
+using System.IO;
 
 
 namespace C4F.DevKit.PreviewHandler.Service.Logger
 {
     public class WSSqlLogger
     {
+
+        private const string Filename = "log4net.config";
+
         #region fields
         private ILog _log;
         #endregion
@@ -31,8 +36,16 @@ namespace C4F.DevKit.PreviewHandler.Service.Logger
 
         private WSSqlLogger()
         {
-            XmlConfigurator.Configure();
-            _log = log4net.LogManager.GetLogger(typeof(WSSqlLogger));
+            string path = Assembly.GetAssembly(typeof(WSSqlLogger)).Location;
+            path = path.Substring(0, path.LastIndexOf('\\') + 1);
+            path = path + Filename;
+
+            FileInfo fi = new FileInfo(path);
+            if (fi.Exists)
+            {
+                XmlConfigurator.Configure(fi);
+                _log = log4net.LogManager.GetLogger(typeof(WSSqlLogger));
+            }
         }
 
         public static WSSqlLogger Instance
