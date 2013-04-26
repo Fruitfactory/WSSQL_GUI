@@ -8,7 +8,8 @@
       <preferences>
         <showInstallUI>true</showInstallUI>
         <showUninstallUI>true</showUninstallUI>
-        <webPage />
+        <webPage>
+        </webPage>
         <showDownloaderWindow>true</showDownloaderWindow>
         <showRunningApplicationsWarning>true</showRunningApplicationsWarning>
       </preferences>
