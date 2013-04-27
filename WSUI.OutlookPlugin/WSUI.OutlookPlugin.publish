@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<publishConfiguration version="1.2" activeTab="0" lastOpenedMSI="C:\Users\Vincent\Documents\GitHub\WSSQL_GUI_2\ROutput\WSUI.OutlookPluginSetup.msi">
+<publishConfiguration version="1.2" activeTab="1" lastOpenedMSI="C:\Users\Vincent\Documents\GitHub\WSSQL_GUI_2\ROutput\WSUI.OutlookPluginSetup.msi">
   <application version="1.0.0.0">
     <signingOptions>
       <certificatePath>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI_2\Toolkits\ClickOnceKey\WSUIOutlookPluginKey.pfx</certificatePath>

@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
-using log4net.Config;
+
  
 //
 // General Information about an assembly is controlled through the following
@@ -15,7 +15,7 @@ using log4net.Config;
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: log4net.Config.XmlConfigurator(ConfigFileExtension = "log4net", Watch = true)]
+
 //
 // Version information for an assembly consists of the following four values:
 //

@@ -41,9 +41,6 @@
     <Reference Include="AddinExpress.OL.2005, Version=7.1.4050.2005, Culture=neutral, PublicKeyToken=e69a7e0f3592d2b8, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\Toolkits\Log4Net\net40-full\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\Toolkits\Prism\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
@@ -115,6 +112,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WSPreview\WSPreview.csproj">
+      <Project>{3E9F9F18-B9AD-4DDE-A5D6-F71B75C737D2}</Project>
+      <Name>WSPreview</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WSUI.Control\WSUI.Control.csproj">
       <Project>{FC28437E-0008-4A62-B444-37EB9E6B5AE6}</Project>
       <Name>WSUI.Control</Name>

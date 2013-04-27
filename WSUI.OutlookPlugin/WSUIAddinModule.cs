@@ -8,6 +8,10 @@ using System.Globalization;
 using System.Reflection;
 using WSUI.Control;
 using Microsoft.Win32;
+using System.Threading.Tasks;
+using System.Net;
+using System.Diagnostics;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSUIOutlookPlugin
 {
@@ -169,6 +173,7 @@ namespace WSUIOutlookPlugin
 
         private void Init()
         {
+            WSSqlLogger.Instance.LogInfo("Plugin is loading...");
             outlookFormManager.ADXBeforeFolderSwitchEx += outlookFormManager_ADXBeforeFolderSwitchEx;
             buttonShow.OnClick += buttonShow_OnClick;
             buttonClose.OnClick += buttonClose_OnClick;
@@ -177,9 +182,41 @@ namespace WSUIOutlookPlugin
             {
                 new AppEmpty();
             }
+            CheckUpdate();
         }
 
         #endregion
+
+
+        private void CheckUpdate()
+        {
+            if (!this.IsMSINetworkDeployed() && !this.IsMSIUpdatable())
+                return;
+            Task taskUpdate = Task.Factory.StartNew(SilentUpdate);
+        }
+
+        private void SilentUpdate()
+        {
+            WSSqlLogger.Instance.LogInfo("Check for updates...");
+            string url = this.CheckForMSIUpdates();
+            if (string.IsNullOrEmpty(url))
+            {
+                WSSqlLogger.Instance.LogInfo("No updates...");
+                return;
+            }
+                
+            WebClient webClient = new WebClient();
+            string filename = url.Substring(url.LastIndexOf('\\'));
+            WSSqlLogger.Instance.LogInfo(string.Format("File: {0}...",url));
+            webClient.DownloadFile(url, filename);
+            Process process = new Process();
+            process.StartInfo.FileName = "msiexec.exe";
+            process.StartInfo.Arguments = string.Format(" /qb /i \"{0}\" ALLUSERS=1", filename);
+            process.Start();
+            process.WaitForExit();
+            WSSqlLogger.Instance.LogInfo("Update is dome...");
+        }
+
 
         private void outlookFormManager_ADXBeforeFolderSwitchEx(object sender, AddinExpress.OL.BeforeFolderSwitchExEventArgs args)
         {
