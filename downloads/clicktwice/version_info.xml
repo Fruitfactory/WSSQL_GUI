@@ -7,10 +7,10 @@
       </files>
       <preferences>
         <showInstallUI>true</showInstallUI>
-        <showUninstallUI>true</showUninstallUI>
+        <showUninstallUI>false</showUninstallUI>
         <webPage>
         </webPage>
-        <showDownloaderWindow>true</showDownloaderWindow>
+        <showDownloaderWindow>false</showDownloaderWindow>
         <showRunningApplicationsWarning>true</showRunningApplicationsWarning>
       </preferences>
     </version>
