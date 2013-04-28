@@ -32,6 +32,7 @@ namespace WSUIOutlookPlugin
 
         public WSUIAddinModule()
         {
+            AppDomain.CurrentDomain.SetupInformation.ShadowCopyFiles = "false"; 
             Application.EnableVisualStyles();
             InitializeComponent();
             // Please add any initialization code to the AddinInitialize event handler
@@ -44,6 +45,7 @@ namespace WSUIOutlookPlugin
         private ADXRibbonGroup managingCtrlGroup;
         private ADXRibbonButton buttonShow;
         private ADXRibbonButton buttonClose;
+        private Task taskUpdate;
  
         #region Component Designer generated code
         /// <summary>
@@ -173,6 +175,7 @@ namespace WSUIOutlookPlugin
 
         private void Init()
         {
+            
             WSSqlLogger.Instance.LogInfo("Plugin is loading...");
             outlookFormManager.ADXBeforeFolderSwitchEx += outlookFormManager_ADXBeforeFolderSwitchEx;
             buttonShow.OnClick += buttonShow_OnClick;
@@ -191,14 +194,19 @@ namespace WSUIOutlookPlugin
         private void CheckUpdate()
         {
             if (!this.IsMSINetworkDeployed() && !this.IsMSIUpdatable())
+            {
+                WSSqlLogger.Instance.LogInfo("Not updatable...");
                 return;
-            Task taskUpdate = Task.Factory.StartNew(SilentUpdate);
+            }
+                
+            taskUpdate = Task.Factory.StartNew(SilentUpdate);
         }
 
         private void SilentUpdate()
         {
             WSSqlLogger.Instance.LogInfo("Check for updates...");
             string url = this.CheckForMSIUpdates();
+            WSSqlLogger.Instance.LogInfo("End checking updates...");
             if (string.IsNullOrEmpty(url))
             {
                 WSSqlLogger.Instance.LogInfo("No updates...");
@@ -208,13 +216,15 @@ namespace WSUIOutlookPlugin
             WebClient webClient = new WebClient();
             string filename = url.Substring(url.LastIndexOf('\\'));
             WSSqlLogger.Instance.LogInfo(string.Format("File: {0}...",url));
+            WSSqlLogger.Instance.LogInfo("Download update...");
             webClient.DownloadFile(url, filename);
             Process process = new Process();
             process.StartInfo.FileName = "msiexec.exe";
             process.StartInfo.Arguments = string.Format(" /qb /i \"{0}\" ALLUSERS=1", filename);
+            WSSqlLogger.Instance.LogInfo("Installing update...");
             process.Start();
             process.WaitForExit();
-            WSSqlLogger.Instance.LogInfo("Update is dome...");
+            WSSqlLogger.Instance.LogInfo("Update is done...");
         }
 
 

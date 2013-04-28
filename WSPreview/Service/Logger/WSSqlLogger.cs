@@ -38,27 +38,13 @@ namespace C4F.DevKit.PreviewHandler.Service.Logger
         {
             string path = Assembly.GetAssembly(typeof(WSSqlLogger)).Location;
             path = path.Substring(0, path.LastIndexOf('\\') + 1);
-            var filename = path + "log.txt";
-            System.Diagnostics.Debug.WriteLine(filename);
-            using(var writer = new StreamWriter(filename))
+            path = path + Filename;
+            System.Diagnostics.Debug.WriteLine(path);
+            FileInfo fi = new FileInfo(path);
+            if (fi.Exists)
             {
-                path = path + Filename;
-                writer.WriteLine(path);
-                System.Diagnostics.Debug.WriteLine(path);
-                FileInfo fi = new FileInfo(path);
-                if (fi.Exists)
-                {
-                    writer.WriteLine("File is exist");
-                    var col = XmlConfigurator.Configure(fi);
-                    foreach (var item in col)
-                    {
-                        writer.WriteLine(item.ToString());
-                        System.Diagnostics.Debug.WriteLine(item.ToString());
-                    }
-                    _log = log4net.LogManager.GetLogger("WSUILogger");
-                    writer.WriteLine(_log.Logger.Name);
-                    System.Diagnostics.Debug.WriteLine(_log.Logger.Name);
-                }
+                var col = XmlConfigurator.Configure(fi);
+                _log = log4net.LogManager.GetLogger("WSUILogger");
             }
         }
 

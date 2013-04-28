@@ -83,7 +83,6 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="Loader\adxloader.dll.manifest" />
     <!--<None Include="WSUI.OutlookPlugin.snk" /> -->
   </ItemGroup>

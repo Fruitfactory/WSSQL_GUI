@@ -1,10 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<publishConfiguration version="1.0" lastOpenedMSI="C:\Users\Vincent\Documents\GitHub\WSSQL_GUI_2\ROutput\WSUI.OutlookPluginSetup.msi">
-  <application version="1.0.0" language="1033" publishingLocation="C:\Users\Vincent\Documents\GitHub\WSSQL_GUI_2\ClickTwice" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/" customActionLocation="" customActionClassName="">
+<publishConfiguration version="1.0" lastOpenedMSI="C:\Users\Vincent\Documents\GitHub\WSUI_Project\ROutput\WSUI.OutlookPluginSetup.msi">
+  <application version="1.0.0" language="1033" publishingLocation="C:\Users\Vincent\Documents\GitHub\WSUI_Project\ClickTwice" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/" customActionLocation="" customActionClassName="">
     <signingOptions>
-      <certificatePath>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI_2\WSUI.OutlookPlugin\wsuiclicktwice.pfx</certificatePath>
+      <certificatePath>C:\Users\Vincent\Documents\GitHub\WSUI_Project\WSUI.OutlookPlugin\wsuiclicktwice.pfx</certificatePath>
     </signingOptions>
-    <iconPath>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI_2\WSUI\Search.ico</iconPath>
+    <iconPath>C:\Users\Vincent\Documents\GitHub\WSUI_Project\WSUI\Search.ico</iconPath>
+    <preferences showInstallUI="true" showUninstallUI="false" webPage="" showDownloaderWindow="false" showRunningApplicationsWarning="true" />
+    <prerequisites createSetupProgram="false" installFromVendor="false">
+      <product code=".NETFramework,Version=v4.0" displayName="Microsoft .NET Framework 4 (x86 and x64)" />
+      <product code="Microsoft.Visual.C++.10.0.x86" displayName="Visual C++ 2010 Runtime Libraries (x86)" />
+    </prerequisites>
+    <ftp userName="" passive="0" anonimous="0" />
+  </application>
+  <application version="1.0.1" language="1033" publishingLocation="C:\Users\Vincent\Documents\GitHub\WSUI_Project\ClickTwice" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/" customActionLocation="" customActionClassName="">
+    <signingOptions>
+      <certificatePath>C:\Users\Vincent\Documents\GitHub\WSUI_Project\WSUI.OutlookPlugin\wsuiclicktwice.pfx</certificatePath>
+    </signingOptions>
+    <iconPath>C:\Users\Vincent\Documents\GitHub\WSUI_Project\WSUI\Search.ico</iconPath>
     <preferences showInstallUI="true" showUninstallUI="false" webPage="" showDownloaderWindow="false" showRunningApplicationsWarning="true" />
     <prerequisites createSetupProgram="false" installFromVendor="false">
       <product code=".NETFramework,Version=v4.0" displayName="Microsoft .NET Framework 4 (x86 and x64)" />
