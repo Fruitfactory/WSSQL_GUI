@@ -76,7 +76,6 @@ namespace WSUIOutlookPlugin
             // 
             this.formWebPaneItem.AlwaysShowHeader = true;
             this.formWebPaneItem.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
-            this.formWebPaneItem.CloseButton = true;
             this.formWebPaneItem.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.WebViewPane;
             this.formWebPaneItem.FormClassName = "WSUIOutlookPlugin.WSUIForm";
             this.formWebPaneItem.UseOfficeThemeForBackground = true;
@@ -193,13 +192,15 @@ namespace WSUIOutlookPlugin
 
         private void CheckUpdate()
         {
-            if (!this.IsMSINetworkDeployed() && !this.IsMSIUpdatable())
+            if (this.IsMSINetworkDeployed() && this.IsMSIUpdatable())
+            {
+                taskUpdate = Task.Factory.StartNew(SilentUpdate);
+            }
+            else
             {
                 WSSqlLogger.Instance.LogInfo("Not updatable...");
-                return;
+                //MessageBox.Show("Not updatable.");
             }
-                
-            taskUpdate = Task.Factory.StartNew(SilentUpdate);
         }
 
         private void SilentUpdate()
@@ -210,21 +211,25 @@ namespace WSUIOutlookPlugin
             if (string.IsNullOrEmpty(url))
             {
                 WSSqlLogger.Instance.LogInfo("No updates...");
+                ///MessageBox.Show("No updates.");
                 return;
             }
                 
             WebClient webClient = new WebClient();
             string filename = url.Substring(url.LastIndexOf('\\'));
             WSSqlLogger.Instance.LogInfo(string.Format("File: {0}...",url));
+            //MessageBox.Show(url);
             WSSqlLogger.Instance.LogInfo("Download update...");
             webClient.DownloadFile(url, filename);
             Process process = new Process();
             process.StartInfo.FileName = "msiexec.exe";
             process.StartInfo.Arguments = string.Format(" /qb /i \"{0}\" ALLUSERS=1", filename);
             WSSqlLogger.Instance.LogInfo("Installing update...");
+           // MessageBox.Show("Install updates.");
             process.Start();
             process.WaitForExit();
             WSSqlLogger.Instance.LogInfo("Update is done...");
+           // MessageBox.Show("Done.");
         }
 
 
