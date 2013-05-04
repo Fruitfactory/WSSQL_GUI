@@ -24,8 +24,8 @@ namespace WSUIOutlookPlugin
 
         private int _outlookVersion = 0;
         private bool _refreshCurrentFolderExecuting = false;
-        
 
+        private const string UpdatedFilename = "WSUI.OutlookPluginSetup.msi";
 
 
         private const string ADXHTMLFileName = "ADXOlFormGeneral.html";
@@ -74,7 +74,6 @@ namespace WSUIOutlookPlugin
             // 
             // formWebPaneItem
             // 
-            this.formWebPaneItem.AlwaysShowHeader = true;
             this.formWebPaneItem.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formWebPaneItem.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.WebViewPane;
             this.formWebPaneItem.FormClassName = "WSUIOutlookPlugin.WSUIForm";
@@ -192,12 +191,16 @@ namespace WSUIOutlookPlugin
 
         private void CheckUpdate()
         {
-            if (this.IsMSINetworkDeployed() && this.IsMSIUpdatable())
+            var isMSIDep = this.IsMSINetworkDeployed();
+            var isMSIUpdatable = this.IsMSIUpdatable();
+
+            if (isMSIDep && isMSIUpdatable)
             {
                 taskUpdate = Task.Factory.StartNew(SilentUpdate);
             }
             else
             {
+                WSSqlLogger.Instance.LogInfo(string.Format("IsMSIDep = {0}; IsMSIUpdatable = {1}", isMSIDep, isMSIUpdatable));
                 WSSqlLogger.Instance.LogInfo("Not updatable...");
                 //MessageBox.Show("Not updatable.");
             }
@@ -205,31 +208,41 @@ namespace WSUIOutlookPlugin
 
         private void SilentUpdate()
         {
-            WSSqlLogger.Instance.LogInfo("Check for updates...");
-            string url = this.CheckForMSIUpdates();
-            WSSqlLogger.Instance.LogInfo("End checking updates...");
-            if (string.IsNullOrEmpty(url))
+            try
             {
-                WSSqlLogger.Instance.LogInfo("No updates...");
-                ///MessageBox.Show("No updates.");
-                return;
+                WSSqlLogger.Instance.LogInfo("Check for updates...");
+                string url = this.CheckForMSIUpdates();
+                WSSqlLogger.Instance.LogInfo("End checking updates...");
+                if (string.IsNullOrEmpty(url))
+                {
+                    WSSqlLogger.Instance.LogInfo("No updates...");
+                    ///MessageBox.Show("No updates.");
+                    return;
+                }
+                string filename = url.Substring(0, url.LastIndexOf('/') + 1);
+                filename = filename + UpdatedFilename;
+                WSSqlLogger.Instance.LogInfo(string.Format("File: {0}...", filename));
+                string path = Assembly.GetAssembly(typeof(WSUIAddinModule)).Location;
+                path = path.Substring(0, path.LastIndexOf('\\') + 1);
+                path = path + UpdatedFilename;
+                WebClient webClient = new WebClient();
+                //MessageBox.Show(url);
+                WSSqlLogger.Instance.LogInfo("Download update...");
+                webClient.DownloadFile(filename, path);
+                Process process = new Process();
+                process.StartInfo.FileName = "msiexec.exe";
+                process.StartInfo.Arguments = string.Format(" /qb /i \"{0}\" ALLUSERS=0", path);
+                WSSqlLogger.Instance.LogInfo("Installing update...");
+                // MessageBox.Show("Install updates.");
+                process.Start();
+                process.WaitForExit();
+                WSSqlLogger.Instance.LogInfo("Update is done...");
+                // MessageBox.Show("Done.");
             }
-                
-            WebClient webClient = new WebClient();
-            string filename = url.Substring(url.LastIndexOf('\\'));
-            WSSqlLogger.Instance.LogInfo(string.Format("File: {0}...",url));
-            //MessageBox.Show(url);
-            WSSqlLogger.Instance.LogInfo("Download update...");
-            webClient.DownloadFile(url, filename);
-            Process process = new Process();
-            process.StartInfo.FileName = "msiexec.exe";
-            process.StartInfo.Arguments = string.Format(" /qb /i \"{0}\" ALLUSERS=1", filename);
-            WSSqlLogger.Instance.LogInfo("Installing update...");
-           // MessageBox.Show("Install updates.");
-            process.Start();
-            process.WaitForExit();
-            WSSqlLogger.Instance.LogInfo("Update is done...");
-           // MessageBox.Show("Done.");
+            catch(Exception ex)
+            {
+                WSSqlLogger.Instance.LogInfo(string.Format("Exception during updates: {0}...",ex.Message));
+            }
         }
 
 

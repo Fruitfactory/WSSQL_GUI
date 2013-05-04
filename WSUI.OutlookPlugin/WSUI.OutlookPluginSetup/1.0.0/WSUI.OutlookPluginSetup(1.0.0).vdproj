@@ -256,19 +256,13 @@
         "Entry"
         {
         "MsmKey" = "8:_CC0261779BDA05DDBCD9AAC29488C857"
-        "OwnerKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_1223A86871044FCB82F28F63D17AA70D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_CC0261779BDA05DDBCD9AAC29488C857"
         "OwnerKey" = "8:_9B57A131C884275D102D473CC49F669E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CC0261779BDA05DDBCD9AAC29488C857"
-        "OwnerKey" = "8:_1223A86871044FCB82F28F63D17AA70D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -454,12 +448,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CC0261779BDA05DDBCD9AAC29488C857"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_D96B2A686B7FA2E0989CB906390A5763"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -497,6 +485,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_022042348A6518286A09B59C2BEE5347"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_CC0261779BDA05DDBCD9AAC29488C857"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1228,16 +1222,16 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GflWrapper, Version=1.0.4865.43162, Culture=neutral, PublicKeyToken=5f9127ac560a0292, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:GflWrapper, Version=1.0.4871.22581, Culture=neutral, PublicKeyToken=5f9127ac560a0292, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_CC0261779BDA05DDBCD9AAC29488C857"
                     {
-                    "Name" = "8:GflWrapper.DLL"
+                    "Name" = "8:GflWrapper.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:GflWrapper.DLL"
+            "SourcePath" = "8:GflWrapper.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D3166896672F4C2CB92062B90A3F2E2D"
@@ -1579,15 +1573,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Windows Search Outlook Plugin"
-        "ProductCode" = "8:{2861C082-936D-4F0D-9B7B-F334AA9C74EC}"
-        "PackageCode" = "8:{FFBBBEFD-6297-4933-831D-7ADCA1C532AA}"
+        "ProductCode" = "8:{AE7845A6-ABA8-43E9-A284-0F6231D040A2}"
+        "PackageCode" = "8:{6F53ABC7-F53D-445E-9332-644AC467D20F}"
         "UpgradeCode" = "8:{6169FA5D-89FA-44D3-9801-CEFE8FC8755E}"
         "AspNetVersion" = "8:4.0.30220.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.1"
+        "InstallAllUsers" = "11:FALSE"
+        "ProductVersion" = "8:1.0.0"
         "Manufacturer" = "8:FruitFactory"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
