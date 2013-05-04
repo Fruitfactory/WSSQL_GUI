@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using AddinExpress.MSO;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Globalization;
@@ -24,9 +26,18 @@ namespace WSUIOutlookPlugin
 
         private int _outlookVersion = 0;
         private bool _refreshCurrentFolderExecuting = false;
+        private string _instalatonUrl = string.Empty;
+
+        #region elements fo manifest
+        private const string InstallPathNodeName = "installationUrl";
+        private const string VersionNodeName = "version";
+        private const string ProductCodeNodeName = "productCode";
+        #endregion
 
         private const string UpdatedFilename = "WSUI.OutlookPluginSetup.msi";
-
+        private const string ManifestFilename = "adxloader.dll.manifest";
+        private const string VersionFilename = "version_info.xml";
+        private const string TempFolder = "{0}Update\\{1}";
 
         private const string ADXHTMLFileName = "ADXOlFormGeneral.html";
 
@@ -202,7 +213,6 @@ namespace WSUIOutlookPlugin
             {
                 WSSqlLogger.Instance.LogInfo(string.Format("IsMSIDep = {0}; IsMSIUpdatable = {1}", isMSIDep, isMSIUpdatable));
                 WSSqlLogger.Instance.LogInfo("Not updatable...");
-                //MessageBox.Show("Not updatable.");
             }
         }
 
@@ -216,33 +226,85 @@ namespace WSUIOutlookPlugin
                 if (string.IsNullOrEmpty(url))
                 {
                     WSSqlLogger.Instance.LogInfo("No updates...");
-                    ///MessageBox.Show("No updates.");
                     return;
                 }
+                
                 string filename = url.Substring(0, url.LastIndexOf('/') + 1);
                 filename = filename + UpdatedFilename;
                 WSSqlLogger.Instance.LogInfo(string.Format("File: {0}...", filename));
                 string path = Assembly.GetAssembly(typeof(WSUIAddinModule)).Location;
                 path = path.Substring(0, path.LastIndexOf('\\') + 1);
-                path = path + UpdatedFilename;
+                _instalatonUrl = GetInstalationPath(path);
+                WSSqlLogger.Instance.LogInfo(string.Format("Instalation Url: {0}...", _instalatonUrl));
+
+                string localmsi = string.Format(TempFolder, path,UpdatedFilename);
+                WSSqlLogger.Instance.LogInfo(string.Format("Msi local path: {0}...", localmsi));
+                string localversion = string.Format(TempFolder, path, VersionFilename);
+                WSSqlLogger.Instance.LogInfo(string.Format("Version local path: {0}...", localversion));
+                string urlVersion = _instalatonUrl + VersionFilename;
+                WSSqlLogger.Instance.LogInfo(string.Format("Version Url: {0}...",urlVersion));
+
                 WebClient webClient = new WebClient();
-                //MessageBox.Show(url);
                 WSSqlLogger.Instance.LogInfo("Download update...");
-                webClient.DownloadFile(filename, path);
+                webClient.DownloadFile(filename, localmsi);
+                webClient.DownloadFile(urlVersion,localversion);
+
                 Process process = new Process();
                 process.StartInfo.FileName = "msiexec.exe";
-                process.StartInfo.Arguments = string.Format(" /qb /i \"{0}\" ALLUSERS=0", path);
+                process.StartInfo.Arguments = string.Format(" /qb /i \"{0}\" ALLUSERS=0", localmsi);
                 WSSqlLogger.Instance.LogInfo("Installing update...");
-                // MessageBox.Show("Install updates.");
                 process.Start();
                 process.WaitForExit();
+                UpdatedInstallationInfo(path,localversion);
                 WSSqlLogger.Instance.LogInfo("Update is done...");
-                // MessageBox.Show("Done.");
             }
             catch(Exception ex)
             {
                 WSSqlLogger.Instance.LogInfo(string.Format("Exception during updates: {0}...",ex.Message));
             }
+        }
+
+        private string GetInstalationPath(string localpath)
+        {
+            string manifest = localpath + ManifestFilename;
+            XDocument doc = XDocument.Load(manifest);
+            var msi = doc.Descendants("msi").First();
+
+            if (msi.Descendants(InstallPathNodeName).Count() > 0)
+            {
+                var installPath = msi.Descendants(InstallPathNodeName).First();
+                return installPath.Value;
+            }
+            return string.Empty;
+        }
+
+        private void UpdatedInstallationInfo(string localpath, string localversion)
+        {
+            string manifest = localpath + ManifestFilename;
+            XDocument docManifest = XDocument.Load(manifest);
+            XDocument docVersion = XDocument.Load(localversion);
+
+            var listVersions = docVersion.Descendants("version").Select(el => el.Attribute("name") != null ? el.Attribute("name").Value : string.Empty).ToList();
+            listVersions.Sort();
+            string newversion = listVersions[listVersions.Count - 1];
+            var element = docVersion.Descendants("version").Where(el => el.Attribute("name").Value == newversion).First();
+            var productCode = element.Attribute(ProductCodeNodeName).Value;
+
+
+            var msi = docManifest.Descendants("msi").First();
+            if (msi.Descendants(VersionNodeName).Count() > 0)
+            {
+                var el = msi.Descendants(VersionNodeName).First();
+                el.Value = newversion;
+                WSSqlLogger.Instance.LogInfo(string.Format("New version: {0}",newversion));
+            }
+            if (msi.Descendants(ProductCodeNodeName).Count() > 0)
+            {
+                var el = msi.Descendants(ProductCodeNodeName).First();
+                el.Value = productCode;
+                WSSqlLogger.Instance.LogInfo(string.Format("Product code: {0}", productCode));
+            }
+            docManifest.Save(manifest);
         }
 
 
