@@ -74,6 +74,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
     <Compile Include="Commands\EmailCommand.cs" />
     <Compile Include="Commands\ForwardCommand.cs" />
     <Compile Include="Commands\OpenEmailCommand.cs" />

@@ -83,6 +83,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
     <Compile Include="Controllers\AllFilesDataController.cs" />
     <Compile Include="Controllers\AllFilesSettingsController.cs" />
     <Compile Include="Controllers\ContactDataController.cs" />

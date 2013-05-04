@@ -77,6 +77,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
     <Compile Include="AppEmpty.cs" />
     <Compile Include="PluginBootStraper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
