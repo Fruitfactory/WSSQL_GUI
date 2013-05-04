@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Diagnostics;
 using C4F.DevKit.PreviewHandler.Service.Logger;
+using System.IO;
 
 namespace WSUIOutlookPlugin
 {
@@ -38,6 +39,7 @@ namespace WSUIOutlookPlugin
         private const string ManifestFilename = "adxloader.dll.manifest";
         private const string VersionFilename = "version_info.xml";
         private const string TempFolder = "{0}Update\\{1}";
+        private const string TempFolderCreate = "{0}Update";
 
         private const string ADXHTMLFileName = "ADXOlFormGeneral.html";
 
@@ -236,7 +238,7 @@ namespace WSUIOutlookPlugin
                 path = path.Substring(0, path.LastIndexOf('\\') + 1);
                 _instalatonUrl = GetInstalationPath(path);
                 WSSqlLogger.Instance.LogInfo(string.Format("Instalation Url: {0}...", _instalatonUrl));
-
+                CreateTempFolder(string.Format(TempFolderCreate, path));
                 string localmsi = string.Format(TempFolder, path,UpdatedFilename);
                 WSSqlLogger.Instance.LogInfo(string.Format("Msi local path: {0}...", localmsi));
                 string localversion = string.Format(TempFolder, path, VersionFilename);
@@ -256,6 +258,7 @@ namespace WSUIOutlookPlugin
                 process.Start();
                 process.WaitForExit();
                 UpdatedInstallationInfo(path,localversion);
+                DeleteTempFolder(string.Format(TempFolderCreate, path));
                 WSSqlLogger.Instance.LogInfo("Update is done...");
             }
             catch(Exception ex)
@@ -307,6 +310,21 @@ namespace WSUIOutlookPlugin
             docManifest.Save(manifest);
         }
 
+        private void CreateTempFolder(string temp)
+        {
+            if (!Directory.Exists(temp))
+            {
+                Directory.CreateDirectory(temp);
+            }
+        }
+
+        private void DeleteTempFolder(string temp)
+        {
+            if (Directory.Exists(temp))
+            {
+                Directory.Delete(temp, true);
+            }
+        }
 
         private void outlookFormManager_ADXBeforeFolderSwitchEx(object sender, AddinExpress.OL.BeforeFolderSwitchExEventArgs args)
         {
