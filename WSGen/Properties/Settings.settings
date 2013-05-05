@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WSGen.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="BulidNumberFilename" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">wsui.number</Value>
+    </Setting>
+    <Setting Name="SetupProjectFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\WSUI.OutlookPlugin\WSUI.OutlookPluginSetup\1.0.0\WSUI.OutlookPluginSetup(1.0.0).vdproj</Value>
+    </Setting>
+    <Setting Name="BuildNumber" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">1.0.0</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
