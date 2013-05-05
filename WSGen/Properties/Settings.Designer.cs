@@ -50,5 +50,54 @@ namespace WSGen.Properties {
                 return ((string)(this["BuildNumber"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Version.cs")]
+        public string VersionFilename {
+            get {
+                return ((string)(this["VersionFilename"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"ProductVersion\" = \"8:[1-9]{1}\\.[0-9]{1}\\.[0-9]{1}\"")]
+        public string ProductVersion {
+            get {
+                return ((string)(this["ProductVersion"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"ProductCode\" = \"8:\\{[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{" +
+            "4}\\-[0-9a-fA-F]{12}\\}\"")]
+        public string ProductCode {
+            get {
+                return ((string)(this["ProductCode"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"ProductVersion\" = \"8:{0}\"")]
+        public string ProductVersionTemplate {
+            get {
+                return ((string)(this["ProductVersionTemplate"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"ProductCode\" = \"8:{0}\"")]
+        public string ProductCodeTemplate {
+            get {
+                return ((string)(this["ProductCodeTemplate"]));
+            }
+            set {
+                this["ProductCodeTemplate"] = value;
+            }
+        }
     }
 }
