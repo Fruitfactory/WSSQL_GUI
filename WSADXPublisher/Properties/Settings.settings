@@ -1,0 +1,36 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WSADXPublisher.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="installerFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Vincent\Documents\GitHub\WSUI_Project\ROutput\WSUI.OutlookPluginSetup.msi</Value>
+    </Setting>
+    <Setting Name="publishingLocation" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Vincent\Documents\GitHub\WSUI_Project\ClickTwice</Value>
+    </Setting>
+    <Setting Name="installationUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/</Value>
+    </Setting>
+    <Setting Name="certificateFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Vincent\Documents\GitHub\WSUI_Project\WSUI.OutlookPlugin\wsuiclicktwice.pfx</Value>
+    </Setting>
+    <Setting Name="iconFileName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Vincent\Documents\GitHub\WSUI_Project\WSUI\Search.ico</Value>
+    </Setting>
+    <Setting Name="quietModeDuringInstall" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="quietModeDuringUninstall" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="showDownloaderWindow" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AddInExpressBinFolderPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">h:\Visual\WORK\Add-in Express for .NET\Bin\</Value>
+    </Setting>
+    <Setting Name="ADXPublisherConfigFilename" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">adxpublisher.exe.config</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
