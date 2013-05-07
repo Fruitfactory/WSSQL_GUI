@@ -35,10 +35,19 @@
 			  commandline='"${source.directory}\${solution}" /Build "${project.build.type}|Mixed Platforms" /Out "${bin.dir}\Build_WSUI_Solution.log" ' workingdir="." />
   </target>
 
-  <target name="publishClickTwice" depends="compilesolution">
+  <target name="setSettingsADX" depends="compilesolution">
+    <echo message="Set publishing settings..." />
+    <exec program="wsadxpublisher.exe" basedir="${build.tools.dir}" commandline='/set' workingdir="." />
+  </target>  
+  
+  <target name="publishClickTwice" depends="setSettingsADX">
     <echo message="Publish..." />
     <exec program="adxpublisher.exe" basedir="C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\Bin" commandline='/OutputType=ClickTwice' workingdir="." />    
   </target>
-  
+
+  <target name="clearSettingsADX" depends="publishClickTwice">
+    <echo message="Clear publishing settings..." />
+    <exec program="wsadxpublisher.exe" basedir="${build.tools.dir}" commandline='/clear' workingdir="." />
+  </target>
 
 </project>

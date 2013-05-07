@@ -1,2 +1,2 @@
-go publishClickTwice
+go clearSettingsADX
 pause
