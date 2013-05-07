@@ -1,2 +1,2 @@
-go compilesolution
+go publishClickTwice
 pause

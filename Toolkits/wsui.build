@@ -13,27 +13,31 @@
   <property name="bin.dir" value="${working.dir}\ROutput" />
   
   <target name="cleanROutput" unless="${target::has-executed('cleanROutput')}">
-    <echo message="Clean Routput directory" />
+    <echo message="Clean Routput directory..." />
     <delete dir="${bin.dir}" failonerror="false"  if="${directory::exists(bin.dir)}"/>
   </target>
   
   <target name="createROutput" unless="${target::has-executed('createROutput')}">
-      <echo message="Create ROutput directory" />
+      <echo message="Create ROutput directory..." />
       <mkdir dir="${bin.dir}" failonerror="true" unless="${directory::exists(bin.dir)}"/>
   </target>
-  
-  <!--<target name="compilesolution" depends="cleanROutput, createROutput">
-    <echo message="Compiling Solution:" />
 
-    <exec program="msbuild.exe"  basedir="C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319"
-			  commandline='"${source.directory}\${solution}" /p:Platform="Any CPU" /p:Configuration=${project.build.type} /p:OutputDir=${bin.dir} /t:Rebuild /v:m /m' workingdir="." />
-  </target>-->
+  <target name="updatedVersionInfo" unless="${target::has-executed('updatedVersionInfo')}" >
+    <echo message="Update version info..." />
+    <exec program="wsgen.exe" basedir="${build.tools.dir}" commandline='"${source.directory}"' workingdir="." />
+  </target>
+ 
 
-  <target name="compilesolution" depends="cleanROutput, createROutput">
-    <echo message="Compiling Solution:" />
+  <target name="compilesolution" depends="updatedVersionInfo, cleanROutput, createROutput">
+    <echo message="Compiling Solution..." />
 
     <exec program="devenv.com"  basedir="C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE"
 			  commandline='"${source.directory}\${solution}" /Build "${project.build.type}|Mixed Platforms" /Out "${bin.dir}\Build_WSUI_Solution.log" ' workingdir="." />
+  </target>
+
+  <target name="publishClickTwice" depends="compilesolution">
+    <echo message="Publish..." />
+    <exec program="adxpublisher.exe" basedir="C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\Bin" commandline='/OutputType=ClickTwice' workingdir="." />    
   </target>
   
 
