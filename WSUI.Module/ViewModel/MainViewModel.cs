@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
@@ -106,17 +107,29 @@ namespace WSUI.Module.ViewModel
 
         private void GetAllKinds()
         {
-            var currentAssembly = Assembly.GetExecutingAssembly();
-            foreach (var type in currentAssembly.GetTypes())
-            {
-                if (type.IsClass && !type.IsAbstract && type.GetInterface(Interface, true) != null)
-                {
+            //var currentAssembly = Assembly.GetExecutingAssembly();
+            //foreach (var type in currentAssembly.GetTypes())
+            //{
+            //    if (type.IsClass && !type.IsAbstract && type.GetInterface(Interface, true) != null)
+            //    {
 
-                    var kind = new LazyKind(_container,type,this,OnChoose,OnPropertyChanged);
-                    kind.Initialize();
-                    _listItems.Add(kind);
-                }
+            //        var kind = new LazyKind(_container,type,this,OnChoose,OnPropertyChanged);
+            //        kind.Initialize();
+            //        _listItems.Add(kind);
+            //    }
+            //}
+
+            var types =
+               AppDomain.CurrentDomain.GetAssemblies().SelectMany(
+                   a => a.GetTypes().Where(t => !t.IsAbstract && t.IsClass && t.GetInterface(Interface, true) != null));
+
+            foreach (var type in types)
+            {
+                var kind = new LazyKind(_container, type, this, OnChoose, OnPropertyChanged);
+                kind.Initialize();
+                _listItems.Add(kind);
             }
+
             _listItems.Sort((x, y) =>
             {
                 if (x.ID < y.ID)
