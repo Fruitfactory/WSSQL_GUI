@@ -1625,7 +1625,7 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Windows Search Outlook Plugin"
-        "ProductCode" = "8:{DBFBC189-2A97-4234-BD95-4E4A0A0CB82E}"
+        "ProductCode" = "8:{3F896CD6-7FB4-44E5-A7DF-E85F359BD73F}"
         "PackageCode" = "8:{FC2C045A-D0B3-4E55-9E89-43CC29AD20D3}"
         "UpgradeCode" = "8:{6169FA5D-89FA-44D3-9801-CEFE8FC8755E}"
         "AspNetVersion" = "8:4.0.30220.0"
