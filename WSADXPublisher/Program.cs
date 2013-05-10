@@ -167,17 +167,17 @@ namespace WSADXPublisher
                 Console.WriteLine("Add-In Express folder isn't exist.");
                 result = false;
             }
-            if (File.Exists(Properties.Settings.Default.installerFile))
+            if (!File.Exists(Properties.Settings.Default.installerFile))
             {
                 Console.WriteLine("Installer file isn't exist");
                 result = false;
             }
-            if (File.Exists(Properties.Settings.Default.certificateFile))
+            if (!File.Exists(Properties.Settings.Default.certificateFile))
             {
                 Console.WriteLine("Certificate file isn't exist");
                 result = false;
             }
-            if (File.Exists(Properties.Settings.Default.iconFileName))
+            if (!File.Exists(Properties.Settings.Default.iconFileName))
             {
                 Console.WriteLine("Icon file isn't exist");
                 result = false;
