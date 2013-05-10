@@ -24,6 +24,9 @@ namespace WSADXPublisher
         private const string QuietModeDuringInstall = "quietModeDuringInstall";
         private const string QuietModeDuringUninstall = "quietModeDuringUninstall";
         private const string ShowDownloaderWindow = "showDownloaderWindow";
+        private const string DownloaderFileName = "downloaderFileName";
+        private const string TargetApplicationNames = "targetApplicationNames";
+        private const string TargetFrameworkVersion = "targetFrameworkVersion";
 
         #endregion
 
@@ -142,8 +145,31 @@ namespace WSADXPublisher
                     val.Attribute(ValueAttribute).Value = Properties.Settings.Default.showDownloaderWindow.ToString();
                 }
             }
+            if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == DownloaderFileName))
+            {
+                XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == DownloaderFileName).First();
+                if (val != null)
+                {
+                    val.Attribute(ValueAttribute).Value = Properties.Settings.Default.downloaderFileName.ToString();
+                }
+            }
+            if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == TargetApplicationNames))
+            {
+                XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == TargetApplicationNames).First();
+                if (val != null)
+                {
+                    val.Attribute(ValueAttribute).Value = Properties.Settings.Default.targetApplicationNames.ToString();
+                }
+            }
+            if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == TargetFrameworkVersion))
+            {
+                XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == TargetFrameworkVersion).First();
+                if (val != null)
+                {
+                    val.Attribute(ValueAttribute).Value = Properties.Settings.Default.targetFrameworkVersion.ToString();
+                }
+            }
         }
-
 
         static XDocument LoadSettingsFileAndStoreTempCopySettingsFile()
         {
@@ -167,17 +193,17 @@ namespace WSADXPublisher
                 Console.WriteLine("Add-In Express folder isn't exist.");
                 result = false;
             }
-            if (File.Exists(Properties.Settings.Default.installerFile))
+            if (!File.Exists(Properties.Settings.Default.installerFile))
             {
                 Console.WriteLine("Installer file isn't exist");
                 result = false;
             }
-            if (File.Exists(Properties.Settings.Default.certificateFile))
+            if (!File.Exists(Properties.Settings.Default.certificateFile))
             {
                 Console.WriteLine("Certificate file isn't exist");
                 result = false;
             }
-            if (File.Exists(Properties.Settings.Default.iconFileName))
+            if (!File.Exists(Properties.Settings.Default.iconFileName))
             {
                 Console.WriteLine("Icon file isn't exist");
                 result = false;
@@ -193,6 +219,21 @@ namespace WSADXPublisher
                     Console.WriteLine("Error while creating directory: {0}\nException: {1}", Properties.Settings.Default.publishingLocation,ex.Message);
                     result = false;
                 }
+            }
+            if (string.IsNullOrEmpty(Properties.Settings.Default.downloaderFileName))
+            {
+                Console.WriteLine("downloaderFileName property is empty");
+                result = false;
+            }
+            if (string.IsNullOrEmpty(Properties.Settings.Default.targetApplicationNames))
+            {
+                Console.WriteLine("targetApplicationNames property is empty");
+                result = false;
+            }
+            if (string.IsNullOrEmpty(Properties.Settings.Default.targetFrameworkVersion))
+            {
+                Console.WriteLine("targetFrameworkVersion property is empty");
+                result = false;
             }
 
             return result;
@@ -294,6 +335,30 @@ namespace WSADXPublisher
             if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == ShowDownloaderWindow))
             {
                 XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == ShowDownloaderWindow).First();
+                if (val != null)
+                {
+                    val.Attribute(ValueAttribute).Value = bool.TrueString;
+                }
+            }
+            if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == DownloaderFileName))
+            {
+                XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == DownloaderFileName).First();
+                if (val != null)
+                {
+                    val.Attribute(ValueAttribute).Value = bool.TrueString;
+                }
+            }
+            if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == TargetApplicationNames))
+            {
+                XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == TargetApplicationNames).First();
+                if (val != null)
+                {
+                    val.Attribute(ValueAttribute).Value = bool.TrueString;
+                }
+            }
+            if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == TargetFrameworkVersion))
+            {
+                XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == TargetFrameworkVersion).First();
                 if (val != null)
                 {
                     val.Attribute(ValueAttribute).Value = bool.TrueString;

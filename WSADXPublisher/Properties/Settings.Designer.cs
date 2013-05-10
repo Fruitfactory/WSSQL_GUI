@@ -114,5 +114,32 @@ namespace WSADXPublisher.Properties {
                 return ((string)(this["ADXPublisherConfigFilename"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("wsui.outlookplugin.exe")]
+        public string downloaderFileName {
+            get {
+                return ((string)(this["downloaderFileName"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Outlook")]
+        public string targetApplicationNames {
+            get {
+                return ((string)(this["targetApplicationNames"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("v4.0.30319")]
+        public string targetFrameworkVersion {
+            get {
+                return ((string)(this["targetFrameworkVersion"]));
+            }
+        }
     }
 }
