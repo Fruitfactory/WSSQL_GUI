@@ -231,7 +231,12 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                     if(_registreHandler)
                         WindowAPI.EnumChildWindows(this.Handle, SendSizeMessage, m.LParam);
                     break;
-
+                case WindowAPI.WM_KEYDOWN:
+                    if (_comInstance is ITranslateMessage)
+                    {
+                        ((ITranslateMessage)_comInstance).PassMessage(m);
+                    }
+                    break;
             }
             base.WndProc(ref m);
         }

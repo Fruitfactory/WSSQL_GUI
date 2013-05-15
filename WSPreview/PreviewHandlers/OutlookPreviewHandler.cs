@@ -15,7 +15,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
     [Guid("326A2452-981E-403B-9921-911011E677E6")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
-    public sealed class OutlookPreviewHandler : FileBasedPreviewHandler,ISearchWordHighlight
+    public sealed class OutlookPreviewHandler : FileBasedPreviewHandler,ISearchWordHighlight,ITranslateMessage
     {
 
         protected override PreviewHandlerControl CreatePreviewHandlerControl()
@@ -23,7 +23,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
             return new OutlookPreviewHandlerControl(this);
         }
 
-        public sealed class OutlookPreviewHandlerControl : FileBasedPreviewHandlerControl
+        public sealed class OutlookPreviewHandlerControl : FileBasedPreviewHandlerControl,ITranslateMessage
         {
             private OutlookFilePreview _preview;
             private OutlookPreviewHandler _parent;
@@ -48,11 +48,28 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
                 _preview.Unload();
                 base.Unload();
             }
+
+            public void PassMessage(Message m)
+            {
+                var translateMessage = _preview as ITranslateMessage;
+                if (translateMessage != null)
+                {
+                    translateMessage.PassMessage(m);
+                }
+            }
         }
 
         public string HitString
         {
             get; set;
+        }
+
+        public void PassMessage(Message m)
+        {
+            if (_previewControl is ITranslateMessage)
+            {
+                ((ITranslateMessage)_previewControl).PassMessage(m);
+            }
         }
     }
 }
