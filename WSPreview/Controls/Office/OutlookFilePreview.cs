@@ -10,13 +10,14 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Text.RegularExpressions;
 
 namespace C4F.DevKit.PreviewHandler.Controls.Office
 {
-    public partial class OutlookFilePreview : UserControl
+    public partial class OutlookFilePreview : UserControl,ITranslateMessage
     {
         private const string AfterStrongTemplate = "<font style='background-color: yellow'><strong>{0}</strong></font>";
         private const string OutlookProcessName = "OUTLOOK";
@@ -57,9 +58,9 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         private bool _IsExistProcess = false;
         private string _filename = string.Empty;
         private readonly Dictionary<string,string> _dictTempFile = new Dictionary<string, string>();
-        private readonly Dictionary<string,string> _dictImage = new Dictionary<string, string>(); 
+        private readonly Dictionary<string,string> _dictImage = new Dictionary<string, string>();
 
-
+        private const int WM_KEYDOWN = 0x0100;
 
         public OutlookFilePreview()
         {
@@ -460,7 +461,20 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             return File.Exists(path) ? path : string.Empty;
         }
 
+        private void CopyWebBrowserText()
+        {
+            
+        }
 
+        public void PassMessage(Message m)
+        {
+            if (m.Msg == WM_KEYDOWN) // && (Keys)codeKey ==  Keys.C
+            {
+                int codeKey = Marshal.ReadInt32(m.WParam);
+                int lParam = Marshal.ReadInt32(m.LParam);
+                WSSqlLogger.Instance.LogInfo(codeKey.ToString());
+            }
+        }
     }
 
 }
