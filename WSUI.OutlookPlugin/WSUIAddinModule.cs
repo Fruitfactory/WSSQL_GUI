@@ -40,6 +40,7 @@ namespace WSUIOutlookPlugin
         private const string VersionFilename = "version_info.xml";
         private const string TempFolder = "{0}Update\\{1}";
         private const string TempFolderCreate = "{0}Update";
+        private ADXKeyboardShortcut adxKeyboardShortcutCopy;
 
         private const string ADXHTMLFileName = "ADXOlFormGeneral.html";
 
@@ -79,6 +80,7 @@ namespace WSUIOutlookPlugin
             this.managingCtrlGroup = new AddinExpress.MSO.ADXRibbonGroup(this.components);
             this.buttonShow = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.buttonClose = new AddinExpress.MSO.ADXRibbonButton(this.components);
+            this.adxKeyboardShortcutCopy = new AddinExpress.MSO.ADXKeyboardShortcut(this.components);
             // 
             // outlookFormManager
             // 
@@ -126,9 +128,16 @@ namespace WSUIOutlookPlugin
             this.buttonClose.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
             | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             // 
+            // adxKeyboardShortcutCopy
+            // 
+            this.adxKeyboardShortcutCopy.ShortcutText = "Ctrl+C";
+            this.adxKeyboardShortcutCopy.SupportedApps = AddinExpress.MSO.ADXOfficeHostApp.ohaOutlook;
+            this.adxKeyboardShortcutCopy.Action += new AddinExpress.MSO.ADXAction_EventHandler(this.adxKeyboardShortcutCopy_Action);
+            // 
             // WSUIAddinModule
             // 
             this.AddinName = "WS Plugin (Windows  Search)";
+            this.HandleShortcuts = true;
             this.SupportedApps = AddinExpress.MSO.ADXOfficeHostApp.ohaOutlook;
             this.AddinStartupComplete += new AddinExpress.MSO.ADXEvents_EventHandler(this.WSUIAddinModule_AddinStartupComplete);
 
@@ -682,7 +691,12 @@ namespace WSUIOutlookPlugin
                     ADXXOLKey.Close();
                 }
             }
-        } 
+        }
+
+        private void adxKeyboardShortcutCopy_Action(object sender)
+        {
+            System.Diagnostics.Debug.WriteLine("shortcut");
+        }
 
     }
 }

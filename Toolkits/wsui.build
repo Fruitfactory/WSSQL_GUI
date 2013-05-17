@@ -49,5 +49,23 @@
     <echo message="Clear publishing settings..." />
     <exec program="wsadxpublisher.exe" basedir="${build.tools.dir}" commandline='/clear' workingdir="." />
   </target>
+  
+  <target name="copyFiles" depends="clearSettingsADX">
+    <exec program="copy.bat" verbose="true">
+      
+    </exec>
+  </target>
+  
+  
+  <target name="deploy" depends="copyFiles">
+    <exec program="bash.exe" basedir="C:\Program Files (x86)\Git\bin\" verbose="true">
+      <environment>
+        <variable name="HOME" value="${environment::get-variable('userprofile')}"/>
+        <variable name="ADDPATH" value=".:/usr/local/bin:/mingw/bin:/bin:/bin"/>
+      </environment>
+      <arg file="deploy.sh" />
+    </exec>
+  </target>
+  
 
 </project>

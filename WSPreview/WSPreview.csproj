@@ -136,6 +136,9 @@
     <Compile Include="Controls\Office\OutlookFilePreview.Designer.cs">
       <DependentUpon>OutlookFilePreview.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PreviewBrowser.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\Office\WordWindow.cs" />
     <Compile Include="Controls\PageViewer.cs">
       <SubType>UserControl</SubType>

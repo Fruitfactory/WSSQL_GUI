@@ -475,6 +475,16 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
                 WSSqlLogger.Instance.LogInfo(codeKey.ToString());
             }
         }
+
+        private void OutlookFilePreview_KeyDown(object sender, KeyEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine(e.KeyValue);
+        }
+
+        private void webEmail_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine(e.KeyValue);
+        }
     }
 
 }

@@ -48,9 +48,12 @@ namespace WSUIOutlookPlugin
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(300, 300);
             this.Controls.Add(this.wpfHost);
+            this.KeyPreview = true;
             this.Location = new System.Drawing.Point(0, 0);
             this.Name = "WSUIForm";
             this.Text = "WSUIForm";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WSUIForm_KeyDown);
+            this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.WSUIForm_PreviewKeyDown);
             this.ResumeLayout(false);
 
         }

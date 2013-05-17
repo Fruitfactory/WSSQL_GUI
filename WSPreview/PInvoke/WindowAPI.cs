@@ -11,7 +11,9 @@ namespace C4F.DevKit.PreviewHandler.PInvoke
 
         public const int WM_DESTROY = 0x0002;
         public const int WM_SIZE = 0x0005;
-        public const int WM_KEYDOWN = 0x0100; 
+        public const int WM_KEYDOWN = 0x0100;
+        public const int WM_COPY = 0x0301;
+        public const int WM_CHAR = 0x0102;
 
         public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 

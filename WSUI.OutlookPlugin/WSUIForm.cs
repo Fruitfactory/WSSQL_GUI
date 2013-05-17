@@ -24,5 +24,15 @@ namespace WSUIOutlookPlugin
             _wsuiBootStraper.Run();
         }
 
+        private void WSUIForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine(e.KeyValue);
+        }
+
+        private void WSUIForm_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine(e.KeyValue);
+        }
+
     }
 }

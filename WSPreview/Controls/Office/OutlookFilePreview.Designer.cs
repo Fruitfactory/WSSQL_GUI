@@ -30,17 +30,20 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         /// </summary>
         private void InitializeComponent()
         {
-            this.webEmail = new System.Windows.Forms.WebBrowser();
+            this.webEmail = new C4F.DevKit.PreviewHandler.Controls.PreviewBrowser();
             this.SuspendLayout();
             // 
             // webEmail
             // 
+            this.webEmail.AllowNavigation = false;
+            this.webEmail.AllowWebBrowserDrop = false;
             this.webEmail.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webEmail.Location = new System.Drawing.Point(0, 0);
             this.webEmail.MinimumSize = new System.Drawing.Size(20, 20);
             this.webEmail.Name = "webEmail";
             this.webEmail.Size = new System.Drawing.Size(623, 452);
             this.webEmail.TabIndex = 1;
+            this.webEmail.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.webEmail_PreviewKeyDown);
             // 
             // OutlookFilePreview
             // 
@@ -52,13 +55,14 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             this.DoubleBuffered = true;
             this.Name = "OutlookFilePreview";
             this.Size = new System.Drawing.Size(623, 452);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OutlookFilePreview_KeyDown);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private WebBrowser webEmail;
+        private PreviewBrowser webEmail;
 
     }
 }
