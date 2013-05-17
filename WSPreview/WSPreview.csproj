@@ -220,6 +220,7 @@
     <Compile Include="Service\CsvHelper\CSVReader.cs" />
     <Compile Include="Service\CsvHelper\CSVWriter.cs" />
     <Compile Include="Service\Logger\WSSqlLogger.cs" />
+    <Compile Include="Service\WSActionType.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\Calendar\CalendarIcsPreview.resx">

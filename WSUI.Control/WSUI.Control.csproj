@@ -82,6 +82,7 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="AppEmpty.cs" />
+    <Compile Include="IPluginBootStraper.cs" />
     <Compile Include="PluginBootStraper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WSMainControl.xaml.cs">
@@ -89,6 +90,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WSPreview\WSPreview.csproj">
+      <Project>{3E9F9F18-B9AD-4DDE-A5D6-F71B75C737D2}</Project>
+      <Name>WSPreview</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WSUI.Infrastructure\WSUI.Infrastructure.csproj">
       <Project>{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}</Project>
       <Name>WSUI.Infrastructure</Name>

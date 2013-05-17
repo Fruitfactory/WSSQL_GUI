@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using C4F.DevKit.PreviewHandler.Service;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
@@ -338,6 +339,11 @@ namespace WSUI.Module.ViewModel
             {
                 OnChoose(lazyKind.Kind);
             }
+        }
+
+        public void PassActionForPreview(WSActionType actionType)
+        {
+
         }
 
         #endregion

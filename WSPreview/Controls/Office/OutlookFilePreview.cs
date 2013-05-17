@@ -11,13 +11,15 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using C4F.DevKit.PreviewHandler.Service;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Text.RegularExpressions;
+using mshtml;
 
 namespace C4F.DevKit.PreviewHandler.Controls.Office
 {
-    public partial class OutlookFilePreview : UserControl,ITranslateMessage
+    public partial class OutlookFilePreview : UserControl
     {
         private const string AfterStrongTemplate = "<font style='background-color: yellow'><strong>{0}</strong></font>";
         private const string OutlookProcessName = "OUTLOOK";
@@ -461,29 +463,18 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             return File.Exists(path) ? path : string.Empty;
         }
 
-        private void CopyWebBrowserText()
+        public void CopySelectedText()
         {
-            
-        }
-
-        public void PassMessage(Message m)
-        {
-            if (m.Msg == WM_KEYDOWN) // && (Keys)codeKey ==  Keys.C
+            IHTMLDocument2 htmlDocument = webEmail.Document.DomDocument as IHTMLDocument2;
+            IHTMLSelectionObject currentSelection = htmlDocument.selection;
+            if (currentSelection != null)
             {
-                int codeKey = Marshal.ReadInt32(m.WParam);
-                int lParam = Marshal.ReadInt32(m.LParam);
-                WSSqlLogger.Instance.LogInfo(codeKey.ToString());
+                IHTMLTxtRange range = currentSelection.createRange() as IHTMLTxtRange;
+                if (range != null)
+                {
+                    Clipboard.SetText(range.text);
+                }
             }
-        }
-
-        private void OutlookFilePreview_KeyDown(object sender, KeyEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine(e.KeyValue);
-        }
-
-        private void webEmail_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine(e.KeyValue);
         }
     }
 

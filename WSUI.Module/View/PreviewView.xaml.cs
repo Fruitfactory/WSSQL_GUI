@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using C4F.DevKit.PreviewHandler.PreviewHandlerHost;
+using C4F.DevKit.PreviewHandler.Service;
 using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Module.Interface;
 using WSUI.Module.Service;
@@ -58,6 +59,11 @@ namespace WSUI.Module.View
         public void ClearPreview()
         {
             _previewControl.UnloadPreview();
+        }
+
+        public void PassActionForPreview(WSActionType actionType)
+        {
+            _previewControl.PassAction(actionType);
         }
 
         #endregion

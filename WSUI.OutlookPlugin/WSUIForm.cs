@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using AddinExpress.OL;
+using C4F.DevKit.PreviewHandler.Service;
 using WSUI.Control;
   
 namespace WSUIOutlookPlugin
@@ -10,7 +11,7 @@ namespace WSUIOutlookPlugin
     public partial class WSUIForm : AddinExpress.OL.ADXOlForm
     {
 
-        private PluginBootStraper _wsuiBootStraper = null;
+        private IPluginBootStraper _wsuiBootStraper = null;
 
         public WSUIForm()
         {
@@ -24,14 +25,16 @@ namespace WSUIOutlookPlugin
             _wsuiBootStraper.Run();
         }
 
-        private void WSUIForm_KeyDown(object sender, KeyEventArgs e)
+        public void PassActionType(WSActionType actionType)
         {
-            System.Diagnostics.Debug.WriteLine(e.KeyValue);
-        }
-
-        private void WSUIForm_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine(e.KeyValue);
+            switch (actionType)
+            {
+                case WSActionType.Copy:
+                    _wsuiBootStraper.PassAction(actionType);
+                    break;
+                case WSActionType.Paste:
+                    break;
+            }
         }
 
     }

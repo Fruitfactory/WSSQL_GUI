@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using AddinExpress.MSO;
+using C4F.DevKit.PreviewHandler.Service;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Globalization;
 using System.Reflection;
@@ -695,7 +696,8 @@ namespace WSUIOutlookPlugin
 
         private void adxKeyboardShortcutCopy_Action(object sender)
         {
-            System.Diagnostics.Debug.WriteLine("shortcut");
+            WSUIForm frm = formWebPaneItem.GetCurrentForm();
+            frm.PassActionType(WSActionType.Copy);
         }
 
     }

@@ -7,6 +7,7 @@ using System.Globalization;
 using C4F.DevKit.PreviewHandler;
 using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 using C4F.DevKit.PreviewHandler.Controls.Office;
+using C4F.DevKit.PreviewHandler.Service;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
@@ -49,12 +50,13 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
                 base.Unload();
             }
 
-            public void PassMessage(Message m)
+            public void PassMessage(WSActionType action)
             {
-                var translateMessage = _preview as ITranslateMessage;
-                if (translateMessage != null)
+                switch (action)
                 {
-                    translateMessage.PassMessage(m);
+                    case WSActionType.Copy:
+                        _preview.CopySelectedText();
+                        break;
                 }
             }
         }
@@ -64,12 +66,11 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlers
             get; set;
         }
 
-        public void PassMessage(Message m)
+        public void PassMessage(WSActionType action)
         {
-            if (_previewControl is ITranslateMessage)
-            {
-                ((ITranslateMessage)_previewControl).PassMessage(m);
-            }
+            if(_previewControl == null)
+                return;
+            ((OutlookPreviewHandlerControl)_previewControl).PassMessage(action);
         }
     }
 }

@@ -10,6 +10,7 @@ using C4F.DevKit.PreviewHandler.PInvoke;
 using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.InteropServices;
+using C4F.DevKit.PreviewHandler.Service;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
@@ -90,6 +91,10 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
             }
         }
 
+        public void PassAction(WSActionType actionType)
+        {
+            
+        }
 
         private bool IsDesignTime()
         {

@@ -1,3 +1,4 @@
+using C4F.DevKit.PreviewHandler.Service;
 using WSUI.Module.ViewModel;
 
 namespace WSUI.Module.Interface
@@ -13,6 +14,7 @@ namespace WSUI.Module.Interface
         bool SetPreviewFile(string filename);
         void SetSearchPattern(string pattern);
         void ClearPreview();
+        void PassActionForPreview(WSActionType actionType);
 
         void Init();
     }
