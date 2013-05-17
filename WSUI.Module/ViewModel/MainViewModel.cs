@@ -343,7 +343,7 @@ namespace WSUI.Module.ViewModel
 
         public void PassActionForPreview(WSActionType actionType)
         {
-
+            PreviewView.PassActionForPreview(actionType);
         }
 
         #endregion

@@ -52,8 +52,6 @@ namespace WSUIOutlookPlugin
             this.Location = new System.Drawing.Point(0, 0);
             this.Name = "WSUIForm";
             this.Text = "WSUIForm";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WSUIForm_KeyDown);
-            this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.WSUIForm_PreviewKeyDown);
             this.ResumeLayout(false);
 
         }

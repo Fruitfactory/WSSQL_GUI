@@ -43,7 +43,6 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             this.webEmail.Name = "webEmail";
             this.webEmail.Size = new System.Drawing.Size(623, 452);
             this.webEmail.TabIndex = 1;
-            this.webEmail.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.webEmail_PreviewKeyDown);
             // 
             // OutlookFilePreview
             // 
@@ -55,7 +54,6 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             this.DoubleBuffered = true;
             this.Name = "OutlookFilePreview";
             this.Size = new System.Drawing.Size(623, 452);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OutlookFilePreview_KeyDown);
             this.ResumeLayout(false);
 
         }

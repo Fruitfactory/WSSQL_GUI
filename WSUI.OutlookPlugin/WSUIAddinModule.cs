@@ -16,6 +16,7 @@ using System.Net;
 using System.Diagnostics;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using System.IO;
+using AddinExpress.OL;
 
 namespace WSUIOutlookPlugin
 {
@@ -696,8 +697,15 @@ namespace WSUIOutlookPlugin
 
         private void adxKeyboardShortcutCopy_Action(object sender)
         {
-            WSUIForm frm = formWebPaneItem.GetCurrentForm();
-            frm.PassActionType(WSActionType.Copy);
+            try
+            {
+                WSUIForm frm = (WSUIForm)formWebPaneItem.GetCurrentForm(EmbeddedFormStates.Active);
+                frm.PassActionType(WSActionType.Copy);
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
         }
 
     }

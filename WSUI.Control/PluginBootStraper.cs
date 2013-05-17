@@ -43,7 +43,7 @@ namespace WSUI.Control
             //base.InitializeModules();
             IModule module = Container.Resolve<WSUI.Module.WSModule>();
             module.Initialize();
-            _mainViewModel mvv = Container.Resolve<WSUI.Module.ViewModel.MainViewModel>();
+            _mainViewModel = Container.Resolve<WSUI.Module.ViewModel.MainViewModel>();
             (this.Shell as IMainView).Model = _mainViewModel;
         }
 

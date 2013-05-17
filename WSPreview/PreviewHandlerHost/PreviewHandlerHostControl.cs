@@ -93,7 +93,10 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
 
         public void PassAction(WSActionType actionType)
         {
-            
+            if (_comInstance != null && _comInstance is ITranslateMessage)
+            {
+                ((ITranslateMessage)_comInstance).PassMessage(actionType);
+            }
         }
 
         private bool IsDesignTime()
@@ -235,13 +238,6 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                 case WindowAPI.WM_SIZE:
                     if(_registreHandler)
                         WindowAPI.EnumChildWindows(this.Handle, SendSizeMessage, m.LParam);
-                    break;
-                case WindowAPI.WM_COPY:
-                case WindowAPI.WM_KEYDOWN:
-                    if (_comInstance is ITranslateMessage)
-                    {
-                        ((ITranslateMessage)_comInstance).PassMessage(m);
-                    }
                     break;
             }
             base.WndProc(ref m);
