@@ -27,6 +27,7 @@ namespace WSADXPublisher
         private const string DownloaderFileName = "downloaderFileName";
         private const string TargetApplicationNames = "targetApplicationNames";
         private const string TargetFrameworkVersion = "targetFrameworkVersion";
+        private const string ShowRunningApplicationsWarning = "showRunningApplicationsWarning";
 
         #endregion
 
@@ -167,6 +168,14 @@ namespace WSADXPublisher
                 if (val != null)
                 {
                     val.Attribute(ValueAttribute).Value = Properties.Settings.Default.targetFrameworkVersion.ToString();
+                }
+            }
+            if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == ShowRunningApplicationsWarning))
+            {
+                XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == ShowRunningApplicationsWarning).First();
+                if (val != null)
+                {
+                    val.Attribute(ValueAttribute).Value = Properties.Settings.Default.showRunningApplicationsWarning.ToString();
                 }
             }
         }
@@ -362,6 +371,14 @@ namespace WSADXPublisher
                 if (val != null)
                 {
                     val.Attribute(ValueAttribute).Value = bool.TrueString;
+                }
+            }
+            if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == ShowRunningApplicationsWarning))
+            {
+                XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == ShowRunningApplicationsWarning).First();
+                if (val != null)
+                {
+                    val.Attribute(ValueAttribute).Value = bool.FalseString;
                 }
             }
         }

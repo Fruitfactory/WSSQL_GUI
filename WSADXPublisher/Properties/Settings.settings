@@ -35,11 +35,14 @@
     <Setting Name="downloaderFileName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">wsui.outlookplugin.exe</Value>
     </Setting>
-    <Setting Name="targetApplicationNames" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Outlook</Value>
-    </Setting>
     <Setting Name="targetFrameworkVersion" Type="System.String" Scope="Application">
       <Value Profile="(Default)">v4.0.30319</Value>
+    </Setting>
+    <Setting Name="targetApplicationNames" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="showRunningApplicationsWarning" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>
