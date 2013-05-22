@@ -126,7 +126,16 @@ namespace WSADXPublisher.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Outlook")]
+        [global::System.Configuration.DefaultSettingValueAttribute("v4.0.30319")]
+        public string targetFrameworkVersion {
+            get {
+                return ((string)(this["targetFrameworkVersion"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string targetApplicationNames {
             get {
                 return ((string)(this["targetApplicationNames"]));
@@ -135,10 +144,10 @@ namespace WSADXPublisher.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("v4.0.30319")]
-        public string targetFrameworkVersion {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool showRunningApplicationsWarning {
             get {
-                return ((string)(this["targetFrameworkVersion"]));
+                return ((bool)(this["showRunningApplicationsWarning"]));
             }
         }
     }
