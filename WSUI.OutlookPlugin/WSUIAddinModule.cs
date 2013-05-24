@@ -139,8 +139,16 @@ namespace WSUIOutlookPlugin
             // WSUIAddinModule
             // 
             this.AddinName = "WS Plugin (Windows  Search)";
-            this.HandleShortcuts = true;
-            this.SupportedApps = AddinExpress.MSO.ADXOfficeHostApp.ohaOutlook;
+            this.SupportedApps = ((AddinExpress.MSO.ADXOfficeHostApp)(((((((((((AddinExpress.MSO.ADXOfficeHostApp.ohaExcel | AddinExpress.MSO.ADXOfficeHostApp.ohaWord) 
+            | AddinExpress.MSO.ADXOfficeHostApp.ohaOutlook) 
+            | AddinExpress.MSO.ADXOfficeHostApp.ohaPowerPoint) 
+            | AddinExpress.MSO.ADXOfficeHostApp.ohaAccess) 
+            | AddinExpress.MSO.ADXOfficeHostApp.ohaProject) 
+            | AddinExpress.MSO.ADXOfficeHostApp.ohaFrontPage) 
+            | AddinExpress.MSO.ADXOfficeHostApp.ohaMapPoint) 
+            | AddinExpress.MSO.ADXOfficeHostApp.ohaVisio) 
+            | AddinExpress.MSO.ADXOfficeHostApp.ohaPublisher) 
+            | AddinExpress.MSO.ADXOfficeHostApp.ohaInfoPath)));
             this.AddinStartupComplete += new AddinExpress.MSO.ADXEvents_EventHandler(this.WSUIAddinModule_AddinStartupComplete);
 
         }
@@ -264,7 +272,9 @@ namespace WSUIOutlookPlugin
 
                 Process process = new Process();
                 process.StartInfo.FileName = "msiexec.exe";
-                process.StartInfo.Arguments = string.Format(" /qb /i \"{0}\" ALLUSERS=0", localmsi);
+                process.StartInfo.Arguments = string.Format(" /a /qn /i \"{0}\" ALLUSERS=0", localmsi);
+                //WSSqlLogger.Instance.LogInfo(string.Format("TARGETDIR = {0}",path));
+                //process.StartInfo.Arguments = string.Format(" /a \"{0}\" /qn TARGETDIR=\"{1}\" ", localmsi,path);
                 WSSqlLogger.Instance.LogInfo("Installing update...");
                 process.Start();
                 process.WaitForExit();

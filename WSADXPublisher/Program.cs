@@ -234,11 +234,11 @@ namespace WSADXPublisher
                 Console.WriteLine("downloaderFileName property is empty");
                 result = false;
             }
-            if (string.IsNullOrEmpty(Properties.Settings.Default.targetApplicationNames))
-            {
-                Console.WriteLine("targetApplicationNames property is empty");
-                result = false;
-            }
+            //if (string.IsNullOrEmpty(Properties.Settings.Default.targetApplicationNames))
+            //{
+            //    Console.WriteLine("targetApplicationNames property is empty");
+            //    result = false;
+            //}
             if (string.IsNullOrEmpty(Properties.Settings.Default.targetFrameworkVersion))
             {
                 Console.WriteLine("targetFrameworkVersion property is empty");
