@@ -13,7 +13,7 @@
         <showRunningApplicationsWarning>false</showRunningApplicationsWarning>
       </preferences>
     </version>
-    <version name="1.0.1" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/" productCode="{618733A1-24A5-4CC9-90ED-B8B66655A60E}" updateType="directLink">
+    <version name="1.0.1" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/" productCode="{9075E053-44B7-4D57-8956-913B57A6BA33}" updateType="directLink">
       <files msi="WSUI.OutlookPluginSetup" customActionAssembly="" customActionClass="">
         <file>WSUI.OutlookPluginSetup.msi</file>
       </files>
