@@ -272,7 +272,7 @@ namespace WSUIOutlookPlugin
 
                 Process process = new Process();
                 process.StartInfo.FileName = "msiexec.exe";
-                process.StartInfo.Arguments = string.Format(" /a /qn /i \"{0}\" ALLUSERS=0", localmsi);
+                process.StartInfo.Arguments = string.Format(" /i \"{0}\" /quiet /qb /norestart /log {1}install.log ALLUSERS=0  ", localmsi,path); //REINSTALL=\"ALL\"
                 //WSSqlLogger.Instance.LogInfo(string.Format("TARGETDIR = {0}",path));
                 //process.StartInfo.Arguments = string.Format(" /a \"{0}\" /qn TARGETDIR=\"{1}\" ", localmsi,path);
                 WSSqlLogger.Instance.LogInfo("Installing update...");
