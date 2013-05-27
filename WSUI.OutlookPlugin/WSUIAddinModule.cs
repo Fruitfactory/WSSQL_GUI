@@ -43,6 +43,10 @@ namespace WSUIOutlookPlugin
         private const string VersionFilename = "version_info.xml";
         private const string TempFolder = "{0}Update\\{1}";
         private const string TempFolderCreate = "{0}Update";
+
+        private const string ShadowCopyFolder = "{0}\\Shadow";
+
+
         private ADXKeyboardShortcut adxKeyboardShortcutCopy;
 
         private const string ADXHTMLFileName = "ADXOlFormGeneral.html";
@@ -256,9 +260,11 @@ namespace WSUIOutlookPlugin
                 WSSqlLogger.Instance.LogInfo(string.Format("File: {0}...", filename));
                 string path = Assembly.GetAssembly(typeof(WSUIAddinModule)).Location;
                 path = path.Substring(0, path.LastIndexOf('\\') + 1);
+                string shadow = string.Format(ShadowCopyFolder, path);
                 _instalatonUrl = GetInstalationPath(path);
                 WSSqlLogger.Instance.LogInfo(string.Format("Instalation Url: {0}...", _instalatonUrl));
                 CreateTempFolder(string.Format(TempFolderCreate, path));
+                CreateTempFolder(shadow);
                 string localmsi = string.Format(TempFolder, path,UpdatedFilename);
                 WSSqlLogger.Instance.LogInfo(string.Format("Msi local path: {0}...", localmsi));
                 string localversion = string.Format(TempFolder, path, VersionFilename);
@@ -273,14 +279,15 @@ namespace WSUIOutlookPlugin
 
                 Process process = new Process();
                 process.StartInfo.FileName = "msiexec.exe";
-                process.StartInfo.Arguments = string.Format(" /i \"{0}\" /qb /norestart /log {1}install.log ALLUSERS=0  ", localmsi,path); //REINSTALL=\"ALL\"
+                //process.StartInfo.Arguments = string.Format(" /i \"{0}\" /qb /norestart /log {1}install.log ALLUSERS=0  ", localmsi,path); //REINSTALL=\"ALL\"
                 process.StartInfo.Verb = "runas";
-                //WSSqlLogger.Instance.LogInfo(string.Format("TARGETDIR = {0}",path));
-                //process.StartInfo.Arguments = string.Format(" /a \"{0}\" /qn TARGETDIR=\"{1}\" ", localmsi,path);
+                WSSqlLogger.Instance.LogInfo(string.Format("TARGETDIR = {0}",shadow));
+                process.StartInfo.Arguments = string.Format(" /a \"{0}\" /qb TARGETDIR={1} ", localmsi,shadow);
                 WSSqlLogger.Instance.LogInfo("Installing update...");
                 process.Start();
                 process.WaitForExit();
                 WSSqlLogger.Instance.LogInfo(string.Format("Exit code: {0}",process.ExitCode));
+                Copy(shadow,path);
                 if(process.ExitCode == 0)
                     UpdatedInstallationInfo(path,localversion);
                 DeleteTempFolder(string.Format(TempFolderCreate, path));
@@ -290,6 +297,20 @@ namespace WSUIOutlookPlugin
             {
                 WSSqlLogger.Instance.LogInfo(string.Format("Exception during updates: {0}...",ex.Message));
             }
+        }
+
+        void Copy(string sourceDir, string targetDir)
+        {
+            Directory.CreateDirectory(targetDir);
+            foreach (var file in Directory.GetFiles(sourceDir))
+                try
+                {
+                    File.Copy(file, Path.Combine(targetDir, Path.GetFileName(file)));
+                }
+                catch (Exception ex)
+                {
+                    WSSqlLogger.Instance.LogError(ex.Message);
+                }
         }
 
         private bool IsAdmin()
