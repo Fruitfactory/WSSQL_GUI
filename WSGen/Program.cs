@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace WSGen
 {
@@ -43,27 +44,48 @@ namespace WSGen
         
         static void UpdateSetupProject(string setupProject, string buildNumber)
         {
-            string content = string.Empty;
-            using (StreamReader reader = new StreamReader(setupProject))
-            {
-                content = reader.ReadToEnd();
-            }
-            if (string.IsNullOrEmpty(content))
-            {
-                Console.WriteLine("Content of setup project is empty.");
+            #region [for visuall setup project]
+
+            //string content = string.Empty;
+            //using (StreamReader reader = new StreamReader(setupProject))
+            //{
+            //    content = reader.ReadToEnd();
+            //}
+            //if (string.IsNullOrEmpty(content))
+            //{
+            //    Console.WriteLine("Content of setup project is empty.");
+            //    return;
+            //}
+            //content = Regex.Replace(content, Properties.Settings.Default.ProductVersion,
+            //                        string.Format(Properties.Settings.Default.ProductVersionTemplate, buildNumber),
+            //                        RegexOptions.IgnoreCase);
+            //string guid = "{" + Guid.NewGuid().ToString().ToUpperInvariant() + "}";
+            //content = Regex.Replace(content, Properties.Settings.Default.ProductCode,
+            //                        string.Format(Properties.Settings.Default.ProductCodeTemplate, guid),
+            //                        RegexOptions.IgnoreCase);
+            //using (StreamWriter writer = new StreamWriter(setupProject, false, Encoding.UTF8))
+            //{
+            //    writer.Write(content);
+            //}
+
+            #endregion
+
+            if(!File.Exists(setupProject))
                 return;
-            }
-            content = Regex.Replace(content, Properties.Settings.Default.ProductVersion,
-                                    string.Format(Properties.Settings.Default.ProductVersionTemplate, buildNumber),
-                                    RegexOptions.IgnoreCase);
-            string guid = "{" + Guid.NewGuid().ToString().ToUpperInvariant() + "}";
-            content = Regex.Replace(content, Properties.Settings.Default.ProductCode,
-                                    string.Format(Properties.Settings.Default.ProductCodeTemplate, guid),
-                                    RegexOptions.IgnoreCase);
-            using (StreamWriter writer = new StreamWriter(setupProject,false,Encoding.UTF8))
+
+
+            XDocument doc = XDocument.Load(setupProject);
+
+            XElement program = doc.Root.FirstNode as XElement;
+            if (program != null)
             {
-                writer.Write(content);
+                XAttribute attr = program.Attribute("Id");
+                attr.Value = Guid.NewGuid().ToString().ToUpperInvariant();
+                attr = program.Attribute("Version");
+                attr.Value = buildNumber;
             }
+
+            doc.Save(setupProject);
         }
     }
 }
