@@ -24,6 +24,7 @@
     <Media Id="1" Cabinet="WSUI.OutlookPlugin.cab" EmbedCab="yes" />
 
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <Property Id="ALLUSERS" Secure="yes"/>
     
     <Feature Id="ProductFeature" Title="WSUIOutlookPlugin" Level="1" ConfigurableDirectory="INSTALLFOLDER">
       <ComponentRef Id="INSTALLFOLDER" />
