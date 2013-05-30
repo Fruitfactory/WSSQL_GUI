@@ -5,6 +5,8 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <Media Id="1" Cabinet="WSUI.OutlookPlugin.cab" EmbedCab="yes" />
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <Property Id="ALLUSERS" Secure="yes"/>
+    
     <Feature Id="ProductFeature" Title="WSUIOutlookPlugin" Level="1" ConfigurableDirectory="INSTALLFOLDER">
       <ComponentRef Id="INSTALLFOLDER" />
       <ComponentGroupRef Id="ProductComponents" />
@@ -82,6 +84,4 @@
         <File Id="_WSUI_Infrastructure_dll" Name="WSUI.Infrastructure.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_WSUI_Module_dll" Name="WSUI.Module.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
       </Component>
-    </ComponentGroup>
-  </Fragment>
-</Wix>
+
