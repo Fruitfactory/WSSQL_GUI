@@ -18,6 +18,7 @@ using C4F.DevKit.PreviewHandler.Service.Logger;
 using System.IO;
 using AddinExpress.OL;
 using System.Security.Principal;
+using System.Threading;
 
 namespace WSUIOutlookPlugin
 {
@@ -66,7 +67,7 @@ namespace WSUIOutlookPlugin
         private ADXRibbonGroup managingCtrlGroup;
         private ADXRibbonButton buttonShow;
         private ADXRibbonButton buttonClose;
-        private Task taskUpdate;
+        private Thread taskUpdate;
  
         #region Component Designer generated code
         /// <summary>
@@ -233,7 +234,8 @@ namespace WSUIOutlookPlugin
 
             if (isMSIDep && isMSIUpdatable)
             {
-                taskUpdate = Task.Factory.StartNew(SilentUpdate);
+                taskUpdate = new Thread(new ThreadStart(SilentUpdate));
+                taskUpdate.Start();
             }
             else
             {
@@ -279,10 +281,10 @@ namespace WSUIOutlookPlugin
 
                 Process process = new Process();
                 process.StartInfo.FileName = "msiexec.exe";
-                //process.StartInfo.Arguments = string.Format(" /i \"{0}\" /qb /norestart /log {1}install.log ALLUSERS=0  ", localmsi,path); //REINSTALL=\"ALL\"
+                process.StartInfo.Arguments = string.Format(" /i \"{0}\" /qb /norestart /log {1}install.log ALLUSERS=0  ", localmsi,path); //REINSTALL=\"ALL\"
                 process.StartInfo.Verb = "runas";
                 WSSqlLogger.Instance.LogInfo(string.Format("TARGETDIR = {0}",shadow));
-                process.StartInfo.Arguments = string.Format(" /a \"{0}\" /qb TARGETDIR={1} ", localmsi,shadow);
+                //process.StartInfo.Arguments = string.Format(" /a \"{0}\" /qb TARGETDIR={1} ", localmsi,shadow);
                 WSSqlLogger.Instance.LogInfo("Installing update...");
                 process.Start();
                 process.WaitForExit();

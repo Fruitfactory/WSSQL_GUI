@@ -1,118 +1,87 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-	<Product 
-    Id="4A13FA1A-9952-4B7A-9019-2512AF42B56E" 
-    Name="WSUIOutlookPlugin" 
-    Language="1033" 
-    Version="1.0.1" 
-    Manufacturer="FruitFactory" 
-    UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" 
-    Codepage="1252">
-    
-  	<Package 
-      InstallerVersion="200" 
-      Compressed="yes"  
-      Description="WSUIOutlookPlugin"
-      Manufacturer="FruitFactory"
-      Languages="1033"
-      SummaryCodepage="1252" 
-      InstallScope="perUser"
-      InstallPrivileges="limited"
-    /> 
-
+  <Product Id="C417CCA4-4764-41D7-9316-89A940DE84EE" Name="WSUIOutlookPlugin" Language="1033" Version="1.0.1" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+    <Package InstallerVersion="200" Compressed="yes" Description="WSUIOutlookPlugin" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <Media Id="1" Cabinet="WSUI.OutlookPlugin.cab" EmbedCab="yes" />
-
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
-    
     <Feature Id="ProductFeature" Title="WSUIOutlookPlugin" Level="1" ConfigurableDirectory="INSTALLFOLDER">
       <ComponentRef Id="INSTALLFOLDER" />
       <ComponentGroupRef Id="ProductComponents" />
     </Feature>
-
     <UIRef Id="WixUI_InstallDir" />
     <UIRef Id="WixUI_ErrorProgressText" />
-
     <Binary Id="adxregistrator_exe" SourceFile="$(var.ADX_PATH)\Redistributables\adxregistrator.exe" />
-    
-    <CustomAction Id="RegisterDll" BinaryKey="adxregistrator_exe" Execute="deferred" ExeCommand='/install="[INSTALLFOLDER]$(var.WSUI.OutlookPlugin.TargetFileName)" /privileges=user /returnExitCode=false' Impersonate="yes" />
-    <CustomAction Id="UnregisterDll" BinaryKey="adxregistrator_exe" Execute="deferred" ExeCommand='/uninstall="[INSTALLFOLDER]$(var.WSUI.OutlookPlugin.TargetFileName)" /privileges=user' Impersonate="yes" Return="ignore" />
-
+    <CustomAction Id="RegisterDll" BinaryKey="adxregistrator_exe" Execute="deferred" ExeCommand="/install=&quot;[INSTALLFOLDER]$(var.WSUI.OutlookPlugin.TargetFileName)&quot; /privileges=user /returnExitCode=false" Impersonate="yes" />
+    <CustomAction Id="UnregisterDll" BinaryKey="adxregistrator_exe" Execute="deferred" ExeCommand="/uninstall=&quot;[INSTALLFOLDER]$(var.WSUI.OutlookPlugin.TargetFileName)&quot; /privileges=user" Impersonate="yes" Return="ignore" />
     <InstallExecuteSequence>
       <Custom Action="RegisterDll" After="SelfRegModules">NOT Installed</Custom>
       <Custom Action="UnregisterDll" After="SelfUnregModules">Installed</Custom>
     </InstallExecuteSequence>
-
     <!-- Properties for all current versions of the .NET Framework are available here: http://wix.sourceforge.net/manual-wix3/wixnetfxextension.htm -->
-    <PropertyRef Id="NETFRAMEWORK40CLIENT"/>
-    <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again.">
-      <![CDATA[Installed OR NETFRAMEWORK40CLIENT]]>
-    </Condition>
-
+    <PropertyRef Id="NETFRAMEWORK40CLIENT" />
+    <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again."><![CDATA[Installed OR NETFRAMEWORK40CLIENT]]></Condition>
   </Product>
-
-	<Fragment>
-		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="LocalAppDataFolder">
-				<Directory Id="INSTALLFOLDER" Name="WSUIOutlookPlugin" >
-         <Component Id="INSTALLFOLDER" Guid="c7b05686-b33f-4d75-ae82-aa8c069e6a7d">
-            <RemoveFolder On="both" Id="INSTALLFOLDER"/>
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="LocalAppDataFolder">
+        <Directory Id="INSTALLFOLDER" Name="WSUIOutlookPlugin">
+          <Component Id="INSTALLFOLDER" Guid="c7b05686-b33f-4d75-ae82-aa8c069e6a7d">
+            <RemoveFolder On="both" Id="INSTALLFOLDER" />
             <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="WSUIOutlookPlugin" />
           </Component>
         </Directory>
-			</Directory>
-		</Directory>
-	</Fragment>
-
-	<Fragment>
-		<ComponentGroup Id="ProductComponents" >
-      <Component Id="ProductComponent" Guid="515bb330-8d0b-4160-b5e2-a41f32a1c0d5" DiskId="1" Directory="INSTALLFOLDER" >
+      </Directory>
+    </Directory>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="ProductComponents">
+      <Component Id="ProductComponent" Guid="515bb330-8d0b-4160-b5e2-a41f32a1c0d5" DiskId="1" Directory="INSTALLFOLDER">
         <RegistryKey Root="HKCU" Key="Software\[Manufacturer]\[ProductName]">
           <RegistryValue Type="string" Name="Installed" Value="[INSTALLFOLDER]" KeyPath="yes" />
         </RegistryKey>
         <File Id="_$(var.WSUI.OutlookPlugin.TargetName)_dll" Name="$(var.WSUI.OutlookPlugin.TargetFileName)" Source="$(var.WSUI.OutlookPlugin.TargetPath)" />
         <File Id="_adxloader_dll_manifest" Name="adxloader.dll.manifest" Source="$(var.WSUI.OutlookPlugin.ProjectDir)Loader\" />
-        <File Id="_adxloader_dll" Name="adxloader.dll" Source="$(var.WSUI.OutlookPlugin.ProjectDir)Loader\"  />
+        <File Id="_adxloader_dll" Name="adxloader.dll" Source="$(var.WSUI.OutlookPlugin.ProjectDir)Loader\" />
         <File Id="_adxloader64_dll" Name="adxloader64.dll" Source="$(var.WSUI.OutlookPlugin.ProjectDir)Loader\" />
         <File Id="_AddinExpress_MSO_2005_dll" Name="AddinExpress.MSO.2005.dll" Source="C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\Bin\" />
-				<File Id="_AddinExpress_OL_2005_dll" Name="AddinExpress.OL.2005.dll" Source="C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\Bin\" />
-				<File Id="_Extensibility_dll" Name="Extensibility.dll" Source="C:\Windows\assembly\GAC\Extensibility\7.0.3300.0__b03f5f7f11d50a3a\" />
-				<File Id="_Microsoft_Office_Interop_Outlook_dll" Name="Microsoft.Office.Interop.Outlook.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_WSPreview_dll" Name="WSPreview.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_WSUI_Control_dll" Name="WSUI.Control.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_GflWrapper_dll" Name="GflWrapper.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_ICSharpCode_SharpZipLib_dll" Name="ICSharpCode.SharpZipLib.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_libgfl340_dll" Name="libgfl340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_libgfle340_dll" Name="libgfle340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_log4net_config" Name="log4net.config" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_log4net_dll" Name="log4net.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_log4net_xml" Name="log4net.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_MahApps_Metro_dll" Name="MahApps.Metro.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_MahApps_Metro_Resources_dll" Name="MahApps.Metro.Resources.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_Microsoft_Ink_dll" Name="Microsoft.Ink.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_Microsoft_Office_Interop_Excel_dll" Name="Microsoft.Office.Interop.Excel.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_Microsoft_Office_Interop_Word_dll" Name="Microsoft.Office.Interop.Word.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_Microsoft_Practices_Prism_dll" Name="Microsoft.Practices.Prism.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_Microsoft_Practices_Prism_UnityExtensions_dll" Name="Microsoft.Practices.Prism.UnityExtensions.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_Microsoft_Practices_Prism_UnityExtensions_xml" Name="Microsoft.Practices.Prism.UnityExtensions.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_Microsoft_Practices_Prism_xml" Name="Microsoft.Practices.Prism.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_Microsoft_Practices_ServiceLocation_dll" Name="Microsoft.Practices.ServiceLocation.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_Microsoft_Practices_ServiceLocation_xml" Name="Microsoft.Practices.ServiceLocation.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_Microsoft_Practices_Unity_dll" Name="Microsoft.Practices.Unity.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_Microsoft_Practices_Unity_xml" Name="Microsoft.Practices.Unity.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_Microsoft_Vbe_Interop_dll" Name="Microsoft.Vbe.Interop.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_Office_dll" Name="Office.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_PDFLibNet_dll" Name="PDFLibNet.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_SciLexer_dll" Name="SciLexer.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_SciLexer64_dll" Name="SciLexer64.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_ScintillaNET_dll" Name="ScintillaNET.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_ScintillaNET_xml" Name="ScintillaNET.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_setup_exe" Name="setup.exe" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_System_Windows_Interactivity_dll" Name="System.Windows.Interactivity.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_WSPreview_dll_config" Name="WSPreview.dll.config" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_WSUI_Infrastructure_dll" Name="WSUI.Infrastructure.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-				<File Id="_WSUI_Module_dll" Name="WSUI.Module.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_AddinExpress_OL_2005_dll" Name="AddinExpress.OL.2005.dll" Source="C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\Bin\" />
+        <File Id="_Extensibility_dll" Name="Extensibility.dll" Source="C:\Windows\assembly\GAC\Extensibility\7.0.3300.0__b03f5f7f11d50a3a\" />
+        <File Id="_Microsoft_Office_Interop_Outlook_dll" Name="Microsoft.Office.Interop.Outlook.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_WSPreview_dll" Name="WSPreview.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_WSUI_Control_dll" Name="WSUI.Control.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_GflWrapper_dll" Name="GflWrapper.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_ICSharpCode_SharpZipLib_dll" Name="ICSharpCode.SharpZipLib.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_libgfl340_dll" Name="libgfl340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_libgfle340_dll" Name="libgfle340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_log4net_config" Name="log4net.config" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_log4net_dll" Name="log4net.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_log4net_xml" Name="log4net.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_MahApps_Metro_dll" Name="MahApps.Metro.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_MahApps_Metro_Resources_dll" Name="MahApps.Metro.Resources.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Microsoft_Ink_dll" Name="Microsoft.Ink.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Microsoft_Office_Interop_Excel_dll" Name="Microsoft.Office.Interop.Excel.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Microsoft_Office_Interop_Word_dll" Name="Microsoft.Office.Interop.Word.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Microsoft_Practices_Prism_dll" Name="Microsoft.Practices.Prism.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Microsoft_Practices_Prism_UnityExtensions_dll" Name="Microsoft.Practices.Prism.UnityExtensions.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Microsoft_Practices_Prism_UnityExtensions_xml" Name="Microsoft.Practices.Prism.UnityExtensions.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Microsoft_Practices_Prism_xml" Name="Microsoft.Practices.Prism.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Microsoft_Practices_ServiceLocation_dll" Name="Microsoft.Practices.ServiceLocation.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Microsoft_Practices_ServiceLocation_xml" Name="Microsoft.Practices.ServiceLocation.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Microsoft_Practices_Unity_dll" Name="Microsoft.Practices.Unity.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Microsoft_Practices_Unity_xml" Name="Microsoft.Practices.Unity.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Microsoft_Vbe_Interop_dll" Name="Microsoft.Vbe.Interop.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Office_dll" Name="Office.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_PDFLibNet_dll" Name="PDFLibNet.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_SciLexer_dll" Name="SciLexer.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_SciLexer64_dll" Name="SciLexer64.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_ScintillaNET_dll" Name="ScintillaNET.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_ScintillaNET_xml" Name="ScintillaNET.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_System_Windows_Interactivity_dll" Name="System.Windows.Interactivity.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_WSPreview_dll_config" Name="WSPreview.dll.config" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_WSUI_Infrastructure_dll" Name="WSUI.Infrastructure.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_WSUI_Module_dll" Name="WSUI.Module.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
       </Component>
-		</ComponentGroup>
-	</Fragment>
- </Wix>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
