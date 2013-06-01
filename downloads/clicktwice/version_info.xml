@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <application name="wsui.outlookplugin">
   <product language="1033">
-    <version name="1.0.0" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/" productCode="{2CF17A96-989C-4A62-9F4A-B2A4B2DDB7D7}" updateType="directLink">
+    <version name="1.0.0" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/" productCode="{1A1962BE-E338-40C1-B9F9-2DC595D61EEF}" updateType="directLink">
       <files msi="WSUI.OutlookPluginSetup">
         <file>WSUI.OutlookPluginSetup.msi</file>
       </files>
@@ -9,19 +9,6 @@
         <showInstallUI>true</showInstallUI>
         <showUninstallUI>false</showUninstallUI>
         <webPage />
-        <showDownloaderWindow>false</showDownloaderWindow>
-        <showRunningApplicationsWarning>false</showRunningApplicationsWarning>
-      </preferences>
-    </version>
-    <version name="1.0.1" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/" productCode="{D7DDC90D-C3AF-4A62-833C-E9A0B4E44148}" updateType="directLink">
-      <files msi="WSUI.OutlookPluginSetup" customActionAssembly="" customActionClass="">
-        <file>WSUI.OutlookPluginSetup.msi</file>
-      </files>
-      <preferences>
-        <showInstallUI>true</showInstallUI>
-        <showUninstallUI>false</showUninstallUI>
-        <webPage>
-        </webPage>
         <showDownloaderWindow>false</showDownloaderWindow>
         <showRunningApplicationsWarning>false</showRunningApplicationsWarning>
       </preferences>
