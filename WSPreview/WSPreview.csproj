@@ -136,6 +136,13 @@
     <Compile Include="Controls\Office\OutlookFilePreview.Designer.cs">
       <DependentUpon>OutlookFilePreview.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Office\WebUtils\DWebBrowserEvents2.cs" />
+    <Compile Include="Controls\Office\WebUtils\ExtWebBrowser.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Office\WebUtils\ExtWebBrowserEventHelper.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\PreviewBrowser.cs">
       <SubType>Component</SubType>
     </Compile>

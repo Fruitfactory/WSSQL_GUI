@@ -67,9 +67,9 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         public OutlookFilePreview()
         {
             InitializeComponent();
-            webEmail.Navigating += (sender, args) => OnNavigating(args);
+            //webEmail.Navigating += (sender, args) => OnNavigating(args);
+            webEmail.BeforeNavigate += WebEmailOnBeforeNavigate;
         }
-
 
         #region public 
 
@@ -476,6 +476,40 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
                 }
             }
         }
+
+        private void WebEmailOnBeforeNavigate(object sender, WebBrowserNavigatingEventArgs args)
+        {
+            string path = string.Empty;
+            switch (args.Url.Scheme)
+            {
+                case "https":
+                case "mailto":
+                case "http":
+                    path = args.Url.AbsoluteUri;
+                    break;
+                case "about":
+                    path = GetPathForEmail(args.Url);
+                    break;
+            }
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                try
+                {
+                    args.Cancel = true;
+                    Process.Start(path);
+                }
+                catch (Exception ex)
+                {
+                    WSSqlLogger.Instance.LogError(ex.Message);
+                }
+            }
+            else
+            {
+                WSSqlLogger.Instance.LogInfo("Path is empty. Outlook Preview");
+            }
+        }
+
     }
 
 }

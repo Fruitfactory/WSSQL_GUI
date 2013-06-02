@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using C4F.DevKit.PreviewHandler.Controls.Office.WebUtils;
 
 namespace C4F.DevKit.PreviewHandler.Controls.Office
 {
@@ -30,14 +31,14 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         /// </summary>
         private void InitializeComponent()
         {
-            this.webEmail = new C4F.DevKit.PreviewHandler.Controls.PreviewBrowser();
+            this.webEmail = new C4F.DevKit.PreviewHandler.Controls.Office.WebUtils.ExtWebBrowser();
             this.SuspendLayout();
             // 
             // webEmail
             // 
-            this.webEmail.AllowNavigation = false;
             this.webEmail.AllowWebBrowserDrop = false;
             this.webEmail.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webEmail.IsWebBrowserContextMenuEnabled = false;
             this.webEmail.Location = new System.Drawing.Point(0, 0);
             this.webEmail.MinimumSize = new System.Drawing.Size(20, 20);
             this.webEmail.Name = "webEmail";
@@ -60,7 +61,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
         #endregion
 
-        private PreviewBrowser webEmail;
+        private ExtWebBrowser webEmail;
 
     }
 }

@@ -17,7 +17,7 @@
     <SuppressSpecificWarnings>1076</SuppressSpecificWarnings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <OutputPath>C:\Users\Vincent\Documents\GitHub\WSUI\solution\ROutput\</OutputPath>
+    <OutputPath>H:\Visual\WORK\WSUI\solution\ROutput\</OutputPath>
     <DefineConstants>ADX_PATH=C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\;</DefineConstants>
     <SuppressSpecificWarnings>1076</SuppressSpecificWarnings>
   </PropertyGroup>

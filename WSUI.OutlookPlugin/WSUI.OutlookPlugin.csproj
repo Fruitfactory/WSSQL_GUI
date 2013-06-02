@@ -42,6 +42,9 @@
     <Reference Include="AddinExpress.OL.2005, Version=7.1.4050.2005, Culture=neutral, PublicKeyToken=e69a7e0f3592d2b8, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="Kennedy.ManagedHooks">
+      <HintPath>..\Toolkits\Hooks\Kennedy.ManagedHooks.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\Toolkits\Prism\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
@@ -96,6 +99,7 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Interfaces\ICleaneable.cs" />
     <Compile Include="WSUIAddinModule.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -125,4 +129,8 @@
       <Name>WSUI.Control</Name>
     </ProjectReference>
   </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy $(SolutionDir)Toolkits\Hooks\Kennedy.ManagedHooks.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\Hooks\SystemHookCore.dll $(TargetDir) /F /R /Y /I</PostBuildEvent>
+  </PropertyGroup>
 </Project>

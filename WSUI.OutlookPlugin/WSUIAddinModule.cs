@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using AddinExpress.MSO;
 using C4F.DevKit.PreviewHandler.Service;
+using WSUIOutlookPlugin.Interfaces;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Globalization;
 using System.Reflection;
@@ -47,9 +48,6 @@ namespace WSUIOutlookPlugin
 
         private const string ShadowCopyFolder = "{0}\\Shadow";
 
-
-        private ADXKeyboardShortcut adxKeyboardShortcutCopy;
-
         private const string ADXHTMLFileName = "ADXOlFormGeneral.html";
 
         public WSUIAddinModule()
@@ -88,7 +86,6 @@ namespace WSUIOutlookPlugin
             this.managingCtrlGroup = new AddinExpress.MSO.ADXRibbonGroup(this.components);
             this.buttonShow = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.buttonClose = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.adxKeyboardShortcutCopy = new AddinExpress.MSO.ADXKeyboardShortcut(this.components);
             // 
             // outlookFormManager
             // 
@@ -136,25 +133,10 @@ namespace WSUIOutlookPlugin
             this.buttonClose.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
             | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             // 
-            // adxKeyboardShortcutCopy
-            // 
-            this.adxKeyboardShortcutCopy.ShortcutText = "Ctrl+C";
-            this.adxKeyboardShortcutCopy.SupportedApps = AddinExpress.MSO.ADXOfficeHostApp.ohaOutlook;
-            this.adxKeyboardShortcutCopy.Action += new AddinExpress.MSO.ADXAction_EventHandler(this.adxKeyboardShortcutCopy_Action);
-            // 
             // WSUIAddinModule
             // 
             this.AddinName = "WS Plugin (Windows  Search)";
-            this.SupportedApps = ((AddinExpress.MSO.ADXOfficeHostApp)(((((((((((AddinExpress.MSO.ADXOfficeHostApp.ohaExcel | AddinExpress.MSO.ADXOfficeHostApp.ohaWord) 
-            | AddinExpress.MSO.ADXOfficeHostApp.ohaOutlook) 
-            | AddinExpress.MSO.ADXOfficeHostApp.ohaPowerPoint) 
-            | AddinExpress.MSO.ADXOfficeHostApp.ohaAccess) 
-            | AddinExpress.MSO.ADXOfficeHostApp.ohaProject) 
-            | AddinExpress.MSO.ADXOfficeHostApp.ohaFrontPage) 
-            | AddinExpress.MSO.ADXOfficeHostApp.ohaMapPoint) 
-            | AddinExpress.MSO.ADXOfficeHostApp.ohaVisio) 
-            | AddinExpress.MSO.ADXOfficeHostApp.ohaPublisher) 
-            | AddinExpress.MSO.ADXOfficeHostApp.ohaInfoPath)));
+            this.SupportedApps = AddinExpress.MSO.ADXOfficeHostApp.ohaOutlook;
             this.AddinStartupComplete += new AddinExpress.MSO.ADXEvents_EventHandler(this.WSUIAddinModule_AddinStartupComplete);
 
         }
@@ -266,7 +248,7 @@ namespace WSUIOutlookPlugin
                 _instalatonUrl = GetInstalationPath(path);
                 WSSqlLogger.Instance.LogInfo(string.Format("Instalation Url: {0}...", _instalatonUrl));
                 CreateTempFolder(string.Format(TempFolderCreate, path));
-                CreateTempFolder(shadow);
+                //CreateTempFolder(shadow);
                 string localmsi = string.Format(TempFolder, path,UpdatedFilename);
                 WSSqlLogger.Instance.LogInfo(string.Format("Msi local path: {0}...", localmsi));
                 string localversion = string.Format(TempFolder, path, VersionFilename);
@@ -281,7 +263,7 @@ namespace WSUIOutlookPlugin
 
                 Process process = new Process();
                 process.StartInfo.FileName = "msiexec.exe";
-                process.StartInfo.Arguments = string.Format(" /i \"{0}\" /qb /norestart /log {1}install.log ALLUSERS=0  ", localmsi,path); //REINSTALL=\"ALL\"
+                process.StartInfo.Arguments = string.Format(" /i \"{0}\" /qb /norestart /log {1}install.log ", localmsi,path); //REINSTALL=\"ALL\"
                 process.StartInfo.Verb = "runas";
                 WSSqlLogger.Instance.LogInfo(string.Format("TARGETDIR = {0}",shadow));
                 //process.StartInfo.Arguments = string.Format(" /a \"{0}\" /qb TARGETDIR={1} ", localmsi,shadow);
@@ -739,16 +721,18 @@ namespace WSUIOutlookPlugin
             }
         }
 
-        private void adxKeyboardShortcutCopy_Action(object sender)
+        protected override void Dispose(bool disposing)
         {
-            try
+            base.Dispose(disposing);
+            if (formWebPaneItem.Collection.Count > 0)
             {
-                WSUIForm frm = (WSUIForm)formWebPaneItem.GetCurrentForm(EmbeddedFormStates.Active);
-                frm.PassActionType(WSActionType.Copy);
-            }
-            catch (Exception ex)
-            {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                formWebPaneItem.Collection.OfType<WSUIForm>().ToList().ForEach(frm =>
+                                                                                   {
+                                                                                       if (frm is ICleaneable)
+                                                                                       {
+                                                                                           (frm as ICleaneable).Clean();
+                                                                                       }
+                                                                                   });
             }
         }
 
