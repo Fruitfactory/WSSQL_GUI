@@ -23,7 +23,7 @@ namespace WSUIOutlookPlugin
 
         private void HookManagerOnKeyDown(object sender, KeyEventArgs keyEventArgs)
         {
-            if ((Control.ModifierKeys & Keys.Control) == Keys.Control && keyEventArgs.KeyCode == Keys.C && Visible)
+            if (keyEventArgs != null && (Control.ModifierKeys & Keys.Control) == Keys.Control && keyEventArgs.KeyCode == Keys.C && Visible)
             {
                 _wsuiBootStraper.PassAction(WSActionType.Copy);
             }

@@ -470,7 +470,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             if (currentSelection != null)
             {
                 IHTMLTxtRange range = currentSelection.createRange() as IHTMLTxtRange;
-                if (range != null)
+                if (range != null && range.text  != null)
                 {
                     Clipboard.SetText(range.text);
                 }
