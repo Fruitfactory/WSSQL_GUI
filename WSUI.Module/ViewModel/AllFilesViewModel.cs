@@ -150,11 +150,24 @@ namespace WSUI.Module.ViewModel
                         Name = itemE.Subject,
                         Size = itemE.Size
                     };
-
                     TypeSearchItem type = SearchItemHelper.GetTypeItem(itemE.ItemUrl);
                     newValue.Type = type;
                     ListData.Add(newValue);
                     _countAdded++;
+
+                    #region [attacment could be hidden if they have the same ConversationID, so we should pass through list and add them by hand]
+                    if (ordered.Any(a => a.ItemUrl.Contains("at:")))
+                    {
+                        var listAttachment = ordered.Where(o => o.ItemUrl.Contains("at:"));
+                        foreach (var groupData in listAttachment)
+                        {
+                            var b = CreateBaseEntity(groupData,null);
+                            ListData.Add(newValue);
+                            _countAdded++;
+                        }
+                    }
+                    #endregion
+
                 }
                 else
                 {
@@ -164,25 +177,7 @@ namespace WSUI.Module.ViewModel
                         if(!itemByName.Any())
                             continue;
                         var fileItem = itemByName.ElementAt(0);
-
-                        if (string.IsNullOrEmpty(fileItem.ItemName)
-                          || string.IsNullOrEmpty(fileItem.ItemNameDisplay)
-                          || string.IsNullOrEmpty(fileItem.ItemUrl))
-                            continue;
-
-                        TypeSearchItem type = SearchItemHelper.GetTypeItem(fileItem.ItemUrl, fileItem.Kind != null && fileItem.Kind.Length > 0 ? fileItem.Kind[0].ToString() : string.Empty);
-                        BaseSearchData bs = new BaseSearchData()
-                        {
-                            Name = fileItem.ItemName,
-                            Path = fileItem.ItemUrl,
-                            Type = type,
-                            ID = Guid.NewGuid(),
-                            Display = fileItem.ItemNameDisplay,
-                            DateModified = fileItem.DateCreated,
-                            Tag = "",
-                            Count = itemByName.Count().ToString(),
-                            Size = fileItem.Size
-                        };
+                        BaseSearchData bs = CreateBaseEntity(fileItem,itemByName.Count());
                         ListData.Add(bs);
                         _countAdded++;
                     }
@@ -196,6 +191,24 @@ namespace WSUI.Module.ViewModel
             _countProcess = CountSecondAndOtherProcess;
             TopQueryResult = ScrollBehavior.CountSecondProcess;
             _isFirstTime = false;
+        }
+
+        private BaseSearchData CreateBaseEntity(GroupData data, int? count)
+        {
+            TypeSearchItem type = SearchItemHelper.GetTypeItem(data.ItemUrl, data.Kind != null && data.Kind.Length > 0 ? data.Kind[0].ToString() : string.Empty);
+            BaseSearchData bs = new BaseSearchData()
+            {
+                Name = data.ItemName,
+                Path = data.ItemUrl,
+                Type = type,
+                ID = Guid.NewGuid(),
+                Display = data.ItemNameDisplay,
+                DateModified = data.DateCreated,
+                Tag = "",
+                Count = count.HasValue ? count.Value.ToString() : string.Empty,
+                Size = data.Size
+            };
+            return bs;
         }
 
         protected override void OnSearchStringChanged()
