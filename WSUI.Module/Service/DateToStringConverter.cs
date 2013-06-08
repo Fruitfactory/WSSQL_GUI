@@ -14,7 +14,7 @@ namespace WSUI.Module.Service
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string result = ((DateTime) value).ToLocalTime().ToLongDateString();
+            string result = ((DateTime) value).ToLocalTime().ToShortDateString();
             return result;
         }
 

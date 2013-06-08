@@ -54,7 +54,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
             // init
             QueryTemplate =
-                "SELECT TOP {3} System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Subject,System.Message.ToAddress,System.Message.DateReceived,System.Size FROM SystemIndex WHERE System.Kind <> 'folder' AND System.DateCreated < '{1}' AND (Contains(*,{0},1033) OR ( {2} ) ) ORDER BY System.DateCreated DESC";//System.Search.Contents
+                "SELECT TOP {3} System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Subject,System.Message.ToAddress,System.Message.DateReceived,System.Size FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Kind <> 'contact' AND System.DateCreated < '{1}' AND (Contains(*,{0},1033) OR ( {2} ) OR (Contains(System.Search.Contents,{0},1033) ) ) ORDER BY System.DateCreated DESC";//System.Search.Contents
             QueryAnd = " AND \"{0}\""; 
             ID = 0;
             _name = "Everything";
@@ -164,6 +164,11 @@ namespace WSUI.Module.ViewModel
                         if(!itemByName.Any())
                             continue;
                         var fileItem = itemByName.ElementAt(0);
+
+                        if (string.IsNullOrEmpty(fileItem.ItemName)
+                          || string.IsNullOrEmpty(fileItem.ItemNameDisplay)
+                          || string.IsNullOrEmpty(fileItem.ItemUrl))
+                            continue;
 
                         TypeSearchItem type = SearchItemHelper.GetTypeItem(fileItem.ItemUrl, fileItem.Kind != null && fileItem.Kind.Length > 0 ? fileItem.Kind[0].ToString() : string.Empty);
                         BaseSearchData bs = new BaseSearchData()
@@ -414,7 +419,7 @@ namespace WSUI.Module.ViewModel
         private void ReadContactData(OleDbDataReader dataReader)
         {
             var item = ReadRawContactData(dataReader);
-            if(item != null)
+            if(item != null && !string.IsNullOrEmpty(item.Name))
                 _listContacts.Add(item);
         }
 

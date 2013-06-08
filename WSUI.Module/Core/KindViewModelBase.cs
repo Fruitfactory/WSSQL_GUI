@@ -29,13 +29,14 @@ using Microsoft.Practices.Unity;
 using WSUI.Module.Service;
 using Application = System.Windows.Application;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Core
 {
     public abstract class KindViewModelBase : ViewModelBase, IKindItem
     {
         protected readonly string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
-        protected const string OrLikeTemplate = " AND Contains(System.ItemName,'\"{0}\"') ";
+        protected const string OrLikeTemplate = " AND Contains(System.ItemName,'\"{0}*\"') ";
 
 
         protected string QueryTemplate;
@@ -195,7 +196,7 @@ namespace WSUI.Module.Core
             
             ProcessSearchCriteria(searchCriteria);
 
-            res = string.Format(QueryTemplate, string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause);
+            res = string.Format(QueryTemplate, string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}*\"'", _listW[0]) : _andClause);
 
             return res;
         }
@@ -214,7 +215,7 @@ namespace WSUI.Module.Core
             if (_listW.Count > 1)
             {
                 StringBuilder temp = new StringBuilder();
-                temp.Append(string.Format("'\"{0}\"", _listW[0]));
+                temp.Append(string.Format("'\"{0}*\"", _listW[0]));
                 for (int i = 1; i < _listW.Count; i++)
                 {
                     temp.Append(string.Format(QueryAnd, _listW[i]));
@@ -229,7 +230,7 @@ namespace WSUI.Module.Core
                 return string.Empty;
             var temp = new StringBuilder();
 
-            temp.Append(string.Format("Contains(System.ItemName,'\"{0}\"') ", _listW[0]));
+            temp.Append(string.Format("Contains(System.ItemName,'\"{0}*\"') ", _listW[0]));
 
             if (_listW.Count > 1)
                 for (int i = 1; i < _listW.Count; i++)
@@ -304,6 +305,12 @@ namespace WSUI.Module.Core
             if (_isQueryRun)
             {
                 WSSqlLogger.Instance.LogWarning("Query have already started");
+                return;
+            }
+            if (string.IsNullOrEmpty(SearchString))
+            {
+                MessageBoxService.Instance.Show("Warning", "Search criteria is empty");
+                WSSqlLogger.Instance.LogWarning("Search criteria is empty");
                 return;
             }
                 

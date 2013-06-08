@@ -36,7 +36,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
 
             QueryTemplate =
-                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.Message.DateReceived,System.Size FROM SystemIndex WHERE Contains(System.ItemUrl,'at') AND System.Message.DateReceived < '{2}'  AND ( ( {0} ) OR  Contains(System.Search.Contents,{1})) ORDER BY System.Message.DateReceived DESC"; //Contains(System.ItemName,'{0}*')  OR System.Search.Contents  AND System.DateCreated < '{2}'
+                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Size FROM SystemIndex WHERE Contains(System.ItemUrl,'at') AND System.DateCreated < '{2}'  AND ( ( {0} ) OR  Contains(System.Search.Contents,{1})) ORDER BY System.DateCreated DESC"; //Contains(System.ItemName,'{0}*')  OR System.Search.Contents  AND System.DateCreated < '{2}'
             QueryAnd = " AND \"{0}\"";
             ID = 3;
             _name = "Attachments";
