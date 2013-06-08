@@ -156,13 +156,14 @@ namespace WSUI.Module.ViewModel
                     _countAdded++;
 
                     #region [attacment could be hidden if they have the same ConversationID, so we should pass through list and add them by hand]
-                    if (ordered.Any(a => a.ItemUrl.Contains("at:")))
+                    if (ordered.Any(a => a.ItemUrl.Contains("at=")))
                     {
-                        var listAttachment = ordered.Where(o => o.ItemUrl.Contains("at:"));
+                        var listAttachment = ordered.Where(o => o.ItemUrl.Contains("at="));
                         foreach (var groupData in listAttachment)
                         {
                             var b = CreateBaseEntity(groupData,null);
-                            ListData.Add(newValue);
+                            b.DateModified = newValue.DateModified;
+                            ListData.Add(b);
                             _countAdded++;
                         }
                     }
