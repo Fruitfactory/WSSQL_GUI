@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Microsoft.Practices.Prism.Logging;
 using log4net;
 using log4net.Config;
 using System.Reflection;
@@ -10,10 +12,11 @@ using System.IO;
 
 namespace C4F.DevKit.PreviewHandler.Service.Logger
 {
-    public class WSSqlLogger
+    public class WSSqlLogger : ILoggerFacade
     {
 
         private const string Filename = "log4net.config";
+        private Stopwatch _watch;
 
         #region fields
         private ILog _log;
@@ -106,5 +109,31 @@ namespace C4F.DevKit.PreviewHandler.Service.Logger
 
         #endregion
 
+        public void Log(string message, Category category, Priority priority)
+        {
+
+            if (_watch != null && _watch.IsRunning)
+            {
+                _watch.Stop();
+                WriteLog(LevelLogging.Warning, string.Format("Last Elapsed: {0}ms", _watch.ElapsedMilliseconds));
+            }
+
+            switch (category)
+            {
+                case Category.Warn:
+                    WriteLog(LevelLogging.Warning, message);
+                    break;
+                case Category.Debug:
+                    WriteLog(LevelLogging.Info, message);
+                    break;
+                case Category.Info:
+                    WriteLog(LevelLogging.Info, message);
+                    break;
+                case Category.Exception:
+                    WriteLog(LevelLogging.Error, message);
+                    break;
+            }
+            (_watch = new Stopwatch()).Start();
+        }
     }
 }

@@ -80,8 +80,6 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                                                               
                                                               ShowProgressForm();
                                                               WSSqlLogger.Instance.LogInfo("Show progress delay > 0 ----------------------------------");
-                                                              System.Diagnostics.Debug.WriteLine(
-                                                                  ">>>Show progress delay > 0");
                                                           });
 
                 }
@@ -90,7 +88,6 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                     
                     ShowProgressForm();
                     WSSqlLogger.Instance.LogInfo(">>>Show progress delay == 0");
-                    System.Diagnostics.Debug.WriteLine("Show progress delay == 0 ----------------------------------");
                 }
             }
         }
@@ -122,7 +119,6 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                 {
                     _progressForm.ProcessCommand(ProgressFormCommand.Settings, _currentOperation);
                     ((Window) _progressForm).Closed += OnClosedForm;
-                    System.Diagnostics.Debug.WriteLine("Show dialog ----------------------------------");
                     WSSqlLogger.Instance.LogInfo(">>>Show dialog");
                 }
                 catch (Exception ex)
@@ -138,8 +134,6 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
         private void OnClosedForm(object sender,EventArgs args)
         {
             ((Window) _progressForm).Dispatcher.BeginInvokeShutdown(DispatcherPriority.Background);
-            System.Diagnostics.Debug.WriteLine(
-                "Close dialog ----------------------------------");
             WSSqlLogger.Instance.LogInfo(
                 ">>>Close dialog");
         }
@@ -156,7 +150,6 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                     _stackOperation.Pop();
                 }
             }
-            System.Diagnostics.Debug.WriteLine("Stop progress ----------------------------------");
             WSSqlLogger.Instance.LogInfo(">>>Stop progress");
             CloseProgressForm();
         }

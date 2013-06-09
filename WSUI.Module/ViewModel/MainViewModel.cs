@@ -70,15 +70,16 @@ namespace WSUI.Module.ViewModel
 
         public virtual void Init()
         {
-            switch(Host)
-            {
-                case HostType.Plugin:
-                    InitializeInThread();
-                    break;
-                default:
-                    Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
-                    break;
-            }
+            //switch(Host)
+            //{
+            //    case HostType.Plugin:
+            //        Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
+            //        break;
+            //    default:
+            //        Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
+            //        break;
+            //}
+            Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
         }
 
         public bool Enabled
