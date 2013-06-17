@@ -20,6 +20,7 @@ using System.IO;
 using AddinExpress.OL;
 using System.Security.Principal;
 using System.Threading;
+using WSUIOutlookPlugin.Core;
 
 namespace WSUIOutlookPlugin
 {
@@ -33,23 +34,14 @@ namespace WSUIOutlookPlugin
         private int _outlookVersion = 0;
         private bool _refreshCurrentFolderExecuting = false;
         private string _instalatonUrl = string.Empty;
+        private IUpdatable _updatable = null;
 
-        #region elements fo manifest
-        private const string InstallPathNodeName = "installationUrl";
-        private const string VersionNodeName = "version";
-        private const string ProductCodeNodeName = "productCode";
-        #endregion
+        
 
         #region [const]
         
 
-        private const string UpdatedFilename = "WSUI.OutlookPluginSetup.msi";
-        private const string ManifestFilename = "adxloader.dll.manifest";
-        private const string VersionFilename = "version_info.xml";
-        private const string TempFolder = "{0}Update\\{1}";
-        private const string TempFolderCreate = "{0}Update";
-
-        private const string ShadowCopyFolder = "{0}\\Shadow";
+       
 
         private const string ADXHTMLFileName = "ADXOlFormGeneral.html";
 
@@ -66,9 +58,11 @@ namespace WSUIOutlookPlugin
             WSSqlLogger.Instance.LogInfo(string.Format("InitializeComponent of Plugin: {0}ms",watch.ElapsedMilliseconds));
             // Please add any initialization code to the AddinInitialize event handler
             (watch = new Stopwatch()).Start();
+            
             Init();
             watch.Stop();
             WSSqlLogger.Instance.LogInfo(string.Format("Init own controls: {0}ms",watch.ElapsedMilliseconds));
+            
         }
 
         private AddinExpress.OL.ADXOlFormsManager outlookFormManager;
@@ -77,7 +71,7 @@ namespace WSUIOutlookPlugin
         private ADXRibbonGroup managingCtrlGroup;
         private ADXRibbonButton buttonShow;
         private ADXRibbonButton buttonClose;
-        private Thread taskUpdate;
+        
  
         #region Component Designer generated code
         /// <summary>
@@ -205,7 +199,6 @@ namespace WSUIOutlookPlugin
 
         private void Init()
         {
-            
             WSSqlLogger.Instance.LogInfo("Plugin is loading...");
             outlookFormManager.ADXBeforeFolderSwitchEx += outlookFormManager_ADXBeforeFolderSwitchEx;
             buttonShow.OnClick += buttonShow_OnClick;
@@ -215,110 +208,42 @@ namespace WSUIOutlookPlugin
             {
                 new AppEmpty();
             }
+            if (_updatable == null)
+            {
+                _updatable = UpdateHelper.Instance;
+                _updatable.Module = this;
+            }
             CheckUpdate();
         }
 
         #endregion
 
-
         private void CheckUpdate()
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            var isMSIDep = this.IsMSINetworkDeployed();
-            var isMSIUpdatable = this.IsMSIUpdatable();
-
-            if (isMSIDep && isMSIUpdatable)
-            {
-                taskUpdate = new Thread(new ThreadStart(SilentUpdate));
-                taskUpdate.Start();
+            
+            if (!ReferenceEquals(_updatable,null) && _updatable.CanUpdate())
+            {   
+                if(!_updatable.IsUpdating())
+                {
+                    _updatable.Lock();
+                   _updatable.RunSilentUpdate();
+                }
             }
             else
             {
-                WSSqlLogger.Instance.LogInfo(string.Format("IsMSIDep = {0}; IsMSIUpdatable = {1}", isMSIDep, isMSIUpdatable));
+                if (_updatable.IsUpdating())
+                {
+                     WSSqlLogger.Instance.LogInfo("Updating is running. Just update installation info and delete mutex...");
+                    _updatable.UpdateInstalationInfo();
+                    _updatable.Unlock();
+                }
+                WSSqlLogger.Instance.LogInfo(string.Format("Can update = {0}", _updatable != null && _updatable.CanUpdate()));
                 WSSqlLogger.Instance.LogInfo("Not updatable...");
             }
             watch.Stop();
             WSSqlLogger.Instance.LogInfo(string.Format("Check for update: {0}ms",watch.ElapsedMilliseconds));
-        }
-
-        private void SilentUpdate()
-        {
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-
-            try
-            {
-                WSSqlLogger.Instance.LogInfo("Check for updates...");
-                string url = this.CheckForMSIUpdates();
-                WSSqlLogger.Instance.LogInfo("End checking updates...");
-                if (string.IsNullOrEmpty(url))
-                {
-                    WSSqlLogger.Instance.LogInfo("No updates...");
-                    return;
-                }
-
-                string filename = url.Substring(0, url.LastIndexOf('/') + 1);
-                filename = filename + UpdatedFilename;
-                WSSqlLogger.Instance.LogInfo(string.Format("File: {0}...", filename));
-                string path = Assembly.GetAssembly(typeof(WSUIAddinModule)).Location;
-                path = path.Substring(0, path.LastIndexOf('\\') + 1);
-                string shadow = string.Format(ShadowCopyFolder, path);
-                _instalatonUrl = GetInstalationPath(path);
-                WSSqlLogger.Instance.LogInfo(string.Format("Instalation Url: {0}...", _instalatonUrl));
-                CreateTempFolder(string.Format(TempFolderCreate, path));
-                //CreateTempFolder(shadow);
-                string localmsi = string.Format(TempFolder, path, UpdatedFilename);
-                WSSqlLogger.Instance.LogInfo(string.Format("Msi local path: {0}...", localmsi));
-                string localversion = string.Format(TempFolder, path, VersionFilename);
-                WSSqlLogger.Instance.LogInfo(string.Format("Version local path: {0}...", localversion));
-                string urlVersion = _instalatonUrl + VersionFilename;
-                WSSqlLogger.Instance.LogInfo(string.Format("Version Url: {0}...", urlVersion));
-
-                WebClient webClient = new WebClient();
-                WSSqlLogger.Instance.LogInfo("Download update...");
-                webClient.DownloadFile(filename, localmsi);
-                webClient.DownloadFile(urlVersion, localversion);
-
-                Process process = new Process();
-                process.StartInfo.FileName = "msiexec.exe";
-                process.StartInfo.Arguments = string.Format(" /i \"{0}\" /qb /norestart /log {1}install.log ", localmsi, path); //REINSTALL=\"ALL\"
-                process.StartInfo.Verb = "runas";
-                WSSqlLogger.Instance.LogInfo(string.Format("TARGETDIR = {0}", shadow));
-                //process.StartInfo.Arguments = string.Format(" /a \"{0}\" /qb TARGETDIR={1} ", localmsi,shadow);
-                WSSqlLogger.Instance.LogInfo("Installing update...");
-                process.Start();
-                process.WaitForExit();
-                WSSqlLogger.Instance.LogInfo(string.Format("Exit code: {0}", process.ExitCode));
-                Copy(shadow, path);
-                if (process.ExitCode == 0)
-                    UpdatedInstallationInfo(path, localversion);
-                DeleteTempFolder(string.Format(TempFolderCreate, path));
-                WSSqlLogger.Instance.LogInfo("Update is done...");
-            }
-            catch (Exception ex)
-            {
-                WSSqlLogger.Instance.LogInfo(string.Format("Exception during updates: {0}...", ex.Message));
-            }
-            finally
-            {
-                watch.Stop();
-                WSSqlLogger.Instance.LogInfo(string.Format("Silent updated lasts: {0}ms",watch.ElapsedMilliseconds));
-            }
-        }
-
-        void Copy(string sourceDir, string targetDir)
-        {
-            Directory.CreateDirectory(targetDir);
-            foreach (var file in Directory.GetFiles(sourceDir))
-                try
-                {
-                    File.Copy(file, Path.Combine(targetDir, Path.GetFileName(file)));
-                }
-                catch (Exception ex)
-                {
-                    WSSqlLogger.Instance.LogError(ex.Message);
-                }
         }
 
         private bool IsAdmin()
@@ -326,65 +251,6 @@ namespace WSUIOutlookPlugin
             WindowsIdentity current = WindowsIdentity.GetCurrent();
             WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
             return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
-        }
-
-        private string GetInstalationPath(string localpath)
-        {
-            string manifest = localpath + ManifestFilename;
-            XDocument doc = XDocument.Load(manifest);
-            var msi = doc.Descendants("msi").First();
-
-            if (msi.Descendants(InstallPathNodeName).Count() > 0)
-            {
-                var installPath = msi.Descendants(InstallPathNodeName).First();
-                return installPath.Value;
-            }
-            return string.Empty;
-        }
-
-        private void UpdatedInstallationInfo(string localpath, string localversion)
-        {
-            string manifest = localpath + ManifestFilename;
-            XDocument docManifest = XDocument.Load(manifest);
-            XDocument docVersion = XDocument.Load(localversion);
-
-            var listVersions = docVersion.Descendants("version").Select(el => el.Attribute("name") != null ? el.Attribute("name").Value : string.Empty).ToList();
-            listVersions.Sort();
-            string newversion = listVersions[listVersions.Count - 1];
-            var element = docVersion.Descendants("version").Where(el => el.Attribute("name").Value == newversion).First();
-            var productCode = element.Attribute(ProductCodeNodeName).Value;
-
-
-            var msi = docManifest.Descendants("msi").First();
-            if (msi.Descendants(VersionNodeName).Count() > 0)
-            {
-                var el = msi.Descendants(VersionNodeName).First();
-                el.Value = newversion;
-                WSSqlLogger.Instance.LogInfo(string.Format("New version: {0}",newversion));
-            }
-            if (msi.Descendants(ProductCodeNodeName).Count() > 0)
-            {
-                var el = msi.Descendants(ProductCodeNodeName).First();
-                el.Value = productCode;
-                WSSqlLogger.Instance.LogInfo(string.Format("Product code: {0}", productCode));
-            }
-            docManifest.Save(manifest);
-        }
-
-        private void CreateTempFolder(string temp)
-        {
-            if (!Directory.Exists(temp))
-            {
-                Directory.CreateDirectory(temp);
-            }
-        }
-
-        private void DeleteTempFolder(string temp)
-        {
-            if (Directory.Exists(temp))
-            {
-                Directory.Delete(temp, true);
-            }
         }
 
         private void outlookFormManager_ADXBeforeFolderSwitchEx(object sender, AddinExpress.OL.BeforeFolderSwitchExEventArgs args)
@@ -684,6 +550,7 @@ namespace WSUIOutlookPlugin
                     Marshal.ReleaseComObject(fs);
                 
             }
+            
         }
 
         internal void SaveDefaultFoldersEntryIDToRegistry(string PublicFoldersEntryID,
@@ -748,6 +615,7 @@ namespace WSUIOutlookPlugin
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
+            
             if (formWebPaneItem.Collection.Count > 0)
             {
                 formWebPaneItem.Collection.OfType<WSUIForm>().ToList().ForEach(frm =>
