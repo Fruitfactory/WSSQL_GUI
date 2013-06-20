@@ -38,7 +38,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         private const string AttachmentsRow = @"<tr><td class='style1'>Attachments:</td><td class='style2'>{0}</td></tr>";
         private const string SendRow = @"<tr><td class='style1'>Send:</td><td class='style2'>{0}</td></tr>";
         
-        private const string EmailRow = @"<tr style='margin: 25px 10px 10px 10px'><td colspan='2' ><hr />{0}</td></tr>";
+        private const string EmailRow = @"<tr style='margin: 25px 10px 10px 10px'><td colspan='2' ><hr /><html><body>{0}</body></html></td></tr>";
         private const string TableEnd = @"</table>";
         private const string PageEnd = @"</body></html>";
 
@@ -54,6 +54,13 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
 
         private const string LinkTemplate = @"<img src='{1}' width='16' height='16' /><a href='{0}'>{2}</a>&nbsp;&nbsp;&nbsp;";
+
+        private const string HtmlTagOpenName = "html";
+        private const string HtmlTagcloseName = "/html";
+
+        private const string HtmlTemplate = "<html xmlns:v='urn:schemas-microsoft-com:vml' xmlns:o='rn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns:m='http://schemas.microsoft.com/office/2004/12/omml' xmlns='http://www.w3.org/TR/REC-html40'><head></head><body>{0}</body></html>";
+
+
 
         #endregion
 
@@ -283,11 +290,20 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             page += string.Format(ToRow, HighlightSearchString(mail.To));
             page += string.Format(SendRow, mail.ReceivedTime.ToString());
             page += GetAttachments(mail, filename);
-            page += string.Format(EmailRow, HighlightSearchString(mail.HTMLBody));
+            string temp = GetHtmlBodyWithHtmlTags(mail.HTMLBody);
+            page += string.Format(EmailRow, HighlightSearchString(temp));
 
             page += TableEnd + PageEnd;
 
             return page;
+        }
+
+        private string GetHtmlBodyWithHtmlTags(string body)
+        {
+            if (body.IndexOf(HtmlTagOpenName) > -1 && body.IndexOf(HtmlTagcloseName) > -1)
+                return body;
+            return string.Format(HtmlTemplate, body);
+
         }
 
         private string GetPreviewForAppointment(Outlook.AppointmentItem appointment, string filename)

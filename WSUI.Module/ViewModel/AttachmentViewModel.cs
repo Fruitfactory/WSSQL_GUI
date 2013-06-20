@@ -36,7 +36,7 @@ namespace WSUI.Module.ViewModel
             DataView.Model = this;
 
             QueryTemplate =
-                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Size FROM SystemIndex WHERE Contains(System.ItemUrl,'at') AND System.DateCreated < '{2}'  AND ( ( {0} ) OR  Contains(System.Search.Contents,{1})) ORDER BY System.DateCreated DESC"; //Contains(System.ItemName,'{0}*')  OR System.Search.Contents  AND System.DateCreated < '{2}'
+                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Size FROM SystemIndex WHERE Contains(System.ItemUrl,'at=') AND System.DateCreated < '{2}'  AND ( ( {0} ) OR  Contains(System.Search.Contents,{1})) ORDER BY System.DateCreated DESC"; //Contains(System.ItemName,'{0}*')  OR System.Search.Contents  AND System.DateCreated < '{2}'
             QueryAnd = " AND \"{0}\"";
             ID = 3;
             _name = "Attachments";
@@ -72,12 +72,28 @@ namespace WSUI.Module.ViewModel
             return res;
         }
 
+        protected override string LikeCriteria()
+        {
+            if (_listW.Count == 0)
+                return string.Empty;
+            var temp = new StringBuilder();
+
+            temp.Append(string.Format("Contains(*,'\"{0}\"') ", _listW[0]));
+
+            if (_listW.Count > 1)
+                for (int i = 1; i < _listW.Count; i++)
+                    temp.Append(string.Format(" Contains(*,'\"{0}\"') ", _listW.ElementAt(i)));
+
+            return temp.ToString();
+
+        }
+
         protected override void OnInit()
         {
             base.OnInit();
             var fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
             CommandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
-            ScrollBehavior = new ScrollBehavior(){CountFirstProcess = 45, CountSecondProcess = 5,LimitReaction = 75};
+            ScrollBehavior = new ScrollBehavior(){CountFirstProcess = 100, CountSecondProcess = 50,LimitReaction = 75};
             ScrollBehavior.SearchGo += () =>
                                            {
                                                ShowMessageNoMatches = false;
@@ -89,10 +105,7 @@ namespace WSUI.Module.ViewModel
         {
             _list.Clear();
             ListData.Clear();
-            //base.OnStart();
             FireStart();
-            //Enabled = false;
-            //OnPropertyChanged(() => Enabled);
         }
 
         protected override void OnSearchStringChanged()
