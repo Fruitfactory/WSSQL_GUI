@@ -43,6 +43,9 @@
     <AssemblyOriginatorKeyFile>WSUIPreview.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\Toolkits\AgilityPack\Net40\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.2.329, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>

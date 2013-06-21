@@ -224,7 +224,7 @@ namespace WSUI.Module.Core
             }
         }
 
-        protected string LikeCriteria()
+        protected virtual string LikeCriteria()
         {
             if (_listW.Count == 0)
                 return string.Empty;

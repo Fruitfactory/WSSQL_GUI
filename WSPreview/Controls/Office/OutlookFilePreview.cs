@@ -10,12 +10,15 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 using C4F.DevKit.PreviewHandler.Service;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Text.RegularExpressions;
 using mshtml;
+using HtmlAgilityPack;
+using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
 namespace C4F.DevKit.PreviewHandler.Controls.Office
 {
@@ -290,21 +293,45 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             page += string.Format(ToRow, HighlightSearchString(mail.To));
             page += string.Format(SendRow, mail.ReceivedTime.ToString());
             page += GetAttachments(mail, filename);
-            string temp = GetHtmlBodyWithHtmlTags(mail.HTMLBody);
-            page += string.Format(EmailRow, HighlightSearchString(temp));
-
+            string temp = GetHtmlBodyHightlight(mail.HTMLBody);
+            page += string.Format(EmailRow, temp);
             page += TableEnd + PageEnd;
-
             return page;
         }
 
-        private string GetHtmlBodyWithHtmlTags(string body)
+        private string GetHtmlBodyHightlight(string body)
         {
-            if (body.IndexOf(HtmlTagOpenName) > -1 && body.IndexOf(HtmlTagcloseName) > -1)
-                return body;
-            return string.Format(HtmlTemplate, body);
-
+            using (MemoryStream stream = new MemoryStream())
+            {
+                HtmlDocument htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(body);
+                HightlightAllNodes(htmlDoc.DocumentNode);
+                htmlDoc.Save(stream);
+                stream.Position = 0;
+                using(StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();        
+                }
+            }
         }
+
+        private void HightlightAllNodes(HtmlNode node)
+        {
+            if (node == null)
+                return;
+            if (node.ChildNodes.Count == 0 && (node as HtmlTextNode) != null)
+            {
+                var nodeText = node as HtmlTextNode;
+                nodeText.Text = HighlightSearchString(nodeText.Text);
+                return;
+            }
+
+            foreach (var childNode in node.ChildNodes)
+            {
+                HightlightAllNodes(childNode);
+            }
+        }
+
 
         private string GetPreviewForAppointment(Outlook.AppointmentItem appointment, string filename)
         {
