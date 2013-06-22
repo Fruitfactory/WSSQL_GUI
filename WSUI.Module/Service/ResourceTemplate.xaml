@@ -158,7 +158,7 @@
                     </StackPanel>
                 </ToolTip>
             </DockPanel.ToolTip>
-            <Image Grid.Column="0" Source="..\Images\attachment.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
+            <Image Grid.Column="0" Source="{Binding Path=Name,Converter={StaticResource ResourceKey=nameConverter}}" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" Margin="5" DockPanel.Dock="Right"/>
             <Grid>
                 <Grid.ColumnDefinitions>
