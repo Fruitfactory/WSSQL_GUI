@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <Product Id="4CBFA588-A4B0-4C56-9CD9-6C730C9A8080" Name="WSUIOutlookPlugin" Language="1033" Version="1.0.4" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="A12C3609-88D7-4165-89C6-90606064EEE8" Name="WSUIOutlookPlugin" Language="1033" Version="1.0.5" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="WSUIOutlookPlugin" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <Media Id="1" Cabinet="WSUI.OutlookPlugin.cab" EmbedCab="yes" />
@@ -11,6 +11,8 @@
     <Property Id="ALLUSERS" Secure="yes" />
     <Feature Id="ProductFeature" Title="WSUIOutlookPlugin" Level="1" ConfigurableDirectory="INSTALLFOLDER">
       <ComponentRef Id="INSTALLFOLDER" />
+      <ComponentRef Id="INSTALLFOLDERLIB" />
+      <ComponentRef Id="INSTALLFOLDERLIB64" />
       <ComponentGroupRef Id="ProductComponents" />
     </Feature>
     <UIRef Id="WixUI_InstallDir" />
@@ -34,6 +36,18 @@
             <RemoveFolder On="both" Id="INSTALLFOLDER" />
             <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="WSUIOutlookPlugin" />
           </Component>
+          <Directory Id="INSTALLFOLDERLIB" Name="lib">
+            <Component Id="INSTALLFOLDERLIB" Guid="129FC695-F5F1-4476-A5C4-B12642EE5324">
+              <RemoveFolder On="both" Id="INSTALLFOLDERLIB" />
+              <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="lib" />
+            </Component>
+          </Directory>
+          <Directory Id="INSTALLFOLDERLIB64" Name="lib64">
+            <Component Id="INSTALLFOLDERLIB64" Guid="564C4477-7148-40C6-B90E-3C42DF281BD3">
+              <RemoveFolder On="both" Id="INSTALLFOLDERLIB64" />
+              <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="lib64" />
+            </Component>
+          </Directory>
         </Directory>
       </Directory>
     </Directory>
@@ -54,10 +68,7 @@
         <File Id="_Microsoft_Office_Interop_Outlook_dll" Name="Microsoft.Office.Interop.Outlook.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_WSPreview_dll" Name="WSPreview.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_WSUI_Control_dll" Name="WSUI.Control.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-        <File Id="_GflWrapper_dll" Name="GflWrapper.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_ICSharpCode_SharpZipLib_dll" Name="ICSharpCode.SharpZipLib.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-        <File Id="_libgfl340_dll" Name="libgfl340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-        <File Id="_libgfle340_dll" Name="libgfle340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_log4net_config" Name="log4net.config" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_log4net_dll" Name="log4net.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_log4net_xml" Name="log4net.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
@@ -86,6 +97,23 @@
         <File Id="_WSUI_Infrastructure_dll" Name="WSUI.Infrastructure.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_WSUI_Module_dll" Name="WSUI.Module.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_Html_Agility_Pack_dll" Name="HtmlAgilityPack.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+      </Component>
+      <!-- gfl wrappers for x86 and x64 systems -->
+      <Component Id="ProductComponentLib" Guid="E3C62440-D5F8-43C3-905B-DDD2BC79D872" DiskId="1" Directory="INSTALLFOLDERLIB">
+        <RegistryKey Root="HKCU" Key="Software\[Manufacturer]\[ProductName]">
+          <RegistryValue Type="string" Name="Installed" Value="[INSTALLFOLDERLIB]" KeyPath="yes" />
+        </RegistryKey>
+        <File Id="_GflWrapper_dll_1" Name="GflWrapper.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib\" />
+        <File Id="_libgfl340_dll_1" Name="libgfl340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib\" />
+        <File Id="_libgfle340_dll_1" Name="libgfle340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib\" />
+      </Component>
+      <Component Id="ProductComponentLib64" Guid="4685C8D4-3DE8-49B3-9ED4-13535C9E134D" DiskId="1" Directory="INSTALLFOLDERLIB64">
+        <RegistryKey Root="HKCU" Key="Software\[Manufacturer]\[ProductName]">
+          <RegistryValue Type="string" Name="Installed" Value="[INSTALLFOLDERLIB64]" KeyPath="yes" />
+        </RegistryKey>
+        <File Id="_GflWrapper_dll_2" Name="GflWrapper.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib64\" />
+        <File Id="_libgfl340_dll_2" Name="libgfl340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib64\" />
+        <File Id="_libgfle340_dll_2" Name="libgfle340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib64\" />
       </Component>
     </ComponentGroup>
   </Fragment>
