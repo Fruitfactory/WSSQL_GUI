@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using GflWrapper;
-
+using C4F.DevKit.PreviewHandler.Controls.ImageControl.Interface;
+using C4F.DevKit.PreviewHandler.Controls.ImageControl.Service;
 
 namespace C4F.DevKit.PreviewHandler.Controls.ImageControl
 {
@@ -19,14 +19,23 @@ namespace C4F.DevKit.PreviewHandler.Controls.ImageControl
                 zoomPictureBox.Image = null;
                 return;
             }
-            GflImageWrapper image = new GflImageWrapper(filename);
+            try
+            {
+                IImagePreviewGenerator generator = ImagePreviewGenerator.Instance;
+                generator.SetFileName(filename);
 
-            if (!image.IsSupportExt())
-                return;
+                if (!generator.IsSupportFofrmat())
+                    return;
 
-            zoomPictureBox.Image = image.GetImage();
-            labelZoomCurrent.Text = string.Format("{0}x", zoomPictureBox.Zoom.ToString());
-            trackZoom.Value = (int)zoomPictureBox.Zoom;
+                zoomPictureBox.Image = generator.GetImage();
+                labelZoomCurrent.Text = string.Format("{0}x", zoomPictureBox.Zoom.ToString());
+                trackZoom.Value = (int)zoomPictureBox.Zoom;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);        
+            }
+            
         }
 
         private void trackZoom_ValueChanged(object sender, EventArgs e)

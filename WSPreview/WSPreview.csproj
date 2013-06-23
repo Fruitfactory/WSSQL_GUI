@@ -118,12 +118,14 @@
       <DependentUpon>CsvPreview.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\GDI.cs" />
+    <Compile Include="Controls\ImageControl\Interface\IImagePreviewGenerator.cs" />
     <Compile Include="Controls\ImageControl\PicturePreviewControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ImageControl\PicturePreviewControl.Designer.cs">
       <DependentUpon>PicturePreviewControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ImageControl\Service\ImagePreviewGenerator.cs" />
     <Compile Include="Controls\ImageControl\ZoomPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -365,12 +367,6 @@
     <EmbeddedResource Include="Images\zip.png" />
     <EmbeddedResource Include="Images\_blank.png" />
     <EmbeddedResource Include="Images\_page.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GflWrapper\GflWrapper.vcxproj">
-      <Project>{3D329622-7422-4675-A268-822622C35712}</Project>
-      <Name>GflWrapper</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Html\NoPreview.htm" />

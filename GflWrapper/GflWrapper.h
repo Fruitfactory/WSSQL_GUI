@@ -68,7 +68,7 @@ namespace GflWrapper {
 					res = true;
 					break;
 				}
-				free((void*)extName);
+				//free((void*)extName);
 			}
 
 			gflLibraryExit();

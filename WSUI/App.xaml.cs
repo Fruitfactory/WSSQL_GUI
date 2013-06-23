@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
 
 namespace WSUI
@@ -17,6 +13,10 @@ namespace WSUI
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            AppDomain.CurrentDomain.UnhandledException +=
+                (sender, args) => Debug.WriteLine("Unhandled exception: " + args.ExceptionObject);
+            Application.Current.DispatcherUnhandledException += (sender, args) => Debug.WriteLine("Unhandled exception: " + args.Exception);
 
             var boots = new WSBootStraper();
             boots.Run();
