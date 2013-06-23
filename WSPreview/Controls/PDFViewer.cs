@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Configuration;
+using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 using PDFLibNet;
 using System.Management;
 
 namespace C4F.DevKit.PreviewHandler
 {
   
-    public partial class PDFViewer : UserControl
+    public partial class PDFViewer : UserControl,IPreviewControl
     {
         private class loadPagesParam
         {
@@ -61,7 +63,7 @@ namespace C4F.DevKit.PreviewHandler
             Instance = this;
         }
 
-        public bool LoadFile(string filename)
+        public void LoadFile(string filename)
         {
             if (_pdfDoc != null)
             {
@@ -84,9 +86,11 @@ namespace C4F.DevKit.PreviewHandler
 
                 PDFPage pg = _pdfDoc.Pages[1];
             }
-            return res;
         }
 
+        public void LoadFile(Stream stream)
+        {
+        }
 
         #region Mouse Scrolling
         private CursorStatus getCursorStatus(MouseEventArgs e)

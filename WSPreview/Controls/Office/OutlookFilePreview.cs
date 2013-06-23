@@ -22,7 +22,7 @@ using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
 namespace C4F.DevKit.PreviewHandler.Controls.Office
 {
-    public partial class OutlookFilePreview : UserControl
+    public partial class OutlookFilePreview : UserControl,IPreviewControl
     {
         private const string AfterStrongTemplate = "<font style='background-color: yellow'><strong>{0}</strong></font>";
         private const string OutlookProcessName = "OUTLOOK";
@@ -120,6 +120,9 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
         }
 
+        public void LoadFile(Stream stream)
+        {
+        }
 
 
         public void Unload()

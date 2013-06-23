@@ -10,10 +10,11 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.Controls.Calendar
 {
-    public partial class CalendarIcsPreview : UserControl
+    public partial class CalendarIcsPreview : UserControl, IPreviewControl
     {
 
         private const string AfterStrongTemplate = "<font style='background-color: yellow'><strong>{0}</strong></font>";
@@ -68,6 +69,10 @@ namespace C4F.DevKit.PreviewHandler.Controls.Calendar
                 if (file != null)
                     file.Close();
             }
+        }
+
+        public void LoadFile(Stream stream)
+        {
         }
 
         private string GeneratePreview(FileIcsProperty obj)

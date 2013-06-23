@@ -1,11 +1,13 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using C4F.DevKit.PreviewHandler.Controls.ImageControl.Interface;
 using C4F.DevKit.PreviewHandler.Controls.ImageControl.Service;
+using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.Controls.ImageControl
 {
-    public partial class PicturePreviewControl : UserControl
+    public partial class PicturePreviewControl : UserControl, IPreviewControl
     {
         public PicturePreviewControl()
         {
@@ -36,6 +38,10 @@ namespace C4F.DevKit.PreviewHandler.Controls.ImageControl
                 System.Diagnostics.Debug.WriteLine(ex.Message);        
             }
             
+        }
+
+        public void LoadFile(Stream stream)
+        {
         }
 
         private void trackZoom_ValueChanged(object sender, EventArgs e)

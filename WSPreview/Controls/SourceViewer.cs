@@ -7,11 +7,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 using ScintillaNET;
 
 namespace C4F.DevKit.PreviewHandler.Controls
 {
-    public partial class SourceViewer : UserControl
+    public partial class SourceViewer : UserControl,IPreviewControl
     {
 #region fields
 
@@ -40,7 +41,11 @@ namespace C4F.DevKit.PreviewHandler.Controls
             _scintilla.Text = File.ReadAllText(filename);
         }
 
-#endregion
+        public void LoadFile(Stream stream)
+        {
+        }
+
+        #endregion
 
         #region private
 

@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using C4F.DevKit.PreviewHandler.PInvoke;
+using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
 
 namespace C4F.DevKit.PreviewHandler.Controls.Office
 {
-    public partial class OfficeFilePreview : UserControl
+    public partial class OfficeFilePreview : UserControl,IPreviewControl
     {
         private BaseOfficeWindow _window;
 
@@ -27,6 +29,10 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             _window.CreateApp();
             _window.SetParentControl(this);
             _window.LoadFile(file);
+        }
+
+        public void LoadFile(Stream stream)
+        {
         }
 
         public void Unload()

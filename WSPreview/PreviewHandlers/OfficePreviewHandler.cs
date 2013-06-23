@@ -10,7 +10,7 @@ using C4F.DevKit.PreviewHandler.Controls.Office;
 
 namespace C4F.DevKit.PreviewHandler.PreviewHandlers
 {
-    [PreviewHandler("WSSQL Office Preview Handler", ".doc;.docx;.xls", "{288E3293-B332-422C-BF5E-18BC8672C13A}")]
+    [PreviewHandler("WSSQL Office Preview Handler", ".doc;.docx;.xls;.xlsx", "{288E3293-B332-422C-BF5E-18BC8672C13A}")]
     [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.OfficePreviewHandler")]
     [Guid("E289F0A5-EFFB-4B29-822B-CB1849D62426")]
     [ClassInterface(ClassInterfaceType.None)]

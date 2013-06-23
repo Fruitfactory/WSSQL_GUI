@@ -144,11 +144,10 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
             // check application handlers
             if (_filePath.ToLower().EndsWith(".msg") || handler == null )//
             {
-                string ext = Path.GetExtension(_filePath).ToLower();
-                if(HelperPreviewHandlers.HandlersDictionary.ContainsKey(ext))
-                    comType = HelperPreviewHandlers.HandlersDictionary[ext];
+                comType = GetOwnPreviewHandlersType();
                 if (comType == null)
                 {
+                    string ext = Path.GetExtension(_filePath).ToLower();
                     webMessage.Visible = true;
                     var str = Regex.Replace(Properties.Resources.NoPreview, "replace", ext);
                     webMessage.DocumentText = str;
@@ -170,7 +169,15 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                 {
                     if (_comInstance is ISearchWordHighlight)
                         ((ISearchWordHighlight) _comInstance).HitString = SearchCriteria;
-                    ((IInitializeWithFile)_comInstance).Initialize(_filePath, 0);
+                    try
+                    {
+                        ((IInitializeWithFile)_comInstance).Initialize(_filePath, 0);
+                    }
+                    catch
+                    {
+                        _comInstance = SecondChance();
+                    }
+                    
                 }
                 else if (File.Exists(_filePath))
                 {
@@ -195,6 +202,8 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                     throw new FileNotFoundException(_filePath);
                 }
 
+                if(_comInstance == null)
+                    throw new NullReferenceException("Com type can't be founded");
 
                 ((IPreviewHandler)_comInstance).SetWindow(this.Handle, ref r);
                 ((IPreviewHandler)_comInstance).DoPreview();
@@ -251,6 +260,54 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                 WindowAPI.SendMessage(hWnd, WindowAPI.WM_SIZE, IntPtr.Zero, lParam);
             }
             return true;
+        }
+
+        private object SecondChance()
+        {
+            Type comType = GetOwnPreviewHandlersType();
+            if (comType == null)
+                return null;
+            object comInstance = Activator.CreateInstance(comType);
+
+            // Check if it is a stream or file handler
+            if (comInstance is IInitializeWithFile)
+            {
+                if (comInstance is ISearchWordHighlight)
+                    ((ISearchWordHighlight)comInstance).HitString = SearchCriteria;
+                ((IInitializeWithFile)comInstance).Initialize(_filePath, 0);
+            }
+            else if (File.Exists(_filePath))
+            {
+                if (comInstance is IInitializeWithStream)
+                {
+                    StreamWrapper stream = new StreamWrapper(File.Open(_filePath, FileMode.Open));
+                    ((C4F.DevKit.PreviewHandler.PreviewHandlerFramework.IInitializeWithStream)comInstance).Initialize(stream, 0);
+                }
+                else if (comInstance is IInitializeWithItem)
+                {
+                    IShellItem shellItem = null;
+                    UnsafeNativeMethods.SHCreateItemFromParsingName(_filePath, IntPtr.Zero, typeof(IShellItem).GUID, out shellItem);
+                    if (shellItem != null)
+                    {
+                        ((IInitializeWithItem)comInstance).Initialize(shellItem, 2);
+                    }
+                }
+            }
+            else
+            {
+                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "File Not Found", _filePath));
+                throw new FileNotFoundException(_filePath);
+            }
+
+            return comInstance;
+        }
+
+        private Type GetOwnPreviewHandlersType()
+        {
+            string ext = Path.GetExtension(_filePath).ToLower();
+            return HelperPreviewHandlers.HandlersDictionary.ContainsKey(ext)
+                       ? HelperPreviewHandlers.HandlersDictionary[ext]
+                       : null;
         }
 
 
