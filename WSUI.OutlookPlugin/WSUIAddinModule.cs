@@ -214,6 +214,7 @@ namespace WSUIOutlookPlugin
                 _updatable.Module = this;
             }
             CheckUpdate();
+            DllPreloader.Instance.PreloadDll();
         }
 
         #endregion

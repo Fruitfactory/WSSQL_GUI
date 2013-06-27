@@ -96,6 +96,7 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Core\DllPreloader.cs" />
     <Compile Include="Core\UpdateHelper.cs" />
     <Compile Include="Hooks\GlobalEventProvider.cs">
       <SubType>Component</SubType>
