@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <configuration>
+  <startup useLegacyV2RuntimeActivationPolicy="true">
+    <supportedRuntime version="v4.0"/>
+  </startup>
   <assemblyIdentity name="WSUI.OutlookPlugin, PublicKeyToken=dfa14d3b5c78db24" />
   <loaderSettings generateLogFile="true" shadowCopyEnabled="false" privileges="user" configFileName="App.config" />
 </configuration>

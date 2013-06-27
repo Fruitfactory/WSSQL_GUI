@@ -67,6 +67,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.Prism">
+      <HintPath>..\Output\Microsoft.Practices.Prism.dll</HintPath>
+    </Reference>
     <Reference Include="MVCSharp">
       <HintPath>..\Toolkits\MVCSharp\MVCSharp.dll</HintPath>
     </Reference>

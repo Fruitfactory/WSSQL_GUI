@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSUIOutlookPlugin.Core
 {
@@ -56,7 +57,7 @@ namespace WSUIOutlookPlugin.Core
         {
             // add part of dll name which should be loaded during loading plugin
             _listPartNameOfDll.Add("MahApps");
-            _listPartNameOfDll.Add("Microsoft");
+            _listPartNameOfDll.Add("Practices");
             _listPartNameOfDll.Add("WSUI");
             _listPartNameOfDll.Add("WSPreview");
         }
@@ -65,17 +66,26 @@ namespace WSUIOutlookPlugin.Core
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             string currentFolder = AppDomain.CurrentDomain.BaseDirectory;
-            var files = Directory.GetFiles(currentFolder, DllExt, SearchOption.TopDirectoryOnly);
-            if (files.Length == 0)
+            var files = Directory.GetFiles(currentFolder, DllExt, SearchOption.TopDirectoryOnly).Where(filename => _listPartNameOfDll.Any(s => Path.GetFileName(filename).Contains(s)));
+            if (files.Count() == 0)
                 return;
             foreach (var file in files)
             {
-                var assembleName = AssemblyName.GetAssemblyName(file);
-                if (_listPartNameOfDll.Any(s => assembleName.Name.Contains(s)) 
-                    && !assemblies.Any(a => AssemblyName.ReferenceMatchesDefinition(assembleName, a.GetName())))
+                try
                 {
-                    Assembly.LoadFrom(file);
+                    var assembleName = AssemblyName.GetAssemblyName(file);
+                    if (_listPartNameOfDll.Any(s => assembleName.Name.Contains(s))
+                        && !assemblies.Any(a => AssemblyName.ReferenceMatchesDefinition(assembleName, a.GetName())))
+                    {
+                        WSSqlLogger.Instance.LogError(string.Format("Preload: {0}",file));
+                        Assembly.LoadFrom(file);
+                    }
                 }
+                catch (Exception ex)
+                {
+                    WSSqlLogger.Instance.LogError(string.Format("Preload: {0}",ex.Message));
+                }
+                
             }
         }
 
