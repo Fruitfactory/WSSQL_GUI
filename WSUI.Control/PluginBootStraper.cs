@@ -1,9 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using C4F.DevKit.PreviewHandler.Service;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Modularity;
+using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.Unity;
 using WSUI.Module.Interface;
@@ -15,13 +17,43 @@ namespace WSUI.Control
     {
         private ElementHost _elementHost = null;
         private IMainViewModel _mainViewModel;
-        private Stopwatch _watch;
         
         public PluginBootStraper(ElementHost host)
         {
             _elementHost = host;
-            _watch = new Stopwatch();
         }
+        public override void Run(bool runWithDefaultConfiguration)
+        {
+            var watch = new Stopwatch();
+            this.Logger = this.CreateLogger();
+            this.ModuleCatalog = this.CreateModuleCatalog();
+            if(this.ModuleCatalog == null)
+                throw new NullReferenceException("ModuleCatalog");
+            this.ConfigureModuleCatalog();
+            this.Container = this.CreateContainer();
+            if(Container == null)
+                throw new NullReferenceException("Container");
+            this.ConfigureContainer();
+            this.ConfigureServiceLocator();
+            this.ConfigureRegionAdapterMappings();
+            this.ConfigureDefaultRegionBehaviors();
+            this.RegisterFrameworkExceptionTypes();
+            this.Shell = this.CreateShell();
+            if (this.Shell != null)
+            {
+                RegionManager.SetRegionManager(this.Shell,UnityContainerExtensions.Resolve<IRegionManager>(this.Container,new ResolverOverride[0]));
+                RegionManager.UpdateRegions();
+                this.InitializeShell();
+            }
+            if (UnityContainerExtensions.IsRegistered<IModuleManager>(this.Container))
+            {
+                this.InitializeModules();
+            }
+            watch.Stop();
+            WSSqlLogger.Instance.LogInfo(string.Format("Run (plugin): {0}ms", watch.ElapsedMilliseconds));
+        }
+
+
 
         protected override Microsoft.Practices.Prism.Logging.ILoggerFacade CreateLogger()
         {
@@ -30,25 +62,17 @@ namespace WSUI.Control
 
         protected override DependencyObject CreateShell()
         {
-            _watch.Stop();
-            WSSqlLogger.Instance.LogInfo(string.Format("CreateModuleCatalog - CreateShell: {0}ms",_watch.ElapsedMilliseconds));
-
-            
+           
             Stopwatch watch = new Stopwatch();
             watch.Start();
             var shell = Container.Resolve<WSMainControl>();
             watch.Stop();
             WSSqlLogger.Instance.LogInfo(string.Format("Create shell (plugin): {0}ms",watch.ElapsedMilliseconds));
-            (_watch = new Stopwatch()).Start();
             return shell;
         }
 
         protected override void InitializeShell()
         {
-            _watch.Stop();
-            WSSqlLogger.Instance.LogInfo(string.Format("CreateShell - (find and create regions) - InitializeShell: {0}ms", _watch.ElapsedMilliseconds));
-
-
             Stopwatch watch = new Stopwatch();
             watch.Start();
             base.InitializeShell();
@@ -65,10 +89,7 @@ namespace WSUI.Control
             catalog.AddModule(typeof(WSUI.Module.WSModule));
             watch.Stop();
             WSSqlLogger.Instance.LogInfo(string.Format("CreateModuleCatalog (plugin): {0}ms",watch.ElapsedMilliseconds));
-
-
-            _watch.Start();
-            return base.CreateModuleCatalog();
+            return catalog;
         }
 
         protected override void InitializeModules()

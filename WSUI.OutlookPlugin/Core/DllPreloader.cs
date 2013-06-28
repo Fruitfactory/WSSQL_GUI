@@ -16,8 +16,7 @@ namespace WSUIOutlookPlugin.Core
         private List<string> _listPartNameOfDll = new List<string>();
 
         #endregion
-
-
+        
         #region [ctor]
         
         protected DllPreloader()
@@ -46,7 +45,9 @@ namespace WSUIOutlookPlugin.Core
 
         public void PreloadDll()
         {
-            ThreadPool.QueueUserWorkItem(PreloadDllInThread);
+            var preLoadThread = new Thread(PreloadDllInThread);
+            //ThreadPool.QueueUserWorkItem(PreloadDllInThread);
+            preLoadThread.Start(null);
         }
 
         #endregion
@@ -64,20 +65,21 @@ namespace WSUIOutlookPlugin.Core
 
         private void PreloadDllInThread(object state)
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
             string currentFolder = AppDomain.CurrentDomain.BaseDirectory;
-            var files = Directory.GetFiles(currentFolder, DllExt, SearchOption.TopDirectoryOnly).Where(filename => _listPartNameOfDll.Any(s => Path.GetFileName(filename).Contains(s)));
-            if (files.Count() == 0)
+            var files = Directory.GetFiles(currentFolder, DllExt, SearchOption.TopDirectoryOnly);//.Where(filename => _listPartNameOfDll.Any(s => Path.GetFileName(filename).Contains(s)));
+            if (!files.Any())
                 return;
             foreach (var file in files)
             {
                 try
                 {
+                    //_listPartNameOfDll.Any(s => assembleName.Name.Contains(s))
+                    //    &&
                     var assembleName = AssemblyName.GetAssemblyName(file);
-                    if (_listPartNameOfDll.Any(s => assembleName.Name.Contains(s))
-                        && !assemblies.Any(a => AssemblyName.ReferenceMatchesDefinition(assembleName, a.GetName())))
+                    if ( !assemblies.Any(a => AssemblyName.ReferenceMatchesDefinition(assembleName, a.GetName())))
                     {
-                        WSSqlLogger.Instance.LogError(string.Format("Preload: {0}",file));
+                        WSSqlLogger.Instance.LogInfo(string.Format("Preload: {0}",file));
                         Assembly.LoadFrom(file);
                     }
                 }

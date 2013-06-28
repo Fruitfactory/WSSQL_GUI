@@ -39,7 +39,7 @@ namespace WSUI
             catalog.AddModule(typeof (WSUI.Module.WSModule));
             watch.Stop();
             Logger.Log(string.Format("Elapsed (CreateModuleCatalog): {0}", watch.ElapsedMilliseconds), Category.Info, Priority.High);
-            return base.CreateModuleCatalog();
+            return catalog;
         }
 
         protected override void ConfigureModuleCatalog()

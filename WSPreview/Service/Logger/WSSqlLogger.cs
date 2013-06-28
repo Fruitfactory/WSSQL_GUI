@@ -112,11 +112,11 @@ namespace C4F.DevKit.PreviewHandler.Service.Logger
         public void Log(string message, Category category, Priority priority)
         {
 
-            if (_watch != null && _watch.IsRunning)
-            {
-                _watch.Stop();
-                WriteLog(LevelLogging.Warning, string.Format("Last Elapsed: {0}ms", _watch.ElapsedMilliseconds));
-            }
+            //if (_watch != null && _watch.IsRunning)
+            //{
+            //    _watch.Stop();
+            //    WriteLog(LevelLogging.Warning, string.Format("Last Elapsed: {0}ms", _watch.ElapsedMilliseconds));
+            //}
 
             switch (category)
             {
@@ -133,7 +133,7 @@ namespace C4F.DevKit.PreviewHandler.Service.Logger
                     WriteLog(LevelLogging.Error, message);
                     break;
             }
-            (_watch = new Stopwatch()).Start();
+            //(_watch = new Stopwatch()).Start();
         }
     }
 }

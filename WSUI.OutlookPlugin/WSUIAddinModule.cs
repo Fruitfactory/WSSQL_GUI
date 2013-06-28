@@ -55,13 +55,13 @@ namespace WSUIOutlookPlugin
             watch.Start();
             InitializeComponent();
             watch.Stop();
-            WSSqlLogger.Instance.LogInfo(string.Format("InitializeComponent of Plugin: {0}ms",watch.ElapsedMilliseconds));
+            WSSqlLogger.Instance.LogInfo(string.Format("InitializeComponent [ctor]: {0}ms",watch.ElapsedMilliseconds));
             // Please add any initialization code to the AddinInitialize event handler
             (watch = new Stopwatch()).Start();
             
             Init();
             watch.Stop();
-            WSSqlLogger.Instance.LogInfo(string.Format("Init own controls: {0}ms",watch.ElapsedMilliseconds));
+            WSSqlLogger.Instance.LogInfo(string.Format("WSUIAddinModule [ctor]: {0}ms", watch.ElapsedMilliseconds));
             
         }
 
