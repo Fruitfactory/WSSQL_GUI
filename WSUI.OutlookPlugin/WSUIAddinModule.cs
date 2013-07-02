@@ -218,8 +218,8 @@ namespace WSUIOutlookPlugin
                 _updatable.Module = this;
             }
             CheckUpdate();
-            //DllPreloader.Instance.PreloadDll();
-            //PrecreateForm();
+            DllPreloader.Instance.PreloadDll();
+            ThreadPool.QueueUserWorkItem(PrecreateForm);
         }
 
         #endregion
@@ -259,28 +259,28 @@ namespace WSUIOutlookPlugin
             return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
-        private void PrecreateForm()
+        private void PrecreateForm(object state)
         {
             WSSqlLogger.Instance.LogInfo("Design Mode: " + this.DesignMode.ToString());
-            if(this.DesignMode || formWebPaneItem == null )
+            if (this.DesignMode || formWebPaneItem == null)
                 return;
             try
             {
-                var field = typeof (ADXOlFormsCollectionItem).GetField("formInstances",
+                var field = typeof(ADXOlFormsCollectionItem).GetField("formInstances",
                                                                               BindingFlags.NonPublic |
                                                                               BindingFlags.Instance |
-                                                                              BindingFlags.CreateInstance); 
+                                                                              BindingFlags.CreateInstance);
                 if (field != null)
                 {
                     var val = (IList)field.GetValue(formWebPaneItem);
-                    //val.Add(Assembly.GetCallingAssembly().CreateInstance("WSUIOutlookPlugin.WSUIForm"));
+                    val.Add(Assembly.GetCallingAssembly().CreateInstance("WSUIOutlookPlugin.WSUIForm"));
                 }
             }
             catch (Exception ex)
             {
                 WSSqlLogger.Instance.LogError(ex.Message);
             }
-            
+
         }
 
 
@@ -666,7 +666,7 @@ namespace WSUIOutlookPlugin
 
         private void CurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs firstChanceExceptionEventArgs)
         {
-            WSSqlLogger.Instance.LogError("First Chance Exception (plugin): " + firstChanceExceptionEventArgs.Exception.Message);
+            WSSqlLogger.Instance.LogError(Environment.NewLine + "First Chance Exception (plugin): " + firstChanceExceptionEventArgs.Exception.Message + Environment.NewLine + firstChanceExceptionEventArgs.Exception.StackTrace + Environment.NewLine);
         }
 
 

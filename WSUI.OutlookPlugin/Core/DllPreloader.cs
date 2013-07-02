@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using AddinExpress.OL;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSUIOutlookPlugin.Core
@@ -45,7 +47,7 @@ namespace WSUIOutlookPlugin.Core
 
         public void PreloadDll()
         {
-            var preLoadThread = new Thread(PreloadDllInThread);
+            var preLoadThread = new Thread(DoPreInitialize);
             preLoadThread.Start(null);
             //PreloadDllInThread(null);
         }
@@ -63,6 +65,11 @@ namespace WSUIOutlookPlugin.Core
             _listPartNameOfDll.Add("WSPreview");
         }
 
+        private void DoPreInitialize(object obj )
+        {
+            PreloadDllInThread(obj);
+        }
+
         private void PreloadDllInThread(object state)
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
@@ -74,8 +81,6 @@ namespace WSUIOutlookPlugin.Core
             {
                 try
                 {
-                    //_listPartNameOfDll.Any(s => assembleName.Name.Contains(s))
-                    //    &&
                     var assembleName = AssemblyName.GetAssemblyName(file);
                     if ( !assemblies.Any(a => AssemblyName.ReferenceMatchesDefinition(assembleName, a.GetName())))
                     {
