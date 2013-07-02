@@ -50,7 +50,7 @@
             
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <DockPanel LastChildFill="True">
+                    <!--<DockPanel LastChildFill="True">
                         <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
                         <TextBlock Text="{Binding Path=Date,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
                         <Grid>
@@ -59,7 +59,7 @@
                                 <ColumnDefinition Style="{StaticResource CountStyleWidthColumn}"/>
                                 <ColumnDefinition Style="{StaticResource SubjectStyleWidthColumn}" />
                             </Grid.ColumnDefinitions>
-                            <!--<StackPanel Orientation="Horizontal">-->
+                            
                                 <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  FontStyleLabel="Italic"
                                                            Margin="5 3 5 3" Grid.Column="0"/>
                                 <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3" Grid.Column="1"></TextBlock>
@@ -67,10 +67,34 @@
                                 
                                 <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  
                                                        Margin="5" Grid.Column="2"/>
-                                <!--<TextBlock Text="{Binding Path=Path}"/>
-                            </StackPanel>-->
+                              
                         </Grid>
-                    </DockPanel>
+                    </DockPanel>-->
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" />
+
+                        <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3"
+                           Grid.Column="1"></TextBlock>
+
+                        <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                                            Grid.Column="2"  Margin="5" ></ctrl:HightliteTextBlock>
+
+                        <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                                            Grid.Column="3"  Margin="5" ></ctrl:HightliteTextBlock>
+
+                    <TextBlock Grid.Column="4"  Text="{Binding Path=Date,Converter={StaticResource dateConverter}}"  Margin="5" />
+                    </Grid>
+
+
                 </DataTemplate>
             </ListBox.ItemTemplate>
 

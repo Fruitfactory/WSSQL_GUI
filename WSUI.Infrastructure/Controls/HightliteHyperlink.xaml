@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WSUI.Infrastructure.Controls"
              >
-    <DockPanel LastChildFill="True">
+    <Grid >
         <TextBlock>
             <Hyperlink Command="{Binding Path=DataContext.EmailClickCommand,ElementName=this}" CommandParameter="{Binding}">
             <TextBlock TextWrapping="Wrap"  x:Name="textBlock"   
@@ -17,5 +17,5 @@
                        />
             </Hyperlink>
         </TextBlock>
-    </DockPanel>
+    </Grid>
 </local:HightliteTextBlockBase>

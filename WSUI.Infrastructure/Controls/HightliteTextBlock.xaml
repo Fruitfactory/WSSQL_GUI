@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:local="clr-namespace:WSUI.Infrastructure.Controls"
              >
-    <DockPanel LastChildFill="True">
+    <Grid >
         <TextBlock TextTrimming="CharacterEllipsis"  x:Name="textBlock"   
                    
                         FontSize="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontSizeLabel}"
@@ -12,5 +12,5 @@
                         FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontWeightLabel}"
                         Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=ForegroundColor}"
                     />
-    </DockPanel>
+    </Grid>
 </local:HightliteTextBlockBase>

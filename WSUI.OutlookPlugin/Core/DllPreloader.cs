@@ -46,8 +46,8 @@ namespace WSUIOutlookPlugin.Core
         public void PreloadDll()
         {
             var preLoadThread = new Thread(PreloadDllInThread);
-            //ThreadPool.QueueUserWorkItem(PreloadDllInThread);
             preLoadThread.Start(null);
+            //PreloadDllInThread(null);
         }
 
         #endregion

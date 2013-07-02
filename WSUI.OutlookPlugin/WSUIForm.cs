@@ -21,6 +21,7 @@ namespace WSUIOutlookPlugin
         {
             InitializeComponent();
             HookManager.KeyDown += HookManagerOnKeyDown;
+            WSSqlLogger.Instance.LogInfo("WSUIForm [ctor]");
         }
 
         private void HookManagerOnKeyDown(object sender, KeyEventArgs keyEventArgs)

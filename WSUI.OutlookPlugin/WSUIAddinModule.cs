@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Windows.Threading;
 using System.Xml.Linq;
 using AddinExpress.MSO;
 using C4F.DevKit.PreviewHandler.Service;
@@ -58,11 +61,12 @@ namespace WSUIOutlookPlugin
             WSSqlLogger.Instance.LogInfo(string.Format("InitializeComponent [ctor]: {0}ms",watch.ElapsedMilliseconds));
             // Please add any initialization code to the AddinInitialize event handler
             (watch = new Stopwatch()).Start();
-            
             Init();
             watch.Stop();
             WSSqlLogger.Instance.LogInfo(string.Format("WSUIAddinModule [ctor]: {0}ms", watch.ElapsedMilliseconds));
-            
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
+
         }
 
         private AddinExpress.OL.ADXOlFormsManager outlookFormManager;
@@ -214,7 +218,8 @@ namespace WSUIOutlookPlugin
                 _updatable.Module = this;
             }
             CheckUpdate();
-            DllPreloader.Instance.PreloadDll();
+            //DllPreloader.Instance.PreloadDll();
+            //PrecreateForm();
         }
 
         #endregion
@@ -253,6 +258,31 @@ namespace WSUIOutlookPlugin
             WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
             return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
         }
+
+        private void PrecreateForm()
+        {
+            WSSqlLogger.Instance.LogInfo("Design Mode: " + this.DesignMode.ToString());
+            if(this.DesignMode || formWebPaneItem == null )
+                return;
+            try
+            {
+                var field = typeof (ADXOlFormsCollectionItem).GetField("formInstances",
+                                                                              BindingFlags.NonPublic |
+                                                                              BindingFlags.Instance |
+                                                                              BindingFlags.CreateInstance); 
+                if (field != null)
+                {
+                    var val = (IList)field.GetValue(formWebPaneItem);
+                    //val.Add(Assembly.GetCallingAssembly().CreateInstance("WSUIOutlookPlugin.WSUIForm"));
+                }
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+            
+        }
+
 
         private void outlookFormManager_ADXBeforeFolderSwitchEx(object sender, AddinExpress.OL.BeforeFolderSwitchExEventArgs args)
         {
@@ -628,6 +658,17 @@ namespace WSUIOutlookPlugin
                                                                                    });
             }
         }
+
+        void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            WSSqlLogger.Instance.LogError("Unhandled Exception (plugin): " + e.ExceptionObject.ToString());
+        }
+
+        private void CurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs firstChanceExceptionEventArgs)
+        {
+            WSSqlLogger.Instance.LogError("First Chance Exception (plugin): " + firstChanceExceptionEventArgs.Exception.Message);
+        }
+
 
     }
 }
