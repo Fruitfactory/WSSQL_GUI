@@ -43,10 +43,10 @@ namespace WSUIOutlookPlugin
 
         #region [const]
         
-
-       
-
         private const string ADXHTMLFileName = "ADXOlFormGeneral.html";
+        private const int WM_USER = 0x0400;
+        private const int WM_LOADED = WM_USER + 1001;
+
 
         #endregion
 
@@ -63,10 +63,24 @@ namespace WSUIOutlookPlugin
             (watch = new Stopwatch()).Start();
             Init();
             watch.Stop();
+            this.OnSendMessage += WSUIAddinModule_OnSendMessage;
             WSSqlLogger.Instance.LogInfo(string.Format("WSUIAddinModule [ctor]: {0}ms", watch.ElapsedMilliseconds));
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
 
+        }
+
+        private void WSUIAddinModule_OnSendMessage(object sender, ADXSendMessageEventArgs e)
+        {
+            switch(e.Message)
+            {
+                case WM_LOADED:
+                    lock (this)
+                    {
+                        PrecreateForm(null);
+                    }
+                    break;
+            }
         }
 
         private AddinExpress.OL.ADXOlFormsManager outlookFormManager;
@@ -219,7 +233,6 @@ namespace WSUIOutlookPlugin
             }
             CheckUpdate();
             DllPreloader.Instance.PreloadDll();
-            ThreadPool.QueueUserWorkItem(PrecreateForm);
         }
 
         #endregion
@@ -266,14 +279,32 @@ namespace WSUIOutlookPlugin
                 return;
             try
             {
+                // get internal field
                 var field = typeof(ADXOlFormsCollectionItem).GetField("formInstances",
                                                                               BindingFlags.NonPublic |
                                                                               BindingFlags.Instance |
                                                                               BindingFlags.CreateInstance);
-                if (field != null)
+                Assembly assembly = typeof (WSUIAddinModule).Assembly;
+                if (field != null && assembly != null)
                 {
                     var val = (IList)field.GetValue(formWebPaneItem);
-                    val.Add(Assembly.GetCallingAssembly().CreateInstance("WSUIOutlookPlugin.WSUIForm"));
+                    var form = (ADXOlForm) assembly.CreateInstance(formWebPaneItem.FormClassName);
+                    val.Add(form);
+                    // get internal  method
+                    var miInitialize = form.GetType().GetMethods( BindingFlags.NonPublic |
+                                                                                     BindingFlags.Instance |
+                                                                                     BindingFlags.CreateInstance).Where(mi => mi.Name == "Initialize" && mi.GetParameters().Count() == 2).ToList();
+
+                    /// get internal property
+                    PropertyInfo piFormsManager = typeof(ADXOlFormsCollectionItem).GetProperty("FormsManager",
+                                                                              BindingFlags.NonPublic |
+                                                                              BindingFlags.Instance |
+                                                                              BindingFlags.CreateInstance);
+                    var formsManagerValue = piFormsManager.GetValue(formWebPaneItem,null);
+                    if (miInitialize.Any() && formsManagerValue != null)
+                    {
+                        miInitialize.ElementAt(0).Invoke(form, new object[] {formsManagerValue, formWebPaneItem});
+                    }
                 }
             }
             catch (Exception ex)
@@ -579,7 +610,9 @@ namespace WSUIOutlookPlugin
                     Marshal.ReleaseComObject(pf);
                 if (fs != null)
                     Marshal.ReleaseComObject(fs);
-                
+             
+                this.SendMessage(WM_LOADED,IntPtr.Zero,IntPtr.Zero);
+                WSSqlLogger.Instance.LogInfo("WSUI AddinModule Startup Complete...");
             }
             
         }
@@ -666,7 +699,7 @@ namespace WSUIOutlookPlugin
 
         private void CurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs firstChanceExceptionEventArgs)
         {
-            WSSqlLogger.Instance.LogError(Environment.NewLine + "First Chance Exception (plugin): " + firstChanceExceptionEventArgs.Exception.Message + Environment.NewLine + firstChanceExceptionEventArgs.Exception.StackTrace + Environment.NewLine);
+            WSSqlLogger.Instance.LogError("First Chance Exception (plugin): " + firstChanceExceptionEventArgs.Exception.Message);
         }
 
 
