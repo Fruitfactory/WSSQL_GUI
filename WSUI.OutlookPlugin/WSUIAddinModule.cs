@@ -5,6 +5,7 @@ using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 using System.Windows.Threading;
 using System.Xml.Linq;
 using AddinExpress.MSO;
@@ -89,6 +90,7 @@ namespace WSUIOutlookPlugin
         private ADXRibbonGroup managingCtrlGroup;
         private ADXRibbonButton buttonShow;
         private ADXRibbonButton buttonClose;
+        private ElementHost hostElementFake;
         
  
         #region Component Designer generated code
@@ -110,6 +112,7 @@ namespace WSUIOutlookPlugin
             this.managingCtrlGroup = new AddinExpress.MSO.ADXRibbonGroup(this.components);
             this.buttonShow = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.buttonClose = new AddinExpress.MSO.ADXRibbonButton(this.components);
+            this.hostElementFake = new System.Windows.Forms.Integration.ElementHost();
             // 
             // outlookFormManager
             // 
@@ -156,6 +159,14 @@ namespace WSUIOutlookPlugin
             this.buttonClose.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.buttonClose.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
             | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            // 
+            // hostElementFake
+            // 
+            this.hostElementFake.Location = new System.Drawing.Point(0, 0);
+            this.hostElementFake.Name = "hostElementFake";
+            this.hostElementFake.Size = new System.Drawing.Size(200, 100);
+            this.hostElementFake.TabIndex = 0;
+            this.hostElementFake.Child = null;
             // 
             // WSUIAddinModule
             // 
@@ -306,6 +317,7 @@ namespace WSUIOutlookPlugin
                         miInitialize.ElementAt(0).Invoke(form, new object[] {formsManagerValue, formWebPaneItem});
                     }
                 }
+ 
             }
             catch (Exception ex)
             {
