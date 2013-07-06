@@ -46,6 +46,7 @@ namespace WSUIOutlookPlugin
         
         private const string ADXHTMLFileName = "ADXOlFormGeneral.html";
         private const int WM_USER = 0x0400;
+        private ADXOlFormsCollectionItem wpfHostForm;
         private const int WM_LOADED = WM_USER + 1001;
 
 
@@ -113,10 +114,12 @@ namespace WSUIOutlookPlugin
             this.buttonShow = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.buttonClose = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.hostElementFake = new System.Windows.Forms.Integration.ElementHost();
+            this.wpfHostForm = new AddinExpress.OL.ADXOlFormsCollectionItem(this.components);
             // 
             // outlookFormManager
             // 
             this.outlookFormManager.Items.Add(this.formWebPaneItem);
+            this.outlookFormManager.Items.Add(this.wpfHostForm);
             this.outlookFormManager.SetOwner(this);
             // 
             // formWebPaneItem
@@ -167,6 +170,13 @@ namespace WSUIOutlookPlugin
             this.hostElementFake.Size = new System.Drawing.Size(200, 100);
             this.hostElementFake.TabIndex = 0;
             this.hostElementFake.Child = null;
+            // 
+            // wpfHostForm
+            // 
+            this.wpfHostForm.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.BottomSubpane;
+            this.wpfHostForm.FormClassName = "WSUIOutlookPlugin.WPFHost";
+            this.wpfHostForm.RegionBorder = AddinExpress.OL.ADXRegionBorderStyle.None;
+            this.wpfHostForm.UseOfficeThemeForBackground = true;
             // 
             // WSUIAddinModule
             // 
@@ -265,7 +275,7 @@ namespace WSUIOutlookPlugin
             {
                 if (_updatable.IsUpdating())
                 {
-                     WSSqlLogger.Instance.LogInfo("Updating is running. Just update installation info and delete mutex...");
+                     WSSqlLogger.Instance.LogInfo("Updating is running. Just update installation info and delete lock file...");
                     _updatable.UpdateInstalationInfo();
                     _updatable.Unlock();
                 }
@@ -274,13 +284,6 @@ namespace WSUIOutlookPlugin
             }
             watch.Stop();
             WSSqlLogger.Instance.LogInfo(string.Format("Check for update: {0}ms",watch.ElapsedMilliseconds));
-        }
-
-        private bool IsAdmin()
-        {
-            WindowsIdentity current = WindowsIdentity.GetCurrent();
-            WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
-            return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
         private void PrecreateForm(object state)
