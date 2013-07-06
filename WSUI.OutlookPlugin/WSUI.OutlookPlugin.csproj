@@ -111,12 +111,6 @@
     <Compile Include="Hooks\MouseEventExtArgs.cs" />
     <Compile Include="Interfaces\ICleaneable.cs" />
     <Compile Include="Interfaces\IUpdatable.cs" />
-    <Compile Include="WPFHost.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WPFHost.Designer.cs">
-      <DependentUpon>WPFHost.cs</DependentUpon>
-    </Compile>
     <Compile Include="WSUIAddinModule.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -129,9 +123,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WPFHost.resx">
-      <DependentUpon>WPFHost.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="WSUIAddinModule.resx">
       <DependentUpon>WSUIAddinModule.cs</DependentUpon>
     </EmbeddedResource>

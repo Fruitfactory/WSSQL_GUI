@@ -43,8 +43,8 @@
     </Style>
 
 
-    <DataTemplate x:Key="NoneTemplate">
-        <Grid>
+    <DataTemplate x:Key="NoneTemplate" >
+        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition  Width="*"/>
@@ -59,7 +59,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="EmailTemplate">
-        <Grid HorizontalAlignment="Stretch">
+        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
@@ -85,7 +85,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="UserTemplate">
-        <Grid>
+        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -115,7 +115,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="FileTemplate">
-        <Grid>
+        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
@@ -144,7 +144,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="AttachmentTemplate">
-        <Grid>
+        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
@@ -171,8 +171,8 @@
 
     
     <DataTemplate x:Key="CalendarTemplate">
-       
-        <Grid>
+
+        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
@@ -189,7 +189,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="PictureTemplate">
-        <Grid>
+        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
@@ -206,7 +206,7 @@
     </DataTemplate>
     
     <DataTemplate x:Key="CommandTemplate">
-        <DockPanel LastChildFill="True">
+        <DockPanel LastChildFill="True" HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth}">
             <Image Grid.Column="0" Source="..\Images\more1.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <ctrl:HightliteHyperlink Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  

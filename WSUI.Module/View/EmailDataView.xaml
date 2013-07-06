@@ -50,28 +50,7 @@
             
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <!--<DockPanel LastChildFill="True">
-                        <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
-                        <TextBlock Text="{Binding Path=Date,Converter={StaticResource dateConverter}}" Grid.Column="2" Margin="5" DockPanel.Dock="Right"/>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Style="{StaticResource NameStyleWidthColumn}" />
-                                <ColumnDefinition Style="{StaticResource CountStyleWidthColumn}"/>
-                                <ColumnDefinition Style="{StaticResource SubjectStyleWidthColumn}" />
-                            </Grid.ColumnDefinitions>
-                            
-                                <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  FontStyleLabel="Italic"
-                                                           Margin="5 3 5 3" Grid.Column="0"/>
-                                <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3" Grid.Column="1"></TextBlock>
-
-                                
-                                <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,ElementName=this}"  
-                                                       Margin="5" Grid.Column="2"/>
-                              
-                        </Grid>
-                    </DockPanel>-->
-
-                    <Grid HorizontalAlignment="Stretch">
+                    <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="35"/>
