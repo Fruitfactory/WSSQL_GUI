@@ -118,5 +118,33 @@ namespace WSUI.Module.Service
         }
     }
 
+    [ValueConversion(typeof(double),typeof(double))]
+    public class ActualWidthToWidthConverter : IValueConverter
+    {
+        private readonly double ScrollbarWidth = 20;
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (parameter == null)
+            {
+                double val = (double) value;
+                return val - ScrollbarWidth;
+            }
+            if (parameter is Int32)
+            {
+                int param = (int) parameter;
+                double val = (double) value;
+                return val - param;
+            }
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
 
 }

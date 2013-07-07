@@ -15,6 +15,7 @@
                 <!--<Resource   Dictionary Source="..\Themes\Generic.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
             <service:CountToFormatStringConvert x:Key="countConverter" />
+            <service:ActualWidthToWidthConverter x:Key="ActualWidthConverter" />
 
             <Style x:Key="NameStyleWidthColumn" TargetType="ColumnDefinition">
                 <Setter Property="Width" Value="150" />
@@ -50,7 +51,7 @@
             
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth}">
+                    <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="35"/>
