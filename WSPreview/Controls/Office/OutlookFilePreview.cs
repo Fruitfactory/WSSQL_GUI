@@ -71,6 +71,8 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         private string _filename = string.Empty;
         private readonly Dictionary<string,string> _dictTempFile = new Dictionary<string, string>();
         private readonly Dictionary<string,string> _dictImage = new Dictionary<string, string>();
+        private string _hitString;
+        private string[] _itemArray = null;
 
         private const int WM_KEYDOWN = 0x0100;
 
@@ -83,7 +85,15 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
         #region public 
 
-        public string HitString { get; set; }
+        public string HitString 
+        { 
+            get{return _hitString;}
+            set 
+            { 
+                _hitString = value;
+                _itemArray = GetWordsList(_hitString);
+            } 
+        }
 
         public void LoadFile(string filename)
         {
@@ -218,11 +228,10 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
         private string HighlightSearchString(string inputString)
         {
-            if (string.IsNullOrEmpty(HitString) || string.IsNullOrEmpty(inputString))
+            if (string.IsNullOrEmpty(HitString) || string.IsNullOrEmpty(inputString) || _itemArray == null )
                 return inputString;
             string result = inputString;
-            var itemArray = GetWordsList(HitString.Trim());
-            foreach (var s in itemArray)
+            foreach (var s in _itemArray)
             {
                 result = Regex.Replace(result, string.Format(@"\b({0})\b",Regex.Escape(s)), string.Format(AfterStrongTemplate, s), RegexOptions.IgnoreCase);
             }
@@ -389,7 +398,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         private string GetAttachmentValue(Outlook.Attachment att, string tempFolder)
         {
             List<string> resourceArray = Assembly.GetExecutingAssembly().GetManifestResourceNames().Where(s => s.EndsWith(ExtOfImage)).ToList();
-            var ext = Path.GetExtension(att.DisplayName);
+            var ext = Path.GetExtension(att.FileName);
             ext = ext.Substring(1, ext.Length - 1);
             var key = string.Format("{0}.{1}", ext, ExtOfImage);
             var name = resourceArray.FirstOrDefault(s => s.EndsWith(key));
