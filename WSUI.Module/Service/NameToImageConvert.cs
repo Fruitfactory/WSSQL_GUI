@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using C4F.DevKit.PreviewHandler.Service.Logger;
 
 namespace WSUI.Module.Service
 {
@@ -78,12 +79,20 @@ namespace WSUI.Module.Service
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var name = (string)value;
-            if (string.IsNullOrEmpty(name))
-                return ImageHelper.Instance.GetImage(ImageHelper.DefaultKey);
+            try
+            {
+                var name = (string)value;
+                if (string.IsNullOrEmpty(name))
+                    return ImageHelper.Instance.GetImage(ImageHelper.DefaultKey);
 
-            var ext = Path.GetExtension(name);
-            return ImageHelper.Instance.GetImage(ext);
+                var ext = Path.GetExtension(name);
+                return ImageHelper.Instance.GetImage(ext);
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(string.Format("String: {0}; Exception: {1}", value, ex.Message));
+                return ImageHelper.Instance.GetImage(ImageHelper.DefaultKey);
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

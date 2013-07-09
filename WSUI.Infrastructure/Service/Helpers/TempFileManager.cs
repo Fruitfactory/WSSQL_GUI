@@ -196,7 +196,14 @@ namespace WSUI.Infrastructure.Service.Helpers
             switch (searchItem.Type)
             {
                 case TypeSearchItem.Attachment:
-                    filename = Path.GetFileNameWithoutExtension(searchItem.Name);
+                    try
+                    {
+                        filename = Path.GetFileNameWithoutExtension(searchItem.Name);
+                    }
+                    catch (Exception)
+                    { //TODO should changed for getting from the path
+                        filename = Path.GetFileNameWithoutExtension(Path.GetTempFileName());
+                    }
                     break;
                 default:
                     filename = Path.GetFileNameWithoutExtension(Path.GetTempFileName());
