@@ -71,7 +71,7 @@
                         <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                             Grid.Column="3"  Margin="5" ></ctrl:HightliteTextBlock>
 
-                    <TextBlock Grid.Column="4"  Text="{Binding Path=Date,Converter={StaticResource dateConverter}}"  Margin="5" />
+                        <TextBlock Grid.Column="4"  Text="{Binding Path=Date,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>
                     </Grid>
 
 
