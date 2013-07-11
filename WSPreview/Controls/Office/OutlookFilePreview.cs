@@ -506,9 +506,9 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             string path = string.Empty;
             foreach (Outlook.Attachment att in mail.Attachments)
             {
-                if (att.DisplayName == currentname)
+                if (att.DisplayName.Contains(currentname.Trim()))
                 {
-                    path = GetTempFileName(currentname);
+                    path = GetTempFileName(att.FileName);
                     att.SaveAsFile(path);
                     break;
                 }
@@ -543,6 +543,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
                     path = args.Url.AbsoluteUri;
                     break;
                 case "about":
+                case "re":
                     path = GetPathForEmail(args.Url);
                     break;
             }
