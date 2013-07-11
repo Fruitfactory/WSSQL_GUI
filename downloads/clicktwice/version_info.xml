@@ -78,5 +78,18 @@
         <showRunningApplicationsWarning>false</showRunningApplicationsWarning>
       </preferences>
     </version>
+    <version name="1.0.6" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/" productCode="{46A3DF51-62E3-4A80-9A8D-06D0613843FD}" updateType="directLink">
+      <files msi="WSUI.OutlookPluginSetup" customActionAssembly="" customActionClass="">
+        <file>WSUI.OutlookPluginSetup.msi</file>
+      </files>
+      <preferences>
+        <showInstallUI>true</showInstallUI>
+        <showUninstallUI>false</showUninstallUI>
+        <webPage>
+        </webPage>
+        <showDownloaderWindow>false</showDownloaderWindow>
+        <showRunningApplicationsWarning>false</showRunningApplicationsWarning>
+      </preferences>
+    </version>
   </product>
 </application>
