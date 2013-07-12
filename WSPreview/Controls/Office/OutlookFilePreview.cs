@@ -32,7 +32,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
 
         #region pattern for html
 
-        private const string PageBegin = @"<html><head><title></title><style type='text/css'>.style1{width: 15%;color: gray;}.style2{width: 85%;}</style></head><body style='font-family: Arial, Helvetica, sans-serif'>";
+        private const string PageBegin = @"<!DOCTYPE html><html lang='en'><head><title></title><meta charset='utf-8' http-equiv='Content-Type' content='text/html; charset=utf-8;'><style type='text/css'>.style1{width: 15%;color: gray;}.style2{width: 85%;}</style></head><body style='font-family: Arial, Helvetica, sans-serif'>";
         private const string TableBegin = @"<table style='width: 100%; table-layout: auto;'>";
         private const string SubjectRow = @"<tr><td class='style1' style='color: #0c0202; font-size: large; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
         private const string SenderRow = @"<tr><td class='style1' style='color: #0c0202; font-size: medium; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
@@ -316,11 +316,12 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
             using (MemoryStream stream = new MemoryStream())
             {
                 HtmlDocument htmlDoc = new HtmlDocument();
+
                 htmlDoc.LoadHtml(body);
                 HightlightAllNodes(htmlDoc.DocumentNode);
-                htmlDoc.Save(stream);
+                htmlDoc.Save(stream,Encoding.UTF8);
                 stream.Position = 0;
-                using(StreamReader reader = new StreamReader(stream))
+                using(StreamReader reader = new StreamReader(stream,Encoding.UTF8))
                 {
                     return reader.ReadToEnd();        
                 }
