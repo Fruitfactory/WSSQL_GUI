@@ -109,7 +109,7 @@
     <Compile Include="Hooks\HookManager.Structures.cs" />
     <Compile Include="Hooks\HookManager.Windows.cs" />
     <Compile Include="Hooks\MouseEventExtArgs.cs" />
-    <Compile Include="Interfaces\ICleaneable.cs" />
+    <Compile Include="Interfaces\IMainForm.cs" />
     <Compile Include="Interfaces\IUpdatable.cs" />
     <Compile Include="WSUIAddinModule.cs">
       <SubType>Component</SubType>
@@ -138,6 +138,10 @@
     <ProjectReference Include="..\WSUI.Control\WSUI.Control.csproj">
       <Project>{FC28437E-0008-4A62-B444-37EB9E6B5AE6}</Project>
       <Name>WSUI.Control</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WSUI.Module\WSUI.Module.csproj">
+      <Project>{EDCE3394-18B5-40A8-AE43-E6A8E23C9A7F}</Project>
+      <Name>WSUI.Module</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -1,3 +1,5 @@
+using WSUI.Control;
+
 namespace WSUIOutlookPlugin
 {
     partial class WSUIForm
@@ -58,5 +60,5 @@ namespace WSUIOutlookPlugin
         #endregion
 
         private System.Windows.Forms.Integration.ElementHost wpfHost;
-    }
+   }
 }

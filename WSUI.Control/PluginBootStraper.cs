@@ -17,10 +17,12 @@ namespace WSUI.Control
     {
         private ElementHost _elementHost = null;
         private IMainViewModel _mainViewModel;
+        private WSMainControl _mainView;
         
-        public PluginBootStraper(ElementHost host)
+        public PluginBootStraper()
         {
-            _elementHost = host;
+            //_elementHost = host;
+            //_mainView = host;
         }
         public override void Run(bool runWithDefaultConfiguration)
         {
@@ -41,7 +43,7 @@ namespace WSUI.Control
             this.Shell = this.CreateShell();
             if (this.Shell != null)
             {
-                RegionManager.SetRegionManager(this.Shell,UnityContainerExtensions.Resolve<IRegionManager>(this.Container,new ResolverOverride[0]));
+                RegionManager.SetRegionManager(this.Shell, UnityContainerExtensions.Resolve<IRegionManager>(this.Container, new ResolverOverride[0]));
                 RegionManager.UpdateRegions();
                 this.InitializeShell();
             }
@@ -76,7 +78,6 @@ namespace WSUI.Control
             Stopwatch watch = new Stopwatch();
             watch.Start();
             base.InitializeShell();
-            _elementHost.Child = (UIElement)this.Shell;
             watch.Stop();
             WSSqlLogger.Instance.LogInfo(string.Format("InitializeShell (plugin): {0}ms",watch.ElapsedMilliseconds));
         }
@@ -100,7 +101,7 @@ namespace WSUI.Control
             IModule module = Container.Resolve<WSUI.Module.WSModule>();
             module.Initialize();
             _mainViewModel = Container.Resolve<WSUI.Module.ViewModel.MainViewModel>();
-            (this.Shell as IMainView).Model = _mainViewModel;
+            (this.View as IMainView).Model = _mainViewModel;
             watch.Stop();
             WSSqlLogger.Instance.LogInfo(string.Format("InitializeModules (plugin): {0}ms",watch.ElapsedMilliseconds));
         }
@@ -110,6 +111,11 @@ namespace WSUI.Control
             if(ReferenceEquals(_mainViewModel,null))
                 return;
             _mainViewModel.PassActionForPreview(actionType);
+        }
+
+        public DependencyObject View 
+        {
+            get { return this.Shell; }
         }
     }
 }

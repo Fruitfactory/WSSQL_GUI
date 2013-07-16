@@ -1,4 +1,5 @@
-﻿using C4F.DevKit.PreviewHandler.Service;
+﻿using System.Windows;
+using C4F.DevKit.PreviewHandler.Service;
 
 namespace WSUI.Control
 {
@@ -6,5 +7,6 @@ namespace WSUI.Control
     {
         void Run();
         void PassAction(WSActionType actionType);
+        DependencyObject View { get; }
     }
 }

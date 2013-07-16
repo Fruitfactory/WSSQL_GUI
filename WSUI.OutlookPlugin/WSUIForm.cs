@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Windows;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using AddinExpress.OL;
@@ -12,21 +13,31 @@ using WSUIOutlookPlugin.Hooks;
 
 namespace WSUIOutlookPlugin
 {
-    public partial class WSUIForm : AddinExpress.OL.ADXOlForm, ICleaneable
+    public partial class WSUIForm : AddinExpress.OL.ADXOlForm, IMainForm
     {
 
         private IPluginBootStraper _wsuiBootStraper = null;
+        private bool _isDebugMode = false;
 
         public WSUIForm()
         {
-            InitializeComponent();
-            HookManager.KeyDown += HookManagerOnKeyDown;
-            WSSqlLogger.Instance.LogInfo("WSUIForm [ctor]");
+            if (!Process.GetCurrentProcess().ProcessName.Equals("MSBuild", StringComparison.InvariantCultureIgnoreCase)) // recommendation from Add-In Express team
+            {
+                InitializeComponent();
+                HookManager.KeyDown += HookManagerOnKeyDown;
+                WSSqlLogger.Instance.LogInfo("WSUIForm [ctor]");
+            }
+            else
+            {
+                _isDebugMode = true;
+                WSSqlLogger.Instance.LogInfo("Debug Mode ON...");
+            }
+
         }
 
         private void HookManagerOnKeyDown(object sender, KeyEventArgs keyEventArgs)
         {
-            if (keyEventArgs != null && (Control.ModifierKeys & Keys.Control) == Keys.Control && keyEventArgs.KeyCode == Keys.C && Visible)
+            if (keyEventArgs != null && (Control.ModifierKeys & Keys.Control) == Keys.Control && keyEventArgs.KeyCode == Keys.C && Visible && _wsuiBootStraper != null)
             {
                 _wsuiBootStraper.PassAction(WSActionType.Copy);
             }
@@ -34,20 +45,27 @@ namespace WSUIOutlookPlugin
 
         protected override void OnLoad(EventArgs e)
         {
+            if(_isDebugMode)
+                return;
+            
             base.OnLoad(e);
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            _wsuiBootStraper = new PluginBootStraper(wpfHost); 
+            //_wsuiBootStraper = new PluginBootStraper(); 
             watch.Stop();
             WSSqlLogger.Instance.LogInfo(string.Format("OnLoad Main form (new PluginBootStraper(wpfHost)): {0}ms", watch.ElapsedMilliseconds));
             (watch = new Stopwatch()).Start();
-            _wsuiBootStraper.Run();
+            SetBootStraper(WSUIAddinModule.CurrentInstance.BootStraper);
+            //_wsuiBootStraper.Run();
             watch.Stop();
             WSSqlLogger.Instance.LogInfo(string.Format("OnLoad Main form (_wsuiBootStraper.Run()): {0}ms", watch.ElapsedMilliseconds));
         }
 
         public void PassActionType(WSActionType actionType)
         {
+            if(_isDebugMode)
+                return;
+            
             switch (actionType)
             {
                 case WSActionType.Copy:
@@ -58,8 +76,11 @@ namespace WSUIOutlookPlugin
             }
         }
 
-        public void Clean()
+        public void SetBootStraper(IPluginBootStraper bootStraper)
         {
+            
+            _wsuiBootStraper = bootStraper;
+            wpfHost.Child = _wsuiBootStraper.View as UIElement;
         }
     }
 }
