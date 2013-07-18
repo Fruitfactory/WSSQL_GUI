@@ -418,10 +418,19 @@ namespace WSUIOutlookPlugin
 
         private void SetExplorerFolder(Outlook.Explorer Explorer, Outlook.MAPIFolder Folder)
         {
-            if (_outlookVersion == 2000 || _outlookVersion == 2002)
-                Explorer.CurrentFolder = Folder;
-            else
-                Explorer.GetType().InvokeMember("SelectFolder", BindingFlags.InvokeMethod, null, Explorer, new object[] { Folder });
+            try
+            {
+                if (_outlookVersion == 2000 || _outlookVersion == 2002)
+                    Explorer.CurrentFolder = Folder;
+                else
+                    Explorer.GetType().InvokeMember("SelectFolder", BindingFlags.InvokeMethod, null, Explorer, new object[] { Folder });
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError("SetExplorerFolder");
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+            
         }
 
         private void ClearFolderWebViewProperties(Outlook.MAPIFolder Folder)
