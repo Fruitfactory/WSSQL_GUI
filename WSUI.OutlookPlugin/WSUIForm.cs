@@ -1,10 +1,7 @@
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using AddinExpress.OL;
 using C4F.DevKit.PreviewHandler.Service;
 using C4F.DevKit.PreviewHandler.Service.Logger;
 using WSUI.Control;
@@ -26,6 +23,7 @@ namespace WSUIOutlookPlugin
                 InitializeComponent();
                 HookManager.KeyDown += HookManagerOnKeyDown;
                 WSSqlLogger.Instance.LogInfo("WSUIForm [ctor]");
+                ADXAfterFormHide += OnAdxAfterFormHide;
             }
             else
             {
@@ -47,40 +45,24 @@ namespace WSUIOutlookPlugin
         {
             if(_isDebugMode)
                 return;
-            
             base.OnLoad(e);
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-            //_wsuiBootStraper = new PluginBootStraper(); 
-            watch.Stop();
-            WSSqlLogger.Instance.LogInfo(string.Format("OnLoad Main form (new PluginBootStraper(wpfHost)): {0}ms", watch.ElapsedMilliseconds));
-            (watch = new Stopwatch()).Start();
             SetBootStraper(WSUIAddinModule.CurrentInstance.BootStraper);
-            //_wsuiBootStraper.Run();
-            watch.Stop();
-            WSSqlLogger.Instance.LogInfo(string.Format("OnLoad Main form (_wsuiBootStraper.Run()): {0}ms", watch.ElapsedMilliseconds));
-        }
-
-        public void PassActionType(WSActionType actionType)
-        {
-            if(_isDebugMode)
-                return;
-            
-            switch (actionType)
-            {
-                case WSActionType.Copy:
-                    //_wsuiBootStraper.PassAction(actionType);
-                    break;
-                case WSActionType.Paste:
-                    break;
-            }
         }
 
         public void SetBootStraper(IPluginBootStraper bootStraper)
         {
-            
             _wsuiBootStraper = bootStraper;
-            wpfHost.Child = _wsuiBootStraper.View as UIElement;
+            UIElement el = _wsuiBootStraper.View as UIElement;
+            if (el != null)
+            {
+                wpfHost.Child = _wsuiBootStraper.View as UIElement;
+            }    
         }
+
+        private void OnAdxAfterFormHide(object sender, ADXAfterFormHideEventArgs adxAfterFormHideEventArgs)
+        {
+            wpfHost.Child = null;
+        }
+
     }
 }

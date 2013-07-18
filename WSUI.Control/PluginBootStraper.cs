@@ -9,20 +9,15 @@ using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.Unity;
 using WSUI.Module.Interface;
-using System.Windows.Forms.Integration;
 
 namespace WSUI.Control
 {
     public class PluginBootStraper : UnityBootstrapper, IPluginBootStraper
     {
-        private ElementHost _elementHost = null;
         private IMainViewModel _mainViewModel;
-        private WSMainControl _mainView;
         
         public PluginBootStraper()
         {
-            //_elementHost = host;
-            //_mainView = host;
         }
         public override void Run(bool runWithDefaultConfiguration)
         {

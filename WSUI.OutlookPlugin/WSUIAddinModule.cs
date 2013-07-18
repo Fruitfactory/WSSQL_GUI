@@ -3,27 +3,17 @@ using System.Collections;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
-using System.ComponentModel;
 using System.Windows.Forms;
-using System.Windows.Forms.Integration;
-using System.Windows.Threading;
-using System.Xml.Linq;
 using AddinExpress.MSO;
-using C4F.DevKit.PreviewHandler.Service;
 using WSUIOutlookPlugin.Interfaces;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Globalization;
 using System.Reflection;
 using WSUI.Control;
 using Microsoft.Win32;
-using System.Threading.Tasks;
-using System.Net;
 using System.Diagnostics;
 using C4F.DevKit.PreviewHandler.Service.Logger;
-using System.IO;
 using AddinExpress.OL;
-using System.Security.Principal;
-using System.Threading;
 using WSUIOutlookPlugin.Core;
 
 namespace WSUIOutlookPlugin
@@ -227,7 +217,8 @@ namespace WSUIOutlookPlugin
             outlookFormManager.ADXBeforeFolderSwitchEx += outlookFormManager_ADXBeforeFolderSwitchEx;
             buttonShow.OnClick += buttonShow_OnClick;
             buttonClose.OnClick += buttonClose_OnClick;
-
+            buttonShow.Enabled = true;
+            buttonClose.Enabled = false;
             if (System.Windows.Application.Current == null)
             {
                 new AppEmpty();
@@ -579,11 +570,15 @@ namespace WSUIOutlookPlugin
         private void buttonShow_OnClick(object sender, IRibbonControl control, bool pressed)
         {
             DoShowWebViewPane();
+            buttonShow.Enabled = false;
+            buttonClose.Enabled = true;
         }
 
         private void buttonClose_OnClick(object sender, IRibbonControl control, bool pressed)
         {
             DoHideWebViewPane();
+            buttonShow.Enabled = true;
+            buttonClose.Enabled = false;
         }
 
         private void WSUIAddinModule_AddinStartupComplete(object sender, EventArgs e)
@@ -595,9 +590,7 @@ namespace WSUIOutlookPlugin
             try
             {
                 oNS = OutlookApp.GetNamespace("mapi");
-                //ppallf = oNS.GetDefaultFolder(Outlook.OlDefaultFolders.olPublicFoldersAllPublicFolders);
-                 pf = oNS.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox);
-                 //fs = oNS.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderSyncIssues);
+                pf = oNS.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox);
                 if (ppallf != null && pf != null && fs != null)
                 {
                     SaveDefaultFoldersEntryIDToRegistry(pf.EntryID, "", "");
