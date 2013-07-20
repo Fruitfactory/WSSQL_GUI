@@ -5,7 +5,7 @@ using System.IO;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Logger;
 
 namespace WSUI.Module.Service
 {

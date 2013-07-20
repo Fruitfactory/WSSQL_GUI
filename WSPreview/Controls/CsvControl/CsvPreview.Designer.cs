@@ -1,4 +1,4 @@
-﻿namespace C4F.DevKit.PreviewHandler.Controls.CsvControl
+﻿namespace WSPreview.PreviewHandler.Controls.CsvControl
 {
     partial class CsvPreview
     {

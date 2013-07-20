@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;

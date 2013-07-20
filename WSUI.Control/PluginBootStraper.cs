@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
-using C4F.DevKit.PreviewHandler.Service;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service;
+using WSPreview.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;

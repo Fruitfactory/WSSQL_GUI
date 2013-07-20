@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using C4F.DevKit.PreviewHandler.Service;
+using WSPreview.PreviewHandler.Service;
 using WSUI.Infrastructure.Core;
 
 namespace WSUI.Module.Interface

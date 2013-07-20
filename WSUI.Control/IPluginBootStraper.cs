@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using C4F.DevKit.PreviewHandler.Service;
+using WSPreview.PreviewHandler.Service;
 
 namespace WSUI.Control
 {

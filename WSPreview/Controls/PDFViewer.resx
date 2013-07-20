@@ -145,7 +145,7 @@
     <value>pageViewControl1</value>
   </data>
   <data name="&gt;&gt;pageViewControl1.Type" xml:space="preserve">
-    <value>C4F.DevKit.PreviewHandler.PageViewer, WSPreview, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>WSPreview.PreviewHandler.PageViewer, WSPreview, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pageViewControl1.Parent" xml:space="preserve">
     <value>$this</value>

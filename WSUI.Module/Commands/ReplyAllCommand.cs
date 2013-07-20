@@ -3,7 +3,7 @@ using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Logger;
 
 namespace WSUI.Module.Commands
 {

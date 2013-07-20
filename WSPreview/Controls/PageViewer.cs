@@ -6,9 +6,9 @@ using System.Drawing.Drawing2D;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
-using C4F.DevKit.PreviewHandler.Properties;
+using WSPreview.PreviewHandler.Properties;
 
-namespace C4F.DevKit.PreviewHandler
+namespace WSPreview.PreviewHandler
 {
     public class PageViewer : UserControl
     {

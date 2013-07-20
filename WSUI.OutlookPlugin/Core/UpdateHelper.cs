@@ -8,7 +8,7 @@ using System.Threading;
 using System.Windows.Threading;
 using System.Xml.Linq;
 using AddinExpress.MSO;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Logger;
 using WSUIOutlookPlugin.Interfaces;
 
 namespace WSUIOutlookPlugin.Core

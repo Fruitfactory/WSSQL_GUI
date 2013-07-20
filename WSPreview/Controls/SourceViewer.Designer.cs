@@ -1,4 +1,4 @@
-﻿namespace C4F.DevKit.PreviewHandler.Controls
+﻿namespace WSPreview.PreviewHandler.Controls
 {
     partial class SourceViewer
     {

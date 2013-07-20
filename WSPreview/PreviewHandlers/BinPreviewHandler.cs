@@ -7,12 +7,12 @@ using System.IO;
 using System.Windows.Forms;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace C4F.DevKit.PreviewHandler.PreviewHandlers
+namespace WSPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("MSDN Magazine Binary Preview Handler", ".bin;.dat", "{E722C141-DA78-414D-B031-EED646E9B991}")]
-    [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.BinaryPreviewHandler")]
+    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.BinaryPreviewHandler")]
     [Guid("01EFABEE-0E35-410C-9B57-6C2A9ADE12AE")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]

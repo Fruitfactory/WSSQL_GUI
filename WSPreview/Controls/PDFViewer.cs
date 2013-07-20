@@ -8,11 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Configuration;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using PDFLibNet;
 using System.Management;
 
-namespace C4F.DevKit.PreviewHandler
+namespace WSPreview.PreviewHandler
 {
   
     public partial class PDFViewer : UserControl,IPreviewControl

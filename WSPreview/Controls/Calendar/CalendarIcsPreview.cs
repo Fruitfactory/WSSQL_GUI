@@ -10,9 +10,9 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace C4F.DevKit.PreviewHandler.Controls.Calendar
+namespace WSPreview.PreviewHandler.Controls.Calendar
 {
     public partial class CalendarIcsPreview : UserControl, IPreviewControl
     {

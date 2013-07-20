@@ -8,8 +8,8 @@ using WSSQLGUI.Views;
 using MVCSharp.Core.Configuration;
 using MVCSharp.Core.Tasks;
 using MVCSharp.Winforms;
-using C4F.DevKit.PreviewHandler;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler;
+using WSPreview.PreviewHandler.Service.Logger;
 
 namespace WSSQLGUI
 {

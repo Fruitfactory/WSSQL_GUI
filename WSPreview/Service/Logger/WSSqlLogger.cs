@@ -10,7 +10,7 @@ using System.Reflection;
 using System.IO;
 
 
-namespace C4F.DevKit.PreviewHandler.Service.Logger
+namespace WSPreview.PreviewHandler.Service.Logger
 {
     public class WSSqlLogger : ILoggerFacade
     {

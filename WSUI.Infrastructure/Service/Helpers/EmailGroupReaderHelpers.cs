@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.OleDb;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Logger;
 using WSUI.Infrastructure.Models;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Core;

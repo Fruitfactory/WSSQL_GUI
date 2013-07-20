@@ -35,7 +35,7 @@
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.splitPanels = new System.Windows.Forms.SplitContainer();
-            this.previewControl = new C4F.DevKit.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl();
+            this.previewControl = new WSPreview.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl();
             this.buttonPreview = new System.Windows.Forms.Button();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.panelSettings = new System.Windows.Forms.Panel();
@@ -217,7 +217,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.SplitContainer splitPanels;
-        private C4F.DevKit.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl previewControl;
+        private WSPreview.PreviewHandler.PreviewHandlerHost.PreviewHandlerHostControl previewControl;
         private System.Windows.Forms.Button buttonPreview;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
         private System.Windows.Forms.ErrorProvider errorProvider;

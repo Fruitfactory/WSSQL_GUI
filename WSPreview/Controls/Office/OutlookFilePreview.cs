@@ -11,16 +11,16 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
-using C4F.DevKit.PreviewHandler.Service;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.Service;
+using WSPreview.PreviewHandler.Service.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Text.RegularExpressions;
 using mshtml;
 using HtmlAgilityPack;
 using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
-namespace C4F.DevKit.PreviewHandler.Controls.Office
+namespace WSPreview.PreviewHandler.Controls.Office
 {
     public partial class OutlookFilePreview : UserControl,IPreviewControl
     {

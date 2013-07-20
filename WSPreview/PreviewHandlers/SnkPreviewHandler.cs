@@ -8,12 +8,12 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Text;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace C4F.DevKit.PreviewHandler.PreviewHandlers
+namespace WSPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("MSDN Magazine Strong Name Key Preview Handler", ".snk;.keys", "{27145BEA-45DC-4E09-BDC1-7847AEC8AE6B}")]
-    [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.SnkPreviewHandler")]
+    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.SnkPreviewHandler")]
     [Guid("00F574FF-7474-4FDF-B1E5-DA7D6F83BDC9")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]

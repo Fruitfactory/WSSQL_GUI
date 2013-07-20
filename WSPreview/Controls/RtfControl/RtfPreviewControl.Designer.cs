@@ -1,4 +1,4 @@
-﻿namespace C4F.DevKit.PreviewHandler.Controls.RtfControl
+﻿namespace WSPreview.PreviewHandler.Controls.RtfControl
 {
     partial class RtfPreviewControl
     {

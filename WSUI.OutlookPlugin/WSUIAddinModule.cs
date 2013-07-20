@@ -12,7 +12,7 @@ using System.Reflection;
 using WSUI.Control;
 using Microsoft.Win32;
 using System.Diagnostics;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Logger;
 using AddinExpress.OL;
 using WSUIOutlookPlugin.Core;
 

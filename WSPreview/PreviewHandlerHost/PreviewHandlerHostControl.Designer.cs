@@ -1,4 +1,4 @@
-namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
+namespace WSPreview.PreviewHandler.PreviewHandlerHost
 {
     partial class PreviewHandlerHostControl
     {

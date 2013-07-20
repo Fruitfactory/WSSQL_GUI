@@ -16,7 +16,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Text.RegularExpressions;
 using WSSQLGUI.Services.Helpers;
 using WSSQLGUI.Services.Enums;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Logger;
 using System.Reflection;
 using WSSQLGUI.Core;
 using WSSQLGUI.Views;

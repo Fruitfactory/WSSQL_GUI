@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
-using C4F.DevKit.PreviewHandler.Controls.Office.WebUtils;
+using WSPreview.PreviewHandler.Controls.Office.WebUtils;
 
-namespace C4F.DevKit.PreviewHandler.Controls.Office
+namespace WSPreview.PreviewHandler.Controls.Office
 {
     partial class OutlookFilePreview
     {
@@ -31,7 +31,7 @@ namespace C4F.DevKit.PreviewHandler.Controls.Office
         /// </summary>
         private void InitializeComponent()
         {
-            this.webEmail = new C4F.DevKit.PreviewHandler.Controls.Office.WebUtils.ExtWebBrowser();
+            this.webEmail = new WSPreview.PreviewHandler.Controls.Office.WebUtils.ExtWebBrowser();
             this.SuspendLayout();
             // 
             // webEmail

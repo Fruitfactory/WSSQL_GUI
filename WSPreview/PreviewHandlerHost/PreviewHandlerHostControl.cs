@@ -1,19 +1,16 @@
 using System;
 using System.IO;
-using System.Reflection;
 using System.ComponentModel;
 using System.Drawing;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using C4F.DevKit.PreviewHandler.PInvoke;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
-using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.InteropServices;
-using C4F.DevKit.PreviewHandler.Service;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.PInvoke;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.Service;
+using WSPreview.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Preview;
 
-namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
+namespace WSPreview.PreviewHandler.PreviewHandlerHost
 {
     /// <summary>
     /// This control is dependent on the managed framework for preview handlers implemented by Stephen Toub
@@ -55,6 +52,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
         public PreviewHandlerHostControl()
         {
             InitializeComponent();
+            HelperPreviewHandlers.Instance.Inititialize();
         }
 
         public string SearchCriteria
@@ -144,17 +142,21 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
             // check application handlers
             if (_filePath.ToLower().EndsWith(".msg") || handler == null )//
             {
-                comType = GetOwnPreviewHandlersType();
-                if (comType == null)
+                _comInstance = GetOwnPreviewHandler();
+                if (_comInstance == null)
                 {
-                    string ext = Path.GetExtension(_filePath).ToLower();
-                    webMessage.Visible = true;
-                    var str = Regex.Replace(Properties.Resources.NoPreview, "replace", ext);
-                    webMessage.DocumentText = str;
-                    WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "No Preview", _filePath));
-                    return;
+                    comType = GetOwnPreviewHandlersType();
+                    if (comType == null)
+                    {
+                        string ext = Path.GetExtension(_filePath).ToLower();
+                        webMessage.Visible = true;
+                        var str = Regex.Replace(Properties.Resources.NoPreview, "replace", ext);
+                        webMessage.DocumentText = str;
+                        WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "No Preview", _filePath));
+                        return;
+                    }
                 }
-                _registreHandler = false;
+                _registreHandler = false;    
             } 
             else
                 comType = Type.GetTypeFromCLSID(new Guid(handler.ID));
@@ -162,7 +164,8 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
             try
             {
                 // Create an instance of the preview handler
-                _comInstance = Activator.CreateInstance(comType);
+                if(_comInstance == null)
+                    _comInstance = Activator.CreateInstance(comType);
 
                 // Check if it is a stream or file handler
                 if (_comInstance is IInitializeWithFile)
@@ -184,7 +187,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                     if (_comInstance is IInitializeWithStream)
                     {
                         StreamWrapper stream = new StreamWrapper(File.Open(_filePath, FileMode.Open));
-                        ((C4F.DevKit.PreviewHandler.PreviewHandlerFramework.IInitializeWithStream)_comInstance).Initialize(stream, 0);
+                        ((WSPreview.PreviewHandler.PreviewHandlerFramework.IInitializeWithStream)_comInstance).Initialize(stream, 0);
                     }
                     else if (_comInstance is IInitializeWithItem)
                     {
@@ -264,11 +267,14 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
 
         private object SecondChance()
         {
-            Type comType = GetOwnPreviewHandlersType();
-            if (comType == null)
-                return null;
-            object comInstance = Activator.CreateInstance(comType);
-
+            object comInstance = GetOwnPreviewHandler();
+            if (comInstance == null)
+            {
+                Type comType = GetOwnPreviewHandlersType();
+                if (comType == null)
+                    return null;
+                comInstance = Activator.CreateInstance(comType);
+            }
             // Check if it is a stream or file handler
             if (comInstance is IInitializeWithFile)
             {
@@ -281,7 +287,7 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
                 if (comInstance is IInitializeWithStream)
                 {
                     StreamWrapper stream = new StreamWrapper(File.Open(_filePath, FileMode.Open));
-                    ((C4F.DevKit.PreviewHandler.PreviewHandlerFramework.IInitializeWithStream)comInstance).Initialize(stream, 0);
+                    ((WSPreview.PreviewHandler.PreviewHandlerFramework.IInitializeWithStream)comInstance).Initialize(stream, 0);
                 }
                 else if (comInstance is IInitializeWithItem)
                 {
@@ -305,9 +311,15 @@ namespace C4F.DevKit.PreviewHandler.PreviewHandlerHost
         private Type GetOwnPreviewHandlersType()
         {
             string ext = Path.GetExtension(_filePath).ToLower();
-            return HelperPreviewHandlers.HandlersDictionary.ContainsKey(ext)
-                       ? HelperPreviewHandlers.HandlersDictionary[ext]
+            return HelperPreviewHandlers.Instance.HandlersDictionary.ContainsKey(ext)
+                       ? HelperPreviewHandlers.Instance.HandlersDictionary[ext]
                        : null;
+        }
+
+        private PreviewHandlerFramework.PreviewHandler GetOwnPreviewHandler()
+        {
+            string ext = Path.GetExtension(_filePath).ToLower();
+            return HelperPreviewHandlers.Instance.GetReadyHandler(ext);
         }
 
 

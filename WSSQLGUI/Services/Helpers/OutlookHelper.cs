@@ -9,7 +9,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Logger;
 using WSSQLGUI.Core;
 using WSSQLGUI.Models;
 

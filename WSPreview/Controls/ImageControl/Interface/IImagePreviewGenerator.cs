@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace C4F.DevKit.PreviewHandler.Controls.ImageControl.Interface
+namespace WSPreview.PreviewHandler.Controls.ImageControl.Interface
 {
     public interface IImagePreviewGenerator
     {

@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using C4F.DevKit.PreviewHandler.PInvoke;
+using WSPreview.PreviewHandler.PInvoke;
 
 
-namespace C4F.DevKit.PreviewHandler.Controls.Office
+namespace WSPreview.PreviewHandler.Controls.Office
 {
 	public abstract class BaseOfficeWindow
 	{

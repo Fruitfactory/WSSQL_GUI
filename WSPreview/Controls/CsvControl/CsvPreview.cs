@@ -2,10 +2,10 @@
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
-using C4F.DevKit.PreviewHandler.Service.CsvHelper;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.Service.CsvHelper;
 
-namespace C4F.DevKit.PreviewHandler.Controls.CsvControl
+namespace WSPreview.PreviewHandler.Controls.CsvControl
 {
     public partial class CsvPreview : UserControl, IPreviewControl
     {

@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
-namespace C4F.DevKit.PreviewHandler.Controls.Office.WebUtils
+namespace WSPreview.PreviewHandler.Controls.Office.WebUtils
 {
     public partial class ExtWebBrowser : WebBrowser
     {

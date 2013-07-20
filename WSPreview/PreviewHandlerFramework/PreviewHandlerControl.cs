@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 
-namespace C4F.DevKit.PreviewHandler.PreviewHandlerFramework
+namespace WSPreview.PreviewHandler.PreviewHandlerFramework
 {
     public abstract class PreviewHandlerControl : Control
     {

@@ -13,12 +13,12 @@ using System.Runtime.ConstrainedExecution;
 using System.Security;
 using System.Security.Permissions;
 using System.ComponentModel;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace C4F.DevKit.PreviewHandler.PreviewHandlers.PreviewHandlers
+namespace WSPreview.PreviewHandler.PreviewHandlers.PreviewHandlers
 {
     [PreviewHandler("MSDN Magazine MSI Preview Handler", ".msi", "{5CAD7435-A7CD-495C-A84F-A697E4D81C06}")]
-    [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.MsiPreviewHandler")]
+    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.MsiPreviewHandler")]
     [Guid("F90F8E43-EF26-4321-A172-5502E8E63536")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]

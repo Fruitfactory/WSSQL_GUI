@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using C4F.DevKit.PreviewHandler.PInvoke;
+using WSPreview.PreviewHandler.PInvoke;
 
-namespace C4F.DevKit.PreviewHandler.Controls
+namespace WSPreview.PreviewHandler.Controls
 {
     class PreviewBrowser : WebBrowser
     {

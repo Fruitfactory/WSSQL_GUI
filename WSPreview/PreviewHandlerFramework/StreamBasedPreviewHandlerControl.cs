@@ -5,7 +5,7 @@
 using System;
 using System.IO;
 
-namespace C4F.DevKit.PreviewHandler.PreviewHandlerFramework
+namespace WSPreview.PreviewHandler.PreviewHandlerFramework
 {
     public abstract class StreamBasedPreviewHandlerControl : PreviewHandlerControl
     {

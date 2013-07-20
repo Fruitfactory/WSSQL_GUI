@@ -11,12 +11,12 @@ using System.Collections;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Diagnostics;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace C4F.DevKit.PreviewHandler.PreviewHandlers
+namespace WSPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("MSDN Magazine Resources Preview Handler", ".resources", "{0595438C-7C68-4A9B-B5CD-BF6EBAA6623A}")]
-    [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.ResourcesPreviewHandler")]
+    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.ResourcesPreviewHandler")]
     [Guid("7B2D1C25-6DE7-4F16-8C9B-AD65A1EC8FB0")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]

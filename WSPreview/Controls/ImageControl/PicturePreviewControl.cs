@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using C4F.DevKit.PreviewHandler.Controls.ImageControl.Interface;
-using C4F.DevKit.PreviewHandler.Controls.ImageControl.Service;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.Controls.ImageControl.Interface;
+using WSPreview.PreviewHandler.Controls.ImageControl.Service;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace C4F.DevKit.PreviewHandler.Controls.ImageControl
+namespace WSPreview.PreviewHandler.Controls.ImageControl
 {
     public partial class PicturePreviewControl : UserControl, IPreviewControl
     {

@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
-using C4F.DevKit.PreviewHandler.Service;
+using WSPreview.PreviewHandler.Service;
 
-namespace C4F.DevKit.PreviewHandler.PreviewHandlerFramework
+namespace WSPreview.PreviewHandler.PreviewHandlerFramework
 {
     public interface ITranslateMessage
     {

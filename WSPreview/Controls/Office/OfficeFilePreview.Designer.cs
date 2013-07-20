@@ -1,4 +1,4 @@
-﻿namespace C4F.DevKit.PreviewHandler.Controls.Office
+﻿namespace WSPreview.PreviewHandler.Controls.Office
 {
     partial class OfficeFilePreview
     {

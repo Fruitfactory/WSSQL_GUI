@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Logger;
 
 namespace WSUI.Infrastructure.Services
 {

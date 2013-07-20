@@ -11,7 +11,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.Threading;
 using WSSQLGUI.Services.Helpers;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Logger;
 
 namespace WSSQLGUI.Core
 {

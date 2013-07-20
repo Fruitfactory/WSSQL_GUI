@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-namespace C4F.DevKit.PreviewHandler.Controls.Office
+namespace WSPreview.PreviewHandler.Controls.Office
 {
 	public class OfficeWindowFactory
 	{

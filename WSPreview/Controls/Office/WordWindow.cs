@@ -5,11 +5,11 @@ using System.Text;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
 using Core = Microsoft.Office.Core;
-using C4F.DevKit.PreviewHandler.PInvoke;
+using WSPreview.PreviewHandler.PInvoke;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
-namespace C4F.DevKit.PreviewHandler.Controls.Office
+namespace WSPreview.PreviewHandler.Controls.Office
 {
 	public class WordWindow : BaseOfficeWindow
 	{

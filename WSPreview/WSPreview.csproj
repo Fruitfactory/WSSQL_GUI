@@ -8,7 +8,7 @@
     <ProjectGuid>{3E9F9F18-B9AD-4DDE-A5D6-F71B75C737D2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>C4F.DevKit.PreviewHandler</RootNamespace>
+    <RootNamespace>WSPreview.PreviewHandler</RootNamespace>
     <AssemblyName>WSPreview</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -49,7 +49,8 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.2.329, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolkits\Log4Net\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build" />
@@ -96,6 +97,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Version.cs">
@@ -176,7 +178,7 @@
     <Compile Include="Controls\SourceViewer.Designer.cs">
       <DependentUpon>SourceViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="HelperPreviewHandlers.cs" />
+    <Compile Include="Service\Preview\HelperPreviewHandlers.cs" />
     <Compile Include="PInvoke\WindowAPI.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\COLORREF.cs" />
     <Compile Include="PreviewHandlerFramework\COMInterop\COMStream.cs" />

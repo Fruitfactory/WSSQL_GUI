@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Reflection;
-using C4F.DevKit.PreviewHandler.Controls.ImageControl.Interface;
+using WSPreview.PreviewHandler.Controls.ImageControl.Interface;
 
-namespace C4F.DevKit.PreviewHandler.Controls.ImageControl.Service
+namespace WSPreview.PreviewHandler.Controls.ImageControl.Service
 {
     public class ImagePreviewGenerator : IImagePreviewGenerator
     {

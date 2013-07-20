@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace C4F.DevKit.PreviewHandler.Controls.RtfControl
+namespace WSPreview.PreviewHandler.Controls.RtfControl
 {
     public partial class RtfPreviewControl : UserControl, IPreviewControl
     {

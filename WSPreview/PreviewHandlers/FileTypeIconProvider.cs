@@ -8,10 +8,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
-using C4F.DevKit.PreviewHandler.Properties;
+using WSPreview.PreviewHandler.Properties;
 
-namespace C4F.DevKit.PreviewHandler.PreviewHandlers
+namespace WSPreview.PreviewHandler.PreviewHandlers
 {
     internal sealed class FileTypeIconProvider : IDisposable
     {

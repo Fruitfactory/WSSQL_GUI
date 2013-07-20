@@ -6,11 +6,11 @@ using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using Core = Microsoft.Office.Core;
 using System.Runtime.InteropServices;
-using C4F.DevKit.PreviewHandler.PInvoke;
+using WSPreview.PreviewHandler.PInvoke;
 using System.Globalization;
 using System.Threading;
 
-namespace C4F.DevKit.PreviewHandler.Controls.Office
+namespace WSPreview.PreviewHandler.Controls.Office
 {
 	public class ExcelWindow : BaseOfficeWindow
 	{

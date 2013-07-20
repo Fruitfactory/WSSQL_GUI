@@ -12,7 +12,7 @@ using System.Data;
 using WSSQLGUI.Services.Enums;
 using WSSQLGUI.Services.Helpers;
 using MVCSharp.Core.Views;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Logger;
 
 namespace WSSQLGUI.Kinds
 {

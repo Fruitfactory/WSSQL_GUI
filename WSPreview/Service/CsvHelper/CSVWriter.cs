@@ -6,7 +6,7 @@ using System.IO;
 using System.Data;
 using System.Reflection;
 
-namespace C4F.DevKit.PreviewHandler.Service.CsvHelper
+namespace WSPreview.PreviewHandler.Service.CsvHelper
 {
     public class CSVWriter : IDisposable
     {

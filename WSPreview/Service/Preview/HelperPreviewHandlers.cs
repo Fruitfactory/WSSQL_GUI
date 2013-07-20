@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using System.Windows.Threading;
+using Threads = System.Threading;
+using Tasks = System.Threading.Tasks;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Build.Utilities;
 using Microsoft.Win32;
 
-namespace C4F.DevKit.PreviewHandler
+namespace WSPreview.PreviewHandler.Service.Preview
 {
     public class HelperPreviewHandlers
     {
@@ -19,29 +22,66 @@ namespace C4F.DevKit.PreviewHandler
         private static string HKLMWinSdk32 = "SOFTWARE\\Microsoft\\Microsoft SDKs\\Windows";
         private static string HKLMWinSdk64 = "SOFTWARE\\Wow6432Node\\Microsoft\\Microsoft SDKs\\Windows";
         private static string InstallationFolder = "InstallationFolder";
+        #endregion
 
-        private static Dictionary<string, Type> _handlersDictionary = null;
+        #region [needs]
+
+        private readonly Dictionary<string, Type> _handlersDictionary = null;
+        private readonly Dictionary<string, PreviewHandler.PreviewHandlerFramework.PreviewHandler> _poolPreviewHandlers;
+        private readonly static Lazy<HelperPreviewHandlers>  _instance = new Lazy<HelperPreviewHandlers>(() =>
+                                                                                                    {
+                                                                                                        var inst = new HelperPreviewHandlers ();
+                                                                                                        return inst;
+                                                                                                    },Threads.LazyThreadSafetyMode.ExecutionAndPublication);
 
         #endregion
 
-        public static Dictionary<string, Type> HandlersDictionary
-        {
-            get
-            {
-                if (_handlersDictionary == null)
-                {
-                    InitDictiohary();
-                }
-                return _handlersDictionary;
-            }
+        #region [ctor]
+
+        private HelperPreviewHandlers()
+        {   
+            _handlersDictionary = new Dictionary<string, Type>();
+            _poolPreviewHandlers = new Dictionary<string, PreviewHandlerFramework.PreviewHandler>();
         }
 
+        #endregion
 
-        private static void InitDictiohary()
+        public static HelperPreviewHandlers Instance
         {
-            Assembly assembly = Assembly.GetAssembly(typeof(PreviewHandler.PreviewHandlerFramework.PreviewHandler));
-            var listTypes = assembly.GetTypes().Where(type => type.IsSealed && (type.IsSubclassOf(typeof(C4F.DevKit.PreviewHandler.PreviewHandlerFramework.FileBasedPreviewHandler)) || type.IsSubclassOf(typeof(C4F.DevKit.PreviewHandler.PreviewHandlerFramework.StreamBasedPreviewHandler)))).ToList();
-            _handlersDictionary = new Dictionary<string, Type>();
+            get { return _instance.Value; }
+        }
+
+        public Dictionary<string, Type> HandlersDictionary
+        {
+            get { return _handlersDictionary; }
+        }
+
+        public Dictionary<string,PreviewHandlerFramework.PreviewHandler> HandlersInstances
+        {
+            get { return _poolPreviewHandlers; }
+        }
+
+        public PreviewHandlerFramework.PreviewHandler GetReadyHandler(string ext)
+        {
+            var type = HandlersDictionary.ContainsKey(ext) ? HandlersDictionary[ext] : null;
+            if (type == null)
+                return null;
+            string key = type.FullName;
+            var handler = HandlersInstances.ContainsKey(key) ? HandlersInstances[key] : null;
+            return handler;
+        }
+
+        public void Inititialize()
+        {
+            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(Init), null);
+        }
+
+        #region [private]
+
+        private void Init()
+        {
+            Assembly assembly = Assembly.GetAssembly(typeof(PreviewHandlerFramework.PreviewHandler));
+            var listTypes = assembly.GetTypes().Where(type => type.IsSealed && (type.IsSubclassOf(typeof(FileBasedPreviewHandler)) || type.IsSubclassOf(typeof(StreamBasedPreviewHandler)))).ToList();
             foreach (var type in listTypes)
             {
                 object[] attr = (object[])type.GetCustomAttributes(typeof(PreviewHandlerAttribute), true);
@@ -51,12 +91,20 @@ namespace C4F.DevKit.PreviewHandler
                 string[] exts = prewAttr.Extension.Split(';');
                 foreach (var ext in exts)
                 {
-                    if(!_handlersDictionary.ContainsKey(ext))
+                    if (!_handlersDictionary.ContainsKey(ext))
                         _handlersDictionary.Add(ext, type);
                 }
+                var handler = Activator.CreateInstance(type) as PreviewHandlerFramework.PreviewHandler;
+                _poolPreviewHandlers.Add(type.FullName,handler);
             }
         }
+        
+        #endregion
 
+
+
+
+        #region [static public]
 
         public static bool RegisterHandlers()
         {
@@ -79,11 +127,14 @@ namespace C4F.DevKit.PreviewHandler
             process = Process.Start(processInfo);
             process.WaitForExit();
 
-            //var listTypes = assembly.GetTypes().Where(type => type.IsSealed && (type.IsSubclassOf(typeof(C4F.DevKit.PreviewHandler.PreviewHandlerFramework.FileBasedPreviewHandler)) || type.IsSubclassOf(typeof(C4F.DevKit.PreviewHandler.PreviewHandlerFramework.StreamBasedPreviewHandler)))).ToList();
+            //var listTypes = assembly.GetTypes().Where(type => type.IsSealed && (type.IsSubclassOf(typeof(WSPreview.PreviewHandler.PreviewHandlerFramework.FileBasedPreviewHandler)) || type.IsSubclassOf(typeof(WSPreview.PreviewHandler.PreviewHandlerFramework.StreamBasedPreviewHandler)))).ToList();
             //listTypes.ForEach(type => PreviewHandler.PreviewHandlerFramework.PreviewHandler.Register(type));
 
             return true;
         }
+
+        
+        
 
         public static bool UnregisterHandlers()
         {
@@ -106,14 +157,16 @@ namespace C4F.DevKit.PreviewHandler
             process = Process.Start(processInfo);
             process.WaitForExit();
 
-            //var listTypes = assembly.GetTypes().Where(type => type.IsSealed && (type.IsSubclassOf(typeof(C4F.DevKit.PreviewHandler.PreviewHandlerFramework.FileBasedPreviewHandler)) || type.IsSubclassOf(typeof(C4F.DevKit.PreviewHandler.PreviewHandlerFramework.StreamBasedPreviewHandler)))).ToList();
+            //var listTypes = assembly.GetTypes().Where(type => type.IsSealed && (type.IsSubclassOf(typeof(WSPreview.PreviewHandler.PreviewHandlerFramework.FileBasedPreviewHandler)) || type.IsSubclassOf(typeof(WSPreview.PreviewHandler.PreviewHandlerFramework.StreamBasedPreviewHandler)))).ToList();
             //listTypes.ForEach(type => PreviewHandler.PreviewHandlerFramework.PreviewHandler.Register(type));
 
 
             return true;
         }
 
-        #region private
+        #endregion
+
+        #region private static
 
         private static string GetPathToRegasm()
         {
@@ -164,8 +217,6 @@ namespace C4F.DevKit.PreviewHandler
 
 
         #endregion
-
-
 
     }
 }

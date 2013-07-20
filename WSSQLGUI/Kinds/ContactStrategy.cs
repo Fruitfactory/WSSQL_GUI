@@ -3,7 +3,7 @@ using System.Data.OleDb;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Logger;
 using WSSQLGUI.Controllers;
 using WSSQLGUI.Core;
 using System.Data;

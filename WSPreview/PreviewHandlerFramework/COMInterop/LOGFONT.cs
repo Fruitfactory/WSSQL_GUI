@@ -5,7 +5,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace C4F.DevKit.PreviewHandler.PreviewHandlerFramework
+namespace WSPreview.PreviewHandler.PreviewHandlerFramework
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     internal class LOGFONT

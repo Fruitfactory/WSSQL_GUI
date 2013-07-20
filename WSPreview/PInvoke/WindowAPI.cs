@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace C4F.DevKit.PreviewHandler.PInvoke
+namespace WSPreview.PreviewHandler.PInvoke
 {
     public class WindowAPI
     {

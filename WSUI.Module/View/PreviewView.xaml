@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:preview="clr-namespace:C4F.DevKit.PreviewHandler.PreviewHandlerHost;assembly=WSPreview"
+             xmlns:preview="clr-namespace:WSPreview.PreviewHandler.PreviewHandlerHost;assembly=WSPreview"
              mc:Ignorable="d" 
              SizeChanged="MetroContentControl_SizeChanged"
              >

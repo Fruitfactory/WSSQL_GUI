@@ -1,4 +1,4 @@
-using C4F.DevKit.PreviewHandler.Service;
+using WSPreview.PreviewHandler.Service;
 using WSUI.Module.ViewModel;
 
 namespace WSUI.Module.Interface

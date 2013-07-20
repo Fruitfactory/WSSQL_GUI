@@ -12,7 +12,7 @@ using System.Data;
 using System.Reflection;
 using System.ComponentModel;
 
-namespace C4F.DevKit.PreviewHandler.Service.CsvHelper
+namespace WSPreview.PreviewHandler.Service.CsvHelper
 {
     public class CSVReader : IEnumerable<string[]>, IDisposable
     {

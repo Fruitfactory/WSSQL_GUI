@@ -11,7 +11,7 @@ using WSSQLGUI.Services.Enums;
 using WSSQLGUI.Views;
 using WSSQLGUI.Controllers;
 using System.Threading;
-using C4F.DevKit.PreviewHandler.Service.Logger;
+using WSPreview.PreviewHandler.Service.Logger;
 
 namespace WSSQLGUI.Kinds
 {

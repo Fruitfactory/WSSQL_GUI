@@ -1,4 +1,4 @@
-﻿namespace C4F.DevKit.PreviewHandler.Controls.Calendar
+﻿namespace WSPreview.PreviewHandler.Controls.Calendar
 {
     partial class CalendarIcsPreview
     {

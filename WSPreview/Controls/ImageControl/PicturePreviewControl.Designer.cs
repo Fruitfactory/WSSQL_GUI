@@ -1,4 +1,4 @@
-﻿namespace C4F.DevKit.PreviewHandler.Controls.ImageControl
+﻿namespace WSPreview.PreviewHandler.Controls.ImageControl
 {
     partial class PicturePreviewControl
     {
@@ -33,7 +33,7 @@
             this.labelZoom = new System.Windows.Forms.Label();
             this.trackZoom = new System.Windows.Forms.TrackBar();
             this.panel = new System.Windows.Forms.Panel();
-            this.zoomPictureBox = new C4F.DevKit.PreviewHandler.Controls.ImageControl.ZoomPictureBox();
+            this.zoomPictureBox = new WSPreview.PreviewHandler.Controls.ImageControl.ZoomPictureBox();
             this.panelBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).BeginInit();
             this.panel.SuspendLayout();

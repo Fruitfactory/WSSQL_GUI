@@ -7,10 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using ScintillaNET;
 
-namespace C4F.DevKit.PreviewHandler.Controls
+namespace WSPreview.PreviewHandler.Controls
 {
     public partial class SourceViewer : UserControl,IPreviewControl
     {

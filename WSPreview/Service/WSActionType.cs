@@ -1,4 +1,4 @@
-﻿namespace C4F.DevKit.PreviewHandler.Service
+﻿namespace WSPreview.PreviewHandler.Service
 {
     public enum WSActionType
     {

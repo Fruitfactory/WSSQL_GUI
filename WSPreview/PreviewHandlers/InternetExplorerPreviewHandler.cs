@@ -6,12 +6,12 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace C4F.DevKit.PreviewHandler.PreviewHandlers
+namespace WSPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("MSDN Magazine Internet Explorer Preview Handler", "xmlfile;.xml;.xps;.config;.psq", "{5C92DC69-2154-4974-8937-C9A2158D1ADC}")]
-    [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.InternetExplorerPreviewHandler")]
+    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.InternetExplorerPreviewHandler")]
     [Guid("77A309CD-9901-400A-93FC-460B97C4FF88")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]

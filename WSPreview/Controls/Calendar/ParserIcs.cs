@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace C4F.DevKit.PreviewHandler.Controls.Calendar
+namespace WSPreview.PreviewHandler.Controls.Calendar
 {
     static class ParserIcs
     {

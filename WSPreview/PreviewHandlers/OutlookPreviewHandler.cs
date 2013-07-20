@@ -4,15 +4,15 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Globalization;
-using C4F.DevKit.PreviewHandler;
-using C4F.DevKit.PreviewHandler.PreviewHandlerFramework;
-using C4F.DevKit.PreviewHandler.Controls.Office;
-using C4F.DevKit.PreviewHandler.Service;
+using WSPreview.PreviewHandler;
+using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.Controls.Office;
+using WSPreview.PreviewHandler.Service;
 
-namespace C4F.DevKit.PreviewHandler.PreviewHandlers
+namespace WSPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("WSSQL Office Preview Handler", ".msg", "{CE4CB591-6E33-4CA1-9E0C-BD6F774AFEB1}")]
-    [ProgId("C4F.DevKit.PreviewHandler.PreviewHandlers.OutlookPreviewHandler")]
+    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.OutlookPreviewHandler")]
     [Guid("326A2452-981E-403B-9921-911011E677E6")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
