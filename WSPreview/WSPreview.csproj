@@ -157,13 +157,13 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\Office\WordWindow.cs" />
-    <Compile Include="Controls\PageViewer.cs">
+    <Compile Include="Controls\PdfControl\PageViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\PDFViewer.cs">
+    <Compile Include="Controls\PdfControl\PDFViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\PDFViewer.designer.cs">
+    <Compile Include="Controls\PdfControl\PDFViewer.designer.cs">
       <DependentUpon>PDFViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\RtfControl\RtfPreviewControl.cs">
@@ -172,10 +172,10 @@
     <Compile Include="Controls\RtfControl\RtfPreviewControl.Designer.cs">
       <DependentUpon>RtfPreviewControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SourceViewer.cs">
+    <Compile Include="Controls\SourceControl\SourceViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\SourceViewer.Designer.cs">
+    <Compile Include="Controls\SourceControl\SourceViewer.Designer.cs">
       <DependentUpon>SourceViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Service\Preview\HelperPreviewHandlers.cs" />
@@ -263,10 +263,10 @@
     <EmbeddedResource Include="Controls\Office\OutlookFilePreview.resx">
       <DependentUpon>OutlookFilePreview.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\PageViewer.resx">
+    <EmbeddedResource Include="Controls\PdfControl\PageViewer.resx">
       <DependentUpon>PageViewer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\PDFViewer.resx">
+    <EmbeddedResource Include="Controls\PdfControl\PDFViewer.resx">
       <DependentUpon>PDFViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\RtfControl\RtfPreviewControl.resx">
