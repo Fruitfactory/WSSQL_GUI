@@ -11,6 +11,7 @@ using WSPreview.PreviewHandler.PreviewHandlerFramework;
 
 namespace WSPreview.PreviewHandler.Controls.RtfControl
 {
+    [KeyControl(ControlsKey.Rtf)]
     public partial class RtfPreviewControl : UserControl, IPreviewControl
     {
         public RtfPreviewControl()
@@ -37,6 +38,14 @@ namespace WSPreview.PreviewHandler.Controls.RtfControl
 
         public void LoadFile(Stream stream)
         {
+        }
+
+        public void Clear()
+        {
+            if (rtfPreview != null)
+            {
+                rtfPreview.Clear();
+            }
         }
 
         #endregion

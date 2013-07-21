@@ -14,7 +14,7 @@ using System.Management;
 
 namespace WSPreview.PreviewHandler
 {
-  
+    [KeyControl(ControlsKey.Pdf)]
     public partial class PDFViewer : UserControl,IPreviewControl
     {
         private class loadPagesParam
@@ -65,11 +65,7 @@ namespace WSPreview.PreviewHandler
 
         public void LoadFile(string filename)
         {
-            if (_pdfDoc != null)
-            {
-                _pdfDoc.Dispose();
-                _pdfDoc = null;
-            }
+            Clear();
             _pdfDoc = new PDFWrapper();
             _pdfDoc.RenderNotifyFinished += new RenderNotifyFinishedHandler(_pdfDoc_RenderNotifyFinished);
             _pdfDoc.PDFLoadCompeted += new PDFLoadCompletedHandler(_pdfDoc_PDFLoadCompeted);
@@ -90,6 +86,15 @@ namespace WSPreview.PreviewHandler
 
         public void LoadFile(Stream stream)
         {
+        }
+
+        public void Clear()
+        {
+            if (_pdfDoc != null)
+            {
+                _pdfDoc.Dispose();
+                _pdfDoc = null;
+            }
         }
 
         #region Mouse Scrolling

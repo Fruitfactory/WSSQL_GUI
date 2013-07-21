@@ -33,21 +33,34 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
                 _parent = parent;
             }
 
-
             public override void Load(FileInfo file)
             {
-                _preview = new OutlookFilePreview();
-                _preview.Dock = DockStyle.Fill;
-                Controls.Add(_preview);
-                _preview.HitString = _parent.HitString;
-                _preview.LoadFile(file.FullName);
+                if (_preview != null)
+                {
+                    _preview.HitString = _parent.HitString;
+                }
+                base.Load(file);
             }
 
-            public override void Unload()
+            protected override Control GetCustomerPreviewControl()
             {
-                Controls.Clear();
-                _preview.Unload();
-                base.Unload();
+                _preview = new OutlookFilePreview();
+                return _preview;
+            }
+
+            protected override Control GetPreviewControl()
+            {
+                Control ctrl = base.GetPreviewControl();
+                if(ctrl is OutlookFilePreview)
+                {
+                    _preview = (OutlookFilePreview) ctrl;
+                }
+                return ctrl;
+            }
+
+            protected override ControlsKey GetControlsKey()
+            {
+                return ControlsKey.Outlook;
             }
 
             public void PassMessage(WSActionType action)

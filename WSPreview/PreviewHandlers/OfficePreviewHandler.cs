@@ -24,23 +24,18 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
 
         private sealed class OfficePreviewHandlerControl : FileBasedPreviewHandlerControl
         {
-            private OfficeFilePreview _preview;
-            public override void Load(FileInfo file)
+
+            protected override Control GetCustomerPreviewControl()
             {
-                _preview = new OfficeFilePreview();
-                _preview.Dock = DockStyle.Fill;
-                Controls.Add(_preview);
-                _preview.LoadFile(file.FullName);
+                OfficeFilePreview ctrl = new OfficeFilePreview();
+                return ctrl;
             }
 
-            public override void Unload()
+            protected override ControlsKey GetControlsKey()
             {
-                if (_preview == null)
-                    return;
-                _preview.Unload();
-                Controls.Clear();
-                base.Unload();
+                return ControlsKey.Office;
             }
+
         }
 
     }

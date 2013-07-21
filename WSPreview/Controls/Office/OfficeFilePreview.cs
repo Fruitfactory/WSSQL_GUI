@@ -12,6 +12,7 @@ using WSPreview.PreviewHandler.PreviewHandlerFramework;
 
 namespace WSPreview.PreviewHandler.Controls.Office
 {
+    [KeyControl(ControlsKey.Office)]
     public partial class OfficeFilePreview : UserControl,IPreviewControl
     {
         private BaseOfficeWindow _window;
@@ -33,6 +34,11 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         public void LoadFile(Stream stream)
         {
+        }
+
+        public void Clear()
+        {
+            Unload();
         }
 
         public void Unload()

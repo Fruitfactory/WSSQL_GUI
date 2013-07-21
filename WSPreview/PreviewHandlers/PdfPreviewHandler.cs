@@ -27,21 +27,17 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
 
         private sealed class PdfPreviewHandlerControl : FileBasedPreviewHandlerControl
         {
-            public override void Load(FileInfo file)
+            protected override Control GetCustomerPreviewControl()
             {
-                try
-                {
-                    PDFViewer viewer = new PDFViewer();
-                    viewer.Dock = DockStyle.Fill;
-                    Controls.Add(viewer);
-                    viewer.LoadFile(file.FullName);
-
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Error Rendering Preview - this handler requires Acrobat Reader", ex);
-                }
+                PDFViewer viewer = new PDFViewer();
+                return viewer;
             }
+
+            protected override ControlsKey GetControlsKey()
+            {
+                return ControlsKey.Pdf;
+            }
+
         }
        
     }

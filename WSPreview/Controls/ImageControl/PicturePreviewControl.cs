@@ -7,6 +7,7 @@ using WSPreview.PreviewHandler.PreviewHandlerFramework;
 
 namespace WSPreview.PreviewHandler.Controls.ImageControl
 {
+    [KeyControl(ControlsKey.Image)]
     public partial class PicturePreviewControl : UserControl, IPreviewControl
     {
         public PicturePreviewControl()
@@ -26,7 +27,7 @@ namespace WSPreview.PreviewHandler.Controls.ImageControl
                 IImagePreviewGenerator generator = ImagePreviewGenerator.Instance;
                 generator.SetFileName(filename);
 
-                if (!generator.IsSupportFofrmat())
+                if (!generator.IsSupportFormat())
                     return;
 
                 zoomPictureBox.Image = generator.GetImage();
@@ -42,6 +43,14 @@ namespace WSPreview.PreviewHandler.Controls.ImageControl
 
         public void LoadFile(Stream stream)
         {
+        }
+
+        public void Clear()
+        {
+            if (zoomPictureBox != null)
+            {
+                zoomPictureBox.Image = null;
+            }
         }
 
         private void trackZoom_ValueChanged(object sender, EventArgs e)

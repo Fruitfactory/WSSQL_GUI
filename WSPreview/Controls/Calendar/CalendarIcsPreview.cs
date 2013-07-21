@@ -14,6 +14,7 @@ using WSPreview.PreviewHandler.PreviewHandlerFramework;
 
 namespace WSPreview.PreviewHandler.Controls.Calendar
 {
+    [KeyControl(ControlsKey.Calendar)]
     public partial class CalendarIcsPreview : UserControl, IPreviewControl
     {
 
@@ -73,6 +74,14 @@ namespace WSPreview.PreviewHandler.Controls.Calendar
 
         public void LoadFile(Stream stream)
         {
+        }
+
+        public void Clear()
+        {
+            if (browserIcs != null)
+            {
+                browserIcs.DocumentText = string.Empty;
+            }
         }
 
         private string GeneratePreview(FileIcsProperty obj)

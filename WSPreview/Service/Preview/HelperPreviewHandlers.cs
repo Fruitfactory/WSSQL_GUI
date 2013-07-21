@@ -26,8 +26,11 @@ namespace WSPreview.PreviewHandler.Service.Preview
 
         #region [needs]
 
+        private readonly string InterfaceName = "WSPreview.PreviewHandler.PreviewHandlerFramework.IPreviewControl";
+
         private readonly Dictionary<string, Type> _handlersDictionary = null;
         private readonly Dictionary<string, PreviewHandler.PreviewHandlerFramework.PreviewHandler> _poolPreviewHandlers;
+        private readonly Dictionary<ControlsKey, IPreviewControl> _poolPreviewControls; 
         private readonly static Lazy<HelperPreviewHandlers>  _instance = new Lazy<HelperPreviewHandlers>(() =>
                                                                                                     {
                                                                                                         var inst = new HelperPreviewHandlers ();
@@ -42,6 +45,7 @@ namespace WSPreview.PreviewHandler.Service.Preview
         {   
             _handlersDictionary = new Dictionary<string, Type>();
             _poolPreviewHandlers = new Dictionary<string, PreviewHandlerFramework.PreviewHandler>();
+            _poolPreviewControls = new Dictionary<ControlsKey, IPreviewControl>();
         }
 
         #endregion
@@ -71,6 +75,12 @@ namespace WSPreview.PreviewHandler.Service.Preview
             return handler;
         }
 
+        public IPreviewControl GetPreviewControl(ControlsKey key)
+        {
+            var ctrl = _poolPreviewControls.ContainsKey(key) ? _poolPreviewControls[key] : null;
+            return ctrl;
+        }
+
         public void Inititialize()
         {
             Dispatcher.CurrentDispatcher.BeginInvoke(new Action(Init), null);
@@ -81,6 +91,12 @@ namespace WSPreview.PreviewHandler.Service.Preview
         private void Init()
         {
             Assembly assembly = Assembly.GetAssembly(typeof(PreviewHandlerFramework.PreviewHandler));
+            InitPreviewHandlers(assembly);
+            InitPreviewControls(assembly);
+        }
+        
+        private void InitPreviewHandlers(Assembly assembly)
+        {
             var listTypes = assembly.GetTypes().Where(type => type.IsSealed && (type.IsSubclassOf(typeof(FileBasedPreviewHandler)) || type.IsSubclassOf(typeof(StreamBasedPreviewHandler)))).ToList();
             foreach (var type in listTypes)
             {
@@ -95,10 +111,35 @@ namespace WSPreview.PreviewHandler.Service.Preview
                         _handlersDictionary.Add(ext, type);
                 }
                 var handler = Activator.CreateInstance(type) as PreviewHandlerFramework.PreviewHandler;
-                _poolPreviewHandlers.Add(type.FullName,handler);
+                _poolPreviewHandlers.Add(type.FullName, handler);
+            } 
+        }
+
+        private void InitPreviewControls(Assembly assembly)
+        {
+            var listTypes = assembly.GetTypes().Where(type => type.GetInterface(InterfaceName,true) != null);
+            if(!listTypes.Any())
+                return;
+            foreach (var listType in listTypes)
+            {
+                var key = GetControlKey(listType);
+                if(key == ControlsKey.None)
+                    continue;
+                var ctrl = Activator.CreateInstance(listType) as IPreviewControl;
+                _poolPreviewControls.Add(key,ctrl);
             }
         }
-        
+
+        private ControlsKey GetControlKey(Type type)
+        {
+            var attr = type.GetCustomAttributes(typeof (KeyControlAttribute), true);
+            if(attr.Length == 0)
+                return ControlsKey.None;
+            var a = attr[0] as KeyControlAttribute;
+            return a.Key;
+        }
+
+
         #endregion
 
 

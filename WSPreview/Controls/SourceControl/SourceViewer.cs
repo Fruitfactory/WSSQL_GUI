@@ -12,6 +12,7 @@ using ScintillaNET;
 
 namespace WSPreview.PreviewHandler.Controls
 {
+    [KeyControl(ControlsKey.Source)]
     public partial class SourceViewer : UserControl,IPreviewControl
     {
 #region fields
@@ -28,7 +29,7 @@ namespace WSPreview.PreviewHandler.Controls
             Controls.Add(_scintilla);
         }
 
-#region public
+        #region public
 
         public void LoadFile(string filename)
         {
@@ -43,6 +44,14 @@ namespace WSPreview.PreviewHandler.Controls
 
         public void LoadFile(Stream stream)
         {
+        }
+
+        public void Clear()
+        {
+            if (_scintilla != null)
+            {
+                _scintilla.Text = string.Empty;
+            }
         }
 
         #endregion

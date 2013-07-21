@@ -23,20 +23,18 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
 
         private sealed class IcsPreviewHandlerControl : FileBasedPreviewHandlerControl
         {
-            public override void Load(FileInfo file)
+            
+            protected override Control GetCustomerPreviewControl()
             {
-                try
-                {
-                    CalendarIcsPreview preview = new CalendarIcsPreview();
-                    preview.LoadFile(file.FullName);
-                    preview.Dock = DockStyle.Fill;
-                    Controls.Add(preview);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.Message);
-                }
+                CalendarIcsPreview preview = new CalendarIcsPreview();
+                return preview;
             }
+
+            protected override ControlsKey GetControlsKey()
+            {
+                return ControlsKey.Calendar;
+            }
+
         }
 
     }

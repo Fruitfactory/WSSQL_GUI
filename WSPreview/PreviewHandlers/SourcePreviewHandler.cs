@@ -23,19 +23,15 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
         private sealed class SourcePreviewHandlerControl : FileBasedPreviewHandlerControl
         {
 
-            public override void Load(FileInfo file)
+            protected override Control GetCustomerPreviewControl()
             {
                 SourceViewer viewer = new SourceViewer();
-                try
-                {
-                    viewer.LoadFile(file.FullName);
-                    viewer.Dock = DockStyle.Fill;
-                    Controls.Add(viewer);
-                }
-                catch (Exception)
-                {
-                    throw new Exception("Source Preview Error");
-                }
+                return viewer;
+            }
+
+            protected override ControlsKey GetControlsKey()
+            {
+                return ControlsKey.Source;
             }
         }
     }

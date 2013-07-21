@@ -12,6 +12,7 @@ using System.Globalization;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using WSPreview.PreviewHandler.Service.CsvHelper;
 using WSPreview.PreviewHandler.Controls.CsvControl;
+using WSPreview.PreviewHandler.Service.Preview;
 
 namespace WSPreview.PreviewHandler.PreviewHandlers
 {
@@ -29,14 +30,16 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
 
         private sealed class CsvPreviewHandlerControl : StreamBasedPreviewHandlerControl
         {
-            public override void Load(Stream stream)
+            protected override Control GetCustomerPreviewControl()
             {
                 CsvPreview preview = new CsvPreview();
-                preview.LoadFile(stream);
-                preview.Dock = DockStyle.Fill;
-                Controls.Add(preview);
+                return (Control)preview;
             }
 
+            protected override ControlsKey GetControlsKey()
+            {
+                return ControlsKey.Csv;
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ using WSPreview.PreviewHandler.Service.CsvHelper;
 
 namespace WSPreview.PreviewHandler.Controls.CsvControl
 {
+    [KeyControl(ControlsKey.Csv)]
     public partial class CsvPreview : UserControl, IPreviewControl
     {
         public CsvPreview()
@@ -26,6 +27,14 @@ namespace WSPreview.PreviewHandler.Controls.CsvControl
             dataGridCsv.ReadOnly = true;
             dataGridCsv.Dock = DockStyle.Fill;
             dataGridCsv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+        }
+
+        public void Clear()
+        {
+            if (dataGridCsv != null)
+            {
+                dataGridCsv.DataSource = null;
+            }
         }
 
         private static DataTable ParseCsv(Stream stream)

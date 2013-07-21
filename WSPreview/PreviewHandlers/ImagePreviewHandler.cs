@@ -30,23 +30,15 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
         {
             #region Overrides of PreviewHandlerControl
 
-            public override void Load(FileInfo file)
+            protected override Control GetCustomerPreviewControl()
             {
-                try
-                {
-                    PicturePreviewControl ctrl = new PicturePreviewControl();
-                    ctrl.LoadFile(file.FullName);
-                    ctrl.Dock = DockStyle.Fill;
-                    Controls.Add(ctrl);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Error Rendering Preview - this handler requires Image Preview", ex);
-                }
-                finally
-                {
-                    
-                }
+                PicturePreviewControl ctrl = new PicturePreviewControl();
+                return ctrl;
+            }
+
+            protected override ControlsKey GetControlsKey()
+            {
+                return ControlsKey.Image;
             }
 
             #endregion

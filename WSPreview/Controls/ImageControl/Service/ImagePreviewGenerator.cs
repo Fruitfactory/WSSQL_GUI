@@ -63,7 +63,7 @@ namespace WSPreview.PreviewHandler.Controls.ImageControl.Service
             _gflInst = Activator.CreateInstance(_gfltype, _filename);
         }
 
-        public bool IsSupportFofrmat()
+        public bool IsSupportFormat()
         {
             return _gflInst != null ? _gflInst.IsSupportExt() : false;
         }

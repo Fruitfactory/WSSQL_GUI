@@ -22,6 +22,7 @@ using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
 namespace WSPreview.PreviewHandler.Controls.Office
 {
+    [KeyControl(ControlsKey.Outlook)]
     public partial class OutlookFilePreview : UserControl,IPreviewControl
     {
         private const string AfterStrongTemplate = "<font style='background-color: yellow'><strong>{0}</strong></font>";
@@ -134,6 +135,14 @@ namespace WSPreview.PreviewHandler.Controls.Office
         {
         }
 
+        public void Clear()
+        {
+            if (webEmail != null)
+            {
+                webEmail.DocumentText = string.Empty;
+            }
+            Unload();
+        }
 
         public void Unload()
         {

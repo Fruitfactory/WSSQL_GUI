@@ -31,12 +31,15 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
         {
             #region Overrides of PreviewHandlerControl
 
-            public override void Load(FileInfo file)
+            protected override Control GetCustomerPreviewControl()
             {
                 RtfPreviewControl ctrl = new RtfPreviewControl();
-                ((IPreviewControl)ctrl).LoadFile(file.FullName);
-                ctrl.Dock = DockStyle.Fill;
-                Controls.Add(ctrl);
+                return ctrl;
+            }
+
+            protected override ControlsKey GetControlsKey()
+            {
+                return ControlsKey.Rtf;
             }
 
             #endregion

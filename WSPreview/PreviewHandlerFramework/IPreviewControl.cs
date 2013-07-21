@@ -6,5 +6,6 @@ namespace WSPreview.PreviewHandler.PreviewHandlerFramework
     {
         void LoadFile(string filename);
         void LoadFile(Stream stream);
+        void Clear();
     }
 }
