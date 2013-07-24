@@ -71,7 +71,7 @@ namespace WSPreview.PreviewHandler.Controls
                 return;
             string ext = Path.GetExtension(filename).ToLower();
             ext = ext.Substring(1);
-
+            _scintilla.ConfigurationManager.Language = "";
             switch(ext)
             {
                 case "cpp":

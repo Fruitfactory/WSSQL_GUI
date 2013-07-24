@@ -10,6 +10,7 @@
         Outlook,
         Pdf,
         Rtf,
-        Source
+        Source,
+        Bin
     }
 }

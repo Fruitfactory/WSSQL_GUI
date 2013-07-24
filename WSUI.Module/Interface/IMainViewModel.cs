@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using WSPreview.PreviewHandler.Service;
 using WSUI.Infrastructure.Core;
+using WSUI.Module.Core;
 
 namespace WSUI.Module.Interface
 {
@@ -13,5 +14,6 @@ namespace WSUI.Module.Interface
         void Clear();
         void SelectKind(string name);
         void PassActionForPreview(WSActionType actionType);
+        HostType Host { get; }
     }
 }

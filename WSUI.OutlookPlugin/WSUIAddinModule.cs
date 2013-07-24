@@ -228,7 +228,6 @@ namespace WSUIOutlookPlugin
                 _updatable = UpdateHelper.Instance;
                 _updatable.Module = this;
             }
-            CheckUpdate();
             DllPreloader.Instance.PreloadDll();
             _wsuiBootStraper = new PluginBootStraper();
         }
@@ -615,7 +614,7 @@ namespace WSUIOutlookPlugin
                     Marshal.ReleaseComObject(pf);
                 if (fs != null)
                     Marshal.ReleaseComObject(fs);
-             
+                CheckUpdate();
                 this.SendMessage(WM_LOADED,IntPtr.Zero,IntPtr.Zero);
                 WSSqlLogger.Instance.LogInfo("WSUI AddinModule Startup Complete...");
             }

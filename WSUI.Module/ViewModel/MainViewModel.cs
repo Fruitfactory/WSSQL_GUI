@@ -70,15 +70,6 @@ namespace WSUI.Module.ViewModel
 
         public virtual void Init()
         {
-            //switch(Host)
-            //{
-            //    case HostType.Plugin:
-            //        Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
-            //        break;
-            //    default:
-            //        Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
-            //        break;
-            //}
             Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
         }
 
@@ -109,18 +100,6 @@ namespace WSUI.Module.ViewModel
 
         private void GetAllKinds()
         {
-            //var currentAssembly = Assembly.GetExecutingAssembly();
-            //foreach (var type in currentAssembly.GetTypes())
-            //{
-            //    if (type.IsClass && !type.IsAbstract && type.GetInterface(Interface, true) != null)
-            //    {
-
-            //        var kind = new LazyKind(_container,type,this,OnChoose,OnPropertyChanged);
-            //        kind.Initialize();
-            //        _listItems.Add(kind);
-            //    }
-            //}
-
             var types =
                AppDomain.CurrentDomain.GetAssemblies().SelectMany(
                    a => a.GetTypes().Where(t => !t.IsAbstract && t.IsClass && t.GetInterface(Interface, true) != null));

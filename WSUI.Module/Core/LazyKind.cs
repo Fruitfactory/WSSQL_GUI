@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using WSUI.Module.Interface;
+using WSPreview.PreviewHandler.Service.Logger;
 
 namespace WSUI.Module.Core
 {
@@ -40,12 +42,7 @@ namespace WSUI.Module.Core
                 {
                     lock (_lock)
                     {
-                        _kindItem = (IKindItem)_container.Resolve(_typeKind);
-                        _kindItem.Init();
-                        _kindItem.Parent = _parent;
-                        //_kindItem.Choose += (o, e) => _choose(o);
-                        if (_kindItem is INotifyPropertyChanged)
-                            (_kindItem as INotifyPropertyChanged).PropertyChanged += (o, e) => _propertychanged(e.PropertyName);
+                        CreateKind();
                     }
                 }
                 return _kindItem;
@@ -80,6 +77,12 @@ namespace WSUI.Module.Core
             UIName = customAttr[0].Name;
             ID = customAttr[0].Id;
             Toggle = false;
+            switch (_parent.Host)
+            {
+                case HostType.Plugin:
+                    CreateKind();
+                    break;
+            }
             OnPropertyChanged("UIName");
         }
 
@@ -98,6 +101,19 @@ namespace WSUI.Module.Core
         private void OnChoose()
         {
             _choose(Kind);
+        }
+
+        private void CreateKind()
+        {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            _kindItem = (IKindItem)_container.Resolve(_typeKind);
+            _kindItem.Init();
+            _kindItem.Parent = _parent;
+            if (_kindItem is INotifyPropertyChanged)
+                (_kindItem as INotifyPropertyChanged).PropertyChanged += (o, e) => _propertychanged(e.PropertyName);
+            watch.Stop();
+            WSSqlLogger.Instance.LogInfo(String.Format("Resolve '{0}' takes {1}ms",_typeKind.FullName,watch.ElapsedMilliseconds));
         }
 
     }

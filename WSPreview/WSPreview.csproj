@@ -103,6 +103,9 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Controls\BinControl\BinPreviewControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\Calendar\CalendarIcsPreview.cs">
       <SubType>UserControl</SubType>
     </Compile>
