@@ -139,6 +139,10 @@
       <Project>{FC28437E-0008-4A62-B444-37EB9E6B5AE6}</Project>
       <Name>WSUI.Control</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WSUI.Infrastructure\WSUI.Infrastructure.csproj">
+      <Project>{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}</Project>
+      <Name>WSUI.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WSUI.Module\WSUI.Module.csproj">
       <Project>{EDCE3394-18B5-40A8-AE43-E6A8E23C9A7F}</Project>
       <Name>WSUI.Module</Name>

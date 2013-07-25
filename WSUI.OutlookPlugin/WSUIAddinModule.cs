@@ -15,6 +15,7 @@ using System.Diagnostics;
 using WSPreview.PreviewHandler.Service.Logger;
 using AddinExpress.OL;
 using WSUIOutlookPlugin.Core;
+using WSUI.Infrastructure.Service.Dumper;
 
 namespace WSUIOutlookPlugin
 {
@@ -683,6 +684,7 @@ namespace WSUIOutlookPlugin
         void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             WSSqlLogger.Instance.LogError("Unhandled Exception (plugin): " + e.ExceptionObject.ToString());
+            MiniDumper.Write("C:\wsui.outlookplugin.dmp");
         }
 
         private void CurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs firstChanceExceptionEventArgs)
