@@ -115,6 +115,7 @@
         <File Id="_WSUI_Infrastructure_dll" Name="WSUI.Infrastructure.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_WSUI_Module_dll" Name="WSUI.Module.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_Html_Agility_Pack_dll" Name="HtmlAgilityPack.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_WSUI_Core_dll" Name="WSUI.Core.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
       </Component>
     </ComponentGroup>
   </Fragment>
