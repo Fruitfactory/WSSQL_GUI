@@ -5,6 +5,7 @@ using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using AddinExpress.MSO;
+using WSPreview.PreviewHandler.Service.OutlookPreview;
 using WSUIOutlookPlugin.Interfaces;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Globalization;
@@ -617,6 +618,7 @@ namespace WSUIOutlookPlugin
                     Marshal.ReleaseComObject(fs);
                 CheckUpdate();
                 this.SendMessage(WM_LOADED,IntPtr.Zero,IntPtr.Zero);
+                OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
                 WSSqlLogger.Instance.LogInfo("WSUI AddinModule Startup Complete...");
             }
             
@@ -684,7 +686,6 @@ namespace WSUIOutlookPlugin
         void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             WSSqlLogger.Instance.LogError("Unhandled Exception (plugin): " + e.ExceptionObject.ToString());
-            MiniDumper.Write("C:\wsui.outlookplugin.dmp");
         }
 
         private void CurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs firstChanceExceptionEventArgs)
