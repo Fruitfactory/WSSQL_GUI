@@ -1,11 +1,16 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
+using WSUI.Infrastructure.Service.Helpers;
+
 namespace WSUI.Infrastructure.Controls
 {
-
     public class HightliteTextBlockBase : ContentControl
     {
+        protected WSUIFlowDocumentViewer _internalDocumentViewer;
+        protected FlowDocument _internalDoc;
 
         #region properties
 
@@ -84,8 +89,8 @@ namespace WSUI.Infrastructure.Controls
 
         public FontWeight FontWeightLabel
         {
-            get { return (FontWeight)GetValue(FontStyleLabelProperty); }
-            set { SetValue(FontStyleLabelProperty, value); }
+            get { return (FontWeight)GetValue(FontWeightLabelProperty); }
+            set { SetValue(FontWeightLabelProperty, value); }
         }
 
         public static readonly DependencyProperty ForegroundColorProperty =
@@ -100,6 +105,69 @@ namespace WSUI.Infrastructure.Controls
         }
 
         #endregion
+
+        protected override void OnInitialized(System.EventArgs e)
+        {
+            base.OnInitialized(e);
+            _internalDoc = new FlowDocument();
+            _internalDoc.FontSize = 0.1;
+            _internalDoc.PageWidth = 1000;
+           
+        }
+
+        protected override void OnRender(DrawingContext drawingContext)
+        {
+            _internalDoc.Blocks.Clear();
+            Paragraph parag = new Paragraph();
+            parag.Margin = new Thickness(0);
+            parag.Padding = new Thickness(0);
+            var mCol = HelperFunctions.GetMatches(Text, Hightlight);
+
+            Debug.WriteLine(Text);
+
+            if (string.IsNullOrEmpty(Hightlight) || string.IsNullOrEmpty(Text) || mCol.Count == 0)
+            {
+                parag.Inlines.Add(GenerateRun(Text));
+                _internalDoc.Blocks.Add(parag);
+                return;
+            }
+
+            int last = 0;
+            for (int i = 0; i < mCol.Count; i++)
+            {
+                var m = mCol[i];
+                var sub = Text.Substring(last, m.Index - last);
+                parag.Inlines.Add(GenerateRun(sub));
+                sub = Text.Substring(m.Index, m.Length);
+                parag.Inlines.Add(GenerateRun(sub, true));
+                last = (m.Index + m.Length);
+            }
+            if (last < Text.Length)
+            {
+                var temp = Text.Substring(last, Text.Length - last);
+                parag.Inlines.Add(GenerateRun(temp));
+            }
+            _internalDoc.Blocks.Add(parag);
+            _internalDocumentViewer.SetDocument(_internalDoc);
+            base.OnRender(drawingContext);
+        }
+
+
+        protected virtual Inline GenerateRun(string text, bool isBold = false)
+        {
+            WSUIRun run = new WSUIRun(text);
+            run.FontStyle = FontStyleLabel;
+            run.FontFamily = this.FontFamily;
+            run.FontSize = this.FontSizeLabel;
+            run.FontWeight = this.FontWeightLabel;
+            run.Foreground = this.ForegroundColor;
+            if (isBold)
+            {
+                run.FontWeight = FontWeights.ExtraBold;
+            }
+            return run;
+        }
+
 
     }
 }

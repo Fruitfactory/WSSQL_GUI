@@ -85,6 +85,8 @@
     <Compile Include="Controls\ProgressManager\ProgressWindow.xaml.cs">
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\WSUIFlowDocumentViewer.cs" />
+    <Compile Include="Controls\WSUIRun.cs" />
     <Compile Include="Core\BaseSearchData.cs" />
     <Compile Include="Models\CommandSearchData.cs" />
     <Compile Include="Models\ContactSearchData.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Service\FileService.cs" />
     <Compile Include="Service\HelperConst.cs" />
     <Compile Include="Service\Helpers\EmailGroupReaderHelpers.cs" />
+    <Compile Include="Service\Helpers\Extensions.cs" />
     <Compile Include="Service\Helpers\HelperFunctions.cs" />
     <Compile Include="Service\Helpers\OutlookHelper.cs" />
     <Compile Include="Service\Helpers\SearchItemHelper.cs" />

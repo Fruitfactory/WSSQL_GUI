@@ -4,13 +4,42 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:local="clr-namespace:WSUI.Infrastructure.Controls"
              >
-    <Grid >
-        <TextBlock TextTrimming="CharacterEllipsis"  x:Name="textBlock"   
-                   
-                        FontSize="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontSizeLabel}"
-                        FontStyle="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontStyleLabel}" 
-                        FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontWeightLabel}"
-                        Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=ForegroundColor}"
-                    />
+    <ContentControl.Resources>
+        <Style x:Key="WSUIFlowDocumentScrollViewerStyle" TargetType="{x:Type FlowDocumentScrollViewer}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="Local"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type FlowDocumentScrollViewer}">
+                        <Grid Language="en-us" Uid="Grid_26">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Margin="{TemplateBinding Padding}" Uid="Border_49">
+                                <Frame x:Name="PART_ContentHost" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Uid="ScrollViewer_8" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </ContentControl.Resources>
+    <Grid ><!---->
+        
+        <local:WSUIFlowDocumentViewer   Style="{StaticResource ResourceKey=WSUIFlowDocumentScrollViewerStyle}"
+            x:Name="internalFlowDocument" 
+            Height="Auto" Width="Auto"
+            FontSize="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontSizeLabel}"
+            FontStyle="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontStyleLabel}" 
+            FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontWeightLabel}"
+            Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=ForegroundColor}" 
+            HorizontalScrollBarVisibility="Hidden"
+            VerticalScrollBarVisibility="Hidden"
+            Margin="0" Padding="0" >
+           
+        </local:WSUIFlowDocumentViewer>
     </Grid>
 </local:HightliteTextBlockBase>
