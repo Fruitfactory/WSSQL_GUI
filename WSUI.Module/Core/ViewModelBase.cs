@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
+using WSUI.Core.Enums;
 
 namespace WSUI.Module.Core
 {

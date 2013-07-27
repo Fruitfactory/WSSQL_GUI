@@ -17,6 +17,7 @@ using System.Windows.Interop;
 using WSPreview.PreviewHandler.Service.Logger;
 using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Prism.Commands;
+using WSUI.Core.Enums;
 using WSUI.Infrastructure.Attributes;
 using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Core;

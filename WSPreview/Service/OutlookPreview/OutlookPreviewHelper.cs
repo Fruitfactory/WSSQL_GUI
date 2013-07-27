@@ -94,6 +94,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         private OutlookPreviewHelper()
         {
+            HostType = HostType.Unknown;
         }
 
         #endregion
