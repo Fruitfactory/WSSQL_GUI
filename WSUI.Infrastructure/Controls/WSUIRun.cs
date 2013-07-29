@@ -12,5 +12,11 @@ namespace WSUI.Infrastructure.Controls
         {
             e.Handled = true;
         }
+
+        protected override void OnPreviewMouseWheel(System.Windows.Input.MouseWheelEventArgs e)
+        {
+            //e.Handled = true;
+
+        }
     }
 }

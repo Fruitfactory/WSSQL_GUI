@@ -10,7 +10,8 @@ namespace WSUI.Infrastructure.Controls
     public class HightliteTextBlockBase : ContentControl
     {
         protected WSUIFlowDocumentViewer _internalDocumentViewer;
-        protected FlowDocument _internalDoc;
+        protected WSUIFlowDocument _internalDoc;
+        protected WSUIParagraph _internalParagraph;
 
         #region properties
 
@@ -109,26 +110,25 @@ namespace WSUI.Infrastructure.Controls
         protected override void OnInitialized(System.EventArgs e)
         {
             base.OnInitialized(e);
-            _internalDoc = new FlowDocument();
+            _internalDoc = new WSUIFlowDocument();
             _internalDoc.FontSize = 0.1;
             _internalDoc.PageWidth = 1000;
-           
+            _internalParagraph = new WSUIParagraph();
+            _internalParagraph.Margin = new Thickness(0);
+            _internalParagraph.Padding = new Thickness(0);
+            _internalDoc.Blocks.Add(_internalParagraph);
+            _internalDocumentViewer.Document = _internalDoc;    
         }
 
         protected override void OnRender(DrawingContext drawingContext)
         {
-            _internalDoc.Blocks.Clear();
-            Paragraph parag = new Paragraph();
-            parag.Margin = new Thickness(0);
-            parag.Padding = new Thickness(0);
+            _internalParagraph.Inlines.Clear();
+            
             var mCol = HelperFunctions.GetMatches(Text, Hightlight);
-
-            Debug.WriteLine(Text);
 
             if (string.IsNullOrEmpty(Hightlight) || string.IsNullOrEmpty(Text) || mCol.Count == 0)
             {
-                parag.Inlines.Add(GenerateRun(Text));
-                _internalDoc.Blocks.Add(parag);
+                _internalParagraph.Inlines.Add(GenerateRun(Text));
                 return;
             }
 
@@ -137,18 +137,16 @@ namespace WSUI.Infrastructure.Controls
             {
                 var m = mCol[i];
                 var sub = Text.Substring(last, m.Index - last);
-                parag.Inlines.Add(GenerateRun(sub));
+                _internalParagraph.Inlines.Add(GenerateRun(sub));
                 sub = Text.Substring(m.Index, m.Length);
-                parag.Inlines.Add(GenerateRun(sub, true));
+                _internalParagraph.Inlines.Add(GenerateRun(sub, true));
                 last = (m.Index + m.Length);
             }
             if (last < Text.Length)
             {
                 var temp = Text.Substring(last, Text.Length - last);
-                parag.Inlines.Add(GenerateRun(temp));
+                _internalParagraph.Inlines.Add(GenerateRun(temp));
             }
-            _internalDoc.Blocks.Add(parag);
-            _internalDocumentViewer.SetDocument(_internalDoc);
             base.OnRender(drawingContext);
         }
 
@@ -168,6 +166,10 @@ namespace WSUI.Infrastructure.Controls
             return run;
         }
 
+        protected override void OnPreviewMouseWheel(System.Windows.Input.MouseWheelEventArgs e)
+        {
+            //e.Handled = true;
+        }
 
     }
 }

@@ -21,8 +21,8 @@ namespace WSUI.Infrastructure.Controls
 
         protected override void OnInitialized(System.EventArgs e)
         {
-            base.OnInitialized(e);
             _internalDocumentViewer = internalFlowDocument;
+            base.OnInitialized(e);
         }
         protected override Inline GenerateRun(string text, bool isBold = false)
         {
