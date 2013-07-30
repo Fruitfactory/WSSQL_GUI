@@ -11,6 +11,7 @@ using WSPreview.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
+using WSUI.Core.Enums;
 using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Core;
 using WSUI.Infrastructure.Service.Helpers;
@@ -19,6 +20,7 @@ using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Infrastructure;
 using Application = System.Windows.Application;
+using WSPreview.PreviewHandler.Service.OutlookPreview;
 
 namespace WSUI.Module.ViewModel
 {
@@ -71,6 +73,7 @@ namespace WSUI.Module.ViewModel
         public virtual void Init()
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
+            OutlookPreviewHelper.Instance.HostType = HostType.Application;
         }
 
         public bool Enabled

@@ -5,6 +5,7 @@ using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using AddinExpress.MSO;
+using WSPreview.PreviewHandler.Service.OutlookPreview;
 using WSUIOutlookPlugin.Interfaces;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Globalization;
@@ -15,6 +16,7 @@ using System.Diagnostics;
 using WSPreview.PreviewHandler.Service.Logger;
 using AddinExpress.OL;
 using WSUIOutlookPlugin.Core;
+using WSUI.Infrastructure.Service.Dumper;
 
 namespace WSUIOutlookPlugin
 {
@@ -616,6 +618,7 @@ namespace WSUIOutlookPlugin
                     Marshal.ReleaseComObject(fs);
                 CheckUpdate();
                 this.SendMessage(WM_LOADED,IntPtr.Zero,IntPtr.Zero);
+                OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
                 WSSqlLogger.Instance.LogInfo("WSUI AddinModule Startup Complete...");
             }
             

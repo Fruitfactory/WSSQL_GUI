@@ -142,9 +142,6 @@ namespace WSPreview.PreviewHandler.Service.Preview
 
         #endregion
 
-
-
-
         #region [static public]
 
         public static bool RegisterHandlers()

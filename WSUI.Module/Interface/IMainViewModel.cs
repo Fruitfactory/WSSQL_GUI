@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WSPreview.PreviewHandler.Service;
+using WSUI.Core.Enums;
 using WSUI.Infrastructure.Core;
 using WSUI.Module.Core;
 

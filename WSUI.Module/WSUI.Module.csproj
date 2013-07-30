@@ -86,7 +86,6 @@
     <Compile Include="Commands\ReplyCommand.cs" />
     <Compile Include="Core\BaseCommandStrategy.cs" />
     <Compile Include="Core\BasePreviewCommand.cs" />
-    <Compile Include="Core\HostType.cs" />
     <Compile Include="Core\KindNameAttribute.cs" />
     <Compile Include="Core\KindsConstName.cs" />
     <Compile Include="Core\KindViewModelBase.cs" />
@@ -171,6 +170,10 @@
     <ProjectReference Include="..\WSPreview\WSPreview.csproj">
       <Project>{3e9f9f18-b9ad-4dde-a5d6-f71b75c737d2}</Project>
       <Name>WSPreview</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WSUI.Core\WSUI.Core.csproj">
+      <Project>{D650F4E9-99FE-46EC-A59D-BF3A99652255}</Project>
+      <Name>WSUI.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\WSUI.Infrastructure\WSUI.Infrastructure.csproj">
       <Project>{0c9d56f2-fc4f-4677-a33e-e3e9e09c30c0}</Project>
