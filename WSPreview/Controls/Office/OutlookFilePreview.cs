@@ -179,7 +179,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                WSSqlLogger.Instance.LogError("GetFromProcess " + ex.Message);
             }
 
             return ret;
@@ -199,7 +199,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                WSSqlLogger.Instance.LogError("CreateOutlookApplication" + ex.Message);
             }
 
             return ret;
@@ -209,8 +209,16 @@ namespace WSPreview.PreviewHandler.Controls.Office
         {
             if (!_IsExistProcess)
             {
-                app.Quit();
-                Marshal.ReleaseComObject(app);
+                try
+                {
+                    app.Quit();
+                    Marshal.ReleaseComObject(app);
+                }
+                catch (Exception ex)
+                {
+                    WSSqlLogger.Instance.LogError("CloseApplication " + ex.Message);
+                }
+                
             }
         }
         
@@ -240,20 +248,36 @@ namespace WSPreview.PreviewHandler.Controls.Office
             if (string.IsNullOrEmpty(HitString) || string.IsNullOrEmpty(inputString) || _itemArray == null )
                 return inputString;
             string result = inputString;
-            foreach (var s in _itemArray)
+            try
             {
-                result = Regex.Replace(result, string.Format(@"\b({0})\b",Regex.Escape(s)), string.Format(AfterStrongTemplate, s), RegexOptions.IgnoreCase);
+                foreach (var s in _itemArray)
+                {
+                    result = Regex.Replace(result, string.Format(@"\b({0})\b", Regex.Escape(s)), string.Format(AfterStrongTemplate, s), RegexOptions.IgnoreCase);
+                }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError("HighlightSearchString " + ex.Message);
+            }
+            return string.Empty;
         }
 
         private dynamic GetMail(Outlook.Application app,string filename)
         {
-            dynamic mail = app.CreateItemFromTemplate(filename);
+            try
+            {
+                dynamic mail = app.CreateItemFromTemplate(filename);
 
-            if (mail == null)
-                return null;
-            return mail;
+                if (mail == null)
+                    return null;
+                return mail;
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError("GetMail " + ex.Message);
+            }
+            return null;
         }
 
         private string GetTempFileName(string filename)
@@ -287,19 +311,26 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         private string GetAttachments(dynamic item, string filename)
         {
-            if (item.Attachments.Count > 0)
+            try
             {
-                var tempFolder = Path.GetDirectoryName(filename);
-
-                var urls = string.Empty;
-                foreach (Outlook.Attachment att in item.Attachments)
+                if (item.Attachments.Count > 0)
                 {
-                    // TODO add fynctionality, if we don't have image for samo file ext (need to show blank image)
-                    var destname = GetAttachmentValue(att, tempFolder);
-                    if (!string.IsNullOrEmpty(destname))
-                        urls += string.Format(LinkTemplate, att.DisplayName, destname, HighlightSearchString(att.DisplayName));
+                    var tempFolder = Path.GetDirectoryName(filename);
+
+                    var urls = string.Empty;
+                    foreach (Outlook.Attachment att in item.Attachments)
+                    {
+                        // TODO add fynctionality, if we don't have image for samo file ext (need to show blank image)
+                        var destname = GetAttachmentValue(att, tempFolder);
+                        if (!string.IsNullOrEmpty(destname))
+                            urls += string.Format(LinkTemplate, att.DisplayName, destname, HighlightSearchString(att.DisplayName));
+                    }
+                    return string.Format(AttachmentsRow, urls);
                 }
-                return string.Format(AttachmentsRow, urls);
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError("GetAttachments " + ex.Message);
             }
             return null;
         }
