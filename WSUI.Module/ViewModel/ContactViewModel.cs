@@ -267,11 +267,11 @@ namespace WSUI.Module.ViewModel
 
         private void ProcessContactData(IEnumerable<BaseSearchData> listData)
         {
-            var groups = listData.GroupBy(c => !string.IsNullOrEmpty(c.Name) ?  c.Name.ToLower() : string.Empty);
+            var groups = listData.GroupBy(c => !string.IsNullOrEmpty(c.Name) ?  c.Name.ToLower() : string.Empty );//
 
             foreach (var group in groups)
             {
-                if (!group.Any())
+                if (string.IsNullOrEmpty(group.Key) || !group.Any())
                     continue;
                 ListData.Add(group.ElementAt(0));
                 _countAdded++;
