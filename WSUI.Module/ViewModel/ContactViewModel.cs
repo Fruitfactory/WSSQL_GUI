@@ -273,6 +273,9 @@ namespace WSUI.Module.ViewModel
             {
                 if (string.IsNullOrEmpty(group.Key) || !group.Any())
                     continue;
+                var contact = group.ElementAt(0) as ContactSearchData;
+                if(contact == null || contact.EmailList.Count == 0 || contact.EmailList.All(string.IsNullOrEmpty))
+                    continue;
                 ListData.Add(group.ElementAt(0));
                 _countAdded++;
             }
