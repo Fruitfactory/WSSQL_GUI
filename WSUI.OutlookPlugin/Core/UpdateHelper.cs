@@ -5,11 +5,13 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using System.Timers;
 using System.Windows.Threading;
 using System.Xml.Linq;
 using AddinExpress.MSO;
 using WSPreview.PreviewHandler.Service.Logger;
 using WSUIOutlookPlugin.Interfaces;
+using Timer = System.Timers.Timer;
 
 namespace WSUIOutlookPlugin.Core
 {
@@ -43,6 +45,7 @@ namespace WSUIOutlookPlugin.Core
         private const string LanguageNode = "language";
         private const string VersionNode = "version";
         private const string ProductCodeNode = "productCode";
+        private const int IntervalForUpdate = 30*1000;
 
         #endregion
 
@@ -57,6 +60,7 @@ namespace WSUIOutlookPlugin.Core
         private Thread _taskUpdate;
         private string _instalatonUrl = string.Empty;
         private string _path = string.Empty;
+        private Timer _updateTimer = null;
 
         #endregion
 
@@ -78,7 +82,7 @@ namespace WSUIOutlookPlugin.Core
 
         private UpdateHelper()
         {
-                
+                    
         }
 
         #endregion
@@ -151,6 +155,13 @@ namespace WSUIOutlookPlugin.Core
                 WSSqlLogger.Instance.LogError("Update Installation Info: " + ex.Message);
             }
        }
+
+        public void Update()
+        {
+            _updateTimer = new Timer(IntervalForUpdate);
+            _updateTimer.Elapsed += UpdateTimerOnElapsed;
+            _updateTimer.Start();
+        }
 
         #endregion
 
@@ -313,6 +324,38 @@ namespace WSUIOutlookPlugin.Core
             if (Directory.Exists(temp))
             {
                 Directory.Delete(temp, true);
+            }
+        }
+
+        private void UpdateTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        {
+            UpdateOnTimer();
+            _updateTimer.Elapsed -= UpdateTimerOnElapsed;
+            _updateTimer.Stop();
+            _updateTimer.Dispose();
+            _updateTimer = null;
+        }
+
+        private void UpdateOnTimer()
+        {
+            if (CanUpdate())
+            {
+                if (!IsUpdating())
+                {
+                    Lock();
+                    RunSilentUpdate();
+                }
+            }
+            else
+            {
+                if (IsUpdating())
+                {
+                    WSSqlLogger.Instance.LogInfo("Updating is running. Just update installation info and delete lock file...");
+                    UpdateInstalationInfo();
+                    Unlock();
+                }
+                WSSqlLogger.Instance.LogInfo(string.Format("Can update = {0}", CanUpdate()));
+                WSSqlLogger.Instance.LogInfo("Not updatable...");
             }
         }
     }

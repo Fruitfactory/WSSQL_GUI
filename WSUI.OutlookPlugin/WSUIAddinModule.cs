@@ -240,25 +240,9 @@ namespace WSUIOutlookPlugin
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            
-            if (!ReferenceEquals(_updatable,null) && _updatable.CanUpdate())
+            if (!ReferenceEquals(_updatable,null))
             {   
-                if(!_updatable.IsUpdating())
-                {
-                    _updatable.Lock();
-                   _updatable.RunSilentUpdate();
-                }
-            }
-            else
-            {
-                if (_updatable.IsUpdating())
-                {
-                     WSSqlLogger.Instance.LogInfo("Updating is running. Just update installation info and delete lock file...");
-                    _updatable.UpdateInstalationInfo();
-                    _updatable.Unlock();
-                }
-                WSSqlLogger.Instance.LogInfo(string.Format("Can update = {0}", _updatable != null && _updatable.CanUpdate()));
-                WSSqlLogger.Instance.LogInfo("Not updatable...");
+                _updatable.Update();    
             }
             watch.Stop();
             WSSqlLogger.Instance.LogInfo(string.Format("Check for update: {0}ms",watch.ElapsedMilliseconds));
