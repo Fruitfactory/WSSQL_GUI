@@ -15,6 +15,7 @@ using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Module.Service;
 using WSUI.Module.Strategy;
+using WSPreview.PreviewHandler.Service.Logger;
 
 namespace WSUI.Module.ViewModel
 {
@@ -62,6 +63,7 @@ namespace WSUI.Module.ViewModel
         protected override string CreateQuery()
         {
             _countAdded = 0;
+            IsInterupt = false;
             var searchCriteria = SearchString.Trim();
             string res = string.Empty;
            
@@ -131,6 +133,7 @@ namespace WSUI.Module.ViewModel
             var groups = _list.GroupBy(i => new {Name = i.Name, Size = i.Size});
             lock (_lock)
             {
+                WSSqlLogger.Instance.LogInfo(string.Format("Count attachments: {0}", groups.Count()));
                 foreach (var group in groups)
                 {
                     var item = group.FirstOrDefault();
