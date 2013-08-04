@@ -15,7 +15,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Frame x:Name="PART_ScrollContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
+                <local:WSUIFrame x:Name="PART_ScrollContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
             </Grid>
         </ControlTemplate>
 
@@ -33,7 +33,7 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Margin="{TemplateBinding Padding}" Uid="Border_49">
-                                <local:WSUIScrollViewer x:Name="PART_ContentHost" CanContentScroll="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Uid="ScrollViewer_8" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                <local:WSUIScrollViewer x:Name="PART_ContentHost" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Uid="ScrollViewer_8" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                               Template="{StaticResource ResourceKey=WSUIScrollViewerControlTemplate}"/>
                             </Border>
                         </Grid>
@@ -51,8 +51,8 @@
             FontStyle="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontStyleLabel}" 
             FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontWeightLabel}"
             Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=ForegroundColor}" 
-            HorizontalScrollBarVisibility="Disabled"
-            VerticalScrollBarVisibility="Disabled"
+            HorizontalScrollBarVisibility="Hidden"
+            VerticalScrollBarVisibility="Hidden"
             Margin="0" Padding="0"> <!---->
         </local:WSUIFlowDocumentViewer>
     </Grid>

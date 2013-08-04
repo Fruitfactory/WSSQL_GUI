@@ -10,9 +10,11 @@
             <Grid x:Name="Grid" Background="{TemplateBinding Background}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <ContentPresenter x:Name="PART_ScrollContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
             </Grid>
@@ -27,13 +29,13 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type FlowDocumentScrollViewer}">
-                        <Grid Language="en-us" Uid="Grid_26">
+                        <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Margin="{TemplateBinding Padding}" Uid="Border_49">
-                                <local:WSUIScrollViewer x:Name="PART_ContentHost" CanContentScroll="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Uid="ScrollViewer_8" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                        Template="{StaticResource ResourceKey=WSUIScrollViewerControlTemplate}"/>
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Margin="{TemplateBinding Padding}">
+                                <local:WSUIScrollViewer x:Name="PART_ContentHost" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                       Template="{StaticResource ResourceKey=WSUIScrollViewerControlTemplate}" /> <!--Template="{StaticResource ResourceKey=WSUIScrollViewerControlTemplate}"-->
                             </Border>
                         </Grid>
                     </ControlTemplate>
@@ -52,7 +54,7 @@
             FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontWeightLabel}"
             Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=ForegroundColor}" 
             HorizontalScrollBarVisibility="Disabled"
-            VerticalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility=" Disabled"
             Margin="0" Padding="0" ><!---->
 
         </local:WSUIFlowDocumentViewer>

@@ -9,7 +9,7 @@ namespace WSUI.Infrastructure.Controls
 {
     public class HightliteTextBlockBase : ContentControl
     {
-        protected WSUIFlowDocumentViewer _internalDocumentViewer;
+        protected FlowDocumentScrollViewer _internalDocumentViewer;
         protected WSUIFlowDocument _internalDoc;
         protected WSUIParagraph _internalParagraph;
 
@@ -164,11 +164,6 @@ namespace WSUI.Infrastructure.Controls
                 run.FontWeight = FontWeights.ExtraBold;
             }
             return run;
-        }
-
-        protected override void OnPreviewMouseWheel(System.Windows.Input.MouseWheelEventArgs e)
-        {
-            //e.Handled = true;
         }
 
     }

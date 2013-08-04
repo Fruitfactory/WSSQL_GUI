@@ -86,6 +86,7 @@
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\WSUIFlowDocument.cs" />
+    <Compile Include="Controls\WSUIFrame.cs" />
     <Compile Include="Controls\WSUIParagraph.cs" />
     <Compile Include="Controls\WSUIFlowDocumentViewer.cs" />
     <Compile Include="Controls\WSUIRun.cs" />
