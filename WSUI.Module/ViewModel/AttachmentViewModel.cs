@@ -84,7 +84,7 @@ namespace WSUI.Module.ViewModel
 
             if (_listW.Count > 1)
                 for (int i = 1; i < _listW.Count; i++)
-                    temp.Append(string.Format(" Contains(*,'\"{0}\"') ", _listW.ElementAt(i)));
+                    temp.Append(string.Format("AND Contains(*,'\"{0}\"') ", _listW.ElementAt(i)));
 
             return temp.ToString();
 

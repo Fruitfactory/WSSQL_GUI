@@ -129,12 +129,13 @@ namespace WSUI.Module.ViewModel
             var watchGroup = new Stopwatch();
             watchGroup.Start();
             GetContactResult();
-            var grouping = _listEverething.GroupBy(i => i.ConversationID);
+            var grouping = _listEverething.GroupBy(i => i.ConversationID).OrderByDescending(i => i.First().DateCreated);
             foreach (var item in grouping)
             {
                 var ordered = item.OrderByDescending(i => i.DateCreated);
                 if (item.Key != null)
                 {
+                    //only emails and attachments
                     var itemE = ordered.ElementAt(0);
                     EmailSearchData newValue = new EmailSearchData()
                     {
@@ -158,13 +159,15 @@ namespace WSUI.Module.ViewModel
                     #region [attacment could be hidden if they have the same ConversationID, so we should pass through list and add them by hand]
                     if (ordered.Any(a => a.ItemUrl.Contains("at=")))
                     {
-                        var listAttachment = ordered.Where(o => o.ItemUrl.Contains("at="));
-                        foreach (var groupData in listAttachment)
+                        var listAttachment = ordered.Where(o => o.ItemUrl.Contains("at=")).GroupBy(g => g.ConversationID);
+                        foreach (var group in listAttachment)
                         {
-                            var b = CreateBaseEntity(groupData,null);
+                            var b = CreateBaseEntity(group.First(),null);
                             b.DateModified = newValue.DateModified;
+                            b.Count = group.Count().ToString();
                             ListData.Add(b);
                             _countAdded++;
+                            
                         }
                     }
                     #endregion
@@ -172,6 +175,7 @@ namespace WSUI.Module.ViewModel
                 }
                 else
                 {
+                    // without emails and attacments
                     var groupByName = item.GroupBy(i => i.ItemName);
                     foreach (var itemByName in groupByName)
                     {
@@ -179,6 +183,8 @@ namespace WSUI.Module.ViewModel
                             continue;
                         var fileItem = itemByName.ElementAt(0);
                         BaseSearchData bs = CreateBaseEntity(fileItem,itemByName.Count());
+                        if (bs.Type == TypeSearchItem.Email || bs.Type == TypeSearchItem.Attachment)
+                            continue;
                         ListData.Add(bs);
                         _countAdded++;
                     }
@@ -186,8 +192,8 @@ namespace WSUI.Module.ViewModel
             }
             watchGroup.Stop();
             WSSqlLogger.Instance.LogInfo("Grouping (Everything) Elapsed: " + watchGroup.ElapsedMilliseconds.ToString());
-            if(_listEverething.Count > 0)
-                _lastDate = _listEverething[_listEverething.Count-1].DateCreated;
+            if (grouping.Count() > 0)
+                _lastDate = grouping.ElementAt(grouping.Count() - 1).First().DateCreated;
             base.OnComplete(res);
             _countProcess = CountSecondAndOtherProcess;
             TopQueryResult = ScrollBehavior.CountSecondProcess;
