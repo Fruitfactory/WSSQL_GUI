@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using WSUI.Core.Enums;
 using WSUI.Infrastructure.Service.Interfaces;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Diagnostics;
@@ -31,7 +32,7 @@ namespace WSUI.Infrastructure.Service.Helpers
 #region fields
         
         private bool _disposed;
-        private Outlook.Application _app;
+        private Outlook._Application _app;
 #endregion
 
         private static readonly Lazy<OutlookHelper> _instance = new Lazy<OutlookHelper>(() =>
@@ -43,7 +44,7 @@ namespace WSUI.Infrastructure.Service.Helpers
         private OutlookHelper()
         {
             _disposed = false;
-            _app = GetApplication();
+            InternalHostType = HostType.Unknown;
         }
 
         public static  OutlookHelper Instance
@@ -54,8 +55,39 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
         }
 
-        #region public
         
+
+        #region [Outllok application]
+
+        internal HostType InternalHostType
+        {
+            get; set;
+        }
+
+
+        public Outlook._Application OutlookApp
+        {
+            get
+            {
+                if (InternalHostType == HostType.Unknown && _app == null)
+                {
+                    _app = CreateOutlookApplication();
+                }
+                return _app;
+            }
+            set
+            {
+                _app = value;
+                InternalHostType = HostType.Plugin;
+            }
+        }
+
+
+        #endregion
+
+
+        #region public
+
         public string GetEMailTempFileName(BaseSearchData itemsearch)
         {
             if (itemsearch == null)
@@ -154,7 +186,7 @@ namespace WSUI.Infrastructure.Service.Helpers
 
         public Outlook.MailItem CreateNewEmail()
         {
-            if (!IsOutlookAlive())
+            if (!IsOutlookAlive() && IsHostIsApplication())
                 ReopenOutlook(ref _app);
             var newMail = (Microsoft.Office.Interop.Outlook.MailItem)_app.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olMailItem);
             return newMail;
@@ -178,7 +210,7 @@ namespace WSUI.Infrastructure.Service.Helpers
                 return res;
             try
             {
-                if (!IsOutlookAlive())
+                if (!IsOutlookAlive() && IsHostIsApplication())
                     ReopenOutlook(ref _app);
                 Outlook.NameSpace ns = _app.GetNamespace("MAPI");
                 foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
@@ -195,7 +227,7 @@ namespace WSUI.Infrastructure.Service.Helpers
 
         public void Logoff()
         {
-            if (_app == null)
+            if (_app == null || !IsHostIsApplication())
                 return;
             try
             {
@@ -256,7 +288,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             Outlook.ContactItem ci = null;
             try
             {
-                if (!IsOutlookAlive())
+                if (!IsOutlookAlive() && IsHostIsApplication())
                     ReopenOutlook(ref _app);
                 Outlook.NameSpace ns = _app.GetNamespace("MAPI");
                 Outlook.MAPIFolder contacts =
@@ -302,9 +334,9 @@ namespace WSUI.Infrastructure.Service.Helpers
         #region private
         
 
-        private Outlook.Application GetApplication()
+        private Outlook._Application GetApplication()
         {
-            Outlook.Application ret = GetFromProcess();
+            Outlook._Application ret = GetFromProcess();
             if (ret == null)
             {
                 ret = CreateOutlookApplication();
@@ -313,15 +345,15 @@ namespace WSUI.Infrastructure.Service.Helpers
             return ret;
         }
 
-        private Outlook.Application GetFromProcess()
+        private Outlook._Application GetFromProcess()
         {
-            Outlook.Application ret = null;
+            Outlook._Application ret = null;
             try
             {
                 var outlook = Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith(OutlookProcessName));
                 if (outlook.Count() > 0)
                 {
-                    ret = Marshal.GetActiveObject(OutlookApplication) as Outlook.Application;
+                    ret = Marshal.GetActiveObject(OutlookApplication) as Outlook._Application;
                 }
             }
             catch (Exception ex)
@@ -333,13 +365,13 @@ namespace WSUI.Infrastructure.Service.Helpers
             return ret;
         }
 
-        private Outlook.Application CreateOutlookApplication()
+        private Outlook._Application CreateOutlookApplication()
         {
 
-            Outlook.Application ret = null;
+            Outlook._Application ret = null;
             try
             {
-                ret = new Outlook.Application(); 
+                ret = new Outlook.Application() as Outlook._Application;  
                 if (ret == null)
                     return ret;
                 Outlook.NameSpace ns = ret.GetNamespace("MAPI");
@@ -361,7 +393,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             dynamic mi = null;
             try
             {
-                if (!IsOutlookAlive())
+                if (!IsOutlookAlive() && IsHostIsApplication())
                     ReopenOutlook(ref _app);
                 Outlook.NameSpace ns = _app.GetNamespace("MAPI");
                 
@@ -407,7 +439,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             dynamic appointItem = null;
             try
             {
-                if(!IsOutlookAlive())
+                if(!IsOutlookAlive() && IsHostIsApplication())
                     ReopenOutlook(ref _app);
                 Outlook.NameSpace ns = _app.GetNamespace("MAPI");
 
@@ -444,7 +476,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             return res;
         }
 
-        private void ReopenOutlook(ref Outlook.Application app)
+        private void ReopenOutlook(ref Outlook._Application app)
         {
             Marshal.ReleaseComObject(app);
             app = null;
@@ -503,7 +535,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             Outlook.ContactItem ci = null;
             try
             {
-                if (!IsOutlookAlive())
+                if (!IsOutlookAlive() && IsHostIsApplication())
                     ReopenOutlook(ref _app);
                 Outlook.NameSpace ns = _app.GetNamespace("MAPI");
                 Outlook.MAPIFolder contacts =
@@ -547,6 +579,11 @@ namespace WSUI.Infrastructure.Service.Helpers
                 default:
                     return false;
             }
+        }
+
+        private bool IsHostIsApplication()
+        {
+            return InternalHostType == HostType.Application;
         }
 
         #endregion

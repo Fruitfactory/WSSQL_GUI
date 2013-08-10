@@ -94,7 +94,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         private OutlookPreviewHelper()
         {
-            HostType = HostType.Unknown;
+            PreviewHostType = HostType.Unknown;
         }
 
         #endregion
@@ -120,7 +120,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         #region [host type]
 
-        public HostType HostType { get; set; }
+        public HostType PreviewHostType { get; set; }
 
         #endregion
 
@@ -130,7 +130,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         {
             get
             {
-                if (HostType == HostType.Application && _outlook == null)
+                if (PreviewHostType == HostType.Application && _outlook == null)
                     _outlook = GetApplication();
                 return _outlook;
             }
@@ -138,7 +138,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             {
                 _outlook = value;
                 _IsExistProcess = true;
-                HostType = HostType.Plugin;
+                PreviewHostType = HostType.Plugin;
             }
         }
 
