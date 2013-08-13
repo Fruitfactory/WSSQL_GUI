@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using System.Xml.Linq;
 using AddinExpress.MSO;
 using WSPreview.PreviewHandler.Service.Logger;
+using WSUI.Core.Helpers;
 using WSUIOutlookPlugin.Interfaces;
 using Timer = System.Timers.Timer;
 
@@ -119,6 +120,7 @@ namespace WSUIOutlookPlugin.Core
             try
             {
                 File.Create(string.Format("{0}{1}", _path, LocFilename)).Close();
+                RegistryHelper.Instance.StartSilentUpdate();
             }
             catch (Exception ex)
             {
@@ -132,6 +134,7 @@ namespace WSUIOutlookPlugin.Core
             try
             {
             	File.Delete(string.Format("{0}{1}", _path, LocFilename));
+                RegistryHelper.Instance.FinishSilelntUpdate();
                 DeleteTempFolder(string.Format(TempFolderCreate, _path));
             }
             catch (System.Exception ex)
@@ -352,8 +355,8 @@ namespace WSUIOutlookPlugin.Core
                 {
                     WSSqlLogger.Instance.LogInfo("Updating is running. Just update installation info and delete lock file...");
                     UpdateInstalationInfo();
-                    Unlock();
                 }
+                Unlock();
                 WSSqlLogger.Instance.LogInfo(string.Format("Can update = {0}", CanUpdate()));
                 WSSqlLogger.Instance.LogInfo("Not updatable...");
             }

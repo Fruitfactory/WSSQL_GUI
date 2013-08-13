@@ -50,6 +50,7 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Enums\HostType.cs" />
+    <Compile Include="Helpers\RegistryHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
