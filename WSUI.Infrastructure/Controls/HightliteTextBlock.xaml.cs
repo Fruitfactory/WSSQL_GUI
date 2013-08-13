@@ -16,7 +16,6 @@ namespace WSUI.Infrastructure.Controls
             InitializeComponent();
         }
 
-
         protected override void OnRender(DrawingContext drawingContext)
         {
             if (string.IsNullOrEmpty(Hightlight) || string.IsNullOrEmpty(Text))

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Windows;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSPreview.PreviewHandler.Service.Logger;
+using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands
 {
@@ -40,6 +42,9 @@ namespace WSUI.Module.Commands
             }
             catch (Exception ex)
             {
+                MessageBoxService.Instance.Show("Error",
+                                                string.Format(
+                                                    "Error: '{0}'",ex.Message) , MessageBoxButton.OK, MessageBoxImage.Error);
                 WSSqlLogger.Instance.LogError(ex.Message);
             }
         }

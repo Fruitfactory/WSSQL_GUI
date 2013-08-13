@@ -330,6 +330,14 @@ namespace WSUI.Module.ViewModel
             PreviewView.PassActionForPreview(actionType);
         }
 
+        public void ForceClosePreview()
+        {
+            if (PreviewView != null)
+            {
+                PreviewView.ClearPreview();
+            }
+        }
+
         #endregion
 
     }

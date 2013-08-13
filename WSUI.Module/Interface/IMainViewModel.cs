@@ -16,5 +16,6 @@ namespace WSUI.Module.Interface
         void SelectKind(string name);
         void PassActionForPreview(WSActionType actionType);
         HostType Host { get; }
+        void ForceClosePreview();
     }
 }

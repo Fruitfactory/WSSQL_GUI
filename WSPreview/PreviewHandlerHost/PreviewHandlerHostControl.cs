@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.ComponentModel;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using WSPreview.PreviewHandler.PInvoke;
@@ -85,6 +86,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             if (_comInstance != null)
             {
                 ((IPreviewHandler)_comInstance).Unload();
+                Marshal.ReleaseComObject(_comInstance);
                 _comInstance = null;
             }
         }

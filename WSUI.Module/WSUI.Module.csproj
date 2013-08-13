@@ -117,6 +117,7 @@
     <Compile Include="Service\Dialogs\Message\MessageView.xaml.cs">
       <DependentUpon>MessageView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Service\FileExestensionsHelper.cs" />
     <Compile Include="Service\HelperConst.cs" />
     <Compile Include="Service\ContactSuggestingService.cs" />
     <Compile Include="Service\KeyDownBehavior.cs" />

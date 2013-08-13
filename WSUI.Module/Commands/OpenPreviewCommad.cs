@@ -1,10 +1,14 @@
 using System.Diagnostics;
+using System.IO;
+using System.Windows;
 using WSPreview.PreviewHandler.Service.Logger;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
+using WSUI.Module.Service;
+using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands
 {
@@ -46,7 +50,19 @@ namespace WSUI.Module.Commands
                 return;
             try
             {
+                if (FileExestensionsHelper.Instance.IsExternsionRequiredClosePreview(Path.GetExtension(fileName)))
+                {
+                    KindItem.Parent.ForceClosePreview();
+                }
                 Process.Start(fileName);
+            }
+            catch (FileLoadException ex)
+            {
+                MessageBoxService.Instance.Show("Error",
+                                                string.Format(
+                                                    "File '{0}' is locked by another process.\nClose all programs and try again.",
+                                                    Path.GetFileName(fileName)), MessageBoxButton.OK, MessageBoxImage.Error);
+                WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "Error", "Create Email - File Load", ex.Message));
             }
             catch (System.Exception ex)
             {

@@ -6,6 +6,7 @@ using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSPreview.PreviewHandler.Service.Logger;
+using WSUI.Module.Service;
 using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands
@@ -44,6 +45,10 @@ namespace WSUI.Module.Commands
 
                 if (string.IsNullOrEmpty(filename))
                     return;
+                if (FileExestensionsHelper.Instance.IsExternsionRequiredClosePreview(Path.GetExtension(filename)))
+                {
+                    KindItem.Parent.ForceClosePreview();
+                }
                 var mail = OutlookHelper.Instance.CreateNewEmail();
                 mail.Attachments.Add(filename);
                 mail.BodyFormat = Microsoft.Office.Interop.Outlook.OlBodyFormat.olFormatHTML;
