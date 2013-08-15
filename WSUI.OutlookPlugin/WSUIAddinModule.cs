@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using AddinExpress.MSO;
 using WSPreview.PreviewHandler.Service.OutlookPreview;
+using WSUI.Core.Data;
+using WSUI.Core.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUIOutlookPlugin.Interfaces;
 using Outlook = Microsoft.Office.Interop.Outlook;
@@ -41,6 +43,12 @@ namespace WSUIOutlookPlugin
         private ADXOlExplorerCommandBar adxMainPluginCommandBar;
         private ADXCommandBarButton buttonShow2007;
         private ADXCommandBarButton buttonHide2007;
+        private ADXRibbonGroup adxRibbonGroupSearch;
+        private ADXRibbonEditBox adxRibbonEditBoxSearch;
+        private ADXRibbonButton adxRibbonButtonSearch;
+        private ADXRibbonBox adxRibbonBoxSearch;
+        private ADXCommandBarEdit adxCommandBarEditSearchText;
+        private ADXCommandBarButton adxCommandBarButtonSearch;
         private const int WM_LOADED = WM_USER + 1001;
 
 
@@ -65,7 +73,6 @@ namespace WSUIOutlookPlugin
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
             
-
         }
 
         private void OnAddinInitialize(object sender, EventArgs eventArgs)
@@ -73,7 +80,15 @@ namespace WSUIOutlookPlugin
             if (adxMainPluginCommandBar.UseForRibbon && this.HostMajorVersion > 12)
             {
                 adxMainPluginCommandBar.UseForRibbon = false;
+                this.adxRibbonEditBoxSearch.OnChange +=
+                    new AddinExpress.MSO.ADXRibbonOnActionChange_EventHandler(this.adxRibbonEditBoxSearch_OnChange);
+                this.adxRibbonButtonSearch.OnClick += AdxRibbonButtonSearchOnOnClick;
             }
+            else
+            {
+                // for outlook 2007 and less
+            }
+            SetEnabledForSearchControls(false);
         }
 
         private void WSUIAddinModule_OnSendMessage(object sender, ADXSendMessageEventArgs e)
@@ -116,9 +131,15 @@ namespace WSUIOutlookPlugin
             this.managingCtrlGroup = new AddinExpress.MSO.ADXRibbonGroup(this.components);
             this.buttonShow = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.buttonClose = new AddinExpress.MSO.ADXRibbonButton(this.components);
+            this.adxRibbonGroupSearch = new AddinExpress.MSO.ADXRibbonGroup(this.components);
+            this.adxRibbonBoxSearch = new AddinExpress.MSO.ADXRibbonBox(this.components);
+            this.adxRibbonEditBoxSearch = new AddinExpress.MSO.ADXRibbonEditBox(this.components);
+            this.adxRibbonButtonSearch = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.adxMainPluginCommandBar = new AddinExpress.MSO.ADXOlExplorerCommandBar(this.components);
             this.buttonShow2007 = new AddinExpress.MSO.ADXCommandBarButton(this.components);
             this.buttonHide2007 = new AddinExpress.MSO.ADXCommandBarButton(this.components);
+            this.adxCommandBarEditSearchText = new AddinExpress.MSO.ADXCommandBarEdit(this.components);
+            this.adxCommandBarButtonSearch = new AddinExpress.MSO.ADXCommandBarButton(this.components);
             // 
             // outlookFormManager
             // 
@@ -136,9 +157,10 @@ namespace WSUIOutlookPlugin
             // 
             this.wsuiTab.Caption = "Windows Search";
             this.wsuiTab.Controls.Add(this.managingCtrlGroup);
+            this.wsuiTab.Controls.Add(this.adxRibbonGroupSearch);
             this.wsuiTab.Id = "adxRibbonTab_500b5beadf3a45d9b11245e305940d6c";
-            this.wsuiTab.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.wsuiTab.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             // 
             // managingCtrlGroup
             // 
@@ -147,24 +169,59 @@ namespace WSUIOutlookPlugin
             this.managingCtrlGroup.Controls.Add(this.buttonClose);
             this.managingCtrlGroup.Id = "adxRibbonGroup_8837e4bd15814fb2bef7a21b2d8784a3";
             this.managingCtrlGroup.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.managingCtrlGroup.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.managingCtrlGroup.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             // 
             // buttonShow
             // 
             this.buttonShow.Caption = "Show Windows  Search";
             this.buttonShow.Id = "adxRibbonButton_dcb0aa6e6fd442c79ea44b4006d84643";
             this.buttonShow.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.buttonShow.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.buttonShow.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             // 
             // buttonClose
             // 
             this.buttonClose.Caption = "Close Windows Search";
             this.buttonClose.Id = "adxRibbonButton_28c7fe480c61454ca13d1a20e9ae3405";
             this.buttonClose.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.buttonClose.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.buttonClose.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            // 
+            // adxRibbonGroupSearch
+            // 
+            this.adxRibbonGroupSearch.Caption = "Search";
+            this.adxRibbonGroupSearch.Controls.Add(this.adxRibbonBoxSearch);
+            this.adxRibbonGroupSearch.Id = "adxRibbonGroup_c94173390d39441fa25cda51a851cd7a";
+            this.adxRibbonGroupSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.adxRibbonGroupSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            // 
+            // adxRibbonBoxSearch
+            // 
+            this.adxRibbonBoxSearch.Controls.Add(this.adxRibbonEditBoxSearch);
+            this.adxRibbonBoxSearch.Controls.Add(this.adxRibbonButtonSearch);
+            this.adxRibbonBoxSearch.Id = "adxRibbonBox_dc294efeac8340e788f9e0ebd39ab866";
+            this.adxRibbonBoxSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            // 
+            // adxRibbonEditBoxSearch
+            // 
+            this.adxRibbonEditBoxSearch.Caption = "Enter search string:";
+            this.adxRibbonEditBoxSearch.Id = "adxRibbonEditBox_decd82b7448b4bbe9853a4a4dee51263";
+            this.adxRibbonEditBoxSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.adxRibbonEditBoxSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.adxRibbonEditBoxSearch.SizeString = "The size of this string is the size of the edit box";
+            // 
+            // adxRibbonButtonSearch
+            // 
+            this.adxRibbonButtonSearch.Caption = "Start Search";
+            this.adxRibbonButtonSearch.Id = "adxRibbonButton_f0ca75ee177a4886a26d3c9246518516";
+            this.adxRibbonButtonSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.adxRibbonButtonSearch.ParseMsoXmlTypeAs = AddinExpress.MSO.ADXParseMsoXmlTypeAs.pxtControl;
+            this.adxRibbonButtonSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             // 
             // adxMainPluginCommandBar
             // 
@@ -172,8 +229,10 @@ namespace WSUIOutlookPlugin
             this.adxMainPluginCommandBar.CommandBarTag = "674128a0-9ce1-485c-b1a5-f5ff6897bfc8";
             this.adxMainPluginCommandBar.Controls.Add(this.buttonShow2007);
             this.adxMainPluginCommandBar.Controls.Add(this.buttonHide2007);
+            this.adxMainPluginCommandBar.Controls.Add(this.adxCommandBarEditSearchText);
+            this.adxMainPluginCommandBar.Controls.Add(this.adxCommandBarButtonSearch);
             this.adxMainPluginCommandBar.Temporary = true;
-            this.adxMainPluginCommandBar.UpdateCounter = 5;
+            this.adxMainPluginCommandBar.UpdateCounter = 16;
             // 
             // buttonShow2007
             // 
@@ -193,9 +252,28 @@ namespace WSUIOutlookPlugin
             this.buttonHide2007.UpdateCounter = 4;
             this.buttonHide2007.Click += new AddinExpress.MSO.ADXClick_EventHandler(this.buttonHide2007_Click);
             // 
+            // adxCommandBarEditSearchText
+            // 
+            this.adxCommandBarEditSearchText.BeginGroup = true;
+            this.adxCommandBarEditSearchText.Caption = "Enter search string:";
+            this.adxCommandBarEditSearchText.ControlTag = "84fc0dcb-c517-428b-a63f-73b7340c923a";
+            this.adxCommandBarEditSearchText.Style = AddinExpress.MSO.ADXMsoComboStyle.adxMsoComboLabel;
+            this.adxCommandBarEditSearchText.Temporary = true;
+            this.adxCommandBarEditSearchText.UpdateCounter = 14;
+            this.adxCommandBarEditSearchText.Width = 350;
+            // 
+            // adxCommandBarButtonSearch
+            // 
+            this.adxCommandBarButtonSearch.Caption = "Start search";
+            this.adxCommandBarButtonSearch.ControlTag = "0c750b68-d191-4eec-9745-ff30dbac7360";
+            this.adxCommandBarButtonSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.adxCommandBarButtonSearch.Temporary = true;
+            this.adxCommandBarButtonSearch.UpdateCounter = 3;
+            // 
             // WSUIAddinModule
             // 
             this.AddinName = "WS Plugin (Windows  Search)";
+            this.HandleShortcuts = true;
             this.SupportedApps = AddinExpress.MSO.ADXOfficeHostApp.ohaOutlook;
             this.AddinStartupComplete += new AddinExpress.MSO.ADXEvents_EventHandler(this.WSUIAddinModule_AddinStartupComplete);
 
@@ -610,6 +688,7 @@ namespace WSUIOutlookPlugin
             DoShowWebViewPane();
             buttonShow.Enabled = false;
             buttonClose.Enabled = true;
+            SetEnabledForSearchControls(true);
         }
 
         private void buttonClose_OnClick(object sender, IRibbonControl control, bool pressed)
@@ -617,6 +696,7 @@ namespace WSUIOutlookPlugin
             DoHideWebViewPane();
             buttonShow.Enabled = true;
             buttonClose.Enabled = false;
+            SetEnabledForSearchControls(false);
         }
 
         private void WSUIAddinModule_AddinStartupComplete(object sender, EventArgs e)
@@ -727,6 +807,7 @@ namespace WSUIOutlookPlugin
             DoShowWebViewPane();
             buttonShow2007.Enabled = false;
             buttonHide2007.Enabled = true;
+            SetEnabledForSearchControls(true);
         }
 
         private void buttonHide2007_Click(object sender)
@@ -734,9 +815,46 @@ namespace WSUIOutlookPlugin
             DoHideWebViewPane();
             buttonShow2007.Enabled = true;
             buttonHide2007.Enabled = false;
+            SetEnabledForSearchControls(false);
         }
 
+        private void SetEnabledForSearchControls(bool isEnabled)
+        {
+            if(adxRibbonButtonSearch != null && 
+                adxRibbonEditBoxSearch != null)
+            adxRibbonEditBoxSearch.Enabled = adxRibbonButtonSearch.Enabled = isEnabled;
 
+            if (adxMainPluginCommandBar.UseForRibbon &&
+                adxCommandBarEditSearchText != null &&
+                adxCommandBarButtonSearch != null)
+                adxCommandBarButtonSearch.Enabled =
+                    adxCommandBarEditSearchText.Enabled = isEnabled;
+
+
+        }
+
+        #region [event handlers for ribbon]
+
+        private void adxRibbonEditBoxSearch_OnChange(object sender, IRibbonControl Control, string text)
+        {
+            PassSearchActionToSearchEngine(text);
+        }
+
+        private void AdxRibbonButtonSearchOnOnClick(object sender, IRibbonControl control, bool pressed)
+        {
+            PassSearchActionToSearchEngine(adxRibbonEditBoxSearch.Text);
+        }
+
+        private void PassSearchActionToSearchEngine(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return;
+            _wsuiBootStraper.PassAction(new WSAction(WSActionType.Search, text));
+        }
+
+        #endregion
+
+        
     }
 }
 

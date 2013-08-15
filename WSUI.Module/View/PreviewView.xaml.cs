@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WSPreview.PreviewHandler.PreviewHandlerHost;
 using WSPreview.PreviewHandler.Service;
+using WSUI.Core.Interfaces;
 using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Module.Interface;
 using WSUI.Module.Service;
@@ -61,9 +62,9 @@ namespace WSUI.Module.View
             _previewControl.UnloadPreview();
         }
 
-        public void PassActionForPreview(WSActionType actionType)
+        public void PassActionForPreview(IWSAction action)
         {
-            _previewControl.PassAction(actionType);
+            _previewControl.PassAction(action);
         }
 
         #endregion

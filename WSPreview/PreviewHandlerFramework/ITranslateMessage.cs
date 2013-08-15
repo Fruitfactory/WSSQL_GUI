@@ -1,10 +1,9 @@
-﻿using System.Windows.Forms;
-using WSPreview.PreviewHandler.Service;
+﻿using WSUI.Core.Interfaces;
 
 namespace WSPreview.PreviewHandler.PreviewHandlerFramework
 {
     public interface ITranslateMessage
     {
-        void PassMessage(WSActionType action);
+        void PassMessage(IWSAction action);
     }
 }

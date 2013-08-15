@@ -1,12 +1,12 @@
 ﻿using System.Windows;
-using WSPreview.PreviewHandler.Service;
+using WSUI.Core.Interfaces;
 
 namespace WSUI.Control
 {
     public interface IPluginBootStraper
     {
         void Run();
-        void PassAction(WSActionType actionType);
+        void PassAction(IWSAction action);
         DependencyObject View { get; }
     }
 }

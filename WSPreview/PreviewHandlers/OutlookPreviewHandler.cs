@@ -8,6 +8,8 @@ using WSPreview.PreviewHandler;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using WSPreview.PreviewHandler.Controls.Office;
 using WSPreview.PreviewHandler.Service;
+using WSUI.Core.Enums;
+using WSUI.Core.Interfaces;
 
 namespace WSPreview.PreviewHandler.PreviewHandlers
 {
@@ -63,15 +65,16 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
                 return ControlsKey.Outlook;
             }
 
-            public void PassMessage(WSActionType action)
+            public void PassMessage(IWSAction action)
             {
-                switch (action)
+                switch (action.Action)
                 {
                     case WSActionType.Copy:
                         _preview.CopySelectedText();
                         break;
                 }
             }
+
         }
 
         public string HitString
@@ -79,7 +82,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
             get; set;
         }
 
-        public void PassMessage(WSActionType action)
+        public void PassMessage(IWSAction action)
         {
             if(_previewControl == null)
                 return;

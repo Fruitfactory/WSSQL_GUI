@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -10,6 +12,7 @@ using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using WSPreview.PreviewHandler.Service;
 using WSPreview.PreviewHandler.Service.Logger;
 using WSPreview.PreviewHandler.Service.Preview;
+using WSUI.Core.Interfaces;
 
 namespace WSPreview.PreviewHandler.PreviewHandlerHost
 {
@@ -32,6 +35,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         private string _searchCriteria;
         private object _comInstance = null;
         private bool _registreHandler = true;
+        private readonly List<Stream> _listOpenStream = new List<Stream>();
 
 
         public event EventHandler StartLoad;
@@ -89,13 +93,14 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                 Marshal.ReleaseComObject(_comInstance);
                 _comInstance = null;
             }
+            ClearAllStreams();
         }
 
-        public void PassAction(WSActionType actionType)
+        public void PassAction(IWSAction action)
         {
             if (_comInstance != null && _comInstance is ITranslateMessage)
             {
-                ((ITranslateMessage)_comInstance).PassMessage(actionType);
+                ((ITranslateMessage)_comInstance).PassMessage(action);
             }
         }
 
@@ -116,6 +121,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         {
           
             webMessage.Visible = false;
+            ClearAllStreams();
             if (_comInstance != null)
             {
                 ((IPreviewHandler)_comInstance).Unload();
@@ -188,8 +194,10 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                 {
                     if (_comInstance is IInitializeWithStream)
                     {
-                        StreamWrapper stream = new StreamWrapper(File.Open(_filePath, FileMode.Open));
+                        Stream filestream = File.Open(_filePath, FileMode.Open,FileAccess.Read,FileShare.ReadWrite);
+                        StreamWrapper stream = new StreamWrapper(filestream);
                         ((WSPreview.PreviewHandler.PreviewHandlerFramework.IInitializeWithStream)_comInstance).Initialize(stream, 0);
+                        AddStream(filestream);
                     }
                     else if (_comInstance is IInitializeWithItem)
                     {
@@ -288,8 +296,10 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             {
                 if (comInstance is IInitializeWithStream)
                 {
-                    StreamWrapper stream = new StreamWrapper(File.Open(_filePath, FileMode.Open));
-                    ((WSPreview.PreviewHandler.PreviewHandlerFramework.IInitializeWithStream)comInstance).Initialize(stream, 0);
+                    Stream filestream = File.Open(_filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    StreamWrapper stream = new StreamWrapper(filestream);
+                    ((WSPreview.PreviewHandler.PreviewHandlerFramework.IInitializeWithStream)_comInstance).Initialize(stream, 0);
+                    AddStream(filestream);
                 }
                 else if (comInstance is IInitializeWithItem)
                 {
@@ -324,6 +334,18 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             return HelperPreviewHandlers.Instance.GetReadyHandler(ext);
         }
 
+        private void AddStream(Stream stream)
+        {
+            _listOpenStream.Add(stream);
+        }
+
+        private void ClearAllStreams()
+        {
+            if (!_listOpenStream.Any())
+                return;
+            _listOpenStream.ForEach(s => s.Close());
+            _listOpenStream.Clear();
+        }
 
     }
 }

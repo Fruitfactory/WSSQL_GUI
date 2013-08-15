@@ -50,10 +50,10 @@ namespace WSUI.Module.Commands
                 return;
             try
             {
-                if (FileExestensionsHelper.Instance.IsExternsionRequiredClosePreview(Path.GetExtension(fileName)))
-                {
-                    KindItem.Parent.ForceClosePreview();
-                }
+                //if (FileExestensionsHelper.Instance.IsExternsionRequiredClosePreview(Path.GetExtension(fileName)))
+                //{
+                //    KindItem.Parent.ForceClosePreview();
+                //}
                 Process.Start(fileName);
             }
             catch (FileLoadException ex)

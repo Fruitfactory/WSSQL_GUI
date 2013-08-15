@@ -12,6 +12,7 @@ using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Enums;
+using WSUI.Core.Interfaces;
 using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Core;
 using WSUI.Infrastructure.Service.Helpers;
@@ -193,6 +194,9 @@ namespace WSUI.Module.ViewModel
 
         private void OnCurrentItemChanged(object sender, EventArgs<BaseSearchData> args)
         {
+            if(args.Value == null)
+                return;
+            
             _currentData = args.Value;
 
             try
@@ -325,9 +329,23 @@ namespace WSUI.Module.ViewModel
             }
         }
 
-        public void PassActionForPreview(WSActionType actionType)
+        public void PassAction(IWSAction action)
         {
-            PreviewView.PassActionForPreview(actionType);
+            switch (action.Action)
+            {
+                case WSActionType.Copy:
+                case WSActionType.Cut:
+                case WSActionType.Paste:
+                    PreviewView.PassActionForPreview(action);
+                break;
+                case WSActionType.Search:
+                    string searchCriteria = action.Data as string;
+                    if (string.IsNullOrEmpty(searchCriteria))
+                        break;
+                    _currentItem.SearchString = searchCriteria;
+                    _currentItem.SearchCommand.Execute(null);
+                break;
+            }
         }
 
         public void ForceClosePreview()

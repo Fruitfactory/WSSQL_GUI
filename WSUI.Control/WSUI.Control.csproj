@@ -94,6 +94,10 @@
       <Project>{3E9F9F18-B9AD-4DDE-A5D6-F71B75C737D2}</Project>
       <Name>WSPreview</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WSUI.Core\WSUI.Core.csproj">
+      <Project>{D650F4E9-99FE-46EC-A59D-BF3A99652255}</Project>
+      <Name>WSUI.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WSUI.Infrastructure\WSUI.Infrastructure.csproj">
       <Project>{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}</Project>
       <Name>WSUI.Infrastructure</Name>

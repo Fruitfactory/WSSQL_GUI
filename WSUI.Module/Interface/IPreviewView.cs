@@ -1,4 +1,4 @@
-using WSPreview.PreviewHandler.Service;
+using WSUI.Core.Interfaces;
 using WSUI.Module.ViewModel;
 
 namespace WSUI.Module.Interface
@@ -14,7 +14,7 @@ namespace WSUI.Module.Interface
         bool SetPreviewFile(string filename);
         void SetSearchPattern(string pattern);
         void ClearPreview();
-        void PassActionForPreview(WSActionType actionType);
+        void PassActionForPreview(IWSAction action);
 
         void Init();
     }

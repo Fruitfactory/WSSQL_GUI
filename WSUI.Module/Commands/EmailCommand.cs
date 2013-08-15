@@ -45,10 +45,10 @@ namespace WSUI.Module.Commands
 
                 if (string.IsNullOrEmpty(filename))
                     return;
-                if (FileExestensionsHelper.Instance.IsExternsionRequiredClosePreview(Path.GetExtension(filename)))
-                {
-                    KindItem.Parent.ForceClosePreview();
-                }
+                //if (FileExestensionsHelper.Instance.IsExternsionRequiredClosePreview(Path.GetExtension(filename)))
+                //{
+                //    KindItem.Parent.ForceClosePreview();
+                //}
                 var mail = OutlookHelper.Instance.CreateNewEmail();
                 mail.Attachments.Add(filename);
                 mail.BodyFormat = Microsoft.Office.Interop.Outlook.OlBodyFormat.olFormatHTML;

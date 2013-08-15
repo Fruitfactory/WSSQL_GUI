@@ -8,6 +8,7 @@ using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.Unity;
+using WSUI.Core.Interfaces;
 using WSUI.Module.Interface;
 
 namespace WSUI.Control
@@ -101,11 +102,11 @@ namespace WSUI.Control
             WSSqlLogger.Instance.LogInfo(string.Format("InitializeModules (plugin): {0}ms",watch.ElapsedMilliseconds));
         }
 
-        public void PassAction(WSActionType actionType)
+        public void PassAction(IWSAction action)
         {
             if(ReferenceEquals(_mainViewModel,null))
                 return;
-            _mainViewModel.PassActionForPreview(actionType);
+            _mainViewModel.PassAction(action);
         }
 
         public DependencyObject View 

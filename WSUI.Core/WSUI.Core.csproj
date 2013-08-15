@@ -49,8 +49,11 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Data\WSAction.cs" />
     <Compile Include="Enums\HostType.cs" />
+    <Compile Include="Enums\WSActionType.cs" />
     <Compile Include="Helpers\RegistryHelper.cs" />
+    <Compile Include="Interfaces\IWSAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

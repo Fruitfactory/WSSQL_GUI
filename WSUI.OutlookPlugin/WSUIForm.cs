@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using WSPreview.PreviewHandler.Service;
 using WSPreview.PreviewHandler.Service.Logger;
 using WSUI.Control;
+using WSUI.Core.Data;
+using WSUI.Core.Enums;
 using WSUIOutlookPlugin.Interfaces;
 using WSUIOutlookPlugin.Hooks;
 
@@ -37,7 +39,7 @@ namespace WSUIOutlookPlugin
         {
             if (keyEventArgs != null && (Control.ModifierKeys & Keys.Control) == Keys.Control && keyEventArgs.KeyCode == Keys.C && Visible && _wsuiBootStraper != null)
             {
-                _wsuiBootStraper.PassAction(WSActionType.Copy);
+                _wsuiBootStraper.PassAction(new WSAction(WSActionType.Copy,null));
             }
         }
 
