@@ -90,7 +90,8 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             if (_comInstance != null)
             {
                 ((IPreviewHandler)_comInstance).Unload();
-                Marshal.ReleaseComObject(_comInstance);
+                if(Marshal.IsComObject(_comInstance))
+                    Marshal.ReleaseComObject(_comInstance);
                 _comInstance = null;
             }
             ClearAllStreams();

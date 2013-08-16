@@ -857,7 +857,6 @@ namespace WSUIOutlookPlugin
 
         #endregion
 
-
         #region [event handlers for  command bar]
 
         private void AdxCommandBarButtonSearchOnClick(object sender)

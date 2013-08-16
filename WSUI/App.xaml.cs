@@ -9,7 +9,7 @@ namespace WSUI
     /// </summary>
     public partial class App : Application
     {
-
+        [STAThread]
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
