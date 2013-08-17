@@ -5,6 +5,7 @@ using WSPreview.PreviewHandler.Service.Logger;
 using WSUI.Infrastructure.Models;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Core;
+using Outllok = Microsoft.Office.Interop.Outlook;
 
 namespace WSUI.Infrastructure.Service.Helpers
 {
@@ -22,7 +23,7 @@ namespace WSUI.Infrastructure.Service.Helpers
         {
             EmailSearchData data = null;
 
-            var mail = OutlookHelper.Instance.GetEmailItem(new BaseSearchData() { Path = path });
+            var mail = OutlookHelper.Instance.GetEmailItem(new BaseSearchData() { Path = path }) as Outllok.MailItem;
             if (mail != null)
             {
                 data = new EmailSearchData()

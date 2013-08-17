@@ -26,13 +26,24 @@ namespace WSUI.Module.Commands
         {
             var itemSearch = KindItem.Current;
             var mail = OutlookHelper.Instance.GetEmailItem(itemSearch);
-            if (mail != null && mail is MailItem)
+            if (mail != null)
             {
                 try
                 {
-                    var replymail = ((MailItem)mail).ReplyAll();
-                    replymail.Display(false);
-                    mail.Close(OlInspectorClose.olDiscard);
+                    if (mail is MailItem)
+                    {
+                        var replyallmail = (mail as MailItem).ReplyAll();
+                        replyallmail.Display(false);
+                        (mail as MailItem).Close(OlInspectorClose.olDiscard);
+
+                    }
+                    else if (mail is MeetingItem)
+                    {
+                        var replyallmail = (mail as MeetingItem).ReplyAll();
+                        replyallmail.Display(false);
+                        (mail as MeetingItem).Close(OlInspectorClose.olDiscard);
+
+                    }
                 }
                 catch (System.Exception ex)
                 {

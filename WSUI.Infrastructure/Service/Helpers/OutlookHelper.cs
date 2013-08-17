@@ -192,13 +192,13 @@ namespace WSUI.Infrastructure.Service.Helpers
             return newMail;
         }
 
-        public Outlook.MailItem GetEmailItem(BaseSearchData data)
+        public dynamic GetEmailItem(BaseSearchData data)
         {
             if (data == null)
                 return null;
             string mapiUrl = data.Path;
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
-            Outlook.MailItem mailItem = GetMailItem(entryID);
+            dynamic mailItem = GetMailItem(entryID);
             return mailItem;
         }
 

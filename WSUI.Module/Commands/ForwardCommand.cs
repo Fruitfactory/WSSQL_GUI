@@ -26,9 +26,24 @@ namespace WSUI.Module.Commands
             var mail = OutlookHelper.Instance.GetEmailItem(searchItem);
             if (mail != null)
             {
-                var forwardmail = mail.Forward();
-                forwardmail.Display(false);
-                mail.Close(OlInspectorClose.olDiscard);
+                if (mail is MailItem)
+                {
+                    var forwardmail = (mail as MailItem).Forward();
+                    forwardmail.Display(false);
+                    (mail as MailItem).Close(OlInspectorClose.olDiscard);    
+                }
+                else if(mail is MeetingItem)
+                {
+                    var forwardMetting = (mail as MeetingItem).Forward();
+                    forwardMetting.Display(false);
+                    (mail as MeetingItem).Close(OlInspectorClose.olDiscard);
+                }
+                else if (mail is AppointmentItem)
+                {
+                    var forwardMetting = (mail as AppointmentItem).ForwardAsVcal();
+                    forwardMetting.Display(false);
+                    (mail as AppointmentItem).Close(OlInspectorClose.olDiscard);
+                }
             }
         }
 

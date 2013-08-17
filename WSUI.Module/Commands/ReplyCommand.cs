@@ -26,9 +26,20 @@ namespace WSUI.Module.Commands
             var mail = OutlookHelper.Instance.GetEmailItem(itemSearch);
             if (mail != null)
             {
-                var replymail = mail.Reply();
-                replymail.Display(false);
-                mail.Close(OlInspectorClose.olDiscard);
+                if (mail is MailItem)
+                {
+                    var replymail = (mail as MailItem).Reply();
+                    replymail.Display(false);
+                    (mail as MailItem).Close(OlInspectorClose.olDiscard);
+                    
+                }
+                else if(mail is MeetingItem)
+                {
+                    var replymail = (mail as MeetingItem).Reply();
+                    replymail.Display(false);
+                    (mail as MeetingItem).Close(OlInspectorClose.olDiscard);
+                    
+                }
             }
         }
 
