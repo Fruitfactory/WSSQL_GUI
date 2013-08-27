@@ -49,6 +49,7 @@ namespace WSUIOutlookPlugin
                 return;
             base.OnLoad(e);
             SetBootStraper(WSUIAddinModule.CurrentInstance.BootStraper);
+            WSUIAddinModule.CurrentInstance.IsMainUIVisible = true;
         }
 
         public void SetBootStraper(IPluginBootStraper bootStraper)
@@ -64,6 +65,7 @@ namespace WSUIOutlookPlugin
         private void OnAdxAfterFormHide(object sender, ADXAfterFormHideEventArgs adxAfterFormHideEventArgs)
         {
             wpfHost.Child = null;
+            WSUIAddinModule.CurrentInstance.IsMainUIVisible = false;
         }
 
     }

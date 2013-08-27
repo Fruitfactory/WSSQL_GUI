@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Configuration;
 using Microsoft.Win32;
 
 namespace WSUI.Core.Helpers
@@ -9,6 +10,7 @@ namespace WSUI.Core.Helpers
 
         private const string ProductSubKey = "SOFTWARE\\WSUIOutlookPlugin";
         private const string SilentUpdateKey = "IsSilentUpdate";
+        private const string IsOutlookClosedByInstallerKey = "IsOutlookClosedByInstaller";
 
         private RegistryKey _baseRegistry = Registry.CurrentUser;
 
@@ -41,12 +43,7 @@ namespace WSUI.Core.Helpers
 
         public bool IsSilendUpdate()
         {
-            var v = ReadKey(SilentUpdateKey);
-            if (string.IsNullOrEmpty(v))
-                return false;
-            bool parseresult = false;
-            bool.TryParse(v, out parseresult);
-            return parseresult;
+            return ProcessBoolKey(SilentUpdateKey);
         }
 
         public void StartSilentUpdate()
@@ -57,6 +54,31 @@ namespace WSUI.Core.Helpers
         public void FinishSilelntUpdate()
         {
             Write(SilentUpdateKey,false);
+        }
+
+        public bool IsOutlookClosedByInstaller()
+        {
+            return ProcessBoolKey(IsOutlookClosedByInstallerKey);
+        }
+
+        public void SetFlagClosedOutlookApplication()
+        {
+            Write(IsOutlookClosedByInstallerKey,true);
+        }
+
+        public void ResetFlagClosedOutlookApplication()
+        {
+            Write(IsOutlookClosedByInstallerKey,false);
+        }
+
+        private bool ProcessBoolKey(string key)
+        {
+            var v = ReadKey(key);
+            if (string.IsNullOrEmpty(v))
+                return false;
+            bool parseresult = false;
+            bool.TryParse(v, out parseresult);
+            return parseresult;
         }
 
 
