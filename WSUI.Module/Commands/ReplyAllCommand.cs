@@ -47,7 +47,7 @@ namespace WSUI.Module.Commands
                 }
                 catch (System.Exception ex)
                 {
-                    WSSqlLogger.Instance.LogError(ex.Message);
+                    WSSqlLogger.Instance.LogError("ReplyAll Command: " + ex.Message);
                 }
             }
         }

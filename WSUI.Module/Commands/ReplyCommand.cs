@@ -3,6 +3,7 @@ using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
+using WSPreview.PreviewHandler.Service.Logger;
 
 namespace WSUI.Module.Commands
 {
@@ -26,19 +27,28 @@ namespace WSUI.Module.Commands
             var mail = OutlookHelper.Instance.GetEmailItem(itemSearch);
             if (mail != null)
             {
-                if (mail is MailItem)
+                try
                 {
-                    var replymail = (mail as MailItem).Reply();
-                    replymail.Display(false);
-                    (mail as MailItem).Close(OlInspectorClose.olDiscard);
-                    
+
+
+                    if (mail is MailItem)
+                    {
+                        var replymail = (mail as MailItem).Reply();
+                        replymail.Display(false);
+                        (mail as MailItem).Close(OlInspectorClose.olDiscard);
+
+                    }
+                    else if (mail is MeetingItem)
+                    {
+                        var replymail = (mail as MeetingItem).Reply();
+                        replymail.Display(false);
+                        (mail as MeetingItem).Close(OlInspectorClose.olDiscard);
+
+                    }
                 }
-                else if(mail is MeetingItem)
+                catch (System.Exception ex)
                 {
-                    var replymail = (mail as MeetingItem).Reply();
-                    replymail.Display(false);
-                    (mail as MeetingItem).Close(OlInspectorClose.olDiscard);
-                    
+                    WSSqlLogger.Instance.LogError("Reply Command: " + ex.Message);
                 }
             }
         }

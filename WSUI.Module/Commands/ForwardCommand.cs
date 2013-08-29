@@ -1,8 +1,9 @@
-using Microsoft.Office.Interop.Outlook;
+using Outlook = Microsoft.Office.Interop.Outlook;
 using WSUI.Infrastructure.Service.Enums;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Infrastructure.Service.Helpers;
+using WSPreview.PreviewHandler.Service.Logger;
 
 namespace WSUI.Module.Commands
 {
@@ -26,23 +27,39 @@ namespace WSUI.Module.Commands
             var mail = OutlookHelper.Instance.GetEmailItem(searchItem);
             if (mail != null)
             {
-                if (mail is MailItem)
+                try
                 {
-                    var forwardmail = (mail as MailItem).Forward();
-                    forwardmail.Display(false);
-                    (mail as MailItem).Close(OlInspectorClose.olDiscard);    
+                    if (mail is Outlook._MailItem)
+                    {
+                        var forwardmail = (mail as Outlook._MailItem).Forward();
+                        forwardmail.Display(false);
+                        (mail as Outlook._MailItem).Close(Outlook.OlInspectorClose.olDiscard);
+                    }
+                    else if (mail is Outlook._MeetingItem)
+                    {
+                        var Metting = (mail as Outlook._MeetingItem);
+                        if (Metting != null)
+                        {
+                            var forward = Metting.Forward();
+                            forward.Display(false);
+                            Metting.Close(Outlook.OlInspectorClose.olDiscard);
+                        }
+                        
+                    }
+                    else if (mail is Outlook._AppointmentItem)
+                    {
+                        var Appoint = (mail as Outlook._AppointmentItem);
+                        if (Appoint != null)
+                        {
+                            var forward = Appoint.ForwardAsVcal();
+                            forward.Display(false);
+                            Appoint.Close(Outlook.OlInspectorClose.olDiscard);
+                        }
+                    }
                 }
-                else if(mail is MeetingItem)
+                catch (System.Exception ex)
                 {
-                    var forwardMetting = (mail as MeetingItem).Forward();
-                    forwardMetting.Display(false);
-                    (mail as MeetingItem).Close(OlInspectorClose.olDiscard);
-                }
-                else if (mail is AppointmentItem)
-                {
-                    var forwardMetting = (mail as AppointmentItem).ForwardAsVcal();
-                    forwardMetting.Display(false);
-                    (mail as AppointmentItem).Close(OlInspectorClose.olDiscard);
+                    WSSqlLogger.Instance.LogError("Forward Command: " + ex.Message);
                 }
             }
         }
