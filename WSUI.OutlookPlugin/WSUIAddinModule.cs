@@ -10,6 +10,7 @@ using WSPreview.PreviewHandler.Service.OutlookPreview;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Infrastructure.Service.Helpers;
+using WSUI.Infrastructure.Service.Interfaces;
 using WSUIOutlookPlugin.Interfaces;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Globalization;
@@ -20,6 +21,7 @@ using System.Diagnostics;
 using WSPreview.PreviewHandler.Service.Logger;
 using AddinExpress.OL;
 using WSUIOutlookPlugin.Core;
+using ADXOlExplorerItemTypes = AddinExpress.OL.ADXOlExplorerItemTypes;
 
 namespace WSUIOutlookPlugin
 {
@@ -32,9 +34,9 @@ namespace WSUIOutlookPlugin
 
         private int _outlookVersion = 0;
         private bool _refreshCurrentFolderExecuting = false;
-        private string _instalatonUrl = string.Empty;
         private IUpdatable _updatable = null;
         private IPluginBootStraper _wsuiBootStraper = null;
+        private Outlook.MAPIFolder _lastMapiFolder;
         
 
         #region [const]
@@ -51,6 +53,8 @@ namespace WSUIOutlookPlugin
         private ADXCommandBarEdit adxCommandBarEditSearchText;
         private ADXCommandBarButton adxCommandBarButtonSearch;
         private const int WM_LOADED = WM_USER + 1001;
+
+        private const string DefaultNamespace = "MAPI";
 
 
         #endregion
@@ -91,7 +95,6 @@ namespace WSUIOutlookPlugin
                 adxCommandBarEditSearchText.Change += AdxCommandBarEditSearchTextOnChange;
                 adxCommandBarButtonSearch.Click += AdxCommandBarButtonSearchOnClick;
             }
-            SetEnabledForSearchControls(false);
         }
 
         private void WSUIAddinModule_OnSendMessage(object sender, ADXSendMessageEventArgs e)
@@ -101,7 +104,7 @@ namespace WSUIOutlookPlugin
                 case WM_LOADED:
                     lock (this)
                     {
-                        PrecreateForm(null);
+                        RunPluginUI();
                     }
                     break;
             }
@@ -147,6 +150,7 @@ namespace WSUIOutlookPlugin
             // outlookFormManager
             // 
             this.outlookFormManager.Items.Add(this.formWebPaneItem);
+            this.outlookFormManager.OnInitialize += new AddinExpress.OL.ADXOlFormsManager.OnComponentInitialize_EventHandler(this.outlookFormManager_OnInitialize);
             this.outlookFormManager.SetOwner(this);
             // 
             // formWebPaneItem
@@ -154,6 +158,8 @@ namespace WSUIOutlookPlugin
             this.formWebPaneItem.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formWebPaneItem.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.WebViewPane;
             this.formWebPaneItem.FormClassName = "WSUIOutlookPlugin.WSUIForm";
+            this.formWebPaneItem.IsMinimizedStateAllowed = false;
+            this.formWebPaneItem.RegionBorder = AddinExpress.OL.ADXRegionBorderStyle.None;
             this.formWebPaneItem.UseOfficeThemeForBackground = true;
             // 
             // wsuiTab
@@ -162,8 +168,8 @@ namespace WSUIOutlookPlugin
             this.wsuiTab.Controls.Add(this.managingCtrlGroup);
             this.wsuiTab.Controls.Add(this.adxRibbonGroupSearch);
             this.wsuiTab.Id = "adxRibbonTab_500b5beadf3a45d9b11245e305940d6c";
-            this.wsuiTab.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.wsuiTab.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             // 
             // managingCtrlGroup
             // 
@@ -172,24 +178,24 @@ namespace WSUIOutlookPlugin
             this.managingCtrlGroup.Controls.Add(this.buttonClose);
             this.managingCtrlGroup.Id = "adxRibbonGroup_8837e4bd15814fb2bef7a21b2d8784a3";
             this.managingCtrlGroup.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.managingCtrlGroup.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.managingCtrlGroup.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             // 
             // buttonShow
             // 
             this.buttonShow.Caption = "Show Windows  Search";
             this.buttonShow.Id = "adxRibbonButton_dcb0aa6e6fd442c79ea44b4006d84643";
             this.buttonShow.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.buttonShow.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.buttonShow.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             // 
             // buttonClose
             // 
             this.buttonClose.Caption = "Close Windows Search";
             this.buttonClose.Id = "adxRibbonButton_28c7fe480c61454ca13d1a20e9ae3405";
             this.buttonClose.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.buttonClose.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.buttonClose.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             // 
             // adxRibbonGroupSearch
             // 
@@ -197,24 +203,24 @@ namespace WSUIOutlookPlugin
             this.adxRibbonGroupSearch.Controls.Add(this.adxRibbonBoxSearch);
             this.adxRibbonGroupSearch.Id = "adxRibbonGroup_c94173390d39441fa25cda51a851cd7a";
             this.adxRibbonGroupSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.adxRibbonGroupSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.adxRibbonGroupSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             // 
             // adxRibbonBoxSearch
             // 
             this.adxRibbonBoxSearch.Controls.Add(this.adxRibbonEditBoxSearch);
             this.adxRibbonBoxSearch.Controls.Add(this.adxRibbonButtonSearch);
             this.adxRibbonBoxSearch.Id = "adxRibbonBox_dc294efeac8340e788f9e0ebd39ab866";
-            this.adxRibbonBoxSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.adxRibbonBoxSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             // 
             // adxRibbonEditBoxSearch
             // 
             this.adxRibbonEditBoxSearch.Caption = "Enter search string:";
             this.adxRibbonEditBoxSearch.Id = "adxRibbonEditBox_decd82b7448b4bbe9853a4a4dee51263";
             this.adxRibbonEditBoxSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.adxRibbonEditBoxSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.adxRibbonEditBoxSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             this.adxRibbonEditBoxSearch.SizeString = "The size of this string is the size of the edit box";
             // 
             // adxRibbonButtonSearch
@@ -223,8 +229,8 @@ namespace WSUIOutlookPlugin
             this.adxRibbonButtonSearch.Id = "adxRibbonButton_f0ca75ee177a4886a26d3c9246518516";
             this.adxRibbonButtonSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.adxRibbonButtonSearch.ParseMsoXmlTypeAs = AddinExpress.MSO.ADXParseMsoXmlTypeAs.pxtControl;
-            this.adxRibbonButtonSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.adxRibbonButtonSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
+            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
             // 
             // adxMainPluginCommandBar
             // 
@@ -335,6 +341,8 @@ namespace WSUIOutlookPlugin
             get { return _wsuiBootStraper; }
         }
 
+        public bool IsMainUIVisible { get; set; }
+
         #region my own initialization
 
         private void Init()
@@ -355,8 +363,7 @@ namespace WSUIOutlookPlugin
                 _updatable = UpdateHelper.Instance;
                 _updatable.Module = this;
             }
-            DllPreloader.Instance.PreloadDll();
-            _wsuiBootStraper = new PluginBootStraper();
+            
         }
 
         #endregion
@@ -373,49 +380,11 @@ namespace WSUIOutlookPlugin
             WSSqlLogger.Instance.LogInfo(string.Format("Check for update: {0}ms",watch.ElapsedMilliseconds));
         }
 
-        private void PrecreateForm(object state)
+        private void RunPluginUI()
         {
-            WSSqlLogger.Instance.LogInfo("Design Mode: " + this.DesignMode.ToString());
-            if (this.DesignMode || formWebPaneItem == null)
-                return;
-            try
-            {
-                // get internal field
-                var field = typeof(ADXOlFormsCollectionItem).GetField("formInstances",
-                                                                              BindingFlags.NonPublic |
-                                                                              BindingFlags.Instance |
-                                                                              BindingFlags.CreateInstance);
-                Assembly assembly = typeof (WSUIAddinModule).Assembly;
-                if (field != null && assembly != null)
-                {
-                    var val = (IList)field.GetValue(formWebPaneItem);
-                    var form = (ADXOlForm) assembly.CreateInstance(formWebPaneItem.FormClassName);
-                    val.Add(form);
-                    // get internal  method
-                    var miInitialize = form.GetType().GetMethods( BindingFlags.NonPublic |
-                                                                                     BindingFlags.Instance |
-                                                                                     BindingFlags.CreateInstance).Where(mi => mi.Name == "Initialize" && mi.GetParameters().Count() == 2).ToList();
-
-                    /// get internal property
-                    PropertyInfo piFormsManager = typeof(ADXOlFormsCollectionItem).GetProperty("FormsManager",
-                                                                              BindingFlags.NonPublic |
-                                                                              BindingFlags.Instance |
-                                                                              BindingFlags.CreateInstance);
-                    var formsManagerValue = piFormsManager.GetValue(formWebPaneItem,null);
-                    if (miInitialize.Any() && formsManagerValue != null)
-                    {
-                        miInitialize.ElementAt(0).Invoke(form, new object[] {formsManagerValue, formWebPaneItem});
-                    }
-                }
-                // boot Straper
-                _wsuiBootStraper.Run();
- 
-            }
-            catch (Exception ex)
-            {
-                WSSqlLogger.Instance.LogError(ex.Message);
-            }
-
+            DllPreloader.Instance.PreloadDll();
+            _wsuiBootStraper = new PluginBootStraper();
+            _wsuiBootStraper.Run();
         }
 
 
@@ -434,6 +403,11 @@ namespace WSUIOutlookPlugin
                     {
                         formWebPaneItem.FolderName = string.Empty;
                         ClearFolderWebViewProperties((Outlook.MAPIFolder)args.SrcFolder);
+                        
+                        if(!adxMainPluginCommandBar.UseForRibbon)
+                            ApplyButtonsRibbonEnable();
+                        else
+                            ApplyCommandBarButtons();
                     }
                 }
             }
@@ -441,7 +415,7 @@ namespace WSUIOutlookPlugin
 
         public void DoShowWebViewPane()
         {
-            string currentFullFolderName = GetFullNameOfCurrentFolder();
+            string currentFullFolderName = GetFullPathOfDefaultFolder();
             formWebPaneItem.FolderName = currentFullFolderName;
             //Apply the WebViewPane layout
             RefreshCurrentFolder();
@@ -458,7 +432,7 @@ namespace WSUIOutlookPlugin
                         formWebPaneItem.FolderName = string.Empty;
                         ClearFolderWebViewProperties(currentFolder);
                         //Restore Standard View
-                        RefreshCurrentFolder();
+                        RefreshCurrentFolder(false);
                     }
                     finally
                     {
@@ -493,15 +467,28 @@ namespace WSUIOutlookPlugin
             return null;
         }
 
-        private void RefreshCurrentFolder()
+        private Outlook.MAPIFolder GetDefaultFolder()
+        {
+            Outlook.NameSpace outlookNqamespace = OutlookApp.GetNamespace(DefaultNamespace);
+            return outlookNqamespace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox);
+        }
+
+        private string GetFullPathOfDefaultFolder()
+        {
+            var folder = GetDefaultFolder();
+            return folder != null ?  GetFullFolderName(folder) : string.Empty;
+        }
+
+        private void RefreshCurrentFolder(bool isOpenUI = true)
         {
             _refreshCurrentFolderExecuting = true;
             try
             {
                 Outlook.Explorer activeExplorer = (OutlookApp as Outlook._Application).ActiveExplorer();
-                Outlook.MAPIFolder currentFolder = activeExplorer.CurrentFolder;
-                Outlook.NameSpace nameSpace = (OutlookApp as Outlook._Application).GetNamespace("MAPI");
+                Outlook.MAPIFolder currentFolder = isOpenUI ? GetDefaultFolder() : _lastMapiFolder;//activeExplorer.CurrentFolder;
+                Outlook.NameSpace nameSpace = (OutlookApp as Outlook._Application).GetNamespace(DefaultNamespace);
                 Outlook.MAPIFolder outboxFolder = nameSpace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderOutbox);
+                _lastMapiFolder = isOpenUI ? activeExplorer.CurrentFolder : null;
                 try
                 {
                     SetExplorerFolder(activeExplorer, outboxFolder);
@@ -530,7 +517,7 @@ namespace WSUIOutlookPlugin
         {
             try
             {
-                if (_outlookVersion == 2000 || _outlookVersion == 2002)
+                if (_outlookVersion == 2000 || _outlookVersion == 2002 )//|| _outlookVersion == 2007 || _outlookVersion == 2010
                     Explorer.CurrentFolder = Folder;
                 else
                     Explorer.GetType().InvokeMember("SelectFolder", BindingFlags.InvokeMethod, null, Explorer, new object[] { Folder });
@@ -641,7 +628,7 @@ namespace WSUIOutlookPlugin
             return fullName;
         }
 
-        private string GetFullNameOfCurrentFolder()
+        private Tuple<string,string> GetFullNameOfCurrentFolder()
         {
             Outlook.Explorer activeExplorer = (OutlookApp as Outlook._Application).ActiveExplorer();
             if (activeExplorer != null)
@@ -651,7 +638,8 @@ namespace WSUIOutlookPlugin
                     if (currentFolder != null)
                         try
                         {
-                            return GetFullFolderName(currentFolder);
+
+                            return new Tuple<string, string>(currentFolder.EntryID, GetFullFolderName(currentFolder));
                         }
                         finally
                         {
@@ -662,7 +650,7 @@ namespace WSUIOutlookPlugin
                 {
                     Marshal.ReleaseComObject(activeExplorer);
                 }
-            return string.Empty;
+            return default(Tuple<string,string>);
         }
 
         private bool IsADXWebViewUrl(Outlook.MAPIFolder folder)
@@ -689,110 +677,29 @@ namespace WSUIOutlookPlugin
         private void buttonShow_OnClick(object sender, IRibbonControl control, bool pressed)
         {
             DoShowWebViewPane();
-            buttonShow.Enabled = false;
-            buttonClose.Enabled = true;
-            SetEnabledForSearchControls(true);
+            ApplyButtonsRibbonEnable(false);
         }
 
         private void buttonClose_OnClick(object sender, IRibbonControl control, bool pressed)
         {
             DoHideWebViewPane();
-            buttonShow.Enabled = true;
-            buttonClose.Enabled = false;
-            SetEnabledForSearchControls(false);
+            ApplyButtonsRibbonEnable();
         }
+
+        private void ApplyButtonsRibbonEnable(bool isShowEnable = true)
+        {
+            buttonShow.Enabled = isShowEnable;
+            buttonClose.Enabled = !isShowEnable;
+        }
+
 
         private void WSUIAddinModule_AddinStartupComplete(object sender, EventArgs e)
         {
-            Outlook.NameSpace oNS = null;
-            Outlook.MAPIFolder ppallf= null;
-            Outlook.MAPIFolder pf = null;
-            Outlook.MAPIFolder fs = null;
-            try
-            {
-                oNS = OutlookApp.GetNamespace("mapi");
-                pf = oNS.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox);
-                if (ppallf != null && pf != null && fs != null)
-                {
-                    SaveDefaultFoldersEntryIDToRegistry(pf.EntryID, "", "");
-                }
-            }
-            finally
-            {
-                if (oNS != null)
-                    Marshal.ReleaseComObject(oNS);
-                if (ppallf != null)
-                    Marshal.ReleaseComObject(ppallf);
-                if (pf != null)
-                    Marshal.ReleaseComObject(pf);
-                if (fs != null)
-                    Marshal.ReleaseComObject(fs);
-                CheckUpdate();
-                this.SendMessage(WM_LOADED,IntPtr.Zero,IntPtr.Zero);
-                OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
-                OutlookHelper.Instance.OutlookApp = OutlookApp;
-                WSSqlLogger.Instance.LogInfo("WSUI AddinModule Startup Complete...");
-            }
-            
-        }
-
-        internal void SaveDefaultFoldersEntryIDToRegistry(string PublicFoldersEntryID,
-                string PublicFoldersAllPublicFoldersEntryID,
-                string FolderSyncIssuesEntryID)
-        {
-            RegistryKey ModuleKey = null;
-            RegistryKey ADXXOLKey = null;
-            RegistryKey WebViewPaneSpecialFoldersKey = null;
-            try
-            {
-                ModuleKey = Registry.CurrentUser.OpenSubKey(this.RegistryKey, true);
-                if (ModuleKey != null)
-                {
-                    ADXXOLKey = ModuleKey.CreateSubKey("ADXXOL");
-                    if (ADXXOLKey != null)
-                    {
-                        WebViewPaneSpecialFoldersKey =
-                            ADXXOLKey.CreateSubKey
-                            ("FoldersForExcludingFromUseWebViewPaneLayout");
-                        if (WebViewPaneSpecialFoldersKey != null)
-                        {
-                            if (PublicFoldersEntryID.Length >= 0)
-                            {
-                                WebViewPaneSpecialFoldersKey.
-                                    SetValue("PublicFolders",
-                                    PublicFoldersEntryID);
-                            }
-                            if (PublicFoldersAllPublicFoldersEntryID.Length >= 0)
-                            {
-                                WebViewPaneSpecialFoldersKey.
-                                    SetValue("PublicFoldersAllPublicFolders",
-                                    PublicFoldersAllPublicFoldersEntryID);
-                            }
-                            if (FolderSyncIssuesEntryID.Length >= 0)
-                            {
-                                WebViewPaneSpecialFoldersKey.
-                                    SetValue("FolderSyncIssues",
-                                    FolderSyncIssuesEntryID);
-                            }
-                        }
-                    }
-                }
-            }
-            finally
-            {
-                if (ModuleKey != null)
-                {
-                    ModuleKey.Close();
-                }
-                if (WebViewPaneSpecialFoldersKey != null)
-                {
-                    WebViewPaneSpecialFoldersKey.Close();
-                }
-                if (ADXXOLKey != null)
-                {
-                    ADXXOLKey.Close();
-                }
-            }
+            CheckUpdate();
+            this.SendMessage(WM_LOADED,IntPtr.Zero,IntPtr.Zero);
+            OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
+            OutlookHelper.Instance.OutlookApp = OutlookApp;
+            WSSqlLogger.Instance.LogInfo("WSUI AddinModule Startup Complete...");
         }
 
         void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -808,34 +715,22 @@ namespace WSUIOutlookPlugin
         private void buttonShow2007_Click(object sender)
         {
             DoShowWebViewPane();
-            buttonShow2007.Enabled = false;
-            buttonHide2007.Enabled = true;
-            SetEnabledForSearchControls(true);
+            ApplyCommandBarButtons(false);
         }
 
         private void buttonHide2007_Click(object sender)
         {
             DoHideWebViewPane();
-            buttonShow2007.Enabled = true;
-            buttonHide2007.Enabled = false;
-            SetEnabledForSearchControls(false);
+            ApplyCommandBarButtons();
         }
 
-        private void SetEnabledForSearchControls(bool isEnabled)
+        private void ApplyCommandBarButtons(bool isOpenEnable = true)
         {
-            if(adxRibbonButtonSearch != null && 
-                adxRibbonEditBoxSearch != null)
-            adxRibbonEditBoxSearch.Enabled = adxRibbonButtonSearch.Enabled = isEnabled;
-
-            if (adxMainPluginCommandBar.UseForRibbon &&
-                adxCommandBarEditSearchText != null &&
-                adxCommandBarButtonSearch != null)
-                adxCommandBarButtonSearch.Enabled =
-                    adxCommandBarEditSearchText.Enabled = isEnabled;
-
-
+            buttonShow2007.Enabled = isOpenEnable;
+            buttonHide2007.Enabled = !isOpenEnable;
         }
 
+        
         #region [event handlers for ribbon]
 
         private void adxRibbonEditBoxSearch_OnChange(object sender, IRibbonControl Control, string text)
@@ -852,7 +747,24 @@ namespace WSUIOutlookPlugin
         {
             if (string.IsNullOrEmpty(text))
                 return;
+            if (!WSUIAddinModule.CurrentInstance.IsMainUIVisible)
+            {
+                ShowMainUiAfterSearchAction();
+            }
             _wsuiBootStraper.PassAction(new WSAction(WSActionType.Search, text));
+        }
+
+        private void ShowMainUiAfterSearchAction()
+        {
+            DoShowWebViewPane();
+            buttonShow.Enabled = false;
+            buttonClose.Enabled = true;
+            if (!adxMainPluginCommandBar.UseForRibbon && this.HostMajorVersion > 12)
+            {
+                buttonShow2007.Enabled = false;
+                buttonHide2007.Enabled = true;    
+            }
+            
         }
 
         #endregion
@@ -873,6 +785,26 @@ namespace WSUIOutlookPlugin
         }
 
         #endregion 
+
+        private void outlookFormManager_OnInitialize()
+        {
+            if ((OutlookApp != null) && (_outlookVersion == 0))
+            {
+                string hostVersion = OutlookApp.Version;
+                if (hostVersion.StartsWith("9.0"))
+                    _outlookVersion = 2000;
+                if (hostVersion.StartsWith("10.0"))
+                    _outlookVersion = 2002;
+                if (hostVersion.StartsWith("11.0"))
+                    _outlookVersion = 2003;
+                if (hostVersion.StartsWith("12.0"))
+                    _outlookVersion = 2007;
+                if (hostVersion.StartsWith("14.0"))
+                    _outlookVersion = 2010;
+                if (hostVersion.StartsWith("15.0"))
+                    _outlookVersion = 2013;
+            }
+        }
 
     }
 }
