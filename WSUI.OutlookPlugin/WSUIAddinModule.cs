@@ -95,7 +95,6 @@ namespace WSUIOutlookPlugin
                 adxCommandBarEditSearchText.Change += AdxCommandBarEditSearchTextOnChange;
                 adxCommandBarButtonSearch.Click += AdxCommandBarButtonSearchOnClick;
             }
-            //SetEnabledForSearchControls(false);
         }
 
         private void WSUIAddinModule_OnSendMessage(object sender, ADXSendMessageEventArgs e)
@@ -159,7 +158,6 @@ namespace WSUIOutlookPlugin
             this.formWebPaneItem.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formWebPaneItem.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.WebViewPane;
             this.formWebPaneItem.FormClassName = "WSUIOutlookPlugin.WSUIForm";
-            //this.formWebPaneItem.FolderNames.AddRange(new string[]{@"Outlook Data File\Inbox",@"iyariki.ya@gmail.com\Inbox"});
             this.formWebPaneItem.IsMinimizedStateAllowed = false;
             this.formWebPaneItem.RegionBorder = AddinExpress.OL.ADXRegionBorderStyle.None;
             this.formWebPaneItem.UseOfficeThemeForBackground = true;
@@ -384,7 +382,7 @@ namespace WSUIOutlookPlugin
 
         private void RunPluginUI()
         {
-            //DllPreloader.Instance.PreloadDll();
+            DllPreloader.Instance.PreloadDll();
             _wsuiBootStraper = new PluginBootStraper();
             _wsuiBootStraper.Run();
         }
