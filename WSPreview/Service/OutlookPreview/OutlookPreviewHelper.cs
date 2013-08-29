@@ -12,6 +12,7 @@ using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using WSPreview.PreviewHandler.Service.Logger;
 using WSUI.Core.Enums;
 using Outlook = Microsoft.Office.Interop.Outlook;
+using WSUI.Core.Extensions;
 
 namespace WSPreview.PreviewHandler.Service.OutlookPreview
 {
@@ -379,7 +380,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         private string GetBeginingOfPreview(dynamic item, string filename)
         {
             string page = PageBegin + TableBegin;
-            page += string.Format(SubjectRow, HighlightSearchString(item.Subject));
+            page += string.Format(SubjectRow, HighlightSearchString(((string)item.Subject).ConvertToIso()));
             return page;
         }
 
@@ -387,10 +388,10 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         {
             string page = GetBeginingOfPreview(mail, filename);
 
-            page += string.Format(SenderRow, HighlightSearchString(mail.SenderName));
+            page += string.Format(SenderRow, HighlightSearchString(mail.SenderName.ConvertToIso()));
             if (!string.IsNullOrEmpty(mail.CC))
-                page += string.Format(CCRow, HighlightSearchString(mail.CC));
-            page += string.Format(ToRow, HighlightSearchString(mail.To));
+                page += string.Format(CCRow, HighlightSearchString(mail.CC.ConvertToIso()));
+            page += string.Format(ToRow, HighlightSearchString(mail.To.ConvertToIso()));
             page += string.Format(SendRow, mail.ReceivedTime.ToString());
             page += GetAttachments(mail, filename);
             string temp = GetHtmlBodyHightlight(mail.HTMLBody);
@@ -440,8 +441,8 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         public string GetPreviewForMeeting(Outlook.MeetingItem meeting, string filename)
         {
             string page = GetBeginingOfPreview(meeting, filename);
-            page += string.Format(TopicRow, meeting.ConversationTopic);
-            page += string.Format(SendRow, GetMailTo(new string[] { meeting.SenderName }));
+            page += string.Format(TopicRow, meeting.ConversationTopic.ConvertToIso());
+            page += string.Format(SendRow, GetMailTo(new string[] { meeting.SenderName.ConvertToIso() }));
             page += GetAttachments(meeting, filename);
             page += TableEnd + PageEnd;
             return page;

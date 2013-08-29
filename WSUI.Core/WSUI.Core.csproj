@@ -52,6 +52,7 @@
     <Compile Include="Data\WSAction.cs" />
     <Compile Include="Enums\HostType.cs" />
     <Compile Include="Enums\WSActionType.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helpers\RegistryHelper.cs" />
     <Compile Include="Interfaces\IWSAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -59,6 +60,7 @@
   <ItemGroup>
     <None Include="WSUI.Core.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -7,6 +7,7 @@
              xmlns:service="clr-namespace:WSUI.Module.Service"
              xmlns:ctrl="clr-namespace:WSUI.Infrastructure.Controls;assembly=WSUI.Infrastructure"
              x:Name="this"
+             xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure" 
              >
     <UserControl.Resources>
         <ResourceDictionary>
@@ -34,7 +35,7 @@
                 <Setter Property="Width" Value="200" />
             </Style>
 
-
+            <converters:StringToStringConverter x:Key="StringConverter" />
 
         </ResourceDictionary>
     </UserControl.Resources>
@@ -68,7 +69,7 @@
                         <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                             Grid.Column="2"  Margin="5" ></ctrl:HightliteTextBlock>
 
-                        <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                        <ctrl:HightliteTextBlock Text="{Binding Path=Name,Converter={StaticResource ResourceKey=StringConverter}}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                             Grid.Column="3"  Margin="5" ></ctrl:HightliteTextBlock>
 
                         <TextBlock Grid.Column="4"  Text="{Binding Path=Date,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>

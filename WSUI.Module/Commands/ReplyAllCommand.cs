@@ -4,6 +4,7 @@ using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSPreview.PreviewHandler.Service.Logger;
+using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands
 {
@@ -47,6 +48,7 @@ namespace WSUI.Module.Commands
                 }
                 catch (System.Exception ex)
                 {
+                    MessageBoxService.Instance.Show("Error", "Can't open Outlook item.", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Asterisk);
                     WSSqlLogger.Instance.LogError("ReplyAll Command: " + ex.Message);
                 }
             }

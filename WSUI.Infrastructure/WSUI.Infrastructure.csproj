@@ -85,6 +85,7 @@
     <Compile Include="Controls\ProgressManager\ProgressWindow.xaml.cs">
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\StringToStringConverter.cs" />
     <Compile Include="Core\BaseSearchData.cs" />
     <Compile Include="Models\CommandSearchData.cs" />
     <Compile Include="Models\ContactSearchData.cs" />
