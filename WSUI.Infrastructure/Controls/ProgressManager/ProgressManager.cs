@@ -126,7 +126,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                     WSSqlLogger.Instance.LogError(string.Format("{0} - {1}","ShowSplash",ex.Message));
                 }
             }
-            ((Window)_progressForm).ShowDialog();
+            ((Window)_progressForm).Show();
             System.Windows.Threading.Dispatcher.Run();
         }
 
@@ -169,5 +169,11 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
         }
 
         #endregion
+
+
+        public bool InProgress
+        {
+            get { return _currentOperation != null; }
+        }
     }
 }

@@ -275,7 +275,10 @@ namespace WSUI.Module.Core
             //Enabled = true;
             OnPropertyChanged(() => Enabled);
             FireComplete(res);
-            ProgressManager.Instance.StopOperation();
+            if (ProgressManager.Instance.InProgress)
+            {
+                ProgressManager.Instance.StopOperation();
+            }
         }
 
         protected virtual void OnError(bool res)

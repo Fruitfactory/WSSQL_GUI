@@ -6,5 +6,6 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
         void StartOperation(ProgressOperation operation);
         void StopOperation();
         void SetProgress(int value);
+        bool InProgress { get; }
     }
 }

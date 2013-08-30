@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WSUI.Module.Service.Dialogs.Interfaces;
+using WSUI.Infrastructure.Controls.ProgressManager;
 
 namespace WSUI.Module.Service.Dialogs.Message
 {
@@ -36,6 +37,7 @@ namespace WSUI.Module.Service.Dialogs.Message
 
         private void InitView()
         {
+            
             switch (_model.Button)
             {
                 case MessageBoxButton.OK:

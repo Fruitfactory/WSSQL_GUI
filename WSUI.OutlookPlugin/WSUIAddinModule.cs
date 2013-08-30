@@ -357,6 +357,12 @@ namespace WSUIOutlookPlugin
             if (System.Windows.Application.Current == null)
             {
                 new AppEmpty();
+                if (System.Windows.Application.Current != null)
+                {
+                    // to avoid Application was shutdown exception (WALLBASH)
+                    System.Windows.Application.Current.ShutdownMode = System.Windows.ShutdownMode.OnExplicitShutdown;
+                }
+                    
             }
             if (_updatable == null)
             {

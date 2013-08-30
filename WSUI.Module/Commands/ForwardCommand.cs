@@ -38,7 +38,7 @@ namespace WSUI.Module.Commands
                     }
                     else if (mail is Outlook._MeetingItem)
                     {
-                        var Metting = (mail as Outlook._MeetingItem);
+                        var Metting = (mail as Outlook.MeetingItem);
                         if (Metting != null)
                         {
                             var forward = Metting.Forward();
