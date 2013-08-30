@@ -231,7 +231,10 @@ namespace WSUI.Module.ViewModel
             }
             finally
             {
-                ProgressManager.Instance.StopOperation();
+                if (ProgressManager.Instance.InProgress)
+                {
+                    ProgressManager.Instance.StopOperation();
+                }
             }
         }
 

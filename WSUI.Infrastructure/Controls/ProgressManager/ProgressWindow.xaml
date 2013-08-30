@@ -7,7 +7,7 @@
              WindowStyle="None"
             ResizeMode="NoResize"
              ShowInTaskbar="False" 
-             Height="250" Width="300" >
+             Height="250" Width="300" Topmost="True" >
     <Window.Resources><!--Controls:MetroWindow-->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
