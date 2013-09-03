@@ -180,8 +180,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                         ((ISearchWordHighlight) _comInstance).HitString = SearchCriteria;
                     try
                     {
-                        int res = ((IInitializeWithFile) _comInstance).Initialize(_filePath, 0);
-                        WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(Initialize)={0}", res));
+                        ((IInitializeWithFile) _comInstance).Initialize(_filePath, 0);
                     }
                     catch
                     {
@@ -218,8 +217,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                 if (_comInstance == null)
                     throw new NullReferenceException("Com type can't be founded");
 
-                int wndRes = ((IPreviewHandler) _comInstance).SetWindow(this.Handle, ref r);
-                WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(SetWindow)={0}", wndRes));
+                ((IPreviewHandler) _comInstance).SetWindow(this.Handle, ref r);
                 ((IPreviewHandler)_comInstance).DoPreview();
 
             }
