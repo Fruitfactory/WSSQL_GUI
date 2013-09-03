@@ -201,7 +201,7 @@ namespace WSUI.CA
             ActionResult result = ActionResult.Success;
             try
             {
-                MessageBox.Show("Update was successful.Outlook will be opened soon.");
+                MessageBox.Show("Update was successful.\nOutlook will be opened soon.");
             }
             catch (Exception)
             {
