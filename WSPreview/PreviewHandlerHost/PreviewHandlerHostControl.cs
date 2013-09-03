@@ -36,7 +36,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         private object _comInstance = null;
         private bool _registreHandler = true;
         private readonly List<Stream> _listOpenStream = new List<Stream>();
-
+        private readonly RegistrationData _dataHandler;
 
         public event EventHandler StartLoad;
 
@@ -58,6 +58,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         {
             InitializeComponent();
             HelperPreviewHandlers.Instance.Inititialize();
+            _dataHandler = PreviewHandlerRegistryAccessor.LoadRegistrationInformation();
         }
 
         public string SearchCriteria
@@ -136,20 +137,16 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             r.right = this.Width;
             
             //check registry
-            RegistrationData data = PreviewHandlerRegistryAccessor.LoadRegistrationInformation();
             PreviewHandlerInfo handler = null;
             Type comType = null;
-            foreach (ExtensionInfo ei in data.Extensions)
+            var extens = Path.GetExtension(_filePath).ToUpperInvariant();
+            if (!string.IsNullOrEmpty(extens) && _dataHandler.Extensions.ContainsKey(extens) && !_filePath.ToLower().EndsWith(".msg"))
             {
-                if (_filePath.ToUpper().EndsWith(ei.Extension.ToUpper()))
-                {
-                    handler = ei.Handler;
-                    if (handler != null)
-                        break;
-                }
+                handler = _dataHandler.Extensions[extens].Handler;
             }
+
             // check application handlers
-            if (_filePath.ToLower().EndsWith(".msg") || handler == null )//
+            if (_filePath.ToLower().EndsWith(".msg") || handler == null)
             {
                 _comInstance = GetOwnPreviewHandler();
                 if (_comInstance == null)
@@ -173,40 +170,42 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             try
             {
                 // Create an instance of the preview handler
-                if(_comInstance == null)
+                if (_comInstance == null)
                     _comInstance = Activator.CreateInstance(comType);
 
-                // Check if it is a stream or file handler
+                //// Check if it is a stream or file handler
                 if (_comInstance is IInitializeWithFile)
                 {
                     if (_comInstance is ISearchWordHighlight)
                         ((ISearchWordHighlight) _comInstance).HitString = SearchCriteria;
                     try
                     {
-                        ((IInitializeWithFile)_comInstance).Initialize(_filePath, 0);
+                        int res = ((IInitializeWithFile) _comInstance).Initialize(_filePath, 0);
+                        WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(Initialize)={0}", res));
                     }
                     catch
                     {
                         _comInstance = SecondChance();
                     }
-                    
+
                 }
                 else if (File.Exists(_filePath))
                 {
                     if (_comInstance is IInitializeWithStream)
                     {
-                        Stream filestream = File.Open(_filePath, FileMode.Open,FileAccess.Read,FileShare.ReadWrite);
+                        Stream filestream = File.Open(_filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                         StreamWrapper stream = new StreamWrapper(filestream);
-                        ((WSPreview.PreviewHandler.PreviewHandlerFramework.IInitializeWithStream)_comInstance).Initialize(stream, 0);
+                        ((IInitializeWithStream) _comInstance).Initialize(stream, 0);
                         AddStream(filestream);
                     }
                     else if (_comInstance is IInitializeWithItem)
                     {
                         IShellItem shellItem = null;
-                        UnsafeNativeMethods.SHCreateItemFromParsingName(_filePath, IntPtr.Zero, typeof(IShellItem).GUID, out shellItem);
+                        UnsafeNativeMethods.SHCreateItemFromParsingName(_filePath, IntPtr.Zero, typeof (IShellItem).GUID,
+                            out shellItem);
                         if (shellItem != null)
                         {
-                            ((IInitializeWithItem)_comInstance).Initialize(shellItem, 2);
+                            ((IInitializeWithItem) _comInstance).Initialize(shellItem, 2);
                         }
                     }
                 }
@@ -216,22 +215,23 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                     throw new FileNotFoundException(_filePath);
                 }
 
-                if(_comInstance == null)
+                if (_comInstance == null)
                     throw new NullReferenceException("Com type can't be founded");
 
-                ((IPreviewHandler)_comInstance).SetWindow(this.Handle, ref r);
+                int wndRes = ((IPreviewHandler) _comInstance).SetWindow(this.Handle, ref r);
+                WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(SetWindow)={0}", wndRes));
                 ((IPreviewHandler)_comInstance).DoPreview();
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
+                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "WinError", Marshal.GetLastWin32Error()));
+                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "Error", ex.Message));
                 _comInstance = null;
                 webMessage.Visible = true;
-                webMessage.DocumentText = Regex.Replace(Properties.Resources.Error1,"replace",ex.Message);
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "Error", ex.Message));
+                webMessage.DocumentText = Regex.Replace(Properties.Resources.Error1, "replace", ex.Message);
             }
-
         }
-
 
         private void Control_Resize(object sender, EventArgs e)
         {
