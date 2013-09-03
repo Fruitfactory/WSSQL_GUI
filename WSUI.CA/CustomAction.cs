@@ -212,6 +212,41 @@ namespace WSUI.CA
 
         #endregion
 
+        #region [error message]
+
+        public static ActionResult ErrorMessage(Session session)
+        {
+            ActionResult result = ActionResult.Success;
+            try
+            {
+                MessageBox.Show("Update was finished with error.\nPlease, see log.");
+            }
+            catch (Exception)
+            {
+                result = ActionResult.NotExecuted;
+            }
+            return result;
+        }
+
+        #endregion
+
+        #region [cancel message]
+
+        public static ActionResult CancelMessage(Session session)
+        {
+            ActionResult result = ActionResult.Success;
+            try
+            {
+                MessageBox.Show("Update was canceled by user.");
+            }
+            catch (Exception)
+            {
+                result = ActionResult.NotExecuted;
+            }
+            return result;
+        }
+
+        #endregion
 
     }
 }
