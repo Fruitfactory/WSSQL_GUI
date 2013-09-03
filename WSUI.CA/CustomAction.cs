@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Win32;
+using System.Windows.Forms;
 using WSUI.Core.Helpers;
 
 namespace WSUI.CA
@@ -191,6 +192,26 @@ namespace WSUI.CA
 
 
         #endregion
+
+        #region [succes message]
+
+        [CustomAction]
+        public static ActionResult SuccesMessage(Session session)
+        {
+            ActionResult result = ActionResult.Success;
+            try
+            {
+                MessageBox.Show("Update was successful.Outlook will be opened soon.");
+            }
+            catch (Exception)
+            {
+                result = ActionResult.NotExecuted;                
+            }
+            return result;
+        }
+
+        #endregion
+
 
     }
 }
