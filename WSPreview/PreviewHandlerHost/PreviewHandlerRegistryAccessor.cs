@@ -56,13 +56,13 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             string[] extensions = Registry.ClassesRoot.GetSubKeyNames();
 
             // Find out what each extension is registered to be previewed with
-            List<ExtensionInfo> extensionInfos = new List<ExtensionInfo>(extensions.Length);
+            Dictionary<string, ExtensionInfo> extensionInfos = new Dictionary<string, ExtensionInfo>();
             foreach (string extension in extensions)
             {
                 if (extension.StartsWith("."))
                 {
                     ExtensionInfo info = new ExtensionInfo();
-                    info.Extension = extension;
+                    info.Extension = extension.ToUpperInvariant();
 
                     string id = Registry.GetValue(
                         string.Format(BaseClsIDKey, extension),
@@ -74,7 +74,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                     PreviewHandlerInfo mappedHandler;
                     if (id != null && handlerMapping.TryGetValue(id, out mappedHandler)) info.Handler = mappedHandler;
 
-                    extensionInfos.Add(info);
+                    extensionInfos.Add(info.Extension,info);
                 }
             }
 
@@ -88,7 +88,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
     internal class RegistrationData
     {
         public List<PreviewHandlerInfo> Handlers;
-        public List<ExtensionInfo> Extensions;
+        public Dictionary<string,ExtensionInfo> Extensions;
     }
 
     internal class PreviewHandlerInfo
