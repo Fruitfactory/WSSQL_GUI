@@ -2,11 +2,10 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Forms;
-using WSPreview.PreviewHandler.Service;
-using WSPreview.PreviewHandler.Service.Logger;
 using WSUI.Control;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Core.Logger;
 using WSUIOutlookPlugin.Interfaces;
 using WSUIOutlookPlugin.Hooks;
 

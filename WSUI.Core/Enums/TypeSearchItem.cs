@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WSUI.Infrastructure.Service.Enums
+namespace WSUI.Core.Enums
 {
     [Flags]
     public enum TypeSearchItem

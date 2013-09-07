@@ -55,11 +55,12 @@ namespace WSPreview.PreviewHandler.PreviewHandlerFramework
             }
         }
 
-        void IPreviewHandler.SetWindow(IntPtr hwnd, ref RECT rect)
+        int IPreviewHandler.SetWindow(IntPtr hwnd, ref RECT rect)
         {
             _parentHwnd = hwnd;
             _windowBounds = rect.ToRectangle();
             UpdateWindowBounds();
+            return 0;
         }
 
         void IPreviewHandler.SetRect(ref RECT rect)

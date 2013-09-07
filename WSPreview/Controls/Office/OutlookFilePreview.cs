@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
-using WSPreview.PreviewHandler.Service.Logger;
+using WSUI.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using mshtml;
 using WSPreview.PreviewHandler.Service.OutlookPreview;

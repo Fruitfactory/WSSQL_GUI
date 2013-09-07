@@ -9,8 +9,8 @@ using System.Timers;
 using System.Windows.Threading;
 using System.Xml.Linq;
 using AddinExpress.MSO;
-using WSPreview.PreviewHandler.Service.Logger;
 using WSUI.Core.Helpers;
+using WSUI.Core.Logger;
 using WSUIOutlookPlugin.Interfaces;
 using Timer = System.Timers.Timer;
 
@@ -333,6 +333,8 @@ namespace WSUIOutlookPlugin.Core
         private void UpdateTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
             UpdateOnTimer();
+            if (_updateTimer == null)
+                return;
             _updateTimer.Elapsed -= UpdateTimerOnElapsed;
             _updateTimer.Stop();
             _updateTimer.Dispose();

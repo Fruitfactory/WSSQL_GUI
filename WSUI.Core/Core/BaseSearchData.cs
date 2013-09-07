@@ -1,7 +1,7 @@
 using System;
-using WSUI.Infrastructure.Service.Enums;
+using WSUI.Core.Enums;
 
-namespace WSUI.Infrastructure.Core
+namespace WSUI.Core.Core
 {
 	public class BaseSearchData
 	{

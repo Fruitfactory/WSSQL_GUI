@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
-using WSPreview.PreviewHandler.Service.Logger;
+using WSUI.Core.Logger;
 using WSUI.Core.Enums;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using WSUI.Core.Extensions;

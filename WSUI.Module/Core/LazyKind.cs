@@ -8,8 +8,8 @@ using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Enums;
+using WSUI.Core.Logger;
 using WSUI.Module.Interface;
-using WSPreview.PreviewHandler.Service.Logger;
 
 namespace WSUI.Module.Core
 {

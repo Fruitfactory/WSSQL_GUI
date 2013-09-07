@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using WSPreview.PreviewHandler.PInvoke;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using WSPreview.PreviewHandler.Service;
-using WSPreview.PreviewHandler.Service.Logger;
+using WSUI.Core.Logger;
 using WSPreview.PreviewHandler.Service.Preview;
 using WSUI.Core.Interfaces;
 
@@ -130,11 +130,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                 _comInstance = null;
             }
             _registreHandler = true;
-            RECT r;
-            r.top = 0;
-            r.bottom = this.Height;
-            r.left = 0;
-            r.right = this.Width;
+            
             
             //check registry
             PreviewHandlerInfo handler = null;
@@ -169,67 +165,14 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
 
             try
             {
-                // Create an instance of the preview handler
-                if (_comInstance == null)
-                    _comInstance = Activator.CreateInstance(comType);
-
-                //// Check if it is a stream or file handler
-                if (_comInstance is IInitializeWithFile)
-                {
-                    if (_comInstance is ISearchWordHighlight)
-                        ((ISearchWordHighlight) _comInstance).HitString = SearchCriteria;
-                    try
-                    {
-                        int res = ((IInitializeWithFile) _comInstance).Initialize(_filePath, 0);
-                        WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(Initialize)={0}", res));
-                    }
-                    catch
-                    {
-                        _comInstance = SecondChance();
-                    }
-
-                }
-                else if (File.Exists(_filePath))
-                {
-                    if (_comInstance is IInitializeWithStream)
-                    {
-                        Stream filestream = File.Open(_filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                        StreamWrapper stream = new StreamWrapper(filestream);
-                        ((IInitializeWithStream) _comInstance).Initialize(stream, 0);
-                        AddStream(filestream);
-                    }
-                    else if (_comInstance is IInitializeWithItem)
-                    {
-                        IShellItem shellItem = null;
-                        UnsafeNativeMethods.SHCreateItemFromParsingName(_filePath, IntPtr.Zero, typeof (IShellItem).GUID,
-                            out shellItem);
-                        if (shellItem != null)
-                        {
-                            ((IInitializeWithItem) _comInstance).Initialize(shellItem, 2);
-                        }
-                    }
-                }
-                else
-                {
-                    WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "File Not Found", _filePath));
-                    throw new FileNotFoundException(_filePath);
-                }
-
-                if (_comInstance == null)
-                    throw new NullReferenceException("Com type can't be founded");
-
-                int wndRes = ((IPreviewHandler) _comInstance).SetWindow(this.Handle, ref r);
-                WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(SetWindow)={0}", wndRes));
-                ((IPreviewHandler)_comInstance).DoPreview();
-
+                GenerateProviewByType(comType);
             }
             catch (Exception ex)
             {
                 WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "WinError", Marshal.GetLastWin32Error()));
                 WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "Error", ex.Message));
                 _comInstance = null;
-                webMessage.Visible = true;
-                webMessage.DocumentText = Regex.Replace(Properties.Resources.Error1, "replace", ex.Message);
+                SecondChance();
             }
         }
 
@@ -276,39 +219,67 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             return true;
         }
 
-        private object SecondChance()
+        private void SecondChance()
         {
-            object comInstance = GetOwnPreviewHandler();
-            if (comInstance == null)
+            try
             {
-                Type comType = GetOwnPreviewHandlersType();
-                if (comType == null)
-                    return null;
-                comInstance = Activator.CreateInstance(comType);
+                object comInstance = GetOwnPreviewHandler();
+                if (comInstance == null)
+                {
+                    Type comType = GetOwnPreviewHandlersType();
+                    if (comType == null)
+                        return;
+                    GenerateProviewByType(comType);
+                }
+                else
+                {
+                    _comInstance = comInstance;
+                    GeneratePreviewByInstance();
+                }
             }
-            // Check if it is a stream or file handler
-            if (comInstance is IInitializeWithFile)
+            catch (Exception ex)
             {
-                if (comInstance is ISearchWordHighlight)
-                    ((ISearchWordHighlight)comInstance).HitString = SearchCriteria;
-                ((IInitializeWithFile)comInstance).Initialize(_filePath, 0);
+                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "WinError", Marshal.GetLastWin32Error()));
+                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "Error", ex.Message));
+                _comInstance = null;
+            }
+        }
+
+        private void GenerateProviewByType(Type type)
+        {
+            // Create an instance of the preview handler
+            if (_comInstance == null)
+                _comInstance = Activator.CreateInstance(type);
+            GeneratePreviewByInstance();            
+        }
+
+        private void GeneratePreviewByInstance()
+        {
+            //// Check if it is a stream or file handler
+            if (_comInstance is IInitializeWithFile)
+            {
+                if (_comInstance is ISearchWordHighlight)
+                    ((ISearchWordHighlight)_comInstance).HitString = SearchCriteria;
+                int res = ((IInitializeWithFile)_comInstance).Initialize(_filePath, 0);
+                WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(Initialize)={0}", res));
             }
             else if (File.Exists(_filePath))
             {
-                if (comInstance is IInitializeWithStream)
+                if (_comInstance is IInitializeWithStream)
                 {
                     Stream filestream = File.Open(_filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     StreamWrapper stream = new StreamWrapper(filestream);
-                    ((WSPreview.PreviewHandler.PreviewHandlerFramework.IInitializeWithStream)_comInstance).Initialize(stream, 0);
+                    ((IInitializeWithStream)_comInstance).Initialize(stream, 0);
                     AddStream(filestream);
                 }
-                else if (comInstance is IInitializeWithItem)
+                else if (_comInstance is IInitializeWithItem)
                 {
                     IShellItem shellItem = null;
-                    UnsafeNativeMethods.SHCreateItemFromParsingName(_filePath, IntPtr.Zero, typeof(IShellItem).GUID, out shellItem);
+                    UnsafeNativeMethods.SHCreateItemFromParsingName(_filePath, IntPtr.Zero, typeof(IShellItem).GUID,
+                        out shellItem);
                     if (shellItem != null)
                     {
-                        ((IInitializeWithItem)comInstance).Initialize(shellItem, 2);
+                        ((IInitializeWithItem)_comInstance).Initialize(shellItem, 2);
                     }
                 }
             }
@@ -318,7 +289,16 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                 throw new FileNotFoundException(_filePath);
             }
 
-            return comInstance;
+            if (_comInstance == null)
+                throw new NullReferenceException("Com type can't be founded");
+            RECT r;
+            r.top = 0;
+            r.bottom = this.Height;
+            r.left = 0;
+            r.right = this.Width;
+            int wndRes = ((IPreviewHandler)_comInstance).SetWindow(this.Handle, ref r);
+            WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(SetWindow)={0}", wndRes));
+            ((IPreviewHandler)_comInstance).DoPreview();
         }
 
         private Type GetOwnPreviewHandlersType()

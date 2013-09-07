@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using WSUI.Infrastructure.Core;
+using WSUI.Core.Core;
+
 namespace WSUI.Infrastructure.Models
 {
 

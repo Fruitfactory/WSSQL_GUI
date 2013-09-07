@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
-using WSPreview.PreviewHandler.Service.Logger;
+using WSUI.Core.Logger;
+
 
 namespace WSUI.Infrastructure.Services
 {

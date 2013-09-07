@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using WSUI.Infrastructure.Core;
-using WSUI.Infrastructure.Service.Enums;
+using WSUI.Core.Core;
+using WSUI.Core.Enums;
 
 namespace WSUI.Module.Service
 {

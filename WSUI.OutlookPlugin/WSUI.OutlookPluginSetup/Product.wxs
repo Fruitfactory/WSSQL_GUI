@@ -30,8 +30,10 @@
       <Custom Action="UnregisterDll" After="SelfUnregModules">Installed</Custom>
       <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>
       <Custom Action="CloseOutlook" After="InstallInitialize">NOT Installed OR Installed</Custom>
-      <Custom Action="SuccesMessage" After="InstallFinalize" OnExit="success">NOT Installed OR Installed</Custom>
-      <Custom Action="OpenOutlook" After="SuccesMessage">NOT Installed OR Installed</Custom>
+      <Custom Action="SuccesMessage" OnExit="success">NOT Installed OR Installed</Custom>
+      <!-- <Custom Action="CancelMessage" OnExit="cancel">NOT Installed OR Installed</Custom>
+      <Custom Action="ErrorMessage" OnExit="error">NOT Installed OR Installed</Custom> -->
+      <Custom Action="OpenOutlook" After="InstallFinalize">NOT Installed OR Installed</Custom>
     </InstallExecuteSequence>
     <!-- Properties for all current versions of the .NET Framework are available here: http://wix.sourceforge.net/manual-wix3/wixnetfxextension.htm -->
     <PropertyRef Id="NETFRAMEWORK40CLIENT" />

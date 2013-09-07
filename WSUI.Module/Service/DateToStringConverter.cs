@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using WSUI.Infrastructure.Core;
+using WSUI.Core.Core;
 using WSUI.Infrastructure.Models;
 
 namespace WSUI.Module.Service

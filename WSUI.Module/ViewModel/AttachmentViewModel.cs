@@ -7,15 +7,15 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
-using WSUI.Infrastructure.Core;
+using WSUI.Core.Core;
+using WSUI.Core.Enums;
+using WSUI.Core.Logger;
 using WSUI.Infrastructure.Service;
-using WSUI.Infrastructure.Service.Enums;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Module.Service;
 using WSUI.Module.Strategy;
-using WSPreview.PreviewHandler.Service.Logger;
 
 namespace WSUI.Module.ViewModel
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using WSUI.Infrastructure.Service.Enums;
+using WSUI.Core.Enums;
+
 
 namespace WSUI.Infrastructure.Models
 {

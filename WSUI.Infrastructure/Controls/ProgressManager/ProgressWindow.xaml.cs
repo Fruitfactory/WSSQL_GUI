@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Threading;
-using WSPreview.PreviewHandler.Service.Logger;
+using WSUI.Core.Logger;
 
 namespace WSUI.Infrastructure.Controls.ProgressManager
 {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using WSUI.Infrastructure.Core;
+using WSUI.Core.Core;
 using WSUI.Infrastructure.Services;
 
 namespace WSUI.Module.Interface

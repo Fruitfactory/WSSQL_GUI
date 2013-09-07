@@ -28,18 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.webBrowserPreview = new WSPreview.PreviewHandler.Controls.Office.WebUtils.ExtWebBrowser();
             this.SuspendLayout();
+            // 
+            // webBrowserPreview
+            // 
+            this.webBrowserPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowserPreview.Location = new System.Drawing.Point(0, 0);
+            this.webBrowserPreview.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowserPreview.Name = "webBrowserPreview";
+            this.webBrowserPreview.Size = new System.Drawing.Size(150, 150);
+            this.webBrowserPreview.TabIndex = 0;
             // 
             // OfficeFilePreview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.webBrowserPreview);
             this.Name = "OfficeFilePreview";
-            this.Resize += new System.EventHandler(this.OfficeFilePreview_Resize);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private WebUtils.ExtWebBrowser webBrowserPreview;
     }
 }

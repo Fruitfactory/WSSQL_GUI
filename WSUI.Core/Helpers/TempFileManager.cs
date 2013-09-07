@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using WSPreview.PreviewHandler.Service.Logger;
-using WSUI.Infrastructure.Service.Enums;
+using WSUI.Core.Logger;
+using WSUI.Core.Enums;
+using WSUI.Core.Core;
 
 
-namespace WSUI.Infrastructure.Service.Helpers
+namespace WSUI.Core.Helpers
 {
     public class TempFileManager
     {
 
         #region static 
         private static TempFileManager _instance = null;
-        private static string TempFileName = "{0}WSSQL\\{1}\\{2}";
+        private static string TempFileName = "{0}\\{1}";
         private static string TempFolder = "{0}WSSQL";
         private static string TempFolderFile = "{0}WSSQL\\{1}";
         private static readonly object _lockObject = new object();
@@ -55,42 +56,39 @@ namespace WSUI.Infrastructure.Service.Helpers
         #region public 
 
 
-        public string GenerateTempFileName(WSUI.Infrastructure.Core.BaseSearchData searchitem)
+        public string GenerateTempFileName(BaseSearchData searchitem)
         {
-            if (_tempFileList.ContainsKey(searchitem.ID))
-            {
-                return _tempFileList[searchitem.ID];
-            }
-            string filename = string.Format("{0}{1}",GetFilename(searchitem),GetExtension(searchitem));
-            string tempFolder = string.Format(TempFolderFile, Path.GetTempPath(), searchitem.ID.ToString());
-            DirectoryInfo di = new DirectoryInfo(tempFolder);
-            if (!di.Exists)
-            {
-                di.Create();
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Create folder", di.FullName));
-            }
-            string tempFilename = string.Format(TempFileName, Path.GetTempPath(), searchitem.ID.ToString(), filename);
-            if (string.IsNullOrEmpty(tempFilename))
-                return null;
-            _tempFileList.Add(searchitem.ID, tempFilename);
-            return tempFilename;
+            return InternalGetTempFilename(searchitem.ID, GetFilename(searchitem), GetExtension(searchitem));
         }
 
-        public string GenerateTempFileNameWithCopy(WSUI.Infrastructure.Core.BaseSearchData searchitem, string filename)
+        public string GenerateHtmlTempFileName(Guid id)
         {
-            if (_tempFileList.ContainsKey(searchitem.ID))
-            {
-                return _tempFileList[searchitem.ID];
-            }
+            return GenerateTempFileName(id, ".html");
+        }
+
+        public string GenerateTempFileName(Guid id, string ext)
+        {
+            return InternalGetTempFilename(id, id.ToString(), ext);
+        }
+
+        private string InternalGetTempFilename(Guid id, string file, string ext)
+        {
+            string path = CheckAndGetExistTempFilepath(id);
+            if (!string.IsNullOrEmpty(path))
+                return path;
+            string filename = GetFileName(file, ext);
+            string tempFolder = CreateAndGetTempFolder(id);
+            return GetTempFilename(tempFolder, filename, id);
+        }
+
+        public string GenerateTempFileNameWithCopy(BaseSearchData searchitem, string filename)
+        {
+            string path = CheckAndGetExistTempFilepath(searchitem.ID);
+            if (!string.IsNullOrEmpty(path))
+                return path;
             string file = Path.GetFileName(filename);
-            string tempFolder = string.Format(TempFolderFile, Path.GetTempPath(), searchitem.ID.ToString());
-            DirectoryInfo di = new DirectoryInfo(tempFolder);
-            if (!di.Exists)
-            {
-                di.Create();
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Create folder", di.FullName));
-            }
-            string tempFilename = string.Format(TempFileName, Path.GetTempPath(), searchitem.ID.ToString(), file);
+            string tempFolder = CreateAndGetTempFolder(searchitem.ID);
+            string tempFilename = GetTempFilename(tempFolder, file, searchitem.ID);
             if (string.IsNullOrEmpty(tempFilename))
                 return null;
             try
@@ -98,7 +96,6 @@ namespace WSUI.Infrastructure.Service.Helpers
                 if (!File.Exists(filename))
                     throw new FileNotFoundException("File doesn't exist", filename);
                 CopyFile(filename,tempFilename);    
-                _tempFileList.Add(searchitem.ID, tempFilename);
             }
             catch (Exception ex)
             {
@@ -134,6 +131,40 @@ namespace WSUI.Infrastructure.Service.Helpers
 
         #region private 
 
+        private string CheckAndGetExistTempFilepath(Guid id)
+        {
+            if (_tempFileList.ContainsKey(id))
+            {
+                return _tempFileList[id];
+            }
+            return string.Empty;
+        }
+
+        private string GetFileName(string filename, string extension)
+        {
+            return string.Format("{0}{1}", filename, extension);
+        }
+
+        private string CreateAndGetTempFolder(Guid id)
+        {
+            string tempFolder = string.Format(TempFolderFile, Path.GetTempPath(),id.ToString());
+            DirectoryInfo di = new DirectoryInfo(tempFolder);
+            if (!di.Exists)
+            {
+                di.Create();
+                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Create folder", di.FullName));
+            }
+            return tempFolder;
+        }
+
+        private string GetTempFilename(string folder, string filename,Guid id)
+        {
+            string tempFilename = string.Format(TempFileName, folder, filename);
+            if (string.IsNullOrEmpty(tempFilename))
+                return null;
+            _tempFileList.Add(id, tempFilename);
+            return tempFilename;
+        }
 
         private void CopyFile(string source, string destination)
         {
@@ -168,7 +199,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
         }
 
-        private string GetExtension(WSUI.Infrastructure.Core.BaseSearchData searchItem)
+        private string GetExtension(BaseSearchData searchItem)
         {
             string ext = null;
             switch (searchItem.Type)
@@ -190,7 +221,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             return ext;
         }
 
-        private string GetFilename(WSUI.Infrastructure.Core.BaseSearchData searchItem)
+        private string GetFilename(BaseSearchData searchItem)
         {
             string filename = string.Empty;
             switch (searchItem.Type)

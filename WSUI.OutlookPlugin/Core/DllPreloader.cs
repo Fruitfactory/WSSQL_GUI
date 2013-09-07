@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using AddinExpress.OL;
-using WSPreview.PreviewHandler.Service.Logger;
+using WSUI.Core.Logger;
 
 namespace WSUIOutlookPlugin.Core
 {

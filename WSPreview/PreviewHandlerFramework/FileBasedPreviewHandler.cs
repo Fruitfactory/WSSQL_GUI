@@ -11,9 +11,10 @@ namespace WSPreview.PreviewHandler.PreviewHandlerFramework
     {
         private string _filePath;
 
-        void IInitializeWithFile.Initialize(string pszFilePath, uint grfMode)
+        int IInitializeWithFile.Initialize(string pszFilePath, uint grfMode)
         {
             _filePath = pszFilePath;
+            return 0;
         }
 
         protected override void Load(PreviewHandlerControl c)

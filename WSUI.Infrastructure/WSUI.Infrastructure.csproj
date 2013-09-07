@@ -86,7 +86,6 @@
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\StringToStringConverter.cs" />
-    <Compile Include="Core\BaseSearchData.cs" />
     <Compile Include="Models\CommandSearchData.cs" />
     <Compile Include="Models\ContactSearchData.cs" />
     <Compile Include="Models\EmailSearchData.cs" />
@@ -95,7 +94,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Service\Dumper\MiniDumper.cs" />
-    <Compile Include="Service\Enums\TypeSearchItem.cs" />
     <Compile Include="Service\EventArgs.cs" />
     <Compile Include="Service\ExtensionMethods.cs" />
     <Compile Include="Service\FileService.cs" />
@@ -105,7 +103,6 @@
     <Compile Include="Service\Helpers\OutlookHelper.cs" />
     <Compile Include="Service\Helpers\SearchItemHelper.cs" />
     <Compile Include="Service\Helpers\TaskFinderHelper.cs" />
-    <Compile Include="Service\Helpers\TempFileManager.cs" />
     <Compile Include="Service\Interfaces\IOutlookHelper.cs" />
     <Compile Include="Service\Rules\BaseRule.cs" />
     <Compile Include="Service\Rules\IRule.cs" />
@@ -139,6 +136,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="WSUIInfrastructure.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Service\Enums\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
-using WSPreview.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
+using WSUI.Core.Logger;
 using WSUI.Infrastructure;
 using WSUI.Module.Interface;
 using WSUI.Module.View;

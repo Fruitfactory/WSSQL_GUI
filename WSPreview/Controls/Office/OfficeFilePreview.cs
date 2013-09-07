@@ -15,7 +15,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
     [KeyControl(ControlsKey.Office)]
     public partial class OfficeFilePreview : UserControl,IPreviewControl
     {
-        private BaseOfficeWindow _window;
+        private BaseOfficePreview _officePreviewGeneratorPreview;
 
         public OfficeFilePreview()
         {
@@ -24,12 +24,15 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         public void LoadFile(string file)
         {
-            _window = OfficeWindowFactory.CreatePreviewWindow(file);
-            if (_window == null)
+            _officePreviewGeneratorPreview = OfficePreviewFactory.CreatePreviewWindow(file);
+            if (_officePreviewGeneratorPreview == null)
                 throw new Exception("Office File Preview Error");
-            _window.CreateApp();
-            _window.SetParentControl(this);
-            _window.LoadFile(file);
+            _officePreviewGeneratorPreview.CreateApp();
+            _officePreviewGeneratorPreview.LoadFile(file);
+            if (!string.IsNullOrEmpty(_officePreviewGeneratorPreview.Filename))
+            {
+                webBrowserPreview.Url = new Uri(_officePreviewGeneratorPreview.Filename);
+            }
         }
 
         public void LoadFile(Stream stream)
@@ -43,18 +46,9 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         public void Unload()
         {
-            if (_window == null)
+            if (_officePreviewGeneratorPreview == null)
                 return;
-            _window.RestoreOfficeSettings();
-            _window.UnloadApp();
-        }
-
-
-        private void OfficeFilePreview_Resize(object sender, EventArgs e)
-        {
-            if (_window == null)
-                return;
-            _window.ResizeWindow();
+            _officePreviewGeneratorPreview.UnloadApp();
         }
 
     }

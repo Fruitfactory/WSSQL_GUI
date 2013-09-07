@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Data;
 using System.Data.OleDb;
-using WSPreview.PreviewHandler.Service.Logger;
+using WSUI.Core.Core;
+using WSUI.Core.Enums;
+using WSUI.Core.Logger;
 using WSUI.Infrastructure.Models;
-using WSUI.Infrastructure.Service.Enums;
-using WSUI.Infrastructure.Core;
 using Outllok = Microsoft.Office.Interop.Outlook;
 
 namespace WSUI.Infrastructure.Service.Helpers
