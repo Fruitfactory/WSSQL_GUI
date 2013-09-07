@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <Product Id="4DC1081E-B3C1-4206-87FE-07FAC14E8F31" Name="WSUIOutlookPlugin" Language="1033" Version="1.0.13" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="56C7E250-CB3D-404A-8D38-402D01521718" Name="WSUIOutlookPlugin" Language="1033" Version="1.0.15" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="WSUIOutlookPlugin" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <Media Id="1" Cabinet="WSUI.OutlookPlugin.cab" EmbedCab="yes" />
@@ -33,8 +33,8 @@
       <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>
       <Custom Action="CloseOutlook" After="InstallInitialize">NOT Installed OR Installed</Custom>
       <Custom Action="SuccesMessage" OnExit="success">NOT Installed OR Installed</Custom>
-      <Custom Action="CancelMessage" OnExit="cancel">NOT Installed OR Installed</Custom>
-      <Custom Action="ErrorMessage" OnExit="error">NOT Installed OR Installed</Custom>
+      <!-- <Custom Action="CancelMessage" OnExit="cancel">NOT Installed OR Installed</Custom>
+      <Custom Action="ErrorMessage" OnExit="error">NOT Installed OR Installed</Custom> -->
       <Custom Action="OpenOutlook" After="InstallFinalize">NOT Installed OR Installed</Custom>
     </InstallExecuteSequence>
     <!-- Properties for all current versions of the .NET Framework are available here: http://wix.sourceforge.net/manual-wix3/wixnetfxextension.htm -->
