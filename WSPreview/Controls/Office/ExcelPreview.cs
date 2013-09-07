@@ -19,12 +19,13 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
 		public override void UnloadApp()
 		{
-            base.UnloadApp();
+            
             if (_app != null)
             {
                 _app.Quit();
                 Marshal.ReleaseComObject(_app);
             }
+            base.UnloadApp();
 		}
 
 	    public override void LoadFile(string filename)
