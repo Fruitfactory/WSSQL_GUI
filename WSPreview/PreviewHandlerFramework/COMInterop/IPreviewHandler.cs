@@ -12,7 +12,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerFramework
     [Guid("8895b1c6-b41f-4c1c-a562-0d564250836f")]
     public interface IPreviewHandler
     {
-        void SetWindow(IntPtr hwnd, ref RECT rect);
+        int SetWindow(IntPtr hwnd, ref RECT rect);
         void SetRect(ref RECT rect);
         void DoPreview();
         void Unload();

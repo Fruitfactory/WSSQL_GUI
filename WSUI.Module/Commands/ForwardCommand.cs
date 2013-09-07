@@ -1,9 +1,9 @@
+using WSUI.Core.Enums;
+using WSUI.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
-using WSUI.Infrastructure.Service.Enums;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Infrastructure.Service.Helpers;
-using WSPreview.PreviewHandler.Service.Logger;
 using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands

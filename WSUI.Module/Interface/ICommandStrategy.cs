@@ -1,5 +1,5 @@
 using System.Collections.ObjectModel;
-using WSUI.Infrastructure.Service.Enums;
+using WSUI.Core.Enums;
 
 namespace WSUI.Module.Interface
 {

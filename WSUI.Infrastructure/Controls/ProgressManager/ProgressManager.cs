@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Threading;
-using WSPreview.PreviewHandler.Service.Logger;
+using WSUI.Core.Logger;
+
 
 namespace WSUI.Infrastructure.Controls.ProgressManager
 {

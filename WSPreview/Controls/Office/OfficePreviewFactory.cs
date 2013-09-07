@@ -5,18 +5,19 @@ using System.IO;
 
 namespace WSPreview.PreviewHandler.Controls.Office
 {
-	public class OfficeWindowFactory
+	public class OfficePreviewFactory
 	{
-		public static BaseOfficeWindow CreatePreviewWindow(string filename)
+		public static BaseOfficePreview CreatePreviewWindow(string filename)
 		{
             string ext = Path.GetExtension(filename).ToLower();
             switch(ext)
             {
                 case ".doc":
                 case ".docx":
-                    return new WordWindow();
+                    return new WordPreview();
                 case ".xls":
-                    return new ExcelWindow();
+                case ".xlsx":
+                    return new ExcelPreview();
                 default:
                     return null;
             }

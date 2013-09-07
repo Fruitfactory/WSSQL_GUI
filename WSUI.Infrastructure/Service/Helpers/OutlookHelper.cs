@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using WSUI.Core.Core;
 using WSUI.Core.Enums;
+using WSUI.Core.Helpers;
+using WSUI.Core.Logger;
 using WSUI.Infrastructure.Service.Interfaces;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using WSPreview.PreviewHandler.Service.Logger;
-using WSUI.Infrastructure.Core;
+
+
 using WSUI.Infrastructure.Models;
 
 
@@ -113,7 +116,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             return tempFilename;
         }
 
-        public string GetAttachmentTempFileName(WSUI.Infrastructure.Core.BaseSearchData item)
+        public string GetAttachmentTempFileName(BaseSearchData item)
         {
             if (item == null)
                 return null;

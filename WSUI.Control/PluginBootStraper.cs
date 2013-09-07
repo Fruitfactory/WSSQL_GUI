@@ -2,13 +2,13 @@
 using System.Diagnostics;
 using System.Windows;
 using WSPreview.PreviewHandler.Service;
-using WSPreview.PreviewHandler.Service.Logger;
 using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Interfaces;
+using WSUI.Core.Logger;
 using WSUI.Module.Interface;
 
 namespace WSUI.Control

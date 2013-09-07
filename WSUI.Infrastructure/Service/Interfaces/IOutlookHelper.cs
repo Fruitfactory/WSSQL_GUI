@@ -1,10 +1,12 @@
 ﻿
+using WSUI.Core.Core;
+
 namespace WSUI.Infrastructure.Service.Interfaces
 {
     interface IOutlookHelper
     {
-        string GetEMailTempFileName(WSUI.Infrastructure.Core.BaseSearchData itemsearch);
+        string GetEMailTempFileName(BaseSearchData itemsearch);
 
-        string GetAttachmentTempFileName(WSUI.Infrastructure.Core.BaseSearchData itemsearch);
+        string GetAttachmentTempFileName(BaseSearchData itemsearch);
     }
 }

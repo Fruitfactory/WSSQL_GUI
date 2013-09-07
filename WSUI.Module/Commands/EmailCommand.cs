@@ -1,11 +1,12 @@
 using System;
 using System.IO;
 using System.Windows;
-using WSUI.Infrastructure.Service.Enums;
+using WSUI.Core.Enums;
+using WSUI.Core.Helpers;
+using WSUI.Core.Logger;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
-using WSPreview.PreviewHandler.Service.Logger;
 using WSUI.Module.Service;
 using WSUI.Module.Service.Dialogs.Message;
 

@@ -1,6 +1,7 @@
 ﻿using System.IO;
-using WSUI.Infrastructure.Service.Enums;
-using WSUI.Infrastructure.Core;
+using WSUI.Core.Core;
+using WSUI.Core.Enums;
+using WSUI.Core.Helpers;
 
 namespace WSUI.Infrastructure.Service.Helpers
 {

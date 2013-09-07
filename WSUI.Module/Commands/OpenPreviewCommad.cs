@@ -1,8 +1,9 @@
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using WSPreview.PreviewHandler.Service.Logger;
-using WSUI.Infrastructure.Service.Enums;
+using WSUI.Core.Enums;
+using WSUI.Core.Helpers;
+using WSUI.Core.Logger;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
 using WSUI.Module.Core;

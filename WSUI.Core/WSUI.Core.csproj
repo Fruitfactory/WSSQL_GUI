@@ -37,6 +37,12 @@
     <AssemblyOriginatorKeyFile>WSUI.Core.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\Toolkits\Log4Net\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Toolkits\Prism\Microsoft.Practices.Prism.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,15 +55,20 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Core\BaseSearchData.cs" />
     <Compile Include="Data\WSAction.cs" />
     <Compile Include="Enums\HostType.cs" />
+    <Compile Include="Enums\TypeSearchItem.cs" />
     <Compile Include="Enums\WSActionType.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helpers\RegistryHelper.cs" />
+    <Compile Include="Helpers\TempFileManager.cs" />
     <Compile Include="Interfaces\IWSAction.cs" />
+    <Compile Include="Logger\WSSqlLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="log4net.config" />
     <None Include="WSUI.Core.snk" />
   </ItemGroup>
   <ItemGroup />

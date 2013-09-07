@@ -10,7 +10,7 @@ using System.Reflection;
 using System.IO;
 
 
-namespace WSPreview.PreviewHandler.Service.Logger
+namespace WSUI.Core.Logger
 {
     public class WSSqlLogger : ILoggerFacade
     {
