@@ -33,11 +33,11 @@ namespace WSUI.Module.Service
                 if (arr == null || arr.Count == 1)
                 {
                     var where1 = string.Format(QueryContactWhere, arr[0], "", ")");
-                    return string.Format("{0}{1}", QueryTemplate, where1) + string.Format(QueryByAddress, arr[0]);
+                    return string.Format("{0}{1}", queryContactTemplate, where1) + string.Format(QueryByAddress, arr[0]);
                 }
                 var address = new StringBuilder(string.Format(QueryByAddress, arr[0]));
                 var where2 = string.Format(QueryContactWhere, arr[0], "(", "");
-                res += QueryTemplate + where2;
+                res += queryContactTemplate + where2;
                 for (int i = 1; i < arr.Count; i++)
                 {
                     strBuilder.Append(string.Format(QueryAnd, arr[i]));

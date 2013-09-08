@@ -201,7 +201,14 @@ namespace WSUI.CA
             ActionResult result = ActionResult.Success;
             try
             {
-                MessageBox.Show("Update was successful.\nOutlook will be opened soon.");
+                Record rec = new Record();
+                rec.FormatString = "Update was successful.";
+                if (RegistryHelper.Instance.IsOutlookClosedByInstaller())
+                {
+                    rec.FormatString += "\nOutlook will be opened soon.";
+                }
+                session.Message(InstallMessage.User | InstallMessage.Info | (InstallMessage)(MessageBoxIcon.Information) | (InstallMessage)MessageBoxButtons.OK, rec);
+                OpenOutlook(session);
             }
             catch (Exception)
             {
@@ -219,7 +226,9 @@ namespace WSUI.CA
             ActionResult result = ActionResult.Success;
             try
             {
-                MessageBox.Show("Update was finished with error.\nPlease, see log.");
+                Record rec = new Record();
+                rec.FormatString = "Update was finished with error.\nPlease, see log.";
+                session.Message(InstallMessage.User | InstallMessage.Error | (InstallMessage)(MessageBoxIcon.Error) | (InstallMessage)MessageBoxButtons.OK, rec);
             }
             catch (Exception)
             {
@@ -237,7 +246,9 @@ namespace WSUI.CA
             ActionResult result = ActionResult.Success;
             try
             {
-                MessageBox.Show("Update was canceled by user.");
+                Record rec = new Record();
+                rec.FormatString = "Update was canceled by user.";
+                session.Message(InstallMessage.User | InstallMessage.Info | (InstallMessage)(MessageBoxIcon.Warning) | (InstallMessage)MessageBoxButtons.OK, rec);
             }
             catch (Exception)
             {
