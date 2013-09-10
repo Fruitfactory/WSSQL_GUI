@@ -15,7 +15,7 @@ using WSPreview.PreviewHandler.Service.OutlookPreview;
 namespace WSPreview.PreviewHandler.Controls.Office
 {
     [KeyControl(ControlsKey.Outlook)]
-    public partial class OutlookFilePreview : ExtWebBrowser,IPreviewControl //UserControl, IPreviewControl
+    public partial class OutlookFilePreview : ExtWebBrowser,IPreviewControl
     {
 
         private string _hitString;
@@ -23,9 +23,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         public OutlookFilePreview()
         {
-            //InitializeComponent();
             BeforeNavigate += WebEmailOnBeforeNavigate;
-            //ContextMenu = outlookPreviewContextMenu.ContextMenu;
         }
 
         #region public
@@ -75,10 +73,6 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         public void Clear()
         {
-            //if (webEmail != null)
-            //{
-            //    webEmail.DocumentText = string.Empty;
-            //}
             DocumentText = string.Empty;
             Unload();
         }
@@ -103,17 +97,6 @@ namespace WSPreview.PreviewHandler.Controls.Office
                 }
             }
         }
-
-        public void ShowContextMenu(IWSAction action)
-        {
-            if (outlookPreviewContextMenu == null || !this.Visible)
-                return;
-
-            outlookPreviewContextMenu.Show(this,this.PointToClient((Point)action.Data));
-        }
-
-
-
 
         private void WebEmailOnBeforeNavigate(object sender, WebBrowserNavigatingEventArgs args)
         {
@@ -147,11 +130,6 @@ namespace WSPreview.PreviewHandler.Controls.Office
             {
                 WSSqlLogger.Instance.LogInfo("Path is empty. Outlook Preview");
             }
-        }
-
-        private void copyMenuItem_Click(object sender, EventArgs e)
-        {
-            CopySelectedText();
         }
 
     }

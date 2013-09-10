@@ -72,9 +72,6 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
                     case WSActionType.Copy:
                         _preview.CopySelectedText();
                         break;
-                    case WSActionType.ShowContextMenu:
-                        _preview.ShowContextMenu(action);
-                        break;
                 }
             }
 
