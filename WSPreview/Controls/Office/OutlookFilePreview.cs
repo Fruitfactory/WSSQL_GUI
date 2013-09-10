@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using WSPreview.PreviewHandler.Controls.Office.WebUtils;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using mshtml;
@@ -12,7 +15,7 @@ using WSPreview.PreviewHandler.Service.OutlookPreview;
 namespace WSPreview.PreviewHandler.Controls.Office
 {
     [KeyControl(ControlsKey.Outlook)]
-    public partial class OutlookFilePreview : UserControl,IPreviewControl
+    public partial class OutlookFilePreview : ExtWebBrowser,IPreviewControl //UserControl, IPreviewControl
     {
 
         private string _hitString;
@@ -20,20 +23,21 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         public OutlookFilePreview()
         {
-            InitializeComponent();
-            webEmail.BeforeNavigate += WebEmailOnBeforeNavigate;
+            //InitializeComponent();
+            BeforeNavigate += WebEmailOnBeforeNavigate;
+            //ContextMenu = outlookPreviewContextMenu.ContextMenu;
         }
 
-        #region public 
+        #region public
 
-        public string HitString 
-        { 
-            get{return _hitString;}
-            set 
-            { 
+        public string HitString
+        {
+            get { return _hitString; }
+            set
+            {
                 _hitString = value;
                 OutlookPreviewHelper.Instance.HitString = value;
-            } 
+            }
         }
 
         public void LoadFile(string filename)
@@ -51,7 +55,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
             if (mail is Outlook.MailItem)
             {
-                page = OutlookPreviewHelper.Instance.GetPreviewForEmail(mail as Outlook.MailItem,filename);
+                page = OutlookPreviewHelper.Instance.GetPreviewForEmail(mail as Outlook.MailItem, filename);
             }
             else if (mail is Outlook.AppointmentItem)
             {
@@ -61,7 +65,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
             {
                 page = OutlookPreviewHelper.Instance.GetPreviewForMeeting(mail as Outlook.MeetingItem, filename);
             }
-            webEmail.DocumentText = page;
+            DocumentText = page;
             Marshal.ReleaseComObject(mail);
         }
 
@@ -71,10 +75,11 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         public void Clear()
         {
-            if (webEmail != null)
-            {
-                webEmail.DocumentText = string.Empty;
-            }
+            //if (webEmail != null)
+            //{
+            //    webEmail.DocumentText = string.Empty;
+            //}
+            DocumentText = string.Empty;
             Unload();
         }
 
@@ -87,17 +92,28 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         public void CopySelectedText()
         {
-            IHTMLDocument2 htmlDocument = webEmail.Document.DomDocument as IHTMLDocument2;
+            IHTMLDocument2 htmlDocument = Document.DomDocument as IHTMLDocument2;
             IHTMLSelectionObject currentSelection = htmlDocument.selection;
             if (currentSelection != null)
             {
                 IHTMLTxtRange range = currentSelection.createRange() as IHTMLTxtRange;
-                if (range != null && range.text  != null)
+                if (range != null && range.text != null)
                 {
                     Clipboard.SetText(range.text);
                 }
             }
         }
+
+        public void ShowContextMenu(IWSAction action)
+        {
+            if (outlookPreviewContextMenu == null || !this.Visible)
+                return;
+
+            outlookPreviewContextMenu.Show(this,this.PointToClient((Point)action.Data));
+        }
+
+
+
 
         private void WebEmailOnBeforeNavigate(object sender, WebBrowserNavigatingEventArgs args)
         {
@@ -111,7 +127,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
                     break;
                 case "about":
                 case "re":
-                    path = OutlookPreviewHelper.Instance.GetPathForEmail(args.Url,_fileName);
+                    path = OutlookPreviewHelper.Instance.GetPathForEmail(args.Url, _fileName);
                     break;
             }
 
@@ -131,6 +147,11 @@ namespace WSPreview.PreviewHandler.Controls.Office
             {
                 WSSqlLogger.Instance.LogInfo("Path is empty. Outlook Preview");
             }
+        }
+
+        private void copyMenuItem_Click(object sender, EventArgs e)
+        {
+            CopySelectedText();
         }
 
     }

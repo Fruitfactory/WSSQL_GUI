@@ -340,6 +340,7 @@ namespace WSUI.Module.ViewModel
                 case WSActionType.Copy:
                 case WSActionType.Cut:
                 case WSActionType.Paste:
+                case WSActionType.ShowContextMenu:
                     PreviewView.PassActionForPreview(action);
                 break;
                 case WSActionType.Search:

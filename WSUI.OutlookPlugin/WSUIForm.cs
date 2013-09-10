@@ -19,7 +19,8 @@ namespace WSUIOutlookPlugin
 
         public WSUIForm()
         {
-            if (!Process.GetCurrentProcess().ProcessName.Equals("MSBuild", StringComparison.InvariantCultureIgnoreCase)) // recommendation from Add-In Express team
+            if (!Process.GetCurrentProcess().ProcessName.Equals("MSBuild", StringComparison.InvariantCultureIgnoreCase))
+                // recommendation from Add-In Express team
             {
                 InitializeComponent();
                 HookManager.KeyDown += HookManagerOnKeyDown;
@@ -36,15 +37,16 @@ namespace WSUIOutlookPlugin
 
         private void HookManagerOnKeyDown(object sender, KeyEventArgs keyEventArgs)
         {
-            if (keyEventArgs != null && (Control.ModifierKeys & Keys.Control) == Keys.Control && keyEventArgs.KeyCode == Keys.C && Visible && _wsuiBootStraper != null)
+            if (keyEventArgs != null && (Control.ModifierKeys & Keys.Control) == Keys.Control &&
+                keyEventArgs.KeyCode == Keys.C && Visible && _wsuiBootStraper != null)
             {
-                _wsuiBootStraper.PassAction(new WSAction(WSActionType.Copy,null));
+                _wsuiBootStraper.PassAction(new WSAction(WSActionType.Copy, null));
             }
         }
 
         protected override void OnLoad(EventArgs e)
         {
-            if(_isDebugMode)
+            if (_isDebugMode)
                 return;
             base.OnLoad(e);
             SetBootStraper(WSUIAddinModule.CurrentInstance.BootStraper);
@@ -58,7 +60,7 @@ namespace WSUIOutlookPlugin
             if (el != null)
             {
                 wpfHost.Child = _wsuiBootStraper.View as UIElement;
-            }    
+            }
         }
 
         private void OnAdxAfterFormHide(object sender, ADXAfterFormHideEventArgs adxAfterFormHideEventArgs)

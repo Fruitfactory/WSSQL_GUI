@@ -18,7 +18,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
     [Guid("326A2452-981E-403B-9921-911011E677E6")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
-    public sealed class OutlookPreviewHandler : FileBasedPreviewHandler,ISearchWordHighlight,ITranslateMessage
+    public sealed class OutlookPreviewHandler : FileBasedPreviewHandler, ISearchWordHighlight, ITranslateMessage
     {
 
         protected override PreviewHandlerControl CreatePreviewHandlerControl()
@@ -26,7 +26,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
             return new OutlookPreviewHandlerControl(this);
         }
 
-        public sealed class OutlookPreviewHandlerControl : FileBasedPreviewHandlerControl,ITranslateMessage
+        public sealed class OutlookPreviewHandlerControl : FileBasedPreviewHandlerControl, ITranslateMessage
         {
             private OutlookFilePreview _preview;
             private OutlookPreviewHandler _parent;
@@ -53,9 +53,9 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
             protected override Control GetPreviewControl()
             {
                 Control ctrl = base.GetPreviewControl();
-                if(ctrl is OutlookFilePreview)
+                if (ctrl is OutlookFilePreview)
                 {
-                    _preview = (OutlookFilePreview) ctrl;
+                    _preview = (OutlookFilePreview)ctrl;
                 }
                 return ctrl;
             }
@@ -72,6 +72,9 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
                     case WSActionType.Copy:
                         _preview.CopySelectedText();
                         break;
+                    case WSActionType.ShowContextMenu:
+                        _preview.ShowContextMenu(action);
+                        break;
                 }
             }
 
@@ -79,12 +82,13 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
 
         public string HitString
         {
-            get; set;
+            get;
+            set;
         }
 
         public void PassMessage(IWSAction action)
         {
-            if(_previewControl == null)
+            if (_previewControl == null)
                 return;
             ((OutlookPreviewHandlerControl)_previewControl).PassMessage(action);
         }

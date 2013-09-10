@@ -1,8 +1,11 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using WSUI.Core.Logger;
 
 namespace WSUIOutlookPlugin.Hooks
 {
@@ -217,14 +220,15 @@ namespace WSUIOutlookPlugin.Hooks
             if (s_MouseHookHandle == 0)
             {
                 //See comment of this field. To avoid GC to clean it up.
+                IntPtr handle = GetOutlookApplication();
                 s_MouseDelegate = MouseHookProc;
                 //install hook
                 s_MouseHookHandle = SetWindowsHookEx(
                     WH_MOUSE_LL,
                     s_MouseDelegate,
-                    Marshal.GetHINSTANCE(
-                        Assembly.GetExecutingAssembly().GetModules()[0]),
-                    0);
+                    Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]),
+                    0); 
+                //Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0])
                 //If SetWindowsHookEx fails.
                 if (s_MouseHookHandle == 0)
                 {
@@ -437,5 +441,12 @@ namespace WSUIOutlookPlugin.Hooks
 
         #endregion
 
+
+        private static IntPtr GetOutlookApplication()
+        {
+            const string OutlookProcessName = "OUTLOOK";
+            var outlook = Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith(OutlookProcessName));
+            return outlook.Any() ? outlook.First().Handle : IntPtr.Zero;
+        }
     }
 }

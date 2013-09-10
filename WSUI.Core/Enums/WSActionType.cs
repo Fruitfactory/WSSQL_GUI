@@ -5,6 +5,7 @@
         Copy,
         Cut,
         Paste,
-        Search
+        Search,
+        ShowContextMenu
     }
 }

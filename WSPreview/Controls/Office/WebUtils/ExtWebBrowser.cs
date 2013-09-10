@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
+using WSUI.Core.Logger;
 
 namespace WSPreview.PreviewHandler.Controls.Office.WebUtils
 {

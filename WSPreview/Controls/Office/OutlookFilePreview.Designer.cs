@@ -31,8 +31,26 @@ namespace WSPreview.PreviewHandler.Controls.Office
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.outlookPreviewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.webEmail = new WSPreview.PreviewHandler.Controls.Office.WebUtils.ExtWebBrowser();
+            this.outlookPreviewContextMenu.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // outlookPreviewContextMenu
+            // 
+            this.outlookPreviewContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyMenuItem});
+            this.outlookPreviewContextMenu.Name = "outlookPreviewContextMenu";
+            this.outlookPreviewContextMenu.Size = new System.Drawing.Size(153, 48);
+            // 
+            // copyMenuItem
+            // 
+            this.copyMenuItem.Name = "copyMenuItem";
+            this.copyMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.copyMenuItem.Text = "Copy";
+            this.copyMenuItem.Click += new System.EventHandler(this.copyMenuItem_Click);
             // 
             // webEmail
             // 
@@ -47,14 +65,16 @@ namespace WSPreview.PreviewHandler.Controls.Office
             // 
             // OutlookFilePreview
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoScroll = true;
+            //this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            //this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            //this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.White;
+            this.ContextMenuStrip = this.outlookPreviewContextMenu;
             this.Controls.Add(this.webEmail);
             this.DoubleBuffered = true;
             this.Name = "OutlookFilePreview";
             this.Size = new System.Drawing.Size(623, 452);
+            this.outlookPreviewContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -62,6 +82,8 @@ namespace WSPreview.PreviewHandler.Controls.Office
         #endregion
 
         private ExtWebBrowser webEmail;
+        private ContextMenuStrip outlookPreviewContextMenu;
+        private ToolStripMenuItem copyMenuItem;
 
     }
 }
