@@ -15,7 +15,7 @@ using WSPreview.PreviewHandler.PreviewHandlerFramework;
 namespace WSPreview.PreviewHandler.Controls.Calendar
 {
     [KeyControl(ControlsKey.Calendar)]
-    public partial class CalendarIcsPreview : UserControl, IPreviewControl
+    public partial class CalendarIcsPreview : WebBrowser,IPreviewControl
     {
 
         private const string AfterStrongTemplate = "<font style='background-color: yellow'><strong>{0}</strong></font>";
@@ -42,7 +42,6 @@ namespace WSPreview.PreviewHandler.Controls.Calendar
 
         public CalendarIcsPreview()
         {
-            InitializeComponent();
         }
 
 
@@ -59,7 +58,7 @@ namespace WSPreview.PreviewHandler.Controls.Calendar
                 string content = file.ReadToEnd();
                 FileIcsProperty obj = new FileIcsProperty();
                 ParserIcs.ParseContent(content,obj);
-                browserIcs.DocumentText = GeneratePreview(obj);
+                DocumentText = GeneratePreview(obj);
             }
             catch (Exception ex)
             {
@@ -78,10 +77,7 @@ namespace WSPreview.PreviewHandler.Controls.Calendar
 
         public void Clear()
         {
-            if (browserIcs != null)
-            {
-                browserIcs.DocumentText = string.Empty;
-            }
+            DocumentText = string.Empty;
         }
 
         private string GeneratePreview(FileIcsProperty obj)

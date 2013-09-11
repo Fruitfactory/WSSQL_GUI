@@ -1,0 +1,33 @@
+﻿using System;
+using System.Runtime.InteropServices;
+
+namespace WSUI.Core.Win32
+{
+    public static class WindowsFunction
+    {
+        #region [struct]
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT
+        {
+            public int Left;        // x position of upper-left corner
+            public int Top;         // y position of upper-left corner
+            public int Right;       // x position of lower-right corner
+            public int Bottom;      // y position of lower-right corner
+        }
+
+        #endregion
+
+        #region [function]
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
+
+        #endregion
+
+    }
+}

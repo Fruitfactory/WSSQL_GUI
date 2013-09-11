@@ -15,6 +15,7 @@ using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
+using WSUI.Core.Win32;
 using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
@@ -302,10 +303,33 @@ namespace WSUI.Module.ViewModel
                         pt = new Point(formsCollection[0].DesktopLocation.X,formsCollection[0].DesktopLocation.Y);
                         sz = new Size(formsCollection[0].DesktopBounds.Width, formsCollection[0].DesktopBounds.Height);                    
                     }
+                    else
+                    {
+                        return GetForegroundWindowInfo();
+                    }
                     break;
             }
             
             return new Tuple<Point, Size>(pt,sz);
+        }
+
+        private Tuple<Point, Size> GetForegroundWindowInfo()
+        {
+            try
+            {
+                var hwnd = WindowsFunction.GetForegroundWindow();
+                WindowsFunction.RECT rect;
+                WindowsFunction.GetWindowRect(hwnd, out rect);
+                Point pt = new Point(rect.Left,rect.Top);
+                Size sz = new Size(rect.Right - rect.Left,rect.Bottom - rect.Top);
+                return new Tuple<Point, Size>(pt,sz);
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+                return null;
+            }
+            return null;
         }
 
         #endregion
