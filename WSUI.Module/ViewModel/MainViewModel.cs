@@ -308,6 +308,8 @@ namespace WSUI.Module.ViewModel
                         return GetForegroundWindowInfo();
                     }
                     break;
+                default:
+                    return GetForegroundWindowInfo();
             }
             
             return new Tuple<Point, Size>(pt,sz);

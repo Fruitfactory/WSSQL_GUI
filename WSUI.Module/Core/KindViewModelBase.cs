@@ -30,6 +30,7 @@ using WSUI.Module.Service;
 using Application = System.Windows.Application;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using WSUI.Module.Service.Dialogs.Message;
+using WSUI.Core.Win32;
 
 namespace WSUI.Module.Core
 {
@@ -566,24 +567,59 @@ namespace WSUI.Module.Core
                 case HostType.Application:
                     rect.Location = Application.Current.MainWindow.PointToScreen(new Point(0, 0));
                     rect.Size = new Size(Application.Current.MainWindow.ActualWidth, Application.Current.MainWindow.ActualHeight);
+                    mwi.MainWindowRect = rect;
                     mwi.MainWindowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
                     break;
                 case HostType.Plugin:
                     FormCollection formsCollection = System.Windows.Forms.Application.OpenForms;
                     if (formsCollection.Count > 0)
                     {
-                        rect = new Rect(formsCollection[0].DesktopLocation.X, formsCollection[0].DesktopLocation.Y,
+                        mwi.MainWindowRect = new Rect(formsCollection[0].DesktopLocation.X, formsCollection[0].DesktopLocation.Y,
                             formsCollection[0].DesktopBounds.Size.Width, formsCollection[0].DesktopBounds.Size.Height);
                         mwi.MainWindowHandle = formsCollection[0].Handle;
                     }
-                    int i = 0;
+                    else
+                    {
+                        ApplyMainWindowInfo(mwi);
+                    }
                     break;
-            }
-            mwi.MainWindowRect = rect;
+                default:
+                    ApplyMainWindowInfo(mwi);
+                    break;
 
+            }
 
             return mwi;
         }
+
+        private Tuple<IntPtr,Rect> GetForegroundWindowInfo()
+        {
+            try
+            {
+                var hwnd = WindowsFunction.GetForegroundWindow();
+                WindowsFunction.RECT rect;
+                WindowsFunction.GetWindowRect(hwnd, out rect);
+                Point pt = new Point(rect.Left, rect.Top);
+                Size sz = new Size(rect.Right - rect.Left, rect.Bottom - rect.Top);
+                return new Tuple<IntPtr, Rect>(hwnd, new Rect(pt, sz));
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+                return null;
+            }
+            return null;
+        }
+
+        private void ApplyMainWindowInfo(MainWindowInfo info)
+        {
+            var result = GetForegroundWindowInfo();
+            if (result == null)
+                return;
+            info.MainWindowHandle = result.Item1;
+            info.MainWindowRect = result.Item2;
+        }
+
 
     }
 }
