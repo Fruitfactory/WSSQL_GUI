@@ -71,21 +71,19 @@ namespace WSUI.Infrastructure.Controls.BusyControl
                 {
                     var app = System.Windows.Application.Current as AppEmpty;
                     FrameworkElement element = app.MainControl as FrameworkElement;
-                    var topleft = GetScreenLocation((UserControl)element,new Point(0,0));
-
-                    _indicator.SetValue(Canvas.LeftProperty, topleft.X);
-                    _indicator.SetValue(Canvas.TopProperty, topleft.Y);
-                    _indicator.Width = app.MainControl.ActualWidth;
-                    _indicator.Height = app.MainControl.ActualHeight;
-
-                    System.Diagnostics.Debug.WriteLine("X={0},Y={1},W={2},H={3}",topleft.X,topleft.Y,_indicator.Width,_indicator.Height);
-
-                    var horizontalOffset = topleft.X;
-                    var verticalOffset = topleft.Y;
-                    if (_popup.HorizontalOffset != horizontalOffset) _popup.HorizontalOffset = horizontalOffset;
-                    if (_popup.VerticalOffset != verticalOffset) _popup.VerticalOffset = verticalOffset;
+                    var topleft = GetScreenLocation((UserControl)element, new Point(0, 0));
+                    ApplyPositionAndSize(topleft, (int)app.MainControl.ActualWidth,(int)app.MainControl.ActualHeight);
+                   
                 }
-
+                else
+                {
+                    var app = System.Windows.Application.Current;
+                    var hwnd = WindowsFunction.GetForegroundWindow();
+                    WindowsFunction.RECT rect;
+                    WindowsFunction.GetWindowRect(hwnd, out rect);
+                    var topleft = new Point(rect.Left,rect.Top);
+                    ApplyPositionAndSize(topleft, (int)app.MainWindow.ActualWidth, (int)app.MainWindow.ActualHeight);
+                }
             }
             catch (Exception)
             {
@@ -97,6 +95,21 @@ namespace WSUI.Infrastructure.Controls.BusyControl
         {
             return WindowsFunction.TransformToScreen(pt, ctrl);
         }
+
+        private void ApplyPositionAndSize(Point pt, int width, int height)
+        {
+            _indicator.SetValue(Canvas.LeftProperty, pt.X);
+            _indicator.SetValue(Canvas.TopProperty, pt.Y);
+            _indicator.Width = width;
+            _indicator.Height = height;
+
+            var horizontalOffset = pt.X;
+            var verticalOffset = pt.Y;
+            if (_popup.HorizontalOffset != horizontalOffset) _popup.HorizontalOffset = horizontalOffset;
+            if (_popup.VerticalOffset != verticalOffset) _popup.VerticalOffset = verticalOffset;
+
+        }
+
 
     }
 }

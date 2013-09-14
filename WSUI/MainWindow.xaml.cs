@@ -15,7 +15,6 @@ using System.Windows.Shapes;
 using MahApps.Metro;
 using MahApps.Metro.Controls;
 using WSUI.Module.Interface;
-using WSUI.Infrastructure.Controls.ProgressAdorner;
 
 namespace WSUI
 {
