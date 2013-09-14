@@ -20,6 +20,7 @@ using WSUI.Core.Core;
 using WSUI.Core.Enums;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Attributes;
+using WSUI.Infrastructure.Controls.BusyControl;
 using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Service.Rules;
@@ -275,10 +276,7 @@ namespace WSUI.Module.Core
             //Enabled = true;
             OnPropertyChanged(() => Enabled);
             FireComplete(res);
-            if (ProgressManager.Instance.InProgress)
-            {
-                ProgressManager.Instance.StopOperation();
-            }
+            Application.Current.Dispatcher.BeginInvoke(new Action(() => BusyPopupAdorner.Instance.IsBusy = false), null);
         }
 
         protected virtual void OnError(bool res)
@@ -330,15 +328,8 @@ namespace WSUI.Module.Core
             thread.Start();
             _eventForContinue.Reset();
             thread2.Start();
-            ProgressManager.Instance.StartOperation(new ProgressOperation()
-            {
-                Caption = "Searching...",
-                DelayTime = 2500,
-                Canceled = false,
-                Location = new Point(mwi.MainWindowRect.Left, mwi.MainWindowRect.Top),
-                Size = new Size(mwi.MainWindowRect.Width, mwi.MainWindowRect.Height),
-                MainHandle = mwi.MainWindowHandle
-            });
+            BusyPopupAdorner.Instance.Message = "Searching...";
+            BusyPopupAdorner.Instance.IsBusy = true;
         }
 
         protected virtual bool CanSearch()

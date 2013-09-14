@@ -70,6 +70,12 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Attributes\FieldIndexAttribute.cs" />
+    <Compile Include="Controls\Application\AppEmpty.cs" />
+    <Compile Include="Controls\BusyControl\BusyIndicator.xaml.cs">
+      <DependentUpon>BusyIndicator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BusyControl\BusyPopupAdorner.cs" />
+    <Compile Include="Controls\BusyControl\IBusyPopupAdorner.cs" />
     <Compile Include="Controls\HightliteHyperlink.xaml.cs">
       <DependentUpon>HightliteHyperlink.xaml</DependentUpon>
     </Compile>
@@ -77,7 +83,6 @@
       <DependentUpon>HightliteTextBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\HightliteTextBlockBase.cs" />
-    <Compile Include="Controls\ProgressAdorner\ProgressAdorner.cs" />
     <Compile Include="Controls\ProgressManager\IProgressForm.cs" />
     <Compile Include="Controls\ProgressManager\IProgressManager.cs" />
     <Compile Include="Controls\ProgressManager\ProgressManager.cs" />
@@ -121,6 +126,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\BusyControl\BusyIndicator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\HightliteHyperlink.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

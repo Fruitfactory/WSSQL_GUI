@@ -16,6 +16,7 @@ using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Core.Win32;
+using WSUI.Infrastructure.Controls.BusyControl;
 using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
@@ -204,14 +205,8 @@ namespace WSUI.Module.ViewModel
             try
             {
                 Tuple<Point, Size> mwi = GetMainWindowInfo();
-                ProgressManager.Instance.StartOperation(new ProgressOperation()
-                                                            {
-                                                                Caption = "Loading...",
-                                                                DelayTime = 250,
-                                                                Canceled = false,
-                                                                Location =  mwi.Item1,
-                                                                Size = mwi.Item2
-                                                            });
+                BusyPopupAdorner.Instance.Message = "Loading...";
+                BusyPopupAdorner.Instance.IsBusy = true;
                 var filename = SearchItemHelper.GetFileName(_currentData);
                 if (PreviewView != null)
                 {
@@ -233,10 +228,7 @@ namespace WSUI.Module.ViewModel
             }
             finally
             {
-                if (ProgressManager.Instance.InProgress)
-                {
-                    ProgressManager.Instance.StopOperation();
-                }
+                BusyPopupAdorner.Instance.IsBusy = false;
             }
         }
 

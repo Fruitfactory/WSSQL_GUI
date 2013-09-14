@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using System.Windows.Controls;
 using System.Windows.Documents.DocumentStructures;
 using System.Windows.Forms;
 using AddinExpress.MSO;
@@ -22,6 +23,7 @@ using System.Diagnostics;
 using AddinExpress.OL;
 using WSUIOutlookPlugin.Core;
 using ADXOlExplorerItemTypes = AddinExpress.OL.ADXOlExplorerItemTypes;
+using WSUI.Infrastructure.Controls.Application;
 
 namespace WSUIOutlookPlugin
 {
@@ -391,6 +393,7 @@ namespace WSUIOutlookPlugin
             DllPreloader.Instance.PreloadDll();
             _wsuiBootStraper = new PluginBootStraper();
             _wsuiBootStraper.Run();
+            ((AppEmpty) System.Windows.Application.Current).MainControl = (System.Windows.Controls.UserControl)_wsuiBootStraper.View;
         }
 
 

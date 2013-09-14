@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace WSUI.Core.Win32
 {
@@ -16,6 +19,15 @@ namespace WSUI.Core.Win32
             public int Bottom;      // y position of lower-right corner
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+
+        public class POINT
+        {
+            public int x = 0;
+            public int y = 0;
+        }
+
+
         #endregion
 
         #region [function]
@@ -27,7 +39,43 @@ namespace WSUI.Core.Win32
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
 
+        [DllImport("User32", EntryPoint = "ClientToScreen", SetLastError = true, ExactSpelling = true, CharSet = CharSet.Auto)]
+        public static extern int ClientToScreen(IntPtr hWnd, [In, Out] POINT pt);
+
+
         #endregion
+
+        public static Point TransformToScreen(Point point, Visual relativeTo)
+        {
+            HwndSource hwndSource = PresentationSource.FromVisual(relativeTo) as HwndSource;
+            Visual root = hwndSource.RootVisual;
+            // Translate the point from the visual to the root.
+            GeneralTransform transformToRoot = relativeTo.TransformToAncestor(root);
+            Point pointRoot = transformToRoot.Transform(point);
+
+            // Transform the point from the root to client coordinates.
+            Matrix m = Matrix.Identity;
+            Transform transform = VisualTreeHelper.GetTransform(root);
+            if (transform != null)
+            {
+                m = Matrix.Multiply(m, transform.Value);
+            }
+            Vector offset = VisualTreeHelper.GetOffset(root);
+            m.Translate(offset.X, offset.Y);
+            Point pointClient = m.Transform(pointRoot);
+            // Convert from “device-independent pixels” into pixels.
+            pointClient = hwndSource.CompositionTarget.TransformToDevice.Transform(pointClient);
+            POINT pointClientPixels = new POINT();
+            pointClientPixels.x = (0 < pointClient.X) ? (int)(pointClient.X + 0.5) : (int)(pointClient.X - 0.5);
+            pointClientPixels.y = (0 < pointClient.Y) ? (int)(pointClient.Y + 0.5) : (int)(pointClient.Y - 0.5);
+
+            // Transform the point into screen coordinates.
+            POINT pointScreenPixels = pointClientPixels;
+            ClientToScreen(hwndSource.Handle, pointScreenPixels);
+            return new Point(pointScreenPixels.x, pointScreenPixels.y);
+        }
+
+
 
     }
 }
