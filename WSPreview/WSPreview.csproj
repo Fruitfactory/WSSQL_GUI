@@ -83,7 +83,8 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\Toolkits\Interop\Office\Office.dll</HintPath>
     </Reference>
-    <Reference Include="PDFLibNet">
+    <Reference Include="PDFLibNet, Version=1.0.6.8, Culture=neutral, PublicKeyToken=26d87f7d66fb2aee, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolkits\PDFSharp\PDFLibNet.dll</HintPath>
     </Reference>
     <Reference Include="ScintillaNET">
@@ -99,6 +100,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +120,7 @@
     <Compile Include="Controls\Calendar\IIcsFileProperty.cs" />
     <Compile Include="Controls\Calendar\ParseAttribute.cs" />
     <Compile Include="Controls\Calendar\ParserIcs.cs" />
+    <Compile Include="Controls\Core\BaseLoaderAssembly.cs" />
     <Compile Include="Controls\CsvControl\CsvPreview.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -159,6 +162,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\Office\WordPreview.cs" />
+    <Compile Include="Controls\PdfControl\LinkActionKind.cs" />
     <Compile Include="Controls\PdfControl\PageViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -168,6 +172,7 @@
     <Compile Include="Controls\PdfControl\PDFViewer.designer.cs">
       <DependentUpon>PDFViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PdfControl\TypeResolver\PdfTypeLoader.cs" />
     <Compile Include="Controls\RtfControl\RtfPreviewControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

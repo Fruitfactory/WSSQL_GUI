@@ -205,8 +205,16 @@ namespace WSUI.Module.ViewModel
             try
             {
                 Tuple<Point, Size> mwi = GetMainWindowInfo();
-                BusyPopupAdorner.Instance.Message = "Loading...";
-                BusyPopupAdorner.Instance.IsBusy = true;
+                //BusyPopupAdorner.Instance.Message = "Loading...";
+                //BusyPopupAdorner.Instance.IsBusy = true;
+                ProgressManager.Instance.StartOperation(new ProgressOperation()
+                {
+                    Caption = "Loading...",
+                    DelayTime = 250,
+                    Canceled = false,
+                    Location = mwi.Item1,
+                    Size = mwi.Item2
+                });
                 var filename = SearchItemHelper.GetFileName(_currentData);
                 if (PreviewView != null)
                 {
@@ -228,7 +236,11 @@ namespace WSUI.Module.ViewModel
             }
             finally
             {
-                BusyPopupAdorner.Instance.IsBusy = false;
+                if (ProgressManager.Instance.InProgress)
+                {
+                    ProgressManager.Instance.StopOperation();
+                }
+                //BusyPopupAdorner.Instance.IsBusy = false;
             }
         }
 

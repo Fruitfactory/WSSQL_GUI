@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
-using System.Reflection;
+using WSPreview.Controls.Core;
 using WSPreview.PreviewHandler.Controls.ImageControl.Interface;
 
 namespace WSPreview.PreviewHandler.Controls.ImageControl.Service
 {
-    public class ImagePreviewGenerator : IImagePreviewGenerator
+    public class ImagePreviewGenerator : BaseLoaderAssembly, IImagePreviewGenerator
     {
         #region [needs]
 
@@ -13,8 +13,6 @@ namespace WSPreview.PreviewHandler.Controls.ImageControl.Service
 
         private const string TypeName = "GflWrapper.GflImageWrapper";
         private const string AssemblyWrapperName = "GflWrapper.dll";
-        private const string Lib = @"\lib\";
-        private const string Lib64 = @"\lib64\";
 
         #endregion
 
@@ -22,7 +20,6 @@ namespace WSPreview.PreviewHandler.Controls.ImageControl.Service
 
         private string _filename = string.Empty;
         private dynamic _gflInst = null;
-        private Assembly _assembly = null;
         private Type _gfltype = null;
 
         #endregion
@@ -50,7 +47,7 @@ namespace WSPreview.PreviewHandler.Controls.ImageControl.Service
 
         private ImagePreviewGenerator()
         {
-
+            AssemblyName = AssemblyWrapperName;
         }
 
         #endregion
@@ -77,24 +74,14 @@ namespace WSPreview.PreviewHandler.Controls.ImageControl.Service
 
         #region [private]
 
-        private void Init()
+        protected override void Init()
         {
-            _assembly = Environment.Is64BitProcess ? LoadGflWrapperAssembly(Lib64) : LoadGflWrapperAssembly(Lib);
+            base.Init();
             if (_assembly != null)
             {
                 _gfltype = _assembly.GetType(TypeName);
             }
         }
-
-        private Assembly LoadGflWrapperAssembly(string folder)
-        {
-            string loc = Assembly.GetExecutingAssembly().Location;
-            loc = loc.Substring(0, loc.LastIndexOf("\\"));
-            loc = string.Format("{0}{1}{2}", loc, folder, AssemblyWrapperName);
-            Assembly dll = Assembly.LoadFrom(loc);
-            return dll;
-        }
-           
 
         #endregion
         

@@ -276,7 +276,11 @@ namespace WSUI.Module.Core
             //Enabled = true;
             OnPropertyChanged(() => Enabled);
             FireComplete(res);
-            Application.Current.Dispatcher.BeginInvoke(new Action(() => BusyPopupAdorner.Instance.IsBusy = false), null);
+            //Application.Current.Dispatcher.BeginInvoke(new Action(() => BusyPopupAdorner.Instance.IsBusy = false), null);
+            if (ProgressManager.Instance.InProgress)
+            {
+                ProgressManager.Instance.StopOperation();
+            }
         }
 
         protected virtual void OnError(bool res)
@@ -328,8 +332,17 @@ namespace WSUI.Module.Core
             thread.Start();
             _eventForContinue.Reset();
             thread2.Start();
-            BusyPopupAdorner.Instance.Message = "Searching...";
-            BusyPopupAdorner.Instance.IsBusy = true;
+            //BusyPopupAdorner.Instance.Message = "Searching...";
+            //BusyPopupAdorner.Instance.IsBusy = true;
+            ProgressManager.Instance.StartOperation(new ProgressOperation()
+            {
+                Caption = "Searching...",
+                DelayTime = 2500,
+                Canceled = false,
+                Location = new Point(mwi.MainWindowRect.Left, mwi.MainWindowRect.Top),
+                Size = new Size(mwi.MainWindowRect.Width, mwi.MainWindowRect.Height),
+                MainHandle = mwi.MainWindowHandle
+            });
         }
 
         protected virtual bool CanSearch()

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
@@ -765,6 +766,21 @@ namespace WSPreview.PreviewHandler
             if (_pdfDoc != null && _pdfDoc.PageCount > 0)
                 return true;
             return false;
+        }
+
+        private void ApplyDynamicEvents(object o, string eventname, string methodname, bool isAdd = true)
+        {
+            EventInfo ei = o.GetType().GetEvent(eventname);
+            MethodInfo mi = GetType().GetMethod(methodname, BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic);
+            Delegate del = Delegate.CreateDelegate(ei.EventHandlerType, null, mi);
+            if (isAdd)
+            {
+                ei.AddEventHandler(o, del);
+            }
+            else
+            {
+                ei.RemoveEventHandler(o,del);
+            }
         }
     }
 
