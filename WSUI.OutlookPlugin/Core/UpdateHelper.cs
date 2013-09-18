@@ -143,21 +143,6 @@ namespace WSUIOutlookPlugin.Core
             }
         }
 
-        public void UpdateInstalationInfo()
-        {
-            try
-            {
-                string localversion = string.Format(TempFolder, _path, VersionFilename);
-                WSSqlLogger.Instance.LogInfo(String.Format("Version local path: {0}...", localversion));
-
-                UpdatedInstallationInfo(_path, localversion);
-            }
-            catch (Exception ex)
-            {
-                WSSqlLogger.Instance.LogError("Update Installation Info: " + ex.Message);
-            }
-       }
-
         public void Update()
         {
             _updateTimer = new Timer(IntervalForUpdate);
@@ -209,7 +194,6 @@ namespace WSUIOutlookPlugin.Core
                 process.StartInfo.FileName = "msiexec.exe";
                 process.StartInfo.Arguments = String.Format(" /i \"{0}\" /qb /norestart /log {1}install.log ", localmsi, _path); //REINSTALL=\"ALL\"
                 process.StartInfo.Verb = "runas";
-                UpdatedInstallationInfo(_path, localversion);
                 WSSqlLogger.Instance.LogInfo("Installing update...");
                 process.Start();
                 process.WaitForExit();
@@ -242,75 +226,6 @@ namespace WSUIOutlookPlugin.Core
                 return installPath.Value;
             }
             return string.Empty;
-        }
-
-        private void UpdatedInstallationInfo(string localpath, string localversion)
-        {
-            try
-            {
-
-
-                string manifest = localpath + UpdateHelper.ManifestFilename;
-                XDocument docManifest = XDocument.Load(manifest);
-                XDocument docVersion = XDocument.Load(localversion);
-
-                string language = docVersion.Descendants("product").First().Attribute("language").Value;
-
-                var listVersions =
-                    docVersion.Descendants("version").Select(
-                        el => el.Attribute("name") != null ? el.Attribute("name").Value : string.Empty).ToList();
-                listVersions.Sort();
-                string newversion = listVersions[listVersions.Count - 1];
-                var element =
-                    docVersion.Descendants("version").Where(el => el.Attribute("name").Value == newversion).First();
-                var productCode = element.Attribute(ProductCodeNodeName).Value;
-
-                if (docManifest.Descendants(MSINode).Any())
-                {
-                    var msi = docManifest.Descendants("msi").First();
-                    UpdateMSINode(msi, productCode, newversion);
-                }
-                else
-                {
-                    CreateMSINode(docManifest, element, language);
-                }
-
-                docManifest.Save(manifest);
-            }
-            catch (Exception ex)
-            {
-                WSSqlLogger.Instance.LogError("Update info: " + ex.Message);
-            }
-        }
-
-        private void UpdateMSINode(XElement msi, string productCode, string newversion)
-        {
-            if (msi.Descendants(VersionNodeName).Count() > 0)
-            {
-                var el = msi.Descendants(VersionNodeName).First();
-                el.Value = newversion;
-                WSSqlLogger.Instance.LogInfo(string.Format("New version: {0}", newversion));
-            }
-            if (msi.Descendants(ProductCodeNodeName).Count() > 0)
-            {
-                var el = msi.Descendants(ProductCodeNodeName).First();
-                el.Value = productCode;
-                WSSqlLogger.Instance.LogInfo(string.Format("Product code: {0}", productCode));
-            }
-        }
-
-        private void CreateMSINode(XDocument docManifest, XElement elementNewestVersion,string language)
-        {
-            XElement msi = new XElement(MSINode);
-            string prodCode = elementNewestVersion.Attribute(ProductCodeNode).Value;
-            string installUrl = elementNewestVersion.Attribute(InstallPathNodeName).Value;
-            string newVersion = elementNewestVersion.Attribute("name").Value;
-            XElement pc = new XElement(ProductCodeNode,prodCode);
-            XElement iu = new XElement(InstallPathNodeName,installUrl);
-            XElement ver = new XElement(VersionNode,newVersion);
-            XElement lan = new XElement(LanguageNode,language);
-            msi.Add(pc,iu,ver,lan);
-            docManifest.Root.Add(msi);
         }
 
         private void CreateTempFolder(string temp)
@@ -352,12 +267,6 @@ namespace WSUIOutlookPlugin.Core
             }
             else
             {
-                if (IsUpdating())
-                {
-                    WSSqlLogger.Instance.LogInfo("Updating is running. Just update installation info and delete lock file...");
-                    UpdateInstalationInfo();
-                }
-                Unlock();
                 WSSqlLogger.Instance.LogInfo(string.Format("Can update = {0}", CanUpdate()));
                 WSSqlLogger.Instance.LogInfo("Not updatable...");
             }

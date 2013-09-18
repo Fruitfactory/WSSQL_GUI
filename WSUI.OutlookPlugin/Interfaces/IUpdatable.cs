@@ -8,7 +8,6 @@
         bool CanUpdate();
         void Lock();
         void Unlock();
-        void UpdateInstalationInfo();
         void Update();
     }
 }
