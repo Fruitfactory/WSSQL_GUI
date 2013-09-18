@@ -147,7 +147,6 @@ namespace WSUIOutlookPlugin.Core
         {
             try
             {
-                
                 string localversion = string.Format(TempFolder, _path, VersionFilename);
                 WSSqlLogger.Instance.LogInfo(String.Format("Version local path: {0}...", localversion));
 

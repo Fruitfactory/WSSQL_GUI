@@ -76,6 +76,7 @@ namespace WSUI.Module.Core
             OpenCommand = new DelegateCommand<object>(o => OpenFile(), o => CanOpenFile());
             OpenFolderCommand = new DelegateCommand<object>(o => OpenFolder(), o => CanOpenFile());
             KeyDownCommand = new DelegateCommand<KeyEventArgs>(KeyDown, o => true);
+            DoubleClickCommand = new DelegateCommand<MouseButtonEventArgs>(DoubleClick, o => true);
             Enabled = true;
             DataSource = new ObservableCollection<BaseSearchData>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
@@ -428,6 +429,7 @@ namespace WSUI.Module.Core
         public ICommand ChooseCommand { get; protected set; }
         public ICommand SearchCommand { get; protected set; }
         public ICommand KeyDownCommand { get; protected set; }
+        public ICommand DoubleClickCommand { get; protected set; }
         public event EventHandler Start;
         public event EventHandler<EventArgs<bool>> Complete;
         public event EventHandler<EventArgs<bool>> Error;
@@ -622,6 +624,13 @@ namespace WSUI.Module.Core
                 return;
             info.MainWindowHandle = result.Item1;
             info.MainWindowRect = result.Item2;
+        }
+
+        private void DoubleClick(MouseButtonEventArgs obj)
+        {
+            if (Current == null)
+                return;
+            OpenFile();
         }
 
 

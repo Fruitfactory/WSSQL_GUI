@@ -123,6 +123,7 @@
                  ContextMenu="{StaticResource ResourceKey=contextMenu}"
                  IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
                  ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
+                 service:DoubleClickBehabior.DoubleClickHandler="{Binding DoubleClickCommand}"
                  >
             
         </ListBox>

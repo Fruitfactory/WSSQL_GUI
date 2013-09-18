@@ -48,6 +48,7 @@
                       SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                       ContextMenu="{StaticResource ResourceKey=contextMenu}"
                       ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
+                 service:DoubleClickBehabior.DoubleClickHandler="{Binding DoubleClickCommand}"
                       >
             
             <ListBox.ItemTemplate>
