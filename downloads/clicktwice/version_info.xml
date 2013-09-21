@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <application name="wsui.outlookplugin">
   <product language="1033">
-    <version name="1.0.0" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/" productCode="{0EFA535B-7906-4F43-878C-10B03C665CC8}" updateType="directLink">
+    <version name="1.1.0" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/" productCode="{78ED66F4-CA77-4820-951A-41C1F94E574D}" updateType="directLink">
       <files msi="WSUI.OutlookPluginSetup">
         <file>WSUI.OutlookPluginSetup.msi</file>
       </files>
