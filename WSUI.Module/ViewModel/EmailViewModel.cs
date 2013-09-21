@@ -48,11 +48,7 @@ namespace WSUI.Module.ViewModel
             SettingsView.Model = this;
             DataView = dataView;
             DataView.Model = this;
-//            QueryTemplate = "GROUP ON TOP {3} System.Message.ConversationID OVER( SELECT TOP 75  System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID FROM SystemIndex WHERE System.Kind = 'email' AND System.Message.DateReceived < '{2}' {0}AND CONTAINS(*,{1}) {4})";
-
             QueryTemplate = " SELECT TOP {3}  System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID FROM SystemIndex WHERE System.Kind = 'email' AND System.Message.DateReceived < '{2}' {0}AND CONTAINS(*,{1}) {4}";
-
-
             QueryAnd = " AND \"{0}\"";
             ID = 2;
             _name = "Email";
@@ -112,7 +108,6 @@ namespace WSUI.Module.ViewModel
             TopQueryResult = ScrollBehavior.CountFirstProcess;
             lock (_lock)
                 _listID.Clear();
-            _lastDate = DateTime.Now;
             ShowMessageNoMatches = true;
         }
 
@@ -122,7 +117,6 @@ namespace WSUI.Module.ViewModel
             TopQueryResult = ScrollBehavior.CountFirstProcess;
             lock(_lock)
                 _listID.Clear();
-            _lastDate = DateTime.Now;
             ShowMessageNoMatches = true;
             base.OnFilterData();
         }

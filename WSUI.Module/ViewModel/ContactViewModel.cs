@@ -69,7 +69,6 @@ namespace WSUI.Module.ViewModel
                                                   }
                                               };
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
-            _lastDate = DateTime.Now;
         }
 
         public ICommand EmailClickCommand { get; protected set; }
@@ -127,7 +126,7 @@ namespace WSUI.Module.ViewModel
         {
             _countProcess = ScrollBehavior.CountFirstProcess;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
-            _lastDate = DateTime.Now;
+            _lastDate = GetCurrentDate();
             if (string.IsNullOrEmpty(SearchString))
                 return;
             ClearDataSource();
@@ -139,7 +138,6 @@ namespace WSUI.Module.ViewModel
             base.OnFilterData();
             _countProcess = ScrollBehavior.CountFirstProcess;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
-            _lastDate = DateTime.Now;
         }
         private void EmailClick (object address)
         {

@@ -59,6 +59,7 @@ namespace WSUI.Module.Core
         protected List<string> _listW;
         protected IScrollBehavior ScrollBehavior =  null;
         protected int TopQueryResult = 100;
+        protected DateTime _lastDate;
 
         private volatile bool _isQueryRun = false;
         private object _lock = new object();
@@ -80,6 +81,7 @@ namespace WSUI.Module.Core
             Enabled = true;
             DataSource = new ObservableCollection<BaseSearchData>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
+            _lastDate = GetCurrentDate();
         }
 
         protected virtual void DoQuery(object mwi)
@@ -247,6 +249,10 @@ namespace WSUI.Module.Core
             return date.ToString("yyyy/MM/dd hh:mm:ss").Replace('.', '/');
         }
 
+        protected virtual DateTime GetCurrentDate()
+        {
+            return DateTime.Now.AddDays(1);
+        }
 
         protected virtual void OnStart()
         {
@@ -350,9 +356,11 @@ namespace WSUI.Module.Core
         {
             return true;
         }
-        
+
         protected virtual void OnSearchStringChanged()
-        {}
+        {
+            _lastDate = GetCurrentDate();
+        }
 
         protected virtual void OnInit()
         {
@@ -365,8 +373,10 @@ namespace WSUI.Module.Core
 
         protected virtual void OnFilterData()
         {
+            _lastDate = GetCurrentDate();
             if (string.IsNullOrEmpty(SearchString))
                 return;
+
             ClearDataSource();
             Search();
         }

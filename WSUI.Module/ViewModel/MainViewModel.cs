@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Threading;
 using WSPreview.PreviewHandler.Service;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
@@ -215,14 +216,26 @@ namespace WSUI.Module.ViewModel
                     Location = mwi.Item1,
                     Size = mwi.Item2
                 });
+                Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "OnCurrentImageChanged", ex.Message));
+            }
+        }
+
+        private void ShowPreviewForCurrentItem()
+        {
+            try
+            {
                 var filename = SearchItemHelper.GetFileName(_currentData);
                 if (PreviewView != null)
                 {
                     if (!string.IsNullOrEmpty(filename))
                     {
                         PreviewView.SetSearchPattern(_currentItem != null
-                                ? _currentItem.SearchString
-                                : string.Empty);
+                            ? _currentItem.SearchString
+                            : string.Empty);
                         PreviewView.SetPreviewFile(filename);
                     }
                     else
@@ -231,8 +244,7 @@ namespace WSUI.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "OnCurrentImageChanged", ex.Message));
-                throw;
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "ShowPreviewForCurrentItem", ex.Message));
             }
             finally
             {
@@ -240,7 +252,6 @@ namespace WSUI.Module.ViewModel
                 {
                     ProgressManager.Instance.StopOperation();
                 }
-                //BusyPopupAdorner.Instance.IsBusy = false;
             }
         }
 

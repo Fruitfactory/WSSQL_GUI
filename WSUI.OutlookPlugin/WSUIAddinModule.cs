@@ -390,7 +390,7 @@ namespace WSUIOutlookPlugin
 
         private void RunPluginUI()
         {
-            DllPreloader.Instance.PreloadDll();
+            //DllPreloader.Instance.PreloadDll();
             _wsuiBootStraper = new PluginBootStraper();
             _wsuiBootStraper.Run();
             ((AppEmpty) System.Windows.Application.Current).MainControl = (System.Windows.Controls.UserControl)_wsuiBootStraper.View;

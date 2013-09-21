@@ -26,7 +26,6 @@ namespace WSUI.Module.ViewModel
     public class AllFilesViewModel : KindViewModelBase, IUView<AllFilesViewModel>, IScrollableView
     {
         private const string KindGroup = "email";
-        private DateTime _lastDate;
         private const string QueryForGroupEmails =
             "GROUP ON System.Message.ConversationID OVER( SELECT System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID,System.Message.ConversationIndex,System.Search.EntryID FROM SystemIndex WHERE System.Kind = 'email'  AND CONTAINS(System.Message.ConversationID,'{0}*')   ORDER BY System.Message.DateReceived DESC) ";//AND CONTAINS(System.ItemPathDisplay,'{0}*',1033)
 
@@ -67,7 +66,6 @@ namespace WSUI.Module.ViewModel
                                                               OnPropertyChanged(() => IsOpen);
                                                           },
                                                           o => true);
-            _lastDate = DateTime.Now;
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
             TopQueryResult = 50;
             EmailClickCommand = new DelegateCommand<object>(o => EmailClick(o), o => true);
@@ -238,7 +236,7 @@ namespace WSUI.Module.ViewModel
         {
             lock (_lockObjcet)
             {
-                _lastDate = DateTime.Now;
+                _lastDate = GetCurrentDate();
                 _countProcess = CountFirstProcess;
                 TopQueryResult = ScrollBehavior.CountFirstProcess;
                 _isFirstTime = true;

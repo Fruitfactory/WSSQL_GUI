@@ -24,7 +24,6 @@ namespace WSUI.Module.ViewModel
     {
         private int _countAdded = 0;
         private int _countProcess;
-        private DateTime _lastDate;
         private List<BaseSearchData> _list = new List<BaseSearchData>();
         private List<string> _listId = new List<string>();
         private object _lock = new object();
@@ -44,7 +43,6 @@ namespace WSUI.Module.ViewModel
             UIName = _name;
             _prefix = "Attachment";
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
-            _lastDate = DateTime.Now;
         }
 
         protected override void ReadData(System.Data.IDataReader reader)
@@ -114,7 +112,6 @@ namespace WSUI.Module.ViewModel
         {
             _listId.Clear();
             _countProcess = ScrollBehavior.CountFirstProcess;
-            _lastDate = DateTime.Now;
             ClearDataSource();
             base.OnSearchStringChanged();
             
@@ -125,7 +122,6 @@ namespace WSUI.Module.ViewModel
             _listId.Clear();
             base.OnFilterData();
             _countProcess = ScrollBehavior.CountFirstProcess;
-            _lastDate = DateTime.Now;
         }
 
         protected override void OnComplete(bool res)
