@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms.VisualStyles;
 using System.Xml.Linq;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Win32;
@@ -232,6 +233,23 @@ namespace WSUI.CA
         public static ActionResult SuccesMessage(Session session)
         {
             ActionResult result = ActionResult.Success;
+
+            //var callIndex = RegistryHelper.Instance.GetCallIndex();
+            //switch (callIndex)
+            //{
+            //        case RegistryHelper.CallIndex.First:
+            //        case RegistryHelper.CallIndex.None:
+            //        session.Log("First entry to SuccesMessage...");
+            //        RegistryHelper.Instance.SetCallIndexKey(RegistryHelper.CallIndex.Second);
+            //        return result;
+            //}
+
+            if (!RegistryHelper.Instance.IsSilendUpdate())
+            {
+                session.Log("Isn't silent update.");
+                return result;
+            }
+            //session.Log("Second entry to SuccesMessage...");
             try
             {
                 Record rec = new Record();
@@ -261,9 +279,15 @@ namespace WSUI.CA
             try
             {
                 string localversion = string.Format(TempFolder, path, VersionFilename);
-                session.Log(String.Format("Version local path: {0}...", localversion));
-
-                UpdatedInstallationInfo(path, localversion,session);
+                if (File.Exists(localversion))
+                {
+                    session.Log(String.Format("Version local path: {0}...", localversion));
+                    UpdatedInstallationInfo(path, localversion, session);
+                }
+                else
+                {
+                    session.Log(String.Format("Version local path: {0} is not exist...", localversion));
+                }
                 Unlock(path,session);
             }
             catch (Exception ex)
@@ -344,8 +368,9 @@ namespace WSUI.CA
             try
             {
                 File.Delete(string.Format("{0}{1}", path, LocFilename));
-                RegistryHelper.Instance.FinishSilelntUpdate();
-                DeleteTempFolder(string.Format(TempFolderCreate, path));
+                session.Log("Silent updates is finished. Call index set up in default value (None).");
+                RegistryHelper.Instance.FinishSilentUpdate();
+                RegistryHelper.Instance.SetCallIndexKey(RegistryHelper.CallIndex.None);
             }
             catch (System.Exception ex)
             {
@@ -369,6 +394,11 @@ namespace WSUI.CA
         public static ActionResult ErrorMessage(Session session)
         {
             ActionResult result = ActionResult.Success;
+            if (!RegistryHelper.Instance.IsSilendUpdate())
+            {
+                session.Log("Isn't silent update.");
+                return result;
+            }
             try
             {
                 Record rec = new Record();
@@ -389,6 +419,11 @@ namespace WSUI.CA
         public static ActionResult CancelMessage(Session session)
         {
             ActionResult result = ActionResult.Success;
+            if (!RegistryHelper.Instance.IsSilendUpdate())
+            {
+                session.Log("Isn't silent update.");
+                return result;
+            }
             try
             {
                 Record rec = new Record();

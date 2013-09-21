@@ -215,7 +215,10 @@ xcopy $(SolutionDir)Toolkits\GflSdk\lib\libgfle340.dll $(TargetDir)lib\ /F /R /Y
 
 xcopy $(SolutionDir)Toolkits\GflSdk\lib64\GflWrapper.dll $(TargetDir)lib64\ /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\GflSdk\lib64\libgfl340.dll $(TargetDir)lib64\ /F /R /Y /I
-xcopy $(SolutionDir)Toolkits\GflSdk\lib64\libgfle340.dll $(TargetDir)lib64\ /F /R /Y /I</PostBuildEvent>
+xcopy $(SolutionDir)Toolkits\GflSdk\lib64\libgfle340.dll $(TargetDir)lib64\ /F /R /Y /I
+
+xcopy $(SolutionDir)Toolkits\PDFSharp\x86\PDFLibNet.dll $(TargetDir)lib\ /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\PDFSharp\x64\PDFLibNet.dll $(TargetDir)lib64\ /F /R /Y /I</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

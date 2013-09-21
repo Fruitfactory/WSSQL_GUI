@@ -6,11 +6,20 @@ namespace WSUI.Core.Helpers
 {
     public class RegistryHelper
     {
+        public enum CallIndex
+        {
+            None,
+            First,
+            Second
+        };
+
         #region [needs]
 
         private const string ProductSubKey = "SOFTWARE\\WSUIOutlookPlugin";
         private const string SilentUpdateKey = "IsSilentUpdate";
         private const string IsOutlookClosedByInstallerKey = "IsOutlookClosedByInstaller";
+        private const string CallIndexKey = "CallIndex";
+
 
         private RegistryKey _baseRegistry = Registry.CurrentUser;
 
@@ -51,7 +60,7 @@ namespace WSUI.Core.Helpers
             Write(SilentUpdateKey,true);
         }
 
-        public void FinishSilelntUpdate()
+        public void FinishSilentUpdate()
         {
             Write(SilentUpdateKey,false);
         }
@@ -81,7 +90,18 @@ namespace WSUI.Core.Helpers
             return parseresult;
         }
 
+        public void SetCallIndexKey(CallIndex index)
+        {
+            Write(CallIndexKey,index);
+        }
 
+        public CallIndex GetCallIndex()
+        {
+            var val = ReadKey(CallIndexKey);
+            var parse = (CallIndex)Enum.Parse(typeof (CallIndex), val);
+            return parse;
+        }
+        
         private string ReadKey(string key)
         {
             RegistryKey temp = _baseRegistry;

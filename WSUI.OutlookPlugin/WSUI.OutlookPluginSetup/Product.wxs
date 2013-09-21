@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <Product Id="17FD87CD-142B-4215-9584-27EC2C31EEB6" Name="WSUIOutlookPlugin" Language="1033" Version="1.0.5" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="79B7ECF5-0CF3-4522-90B2-A1A206E4A02C" Name="WSUIOutlookPlugin" Language="1033" Version="1.0.0" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="WSUIOutlookPlugin" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <Media Id="1" Cabinet="WSUI.OutlookPlugin.cab" EmbedCab="yes" />
@@ -31,10 +31,10 @@
       <Custom Action="RegisterDll" After="SelfRegModules">NOT Installed</Custom>
       <Custom Action="UnregisterDll" After="SelfUnregModules">Installed</Custom>
       <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>
-      <Custom Action="CloseOutlook" After="AppSearch">NOT Installed OR Installed</Custom>
-      <Custom Action="SuccesMessage" OnExit="success">NOT Installed OR Installed</Custom>
-      <Custom Action="CancelMessage" OnExit="cancel">NOT Installed OR Installed</Custom>
-      <Custom Action="ErrorMessage" OnExit="error">NOT Installed OR Installed</Custom>
+      <Custom Action="CloseOutlook" After="AppSearch">NOT Installed OR Installed OR REMOVE="ALL"</Custom>
+      <Custom Action="SuccesMessage" OnExit="success">NOT Installed</Custom>
+      <Custom Action="CancelMessage" OnExit="cancel">NOT Installed</Custom>
+      <Custom Action="ErrorMessage" OnExit="error">NOT Installed</Custom>
       <!--<Custom Action="OpenOutlook" After="InstallFinalize">NOT Installed OR Installed</Custom>-->
     </InstallExecuteSequence>
     <!-- Properties for all current versions of the .NET Framework are available here: http://wix.sourceforge.net/manual-wix3/wixnetfxextension.htm -->
@@ -75,6 +75,7 @@
         <File Id="_GflWrapper_dll_1" Name="GflWrapper.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib\" />
         <File Id="_libgfl340_dll_1" Name="libgfl340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib\" />
         <File Id="_libgfle340_dll_1" Name="libgfle340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib\" />
+        <File Id="_PDFLibNet_dll_1" Name="PDFLibNet.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib\" />
       </Component>
       <Component Id="ProductComponentLib64" Guid="4685C8D4-3DE8-49B3-9ED4-13535C9E134D" DiskId="1" Directory="INSTALLFOLDERLIB64">
         <RegistryKey Root="HKCU" Key="Software\[Manufacturer]\[ProductName]">
@@ -83,6 +84,7 @@
         <File Id="_GflWrapper_dll_2" Name="GflWrapper.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib64\" />
         <File Id="_libgfl340_dll_2" Name="libgfl340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib64\" />
         <File Id="_libgfle340_dll_2" Name="libgfle340.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib64\" />
+        <File Id="_PDFLibNet_dll_2" Name="PDFLibNet.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)lib\" />
       </Component>
       <!-- main components -->
       <Component Id="ProductComponent" Guid="515bb330-8d0b-4160-b5e2-a41f32a1c0d5" DiskId="1" Directory="INSTALLFOLDER">

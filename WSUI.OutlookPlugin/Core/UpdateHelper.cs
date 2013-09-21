@@ -121,6 +121,7 @@ namespace WSUIOutlookPlugin.Core
             {
                 File.Create(string.Format("{0}{1}", _path, LocFilename)).Close();
                 RegistryHelper.Instance.StartSilentUpdate();
+                RegistryHelper.Instance.SetCallIndexKey(RegistryHelper.CallIndex.First);
             }
             catch (Exception ex)
             {
@@ -134,7 +135,7 @@ namespace WSUIOutlookPlugin.Core
             try
             {
             	File.Delete(string.Format("{0}{1}", _path, LocFilename));
-                RegistryHelper.Instance.FinishSilelntUpdate();
+                RegistryHelper.Instance.FinishSilentUpdate();
                 DeleteTempFolder(string.Format(TempFolderCreate, _path));
             }
             catch (System.Exception ex)

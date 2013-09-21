@@ -10,23 +10,24 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Configuration;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
-using PDFLibNet;
 using System.Management;
+using WSPreview.PreviewHandler.TypeResolver;
 
 namespace WSPreview.PreviewHandler
 {
     [KeyControl(ControlsKey.Pdf)]
     public partial class PDFViewer : UserControl,IPreviewControl
     {
-        private class loadPagesParam
+
+        public enum LinkActionKind
         {
-            public loadPagesParam(PDFWrapper pdf, ListView lv)
-            {
-                pdfDoc = pdf;
-                listView = lv;
-            }
-            public PDFWrapper pdfDoc;
-            public ListView listView;
+            actionGoTo,
+            actionGoToR,
+            actionLaunch,
+            actionURI,
+            actionNamed,
+            actionMovie,
+            actionUnknown,
         }
 
         public delegate void RenderNotifyInvoker(int page, bool isCurrent);
@@ -55,7 +56,7 @@ namespace WSPreview.PreviewHandler
        
         #endregion
 
-        PDFWrapper _pdfDoc = null;
+        dynamic _pdfDoc = null;
         public PDFViewer()
         {
             InitializeComponent();
@@ -67,10 +68,13 @@ namespace WSPreview.PreviewHandler
         public void LoadFile(string filename)
         {
             Clear();
-            _pdfDoc = new PDFWrapper();
-            _pdfDoc.RenderNotifyFinished += new RenderNotifyFinishedHandler(_pdfDoc_RenderNotifyFinished);
-            _pdfDoc.PDFLoadCompeted += new PDFLoadCompletedHandler(_pdfDoc_PDFLoadCompeted);
-            _pdfDoc.PDFLoadBegin += new PDFLoadBeginHandler(_pdfDoc_PDFLoadBegin);
+            _pdfDoc = PdfTypeLoader.Instance.GetPdfWrapper();
+            //_pdfDoc.RenderNotifyFinished += new RenderNotifyFinishedHandler(_pdfDoc_RenderNotifyFinished);
+            ApplyDynamicEvents(_pdfDoc, "RenderNotifyFinished", "_pdfDoc_RenderNotifyFinished");
+            //_pdfDoc.PDFLoadCompeted += new PDFLoadCompletedHandler(_pdfDoc_PDFLoadCompeted);
+            ApplyDynamicEvents(_pdfDoc, "PDFLoadCompeted", "_pdfDoc_PDFLoadCompeted");
+            //_pdfDoc.PDFLoadBegin += new PDFLoadBeginHandler(_pdfDoc_PDFLoadBegin);
+            ApplyDynamicEvents(_pdfDoc, "PDFLoadBegin", "_pdfDoc_PDFLoadBegin");
             int ts = Environment.TickCount;
             bool res = false;
             if (res = LoadFile(filename, _pdfDoc))
@@ -81,7 +85,7 @@ namespace WSPreview.PreviewHandler
 
                 Render();
 
-                PDFPage pg = _pdfDoc.Pages[1];
+                dynamic pg = _pdfDoc.Pages[1];
             }
         }
 
@@ -137,7 +141,7 @@ namespace WSPreview.PreviewHandler
                     //Check if we have the pointer on a link
                     if (getCursorStatus(e) == CursorStatus.Move)
                     {
-                        PDFLibNet.PageLink link = SearchLink(e.Location);
+                        dynamic link = SearchLink(e.Location);
                         if (link != null)
                         {
                             pageViewControl1.Cursor = Cursors.Hand;
@@ -170,16 +174,16 @@ namespace WSPreview.PreviewHandler
             _pointCurrent = e.Location; //Update current Point
         }
 
-        private PDFLibNet.PageLink SearchLink(Point location)
+        private dynamic SearchLink(Point location)
         {
             if (_pdfDoc != null)
             {
                 Point p = pageViewControl1.PointToClient(location);
-                List<PageLink> links = _pdfDoc.GetLinks(_pdfDoc.CurrentPage);
+                List<dynamic> links = _pdfDoc.GetLinks(_pdfDoc.CurrentPage);
                 if (links != null)
                 {
                     //Search for a link
-                    foreach (PDFLibNet.PageLink pl in links)
+                    foreach (dynamic pl in links)
                     {
                         //Convert coordinates
                         Point p1 = Point.Ceiling(_pdfDoc.PointUserToDev(new PointF(pl.Bounds.Left, pl.Bounds.Top)));
@@ -234,14 +238,15 @@ namespace WSPreview.PreviewHandler
             Point pos = pageViewControl1.PointToClient(e.Location);
             if (_pdfDoc != null && MouseInPage(pos) && e.Button == MouseButtons.Left)
             {
-                PDFLibNet.PageLink link = SearchLink(e.Location);
+                dynamic link = SearchLink(e.Location);
                 if (link != null)
                 {
-                    switch (link.Action.Kind)
+                    var linkKind = (LinkActionKind) link.Action.Kind;
+                    switch (linkKind)
                     {
                         case LinkActionKind.actionGoTo:
 
-                            PDFLibNet.PageLinkGoTo plgo = (link.Action as PDFLibNet.PageLinkGoTo);
+                            dynamic plgo =link.Action;
                             if (plgo.Destination != null)
                             {
                                 _pdfDoc.CurrentPage = plgo.Destination.Page;
@@ -259,7 +264,7 @@ namespace WSPreview.PreviewHandler
                             }
                             break;
                         case LinkActionKind.actionURI:
-                            PDFLibNet.PageLinkURI uri = (link.Action as PDFLibNet.PageLinkURI);
+                            dynamic uri = link.Action;
                             if (MessageBox.Show("Ejecutar aplicación externa?" + Environment.NewLine + uri.URL, Text, MessageBoxButtons.OKCancel) == DialogResult.OK)
                             {
                                 System.Diagnostics.Process p = new System.Diagnostics.Process();
@@ -307,9 +312,10 @@ namespace WSPreview.PreviewHandler
                     p.Width = pageViewControl1.ClientSize.Width;
                     _pdfDoc.FitToWidth(p.Handle);
                 }
-                _pdfDoc.RenderFinished -= new RenderFinishedHandler(_pdfDoc_RenderFinished);
-                _pdfDoc.RenderFinished += new RenderFinishedHandler(_pdfDoc_RenderFinished);
-
+                //_pdfDoc.RenderFinished -= new RenderFinishedHandler(_pdfDoc_RenderFinished);
+                ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished", false);
+                //_pdfDoc.RenderFinished += new RenderFinishedHandler(_pdfDoc_RenderFinished);
+                ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished");
                 _pdfDoc.RenderPageThread(pageViewControl1.Handle,true);
             }
         }
@@ -323,8 +329,10 @@ namespace WSPreview.PreviewHandler
                     p.Width = pageViewControl1.ClientSize.Height;
                     _pdfDoc.FitToHeight(p.Handle);
                 }
-                _pdfDoc.RenderFinished -= new RenderFinishedHandler(_pdfDoc_RenderFinished);
-                _pdfDoc.RenderFinished += new RenderFinishedHandler(_pdfDoc_RenderFinished);
+                //_pdfDoc.RenderFinished -= new RenderFinishedHandler(_pdfDoc_RenderFinished);
+                ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished", false);
+                //_pdfDoc.RenderFinished += new RenderFinishedHandler(_pdfDoc_RenderFinished);
+                ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished");
                 _pdfDoc.RenderPageThread(pageViewControl1.Handle, false);
             }
         }
@@ -434,10 +442,13 @@ namespace WSPreview.PreviewHandler
                 _pdfDoc.Dispose();
                 _pdfDoc = null;
             }
-            _pdfDoc = new PDFWrapper();
-            _pdfDoc.RenderNotifyFinished += new RenderNotifyFinishedHandler(_pdfDoc_RenderNotifyFinished);
-            _pdfDoc.PDFLoadCompeted += new PDFLoadCompletedHandler(_pdfDoc_PDFLoadCompeted);
-            _pdfDoc.PDFLoadBegin += new PDFLoadBeginHandler(_pdfDoc_PDFLoadBegin);
+            _pdfDoc = PdfTypeLoader.Instance.GetPdfWrapper();
+            //_pdfDoc.RenderNotifyFinished += new RenderNotifyFinishedHandler(_pdfDoc_RenderNotifyFinished);
+            ApplyDynamicEvents(_pdfDoc, "RenderNotifyFinished", "_pdfDoc_RenderNotifyFinished");
+            //_pdfDoc.PDFLoadCompeted += new PDFLoadCompletedHandler(_pdfDoc_PDFLoadCompeted);
+            ApplyDynamicEvents(_pdfDoc, "PDFLoadCompeted", "_pdfDoc_PDFLoadCompeted");
+            //_pdfDoc.PDFLoadBegin += new PDFLoadBeginHandler(_pdfDoc_PDFLoadBegin);
+            ApplyDynamicEvents(_pdfDoc, "PDFLoadBegin", "_pdfDoc_PDFLoadBegin");
 
             try
             {
@@ -466,7 +477,7 @@ namespace WSPreview.PreviewHandler
 
                 Render();
 
-                PDFPage pg = _pdfDoc.Pages[1];
+                dynamic pg = _pdfDoc.Pages[1];
                 
                 return true;
             }
@@ -474,7 +485,7 @@ namespace WSPreview.PreviewHandler
         }
 
         System.IO.FileStream fs = null;
-        private bool LoadFile(string filename, PDFLibNet.PDFWrapper pdfDoc)
+        private bool LoadFile(string filename, dynamic pdfDoc)
         {
             try
             {
@@ -522,8 +533,10 @@ namespace WSPreview.PreviewHandler
                 if (_pdfDoc != null)
                 {
                     _pdfDoc.ZoomIN();
-                    _pdfDoc.RenderFinished -= new RenderFinishedHandler(_pdfDoc_RenderFinished);
-                    _pdfDoc.RenderFinished += new RenderFinishedHandler(_pdfDoc_RenderFinished);
+                    //_pdfDoc.RenderFinished -= new RenderFinishedHandler(_pdfDoc_RenderFinished);
+                    ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished", false);
+                    //_pdfDoc.RenderFinished += new RenderFinishedHandler(_pdfDoc_RenderFinished);
+                    ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished");
                     _pdfDoc.RenderPageThread(pageViewControl1.Handle, false);
                     Render();
                 }
@@ -546,8 +559,10 @@ namespace WSPreview.PreviewHandler
                 if (_pdfDoc != null)
                 {
                     _pdfDoc.ZoomOut();
-                    _pdfDoc.RenderFinished -= new RenderFinishedHandler(_pdfDoc_RenderFinished);
-                    _pdfDoc.RenderFinished += new RenderFinishedHandler(_pdfDoc_RenderFinished);
+                    //_pdfDoc.RenderFinished -= new RenderFinishedHandler(_pdfDoc_RenderFinished);
+                    ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished", false);
+                    //_pdfDoc.RenderFinished += new RenderFinishedHandler(_pdfDoc_RenderFinished);
+                    ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished");
                     _pdfDoc.RenderPageThread(pageViewControl1.Handle, false);
                     Render();
                 }
@@ -740,7 +755,7 @@ namespace WSPreview.PreviewHandler
         {
             if (!PdfOK())
                 return;
-            PDFPage page = _pdfDoc.Pages[_pdfDoc.CurrentPage];
+            dynamic page = _pdfDoc.Pages[_pdfDoc.CurrentPage];
             var list = page.WordList;
             
         }
