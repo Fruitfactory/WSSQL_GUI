@@ -63,6 +63,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -72,6 +73,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -162,16 +164,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WSUI.Infrastructure\WSUI.Infrastructure.csproj">
-      <Project>{0c9d56f2-fc4f-4677-a33e-e3e9e09c30c0}</Project>
-      <Name>WSUI.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WSUI.Module\WSUI.Module.csproj">
-      <Project>{edce3394-18b5-40a8-ae43-e6a8e23c9a7f}</Project>
-      <Name>WSUI.Module</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Search.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +187,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WSUI.Module\WSUI.Module.csproj">
+      <Project>{EDCE3394-18B5-40A8-AE43-E6A8E23C9A7F}</Project>
+      <Name>WSUI.Module</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
