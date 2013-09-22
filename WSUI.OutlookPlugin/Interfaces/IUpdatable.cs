@@ -9,5 +9,6 @@
         void Lock();
         void Unlock();
         void Update();
+        void DeleteTempoparyFolders();
     }
 }

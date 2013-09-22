@@ -151,6 +151,11 @@ namespace WSUIOutlookPlugin.Core
             _updateTimer.Start();
         }
 
+        public void DeleteTempoparyFolders()
+        {
+            DeleteTempFolder(string.Format(TempFolderCreate, _path));
+        }
+
         #endregion
 
         private void SilentUpdate()

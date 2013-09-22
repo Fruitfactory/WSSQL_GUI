@@ -370,6 +370,7 @@ namespace WSUIOutlookPlugin
             {
                 _updatable = UpdateHelper.Instance;
                 _updatable.Module = this;
+                _updatable.DeleteTempoparyFolders();
             }
             
         }
