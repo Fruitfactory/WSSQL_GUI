@@ -31,8 +31,7 @@ namespace WSUI.Module.ViewModel
 
         private int _countAdded = 0;
         private int _countProcess;
-        private DateTime _lastDate;
-
+        
         public ContactViewModel(IUnityContainer container, ISettingsView<ContactViewModel> settingsView, IDataView<ContactViewModel> dataView)
             :base(container)
         {

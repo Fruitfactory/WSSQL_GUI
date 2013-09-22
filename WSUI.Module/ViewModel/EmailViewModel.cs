@@ -35,7 +35,6 @@ namespace WSUI.Module.ViewModel
         private readonly List<EmailGroupData> _listEmails = new List<EmailGroupData>(); 
         private int _countAdded;
         private int _countProcess;
-        private DateTime _lastDate;
         private object _lock = new object();
 
 

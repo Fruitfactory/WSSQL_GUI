@@ -191,7 +191,7 @@ namespace WSUI.Infrastructure.Service.Helpers
         {
             if (!IsOutlookAlive() && IsHostIsApplication())
                 ReopenOutlook(ref _app);
-            var newMail = (Microsoft.Office.Interop.Outlook.MailItem)_app.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olMailItem);
+            var newMail = (Microsoft.Office.Interop.Outlook.MailItem)this.OutlookApp.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olMailItem);
             return newMail;
         }
 
@@ -209,13 +209,13 @@ namespace WSUI.Infrastructure.Service.Helpers
         public List<string> GetFolderList()
         {
             List<string> res = new List<string>();
-            if (_app == null)
+            if (this.OutlookApp == null)
                 return res;
             try
             {
                 if (!IsOutlookAlive() && IsHostIsApplication())
                     ReopenOutlook(ref _app);
-                Outlook.NameSpace ns = _app.GetNamespace("MAPI");
+                Outlook.NameSpace ns = this.OutlookApp.GetNamespace("MAPI");
                 foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
                     GetOutlookFolders(folder, res);
             }
@@ -230,11 +230,11 @@ namespace WSUI.Infrastructure.Service.Helpers
 
         public void Logoff()
         {
-            if (_app == null || !IsHostIsApplication())
+            if (this.OutlookApp == null || !IsHostIsApplication())
                 return;
             try
             {
-                Outlook.NameSpace ns = _app.GetNamespace("MAPI");
+                Outlook.NameSpace ns = this.OutlookApp.GetNamespace("MAPI");
                 ns.Logoff();
             }
             catch (Exception e)
@@ -286,14 +286,14 @@ namespace WSUI.Infrastructure.Service.Helpers
 
         public Outlook.ContactItem GetContact(string fullname)
         {
-            if (_app == null)
+            if (this.OutlookApp == null)
                 return null;
             Outlook.ContactItem ci = null;
             try
             {
                 if (!IsOutlookAlive() && IsHostIsApplication())
                     ReopenOutlook(ref _app);
-                Outlook.NameSpace ns = _app.GetNamespace("MAPI");
+                Outlook.NameSpace ns = this.OutlookApp.GetNamespace("MAPI");
                 Outlook.MAPIFolder contacts =
                         ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderContacts);
 
@@ -391,14 +391,14 @@ namespace WSUI.Infrastructure.Service.Helpers
 
         private dynamic GetMailItem(string entryID)
         {
-            if (_app == null)
+            if (this.OutlookApp == null)
                 return null;
             dynamic mi = null;
             try
             {
                 if (!IsOutlookAlive() && IsHostIsApplication())
                     ReopenOutlook(ref _app);
-                Outlook.NameSpace ns = _app.GetNamespace("MAPI");
+                Outlook.NameSpace ns = this.OutlookApp.GetNamespace("MAPI");
                 
            
                 mi = ns.GetItemFromID(entryID, Type.Missing);
@@ -437,14 +437,14 @@ namespace WSUI.Infrastructure.Service.Helpers
 
         private dynamic GetAppointment(string id)
         {
-            if (_app == null)
+            if (this.OutlookApp == null)
                 return null;
             dynamic appointItem = null;
             try
             {
                 if(!IsOutlookAlive() && IsHostIsApplication())
                     ReopenOutlook(ref _app);
-                Outlook.NameSpace ns = _app.GetNamespace("MAPI");
+                Outlook.NameSpace ns = this.OutlookApp.GetNamespace("MAPI");
 
                 appointItem = ns.GetItemFromID(id, Type.Missing);
 
@@ -493,9 +493,9 @@ namespace WSUI.Infrastructure.Service.Helpers
             {
                 if (disposing)
                 {
-                    if (_app != null)
+                    if (this.OutlookApp != null)
                     {
-                        Marshal.ReleaseComObject(_app);
+                        Marshal.ReleaseComObject(this.OutlookApp);
                         _app = null;
                     }
                 }
@@ -533,14 +533,14 @@ namespace WSUI.Infrastructure.Service.Helpers
 
         private Outlook.ContactItem GetContact(ContactSearchData data)
         {
-            if (_app == null)
+            if (this.OutlookApp == null)
                 return null;
             Outlook.ContactItem ci = null;
             try
             {
                 if (!IsOutlookAlive() && IsHostIsApplication())
                     ReopenOutlook(ref _app);
-                Outlook.NameSpace ns = _app.GetNamespace("MAPI");
+                Outlook.NameSpace ns = this.OutlookApp.GetNamespace("MAPI");
                 Outlook.MAPIFolder contacts =
                         ns.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderContacts);
 
