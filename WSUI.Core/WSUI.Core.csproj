@@ -58,17 +58,46 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Core\Attributes\BaseWSUIAttribute.cs" />
+    <Compile Include="Core\Attributes\FieldAttribute.cs" />
     <Compile Include="Core\BaseSearchData.cs" />
+    <Compile Include="Core\Rules\BaseRule.cs" />
+    <Compile Include="Core\Rules\IRule.cs" />
+    <Compile Include="Core\Rules\QuoteRule.cs" />
+    <Compile Include="Core\Rules\WordRule.cs" />
+    <Compile Include="Core\Search\BaseSearchRule.cs" />
+    <Compile Include="Core\Search\BaseSearchSystem.cs" />
+    <Compile Include="Core\Search\ResultMessage.cs" />
+    <Compile Include="Core\Search\SearchResult.cs" />
+    <Compile Include="Core\Search\SystemSearchResult.cs" />
+    <Compile Include="Data\AdressSearchObject.cs" />
+    <Compile Include="Data\AttachmentSearchObject.cs" />
+    <Compile Include="Data\BaseEmailSearchObject.cs" />
+    <Compile Include="Data\BaseSearchObject.cs" />
+    <Compile Include="Data\ContactSearchObject.cs" />
+    <Compile Include="Data\EmailSearchObject.cs" />
+    <Compile Include="Data\FileSearchObject.cs" />
     <Compile Include="Data\WSAction.cs" />
     <Compile Include="Enums\HostType.cs" />
+    <Compile Include="Enums\TypeResult.cs" />
     <Compile Include="Enums\TypeSearchItem.cs" />
     <Compile Include="Enums\WSActionType.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helpers\RegistryHelper.cs" />
     <Compile Include="Helpers\TempFileManager.cs" />
+    <Compile Include="Interfaces\IQueryGenerator.cs" />
+    <Compile Include="Interfaces\IResultMessage.cs" />
+    <Compile Include="Interfaces\IRuleQueryGenerator.cs" />
+    <Compile Include="Interfaces\ISearch.cs" />
+    <Compile Include="Interfaces\ISearchResult.cs" />
+    <Compile Include="Interfaces\ISearchRule.cs" />
+    <Compile Include="Interfaces\ISearchSystem.cs" />
+    <Compile Include="Interfaces\ISystemSearchResult.cs" />
     <Compile Include="Interfaces\IWSAction.cs" />
+    <Compile Include="Interfaces\IWSUIAttribute.cs" />
     <Compile Include="Logger\WSSqlLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\QueryGenerator.cs" />
     <Compile Include="Win32\WindowsFunction.cs" />
   </ItemGroup>
   <ItemGroup>
