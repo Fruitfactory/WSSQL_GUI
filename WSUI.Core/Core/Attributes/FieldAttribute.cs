@@ -6,10 +6,6 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
-
-
-using WSUI.Core.Core.Attributes;
 namespace WSUI.Core.Core.Attributes {
 	public class FieldAttribute : BaseWSUIAttribute {
 
@@ -17,10 +13,11 @@ namespace WSUI.Core.Core.Attributes {
 		public int Index{ get;  private set;}
 	    public bool CanBeIgnored { get; private set; }
 
-	    public FieldAttribute(string fieldName,int index)
+	    public FieldAttribute(string fieldName,int index, bool canBeIngnored)
 		{
 		    FieldName = fieldName;
 		    Index = index;
+	        CanBeIgnored = canBeIngnored;
 		}
 
 	}//end FieldAttribute

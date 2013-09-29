@@ -8,17 +8,17 @@
 
 
 using System;
-using WSUI.Core.Data;
-namespace WSUI.Core.Data {
-	public class AttachmentSearchObject : BaseEmailSearchObject {
+using WSUI.Core.Core.Attributes;
 
+namespace WSUI.Core.Data 
+{
+	public class AttachmentSearchObject : BaseEmailSearchObject 
+    {
+        [Field("System.DateModified", 10, false)]
 		public DateTime DateModified{ get;  set;} 
 
-		public AttachmentSearchObject(){
-
-		}
-
-		~AttachmentSearchObject(){
+		public AttachmentSearchObject()
+        {
 
 		}
 

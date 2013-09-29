@@ -7,10 +7,12 @@
 ///////////////////////////////////////////////////////////
 
 
-
-
+using System;
+using System.Collections.Generic;
 using WSUI.Core.Interfaces;
-namespace WSUI.Core.Utils {
+
+namespace WSUI.Core.Utils 
+{
 	public class QueryGenerator : IQueryGenerator 
 	{
 
@@ -35,7 +37,7 @@ namespace WSUI.Core.Utils {
 		/// <param name="type"></param>
 		/// <param name="searchCriteria"></param>
 		/// <param name="exludeIgnored"></param>
-		public string GenerateQuery(Type type, string searchCriteria,int topResult, IRuleQueryGenerator ruleQueryGenerator, bool exludeIgnored)
+		public string GenerateQuery(Type type, string searchCriteria,int topResult, IRuleQueryGenerator ruleQueryGenerator, bool exludeIgnored = false)
 		{
 
 			return "";
@@ -46,16 +48,24 @@ namespace WSUI.Core.Utils {
 		
 		private Tuple<string,int> GetFieldsList(Type type, bool exludeIgnoread)
 		{
+            return null;
+		    
 		}
-		
-		private string GenerateSelectPart(IList<Tuple,int> list, int top)
-		{}
-		
-		private string GenerateFromPart()
-		{}
-		
-		private string GenerateWherePart(IRuleQueryGenerator ruleQueryGenerator)
-		{}
+
+	    private string GenerateSelectPart(IList<Tuple<string, int>> list, int top)
+	    {
+	        return null;
+	    }
+
+	    private string GenerateFromPart()
+	    {
+	        return null;
+	    }
+
+	    private string GenerateWherePart(IRuleQueryGenerator ruleQueryGenerator)
+	    {
+	        return null;
+	    }
 		
 		
 	}//end QueryGenerator

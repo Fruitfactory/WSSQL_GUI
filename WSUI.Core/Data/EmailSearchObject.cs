@@ -6,20 +6,16 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
-
-
-using WSUI.Core.Data;
-namespace WSUI.Core.Data {
-	public class EmailSearchObject : BaseEmailSearchObject {
-
+using WSUI.Core.Core.Attributes;
+namespace WSUI.Core.Data 
+{
+	public class EmailSearchObject : BaseEmailSearchObject 
+    {
+        [Field("System.Subject", 10, false)]    
 		public string Subject{ get;  set;} 
 
-		public EmailSearchObject(){
-
-		}
-
-		~EmailSearchObject(){
+		public EmailSearchObject()
+        {
 
 		}
 

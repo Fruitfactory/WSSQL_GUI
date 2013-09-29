@@ -7,11 +7,10 @@
 ///////////////////////////////////////////////////////////
 
 
-
-
+using System;
 using WSUI.Core.Interfaces;
 namespace WSUI.Core.Core.Attributes {
-	public class BaseWSUIAttribute : IWSUIAttribute {
+	public class BaseWSUIAttribute : Attribute, IWSUIAttribute {
 
 		public BaseWSUIAttribute(){
 

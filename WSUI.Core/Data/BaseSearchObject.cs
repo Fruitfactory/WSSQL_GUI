@@ -8,23 +8,32 @@
 
 
 using System;
+using WSUI.Core.Core.Attributes;
 
-namespace WSUI.Core.Data {
-	public class BaseSearchObject {
+namespace WSUI.Core.Data 
+{
+	public class BaseSearchObject 
+    {
+        [Field("System.ItemName", 1, false)]
+		public string ItemName{ get;  set;}
 
-		public string ItemName{ get;  set;} 
-		public string ItemUrl{ get;  set;} 
-		public string[] Kind{ get;  set;} 
-		public DateTime DateCreated{ get;  set;} 
-		public string ItemNameDisplay{ get;  set;} 
+        [Field("System.ItemUrl", 2, false)]
+		public string ItemUrl{ get;  set;}
+
+        [Field("System.Kind", 3, false)]
+		public string[] Kind{ get;  set;}
+
+        [Field("System.DateCreated", 4, false)]
+		public DateTime DateCreated{ get;  set;}
+
+        [Field("System.ItemNameDisplay", 5, false)]
+		public string ItemNameDisplay{ get;  set;}
+
+        [Field("System.Size", 6, false)]
 		public int Size{ get;  set;} 
 
-		public BaseSearchObject(){
-
-		}
-
-		~BaseSearchObject(){
-
+		protected BaseSearchObject()
+        {
 		}
 
 	}//end BaseSearchObject

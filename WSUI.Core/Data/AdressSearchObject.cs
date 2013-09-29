@@ -6,23 +6,22 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
+using WSUI.Core.Core.Attributes;
+namespace WSUI.Core.Data 
+{
+	public class AdressSearchObject : BaseSearchObject 
+    {
+        [Field("System.Message.ToAddress", 7, false)]    
+		public string ToAddress{ get;  set;}
 
+        [Field("System.Message.FromAddress", 8, false)]
+		public string FromAddress{ get;  set;}
 
-
-using WSUI.Core.Data;
-namespace WSUI.Core.Data {
-	public class AdressSearchObject : BaseSearchObject {
-
-		public string ToAddress{ get;  set;} 
-		public string FromAddress{ get;  set;} 
+        [Field("System.Message.CcAddress", 9, false)]
 		public string CcAddress{ get;  set;} 
 
-		public AdressSearchObject(){
-
-		}
-
-		~AdressSearchObject(){
-
+		public AdressSearchObject()
+        {
 		}
 
 	}//end AdressSearchObject

@@ -17,10 +17,6 @@ namespace WSUI.Core.Data {
 
 		}
 
-		~FileSearchObject(){
-
-		}
-
 	}//end FileSearchObject
 
 }//end namespace Data

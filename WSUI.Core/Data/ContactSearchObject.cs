@@ -7,26 +7,31 @@
 ///////////////////////////////////////////////////////////
 
 
+using WSUI.Core.Core.Attributes;
 
+namespace WSUI.Core.Data 
+{
+	public class ContactSearchObject : BaseSearchObject 
+    {
+        [Field("System.Contact.FirstName", 7, false)]
+		public string FirstName{ get;  set;}
 
-using WSUI.Core.Data;
-namespace WSUI.Core.Data {
-	public class ContactSearchObject : BaseSearchObject {
+        [Field("System.Contact.LastName", 8, false)]
+		public string LastName{ get;  set;}
 
-		public string FirstName{ get;  set;} 
-		public string LastName{ get;  set;} 
-		public string EmailAddress{ get;  set;} 
-		public string EmailAddress2{ get;  set;} 
+        [Field("System.Contact.EmailAddress", 9, false)]
+		public string EmailAddress{ get;  set;}
+
+        [Field("System.Contact.EmailAddress2", 10, false)]
+		public string EmailAddress2{ get;  set;}
+
+        [Field("System.Contact.EmailAddress3", 11, false)]
 		public string EmailAddress3{ get;  set;} 
 
-		public ContactSearchObject(){
+		public ContactSearchObject()
+        {
 
 		}
-
-		~ContactSearchObject(){
-
-		}
-
 	}//end ContactSearchObject
 
 }//end namespace Data

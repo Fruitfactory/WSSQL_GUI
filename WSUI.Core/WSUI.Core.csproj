@@ -85,7 +85,9 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helpers\RegistryHelper.cs" />
     <Compile Include="Helpers\TempFileManager.cs" />
+    <Compile Include="Interfaces\IFieldCash.cs" />
     <Compile Include="Interfaces\IQueryGenerator.cs" />
+    <Compile Include="Interfaces\IQueryReader.cs" />
     <Compile Include="Interfaces\IResultMessage.cs" />
     <Compile Include="Interfaces\IRuleQueryGenerator.cs" />
     <Compile Include="Interfaces\ISearch.cs" />
@@ -97,7 +99,9 @@
     <Compile Include="Interfaces\IWSUIAttribute.cs" />
     <Compile Include="Logger\WSSqlLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\FieldCash.cs" />
     <Compile Include="Utils\QueryGenerator.cs" />
+    <Compile Include="Utils\QueryReader.cs" />
     <Compile Include="Win32\WindowsFunction.cs" />
   </ItemGroup>
   <ItemGroup>

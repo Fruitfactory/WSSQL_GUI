@@ -8,19 +8,22 @@
 
 
 using System;
-using WSUI.Core.Data;
-namespace WSUI.Core.Data {
-	public class BaseEmailSearchObject : BaseSearchObject {
+using WSUI.Core.Core.Attributes;
+namespace WSUI.Core.Data 
+{
+	public class BaseEmailSearchObject : BaseSearchObject 
+    {
+        [Field("System.Message.ConversationID", 7, false)]
+		public string ConversationId{ get;  set;}
 
-		public string ConversationId{ get;  set;} 
-		public string ToAdress{ get;  set;} 
+        [Field("System.Message.ToAddress", 8, false)]
+		public string ToAddress{ get;  set;}
+
+        [Field("System.Message.DateReceived", 9, false)]
 		public DateTime DateReceived{ get;  set;} 
 
-		public BaseEmailSearchObject(){
-
-		}
-
-		~BaseEmailSearchObject(){
+		public BaseEmailSearchObject()
+        {
 
 		}
 
