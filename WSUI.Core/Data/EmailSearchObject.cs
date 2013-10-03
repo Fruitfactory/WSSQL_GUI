@@ -19,6 +19,16 @@ namespace WSUI.Core.Data
 
 		}
 
-	}//end EmailSearchObject
+	    public override void SetValue(int index, object value)
+	    {
+	        base.SetValue(index, value);
+	        switch (index)
+	        {
+	            case 10:
+                    Subject = value as string;
+                    break;
+	        }
+	    }
+    }//end EmailSearchObject
 
 }//end namespace Data

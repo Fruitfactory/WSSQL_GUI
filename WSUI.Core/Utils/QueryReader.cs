@@ -15,41 +15,45 @@ using WSUI.Core.Interfaces;
 
 namespace WSUI.Core.Utils 
 {
-	public class QueryReader : IQueryReader 
+	public class QueryReader : IQueryReader
     {
+        #region [needs]
 
-		protected QueryReader()
+	    private Type _type;
+	    private IList<Tuple<string, string, int, bool>> _intermalList; 
+
+        #endregion
+
+        private QueryReader(Type type,IList<Tuple<string, string, int, bool>> fields )
         {
+            _type = type;
+            _intermalList = fields;
+        }
 
-		}
-
-        private static Lazy<IQueryReader> _instance = new Lazy<IQueryReader>(() =>
-        {
-            var inst = new QueryReader();
-            inst.Init();
-            return inst;
-        });
-
-
-	    public static IQueryReader Instance
+	    public static QueryReader CreateNewReader(Type type,IList<Tuple<string, string, int, bool>> listFields )
 	    {
-	        get { return _instance.Value; }
-	    }
-
-	    private void Init()
-	    {
-	        
+	        return new QueryReader(type,listFields); 
 	    }
 
 		/// 
 		/// <param name="reader"></param>
 		/// <param name="type"></param>
-		public object ReadResult(IDataReader reader, Type type, IList<Tuple<string,string,int,bool>> fields){
+		public object ReadResult(IDataReader reader)
+		{
+		    var result = Activator.CreateInstance(_type) as ISearchObject;
+		    if (result == null)
+		        return null;
 
-			return null;
+		    foreach (var tuple in _intermalList)
+		    {
+		        int index = tuple.Item3 - 1;
+		        if (index >= reader.FieldCount)
+		            break;
+		        object val = reader[index];
+                result.SetValue(tuple.Item3,val);
+		    }
+			return result;
 		}
-
-
 
 	}//end QueryReader
 

@@ -64,6 +64,7 @@
     <Compile Include="Core\Rules\BaseRule.cs" />
     <Compile Include="Core\Rules\IRule.cs" />
     <Compile Include="Core\Rules\QuoteRule.cs" />
+    <Compile Include="Core\Rules\RuleFactory.cs" />
     <Compile Include="Core\Rules\WordRule.cs" />
     <Compile Include="Core\Search\BaseSearchRule.cs" />
     <Compile Include="Core\Search\BaseSearchSystem.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Enums\TypeResult.cs" />
     <Compile Include="Enums\TypeSearchItem.cs" />
     <Compile Include="Enums\WSActionType.cs" />
+    <Compile Include="Extensions\FieldsExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helpers\RegistryHelper.cs" />
     <Compile Include="Helpers\TempFileManager.cs" />
@@ -91,6 +93,7 @@
     <Compile Include="Interfaces\IResultMessage.cs" />
     <Compile Include="Interfaces\IRuleQueryGenerator.cs" />
     <Compile Include="Interfaces\ISearch.cs" />
+    <Compile Include="Interfaces\ISearchObject.cs" />
     <Compile Include="Interfaces\ISearchResult.cs" />
     <Compile Include="Interfaces\ISearchRule.cs" />
     <Compile Include="Interfaces\ISearchSystem.cs" />

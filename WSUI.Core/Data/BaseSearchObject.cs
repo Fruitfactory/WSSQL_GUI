@@ -8,11 +8,14 @@
 
 
 using System;
+using System.Globalization;
+using System.IO.IsolatedStorage;
 using WSUI.Core.Core.Attributes;
+using WSUI.Core.Interfaces;
 
 namespace WSUI.Core.Data 
 {
-	public class BaseSearchObject 
+	public class BaseSearchObject :  ISearchObject
     {
         [Field("System.ItemName", 1, false)]
 		public string ItemName{ get;  set;}
@@ -36,6 +39,30 @@ namespace WSUI.Core.Data
         {
 		}
 
-	}//end BaseSearchObject
+	    public virtual void SetValue(int index, object value)
+	    {
+	        switch (index)
+	        {
+	            case 1:
+	                ItemName = value as string;
+	                break;
+                case 2:
+	                ItemUrl = value as string;
+	                break;
+                case 3:
+	                Kind = value as string[];
+	                break;
+                case 4:
+	                DateCreated = (DateTime)Convert.ChangeType(value, typeof (DateTime), CultureInfo.InvariantCulture);
+	                break;
+                case 5:
+	                ItemNameDisplay = value as string;
+	                break;
+                case 6:
+	                Size = (int)value;
+	                break;
+	        }
+	    }
+    }//end BaseSearchObject
 
 }//end namespace Data

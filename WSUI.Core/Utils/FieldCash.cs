@@ -74,6 +74,7 @@ namespace WSUI.Core.Utils
 	        {
 	            GetBaseFields(listResult, type.BaseType);
 	        }
+            GetListValue(listResult,type);
 	        return listResult;
 	    }
 

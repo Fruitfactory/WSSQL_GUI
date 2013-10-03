@@ -10,26 +10,47 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
+using System.Data.OleDb;
+using System.Diagnostics;
 using System.Threading;
 using WSUI.Core.Interfaces;
-using WSUI.Infrastructure.Service.Rules;
+using WSUI.Core.Core.Rules;
+using WSUI.Core.Logger;
+using WSUI.Core.Utils;
 
 namespace WSUI.Core.Core.Search 
 {
 	public class BaseSearchRule<T> : ISearch, ISearchTemplateRule<T>, IRuleQueryGenerator where T : class
-	{
-		protected IList<T> Result;
-		protected bool NeedInterrup;
-		protected DateTime LastDate;
-		protected string Query;
-		private readonly string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
-		protected AutoResetEvent Event;
-		private Thread _ruleThread;
+    {
+        #region [needs private]
 
+        private readonly string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
+        private Thread _ruleThread;
+        private IQueryReader _reader;
+	    private int _countAdded = 0;
+	    private int _countProcess = 0;
 
-		public BaseSearchRule()
-		{
+        #endregion
 
+        #region [needs protected]
+
+	    protected volatile bool IsInterupt = false;
+        protected IList<T> Result;
+        protected bool NeedInterrup;
+        protected DateTime LastDate;
+        protected string Query;
+        protected AutoResetEvent Event;
+        protected int TopQueryResult = 100;
+	    protected int CountFirstProcess = 35;
+	    protected int CountSecondProcess = 7;
+
+        #endregion
+        
+        private readonly object _lock = new object();
+
+		protected BaseSearchRule()
+		{   
 		}
 
 		public ISearchResult<T> GetResults()
@@ -42,8 +63,9 @@ namespace WSUI.Core.Core.Search
 		/// @param ="criteris"
 		/// </summary>
 		/// <param name="criteria"></param>
-		public void SetSearchCriteria(string criteria){
-
+		public void SetSearchCriteria(string criteria)
+		{
+		    Query = criteria;
 		}
 
 		public void Search()
@@ -62,24 +84,90 @@ namespace WSUI.Core.Core.Search
 
 	    protected virtual void DoQuery()
 	    {
+	        try
+	        {
+	            IsSearching = true;
+	            var query = QueryGenerator.Instance.GenerateQuery(typeof (T), Query, 100, this, false);
+	            if (string.IsNullOrEmpty(query))
+                    throw new ArgumentNullException("Query is null or empty");
+                OleDbDataReader dataReader = null;
+                OleDbConnection connection = new OleDbConnection(ConnectionString);
+                OleDbCommand cmd = new OleDbCommand(query, connection);
+                cmd.CommandTimeout = 0;
+
+                var watch = new Stopwatch();
+                watch.Start();
+                try
+                {
+
+                    connection.Open();
+
+                    var watchOleDbCommand = new Stopwatch();
+                    watchOleDbCommand.Start();
+                    dataReader = cmd.ExecuteReader();
+                    watchOleDbCommand.Stop();
+                    WSSqlLogger.Instance.LogInfo("dataReader = cmd.ExecuteReader(); Elapsed: " + watchOleDbCommand.ElapsedMilliseconds.ToString());
+
+                    while (dataReader.Read())
+                    {
+                        try
+                        {
+                            ReadData(dataReader);
+                            if (IsInterupt)
+                                break;
+                        }
+                        catch (Exception ex)
+                        {
+                            WSSqlLogger.Instance.LogError("{0}: {1}", "DoQuery _ main cycle", ex.Message);
+                        }
+                    }
+
+                }
+                catch (OleDbException oleDbException)
+                {
+                    WSSqlLogger.Instance.LogError("{0}: {1}", "DoQuery", oleDbException.Message);
+                }
+	        }
+	        catch (Exception ex)
+	        {
+                WSSqlLogger.Instance.LogError("Search: {0}",ex.Message);
+	        }
+	        finally
+	        {
+	            IsSearching = false;
+	            Event.Set();
+	        }
+	        
 	    }
 
-	    protected virtual void CreateQuery(){}
+	    protected virtual void CreateQuery()
+	    {
+	        IsInterupt = false;
+	    }
 
-		/// 
-		/// <param name="reader"></param>
-		protected virtual void ReadData(IDataReader reader){}
+	    /// 
+	    /// <param name="reader"></param>
+	    protected virtual void ReadData(IDataReader reader)
+	    {
+	        var result = Reader.ReadResult(reader) as T;
+	        if (result == null)
+	            return;
+	        Result.Add(result);
+	        _countAdded++;
+	        if (_countAdded == _countProcess)
+	            IsInterupt = true;
+	    }
 
-		public AutoResetEvent GetEvent()
+	    public AutoResetEvent GetEvent()
 		{
-
-			return null;
+			return Event;
 		}
 
-		public void Reset()
+		public virtual void Reset()
 		{
-			
-
+            _countAdded = 0;
+            _countProcess = 0;
+		    Query = string.Empty;
 		}
 
 	    public bool IsSearching { get; private set; }
@@ -87,13 +175,10 @@ namespace WSUI.Core.Core.Search
 
 	    protected virtual void ProcessResult()
 		{
-			
-
 		}
 
 		protected virtual void SortingResult()
 		{
-
 		}
 
 		protected virtual void RemoveDuplicates()
@@ -101,14 +186,25 @@ namespace WSUI.Core.Core.Search
 
 		}
 
-		public void Init()
+		public virtual void Init()
 		{
-
+		    _countProcess = CountFirstProcess;
+		    _countAdded = 0;
 		}
 
 	    public string GenerateWherePart(IList<IRule> listCriteriaRules)
 	    {
-	        throw new NotImplementedException();
+	        return string.Empty;
+	    }
+
+	    protected virtual string OnGenerateWherePart(IList<IRule> listCriterisRules)
+	    {
+	        return string.Empty;
+	    }
+
+        protected IQueryReader Reader
+	    {
+            get { return _reader ?? (_reader = QueryReader.CreateNewReader(typeof(T),FieldCash.Instance.GetFields(typeof(T),false))); }	        
 	    }
 
 	}//end BaseSearchRule

@@ -8,6 +8,7 @@
 
 
 using System;
+using System.Globalization;
 using WSUI.Core.Core.Attributes;
 
 namespace WSUI.Core.Data 
@@ -22,6 +23,16 @@ namespace WSUI.Core.Data
 
 		}
 
-	}//end AttachmentSearchObject
+	    public override void SetValue(int index, object value)
+	    {
+	        base.SetValue(index, value);
+	        switch (index)
+	        {
+                case 10:
+	                DateModified = (DateTime) Convert.ChangeType(value, typeof (DateTime), CultureInfo.InvariantCulture);
+	                break;
+	        }
+	    }
+    }//end AttachmentSearchObject
 
 }//end namespace Data

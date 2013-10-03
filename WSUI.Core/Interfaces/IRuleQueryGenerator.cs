@@ -8,7 +8,7 @@
 
 
 using System.Collections.Generic;
-using WSUI.Infrastructure.Service.Rules;
+using WSUI.Core.Core.Rules;
 
 namespace WSUI.Core.Interfaces {
 	public interface IRuleQueryGenerator  {

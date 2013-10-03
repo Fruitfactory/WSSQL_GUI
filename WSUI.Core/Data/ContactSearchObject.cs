@@ -32,6 +32,29 @@ namespace WSUI.Core.Data
         {
 
 		}
-	}//end ContactSearchObject
+
+	    public override void SetValue(int index, object value)
+	    {
+	        base.SetValue(index, value);
+	        switch (index)
+	        {
+	            case 7:
+	                FirstName = value as string;
+	                break;
+                case 8:
+                    LastName = value as string;
+                    break;
+                case 9:
+                    EmailAddress = value as string;
+                    break;
+                case 10:
+                    EmailAddress2 = value as string;
+                    break;
+                case 11:
+                    EmailAddress3 = value as string;
+                    break;
+	        }
+	    }
+    }//end ContactSearchObject
 
 }//end namespace Data

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace WSUI.Infrastructure.Service.Rules
+namespace WSUI.Core.Core.Rules
 {
     public abstract class BaseRule : IRule
     {

@@ -6,6 +6,8 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
+using System.Collections;
+using System.Windows.Input;
 using WSUI.Core.Core.Attributes;
 namespace WSUI.Core.Data 
 {
@@ -24,6 +26,22 @@ namespace WSUI.Core.Data
         {
 		}
 
-	}//end AdressSearchObject
+	    public override void SetValue(int index, object value)
+	    {
+	        base.SetValue(index, value);
+	        switch (index)
+	        {
+	            case 7:
+                    ToAddress = value as string;
+	                break;
+                case 8:
+                    FromAddress = value as string;
+	                break;
+                case 9:
+                    CcAddress = value as string;
+	                break;
+	        }
+	    }
+    }//end AdressSearchObject
 
 }//end namespace Data

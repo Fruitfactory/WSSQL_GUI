@@ -10,13 +10,14 @@
 
 
 using WSUI.Core.Data;
-namespace WSUI.Core.Data {
-	public class FileSearchObject : BaseSearchObject {
-
-		public FileSearchObject(){
+namespace WSUI.Core.Data 
+{
+	public class FileSearchObject : BaseSearchObject 
+    {
+		public FileSearchObject()
+        {
 
 		}
-
 	}//end FileSearchObject
 
 }//end namespace Data

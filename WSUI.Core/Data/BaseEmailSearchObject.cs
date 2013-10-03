@@ -8,6 +8,7 @@
 
 
 using System;
+using System.Globalization;
 using WSUI.Core.Core.Attributes;
 namespace WSUI.Core.Data 
 {
@@ -27,6 +28,22 @@ namespace WSUI.Core.Data
 
 		}
 
-	}//end BaseEmailSearchObject
+	    public override void SetValue(int index, object value)
+	    {
+	        base.SetValue(index, value);
+	        switch (index)
+	        {
+	            case 7:
+	                ConversationId = value as string;
+	                break;
+                case 8:
+	                ToAddress = value as string;
+	                break;
+                case 9:
+	                DateReceived = (DateTime) Convert.ChangeType(value, typeof (DateTime), CultureInfo.InvariantCulture);
+	                break;
+	        }
+	    }
+    }//end BaseEmailSearchObject
 
 }//end namespace Data

@@ -19,7 +19,7 @@ namespace WSUI.Core.Interfaces
 		/// 
 		/// <param name="reader"></param>
 		/// <param name="type"></param>
-        object ReadResult(IDataReader reader, Type type, IList<Tuple<string, string, int, bool>> fields);
+        object ReadResult(IDataReader reader);
 	}//end IQueryReader
 
 }//end namespace Interfaces

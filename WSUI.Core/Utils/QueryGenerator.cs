@@ -9,17 +9,23 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
+using WSUI.Core.Core.Rules;
 
 namespace WSUI.Core.Utils 
 {
-	public class QueryGenerator : IQueryGenerator 
+	public class QueryGenerator : IQueryGenerator
 	{
+	    private const string QueryTemplate = "{0} {1} {2}";
+	    private const string SelectTopTemplate = "SELECT TOP {0} ";
+	    private const string FieldsSeparator = ",";
 
-		
+
 		protected QueryGenerator()
 		{
-
 		}
 
 		private static Lazy<IQueryGenerator> _instance = new Lazy<IQueryGenerator>(() => {
@@ -39,32 +45,38 @@ namespace WSUI.Core.Utils
 		/// <param name="exludeIgnored"></param>
 		public string GenerateQuery(Type type, string searchCriteria,int topResult, IRuleQueryGenerator ruleQueryGenerator, bool exludeIgnored = false)
 		{
-
-			return "";
+		    var listFields = FieldCash.Instance.GetFieldList(type, exludeIgnored);
+		    if (listFields == null || listFields.Count == 0)
+		        return "";
+		    var selectPart = GenerateSelectPart(listFields, topResult);
+		    var fromPart = GenerateFromPart();
+		    var wherePart = GenerateWherePart(ruleQueryGenerator);
+		    var query = string.Format(QueryTemplate, selectPart, fromPart, wherePart);
+			return query;
 		}
 
 		private void Init()
 		{}
-		
-		private Tuple<string,int> GetFieldsList(Type type, bool exludeIgnoread)
-		{
-            return null;
-		    
-		}
 
 	    private string GenerateSelectPart(IList<Tuple<string, int>> list, int top)
 	    {
-	        return null;
+	        var selectPart = string.Format(SelectTopTemplate, top);
+            var fields = string.Join(FieldsSeparator, list.Select(item => item.Item1).ToArray());
+	        selectPart += fields;
+	        return selectPart;
 	    }
 
 	    private string GenerateFromPart()
 	    {
-	        return null;
+	        return "FROM SystemIndex";
 	    }
 
 	    private string GenerateWherePart(IRuleQueryGenerator ruleQueryGenerator)
 	    {
-	        return null;
+	        if (ruleQueryGenerator == null)
+	            return "";
+	        string where = ruleQueryGenerator.GenerateWherePart(RuleFactory.Instance.GetAllRules());
+	        return where;
 	    }
 		
 		
