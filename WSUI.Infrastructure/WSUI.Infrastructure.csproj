@@ -94,6 +94,8 @@
     <Compile Include="Implements\AllSearchSystem.cs" />
     <Compile Include="Implements\AttachmentFilenameSearchRule.cs" />
     <Compile Include="Implements\AttachmentSearchSystem.cs" />
+    <Compile Include="Implements\BaseEmailSearchRule.cs" />
+    <Compile Include="Implements\BaseFilelSearchRule.cs" />
     <Compile Include="Implements\ContactSearchRule.cs" />
     <Compile Include="Implements\ContactSearchSystem.cs" />
     <Compile Include="Implements\EmailContentSearchRule.cs" />

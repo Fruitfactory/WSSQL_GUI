@@ -13,6 +13,8 @@ using System.Data;
 using System.Data.Common;
 using System.Data.OleDb;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Core.Rules;
@@ -21,15 +23,16 @@ using WSUI.Core.Utils;
 
 namespace WSUI.Core.Core.Search 
 {
-	public class BaseSearchRule<T> : ISearch, ISearchTemplateRule<T>, IRuleQueryGenerator where T : class
+	public class BaseSearchRule<T> : ISearch, ISearchRule, IRuleQueryGenerator where T : class
     {
         #region [needs private]
 
-        private readonly string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
-        private Thread _ruleThread;
+	    private const string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
+	    private Thread _ruleThread;
         private IQueryReader _reader;
 	    private int _countAdded = 0;
 	    private int _countProcess = 0;
+	    private volatile bool _needStop = false;
 
         #endregion
 
@@ -45,6 +48,8 @@ namespace WSUI.Core.Core.Search
 	    protected int CountFirstProcess = 35;
 	    protected int CountSecondProcess = 7;
 
+        protected string QueryAnd = " AND \"{0}\"";
+
         #endregion
         
         private readonly object _lock = new object();
@@ -53,9 +58,8 @@ namespace WSUI.Core.Core.Search
 		{   
 		}
 
-		public ISearchResult<T> GetResults()
+		public ISearchResult GetResults()
 		{
-
 			return null;
 		}
 
@@ -70,12 +74,16 @@ namespace WSUI.Core.Core.Search
 
 		public void Search()
 		{
+		    if (_ruleThread != null)
+		        return;
+            _ruleThread = new Thread(DoQuery) {Priority = ThreadPriority.Highest};
+		    _ruleThread.Start();
 
 		}
 
 		public void Stop()
 		{
-
+		    _needStop = true;
 		}
 
 		public event Action<object> SearchStarted;
@@ -127,6 +135,8 @@ namespace WSUI.Core.Core.Search
                 {
                     WSSqlLogger.Instance.LogError("{0}: {1}", "DoQuery", oleDbException.Message);
                 }
+                // additional process
+                ProcessResult();
 	        }
 	        catch (Exception ex)
 	        {
@@ -134,6 +144,7 @@ namespace WSUI.Core.Core.Search
 	        }
 	        finally
 	        {
+	            TopQueryResult = _countProcess = CountSecondProcess;
 	            IsSearching = false;
 	            Event.Set();
 	        }
@@ -159,7 +170,8 @@ namespace WSUI.Core.Core.Search
 	    }
 
 	    public AutoResetEvent GetEvent()
-		{
+	    {
+	        Event.Reset();
 			return Event;
 		}
 
@@ -168,33 +180,28 @@ namespace WSUI.Core.Core.Search
             _countAdded = 0;
             _countProcess = 0;
 		    Query = string.Empty;
+		    _needStop = false;
+		    LastDate = GetCurrentDateTime();
 		}
 
-	    public bool IsSearching { get; private set; }
-	    public int Priority { get; private set; }
+	    public bool IsSearching { get; protected set; }
+	    public int Priority { get; protected set; }
 
 	    protected virtual void ProcessResult()
 		{
-		}
-
-		protected virtual void SortingResult()
-		{
-		}
-
-		protected virtual void RemoveDuplicates()
-		{
-
+            
 		}
 
 		public virtual void Init()
 		{
-		    _countProcess = CountFirstProcess;
+		    LastDate = GetCurrentDateTime();
+		    TopQueryResult = _countProcess = CountFirstProcess;
 		    _countAdded = 0;
 		}
 
 	    public string GenerateWherePart(IList<IRule> listCriteriaRules)
 	    {
-	        return string.Empty;
+	        return OnGenerateWherePart(listCriteriaRules);
 	    }
 
 	    protected virtual string OnGenerateWherePart(IList<IRule> listCriterisRules)
@@ -206,6 +213,46 @@ namespace WSUI.Core.Core.Search
 	    {
             get { return _reader ?? (_reader = QueryReader.CreateNewReader(typeof(T),FieldCash.Instance.GetFields(typeof(T),false))); }	        
 	    }
+
+	    protected DateTime GetCurrentDateTime()
+	    {
+	        return DateTime.Now.AddDays(1);
+	    }
+
+        protected string FormatDate(ref DateTime date)
+        {
+            return date.ToString("yyyy/MM/dd hh:mm:ss").Replace('.', '/');
+        }
+
+	    protected string GetProcessingSearchSriteria(IList<IRule> listRuleCriteriasRules )
+	    {
+	        var tempCriteria = Query;
+            var andClause = string.Empty;
+            var listW = new List<string>();
+
+            foreach (var rule in listRuleCriteriasRules.OrderBy(i => i.Priority))
+            {
+                listW.AddRange(rule.ApplyRule(Query));
+                tempCriteria = rule.ClearCriteriaAccordingRule(tempCriteria);
+            }
+
+	        if (listW.Count > 1)
+	        {
+	            StringBuilder temp = new StringBuilder();
+	            temp.Append(string.Format("'\"{0}*\"", listW[0]));
+	            for (int i = 1; i < listW.Count; i++)
+	            {
+	                temp.Append(string.Format(QueryAnd, listW[i]));
+	            }
+	            andClause = temp.ToString() + "'";
+	        }
+	        else
+	        {
+                andClause = string.Format("'\"{0}*\"'", listW[0]);
+	        }
+	        return andClause;
+	    }
+
 
 	}//end BaseSearchRule
 

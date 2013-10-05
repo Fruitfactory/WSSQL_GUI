@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using WSUI.Core.Core;
+using WSUI.Core.Data;
 using WSUI.Infrastructure.Services;
 
 namespace WSUI.Module.Interface
@@ -47,7 +48,7 @@ namespace WSUI.Module.Interface
 
         BaseSearchData Current { get; set; }
 
-        ObservableCollection<BaseSearchData> DataSource
+        ObservableCollection<BaseSearchObject> DataSource
         {
             get;
         }

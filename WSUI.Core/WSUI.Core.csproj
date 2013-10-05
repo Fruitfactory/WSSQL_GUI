@@ -83,6 +83,7 @@
     <Compile Include="Enums\TypeResult.cs" />
     <Compile Include="Enums\TypeSearchItem.cs" />
     <Compile Include="Enums\WSActionType.cs" />
+    <Compile Include="Extensions\CommonExtensions.cs" />
     <Compile Include="Extensions\FieldsExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helpers\RegistryHelper.cs" />

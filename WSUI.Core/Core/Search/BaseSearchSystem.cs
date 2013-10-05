@@ -9,8 +9,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using WSUI.Core.Interfaces;
+using WSUI.Core.Extensions;
+using WSUI.Core.Logger;
+
 namespace WSUI.Core.Core.Search 
 {
 	public abstract class BaseSearchSystem : ISearchSystem 
@@ -18,38 +22,48 @@ namespace WSUI.Core.Core.Search
 
 		private Thread _mainSearchThread;
 		private IList<ISearch> _listRules;
+	    private volatile bool _needStop = false;
+
+	    protected IList<ISystemSearchResult> InternalResult;
+	    protected volatile bool IsSearching = false;
 
 		protected BaseSearchSystem()
         {
-
+            _listRules = new List<ISearch>();
+            InternalResult = new List<ISystemSearchResult>();
 		}
 
+		public virtual void Init()
+		{
+		    IsSearching = false;
+		}
 
-		public void Init()
+		public virtual void Reset()
         {
-
-		}
-
-		public void Reset()
-        {
-
-		}
+            InternalResult.Clear();
+		    IsSearching = false;
+		    _needStop = false;
+        }
 
 		/// 
 		/// <param name="searchCriteris"></param>
 		public void SetSearchCriteria(string searchCriteris)
-        {
-
+		{
+		    _listRules.ForEach(item => item.SetSearchCriteria(searchCriteris));
 		}
 
-		public void Search()
-        {
-
+		public virtual void Search()
+		{
+		    if (IsSearching)
+		        return;
+            _mainSearchThread = new Thread(DoSearch);
+            _mainSearchThread.Start();
 		}
 
-		public void Stop()
-        {
-
+		public virtual void Stop()
+		{
+		    _needStop = true;
+            _listRules.ForEach(item => item.Stop());
 		}
 
 		public event Action<object> SearchStarted;
@@ -60,23 +74,28 @@ namespace WSUI.Core.Core.Search
 
 		public IList<ISystemSearchResult> GetResult()
         {
-
-			return null;
+			return InternalResult;
 		}
 
 		protected virtual void RaiseSearchStarted()
-        {
-
+		{
+		    var temp = SearchStarted;
+		    if (temp != null)
+		        temp(null);
 		}
 
 		protected virtual void RaiseSearchFinished()
-        {
-
+		{
+		    var temp = SearchFinished;
+		    if (temp != null)
+		        temp(null);
 		}
 
 		protected virtual void RaiseSearchStopped()
-        {
-
+		{
+		    var temp = SearchStoped;
+		    if (temp != null)
+		        temp(null);
 		}
 
 		protected virtual void ProcessData()
@@ -86,19 +105,50 @@ namespace WSUI.Core.Core.Search
 
 		protected IList<ISearch> GetRules()
         {
-
 			return _listRules;
 		}
 
 		protected virtual void DoSearch()
-        {
+		{
+		    try
+		    {
+		        var listEvents = new List<AutoResetEvent>();
+		        _listRules.ForEach(item => listEvents.Add(item.GetEvent()));
+		        _listRules.ForEach(item => item.Search());
+		        WaitHandle.WaitAll(listEvents.ToArray());
 
+		        if (_needStop)
+		        {
+		            RaiseSearchStopped();
+		            IsSearching = false;
+                    WSSqlLogger.Instance.LogError("Searching was stoped");
+                    return;
+		        }
+		        foreach (var item in _listRules.OrderBy(i => i.Priority))
+		        {
+		            var result = (item as ISearchRule).GetResults();
+		            if (result == null)
+		                continue;
+		            var itemResult = new SystemSearchResult(item.Priority, result.OperationResult);
+		            InternalResult.Add(itemResult);
+		        }
+		    }
+		    catch (Exception ex)
+		    {
+                WSSqlLogger.Instance.LogError("{0}",ex.Message);
+		    }
+		    finally
+		    {
+		        IsSearching = false;
+		    }
 		}
 
-		protected virtual void DoStop()
-        {
-
-		}
+	    protected void AddRule(ISearch rule)
+	    {
+	        if (rule == null)
+	            return;
+            _listRules.Add(rule);
+	    }
 
 	}//end BaseSearchSystem
 

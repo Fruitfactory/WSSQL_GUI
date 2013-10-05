@@ -15,7 +15,7 @@ namespace WSUI.Core.Core.Search
 	public class SystemSearchResult : ISystemSearchResult 
     {
 
-        public SystemSearchResult(int priority, System.Collections.Generic.IList<Data.BaseSearchObject> result)
+        public SystemSearchResult(int priority, System.Collections.Generic.IList<ISearchObject> result)
 		{
 		    Priority = priority;
             Result = result;
@@ -27,7 +27,7 @@ namespace WSUI.Core.Core.Search
             private set;
         }
 
-        public System.Collections.Generic.IList<Data.BaseSearchObject> Result
+        public System.Collections.Generic.IList<ISearchObject> Result
         {
             get;
             private set;

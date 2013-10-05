@@ -8,6 +8,7 @@
 
 
 using WSUI.Core.Core.Attributes;
+using WSUI.Core.Enums;
 
 namespace WSUI.Core.Data 
 {
@@ -30,7 +31,7 @@ namespace WSUI.Core.Data
 
 		public ContactSearchObject()
         {
-
+            TypeItem = TypeSearchItem.Contact;
 		}
 
 	    public override void SetValue(int index, object value)

@@ -7,17 +7,24 @@
 ///////////////////////////////////////////////////////////
 
 
-
-
+using MahApps.Metro.Controls;
 using WSUI.Core.Core.Search;
-namespace WSUI.Infrastructure.Implements {
-	public class EmailSearchSystem : BaseSearchSystem {
-
-		public EmailSearchSystem(){
-
+namespace WSUI.Infrastructure.Implements 
+{
+	public class EmailSearchSystem : BaseSearchSystem 
+    {
+		public EmailSearchSystem()
+        {
 		}
 
+	    public override void Init()
+	    {
+	        base.Init();
+            AddRule(new EmailSubjectSearchRule());
+            //AddRule(new EmailContentSearchRule());
+	    }
 
-	}//end EmailSearchSystem
+
+    }//end EmailSearchSystem
 
 }//end namespace Implements

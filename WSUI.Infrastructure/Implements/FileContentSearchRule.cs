@@ -13,7 +13,7 @@ using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
 
 namespace WSUI.Infrastructure.Implements {
-	public class FileContentSearchRule : BaseSearchRule<FileSearchObject> {
+	public class FileContentSearchRule : BaseFilelSearchRule {
 
 		public FileContentSearchRule(){
 

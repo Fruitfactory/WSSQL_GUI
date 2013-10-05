@@ -12,10 +12,10 @@
 namespace WSUI.Core.Interfaces 
 {
 
-	public interface ISearchTemplateRule<T> where T : class 
+	public interface ISearchRule 
 	{
 
-		ISearchResult<T> GetResults();
+		ISearchResult GetResults();
 
 	}//end ISearchTemplateRule
 

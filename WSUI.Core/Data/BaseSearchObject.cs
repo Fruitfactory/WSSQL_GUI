@@ -8,19 +8,28 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO.IsolatedStorage;
 using WSUI.Core.Core.Attributes;
+using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
 
 namespace WSUI.Core.Data 
 {
 	public class BaseSearchObject :  ISearchObject
     {
+        #region [needs]
+
+	    private readonly IList<ISearchObject> _internaList = new List<ISearchObject>();
+
+        #endregion
+
+
         [Field("System.ItemName", 1, false)]
 		public string ItemName{ get;  set;}
 
-        [Field("System.ItemUrl", 2, false)]
+	    [Field("System.ItemUrl", 2, false)]
 		public string ItemUrl{ get;  set;}
 
         [Field("System.Kind", 3, false)]
@@ -35,8 +44,11 @@ namespace WSUI.Core.Data
         [Field("System.Size", 6, false)]
 		public int Size{ get;  set;} 
 
+		public Guid Id {get;private set;}
+		
 		protected BaseSearchObject()
         {
+			Id = Guid.NewGuid();
 		}
 
 	    public virtual void SetValue(int index, object value)
@@ -63,6 +75,21 @@ namespace WSUI.Core.Data
 	                break;
 	        }
 	    }
+
+	    public IEnumerable<ISearchObject> Items
+	    {
+	        get { return _internaList; }
+	    }
+
+	    public void AddItem(ISearchObject item)
+	    {
+	        if (!_internaList.Contains(item)) 
+                _internaList.Add(item);
+	    }
+
+	    public TypeSearchItem TypeItem {get; set;}
+
+    
     }//end BaseSearchObject
 
 }//end namespace Data

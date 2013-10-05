@@ -7,6 +7,8 @@
 ///////////////////////////////////////////////////////////
 
 using WSUI.Core.Core.Attributes;
+using WSUI.Core.Enums;
+
 namespace WSUI.Core.Data 
 {
 	public class EmailSearchObject : BaseEmailSearchObject 
@@ -16,7 +18,7 @@ namespace WSUI.Core.Data
 
 		public EmailSearchObject()
         {
-
+            TypeItem = TypeSearchItem.Email;
 		}
 
 	    public override void SetValue(int index, object value)

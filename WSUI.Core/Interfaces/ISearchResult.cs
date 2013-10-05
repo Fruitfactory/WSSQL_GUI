@@ -9,11 +9,13 @@
 
 using System.Collections.Generic;
 using WSUI.Core.Enums;
-namespace WSUI.Core.Interfaces {
-	public interface ISearchResult<T>   where T : class    {
+namespace WSUI.Core.Interfaces 
+{
+	public interface ISearchResult  
+    {
 		TypeResult Type{ get; } 
 		IList<IResultMessage> Messages{ get; } 
-		IList<T> OperationResult{ get; } 
+		IList<ISearchObject> OperationResult{ get; } 
 		
 	}//end ISearchResult
 

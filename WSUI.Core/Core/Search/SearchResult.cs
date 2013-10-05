@@ -8,14 +8,15 @@
 
 
 using System.Collections.Generic;
+using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
 namespace WSUI.Core.Core.Search 
 {
-	public class SearchResult<T> : ISearchResult<T>  where T : class
+	public class SearchResult : ISearchResult
     {
 
-		public SearchResult(TypeResult type,IList<IResultMessage> messages, IList<T> result)
+        public SearchResult(TypeResult type, IList<IResultMessage> messages, IList<ISearchObject> result)
         {
 			Type  = type;
 			Messages = messages;
@@ -24,7 +25,7 @@ namespace WSUI.Core.Core.Search
 
 		public TypeResult Type{get; private set;}
 		public IList<IResultMessage> Messages{get; private set;}
-		public IList<T> OperationResult{get; private set;}
+		public IList<ISearchObject> OperationResult{get; private set;}
 
 	}//end SearchResult
 

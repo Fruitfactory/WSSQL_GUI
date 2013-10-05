@@ -14,7 +14,7 @@ namespace WSUI.Core.Interfaces
 	public interface ISystemSearchResult   
     {
 	    int Priority{get;}
-	    IList<BaseSearchObject> Result {get;}
+        IList<ISearchObject> Result { get; }
 	}//end ISystemSearchResult
 
 }//end namespace Interfaces
