@@ -18,10 +18,20 @@ namespace WSUI.Core.Data
 		public string ConversationId{ get;  set;}
 
         [Field("System.Message.ToAddress", 8, false)]
-		public string ToAddress{ get;  set;}
+		public string[] ToAddress{ get;  set;}
 
         [Field("System.Message.DateReceived", 9, false)]
-		public DateTime DateReceived{ get;  set;} 
+		public DateTime DateReceived{ get;  set;}
+
+	    public string Recepient
+	    {
+	        get
+	        {
+	            return ToAddress != null && ToAddress.Length > 0
+	                ? ToAddress[0]
+	                : string.Empty;
+	        }
+	    }
 
 		public BaseEmailSearchObject()
         {
@@ -37,7 +47,7 @@ namespace WSUI.Core.Data
 	                ConversationId = value as string;
 	                break;
                 case 8:
-	                ToAddress = value as string;
+	                ToAddress = value as string[];
 	                break;
                 case 9:
 	                DateReceived = (DateTime) Convert.ChangeType(value, typeof (DateTime), CultureInfo.InvariantCulture);

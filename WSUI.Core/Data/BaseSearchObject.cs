@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO.IsolatedStorage;
+using System.Linq;
 using WSUI.Core.Core.Attributes;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
@@ -71,7 +72,7 @@ namespace WSUI.Core.Data
 	                ItemNameDisplay = value as string;
 	                break;
                 case 6:
-	                Size = (int)value;
+	                Size = (int)Convert.ChangeType(value,typeof(int),CultureInfo.InvariantCulture);
 	                break;
 	        }
 	    }
@@ -79,6 +80,11 @@ namespace WSUI.Core.Data
 	    public IEnumerable<ISearchObject> Items
 	    {
 	        get { return _internaList; }
+	    }
+
+	    public int Count
+	    {
+	        get { return Items.Count(); }
 	    }
 
 	    public void AddItem(ISearchObject item)

@@ -9,17 +9,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
-using Microsoft.Practices.ObjectBuilder2;
-using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
 using WSUI.Core.Core;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Attributes;
@@ -66,7 +64,7 @@ namespace WSUI.Module.Core
 
         private volatile bool _isQueryRun = false;
         private object _lock = new object();
-        private BaseSearchData _current = null;
+        private BaseSearchObject _current = null;
         private string _searchString = string.Empty;
         private ICommandStrategy _currentStrategy;
         private ManualResetEvent _eventForContinue;
@@ -271,18 +269,24 @@ namespace WSUI.Module.Core
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() => 
             {
-                if (ListData.Count == 0 && ShowMessageNoMatches)
-                {
-                    DataSource.Clear();
+                //if (ListData.Count == 0 && ShowMessageNoMatches)
+                //{
+                //    DataSource.Clear();
                     //var message = new BaseSearchData() { Name = string.Format("Search for '{0}' returned no matches. Try different keywords.", SearchString), Type = TypeSearchItem.None };
                     //ListData.Add(message);
                     //ListData.ForEach(s => DataSource.Add(s));
-                }
-                else
+                //}
+                //else
                 {
                     //ListData.ForEach(s => DataSource.Add(s));
                     var result = SearchSystem.GetResult();
-                    result.ForEach(it => DataSource.AddRange<BaseSearchObject>((IEnumerable<BaseSearchObject>) it.Result));
+                    result.ForEach(it =>
+                    {
+                        foreach (var systemSearchResult in it.Result)
+                        {
+                            DataSource.Add(systemSearchResult as BaseSearchObject);
+                        }
+                    });
                 }
             }), null);
             OnPropertyChanged(() => DataSource);
@@ -303,12 +307,12 @@ namespace WSUI.Module.Core
                 temp(this,new EventArgs<bool>(res));
         }
 
-        protected virtual void OnCurrentItemChanged(BaseSearchData data)
+        protected virtual void OnCurrentItemChanged(BaseSearchObject data)
         {
-            EventHandler<EventArgs<BaseSearchData>> temp = CurrentItemChanged;
+            EventHandler<EventArgs<BaseSearchObject>> temp = CurrentItemChanged;
             if (temp != null)
             {
-                temp(this,new EventArgs<BaseSearchData>(data));
+                temp(this, new EventArgs<BaseSearchObject>(data));
             }
         }
 
@@ -336,6 +340,7 @@ namespace WSUI.Module.Core
             OnStart();
             MainWindowInfo mwi = GetWindowInfo();
             
+            SearchSystem.SetSearchCriteria(SearchString);
             SearchSystem.Search();
 
             //BusyPopupAdorner.Instance.Message = "Searching...";
@@ -463,10 +468,10 @@ namespace WSUI.Module.Core
         public event EventHandler Start;
         public event EventHandler<EventArgs<bool>> Complete;
         public event EventHandler<EventArgs<bool>> Error;
-        public event EventHandler<EventArgs<BaseSearchData>> CurrentItemChanged;
+        public event EventHandler<EventArgs<BaseSearchObject>> CurrentItemChanged;
         public event EventHandler Choose;
 
-        public BaseSearchData Current
+        public BaseSearchObject Current
         {
             get { return _current; }
             set

@@ -36,6 +36,7 @@ namespace WSUI.Core.Core.Search
 		public virtual void Init()
 		{
 		    IsSearching = false;
+            _listRules.ForEach(item => item.Init());
 		}
 
 		public virtual void Reset()
@@ -58,12 +59,14 @@ namespace WSUI.Core.Core.Search
 		        return;
             _mainSearchThread = new Thread(DoSearch);
             _mainSearchThread.Start();
+            RaiseSearchStarted();
 		}
 
 		public virtual void Stop()
 		{
 		    _needStop = true;
             _listRules.ForEach(item => item.Stop());
+            RaiseSearchStopped();
 		}
 
 		public event Action<object> SearchStarted;
@@ -140,6 +143,7 @@ namespace WSUI.Core.Core.Search
 		    finally
 		    {
 		        IsSearching = false;
+                RaiseSearchFinished();
 		    }
 		}
 

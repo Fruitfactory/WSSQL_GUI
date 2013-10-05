@@ -15,5 +15,13 @@ namespace WSUI.Core.Extensions
             }
         }
 
+        public static void AddRange<T>(this IList<T> col, IList<T> items)
+        {
+            if (col == null || items == null)
+                return;
+            foreach (var item in items)
+                col.Add(item);
+        }
+
     }
 }

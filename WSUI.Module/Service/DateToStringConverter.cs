@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using WSUI.Core.Core;
+using WSUI.Core.Data;
 using WSUI.Infrastructure.Models;
 
 namespace WSUI.Module.Service
@@ -86,20 +87,17 @@ namespace WSUI.Module.Service
         #endregion
     }
 
-    [ValueConversion(typeof(BaseSearchData),typeof(string))]
+    [ValueConversion(typeof(BaseSearchObject), typeof(string))]
     public class ObjectToNameConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string result = string.Empty;
-            var contact = value as ContactSearchData;
+            var contact = value as ContactSearchObject;
             if (contact != null)
             {
                 
-                result = string.Format("{0} {1} ({2})", contact.FirstName, contact.LastName,
-                                       contact.EmailList != null && contact.EmailList.Count > 0
-                                           ? contact.EmailList[0]
-                                           : string.Empty);
+                result = string.Format("{0} {1} ({2})", contact.FirstName, contact.LastName,contact.EmailAddress ?? contact.EmailAddress2 ?? contact.EmailAddress3 );
 
                 return result;
             }
@@ -114,7 +112,7 @@ namespace WSUI.Module.Service
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 

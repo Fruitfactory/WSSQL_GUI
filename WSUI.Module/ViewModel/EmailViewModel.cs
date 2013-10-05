@@ -26,7 +26,7 @@ using System.Diagnostics;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId(KindsConstName.Email,2)]
+    [KindNameId(KindsConstName.Email,0)]
     public class EmailViewModel : KindViewModelBase, IUView<EmailViewModel>, IScrollableView
     {
         
@@ -124,8 +124,8 @@ namespace WSUI.Module.ViewModel
             base.OnFilterData();
         }
 
-        protected override void OnComplete(bool res)
-        {
+        //protected override void OnComplete(bool res)
+        //{
             //var watchGroup = new Stopwatch();
             //watchGroup.Start();
             //var groups = _listEmails.GroupBy(e => e.ConversationId);
@@ -168,7 +168,7 @@ namespace WSUI.Module.ViewModel
 
 
 
-        }
+        //}
 
         protected override void OnStart()
         {

@@ -46,7 +46,7 @@ namespace WSUI.Module.Interface
             set;
         }
 
-        BaseSearchData Current { get; set; }
+        BaseSearchObject Current { get; set; }
 
         ObservableCollection<BaseSearchObject> DataSource
         {
@@ -70,7 +70,7 @@ namespace WSUI.Module.Interface
 
         event EventHandler<EventArgs<bool>> Error;
 
-        event EventHandler<EventArgs<BaseSearchData>> CurrentItemChanged;
+        event EventHandler<EventArgs<BaseSearchObject>> CurrentItemChanged;
 
         event EventHandler Choose;
 

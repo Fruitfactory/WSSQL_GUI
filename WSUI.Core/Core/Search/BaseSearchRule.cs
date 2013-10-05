@@ -16,6 +16,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using WSUI.Core.Data;
+using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Core.Rules;
 using WSUI.Core.Logger;
@@ -48,6 +50,10 @@ namespace WSUI.Core.Core.Search
 	    protected int CountFirstProcess = 35;
 	    protected int CountSecondProcess = 7;
 
+        // results
+	    private TypeResult _typeResult;
+	    private IList<IResultMessage> _listMessage;
+
         protected string QueryAnd = " AND \"{0}\"";
 
         #endregion
@@ -56,11 +62,13 @@ namespace WSUI.Core.Core.Search
 
 		protected BaseSearchRule()
 		{   
+            Event = new AutoResetEvent(false);
+            Result = new List<T>();
 		}
 
 		public ISearchResult GetResults()
 		{
-			return null;
+            return new SearchResult(_typeResult, _listMessage.ToList(), (IEnumerable<ISearchObject>)Result.ToList());
 		}
 
 		/// <summary>
@@ -74,11 +82,9 @@ namespace WSUI.Core.Core.Search
 
 		public void Search()
 		{
-		    if (_ruleThread != null)
-		        return;
+		    InitBeforeSearching();
             _ruleThread = new Thread(DoQuery) {Priority = ThreadPriority.Highest};
 		    _ruleThread.Start();
-
 		}
 
 		public void Stop()
@@ -95,12 +101,11 @@ namespace WSUI.Core.Core.Search
 	        try
 	        {
 	            IsSearching = true;
-	            var query = QueryGenerator.Instance.GenerateQuery(typeof (T), Query, 100, this, false);
+	            var query = QueryGenerator.Instance.GenerateQuery(typeof (T), Query, TopQueryResult, this, false);
 	            if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
-                OleDbDataReader dataReader = null;
-                OleDbConnection connection = new OleDbConnection(ConnectionString);
-                OleDbCommand cmd = new OleDbCommand(query, connection);
+	            var connection = new OleDbConnection(ConnectionString);
+                var cmd = new OleDbCommand(query, connection);
                 cmd.CommandTimeout = 0;
 
                 var watch = new Stopwatch();
@@ -112,7 +117,7 @@ namespace WSUI.Core.Core.Search
 
                     var watchOleDbCommand = new Stopwatch();
                     watchOleDbCommand.Start();
-                    dataReader = cmd.ExecuteReader();
+                    OleDbDataReader dataReader = cmd.ExecuteReader();
                     watchOleDbCommand.Stop();
                     WSSqlLogger.Instance.LogInfo("dataReader = cmd.ExecuteReader(); Elapsed: " + watchOleDbCommand.ElapsedMilliseconds.ToString());
 
@@ -137,9 +142,12 @@ namespace WSUI.Core.Core.Search
                 }
                 // additional process
                 ProcessResult();
+                _typeResult = TypeResult.Ok;
 	        }
 	        catch (Exception ex)
 	        {
+                _typeResult = TypeResult.Error;
+                _listMessage.Add(new ResultMessage(){Message = ex.Message});
                 WSSqlLogger.Instance.LogError("Search: {0}",ex.Message);
 	        }
 	        finally
@@ -197,6 +205,8 @@ namespace WSUI.Core.Core.Search
 		    LastDate = GetCurrentDateTime();
 		    TopQueryResult = _countProcess = CountFirstProcess;
 		    _countAdded = 0;
+            _typeResult = TypeResult.None;
+            _listMessage = new List<IResultMessage>();
 		}
 
 	    public string GenerateWherePart(IList<IRule> listCriteriaRules)
@@ -253,6 +263,12 @@ namespace WSUI.Core.Core.Search
 	        return andClause;
 	    }
 
+	    protected virtual void InitBeforeSearching()
+	    {
+	        _typeResult = TypeResult.None;
+	        _listMessage.Clear();
+            Result.Clear();
+	    }
 
 	}//end BaseSearchRule
 

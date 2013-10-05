@@ -12,6 +12,7 @@ using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Core;
+using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
@@ -38,7 +39,7 @@ namespace WSUI.Module.ViewModel
         private bool _enabled = true;
         private const string Interface = "WSUI.Module.Interface.IKindItem";
 
-        private BaseSearchData _currentData = null;
+        private BaseSearchObject _currentData = null;
 
 
         public MainViewModel(IUnityContainer container, IRegionManager region, IKindsView kindView, IPreviewView previewView)
@@ -49,7 +50,7 @@ namespace WSUI.Module.ViewModel
             kindView.Model = this;
             PreviewView = previewView;
             previewView.Model = this;
-            MainDataSource = new List<BaseSearchData>();
+            MainDataSource = new List<BaseSearchObject>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
         }
 
@@ -196,7 +197,7 @@ namespace WSUI.Module.ViewModel
             _currentItem.CurrentItemChanged += OnCurrentItemChanged;
         }
 
-        private void OnCurrentItemChanged(object sender, EventArgs<BaseSearchData> args)
+        private void OnCurrentItemChanged(object sender, EventArgs<BaseSearchObject> args)
         {
             if(args.Value == null)
                 return;
@@ -355,7 +356,7 @@ namespace WSUI.Module.ViewModel
 
         public event EventHandler Start;
         public event EventHandler Complete;
-        public List<BaseSearchData> MainDataSource { get; protected set; }
+        public List<BaseSearchObject> MainDataSource { get; protected set; }
 
         public void Clear()
         {

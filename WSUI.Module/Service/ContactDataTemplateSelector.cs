@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using WSUI.Core.Core;
+using WSUI.Core.Data;
 using WSUI.Core.Enums;
 
 namespace WSUI.Module.Service
@@ -13,8 +14,8 @@ namespace WSUI.Module.Service
         
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            var bs = item as BaseSearchData;
-            switch (bs.Type)
+            var bs = item as BaseSearchObject;
+            switch (bs.TypeItem)
             {
                 case TypeSearchItem.Email:
                     return EmailTemplate;

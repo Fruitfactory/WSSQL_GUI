@@ -22,7 +22,7 @@ using System.Diagnostics;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId(KindsConstName.Everything,0)]
+    [KindNameId(KindsConstName.Everything,2)]
     public class AllFilesViewModel : KindViewModelBase, IUView<AllFilesViewModel>, IScrollableView
     {
         private const string KindGroup = "email";
