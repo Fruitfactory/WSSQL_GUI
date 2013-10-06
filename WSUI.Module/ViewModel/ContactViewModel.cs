@@ -11,7 +11,9 @@ using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Core;
+using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Service;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
@@ -68,6 +70,7 @@ namespace WSUI.Module.ViewModel
                                                   }
                                               };
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
+            SearchSystem = new ContactSearchSystem();
         }
 
         public ICommand EmailClickCommand { get; protected set; }
@@ -121,23 +124,24 @@ namespace WSUI.Module.ViewModel
         //    TopQueryResult = ScrollBehavior.CountSecondProcess;
         //}
 
-        //protected override void OnSearchStringChanged()
-        //{
-        //    _countProcess = ScrollBehavior.CountFirstProcess;
-        //    TopQueryResult = ScrollBehavior.CountFirstProcess;
-        //    _lastDate = GetCurrentDate();
-        //    if (string.IsNullOrEmpty(SearchString))
-        //        return;
-        //    ClearDataSource();
-        //    //_contactSuggesting.StartSuggesting(SearchString);
-        //}
+        protected override void OnSearchStringChanged()
+        {
+            _countProcess = ScrollBehavior.CountFirstProcess;
+            TopQueryResult = ScrollBehavior.CountFirstProcess;
+            _lastDate = GetCurrentDate();
+            if (string.IsNullOrEmpty(SearchString))
+                return;
+            ClearDataSource();
+            //_contactSuggesting.StartSuggesting(SearchString);
+        }
 
-        //protected override void OnFilterData()
-        //{
-        //    base.OnFilterData();
-        //    _countProcess = ScrollBehavior.CountFirstProcess;
-        //    TopQueryResult = ScrollBehavior.CountFirstProcess;
-        //}
+        protected override void OnFilterData()
+        {
+            base.OnFilterData();
+            _countProcess = ScrollBehavior.CountFirstProcess;
+            TopQueryResult = ScrollBehavior.CountFirstProcess;
+        }
+
         private void EmailClick(object address)
         {
             string adr = string.Empty;
@@ -147,10 +151,16 @@ namespace WSUI.Module.ViewModel
             {
                 adr = (address as EmailSearchData).From;
             }
-            else if (address is ContactSearchData)
+            else if (address is ContactSearchObject)
             {
-                var contact = (ContactSearchData)address;
-                adr = contact.EmailList != null && contact.EmailList.Count > 0 ? contact.EmailList[0] : string.Empty;
+                var contact = (ContactSearchObject)address;
+                adr = !string.IsNullOrEmpty(contact.EmailAddress)
+                    ? contact.EmailAddress
+                    : !string.IsNullOrEmpty(contact.EmailAddress2)
+                        ? contact.EmailAddress2
+                        : !string.IsNullOrEmpty(contact.EmailAddress3)
+                            ? contact.EmailAddress3
+                            : string.Empty;
             }
 
             if (string.IsNullOrEmpty(adr))
@@ -161,17 +171,19 @@ namespace WSUI.Module.ViewModel
             email.Display(false);
         }
 
-        //protected override void OnInit()
-        //{
-        //    base.OnInit();
-        //    CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
-        //    ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 400, CountSecondProcess = 100, LimitReaction = 99 };
-        //    ScrollBehavior.SearchGo += () =>
-        //    {
-        //        ShowMessageNoMatches = false;
-        //        Search();
-        //    };
-        //}
+        protected override void OnInit()
+        {
+            base.OnInit();
+            SearchSystem.Init();
+
+            CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
+            ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 400, CountSecondProcess = 100, LimitReaction = 99 };
+            ScrollBehavior.SearchGo += () =>
+            {
+                ShowMessageNoMatches = false;
+                Search();
+            };
+        }
 
 
         #region IUIView

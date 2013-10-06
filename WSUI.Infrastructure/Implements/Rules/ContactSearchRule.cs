@@ -7,8 +7,10 @@
 ///////////////////////////////////////////////////////////
 
 
-
-
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using WSUI.Core.Core.Rules;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
 
@@ -16,13 +18,44 @@ namespace WSUI.Infrastructure.Implements.Rules
 {
 	public class ContactSearchRule : BaseSearchRule<ContactSearchObject>
 	{
+        private const string WhereTemplate = 
+            " WHERE System.Kind = 'contact' AND ";
+	    private const string NamesTemplate =
+	        "CONTAINS(System.Contact.FirstName,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\" OR \"*{0}*\"')";
+
+	    private const string CollapseTemplate = "( {0} )";
 
 		public ContactSearchRule()
-        {
-
+		{
+		    Priority = 1;
 		}
 
+	    protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
+	    {
+	        string result = string.Empty;
+	        if (Query.IndexOf(' ') > -1)
+	        {
+	            result = WhereTemplate + ProcessAndBuildWhereQueryPart(Query);
+	        }
+	        else
+	        {
+	            result = WhereTemplate + string.Format(NamesTemplate, Query);
+	        }
+	        return result;
+	    }
 
+	    private string ProcessAndBuildWhereQueryPart(string query)
+	    {
+	        StringBuilder strBuid = new StringBuilder();
+	        var arr = query.Split(' ').ToList();
+	        strBuid.Append(string.Format(NamesTemplate, arr[0]));
+	        foreach (var item in arr.Skip(1))
+	        {
+	            strBuid.Append(" AND " + string.Format(NamesTemplate, item));
+	        }
+	        return string.Format(CollapseTemplate, strBuid.ToString());
+	    }
+        
 	}//end ContactSearchRule
 
 }//end namespace Implements

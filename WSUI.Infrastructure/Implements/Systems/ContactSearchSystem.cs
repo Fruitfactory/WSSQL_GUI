@@ -10,6 +10,8 @@
 
 
 using WSUI.Core.Core.Search;
+using WSUI.Infrastructure.Implements.Rules;
+
 namespace WSUI.Infrastructure.Implements.Systems 
 {
 	public class ContactSearchSystem : BaseSearchSystem 
@@ -17,9 +19,14 @@ namespace WSUI.Infrastructure.Implements.Systems
 
 		public ContactSearchSystem()
         {
-
+            
 		}
 
-	}//end ContactSearchSystem
+	    public override void Init()
+	    {
+            AddRule(new ContactSearchRule());
+	        base.Init();
+	    }
+    }//end ContactSearchSystem
 
 }//end namespace Implements
