@@ -76,6 +76,7 @@
     <Compile Include="Data\BaseEmailSearchObject.cs" />
     <Compile Include="Data\BaseSearchObject.cs" />
     <Compile Include="Data\ContactSearchObject.cs" />
+    <Compile Include="Data\EmailContactSearchObject.cs" />
     <Compile Include="Data\EmailSearchObject.cs" />
     <Compile Include="Data\FileSearchObject.cs" />
     <Compile Include="Data\WSAction.cs" />

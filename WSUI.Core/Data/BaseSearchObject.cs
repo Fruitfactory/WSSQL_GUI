@@ -95,6 +95,8 @@ namespace WSUI.Core.Data
 
 	    public TypeSearchItem TypeItem {get; set;}
 
+        public object Tag { get; set; }
+
     
     }//end BaseSearchObject
 

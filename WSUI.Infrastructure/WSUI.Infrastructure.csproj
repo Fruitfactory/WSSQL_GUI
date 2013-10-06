@@ -91,6 +91,7 @@
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\StringToStringConverter.cs" />
+    <Compile Include="Implements\Rules\EmailContactSearchRule.cs" />
     <Compile Include="Implements\Systems\AllSearchSystem.cs" />
     <Compile Include="Implements\Rules\AttachmentFilenameSearchRule.cs" />
     <Compile Include="Implements\Systems\AttachmentSearchSystem.cs" />

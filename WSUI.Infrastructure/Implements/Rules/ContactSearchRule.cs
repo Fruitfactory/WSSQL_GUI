@@ -55,7 +55,13 @@ namespace WSUI.Infrastructure.Implements.Rules
 	        }
 	        return string.Format(CollapseTemplate, strBuid.ToString());
 	    }
-        
+
+        public override void Init()
+        {
+            RuleName = "Contact";
+            base.Init();
+        }
+
 	}//end ContactSearchRule
 
 }//end namespace Implements

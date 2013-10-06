@@ -32,7 +32,8 @@ namespace WSUI.Core.Data
 		public ContactSearchObject()
         {
             TypeItem = TypeSearchItem.Contact;
-		}
+		    Tag = "Click to email recipient";
+        }
 
 	    public override void SetValue(int index, object value)
 	    {

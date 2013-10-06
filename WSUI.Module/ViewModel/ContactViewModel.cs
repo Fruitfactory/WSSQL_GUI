@@ -147,9 +147,9 @@ namespace WSUI.Module.ViewModel
             string adr = string.Empty;
             if (address is string)
                 adr = (string)address;
-            else if (address is EmailSearchData)
+            else if (address is EmailContactSearchObject)
             {
-                adr = (address as EmailSearchData).From;
+                adr = (address as EmailContactSearchObject).EMail;
             }
             else if (address is ContactSearchObject)
             {

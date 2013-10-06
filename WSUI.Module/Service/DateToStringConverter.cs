@@ -101,10 +101,10 @@ namespace WSUI.Module.Service
 
                 return result;
             }
-            var email = value as EmailSearchData;
+            var email = value as EmailContactSearchObject;
             if (email != null)
             {
-                result = string.Format("{0} ({1})", email.From, email.From);
+                result = string.Format("{0} ({1})", email.EMail, email.EMail);
                 return result;
             }
             return result;
