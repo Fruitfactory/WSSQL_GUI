@@ -26,8 +26,14 @@ namespace WSUI.Infrastructure.Implements.Rules
 	    protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
 	    {
             var dateString = FormatDate(ref LastDate);
-            var and = GetProcessingSearchSriteria(listCriterisRules);
+            var and = GetProcessingSearchCriteria(listCriterisRules).Item1;
             return string.Format(WhereTemplate, dateString, and);
+	    }
+
+	    public override void Init()
+	    {
+            RuleName = "EmailContent";
+	        base.Init();
 	    }
     }//end EmailContentSearchRule
 

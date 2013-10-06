@@ -61,31 +61,31 @@ namespace WSUI.Module.ViewModel
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
         }
 
-        protected override void ReadData(IDataReader reader)
-        {
-            EmailGroupData item = new EmailGroupData();
-            ReadGroupData(reader, item);
-            if (item != null && !string.IsNullOrEmpty(item.Subject))
-            {
-                _listEmails.Add(item);
-            }
-        }
+        //protected override void ReadData(IDataReader reader)
+        //{
+        //    EmailGroupData item = new EmailGroupData();
+        //    ReadGroupData(reader, item);
+        //    if (item != null && !string.IsNullOrEmpty(item.Subject))
+        //    {
+        //        _listEmails.Add(item);
+        //    }
+        //}
 
-        protected override string CreateQuery()
-        {
-            _countAdded = 0;
-            IsInterupt = false;
-            var folder = Folder;
-            var searchCriteria = SearchString.Trim();
-            string res = string.Empty;
+        //protected override string CreateQuery()
+        //{
+        //    _countAdded = 0;
+        //    IsInterupt = false;
+        //    var folder = Folder;
+        //    var searchCriteria = SearchString.Trim();
+        //    string res = string.Empty;
 
-            ProcessSearchCriteria(searchCriteria);
+        //    ProcessSearchCriteria(searchCriteria);
 
-            res = string.Format(QueryTemplate, folder != OutlookHelper.AllFolders ? string.Format(FilterByFolder, folder) : string.Empty, string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause, FormatDate(ref _lastDate), TopQueryResult, OrderTemplate);
+        //    res = string.Format(QueryTemplate, folder != OutlookHelper.AllFolders ? string.Format(FilterByFolder, folder) : string.Empty, string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause, FormatDate(ref _lastDate), TopQueryResult, OrderTemplate);
 
-            return res;
+        //    return res;
 
-        }
+        //}
 
         protected override void OnInit()
         {

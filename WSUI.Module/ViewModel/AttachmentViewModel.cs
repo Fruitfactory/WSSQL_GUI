@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.OleDb;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using Microsoft.Practices.Unity;
 using WSUI.Core.Core;
 using WSUI.Core.Enums;
 using WSUI.Core.Logger;
+using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Service;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
@@ -43,6 +45,8 @@ namespace WSUI.Module.ViewModel
             UIName = _name;
             _prefix = "Attachment";
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
+
+            SearchSystem = new AttachmentSearchSystem();
         }
 
         //protected override void ReadData(System.Data.IDataReader reader)
@@ -88,41 +92,42 @@ namespace WSUI.Module.ViewModel
 
         //}
 
-        //protected override void OnInit()
-        //{
-        //    base.OnInit();
-        //    var fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
-        //    CommandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
-        //    ScrollBehavior = new ScrollBehavior(){CountFirstProcess = 100, CountSecondProcess = 50,LimitReaction = 75};
-        //    ScrollBehavior.SearchGo += () =>
-        //                                   {
-        //                                       ShowMessageNoMatches = false;
-        //                                       Search();
-        //                                   };
-        //}
+        protected override void OnInit()
+        {
+            base.OnInit();
+            SearchSystem.Init();
+            var fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
+            CommandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
+            ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 100, CountSecondProcess = 50, LimitReaction = 75 };
+            ScrollBehavior.SearchGo += () =>
+                                           {
+                                               ShowMessageNoMatches = false;
+                                               Search();
+                                           };
+        }
 
-        //protected override void OnStart()
-        //{
-        //    _list.Clear();
-        //    ListData.Clear();
-        //    FireStart();
-        //}
+        protected override void OnStart()
+        {
+            _list.Clear();
+            ListData.Clear();
+            FireStart();
+        }
 
-        //protected override void OnSearchStringChanged()
-        //{
-        //    _listId.Clear();
-        //    _countProcess = ScrollBehavior.CountFirstProcess;
-        //    ClearDataSource();
-        //    base.OnSearchStringChanged();
-            
-        //}
+        protected override void OnSearchStringChanged()
+        {
+            _listId.Clear();
+            _countProcess = ScrollBehavior.CountFirstProcess;
+            ClearDataSource();
+            base.OnSearchStringChanged();
 
-        //protected override void OnFilterData()
-        //{
-        //    _listId.Clear();
-        //    base.OnFilterData();
-        //    _countProcess = ScrollBehavior.CountFirstProcess;
-        //}
+        }
+
+        protected override void OnFilterData()
+        {
+            _listId.Clear();
+            base.OnFilterData();
+            _countProcess = ScrollBehavior.CountFirstProcess;
+        }
 
         //protected override void OnComplete(bool res)
         //{

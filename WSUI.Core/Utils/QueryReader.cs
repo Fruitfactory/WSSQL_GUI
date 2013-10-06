@@ -50,6 +50,8 @@ namespace WSUI.Core.Utils
 		        if (index >= reader.FieldCount)
 		            break;
 		        object val = reader[index];
+                if(DBNull.Value.Equals(val))
+                    continue;
                 result.SetValue(tuple.Item3,val);
 		    }
 			return result;

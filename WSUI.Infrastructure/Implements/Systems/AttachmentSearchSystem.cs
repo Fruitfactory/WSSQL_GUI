@@ -10,6 +10,8 @@
 
 
 using WSUI.Core.Core.Search;
+using WSUI.Infrastructure.Implements.Rules;
+
 namespace WSUI.Infrastructure.Implements.Systems 
 {
 	public class AttachmentSearchSystem : BaseSearchSystem 
@@ -19,6 +21,12 @@ namespace WSUI.Infrastructure.Implements.Systems
         {
 
 		}
-	}//end AttachmentSearchSystem
+
+	    public override void Init()
+	    {
+            AddRule(new AttachmentFilenameSearchRule());
+	        base.Init();
+	    }
+    }//end AttachmentSearchSystem
 
 }//end namespace Implements

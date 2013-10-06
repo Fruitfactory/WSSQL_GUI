@@ -162,11 +162,11 @@
                 </StackPanel>
             </Grid.ToolTip>
 
-            <Image  Source="{Binding Path=Name,Converter={StaticResource ResourceKey=nameConverter}}" Style="{StaticResource ImageStyle}" 
+            <Image  Source="{Binding Path=ItemUrl,Converter={StaticResource ResourceKey=nameConverter}}" Style="{StaticResource ImageStyle}" 
                     Grid.Column="0"/>
             <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
                            Grid.Column="1"></TextBlock>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+            <ctrl:HightliteTextBlock Text="{Binding Path=ItemName}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                                         Grid.Column="2" Grid.ColumnSpan="2"  Margin="5"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" Grid.Column="4" Foreground="Black"/>
         </Grid>

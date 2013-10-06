@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
+using WSUI.Core.Logger;
 
 namespace WSUI.Infrastructure.Implements.Rules 
 {
@@ -52,16 +53,12 @@ namespace WSUI.Infrastructure.Implements.Rules
             Result.Clear();
 	        if (result.Count > 0)
 	        {
+                WSSqlLogger.Instance.LogInfo("{0}: {1}",RuleName,result.Count);
                 Result = result;
                 LastDate = Result.Last().DateReceived;    
 	        }
             _listID.Clear();
 	        
-	    }
-
-	    public override void Reset()
-	    {
-	        base.Reset();
 	    }
     }//end BaseEmailSearchRule
 

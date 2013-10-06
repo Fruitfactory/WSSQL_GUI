@@ -58,6 +58,7 @@ namespace WSUI.Core.Core.Search
 		{
 		    if (IsSearching)
 		        return;
+            InitBeforeSearch();
             _mainSearchThread = new Thread(DoSearch);
             _mainSearchThread.Start();
             RaiseSearchStarted();
@@ -153,6 +154,12 @@ namespace WSUI.Core.Core.Search
 	        if (rule == null)
 	            return;
             _listRules.Add(rule);
+	    }
+
+	    protected virtual void InitBeforeSearch()
+	    {
+            if(InternalResult.Count > 0)
+	            InternalResult.Clear(); 
 	    }
 
 	}//end BaseSearchSystem

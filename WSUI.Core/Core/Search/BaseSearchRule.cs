@@ -32,8 +32,6 @@ namespace WSUI.Core.Core.Search
 	    private const string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
 	    private Thread _ruleThread;
         private IQueryReader _reader;
-	    private int _countAdded = 0;
-	    private int _countProcess = 0;
 	    private volatile bool _needStop = false;
 
         #endregion
@@ -49,6 +47,9 @@ namespace WSUI.Core.Core.Search
         protected int TopQueryResult = 100;
 	    protected int CountFirstProcess = 35;
 	    protected int CountSecondProcess = 7;
+        protected int CountAdded = 0;
+        protected int CountProcess = 0;
+
 
         // results
 	    private TypeResult _typeResult;
@@ -56,9 +57,11 @@ namespace WSUI.Core.Core.Search
 
         protected string QueryAnd = " AND \"{0}\"";
 
+	    protected string RuleName;
+
         #endregion
         
-        private readonly object _lock = new object();
+        protected readonly object Lock = new object();
 
 		protected BaseSearchRule()
 		{   
@@ -153,7 +156,7 @@ namespace WSUI.Core.Core.Search
 	        }
 	        finally
 	        {
-	            TopQueryResult = _countProcess = CountSecondProcess;
+	            TopQueryResult = CountProcess = CountSecondProcess;
 	            IsSearching = false;
 	            Event.Set();
 	        }
@@ -173,8 +176,13 @@ namespace WSUI.Core.Core.Search
 	        if (result == null)
 	            return;
 	        Result.Add(result);
-	        _countAdded++;
-	        if (_countAdded == _countProcess)
+	        ProcessCountAdded();
+	    }
+
+	    protected virtual void ProcessCountAdded()
+	    {
+	        CountAdded++;
+	        if (CountAdded == CountProcess)
 	            IsInterupt = true;
 	    }
 
@@ -186,8 +194,8 @@ namespace WSUI.Core.Core.Search
 
 		public virtual void Reset()
 		{
-            _countAdded = 0;
-            _countProcess = 0;
+            CountAdded = 0;
+            CountProcess = 0;
 		    Query = string.Empty;
 		    _needStop = false;
 		    LastDate = GetCurrentDateTime();
@@ -204,8 +212,8 @@ namespace WSUI.Core.Core.Search
 		public virtual void Init()
 		{
 		    LastDate = GetCurrentDateTime();
-		    TopQueryResult = _countProcess = CountFirstProcess;
-		    _countAdded = 0;
+		    TopQueryResult = CountProcess = CountFirstProcess;
+		    CountAdded = 0;
             _typeResult = TypeResult.None;
             _listMessage = new List<IResultMessage>();
 		}
@@ -235,7 +243,7 @@ namespace WSUI.Core.Core.Search
             return date.ToString("yyyy/MM/dd hh:mm:ss").Replace('.', '/');
         }
 
-	    protected string GetProcessingSearchSriteria(IList<IRule> listRuleCriteriasRules )
+	    protected Tuple<string,List<string>> GetProcessingSearchCriteria(IList<IRule> listRuleCriteriasRules)
 	    {
 	        var tempCriteria = Query;
             var andClause = string.Empty;
@@ -261,7 +269,7 @@ namespace WSUI.Core.Core.Search
 	        {
                 andClause = string.Format("'\"{0}*\"'", listW[0]);
 	        }
-	        return andClause;
+	        return new Tuple<string, List<string>>(andClause,listW.ToList());
 	    }
 
 	    protected virtual void InitBeforeSearching()

@@ -249,6 +249,7 @@ namespace WSUI.Module.ViewModel
             }
             finally
             {
+                //Application.Current.Dispatcher.BeginInvoke(new Action(() => BusyPopupAdorner.Instance.IsBusy = false), null);
                 if (ProgressManager.Instance.InProgress)
                 {
                     ProgressManager.Instance.StopOperation();
