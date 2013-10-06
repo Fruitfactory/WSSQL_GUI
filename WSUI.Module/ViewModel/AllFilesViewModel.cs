@@ -133,6 +133,12 @@ namespace WSUI.Module.ViewModel
                 {
                     DataSource.Add(systemSearchResult as BaseSearchObject);
                 }
+                var commandSearchData = new CommandSearchObject()
+                {
+                    ItemName = "More",
+                    TypeItem = TypeSearchItem.Command,
+                };
+                DataSource.Add(commandSearchData);
             }
             else
             {
@@ -199,7 +205,7 @@ namespace WSUI.Module.ViewModel
 
         private bool CommandElementClick(object obj)
         {
-            if (!(obj is CommandSearchData))
+            if (!(obj is CommandSearchObject))
                 return false;
             Parent.SelectKind(KindsConstName.People);
             return true;
