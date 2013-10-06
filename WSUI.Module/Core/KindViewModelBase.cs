@@ -267,19 +267,34 @@ namespace WSUI.Module.Core
 
         protected virtual void OnComplete(bool res)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() => 
+            ProcessMainResult();
+            OnPropertyChanged(() => DataSource);
+            OnPropertyChanged(() => Enabled);
+            FireComplete(res);
+            //Application.Current.Dispatcher.BeginInvoke(new Action(() => BusyPopupAdorner.Instance.IsBusy = false), null);
+            if (ProgressManager.Instance.InProgress)
             {
-                //if (ListData.Count == 0 && ShowMessageNoMatches)
-                //{
-                //    DataSource.Clear();
-                    //var message = new BaseSearchData() { Name = string.Format("Search for '{0}' returned no matches. Try different keywords.", SearchString), Type = TypeSearchItem.None };
-                    //ListData.Add(message);
-                    //ListData.ForEach(s => DataSource.Add(s));
-                //}
-                //else
+                ProgressManager.Instance.StopOperation();
+            }
+        }
+
+        protected virtual void ProcessMainResult()
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var result = SearchSystem.GetResult();
+                if (result.All(i => i.Result.Count == 0) && ShowMessageNoMatches)
                 {
-                    //ListData.ForEach(s => DataSource.Add(s));
-                    var result = SearchSystem.GetResult();
+                    DataSource.Clear();
+                    var message = new FileSearchObject()
+                    {
+                        ItemName = string.Format("Search for '{0}' returned no matches. Try different keywords.", SearchString),
+                        TypeItem = TypeSearchItem.None
+                    };
+                    DataSource.Add(message);
+                }
+                else
+                {
                     result.ForEach(it =>
                     {
                         foreach (var systemSearchResult in it.Result)
@@ -289,15 +304,6 @@ namespace WSUI.Module.Core
                     });
                 }
             }), null);
-            OnPropertyChanged(() => DataSource);
-            //Enabled = true;
-            OnPropertyChanged(() => Enabled);
-            FireComplete(res);
-            //Application.Current.Dispatcher.BeginInvoke(new Action(() => BusyPopupAdorner.Instance.IsBusy = false), null);
-            if (ProgressManager.Instance.InProgress)
-            {
-                ProgressManager.Instance.StopOperation();
-            }
         }
 
         protected virtual void OnError(bool res)

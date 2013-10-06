@@ -87,42 +87,7 @@ namespace WSUI.Module.ViewModel
             get { return _contactData != null ? Visibility.Visible : Visibility.Collapsed; }
         }
 
-        //protected override void ReadData(IDataReader reader)
-        //{
-        //    var item = ReadContactData(reader);
-        //    _listContacts.Add(item);
-        //}
-
-        //protected override string CreateQuery()
-        //{
-        //    _countAdded = 0;
-        //    string res = ContactHelpers.GetContactQuery(SearchString.Trim(), FormatDate(ref _lastDate), TopQueryResult);
-        //    return res;
-        //}
-
-        //protected override void OnStart()
-        //{
-        //    _listContacts.Clear();
-        //    base.OnStart();
-        //}
-
-        //protected override void OnComplete(bool res)
-        //{
-        //    if (_listContacts.Count > 0)
-        //    {
-        //        var list = _listContacts.OfType<BaseSearchData>().ToList();
-        //        ProcessContactData(list);
-        //        if(list.Count > 0)
-        //            _lastDate = list.ElementAt(list.Count - 1).DateModified;
-        //    }
-
-        //    ListData.OrderBy(b => b.Type);
-        //    base.OnComplete(res);
-        //    OnPropertyChanged(() => Contact);
-        //    OnPropertyChanged(() => Visible);
-        //    _countProcess = ScrollBehavior.CountSecondProcess;
-        //    TopQueryResult = ScrollBehavior.CountSecondProcess;
-        //}
+        
 
         protected override void OnSearchStringChanged()
         {
@@ -215,68 +180,7 @@ namespace WSUI.Module.ViewModel
         }
 
 
-        //private BaseSearchData ReadContactData(IDataReader reader)
-        //{
-        //    if (reader == null)
-        //        return null;
-        //    ContactItem item = new ContactItem();
-        //    ReadGroupData(reader, item);
-
-
-        //    switch (item.Kind[0])
-        //    {
-        //        case "contact":
-        //            ContactSearchData data = new ContactSearchData()
-        //            {
-        //                Name = item.EmailAddress,
-        //                Path = string.Empty,
-        //                FirstName = item.FirstName,
-        //                LastName = item.LastName,
-        //                ID = Guid.NewGuid(),
-        //                Type = TypeSearchItem.Contact
-        //            };
-        //            data.EmailList.Add(item.EmailAddress);
-        //            data.EmailList.Add(item.EmailAddress2);
-        //            data.EmailList.Add(item.EmailAddress3);
-        //            data.Foto = OutlookHelper.Instance.GetContactFotoTempFileName(data);
-        //            return data;
-        //        case "email":
-        //            string fromAddress = ContactHelpers.GetEmailAddress(item.FromAddress, SearchString) ?? ContactHelpers.GetEmailAddress(item.CcAddress, SearchString) ?? ContactHelpers.GetEmailAddress(item.ToAddress, SearchString);
-        //            if (string.IsNullOrEmpty(fromAddress))
-        //                break;
-        //            EmailSearchData si = new EmailSearchData()
-        //            {
-        //                Subject = item.Subject,
-        //                Recepient = string.Format("{0}",
-        //                item.ToAddress != null && item.ToAddress.Length > 0 ? item.ToAddress[0] : string.Empty),
-        //                Name = fromAddress,
-        //                Path = item.ItemUrl,
-        //                Date = item.DateReceived,
-        //                Count = string.Empty,
-        //                Type = TypeSearchItem.Contact,
-        //                ID = Guid.NewGuid(),
-        //                From = fromAddress,
-        //                Tag = "Click to email recipient"
-
-        //            };
-
-        //            return si;
-        //    }
-        //    return null;
-        //}
-
-        //private void ProcessContactData(IEnumerable<BaseSearchData> listData)
-        //{
-        //    var groups = listData.GroupBy(c => !string.IsNullOrEmpty(c.Name) ?  c.Name.ToLower() : string.Empty );//
-
-        //    foreach (var group in groups)
-        //    {
-        //        if (string.IsNullOrEmpty(group.Key) || !group.Any())
-        //            continue;
-        //        ListData.Add(group.ElementAt(0));
-        //        _countAdded++;
-        //    }
-        //}
+       
 
     }
 }

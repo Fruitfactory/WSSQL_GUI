@@ -7,17 +7,24 @@
 ///////////////////////////////////////////////////////////
 
 
+using Microsoft.Office.Interop.Outlook;
+
 namespace WSUI.Infrastructure.Implements.Rules 
 {
 	public class FileContentSearchRule : BaseFilelSearchRule 
     {
 
 		public FileContentSearchRule()
-        {
-
+		{
+		    Priority = 5;
+            WhereTemplate = " WHERE System.Kind <> 'email' AND System.Kind <> 'folder' AND System.Kind <> 'contact' AND Contains(System.Search.Contents,{0},1033) AND System.DateCreated < '{1}' ORDER BY System.DateCreated DESC";
 		}
 
-
-	}//end FileContentSearchRule
+	    public override void Init()
+	    {
+            RuleName = "FileContent";
+	        base.Init();
+	    }
+    }//end FileContentSearchRule
 
 }//end namespace Implements

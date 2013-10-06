@@ -10,6 +10,8 @@
 
 
 using WSUI.Core.Core.Search;
+using WSUI.Infrastructure.Implements.Rules;
+
 namespace WSUI.Infrastructure.Implements.Systems 
 {
 	public class AllSearchSystem : BaseSearchSystem 
@@ -20,6 +22,16 @@ namespace WSUI.Infrastructure.Implements.Systems
 
 		}
 
-	}//end AllSearchSystem
+	    public override void Init()
+	    {
+            AddRule(new ContactSearchRule());
+            AddRule(new EmailContactSearchRule());
+            AddRule(new EmailSubjectSearchRule());
+            AddRule(new EmailContentSearchRule());
+            AddRule(new FileFilenameSearchRule());
+            AddRule(new FileContentSearchRule());
+	        base.Init();
+	    }
+    }//end AllSearchSystem
 
 }//end namespace Implements

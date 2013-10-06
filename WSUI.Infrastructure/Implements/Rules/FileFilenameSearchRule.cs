@@ -7,19 +7,22 @@
 ///////////////////////////////////////////////////////////
 
 
-
-
-
 namespace WSUI.Infrastructure.Implements.Rules 
 {
-	public class FileFilenameSearchRule : BaseFilelSearchRule 
-    {
+	public class FileFilenameSearchRule : BaseFilelSearchRule
+	{
 
 		public FileFilenameSearchRule()
-        {
-
+		{
+		    Priority = 4;
+            WhereTemplate = " WHERE System.Kind <> 'email' AND System.Kind <> 'folder' AND System.Kind <> 'contact' AND Contains(System.ItemUrl,{0},1033) AND System.DateCreated < '{1}' ORDER BY System.DateCreated DESC";
 		}
 
+	    public override void Init()
+	    {
+	        RuleName = "FileFilename";
+	        base.Init();
+	    }
 	}//end FileFilenameSearchRule
 
 }//end namespace Implements
