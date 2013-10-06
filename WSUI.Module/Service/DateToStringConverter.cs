@@ -5,6 +5,7 @@ using System.Windows.Data;
 using WSUI.Core.Core;
 using WSUI.Core.Data;
 using WSUI.Infrastructure.Models;
+using System.Text.RegularExpressions;
 
 namespace WSUI.Module.Service
 {
@@ -90,14 +91,15 @@ namespace WSUI.Module.Service
     [ValueConversion(typeof(BaseSearchObject), typeof(string))]
     public class ObjectToNameConverter : IValueConverter
     {
+        private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string result = string.Empty;
             var contact = value as ContactSearchObject;
             if (contact != null)
             {
-                
-                result = string.Format("{0} {1} ({2})", contact.FirstName, contact.LastName,contact.EmailAddress ?? contact.EmailAddress2 ?? contact.EmailAddress3 );
+
+                result = string.Format("{0} {1} ({2})", contact.FirstName, contact.LastName, IsEmail(contact.EmailAddress) ?? IsEmail(contact.EmailAddress2) ?? IsEmail(contact.EmailAddress3));
 
                 return result;
             }
@@ -113,6 +115,11 @@ namespace WSUI.Module.Service
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return null;
+        }
+
+        private string IsEmail(string email)
+        {
+            return !string.IsNullOrEmpty(email) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase) ? email : null;
         }
     }
 

@@ -218,7 +218,7 @@
         <DockPanel LastChildFill="True" HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Image Grid.Column="0" Source="..\Images\more1.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <ctrl:HightliteHyperlink Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                <ctrl:HightliteHyperlink Text="{Binding Path=ItemName}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                                            Margin="5">
                     <ctrl:HightliteHyperlink.Style>
                         <Style TargetType="ctrl:HightliteTextBlockBase">
