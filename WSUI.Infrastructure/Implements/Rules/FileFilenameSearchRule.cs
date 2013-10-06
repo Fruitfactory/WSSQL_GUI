@@ -9,13 +9,14 @@
 
 
 
-using WSUI.Core.Core.Search;
-using WSUI.Core.Data;
 
-namespace WSUI.Infrastructure.Implements {
-	public class FileFilenameSearchRule : BaseFilelSearchRule {
+namespace WSUI.Infrastructure.Implements.Rules 
+{
+	public class FileFilenameSearchRule : BaseFilelSearchRule 
+    {
 
-		public FileFilenameSearchRule(){
+		public FileFilenameSearchRule()
+        {
 
 		}
 

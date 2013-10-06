@@ -82,9 +82,9 @@ namespace WSUI.Core.Data
 	        get { return _internaList; }
 	    }
 
-	    public int Count
+	    public string Count
 	    {
-	        get { return Items.Count(); }
+	        get { return Items.Count().ToString(CultureInfo.InvariantCulture); }
 	    }
 
 	    public void AddItem(ISearchObject item)

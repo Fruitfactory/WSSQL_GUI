@@ -21,7 +21,7 @@ namespace WSUI.Module.Commands
         protected override bool OnCanExecute()
         {
             if (KindItem != null && KindItem.Current != null &&
-                (KindItem.Current.Type & TypeSearchItem.Email) == KindItem.Current.Type)
+                (KindItem.Current.TypeItem & TypeSearchItem.Email) == KindItem.Current.TypeItem)
                 return true;
             return false;
         }
@@ -30,7 +30,7 @@ namespace WSUI.Module.Commands
             string filename = string.Empty;
             try
             {
-                switch (KindItem.Current.Type)
+                switch (KindItem.Current.TypeItem)
                 {
                     case TypeSearchItem.Email:
                         filename = TempFileManager.Instance.GenerateTempFileName(KindItem.Current);

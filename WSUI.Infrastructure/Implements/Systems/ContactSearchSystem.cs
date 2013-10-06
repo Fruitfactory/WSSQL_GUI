@@ -10,10 +10,13 @@
 
 
 using WSUI.Core.Core.Search;
-namespace WSUI.Infrastructure.Implements {
-	public class ContactSearchSystem : BaseSearchSystem {
+namespace WSUI.Infrastructure.Implements.Systems 
+{
+	public class ContactSearchSystem : BaseSearchSystem 
+    {
 
-		public ContactSearchSystem(){
+		public ContactSearchSystem()
+        {
 
 		}
 

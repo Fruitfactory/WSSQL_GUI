@@ -7,15 +7,13 @@
 ///////////////////////////////////////////////////////////
 
 
+namespace WSUI.Infrastructure.Implements.Rules 
+{
+	public class FileContentSearchRule : BaseFilelSearchRule 
+    {
 
-
-using WSUI.Core.Core.Search;
-using WSUI.Core.Data;
-
-namespace WSUI.Infrastructure.Implements {
-	public class FileContentSearchRule : BaseFilelSearchRule {
-
-		public FileContentSearchRule(){
+		public FileContentSearchRule()
+        {
 
 		}
 

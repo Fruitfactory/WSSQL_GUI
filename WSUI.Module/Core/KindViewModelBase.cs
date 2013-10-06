@@ -364,6 +364,7 @@ namespace WSUI.Module.Core
         protected virtual void OnSearchStringChanged()
         {
             _lastDate = GetCurrentDate();
+            SearchSystem.Reset();
         }
 
         protected virtual void OnInit()
@@ -574,12 +575,12 @@ namespace WSUI.Module.Core
         {
             if(Current == null)
                 return;
-            if (!CommandStrategies.ContainsKey(Current.Type))
+            if (!CommandStrategies.ContainsKey(Current.TypeItem))
             {
                 _currentStrategy = null;
             }
             else
-                _currentStrategy = CommandStrategies[Current.Type];
+                _currentStrategy = CommandStrategies[Current.TypeItem];
             
             OnPropertyChanged(() => Commands);
         }

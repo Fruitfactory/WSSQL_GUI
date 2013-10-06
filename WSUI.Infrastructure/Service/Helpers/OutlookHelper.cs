@@ -166,18 +166,18 @@ namespace WSUI.Infrastructure.Service.Helpers
             return list;
         }
 
-        public string GetContactFotoTempFileName(ContactSearchData data)
+        public string GetContactFotoTempFileName(ContactSearchObject data)
         {
             if (data == null)
                 return string.Empty;
-            string mapiUrl = data.Path;
+            string mapiUrl = data.ItemUrl;
             Outlook.ContactItem ci = GetContact(data);
             if (ci == null)
                 return string.Empty;
             Outlook.Attachment att  = GetFotoAttachment(ci);
             if (att == null)
                 return string.Empty;
-            data.Path = att.DisplayName;
+            data.ItemUrl = att.DisplayName;
 
             string tempFilename = TempFileManager.Instance.GenerateTempFileName(data);
             
@@ -532,7 +532,7 @@ namespace WSUI.Infrastructure.Service.Helpers
         }
 
 
-        private Outlook.ContactItem GetContact(ContactSearchData data)
+        private Outlook.ContactItem GetContact(ContactSearchObject data)
         {
             if (this.OutlookApp == null)
                 return null;

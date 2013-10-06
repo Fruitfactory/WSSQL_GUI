@@ -12,11 +12,13 @@
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
 
-namespace WSUI.Infrastructure.Implements {
+namespace WSUI.Infrastructure.Implements.Rules 
+{
 	public class AttachmentFilenameSearchRule : BaseSearchRule<AttachmentSearchObject>
 	{
 
-		public AttachmentFilenameSearchRule(){
+		public AttachmentFilenameSearchRule()
+        {
 
 		}
 

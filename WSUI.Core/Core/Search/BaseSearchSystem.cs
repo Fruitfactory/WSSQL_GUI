@@ -44,6 +44,7 @@ namespace WSUI.Core.Core.Search
             InternalResult.Clear();
 		    IsSearching = false;
 		    _needStop = false;
+            _listRules.ForEach(item => item.Reset());
         }
 
 		/// 

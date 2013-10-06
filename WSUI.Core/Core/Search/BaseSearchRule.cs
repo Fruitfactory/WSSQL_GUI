@@ -101,9 +101,10 @@ namespace WSUI.Core.Core.Search
 	        try
 	        {
 	            IsSearching = true;
-	            var query = QueryGenerator.Instance.GenerateQuery(typeof (T), Query, TopQueryResult, this, false);
+	            string query = QueryGenerator.Instance.GenerateQuery(typeof (T), Query, TopQueryResult, this, false);
 	            if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
+                WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}",typeof(T).Name, query);
 	            var connection = new OleDbConnection(ConnectionString);
                 var cmd = new OleDbCommand(query, connection);
                 cmd.CommandTimeout = 0;

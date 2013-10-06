@@ -9,10 +9,8 @@
 
 using System.Collections.Generic;
 using WSUI.Core.Core.Rules;
-using WSUI.Core.Core.Search;
-using WSUI.Core.Data;
 
-namespace WSUI.Infrastructure.Implements 
+namespace WSUI.Infrastructure.Implements.Rules 
 {
 	public class EmailSubjectSearchRule : BaseEmailSearchRule
 	{

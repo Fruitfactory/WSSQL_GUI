@@ -91,18 +91,18 @@
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\StringToStringConverter.cs" />
-    <Compile Include="Implements\AllSearchSystem.cs" />
-    <Compile Include="Implements\AttachmentFilenameSearchRule.cs" />
-    <Compile Include="Implements\AttachmentSearchSystem.cs" />
-    <Compile Include="Implements\BaseEmailSearchRule.cs" />
-    <Compile Include="Implements\BaseFilelSearchRule.cs" />
-    <Compile Include="Implements\ContactSearchRule.cs" />
-    <Compile Include="Implements\ContactSearchSystem.cs" />
-    <Compile Include="Implements\EmailContentSearchRule.cs" />
-    <Compile Include="Implements\EmailSearchSystem.cs" />
-    <Compile Include="Implements\EmailSubjectSearchRule.cs" />
-    <Compile Include="Implements\FileContentSearchRule.cs" />
-    <Compile Include="Implements\FileFilenameSearchRule.cs" />
+    <Compile Include="Implements\Systems\AllSearchSystem.cs" />
+    <Compile Include="Implements\Rules\AttachmentFilenameSearchRule.cs" />
+    <Compile Include="Implements\Systems\AttachmentSearchSystem.cs" />
+    <Compile Include="Implements\Rules\BaseEmailSearchRule.cs" />
+    <Compile Include="Implements\Rules\BaseFilelSearchRule.cs" />
+    <Compile Include="Implements\Rules\ContactSearchRule.cs" />
+    <Compile Include="Implements\Systems\ContactSearchSystem.cs" />
+    <Compile Include="Implements\Rules\EmailContentSearchRule.cs" />
+    <Compile Include="Implements\Systems\EmailSearchSystem.cs" />
+    <Compile Include="Implements\Rules\EmailSubjectSearchRule.cs" />
+    <Compile Include="Implements\Rules\FileContentSearchRule.cs" />
+    <Compile Include="Implements\Rules\FileFilenameSearchRule.cs" />
     <Compile Include="Models\CommandSearchData.cs" />
     <Compile Include="Models\ContactSearchData.cs" />
     <Compile Include="Models\EmailSearchData.cs" />

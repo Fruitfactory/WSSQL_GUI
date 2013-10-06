@@ -12,7 +12,7 @@ using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Attributes;
-using WSUI.Infrastructure.Implements;
+using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Models;
 using WSUI.Infrastructure.Service;
 using WSUI.Infrastructure.Service.Helpers;

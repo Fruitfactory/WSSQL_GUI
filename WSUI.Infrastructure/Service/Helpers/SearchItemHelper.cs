@@ -60,7 +60,7 @@ namespace WSUI.Infrastructure.Service.Helpers
                     return OutlookHelper.Instance.GetCalendarTempFileName(item);    
                 case TypeSearchItem.File:
                 case TypeSearchItem.Picture:
-                    return forPreview ? GetNormalizeFilename(item, GetFileName(item.Path)) : GetFileName(item.Path);
+                    return forPreview ? GetNormalizeFilename(item, GetFileName(item.ItemUrl)) : GetFileName(item.ItemUrl);
                 default:
                     return null;
             }

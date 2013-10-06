@@ -12,7 +12,7 @@ using System.Linq;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
 
-namespace WSUI.Infrastructure.Implements 
+namespace WSUI.Infrastructure.Implements.Rules 
 {
 	public class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject>
     {
@@ -50,8 +50,11 @@ namespace WSUI.Infrastructure.Implements
                 result.Add(data);
 	        }
             Result.Clear();
-	        Result = result;
-	        LastDate = Result.Last().DateReceived;
+	        if (result.Count > 0)
+	        {
+                Result = result;
+                LastDate = Result.Last().DateReceived;    
+	        }
             _listID.Clear();
 	        
 	    }

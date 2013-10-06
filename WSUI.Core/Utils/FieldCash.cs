@@ -8,6 +8,7 @@
 
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -18,7 +19,7 @@ namespace WSUI.Core.Utils
 {
 	public class FieldCash : IFieldCash
 	{
-	    private Dictionary<Type, IList<Tuple<string, string, int, bool>>>  _internalCash = new Dictionary<Type, IList<Tuple<string, string, int, bool>>>(); 
+        private ConcurrentDictionary<Type, IList<Tuple<string, string, int, bool>>> _internalCash = new ConcurrentDictionary<Type, IList<Tuple<string, string, int, bool>>>(); 
 
 		protected FieldCash(){
 
@@ -63,7 +64,7 @@ namespace WSUI.Core.Utils
         private IList<Tuple<string,string,int,bool>> CreateCashRecordForType(Type type, bool exludeIgnored)
         {
             var list = GetFields(type);
-            _internalCash.Add(type,list);
+            _internalCash.TryAdd(type,list);
             return list.ToList();
         }
 

@@ -10,10 +10,13 @@
 
 
 using WSUI.Core.Core.Search;
-namespace WSUI.Infrastructure.Implements {
-	public class AttachmentSearchSystem : BaseSearchSystem {
+namespace WSUI.Infrastructure.Implements.Systems 
+{
+	public class AttachmentSearchSystem : BaseSearchSystem 
+    {
 
-		public AttachmentSearchSystem(){
+		public AttachmentSearchSystem()
+        {
 
 		}
 	}//end AttachmentSearchSystem
