@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 using WSUI.Infrastructure.Service.Helpers;
+using WSUI.Core.Extensions;
 
 namespace WSUI.Infrastructure.Controls
 {
@@ -24,7 +25,7 @@ namespace WSUI.Infrastructure.Controls
                 base.OnRender(drawingContext);
                 return;
             }
-
+            Text = Text.ConvertToIso();
             var textlbock = textBlock;
             var mCol = HelperFunctions.GetMatches(Text, Hightlight);
             if (mCol.Count == 0)

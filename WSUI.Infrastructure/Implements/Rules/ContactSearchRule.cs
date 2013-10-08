@@ -59,6 +59,8 @@ namespace WSUI.Infrastructure.Implements.Rules
         public override void Init()
         {
             RuleName = "Contact";
+            CountFirstProcess = 100;
+            CountSecondProcess = 50;
             base.Init();
         }
 

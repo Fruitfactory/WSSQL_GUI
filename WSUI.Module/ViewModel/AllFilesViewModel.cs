@@ -110,7 +110,7 @@ namespace WSUI.Module.ViewModel
                 {
                     if (_isFirstTime)
                     {
-                        ContactForFirstTime(result.Where(i => i.Priority == FirstPriority));                            
+                        ContactForFirstTime(result.Where(i => i.Priority <= FirstPriority).OrderBy(i => i.Priority));                            
                     }
                     foreach (var col in result.Where(i => i.Priority > FirstPriority).OrderBy(i => i.Priority))
                     {

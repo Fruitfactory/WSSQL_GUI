@@ -22,7 +22,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         public EmailContactSearchRule()
         {
-            Priority = 1;
+            Priority = 0;
         }
 
         protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
@@ -42,6 +42,8 @@ namespace WSUI.Infrastructure.Implements.Rules
         public override void Init()
         {
             RuleName = "EmailContact";
+            CountFirstProcess = 400;
+            CountSecondProcess = 100;
             base.Init();
         }
 
