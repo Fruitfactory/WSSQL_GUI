@@ -408,7 +408,7 @@ namespace WSUI.Module.Core
             _lastDate = GetCurrentDate();
             if (string.IsNullOrEmpty(SearchString))
                 return;
-
+            SearchSystem.Reset();
             ClearDataSource();
             Search();
         }

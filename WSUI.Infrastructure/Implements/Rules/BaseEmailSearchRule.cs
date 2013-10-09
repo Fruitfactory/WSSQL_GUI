@@ -35,7 +35,8 @@ namespace WSUI.Infrastructure.Implements.Rules
 	    }
 
 	    protected override void ProcessResult()
-	    {
+        {
+            _listID.Clear();
 	        var groped = Result.GroupBy(e => e.ConversationId);
 	        var result = new List<EmailSearchObject>();
             foreach (var group in groped)
@@ -57,8 +58,6 @@ namespace WSUI.Infrastructure.Implements.Rules
                 Result = result;
                 LastDate = Result.Last().DateReceived;    
 	        }
-            _listID.Clear();
-	        
 	    }
     }//end BaseEmailSearchRule
 

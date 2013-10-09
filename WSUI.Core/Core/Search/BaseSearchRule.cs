@@ -196,9 +196,11 @@ namespace WSUI.Core.Core.Search
 		{
             CountAdded = 0;
             CountProcess = 0;
+            TopQueryResult = CountProcess = CountFirstProcess;
 		    Query = string.Empty;
 		    _needStop = false;
 		    LastDate = GetCurrentDateTime();
+            Result.Clear();
 		}
 
 	    public bool IsSearching { get; protected set; }

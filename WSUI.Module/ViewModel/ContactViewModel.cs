@@ -97,6 +97,7 @@ namespace WSUI.Module.ViewModel
             if (string.IsNullOrEmpty(SearchString))
                 return;
             ClearDataSource();
+            base.OnSearchStringChanged();
             //_contactSuggesting.StartSuggesting(SearchString);
         }
 

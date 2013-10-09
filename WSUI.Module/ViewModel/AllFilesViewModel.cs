@@ -78,6 +78,7 @@ namespace WSUI.Module.ViewModel
             if (ParentViewModel != null && ParentViewModel.MainDataSource != null)
                 ParentViewModel.MainDataSource.Clear();
             _isFirstTime = true;
+            base.OnSearchStringChanged();
         }
 
  
