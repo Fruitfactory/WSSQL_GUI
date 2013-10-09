@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using WSUI.Core.Core.Rules;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
+using WSUI.Core.Logger;
 
 namespace WSUI.Infrastructure.Implements.Rules
 {
@@ -15,7 +16,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         private const string NamesTemplate = "(CONTAINS(System.Message.FromAddress,'\"{0}*\"') OR CONTAINS(System.Message.CcAddress,'\"{0}*\"') OR CONTAINS(System.Message.ToAddress,'\"{0}*\"') OR CONTAINS(System.Search.Contents,'\"{0}*\"'))";
         private const string CollapseTemplate = "( {0} )";
-
+        private const string DateTemplate = " AND System.Message.DateReceived < '{0}' ORDER BY System.Message.DateReceived DESC";
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
 
         private readonly List<string> _listEmails = new List<string>(); 
@@ -28,13 +29,15 @@ namespace WSUI.Infrastructure.Implements.Rules
         protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
         {
             string result = string.Empty;
+            var date = FormatDate(ref LastDate);
+            string dateTemplate = string.Format(DateTemplate, date);
             if (Query.IndexOf(' ') > -1)
             {
-                result = WhereTemplate + ProcessAndBuildWhereQueryPart(Query);
+                result = WhereTemplate + ProcessAndBuildWhereQueryPart(Query) + dateTemplate;
             }
             else
             {
-                result = WhereTemplate + string.Format(NamesTemplate, Query);
+                result = WhereTemplate + string.Format(NamesTemplate, Query) + dateTemplate;
             }
             return result;
         }
@@ -59,6 +62,12 @@ namespace WSUI.Infrastructure.Implements.Rules
             return string.Format(CollapseTemplate, strBuid.ToString());
         }
 
+        public override void Reset()
+        {
+            _listEmails.Clear();
+            base.Reset();
+        }
+
         protected override void ProcessResult()
         {
             var groups = Result.GroupBy(i => i.ConversationId);
@@ -74,13 +83,14 @@ namespace WSUI.Infrastructure.Implements.Rules
                 _listEmails.Add(email);
                 item.EMail = email;
                 result.Add(item);
+                WSSqlLogger.Instance.LogInfo("Item: {0}", item.ToString());
             }
             Result.Clear();
             if (result.Count > 0)
             {
                 Result = result;
+                LastDate = Result.Last().DateReceived;
             }
-            _listEmails.Clear();
         }
 
         private string GetEmailAddress(string[] from, string searchCriteria)

@@ -118,8 +118,14 @@ namespace WSUI.Core.Core.Search
 		    try
 		    {
 		        var listEvents = new List<AutoResetEvent>();
-		        _listRules.ForEach(item => listEvents.Add(item.GetEvent()));
-		        _listRules.ForEach(item => item.Search());
+                _listRules.ForEach(item =>
+                {
+                    if (!item.IsSearching)
+                    {
+                        listEvents.Add(item.GetEvent());
+                        item.Search();
+                    }
+                });
 		        WaitHandle.WaitAll(listEvents.ToArray());
 
 		        if (_needStop)

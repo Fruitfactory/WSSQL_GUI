@@ -97,7 +97,10 @@ namespace WSUI.Core.Data
 
         public object Tag { get; set; }
 
-    
+        public override string ToString()
+        {
+            return string.Format("{0}:{1}",ItemName,Id.ToString());
+        }
     }//end BaseSearchObject
 
 }//end namespace Data

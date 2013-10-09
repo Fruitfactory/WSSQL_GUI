@@ -85,6 +85,11 @@ namespace WSUI.Core.Core.Search
 
 		public void Search()
 		{
+            if (IsSearching)
+            {
+                Event.Set();
+                return;
+            }
 		    InitBeforeSearching();
             _ruleThread = new Thread(DoQuery) {Priority = ThreadPriority.Highest};
 		    _ruleThread.Start();
