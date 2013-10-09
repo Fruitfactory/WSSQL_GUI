@@ -163,11 +163,6 @@ namespace WSUI.Core.Core.Search
 	        
 	    }
 
-	    protected virtual void CreateQuery()
-	    {
-	        IsInterupt = false;
-	    }
-
 	    /// 
 	    /// <param name="reader"></param>
 	    protected virtual void ReadData(IDataReader reader)
@@ -200,6 +195,7 @@ namespace WSUI.Core.Core.Search
 		    Query = string.Empty;
 		    _needStop = false;
 		    LastDate = GetCurrentDateTime();
+            IsInterupt = false;
             Result.Clear();
 		}
 
