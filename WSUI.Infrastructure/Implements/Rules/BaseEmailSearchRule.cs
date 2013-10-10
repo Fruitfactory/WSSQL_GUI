@@ -34,9 +34,14 @@ namespace WSUI.Infrastructure.Implements.Rules
 	        base.Init();
 	    }
 
+	    public override void Reset()
+	    {
+            _listID.Clear();
+	        base.Reset();
+	    }
+
 	    protected override void ProcessResult()
         {
-            _listID.Clear();
 	        var groped = Result.GroupBy(e => e.ConversationId);
 	        var result = new List<EmailSearchObject>();
             foreach (var group in groped)

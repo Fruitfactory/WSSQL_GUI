@@ -127,7 +127,7 @@ namespace WSUI.Core.Core.Search
                     }
                 });
 		        WaitHandle.WaitAll(listEvents.ToArray());
-
+                WSSqlLogger.Instance.LogError("+++++++++++++++++ searching is DONE!!!!+++++++++++++++");
 		        if (_needStop)
 		        {
 		            RaiseSearchStopped();

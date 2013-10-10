@@ -30,6 +30,7 @@ namespace WSUI.Infrastructure.Implements.Systems
             AddRule(new EmailContentSearchRule());
             AddRule(new FileFilenameSearchRule());
             AddRule(new FileContentSearchRule());
+            AddRule(new AttachmentFilenameSearchRule());
 	        base.Init();
 	    }
     }//end AllSearchSystem

@@ -351,15 +351,19 @@ namespace WSUI.Module.Core
 
             //BusyPopupAdorner.Instance.Message = "Searching...";
             //BusyPopupAdorner.Instance.IsBusy = true;
-            ProgressManager.Instance.StartOperation(new ProgressOperation()
+            if (!ProgressManager.Instance.InProgress)
             {
-                Caption = "Searching...",
-                DelayTime = 2500,
-                Canceled = false,
-                Location = new Point(mwi.MainWindowRect.Left, mwi.MainWindowRect.Top),
-                Size = new Size(mwi.MainWindowRect.Width, mwi.MainWindowRect.Height),
-                MainHandle = mwi.MainWindowHandle
-            });
+                ProgressManager.Instance.StartOperation(new ProgressOperation()
+                {
+                    Caption = "Searching...",
+                    DelayTime = 2500,
+                    Canceled = false,
+                    Location = new Point(mwi.MainWindowRect.Left, mwi.MainWindowRect.Top),
+                    Size = new Size(mwi.MainWindowRect.Width, mwi.MainWindowRect.Height),
+                    MainHandle = mwi.MainWindowHandle
+                });
+                
+            }
         }
 
         protected virtual bool CanSearch()

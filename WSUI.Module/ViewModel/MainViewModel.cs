@@ -209,14 +209,17 @@ namespace WSUI.Module.ViewModel
                 Tuple<Point, Size> mwi = GetMainWindowInfo();
                 //BusyPopupAdorner.Instance.Message = "Loading...";
                 //BusyPopupAdorner.Instance.IsBusy = true;
-                ProgressManager.Instance.StartOperation(new ProgressOperation()
+                if (!ProgressManager.Instance.InProgress)
                 {
-                    Caption = "Loading...",
-                    DelayTime = 250,
-                    Canceled = false,
-                    Location = mwi.Item1,
-                    Size = mwi.Item2
-                });
+                    ProgressManager.Instance.StartOperation(new ProgressOperation()
+                    {
+                        Caption = "Loading...",
+                        DelayTime = 250,
+                        Canceled = false,
+                        Location = mwi.Item1,
+                        Size = mwi.Item2
+                    });
+                }
                 Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
             }
             catch (Exception ex)
