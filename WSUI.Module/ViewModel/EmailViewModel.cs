@@ -26,7 +26,7 @@ using System.Diagnostics;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId(KindsConstName.Email,0)]
+    [KindNameId(KindsConstName.Email,2)]
     public class EmailViewModel : KindViewModelBase, IUView<EmailViewModel>, IScrollableView
     {
         

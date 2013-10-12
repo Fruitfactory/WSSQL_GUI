@@ -27,7 +27,7 @@ using System.Diagnostics;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId(KindsConstName.Everything,2)]
+    [KindNameId(KindsConstName.Everything,0)]
     public class AllFilesViewModel : KindViewModelBase, IUView<AllFilesViewModel>, IScrollableView
     {
         private int _countAdded = 0;
