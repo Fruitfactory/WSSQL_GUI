@@ -14,7 +14,9 @@ namespace WSUI.Infrastructure.Implements.Rules
     {
         private const string WhereTemplate = " WHERE System.Kind = 'email' AND ";
 
-        private const string NamesTemplate = "(CONTAINS(System.Message.FromAddress,'\"{0}*\"') OR CONTAINS(System.Message.CcAddress,'\"{0}*\"') OR CONTAINS(System.Message.ToAddress,'\"{0}*\"') OR CONTAINS(System.Search.Contents,'\"{0}*\"'))";
+        private const string NamesTemplate =
+            "System.Message.FromAddress LIKE '%{0}%' OR System.Message.CcAddress LIKE '%{0}%' OR System.Message.ToAddress LIKE '%{0}%'";
+        //"(FREETEXT(System.Message.FromAddress,'\"*{0}*\" OR \"{0}*\"') OR FREETEXT(System.Message.CcAddress,'\"*{0}*\" OR \"{0}*\"') OR FREETEXT(System.Message.ToAddress,'\"*{0}*\" OR \"{0}*\"') )";
         private const string CollapseTemplate = "( {0} )";
         private const string DateTemplate = " AND System.Message.DateReceived < '{0}' ORDER BY System.Message.DateReceived DESC";
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
@@ -37,7 +39,7 @@ namespace WSUI.Infrastructure.Implements.Rules
             }
             else
             {
-                result = WhereTemplate + string.Format(NamesTemplate, Query) + dateTemplate;
+                result = WhereTemplate + "(" + string.Format(NamesTemplate, Query) + ")" + dateTemplate;
             }
             return result;
         }
@@ -54,10 +56,11 @@ namespace WSUI.Infrastructure.Implements.Rules
         {
             StringBuilder strBuid = new StringBuilder();
             var arr = query.Split(' ').ToList();
-            strBuid.Append(string.Format(NamesTemplate, arr[0]));
+            var temp = string.Format(NamesTemplate, arr[0]);
+            strBuid.Append(string.Format("({0})", temp));
             foreach (var item in arr.Skip(1))
             {
-                strBuid.Append(" AND " + string.Format(NamesTemplate, item));
+                strBuid.Append(" AND (" + string.Format(NamesTemplate, item)+")");
             }
             return string.Format(CollapseTemplate, strBuid.ToString());
         }
@@ -95,33 +98,33 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         private string GetEmailAddress(string[] from, string searchCriteria)
         {
+            if (from == null)
+                return null;
             string fromAddress = null;
-            if (from != null)
+            var arr = searchCriteria.Trim().Split(' ');
+            if (arr != null && arr.Length > 0)
             {
-                var arr = searchCriteria.Trim().Split(' ');
-                if (arr != null && arr.Length > 0)
+                var present = true;
+                foreach (var s in arr)
                 {
-                    foreach (var s in arr)
-                    {
-                        fromAddress =
-                        from.FirstOrDefault(
-                            str =>
-                            str.IndexOf(s, StringComparison.CurrentCultureIgnoreCase) > -1 &&
-                            Regex.IsMatch(str, EmailPattern, RegexOptions.IgnoreCase));
-                        if (!string.IsNullOrEmpty(fromAddress))
-                            break;
-                    }
-                }
-                else
                     fromAddress =
-                        from.FirstOrDefault(
-                            str =>
-                            str.IndexOf(searchCriteria.Trim(), StringComparison.CurrentCultureIgnoreCase) > -1 &&
-                            Regex.IsMatch(str, EmailPattern, RegexOptions.IgnoreCase));
+                    from.FirstOrDefault(
+                        str =>
+                        str.IndexOf(s, StringComparison.CurrentCultureIgnoreCase) > -1 &&
+                        Regex.IsMatch(str, EmailPattern, RegexOptions.IgnoreCase));
+                    if (string.IsNullOrEmpty(fromAddress))
+                        present = false;
+                }
+                if (!present)
+                    fromAddress = string.Empty;
             }
+            else
+                fromAddress =
+                    from.FirstOrDefault(
+                        str =>
+                        str.IndexOf(searchCriteria.Trim(), StringComparison.CurrentCultureIgnoreCase) > -1 &&
+                        Regex.IsMatch(str, EmailPattern, RegexOptions.IgnoreCase));
             return fromAddress;
         }
-
-
     }
 }

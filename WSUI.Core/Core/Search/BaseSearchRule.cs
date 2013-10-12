@@ -32,7 +32,7 @@ namespace WSUI.Core.Core.Search
 	    private const string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
 	    private Thread _ruleThread;
         private IQueryReader _reader;
-	    private volatile bool _needStop = false;
+	    private volatile bool _isSearching = false;
 
         #endregion
 
@@ -85,7 +85,7 @@ namespace WSUI.Core.Core.Search
 
 		public void Search()
 		{
-            if (IsSearching)
+            if (_isSearching)
             {
                 Event.Set();
                 return;
@@ -97,7 +97,6 @@ namespace WSUI.Core.Core.Search
 
 		public void Stop()
 		{
-		    _needStop = true;
 		}
 
 		public event Action<object> SearchStarted;
@@ -108,7 +107,7 @@ namespace WSUI.Core.Core.Search
 	    {
 	        try
 	        {
-	            IsSearching = true;
+                _isSearching = true;
 	            string query = QueryGenerator.Instance.GenerateQuery(typeof (T), Query, TopQueryResult, this, false);
 	            if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
@@ -162,7 +161,7 @@ namespace WSUI.Core.Core.Search
 	        finally
 	        {
 	            TopQueryResult = CountProcess = CountSecondProcess;
-	            IsSearching = false;
+                _isSearching = false;
 	            Event.Set();
 	        }
 	        
@@ -198,13 +197,12 @@ namespace WSUI.Core.Core.Search
             CountProcess = 0;
             TopQueryResult = CountProcess = CountFirstProcess;
 		    Query = string.Empty;
-		    _needStop = false;
 		    LastDate = GetCurrentDateTime();
             IsInterupt = false;
             Result.Clear();
 		}
 
-	    public bool IsSearching { get; protected set; }
+	    public bool IsSearching { get { return _isSearching; }  }
 	    public int Priority { get; protected set; }
 
 	    protected virtual void ProcessResult()

@@ -21,7 +21,8 @@ namespace WSUI.Infrastructure.Implements.Rules
         private const string WhereTemplate = 
             " WHERE System.Kind = 'contact' AND ";
 	    private const string NamesTemplate =
-	        "CONTAINS(System.Contact.FirstName,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\" OR \"*{0}*\"')";
+            "CONTAINS(System.Contact.FirstName,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\" OR \"*{0}*\"')  OR CONTAINS(System.Contact.EmailAddress,'\"{0}*\" OR \"*{0}*\"')" +
+            " OR CONTAINS(System.Contact.EmailAddress2,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Contact.EmailAddress3,'\"{0}*\" OR \"*{0}*\"')";
 
 	    private const string CollapseTemplate = "( {0} )";
 
@@ -48,10 +49,11 @@ namespace WSUI.Infrastructure.Implements.Rules
 	    {
 	        StringBuilder strBuid = new StringBuilder();
 	        var arr = query.Split(' ').ToList();
-	        strBuid.Append(string.Format(NamesTemplate, arr[0]));
+	        var temp = string.Format(NamesTemplate, arr[0]);
+	        strBuid.Append(string.Format("({0})",temp));
 	        foreach (var item in arr.Skip(1))
 	        {
-	            strBuid.Append(" AND " + string.Format(NamesTemplate, item));
+	            strBuid.Append(" AND (" + string.Format(NamesTemplate, item) + ")");
 	        }
 	        return string.Format(CollapseTemplate, strBuid.ToString());
 	    }

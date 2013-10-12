@@ -678,5 +678,12 @@ namespace WSUI.Module.Core
         }
 
 
+        protected void OnScroolNeedSearch()
+        {
+            if (SearchSystem.IsSearching)
+                return;
+            ShowMessageNoMatches = false;
+            Search();
+        }
     }
 }

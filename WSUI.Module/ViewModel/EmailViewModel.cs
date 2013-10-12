@@ -26,7 +26,7 @@ using System.Diagnostics;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId(KindsConstName.Email,2)]
+    [KindNameId(KindsConstName.Email,0)]
     public class EmailViewModel : KindViewModelBase, IUView<EmailViewModel>, IScrollableView
     {
         
@@ -69,12 +69,7 @@ namespace WSUI.Module.ViewModel
             SearchSystem.Init();
             CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
             ScrollBehavior = new ScrollBehavior() {CountFirstProcess = 300,CountSecondProcess = 100 ,LimitReaction = 85};
-            ScrollBehavior.SearchGo += () =>
-                                           {
-                                               ShowMessageNoMatches = false;
-                                               Search();
-                                               
-                                           };
+            ScrollBehavior.SearchGo += OnScroolNeedSearch;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
         }
 

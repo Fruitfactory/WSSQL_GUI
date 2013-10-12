@@ -27,7 +27,7 @@ using System.Diagnostics;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId(KindsConstName.Everything,0)]
+    [KindNameId(KindsConstName.Everything,2)]
     public class AllFilesViewModel : KindViewModelBase, IUView<AllFilesViewModel>, IScrollableView
     {
         private int _countAdded = 0;
@@ -223,11 +223,7 @@ namespace WSUI.Module.ViewModel
             CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
             ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 300, CountSecondProcess = 100, LimitReaction = 99 };
-            ScrollBehavior.SearchGo += () =>
-                                           {
-                                               ShowMessageNoMatches = false;
-                                               Search();
-                                           };
+            ScrollBehavior.SearchGo += OnScroolNeedSearch;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
         }
 

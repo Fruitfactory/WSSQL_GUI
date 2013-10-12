@@ -25,7 +25,7 @@ namespace WSUI.Core.Core.Search
 	    private volatile bool _needStop = false;
 
 	    protected IList<ISystemSearchResult> InternalResult;
-	    protected volatile bool IsSearching = false;
+	    protected volatile bool _IsSearching = false;
 
 		protected BaseSearchSystem()
         {
@@ -35,14 +35,14 @@ namespace WSUI.Core.Core.Search
 
 		public virtual void Init()
 		{
-		    IsSearching = false;
+            _IsSearching = false;
             _listRules.ForEach(item => item.Init());
 		}
 
 		public virtual void Reset()
         {
             InternalResult.Clear();
-		    IsSearching = false;
+            _IsSearching = false;
 		    _needStop = false;
             _listRules.ForEach(item => item.Reset());
         }
@@ -56,7 +56,7 @@ namespace WSUI.Core.Core.Search
 
 		public virtual void Search()
 		{
-		    if (IsSearching)
+            if (_IsSearching)
 		        return;
             InitBeforeSearch();
             _mainSearchThread = new Thread(DoSearch){Priority = ThreadPriority.Highest};
@@ -82,7 +82,9 @@ namespace WSUI.Core.Core.Search
 			return InternalResult;
 		}
 
-		protected virtual void RaiseSearchStarted()
+        public bool IsSearching { get { return _IsSearching; } }
+
+	    protected virtual void RaiseSearchStarted()
 		{
 		    var temp = SearchStarted;
 		    if (temp != null)
@@ -127,11 +129,11 @@ namespace WSUI.Core.Core.Search
                     }
                 });
 		        WaitHandle.WaitAll(listEvents.ToArray());
-                WSSqlLogger.Instance.LogError("+++++++++++++++++ searching is DONE!!!!+++++++++++++++");
+                WSSqlLogger.Instance.LogInfo("+++++++++++++++++ searching is DONE!!!!+++++++++++++++");
 		        if (_needStop)
 		        {
 		            RaiseSearchStopped();
-		            IsSearching = false;
+                    _IsSearching = false;
                     WSSqlLogger.Instance.LogError("Searching was stoped");
                     return;
 		        }
@@ -150,7 +152,7 @@ namespace WSUI.Core.Core.Search
 		    }
 		    finally
 		    {
-		        IsSearching = false;
+                _IsSearching = false;
                 RaiseSearchFinished();
 		    }
 		}

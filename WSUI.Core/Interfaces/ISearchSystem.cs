@@ -34,6 +34,8 @@ namespace WSUI.Core.Interfaces
 		event Action<object> SearchStoped;
 
 		IList<ISystemSearchResult> GetResult();
+
+        bool IsSearching { get; }
 	}//end ISearchSystem
 
 }//end namespace Interfaces

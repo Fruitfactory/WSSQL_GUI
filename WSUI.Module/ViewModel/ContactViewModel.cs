@@ -144,11 +144,7 @@ namespace WSUI.Module.ViewModel
 
             CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
             ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 400, CountSecondProcess = 100, LimitReaction = 99 };
-            ScrollBehavior.SearchGo += () =>
-            {
-                ShowMessageNoMatches = false;
-                Search();
-            };
+            ScrollBehavior.SearchGo += OnScroolNeedSearch;
         }
 
 
