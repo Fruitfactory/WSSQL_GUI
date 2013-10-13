@@ -45,6 +45,96 @@
         <Setter Property="Width" Value="Auto" />
     </Style>
 
+    <Style x:Key="ExpanderUpHeaderStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Padding="{TemplateBinding Padding}">
+                        <Grid SnapsToDevicePixels="False" Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="19"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Image x:Name="image" Source="..\Images\plus.png" />
+                            </Grid>
+                            <ContentPresenter HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center" SnapsToDevicePixels="True" Grid.Column="1" RecognizesAccessKey="True"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter Property="Source" TargetName="image" Value="..\Images\plus.png"></Setter>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Source" TargetName="image" Value="..\Images\minus.png"/>
+                        </Trigger>
+                        <!--<Trigger Property="IsMouseOver" Value="true">
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                        </Trigger>-->
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="EmailExpanderStyle" TargetType="{x:Type Expander}">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Expander}">
+                    <Border SnapsToDevicePixels="true" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
+                        <DockPanel>
+                            <Grid DockPanel.Dock="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ToggleButton Grid.Column="0" x:Name="HeaderSite"  Margin="0" MinHeight="0" MinWidth="0" Style="{StaticResource ExpanderUpHeaderStyle}" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" FontStretch="{TemplateBinding FontStretch}" FontStyle="{TemplateBinding FontStyle}" FontWeight="{TemplateBinding FontWeight}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                                <Grid Grid.Column="1" HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
+                                        <ColumnDefinition Width="0.25*"/>
+                                        <ColumnDefinition Width="0.75*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" />
+
+                                    <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3"
+                                       Grid.Column="1"></TextBlock>
+
+                                    <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"
+                                            Grid.Column="2"  Margin="5" ></ctrl:HightliteTextBlock>
+
+                                    <ctrl:HightliteTextBlock Text="{Binding Path=ItemName,Converter={StaticResource ResourceKey=StringConverter}}"  Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"
+                                            Grid.Column="3"   Margin="5"></ctrl:HightliteTextBlock>
+
+                                    <TextBlock Grid.Column="4"  Text="{Binding Path=DateReceived,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>
+                                </Grid>
+
+                            </Grid>
+                            <ContentPresenter x:Name="ExpandSite" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="0" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Focusable="false" Visibility="Collapsed" DockPanel.Dock="Bottom"/>
+                        </DockPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="true">
+                            <Setter Property="Visibility" TargetName="ExpandSite" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <DataTemplate x:Key="NoneTemplate" >
         <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
@@ -61,7 +151,7 @@
         
     </DataTemplate>
 
-    <DataTemplate x:Key="EmailTemplate">
+    <DataTemplate x:Key="EmailItemTemplate">
         <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -75,18 +165,36 @@
 
             <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3"
                            Grid.Column="1"></TextBlock>
-<!--ctrl:HightliteTextBlock-->
+            <!--ctrl:HightliteTextBlock-->
             <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"
-                                            Grid.Column="2"  Margin="5" ></ctrl:HightliteTextBlock><!--Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"-->
+                                            Grid.Column="2"  Margin="5" ></ctrl:HightliteTextBlock>
+            <!--Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"-->
 
             <ctrl:HightliteTextBlock Text="{Binding Path=ItemName,Converter={StaticResource ResourceKey=StringConverter}}"  Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"
-                                            Grid.Column="3"   Margin="5"></ctrl:HightliteTextBlock><!--Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"-->
+                                            Grid.Column="3"   Margin="5"></ctrl:HightliteTextBlock>
+            <!--Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"-->
 
             <TextBlock Grid.Column="4"  Text="{Binding Path=DateReceived,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>
         </Grid>
-        
+
     </DataTemplate>
 
+
+    <DataTemplate x:Key="EmailTemplate">
+        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Expander Margin="0" Grid.Column="0" Style="{StaticResource EmailExpanderStyle}" ExpandDirection="Down">
+                <Grid>
+                    <ListBox ItemsSource="{Binding Items}" 
+                             SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=SelectedItem,Mode=OneWayToSource}"
+                             ItemTemplate="{StaticResource EmailItemTemplate}"></ListBox>
+                </Grid>
+            </Expander>    
+        </Grid>
+    </DataTemplate>
+    
     <DataTemplate x:Key="UserTemplate">
         <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
