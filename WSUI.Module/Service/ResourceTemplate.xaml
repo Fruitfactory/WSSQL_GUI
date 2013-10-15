@@ -26,6 +26,16 @@
         <Setter Property="Width"  Value="16"/>
         <Setter Property="Height" Value="16"/>
         <Setter Property="Margin" Value="5"/>
+        
+    </Style>
+
+    <Style x:Key="ExpanderImageStyle" TargetType="{x:Type Image}">
+        <Setter Property="Width"  Value="12"/>
+        <Setter Property="Height" Value="12"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Visibility" Value="Visible"></Setter>
     </Style>
 
     <Style x:Key="NameStyleWidthColumn" TargetType="ColumnDefinition">
@@ -46,22 +56,24 @@
     </Style>
 
     <Style x:Key="ExpanderUpHeaderStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Visibility" Value="Visible"></Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Border Padding="{TemplateBinding Padding}">
                         <Grid SnapsToDevicePixels="False" Background="Transparent">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="19"/>
+                                <ColumnDefinition Width="16"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid>
-                                <Image x:Name="image" Source="..\Images\plus.png" />
+                                <Image x:Name="image" Source="..\Images\plus.png" Style="{StaticResource ExpanderImageStyle}" />
                             </Grid>
                             <ContentPresenter HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center" SnapsToDevicePixels="True" Grid.Column="1" RecognizesAccessKey="True"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
+                        
                         <Trigger Property="IsChecked" Value="False">
                             <Setter Property="Source" TargetName="image" Value="..\Images\plus.png"></Setter>
                         </Trigger>
@@ -76,6 +88,14 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Count}" Value="0">
+                <Setter Property="Visibility" Value="Hidden"></Setter>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Count}" Value="1">
+                <Setter Property="Visibility" Value="Hidden"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
     
     <Style x:Key="EmailExpanderStyle" TargetType="{x:Type Expander}">
@@ -92,7 +112,7 @@
                         <DockPanel>
                             <Grid DockPanel.Dock="Top">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="16" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <ToggleButton Grid.Column="0" x:Name="HeaderSite"  Margin="0" MinHeight="0" MinWidth="0" Style="{StaticResource ExpanderUpHeaderStyle}" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" FontStretch="{TemplateBinding FontStretch}" FontStyle="{TemplateBinding FontStyle}" FontWeight="{TemplateBinding FontWeight}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
