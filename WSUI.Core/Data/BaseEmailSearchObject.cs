@@ -23,6 +23,9 @@ namespace WSUI.Core.Data
         [Field("System.Message.DateReceived", 9, false)]
 		public DateTime DateReceived{ get;  set;}
 
+        [Field("System.Message.ConversationIndex", 10, false)]
+        public string ConversationIndex { get; set; }
+
 	    public string Recepient
 	    {
 	        get
@@ -51,6 +54,9 @@ namespace WSUI.Core.Data
 	                break;
                 case 9:
 	                DateReceived = (DateTime) Convert.ChangeType(value, typeof (DateTime), CultureInfo.InvariantCulture);
+	                break;
+                case 10:
+	                ConversationIndex = value as string;
 	                break;
 	        }
 	    }

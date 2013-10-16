@@ -130,7 +130,7 @@ namespace WSUI.Core.Core.Search
                     watchOleDbCommand.Start();
                     OleDbDataReader dataReader = cmd.ExecuteReader();
                     watchOleDbCommand.Stop();
-                    WSSqlLogger.Instance.LogInfo("dataReader = cmd.ExecuteReader(); Elapsed: " + watchOleDbCommand.ElapsedMilliseconds.ToString());
+                    WSSqlLogger.Instance.LogInfo("dataReader<{0}> Elapsed: {1}", typeof(T).Name, watchOleDbCommand.ElapsedMilliseconds.ToString());
 
                     while (dataReader.Read())
                     {
@@ -142,14 +142,14 @@ namespace WSUI.Core.Core.Search
                         }
                         catch (Exception ex)
                         {
-                            WSSqlLogger.Instance.LogError("{0}: {1}", "DoQuery _ main cycle", ex.Message);
+                            WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery _ main cycle", typeof(T).Name, ex.Message);
                         }
                     }
 
                 }
                 catch (OleDbException oleDbException)
                 {
-                    WSSqlLogger.Instance.LogError("{0}: {1}", "DoQuery", oleDbException.Message);
+                    WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery", typeof(T).Name, oleDbException.Message);
                 }
                 // additional process
 	            if (!NeedStop)
@@ -168,7 +168,7 @@ namespace WSUI.Core.Core.Search
 	        {
                 _typeResult = TypeResult.Error;
                 _listMessage.Add(new ResultMessage(){Message = ex.Message});
-                WSSqlLogger.Instance.LogError("Search: {0}",ex.Message);
+                WSSqlLogger.Instance.LogError("Search <0>: {1}",typeof(T).Name, ex.Message);
 	        }
 	        finally
 	        {

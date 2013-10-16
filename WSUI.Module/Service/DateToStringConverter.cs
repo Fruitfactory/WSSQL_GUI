@@ -56,7 +56,7 @@ namespace WSUI.Module.Service
         {
             int count = 0;
             int.TryParse(value as string, out count);
-            return count <= 1 ? string.Empty : string.Format("[{0}]", count);
+            return count < 1 ? string.Empty : string.Format("[{0}]", count);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

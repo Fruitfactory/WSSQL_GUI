@@ -46,13 +46,16 @@ namespace WSUI.Infrastructure.Implements.Rules
 	        var result = new List<EmailSearchObject>();
             foreach (var group in groped)
 	        {
-	            var data = group.FirstOrDefault();
+                var convIndex = group.GroupBy(i => i.ConversationIndex);
+                if(!convIndex.Any())
+                    continue;
+	            var data = convIndex.FirstOrDefault().First(); // FirstOrDefault = group, First = email
                 if(data == null || string.IsNullOrEmpty(data.ConversationId) || _listID.Contains(data.ConversationId))
                     continue;
 	            _listID.Add(data.ConversationId);
-	            foreach (var emailSearchObject in group.Skip(1))
+                foreach (var emailSearchObject in convIndex.Skip(1))
 	            {
-                    data.AddItem(emailSearchObject);	                
+                    data.AddItem(emailSearchObject.First());	                
 	            }
                 result.Add(data);
 	        }
