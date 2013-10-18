@@ -21,7 +21,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 {
 	public class AttachmentFilenameSearchRule : BaseSearchRule<AttachmentSearchObject>
 	{
-        private const string WhereTemplate = "WHERE Contains(System.ItemUrl,'at=') AND System.DateModified < '{0}'  AND ( ( {1} ) OR  Contains(System.Search.Contents,{2})) ORDER BY System.DateModified DESC";
+        private const string WhereTemplate = "WHERE Contains(System.ItemUrl,'at=') AND System.DateModified < '{0}'  AND ( {1} ) ORDER BY System.DateModified DESC";
         private readonly List<string> _listId = new List<string>(); 
 
 

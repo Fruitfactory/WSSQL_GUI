@@ -119,8 +119,7 @@ namespace WSUI.Core.Core.Search
                 var cmd = new OleDbCommand(query, connection);
                 cmd.CommandTimeout = 0;
 
-                var watch = new Stopwatch();
-                watch.Start();
+                Stopwatch watch = null;
                 try
                 {
 
@@ -132,6 +131,8 @@ namespace WSUI.Core.Core.Search
                     watchOleDbCommand.Stop();
                     WSSqlLogger.Instance.LogInfo("dataReader<{0}> Elapsed: {1}", typeof(T).Name, watchOleDbCommand.ElapsedMilliseconds.ToString());
 
+                    watch = new Stopwatch();
+                    watch.Start();
                     while (dataReader.Read())
                     {
                         try
@@ -145,6 +146,8 @@ namespace WSUI.Core.Core.Search
                             WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery _ main cycle", typeof(T).Name, ex.Message);
                         }
                     }
+                    watch.Stop();
+                    WSSqlLogger.Instance.LogInfo("ReadData<{0}>: {1}",typeof(T).Name,watch.ElapsedMilliseconds);
 
                 }
                 catch (OleDbException oleDbException)
@@ -154,8 +157,12 @@ namespace WSUI.Core.Core.Search
                 // additional process
 	            if (!NeedStop)
 	            {
+                    watch = new Stopwatch(); 
+                    watch.Start();
 	                ProcessResult();
 	                _typeResult = TypeResult.Ok;
+                    watch.Stop();
+                    WSSqlLogger.Instance.LogInfo("ProcessResult<{0}>: {1}", typeof(T).Name, watch.ElapsedMilliseconds);
 	            }
 	            else
 	            {
