@@ -16,7 +16,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 	{
 
 	    private string WhereTemplate =
-            "WHERE System.Kind = 'email' AND System.Message.DateReceived < '{0}' AND CONTAINS(System.Subject,{1}) ORDER BY System.Message.DateReceived DESC";
+            "WHERE System.Kind = 'email' AND System.Message.DateReceived < '{0}' AND CONTAINS(System.Subject,{1},1033) ORDER BY System.Message.DateReceived DESC";
 
 		public EmailSubjectSearchRule()
 		{
