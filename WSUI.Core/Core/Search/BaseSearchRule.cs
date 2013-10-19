@@ -131,7 +131,7 @@ namespace WSUI.Core.Core.Search
 
                     var watchOleDbCommand = new Stopwatch();
                     watchOleDbCommand.Start();
-                    using (OleDbDataReader dataReader = cmd.ExecuteReader())
+                    using (var dataReader = cmd.ExecuteReader())
                     {
                         watchOleDbCommand.Stop();
                         WSSqlLogger.Instance.LogInfo("dataReader<{0}> Elapsed: {1}", typeof(T).Name, watchOleDbCommand.ElapsedMilliseconds);
@@ -181,11 +181,11 @@ namespace WSUI.Core.Core.Search
 	        {
                 _typeResult = TypeResult.Error;
                 _listMessage.Add(new ResultMessage(){Message = ex.Message});
-                WSSqlLogger.Instance.LogError("Search <0>: {1}",typeof(T).Name, ex.Message);
+                WSSqlLogger.Instance.LogError("Search <{0}>: {1}",typeof(T).Name, ex.Message);
 	        }
 	        finally
 	        {
-	            if (connection != null)
+	            if (connection != null && connection.State == ConnectionState.Open)
 	                connection.Close();
                 CountAdded = 0;
 	            TopQueryResult = CountProcess = CountSecondProcess;

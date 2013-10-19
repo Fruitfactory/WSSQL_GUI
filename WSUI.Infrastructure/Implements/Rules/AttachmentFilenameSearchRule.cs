@@ -56,7 +56,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 	    public override void Init()
 	    {
 	        RuleName = "Attachment";
-	        CountFirstProcess = 100;
+	        CountFirstProcess = 75;
 	        CountSecondProcess = 50;
 	        base.Init();
 	    }

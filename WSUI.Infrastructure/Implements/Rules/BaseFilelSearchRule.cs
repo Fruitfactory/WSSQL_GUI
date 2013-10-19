@@ -30,7 +30,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
 	    public override void Init()
 	    {
-	        CountFirstProcess = 150;
+	        CountFirstProcess = 75;
 	        CountSecondProcess = 50;
 	        base.Init();
 	    }

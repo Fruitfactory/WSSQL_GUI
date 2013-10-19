@@ -119,15 +119,14 @@ namespace WSUI.Core.Core.Search
 		{
 		    try
 		    {
-		        var listEvents = new List<AutoResetEvent>();
-                _listRules.ForEach(item => listEvents.Add(item.GetEvent()));
-		        if (listEvents.Count == 0)
+                var events = _listRules.Select(item => item.GetEvent()).ToArray();
+                if (events == null || events.Length == 0)
 		        {
                     WSSqlLogger.Instance.LogInfo("List of Events is empty");
                     return;
 		        }
                 _listRules.ForEach(item => item.Search());
-		        WaitHandle.WaitAll(listEvents.ToArray());
+		        WaitHandle.WaitAll(events);
                 WSSqlLogger.Instance.LogInfo("+++++++++++++++++ searching is DONE!!!!+++++++++++++++");
 		        if (_needStop)
 		        {
