@@ -52,6 +52,7 @@ namespace WSUI.Core.Core.Search
 		public void SetSearchCriteria(string searchCriteris)
 		{
 		    _listRules.ForEach(item => item.SetSearchCriteria(searchCriteris));
+            WSSqlLogger.Instance.LogInfo("Criteria: {0}", searchCriteris);
 		}
 
 		public virtual void Search()

@@ -18,8 +18,8 @@ namespace WSUI.Infrastructure.Implements.Rules
 {
 	public class ContactSearchRule : BaseSearchRule<ContactSearchObject>
 	{
-        private const string WhereTemplate = 
-            " WHERE System.Kind = 'contact' AND ";
+        private const string WhereTemplate =
+            " WHERE CONTAINS(System.Kind,'contact') AND ";
 	    private const string NamesTemplate =
             "CONTAINS(System.Contact.FirstName,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\" OR \"*{0}*\"')  OR CONTAINS(System.Contact.EmailAddress,'\"{0}*\" OR \"*{0}*\"')" +
             " OR CONTAINS(System.Contact.EmailAddress2,'\"{0}*\" OR \"*{0}*\"') OR CONTAINS(System.Contact.EmailAddress3,'\"{0}*\" OR \"*{0}*\"')";

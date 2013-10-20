@@ -12,7 +12,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 {
     public class EmailContactSearchRule : BaseSearchRule<EmailContactSearchObject>
     {
-        private const string WhereTemplate = " WHERE System.Kind = 'email' AND ";
+        private const string WhereTemplate = " WHERE CONTAINS(System.Kind,'email') AND ";
 
         private const string NamesTemplate =
             "(CONTAINS(System.Message.FromAddress,'\"{0}\"',1033) OR CONTAINS(System.Message.CcAddress,'\"{0}\"',1033) OR CONTAINS(System.Message.ToAddress,'\"{0}\"',1033) )";

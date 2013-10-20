@@ -33,7 +33,7 @@ namespace WSUI.Core.Core.Search
 	    private Thread _ruleThread;
         private IQueryReader _reader;
 	    private volatile bool _isSearching = false;
-
+        private static object _lock = new object();
         #endregion
 
         #region [needs protected]
@@ -150,11 +150,10 @@ namespace WSUI.Core.Core.Search
                             {
                                 WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery _ main cycle", typeof(T).Name, ex.Message);
                             }
-                        }
+                        }    
                         watch.Stop();
                         WSSqlLogger.Instance.LogInfo("ReadData<{0}>: {1}", typeof(T).Name, watch.ElapsedMilliseconds);    
                     }
-
                 }
                 catch (OleDbException oleDbException)
                 {

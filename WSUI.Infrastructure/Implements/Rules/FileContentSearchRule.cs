@@ -15,8 +15,8 @@ namespace WSUI.Infrastructure.Implements.Rules
 		public FileContentSearchRule()
 		{
 		    Priority = 5;
-            WhereTemplate = " WHERE System.Kind <> 'email' AND System.Kind <> 'folder' AND System.Kind <> 'contact' AND Contains(*,{0},1033) AND System.DateCreated < '{1}' ORDER BY System.DateCreated DESC";
-		}
+            WhereTemplate = " WHERE Contains(System.Kind,' NOT \"email\"') AND Contains(System.Kind,' NOT \"folder\"') AND Contains(System.Kind,' NOT \"contact\"') AND Contains({0}) AND System.DateCreated < '{1}' ORDER BY System.DateCreated DESC";
+		} //System.Kind <> 'email' AND System.Kind <> 'folder' AND System.Kind <> 'contact' AND
 
 	    public override void Init()
 	    {
