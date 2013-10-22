@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents.DocumentStructures;
 using System.Windows.Forms;
@@ -433,22 +434,21 @@ namespace WSUIOutlookPlugin
 
         public void DoHideWebViewPane()
         {
-            if (ExistsVisibleForm(formWebPaneItem))
-            {
-                Outlook.MAPIFolder currentFolder = GetCurrentFolder();
-                if (currentFolder != null)
-                    try
-                    {
-                        formWebPaneItem.FolderName = string.Empty;
-                        ClearFolderWebViewProperties(currentFolder);
-                        //Restore Standard View
-                        RefreshCurrentFolder(false);
-                    }
-                    finally
-                    {
-                        Marshal.ReleaseComObject(currentFolder);
-                    }
-            }
+            if (!ExistsVisibleForm(formWebPaneItem))
+                return;
+            Outlook.MAPIFolder currentFolder = GetCurrentFolder();
+            if (currentFolder != null)
+                try
+                {
+                    formWebPaneItem.FolderName = string.Empty;
+                    ClearFolderWebViewProperties(currentFolder);
+                    //Restore Standard View
+                    RefreshCurrentFolder(false);
+                }
+                finally
+                {
+                    Marshal.ReleaseComObject(currentFolder);
+                }
         }
 
         #region Outlook Object Model routines
