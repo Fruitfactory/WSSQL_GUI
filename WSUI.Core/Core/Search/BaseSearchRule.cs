@@ -80,7 +80,7 @@ namespace WSUI.Core.Core.Search
 		/// @param ="criteris"
 		/// </summary>
 		/// <param name="criteria"></param>
-		public void SetSearchCriteria(string criteria)
+		public virtual void SetSearchCriteria(string criteria)
 		{
 		    Query = criteria;
 		}
@@ -97,7 +97,7 @@ namespace WSUI.Core.Core.Search
 		    _ruleThread.Start();
 		}
 
-		public void Stop()
+		public virtual void Stop()
 		{
 		    NeedStop = true;
 		}

@@ -44,11 +44,11 @@ namespace WSUI.Infrastructure.Implements.Rules
                  return string.Empty;
              var temp = new StringBuilder();
 
-             temp.Append(string.Format("Contains('\"{0}\"') ", listWord[0]));
+             temp.Append(string.Format("Contains(System.ItemUrl,'\"{0}\"') ", listWord[0]));
 
              if (listWord.Count > 1)
                  for (int i = 1; i < listWord.Count; i++)
-                     temp.Append(string.Format("AND Contains('\"{0}\"') ", listWord.ElementAt(i)));
+                     temp.Append(string.Format("AND Contains(System.ItemUrl,'\"{0}\"') ", listWord.ElementAt(i)));
 
              return temp.ToString();
 	    }
