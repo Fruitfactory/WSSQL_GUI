@@ -28,7 +28,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 	    {
 	        Priority = 5;
 	        WhereTemplate =
-                " WHERE scope='file:' AND Contains({0}) AND System.DateCreated < '{1}' ORDER BY System.DateCreated DESC";
+                " WHERE scope='file:' AND Contains(System.Kind,' NOT \"folder\"') AND Contains({0}) AND System.DateCreated < '{1}' ORDER BY System.DateCreated DESC";
 	    }
 
 //System.Kind <> 'email' AND System.Kind <> 'folder' AND System.Kind <> 'contact' AND
