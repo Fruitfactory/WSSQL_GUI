@@ -33,7 +33,6 @@ namespace WSUI.Core.Core.Search
 	    private Thread _ruleThread;
         private IQueryReader _reader;
 	    private volatile bool _isSearching = false;
-        private static object _lock = new object();
         #endregion
 
         #region [needs protected]
@@ -50,7 +49,7 @@ namespace WSUI.Core.Core.Search
         protected int CountAdded = 0;
         protected int CountProcess = 0;
 	    protected volatile bool NeedStop = false;
-
+        protected volatile object Lock =  null;
 
         // results
 	    private TypeResult _typeResult;
@@ -62,13 +61,17 @@ namespace WSUI.Core.Core.Search
 	    protected string RuleName;
 
         #endregion
-        
-        protected readonly object Lock = new object();
 
-		protected BaseSearchRule()
+	    protected BaseSearchRule()
+            :this(null)
+	    {
+	    }
+
+		protected BaseSearchRule(object lockObject)
 		{   
             Event = new AutoResetEvent(false);
             Result = new List<T>();
+		    Lock = lockObject ?? new object();
 		}
 
 		public ISearchResult GetResults()
@@ -116,50 +119,55 @@ namespace WSUI.Core.Core.Search
 	            if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}",typeof(T).Name, query);
-	            connection = new OleDbConnection(ConnectionString);
-                var cmd = new OleDbCommand(query, connection);
-                cmd.CommandTimeout = 0;
-
                 Stopwatch watch = null;
-                try
-                {
-                    watch = new Stopwatch();
-                    watch.Start();
-                    connection.Open();
-                    watch.Stop();
-                    WSSqlLogger.Instance.LogInfo("ConnectionOpen<{0}>: {1}",typeof(T).Name,watch.ElapsedMilliseconds);
+	            lock (Lock)
+	            {
+	                connection = new OleDbConnection(ConnectionString);
+	                var cmd = new OleDbCommand(query, connection);
+	                cmd.CommandTimeout = 0;
 
-                    var watchOleDbCommand = new Stopwatch();
-                    watchOleDbCommand.Start();
-                    using (var dataReader = cmd.ExecuteReader())
-                    {
-                        watchOleDbCommand.Stop();
-                        WSSqlLogger.Instance.LogInfo("dataReader<{0}> Elapsed: {1}", typeof(T).Name, watchOleDbCommand.ElapsedMilliseconds);
+	                try
+	                {
+	                    watch = new Stopwatch();
+	                    watch.Start();
+	                    connection.Open();
+	                    watch.Stop();
+	                    WSSqlLogger.Instance.LogInfo("ConnectionOpen<{0}>: {1}", typeof (T).Name, watch.ElapsedMilliseconds);
 
-                        watch = new Stopwatch();
-                        watch.Start();
-                        while (dataReader.Read())
-                        {
-                            try
-                            {
-                                ReadData(dataReader);
-                                if (IsInterupt || NeedStop)
-                                    break;
-                            }
-                            catch (Exception ex)
-                            {
-                                WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery _ main cycle", typeof(T).Name, ex.Message);
-                            }
-                        }    
-                        watch.Stop();
-                        WSSqlLogger.Instance.LogInfo("ReadData<{0}>: {1}", typeof(T).Name, watch.ElapsedMilliseconds);    
-                    }
-                }
-                catch (OleDbException oleDbException)
-                {
-                    WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery", typeof(T).Name, oleDbException.Message);
-                }
-                // additional process
+	                    var watchOleDbCommand = new Stopwatch();
+	                    watchOleDbCommand.Start();
+	                    using (var dataReader = cmd.ExecuteReader())
+	                    {
+	                        watchOleDbCommand.Stop();
+	                        WSSqlLogger.Instance.LogInfo("dataReader<{0}> Elapsed: {1}", typeof (T).Name,
+	                            watchOleDbCommand.ElapsedMilliseconds);
+
+	                        watch = new Stopwatch();
+	                        watch.Start();
+	                        while (dataReader.Read())
+	                        {
+	                            try
+	                            {
+	                                ReadData(dataReader);
+	                                if (IsInterupt || NeedStop)
+	                                    break;
+	                            }
+	                            catch (Exception ex)
+	                            {
+	                                WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery _ main cycle", typeof (T).Name,
+	                                    ex.Message);
+	                            }
+	                        }
+	                        watch.Stop();
+	                        WSSqlLogger.Instance.LogInfo("ReadData<{0}>: {1}", typeof (T).Name, watch.ElapsedMilliseconds);
+	                    }
+	                }
+	                catch (OleDbException oleDbException)
+	                {
+	                    WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery", typeof (T).Name, oleDbException.Message);
+	                }
+	            }
+	            // additional process
 	            if (!NeedStop)
 	            {
                     watch = new Stopwatch(); 

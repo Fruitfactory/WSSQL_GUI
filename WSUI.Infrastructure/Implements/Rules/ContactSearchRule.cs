@@ -30,6 +30,13 @@ namespace WSUI.Infrastructure.Implements.Rules
 		{
 		    Priority = 1;
 		}
+        
+        public ContactSearchRule(object lockObject)
+        :base(lockObject)
+        {
+            Priority = 1;
+        }
+        
 
 	    protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
 	    {

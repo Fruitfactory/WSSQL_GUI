@@ -24,12 +24,12 @@ namespace WSUI.Infrastructure.Implements.Systems
 
 	    public override void Init()
 	    {
-            AddRule(new GeneralContactRule());
-            AddRule(new EmailSubjectSearchRule());
-            AddRule(new EmailContentSearchRule());
-            AddRule(new FileFilenameSearchRule());
-            AddRule(new FileContentSearchRule());
-            AddRule(new AttachmentFilenameSearchRule());
+            AddRule(new GeneralContactRule(Lock1));
+            AddRule(new EmailSubjectSearchRule(Lock1));
+            AddRule(new EmailContentSearchRule(Lock1));
+            AddRule(new FileFilenameSearchRule(Lock1));
+            AddRule(new FileContentSearchRule(Lock1));
+            AddRule(new AttachmentFilenameSearchRule(Lock1));
 	        base.Init();
 	    }
     }//end AllSearchSystem

@@ -27,9 +27,21 @@ namespace WSUI.Infrastructure.Implements.Rules
 
 		public AttachmentFilenameSearchRule()
 		{
-		    Priority = 6;
+		    ConstructorInit();
 		}
-        
+
+        public AttachmentFilenameSearchRule(object lockOject)
+            :base(lockOject)
+        {
+            ConstructorInit();
+        }
+
+
+        private void ConstructorInit()
+        {
+            Priority = 6;
+        }
+
 	    protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
 	    {
 	        var dateString = FormatDate(ref LastDate);

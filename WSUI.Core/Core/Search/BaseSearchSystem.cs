@@ -26,6 +26,8 @@ namespace WSUI.Core.Core.Search
 
 	    protected IList<ISystemSearchResult> InternalResult;
 	    protected volatile bool _IsSearching = false;
+        protected readonly object Lock1 = new object();
+        protected readonly object Lock2 = new object();
 
 		protected BaseSearchSystem()
         {
@@ -126,7 +128,7 @@ namespace WSUI.Core.Core.Search
                     WSSqlLogger.Instance.LogInfo("List of Events is empty");
                     return;
 		        }
-                _listRules.ForEach(item => item.Search());
+                _listRules.OrderBy(i => i.Priority).ForEach(item => item.Search());
 		        WaitHandle.WaitAll(events);
                 WSSqlLogger.Instance.LogInfo("+++++++++++++++++ searching is DONE!!!!+++++++++++++++");
 		        if (_needStop)

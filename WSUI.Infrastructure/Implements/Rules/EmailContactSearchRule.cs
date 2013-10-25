@@ -27,6 +27,12 @@ namespace WSUI.Infrastructure.Implements.Rules
             Priority = 0;
         }
 
+        public EmailContactSearchRule(object lockObject)
+        :base(lockObject)
+        {
+            Priority = 0;
+        }
+
         protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
         {
             string result = string.Empty;

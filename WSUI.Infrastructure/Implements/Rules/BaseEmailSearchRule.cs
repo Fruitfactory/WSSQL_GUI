@@ -27,6 +27,11 @@ namespace WSUI.Infrastructure.Implements.Rules
         {
 		}
 
+	    public BaseEmailSearchRule(object lockObject)
+            :base(lockObject)
+	    {
+	    }
+
 	    public override void Init()
 	    {
 	        CountFirstProcess = 300;

@@ -14,9 +14,27 @@ namespace WSUI.Infrastructure.Implements.Rules
 
 		public FileContentSearchRule()
 		{
-		    Priority = 5;
-            WhereTemplate = " WHERE Contains(System.Kind,' NOT \"email\"') AND Contains(System.Kind,' NOT \"folder\"') AND Contains(System.Kind,' NOT \"contact\"') AND Contains({0}) AND System.DateCreated < '{1}' ORDER BY System.DateCreated DESC";
-		} //System.Kind <> 'email' AND System.Kind <> 'folder' AND System.Kind <> 'contact' AND
+		    ConstructorInit();
+		}
+
+        public FileContentSearchRule(object lockObject)
+            :base(lockObject)
+        {
+            ConstructorInit();
+        }
+
+
+	    private void ConstructorInit()
+	    {
+	        Priority = 5;
+	        WhereTemplate =
+                " WHERE scope='file:' AND Contains({0}) AND System.DateCreated < '{1}' ORDER BY System.DateCreated DESC";
+	    }
+
+//System.Kind <> 'email' AND System.Kind <> 'folder' AND System.Kind <> 'contact' AND
+
+
+
 
 	    public override void Init()
 	    {

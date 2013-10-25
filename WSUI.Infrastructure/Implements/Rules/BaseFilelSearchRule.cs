@@ -28,6 +28,12 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         }
 
+        public BaseFilelSearchRule(object lockObject)
+            :base(lockObject)
+        {
+
+        }
+
 	    public override void Init()
 	    {
 	        CountFirstProcess = 50;

@@ -23,6 +23,12 @@ namespace WSUI.Infrastructure.Implements.Rules
 		    Priority = 3;
 		}
 
+        public EmailContentSearchRule(object lockObject)
+        :base(lockObject)
+        {
+            Priority = 3;
+        }
+
 	    protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
 	    {
             var dateString = FormatDate(ref LastDate);

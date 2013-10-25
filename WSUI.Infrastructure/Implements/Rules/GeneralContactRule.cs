@@ -21,9 +21,20 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         public GeneralContactRule()
         {
+            ConstructorInit();
+        }
+
+        public GeneralContactRule(object lockObject)
+            :base(lockObject)
+        {
+            ConstructorInit();
+        }
+
+        private void ConstructorInit()
+        {
             Priority = 0;
-            _listContactsRules.Add(new ContactSearchRule());
-            _listContactsRules.Add(new EmailContactSearchRule());
+            _listContactsRules.Add(new ContactSearchRule(Lock));
+            _listContactsRules.Add(new EmailContactSearchRule(Lock));
         }
 
         public override void SetSearchCriteria(string criteria)
