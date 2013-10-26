@@ -52,7 +52,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         public override void Init()
         {
             RuleName = "EmailContact";
-            CountFirstProcess = 400;
+            CountFirstProcess = 250;
             CountSecondProcess = 100;
             base.Init();
         }

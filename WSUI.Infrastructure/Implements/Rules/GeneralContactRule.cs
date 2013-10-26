@@ -8,6 +8,7 @@ using WSUI.Core.Data;
 using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
+using System.Text.RegularExpressions;
 
 namespace WSUI.Infrastructure.Implements.Rules
 {
@@ -15,8 +16,9 @@ namespace WSUI.Infrastructure.Implements.Rules
     {
         #region [needs]
 
-        private readonly IList<ISearch> _listContactsRules = new List<ISearch>(); 
-        
+        private readonly IList<ISearch> _listContactsRules = new List<ISearch>();
+
+        private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
         #endregion
 
         public GeneralContactRule()
@@ -88,17 +90,17 @@ namespace WSUI.Infrastructure.Implements.Rules
             {
                 foreach (var contactSearchObject in resultContacts)
                 {
-                    if (!string.IsNullOrEmpty(contactSearchObject.EmailAddress) &&
+                    if (IsEmail(contactSearchObject.EmailAddress) &&
                         !listExistEmails.Contains(contactSearchObject.EmailAddress))
                     {
                         Result.Add(contactSearchObject);
                     }
-                    else if (!string.IsNullOrEmpty(contactSearchObject.EmailAddress2) &&
+                    else if (IsEmail(contactSearchObject.EmailAddress2) &&
                              !listExistEmails.Contains(contactSearchObject.EmailAddress2))
                     {
                         Result.Add(contactSearchObject);
                     }
-                    else if (!string.IsNullOrEmpty(contactSearchObject.EmailAddress3) &&
+                    else if (IsEmail(contactSearchObject.EmailAddress3) &&
                              !listExistEmails.Contains(contactSearchObject.EmailAddress3))
                     {
                         Result.Add(contactSearchObject);
@@ -117,6 +119,11 @@ namespace WSUI.Infrastructure.Implements.Rules
         {
             base.Init();
             _listContactsRules.ForEach(r => r.Init());
+        }
+
+        private bool IsEmail(string email)
+        {
+            return !string.IsNullOrEmpty(email) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase) ;
         }
 
     }

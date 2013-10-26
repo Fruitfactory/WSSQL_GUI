@@ -98,15 +98,21 @@ namespace WSUI.Module.Service
             var contact = value as ContactSearchObject;
             if (contact != null)
             {
-
-                result = string.Format("{0} {1} ({2})", contact.FirstName, contact.LastName, IsEmail(contact.EmailAddress) ?? IsEmail(contact.EmailAddress2) ?? IsEmail(contact.EmailAddress3));
+                
+                var strEmail = IsEmail(contact.EmailAddress) ?? IsEmail(contact.EmailAddress2) ?? IsEmail(contact.EmailAddress3);
+                if(string.IsNullOrEmpty(contact.FirstName) || string.IsNullOrEmpty(contact.LastName))
+                {
+                    result = string.Format("{0} ({0})", strEmail);
+                }
+                else
+                 result = string.Format("{0} {1} ({2})", contact.FirstName, contact.LastName,strEmail);
 
                 return result;
             }
             var email = value as EmailContactSearchObject;
             if (email != null)
             {
-                result = string.Format("{0} ({1})", email.EMail, email.EMail);
+                result = string.Format("{0} ({0})", email.EMail);
                 return result;
             }
             return result;
