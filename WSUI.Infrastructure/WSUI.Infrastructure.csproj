@@ -83,6 +83,7 @@
       <DependentUpon>HightliteTextBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\HightliteTextBlockBase.cs" />
+    <Compile Include="Controls\ListBox\WSUIListBox.cs" />
     <Compile Include="Controls\ProgressManager\IProgressForm.cs" />
     <Compile Include="Controls\ProgressManager\IProgressManager.cs" />
     <Compile Include="Controls\ProgressManager\ProgressManager.cs" />
@@ -91,6 +92,7 @@
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\StringToStringConverter.cs" />
+    <Compile Include="Helpers\Extensions\UIExtensions.cs" />
     <Compile Include="Implements\Rules\EmailContactSearchRule.cs" />
     <Compile Include="Implements\Rules\GeneralContactRule.cs" />
     <Compile Include="Implements\Systems\AllSearchSystem.cs" />

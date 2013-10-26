@@ -5,9 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:service="clr-namespace:WSUI.Module.Service"
              xmlns:ctrl="clr-namespace:WSUI.Infrastructure.Controls;assembly=WSUI.Infrastructure"                  
-                    xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure" 
-                    
-                    >
+                    xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
+                    xmlns:listBox="clr-namespace:WSUI.Infrastructure.Controls.ListBox;assembly=WSUI.Infrastructure">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
@@ -80,10 +79,6 @@
                         <Trigger Property="IsChecked" Value="True">
                             <Setter Property="Source" TargetName="image" Value="..\Images\minus.png"/>
                         </Trigger>
-                        <!--<Trigger Property="IsMouseOver" Value="true">
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="true">
-                        </Trigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -92,9 +87,6 @@
             <DataTrigger Binding="{Binding Count}" Value="0">
                 <Setter Property="Visibility" Value="Hidden"></Setter>
             </DataTrigger>
-            <!--<DataTrigger Binding="{Binding Count}" Value="1">
-                <Setter Property="Visibility" Value="Hidden"></Setter>
-            </DataTrigger>-->
         </Style.Triggers>
     </Style>
     
@@ -140,7 +132,7 @@
                                 </Grid>
 
                             </Grid>
-                            <ContentPresenter x:Name="ExpandSite" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="0" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Focusable="false" Visibility="Collapsed" DockPanel.Dock="Bottom"/>
+                            <ContentPresenter x:Name="ExpandSite" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="0"  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Focusable="false" Visibility="Collapsed" DockPanel.Dock="Bottom"/>
                         </DockPanel>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -216,9 +208,11 @@
             </Grid.ToolTip> 
             <Expander Margin="0" Grid.Column="0" Style="{StaticResource EmailExpanderStyle}" ExpandDirection="Down">
                 <Grid>
-                    <ListBox ItemsSource="{Binding Items}" 
+                    <ListBox ItemsSource="{Binding Items}"
                              SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=SelectedItem,Mode=OneWayToSource}"
-                             ItemTemplate="{StaticResource EmailItemTemplate}"></ListBox>
+                             ItemTemplate="{StaticResource EmailItemTemplate}" 
+                             >
+                    </ListBox>
                 </Grid>
             </Expander>    
         </Grid>
