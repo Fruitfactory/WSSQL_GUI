@@ -52,8 +52,8 @@ namespace WSUI.Infrastructure.Implements.Rules
         public override void Init()
         {
             RuleName = "EmailContact";
-            CountFirstProcess = 250;
-            CountSecondProcess = 100;
+            CountFirstProcess = 150;
+            CountSecondProcess = 50;
             base.Init();
         }
 

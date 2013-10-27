@@ -295,7 +295,7 @@ namespace WSUI.Module.Core
                 }
                 else
                 {
-                    result.ForEach(it =>
+                    result.OrderBy(i => i.Priority).ForEach(it =>
                     {
                         foreach (var systemSearchResult in it.Result)
                         {
