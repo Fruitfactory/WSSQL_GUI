@@ -105,10 +105,6 @@ namespace WSUI.Core.Core.Search
 		    NeedStop = true;
 		}
 
-		public event Action<object> SearchStarted;
-
-		public event Action<object> SearchFinished;
-
 	    protected virtual void DoQuery()
 	    {
 	        OleDbConnection connection = null;
@@ -256,6 +252,12 @@ namespace WSUI.Core.Core.Search
             _typeResult = TypeResult.None;
             _listMessage = new List<IResultMessage>();
 		}
+
+	    public void SetProcessingRecordCount(int first, int second)
+	    {
+            TopQueryResult = CountProcess = CountFirstProcess = first;
+	        CountSecondProcess = second;
+	    }
 
 	    public string GenerateWherePart(IList<IRule> listCriteriaRules)
 	    {

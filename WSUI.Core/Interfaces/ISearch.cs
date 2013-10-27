@@ -22,10 +22,6 @@ namespace WSUI.Core.Interfaces {
 
 		void Stop();
 
-		event Action<object> SearchStarted;
-
-		event Action<object> SearchFinished;
-
 		AutoResetEvent GetEvent();
 
 		void Reset();
@@ -39,6 +35,7 @@ namespace WSUI.Core.Interfaces {
 		}
 
 		void Init();
+	    void SetProcessingRecordCount(int first, int second);
 
 	}//end ISearch
 

@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using WSUI.Core.Interfaces;
@@ -122,6 +123,8 @@ namespace WSUI.Core.Core.Search
 		{
 		    try
 		    {
+		        var watch = new Stopwatch();
+                watch.Start();
                 var events = _listRules.Select(item => item.GetEvent()).ToArray();
                 if (events == null || events.Length == 0)
 		        {
@@ -146,6 +149,8 @@ namespace WSUI.Core.Core.Search
 		            var itemResult = new SystemSearchResult(item.Priority, result.OperationResult);
 		            InternalResult.Add(itemResult);
 		        }
+                watch.Stop();
+                WSSqlLogger.Instance.LogInfo("BaseSearchSystem: {0}",watch.ElapsedMilliseconds);
 		    }
 		    catch (Exception ex)
 		    {

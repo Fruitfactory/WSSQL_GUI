@@ -84,31 +84,28 @@ namespace WSUI.Infrastructure.Implements.Rules
 	    {
             var groups = Result.GroupBy(i => new { Name = i.ItemName, Size = i.Size });
 	        var result = new List<AttachmentSearchObject>();
-            lock (Lock)
+            WSSqlLogger.Instance.LogInfo(string.Format("Count attachments: {0}", groups.Count()));
+            foreach (var group in groups)
             {
-                WSSqlLogger.Instance.LogInfo(string.Format("Count attachments: {0}", groups.Count()));
-                foreach (var group in groups)
+                var item = group.FirstOrDefault();
+                if (_listId.Any(i => i == item.ConversationId))
+                    continue;
+                TypeSearchItem type = SearchItemHelper.GetTypeItem(item.ItemUrl, item.Kind != null && item.Kind.Length > 0 ? item.Kind[0].ToString() : string.Empty);
+                foreach (var attachmentSearchObject in group.Skip(1))
                 {
-                    var item = group.FirstOrDefault();
-                    if (_listId.Any(i => i == item.ConversationId))
-                        continue;
-                    TypeSearchItem type = SearchItemHelper.GetTypeItem(item.ItemUrl, item.Kind != null && item.Kind.Length > 0 ? item.Kind[0].ToString() : string.Empty);
-                    foreach (var attachmentSearchObject in group.Skip(1))
-                    {
-                        item.AddItem(attachmentSearchObject);
-                    }
-                    _listId.Add(item.ConversationId);
-                    result.Add(item);
+                    item.AddItem(attachmentSearchObject);
                 }
-                Result.Clear();
-                if (result.Count > 0)
-                {
-                    WSSqlLogger.Instance.LogInfo("{0}: {1}",RuleName,result.Count);
-                    Result = result;
-                    LastDate = Result.Last().DateModified;
-                }
-                _listId.Clear();
+                _listId.Add(item.ConversationId);
+                result.Add(item);
             }
+            Result.Clear();
+            if (result.Count > 0)
+            {
+                WSSqlLogger.Instance.LogInfo("{0}: {1}",RuleName,result.Count);
+                Result = result;
+                LastDate = Result.Last().DateModified;
+            }
+            _listId.Clear();
 	    }
 	}//end AttachmentFilenameSearchRule
 

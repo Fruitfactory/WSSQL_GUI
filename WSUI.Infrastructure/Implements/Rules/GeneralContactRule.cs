@@ -118,7 +118,11 @@ namespace WSUI.Infrastructure.Implements.Rules
         public override void Init()
         {
             base.Init();
-            _listContactsRules.ForEach(r => r.Init());
+            _listContactsRules.ForEach(r =>
+            {
+                r.Init();
+                r.SetProcessingRecordCount(10,0);
+            });
         }
 
         private bool IsEmail(string email)

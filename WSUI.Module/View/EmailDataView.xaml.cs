@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WSUI.Infrastructure.Helpers.Extensions;
 using WSUI.Module.Interface;
 using WSUI.Module.ViewModel;
 using WSUI.Infrastructure.Service;
@@ -22,9 +23,17 @@ namespace WSUI.Module.View
     /// </summary>
     public partial class EmailDataView : IDataView<EmailViewModel>
     {
+        private int _oldIndex = -1;
+
         public EmailDataView()
         {
             InitializeComponent();
+            listBox.SelectionChanged += ListBoxOnSelectionChanged;
+        }
+
+        private void ListBoxOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
+        {
+            listBox.OnSelectedChanged(ref _oldIndex);
         }
 
         #region Implementation of IDataView<EmailViewModel>
