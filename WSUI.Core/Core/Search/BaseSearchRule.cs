@@ -76,7 +76,7 @@ namespace WSUI.Core.Core.Search
 
 		public ISearchResult GetResults()
 		{
-            return new SearchResult(_typeResult, _listMessage.ToList(), (IEnumerable<ISearchObject>)Result.ToList());
+            return new SearchResult(_typeResult, _listMessage.ToList(), (IEnumerable<ISearchObject>)Result);
 		}
 
 		/// <summary>

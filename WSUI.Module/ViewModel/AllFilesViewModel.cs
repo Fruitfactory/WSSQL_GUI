@@ -109,6 +109,8 @@ namespace WSUI.Module.ViewModel
                 }
                 else
                 {
+                    var watch = new Stopwatch();
+                    watch.Start();
                     if (_isFirstTime)
                     {
                         ContactForFirstTime(result.Where(i => i.Priority <= FirstPriority).OrderBy(i => i.Priority));                            
@@ -120,6 +122,8 @@ namespace WSUI.Module.ViewModel
                             DataSource.Add(it as BaseSearchObject);
                         }
                     }
+                    watch.Stop();
+                    WSSqlLogger.Instance.LogInfo("ProcessMainResult (AllViewModel): {0}", watch.ElapsedMilliseconds);
                 }
                 _isFirstTime = false;
             }), null);
