@@ -48,13 +48,13 @@ namespace WSUIOutlookPlugin.Managers
         private void ButtonHideOnClick(object sender)
         {
             InternalHidePublish();
-            ApplyCommandBarButtons(false);
+            ApplyCommandBarButtons();
         }
 
         private void ButtonShowOnClick(object sender)
         {
             InternalShowPublish();
-            ApplyCommandBarButtons();
+            ApplyCommandBarButtons(false);
         }
 
         private void ApplyCommandBarButtons(bool isOpenEnable = true)
