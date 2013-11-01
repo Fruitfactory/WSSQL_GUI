@@ -16,14 +16,24 @@ namespace WSUI.Infrastructure.Implements.Rules
     {
         #region [needs]
 
+        private int _first, _second;
+
         private readonly IList<ISearch> _listContactsRules = new List<ISearch>();
 
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
         #endregion
 
-        public GeneralContactRule()
+        public GeneralContactRule(int firstTime, int secondTime)
+            :this(firstTime,secondTime,null)
+        {
+        }
+
+        public GeneralContactRule(int firstTime, int secondTime,object lockExternal)
+            :base(lockExternal)
         {
             ConstructorInit();
+            _first = firstTime;
+            _second = secondTime;
         }
 
         public GeneralContactRule(object lockObject)
@@ -121,7 +131,7 @@ namespace WSUI.Infrastructure.Implements.Rules
             _listContactsRules.ForEach(r =>
             {
                 r.Init();
-                r.SetProcessingRecordCount(10,0);
+                r.SetProcessingRecordCount(_first,_second);
             });
         }
 
