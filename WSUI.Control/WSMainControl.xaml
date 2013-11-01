@@ -18,6 +18,10 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
+            
+            
+            
         </ResourceDictionary>
     </UserControl.Resources>
     <AdornerDecorator>
@@ -47,7 +51,23 @@
                           Background="GhostWhite"
                           ResizeBehavior="PreviousAndNext"
                           ResizeDirection="Columns" />
-
+            <Button x:Name="CloseButton" Grid.Row="0" Grid.Column="3"    Width="20"  HorizontalAlignment="Right" VerticalAlignment="Top"  FontFamily="Marlett" Content="r"  IsTabStop="False" 
+                    Click="CloseButton_OnClick"
+                    >
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource ChromelessButtonStyle}"> 
+                        <Style.Triggers>
+                            <Trigger Property="Button.IsMouseOver" Value="True">
+                                <Setter Property="Button.Background" Value="{DynamicResource GrayBrush5}" />
+                            </Trigger>
+                            <Trigger Property="Button.IsPressed" Value="True">
+                                <Setter Property="Button.Background" Value="{DynamicResource BlackBrush}" />
+                                <Setter Property="Button.Foreground" Value="{DynamicResource WhiteBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
         </Grid>
     </AdornerDecorator>
 </UserControl>

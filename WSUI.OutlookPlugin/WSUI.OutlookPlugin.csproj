@@ -103,6 +103,9 @@
     </Compile>
     <Compile Include="Core\DllPreloader.cs" />
     <Compile Include="Core\UpdateHelper.cs" />
+    <Compile Include="Events\WSUIHideWindow.cs" />
+    <Compile Include="Events\WSUIOpenWindow.cs" />
+    <Compile Include="Events\WSUISearch.cs" />
     <Compile Include="Hooks\GlobalEventProvider.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -113,6 +116,10 @@
     <Compile Include="Hooks\MouseEventExtArgs.cs" />
     <Compile Include="Interfaces\IMainForm.cs" />
     <Compile Include="Interfaces\IUpdatable.cs" />
+    <Compile Include="Interfaces\IWSUICommandManager.cs" />
+    <Compile Include="Core\BaseCommandManager.cs" />
+    <Compile Include="Managers\WSUICommandBarManager.cs" />
+    <Compile Include="Managers\WSUIRibbonManager.cs" />
     <Compile Include="WSUIAddinModule.cs">
       <SubType>Component</SubType>
     </Compile>

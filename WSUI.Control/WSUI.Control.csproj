@@ -81,6 +81,7 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Interfaces\IWSMainControl.cs" />
     <Compile Include="IPluginBootStraper.cs" />
     <Compile Include="PluginBootStraper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
