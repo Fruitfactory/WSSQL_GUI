@@ -94,6 +94,7 @@
     <!--<None Include="WSUI.OutlookPlugin.snk" /> -->
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\application-plus-red.png" />
     <Content Include="Loader\adxloader.dll" />
     <Content Include="Loader\adxloader64.dll" />
   </ItemGroup>
