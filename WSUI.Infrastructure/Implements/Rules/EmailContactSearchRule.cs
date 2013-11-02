@@ -15,7 +15,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         private const string WhereTemplate = " WHERE CONTAINS(System.Kind,'email') AND ";
 
         private const string NamesTemplate =
-            "(CONTAINS(System.Message.FromAddress,'\"{0}\"',1033) OR CONTAINS(System.Message.CcAddress,'\"{0}\"',1033) OR CONTAINS(System.Message.ToAddress,'\"{0}\"',1033) )";
+            "(CONTAINS(System.Message.FromAddress,'\"{0}\"') OR CONTAINS(System.Message.CcAddress,'\"{0}\"') OR CONTAINS(System.Message.ToAddress,'\"{0}\"') )";
         private const string CollapseTemplate = "( {0} )";
         private const string DateTemplate = " AND System.Message.DateReceived < '{0}' ORDER BY System.Message.DateReceived DESC";
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
