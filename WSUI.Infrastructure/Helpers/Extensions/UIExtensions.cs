@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using WSUI.Core.Logger;
 
 namespace WSUI.Infrastructure.Helpers.Extensions
 {
@@ -155,22 +156,31 @@ namespace WSUI.Infrastructure.Helpers.Extensions
 
         public static void OnSelectedChanged(this ListBox listBox, ref int oldIndex)
         {
-            if (oldIndex == -1)
+            try
             {
-                oldIndex = listBox.SelectedIndex;
-                return;
-            }
-            var currentIndex = listBox.SelectedIndex;
-            var listBoxItem = listBox.ItemContainerGenerator.ContainerFromIndex(oldIndex) as ListBoxItem;
-            if (oldIndex != currentIndex && listBoxItem != null)
-            {
-                var childrens = listBoxItem.GetAllVisualChildren().SelectMany(c => c.GetChildren<ListBox>()).OfType<ListBox>();
-                if (childrens.Any())
+
+                if (oldIndex == -1)
                 {
-                    childrens.ElementAt(0).SelectedIndex = -1;
+                    oldIndex = listBox.SelectedIndex;
+                    return;
                 }
+                var currentIndex = listBox.SelectedIndex;
+                var listBoxItem = listBox.ItemContainerGenerator.ContainerFromIndex(oldIndex) as ListBoxItem;
+                if (oldIndex != currentIndex && listBoxItem != null)
+                {
+                    var childrens = listBoxItem.GetAllVisualChildren().SelectMany(c => c.GetChildren<ListBox>()).OfType<ListBox>();
+                    if (childrens.Any())
+                    {
+                        childrens.ElementAt(0).SelectedIndex = -1;
+                    }
+                }
+                oldIndex = currentIndex;
             }
-            oldIndex = currentIndex;
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+                oldIndex = -1;
+            }
         }
 
     }

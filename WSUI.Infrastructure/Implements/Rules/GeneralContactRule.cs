@@ -115,7 +115,7 @@ namespace WSUI.Infrastructure.Implements.Rules
                     {
                         Result.Add(contactSearchObject);
                     }
-                }                                
+                }
             }
         }
 

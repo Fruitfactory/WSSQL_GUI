@@ -93,11 +93,14 @@ namespace WSUI.Infrastructure.Implements.Rules
                 result.Add(item);
                 WSSqlLogger.Instance.LogInfo("Item: {0}", item.ToString());
             }
+            if (Result.Any())
+            {
+                LastDate = Result.Last().DateReceived;
+            }
             Result.Clear();
             if (result.Count > 0)
             {
                 Result = result;
-                LastDate = Result.Last().DateReceived;
             }
         }
 
@@ -109,19 +112,14 @@ namespace WSUI.Infrastructure.Implements.Rules
             var arr = searchCriteria.Trim().Split(' ');
             if (arr != null && arr.Length > 0)
             {
-                var present = true;
-                foreach (var s in arr)
+                foreach (var email in from)
                 {
-                    fromAddress =
-                    from.FirstOrDefault(
-                        str =>
-                        str.IndexOf(s, StringComparison.CurrentCultureIgnoreCase) > -1 &&
-                        Regex.IsMatch(str, EmailPattern, RegexOptions.IgnoreCase));
-                    if (string.IsNullOrEmpty(fromAddress))
-                        present = false;
+                    if (arr.All(str => email.IndexOf(str) > -1) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase))
+                    {
+                        fromAddress = email;
+                        break;
+                    }
                 }
-                if (!present)
-                    fromAddress = string.Empty;
             }
             else
                 fromAddress =
