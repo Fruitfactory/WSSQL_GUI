@@ -178,7 +178,7 @@ namespace WSUIOutlookPlugin
             // 
             // wsuiTab
             // 
-            this.wsuiTab.Caption = "Windows Search";
+            this.wsuiTab.Caption = "Outlook Finder";
             this.wsuiTab.Controls.Add(this.managingCtrlGroup);
             this.wsuiTab.Controls.Add(this.adxRibbonGroupSearch);
             this.wsuiTab.Id = "adxRibbonTab_500b5beadf3a45d9b11245e305940d6c";
@@ -197,7 +197,7 @@ namespace WSUIOutlookPlugin
             // 
             // buttonShow
             // 
-            this.buttonShow.Caption = "Show Windows  Search";
+            this.buttonShow.Caption = "Show Outlook Finder";
             this.buttonShow.Id = "adxRibbonButton_dcb0aa6e6fd442c79ea44b4006d84643";
             this.buttonShow.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.buttonShow.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
@@ -205,11 +205,10 @@ namespace WSUIOutlookPlugin
             // 
             // buttonClose
             // 
-            this.buttonClose.Caption = "Close Windows Search";
+            this.buttonClose.Caption = "Close Outloook Finder";
             this.buttonClose.Id = "adxRibbonButton_28c7fe480c61454ca13d1a20e9ae3405";
             this.buttonClose.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.buttonClose.Ribbons = ((AddinExpress.MSO.ADXRibbons)(((AddinExpress.MSO.ADXRibbons.msrOutlookMailRead | AddinExpress.MSO.ADXRibbons.msrOutlookMailCompose) 
-            | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.buttonClose.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // adxRibbonGroupSearch
             // 
