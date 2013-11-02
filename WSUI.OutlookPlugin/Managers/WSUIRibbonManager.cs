@@ -49,11 +49,13 @@ namespace WSUIOutlookPlugin.Managers
             if (editBox == null)
                 return;
             InternalSearchPublich(editBox.Text);
+            ApplyButtonsRibbonEnable(false);
         }
 
         private void ButtonSearchOnOnClick(object sender, IRibbonControl control, bool pressed)
         {
             InternalSearchPublich(_editCriteria.Text);
+            ApplyButtonsRibbonEnable(false);
         }
 
         private void ButtonSwitchOnOnClick(object sender, IRibbonControl control, bool pressed)

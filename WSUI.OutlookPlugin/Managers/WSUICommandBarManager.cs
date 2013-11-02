@@ -33,16 +33,20 @@ namespace WSUIOutlookPlugin.Managers
             _buttonHide.Click += ButtonHideOnClick;
             _buttonSearch.Click += ButtonSearchOnClick; 
             _editCriteria.Change += EditCriteriaOnChange;
+            _buttonShow.Enabled = true;
+            _buttonHide.Enabled = false;
         }
 
         private void EditCriteriaOnChange(object sender)
         {
             InternalSearchPublich(_editCriteria.Text);
+            ApplyCommandBarButtons(false);
         }
 
         private void ButtonSearchOnClick(object sender)
         {
             InternalSearchPublich(_editCriteria.Text);
+            ApplyCommandBarButtons(false);
         }
 
         private void ButtonHideOnClick(object sender)
