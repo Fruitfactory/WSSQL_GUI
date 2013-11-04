@@ -260,6 +260,7 @@ namespace WSUI.Module.Core
 
         protected virtual void OnStart()
         {
+            Enabled = false;
             ListData.Clear();
             OnPropertyChanged(() => Enabled);
             FireStart();
@@ -267,6 +268,7 @@ namespace WSUI.Module.Core
 
         protected virtual void OnComplete(bool res)
         {
+            Enabled = true;
             ProcessMainResult();
             OnPropertyChanged(() => DataSource);
             OnPropertyChanged(() => Enabled);

@@ -36,7 +36,7 @@
                 <ColumnDefinition Width="2"/>
                 <ColumnDefinition Width="0.5*"/>
             </Grid.ColumnDefinitions>
-            <ContentControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Margin="4"
+            <ContentControl Grid.Row="0" Grid.Column="1" Margin="4"
                             cal:RegionManager.RegionName="SearchRegion"/>
             <ContentControl Grid.Row="1" Grid.Column="0" Margin="4 4 0 4"
                             cal:RegionManager.RegionName="StrategyRegion" HorizontalAlignment="Stretch"/>

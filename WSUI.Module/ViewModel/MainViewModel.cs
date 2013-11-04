@@ -220,6 +220,7 @@ namespace WSUI.Module.ViewModel
                         Size = mwi.Item2
                     });
                 }
+                Enabled = false;
                 Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
             }
             catch (Exception ex)
@@ -257,6 +258,7 @@ namespace WSUI.Module.ViewModel
                 {
                     ProgressManager.Instance.StopOperation();
                 }
+                Enabled = true;
             }
         }
 
