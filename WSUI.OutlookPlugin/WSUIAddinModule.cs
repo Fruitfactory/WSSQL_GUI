@@ -402,10 +402,6 @@ namespace WSUIOutlookPlugin
         {
             WSSqlLogger.Instance.LogInfo("Plugin is loading...");
             outlookFormManager.ADXBeforeFolderSwitchEx += outlookFormManager_ADXBeforeFolderSwitchEx;
-            //buttonShow.OnClick += buttonShow_OnClick;
-            //buttonClose.OnClick += buttonClose_OnClick;
-            //buttonShow.Enabled = buttonShow2007.Enabled = true;
-            //buttonClose.Enabled = buttonHide2007.Enabled = false;
 
             if (System.Windows.Application.Current == null)
             {
@@ -421,7 +417,6 @@ namespace WSUIOutlookPlugin
             {
                 _updatable = UpdateHelper.Instance;
                 _updatable.Module = this;
-                _updatable.DeleteTempoparyFolders();
             }
             
         }

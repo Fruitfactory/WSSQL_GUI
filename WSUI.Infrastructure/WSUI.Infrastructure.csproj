@@ -91,6 +91,8 @@
     <Compile Include="Controls\ProgressManager\ProgressWindow.xaml.cs">
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ActivationStatusToButtonVisibilityConverter.cs" />
+    <Compile Include="Converters\ActivationStatusToGridVisibilityConverter.cs" />
     <Compile Include="Converters\StringToStringConverter.cs" />
     <Compile Include="Helpers\Extensions\UIExtensions.cs" />
     <Compile Include="Implements\Rules\EmailContactSearchRule.cs" />

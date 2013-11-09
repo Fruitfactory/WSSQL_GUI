@@ -184,6 +184,12 @@ xcopy $(SolutionDir)Toolkits\GflSdk\lib64\libgfl340.dll $(TargetDir)lib64\ /F /R
 xcopy $(SolutionDir)Toolkits\GflSdk\lib64\libgfle340.dll $(TargetDir)lib64\ /F /R /Y /I
 
 xcopy $(SolutionDir)Toolkits\PDFSharp\x86\PDFLibNet.dll $(TargetDir)lib\ /F /R /Y /I
-xcopy $(SolutionDir)Toolkits\PDFSharp\x64\PDFLibNet.dll $(TargetDir)lib64\ /F /R /Y /I</PostBuildEvent>
+xcopy $(SolutionDir)Toolkits\PDFSharp\x64\PDFLibNet.dll $(TargetDir)lib64\ /F /R /Y /I
+
+xcopy $(SolutionDir)Toolkits\TurboApi\Api\x86\TurboActivate.dll $(TargetDir) /F /R /Y /I
+copy $(SolutionDir)Toolkits\TurboApi\Api\x64\TurboActivate.dll $(TargetDir)\TurboActivate64.dll 
+xcopy $(SolutionDir)Toolkits\TurboApi\Api\x86\TurboActivate.exe $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\TurboApi\Dats\1.0.0\TurboActivate.dat $(TargetDir) /F /R /Y /I
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

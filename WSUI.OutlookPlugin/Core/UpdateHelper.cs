@@ -25,8 +25,8 @@ namespace WSUIOutlookPlugin.Core
         private const string UpdatedFilename = "WSUI.OutlookPluginSetup.msi";
         private const string ManifestFilename = "adxloader.dll.manifest";
         private const string VersionFilename = "version_info.xml";
-        private const string TempFolder = "{0}Update\\{1}";
-        private const string TempFolderCreate = "{0}Update";
+        private const string TempFolder = "{0}\\Update\\{1}";
+        private const string TempFolderCreate = "{0}\\Update";
 
         private const string ShadowCopyFolder = "{0}\\Shadow";
         private const string LocFilename = "install.loc";
@@ -122,6 +122,7 @@ namespace WSUIOutlookPlugin.Core
                 File.Create(string.Format("{0}{1}", _path, LocFilename)).Close();
                 RegistryHelper.Instance.StartSilentUpdate();
                 RegistryHelper.Instance.SetCallIndexKey(RegistryHelper.CallIndex.First);
+                WSSqlLogger.Instance.LogError("Lock silent update !!!!");
             }
             catch (Exception ex)
             {
@@ -136,7 +137,7 @@ namespace WSUIOutlookPlugin.Core
             {
             	File.Delete(string.Format("{0}{1}", _path, LocFilename));
                 RegistryHelper.Instance.FinishSilentUpdate();
-                DeleteTempFolder(string.Format(TempFolderCreate, _path));
+                WSSqlLogger.Instance.LogError("Unlock silent update !!!!");
             }
             catch (System.Exception ex)
             {
@@ -153,7 +154,8 @@ namespace WSUIOutlookPlugin.Core
 
         public void DeleteTempoparyFolders()
         {
-            DeleteTempFolder(string.Format(TempFolderCreate, _path));
+            string temp = GetTempUserPath();
+            DeleteTempFolder(string.Format(TempFolderCreate, temp));
         }
 
         #endregion
@@ -182,11 +184,12 @@ namespace WSUIOutlookPlugin.Core
                 string shadow = string.Format(ShadowCopyFolder, _path);
                 _instalatonUrl = GetInstalationPath(_path);
                 WSSqlLogger.Instance.LogInfo(string.Format("Instalation Url: {0}...", _instalatonUrl));
-                CreateTempFolder(string.Format(TempFolderCreate, _path));
+                string temp = GetTempUserPath();
+                CreateTempFolder(string.Format(TempFolderCreate, temp));
                 //CreateTempFolder(shadow);
-                string localmsi = string.Format(TempFolder, _path, UpdatedFilename);
+                string localmsi = string.Format(TempFolder, temp, UpdatedFilename);
                 WSSqlLogger.Instance.LogInfo(String.Format("Msi local path: {0}...", localmsi));
-                string localversion = string.Format(TempFolder, _path, VersionFilename);
+                string localversion = string.Format(TempFolder, temp, VersionFilename);
                 WSSqlLogger.Instance.LogInfo(String.Format("Version local path: {0}...", localversion));
                 string urlVersion = _instalatonUrl + VersionFilename;
                 WSSqlLogger.Instance.LogInfo(String.Format("Version Url: {0}...", urlVersion));
@@ -248,6 +251,11 @@ namespace WSUIOutlookPlugin.Core
             {
                 Directory.Delete(temp, true);
             }
+        }
+
+        private string GetTempUserPath()
+        {
+            return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
         private void UpdateTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)

@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:cal="http://www.codeplex.com/CompositeWPF"
+             xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
+             xmlns:enums="clr-namespace:WSUI.Core.Enums;assembly=WSUI.Core"
              Height="650" Width="950" MinHeight="450" MinWidth="725" 
              Background="White"
              >
@@ -17,57 +19,97 @@
                 <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />-->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                
             </ResourceDictionary.MergedDictionaries>
             
-            
-            
+            <converters:ActivationStatusToGridVisibilityConverter x:Key="GridVisibility"></converters:ActivationStatusToGridVisibilityConverter>
+            <converters:ActivationStatusToButtonVisibilityConverter x:Key="ButtonVisibility"></converters:ActivationStatusToButtonVisibilityConverter>
             
         </ResourceDictionary>
     </UserControl.Resources>
-    <AdornerDecorator>
-        <Grid Margin="7" x:Name="grid">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>    
+    
+        <AdornerDecorator Grid.Row="0">
+            <Grid Margin="7" x:Name="grid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.2*" />
+                    <ColumnDefinition Width="0.5*" />
+                    <ColumnDefinition Width="2"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+                <ContentControl Grid.Row="0" Grid.Column="1" Margin="4"
+                                cal:RegionManager.RegionName="SearchRegion"/>
+                <ContentControl Grid.Row="1" Grid.Column="0" Margin="4 4 0 4"
+                                cal:RegionManager.RegionName="StrategyRegion" HorizontalAlignment="Stretch"/>
+                <ContentControl Grid.Row="1" Grid.Column="1" Margin="0 4 0 4"
+                                cal:RegionManager.RegionName="DataRegion"/>
+                <ContentControl Grid.Row="1" Grid.Column="3" Margin="0 4 4 4"
+                                cal:RegionManager.RegionName="PreviewRegion"/>
+                <GridSplitter Grid.Row="1"
+                              Grid.Column="2"
+                              Width="2"
+                              HorizontalAlignment="Stretch"
+                              Background="GhostWhite"
+                              ResizeBehavior="PreviousAndNext"
+                              ResizeDirection="Columns" />
+                
+
+
+            
+            
+            </Grid>
+        </AdornerDecorator>
+
+        <Button x:Name="CloseButton" Grid.Row="0"  Width="20"  HorizontalAlignment="Right" VerticalAlignment="Top"  FontFamily="Marlett" Content="r"  IsTabStop="False" 
+                        Click="CloseButton_OnClick"
+                        >
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource ChromelessButtonStyle}">
+                    <Style.Triggers>
+                        <Trigger Property="Button.IsMouseOver" Value="True">
+                            <Setter Property="Button.Background" Value="{DynamicResource GrayBrush5}" />
+                        </Trigger>
+                        <Trigger Property="Button.IsPressed" Value="True">
+                            <Setter Property="Button.Background" Value="{DynamicResource BlackBrush}" />
+                            <Setter Property="Button.Foreground" Value="{DynamicResource WhiteBrush}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+        <Grid Grid.Row="1" Visibility="{Binding ActivateStatus,Converter={StaticResource GridVisibility}}">
+            <Grid.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </Grid.Resources>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.2*" />
-                <ColumnDefinition Width="0.5*" />
-                <ColumnDefinition Width="2"/>
-                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <ContentControl Grid.Row="0" Grid.Column="1" Margin="4"
-                            cal:RegionManager.RegionName="SearchRegion"/>
-            <ContentControl Grid.Row="1" Grid.Column="0" Margin="4 4 0 4"
-                            cal:RegionManager.RegionName="StrategyRegion" HorizontalAlignment="Stretch"/>
-            <ContentControl Grid.Row="1" Grid.Column="1" Margin="0 4 0 4"
-                            cal:RegionManager.RegionName="DataRegion"/>
-            <ContentControl Grid.Row="1" Grid.Column="3" Margin="0 4 4 4"
-                            cal:RegionManager.RegionName="PreviewRegion"/>
-            <GridSplitter Grid.Row="1"
-                          Grid.Column="2"
-                          Width="2"
-                          HorizontalAlignment="Stretch"
-                          Background="GhostWhite"
-                          ResizeBehavior="PreviousAndNext"
-                          ResizeDirection="Columns" />
-            <Button x:Name="CloseButton" Grid.Row="0" Grid.Column="3"    Width="20"  HorizontalAlignment="Right" VerticalAlignment="Top"  FontFamily="Marlett" Content="r"  IsTabStop="False" 
-                    Click="CloseButton_OnClick"
-                    >
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource ChromelessButtonStyle}"> 
-                        <Style.Triggers>
-                            <Trigger Property="Button.IsMouseOver" Value="True">
-                                <Setter Property="Button.Background" Value="{DynamicResource GrayBrush5}" />
-                            </Trigger>
-                            <Trigger Property="Button.IsPressed" Value="True">
-                                <Setter Property="Button.Background" Value="{DynamicResource BlackBrush}" />
-                                <Setter Property="Button.Foreground" Value="{DynamicResource WhiteBrush}" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+            
+            <TextBlock x:Name="ActivationStatus" Grid.Column="0" Text="{Binding TextStatus}" Grid.ColumnSpan="2"></TextBlock>
+            
+            <Button x:Name="ButtonActivate" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding ActivateCommand}"
+                    Visibility="{Binding ActivateStatus,Converter={StaticResource ButtonVisibility},ConverterParameter={x:Static enums:ActivationButtons.Activate}}"
+                    >Activate</Button>
+            <Button x:Name="ButtonTryCheckAgain" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding TryAgainCommand}"
+                    Visibility="{Binding ActivateStatus,Converter={StaticResource ButtonVisibility},ConverterParameter={x:Static enums:ActivationButtons.TryAgain}}"
+                    >Try Check Again</Button>
+
         </Grid>
-    </AdornerDecorator>
+    </Grid>
 </UserControl>

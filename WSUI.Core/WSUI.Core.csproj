@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Output\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TA_BOTH_DLL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -26,9 +26,10 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\Routput\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;TA_BOTH_DLL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -61,6 +62,8 @@
     <Compile Include="Core\Attributes\BaseWSUIAttribute.cs" />
     <Compile Include="Core\Attributes\FieldAttribute.cs" />
     <Compile Include="Core\BaseSearchData.cs" />
+    <Compile Include="Core\LimeLM\TurboActivate.cs" />
+    <Compile Include="Core\LimeLM\TurboLimeActivate.cs" />
     <Compile Include="Core\Rules\BaseRule.cs" />
     <Compile Include="Core\Rules\IRule.cs" />
     <Compile Include="Core\Rules\QuoteRule.cs" />
@@ -81,6 +84,8 @@
     <Compile Include="Data\EmailSearchObject.cs" />
     <Compile Include="Data\FileSearchObject.cs" />
     <Compile Include="Data\WSAction.cs" />
+    <Compile Include="Enums\ActivationButtons.cs" />
+    <Compile Include="Enums\ActivationState.cs" />
     <Compile Include="Enums\HostType.cs" />
     <Compile Include="Enums\TypeResult.cs" />
     <Compile Include="Enums\TypeSearchItem.cs" />

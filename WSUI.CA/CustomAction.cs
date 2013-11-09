@@ -18,7 +18,7 @@ namespace WSUI.CA
     {
         #region [needs]
 
-        private const string UpdateFolder = "Update";
+        private const string UpdateFolder = "\\Update";
         private const string LocFilename = "install.loc";
         private const string LogFilename = "install.log";
 
@@ -26,8 +26,7 @@ namespace WSUI.CA
 
         private const string ManifestFilename = "adxloader.dll.manifest";
         private const string VersionFilename = "version_info.xml";
-        private const string TempFolder = "{0}Update\\{1}";
-        private const string TempFolderCreate = "{0}Update";
+        private const string TempFolder = "{0}\\Update\\{1}";
 
         private const string InstallFolder = "INSTALLFOLDER";
 
@@ -67,13 +66,13 @@ namespace WSUI.CA
                     return ActionResult.Success;
                 }
                 session.Log("Delete  files...");
-                DeleteUpdateFolder(path);
+                DeleteUpdateFolder(session);
                 var list = new List<string>() {LocFilename};
                 foreach (var filename in list)
                 {
-                    DeleteFile(path, filename);
+                    DeleteFile(session,path, filename);
                 }
-                DeleteRootFolder(path);
+                DeleteRootFolder(session,path);
             }
             catch (Exception)
             {
@@ -92,11 +91,18 @@ namespace WSUI.CA
             return session[InstallFolder];
         }
 
+        private static string GetTempPath()
+        {
+            return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        }
+
         #region [private for delete files]
 
-        private static bool DeleteUpdateFolder(string root)
+        private static bool DeleteUpdateFolder(Session session)
         {
-            string fullpath = string.Format("{0}{1}",root,UpdateFolder);
+            session.Log("DeleteUpdateFolder...");
+            string temp = GetTempPath();
+            string fullpath = string.Format("{0}{1}", temp, UpdateFolder);
             if (!Directory.Exists(fullpath))
                 return false;
             try
@@ -110,9 +116,10 @@ namespace WSUI.CA
             return true;
         }
 
-        private static bool DeleteRootFolder(string root)
+        private static bool DeleteRootFolder(Session session, string root)
         {
             string fullpath = string.Format("{0}", root);
+            session.Log("Delete Root file...");
             if (!Directory.Exists(fullpath))
                 return false;
             try
@@ -126,7 +133,7 @@ namespace WSUI.CA
             return true;
         }
 
-        private static bool DeleteFile(string root,string filename)
+        private static bool DeleteFile(Session session, string root, string filename)
         {
             string fullpath = string.Format("{0}{1}", root, filename);
             if (!File.Exists(fullpath))
@@ -134,6 +141,7 @@ namespace WSUI.CA
             try
             {
                 File.Delete(fullpath);
+                session.Log("Delete File...");
             }
             catch
             {
@@ -234,16 +242,6 @@ namespace WSUI.CA
         {
             ActionResult result = ActionResult.Success;
 
-            //var callIndex = RegistryHelper.Instance.GetCallIndex();
-            //switch (callIndex)
-            //{
-            //        case RegistryHelper.CallIndex.First:
-            //        case RegistryHelper.CallIndex.None:
-            //        session.Log("First entry to SuccesMessage...");
-            //        RegistryHelper.Instance.SetCallIndexKey(RegistryHelper.CallIndex.Second);
-            //        return result;
-            //}
-
             if (!RegistryHelper.Instance.IsSilendUpdate())
             {
                 session.Log("Isn't silent update.");
@@ -257,8 +255,9 @@ namespace WSUI.CA
                 if (RegistryHelper.Instance.IsOutlookClosedByInstaller())
                 {
                     rec.FormatString += "\nOutlook will be opened soon.";
-                    UpdateAndDeleteLock(session);
+                    
                 }
+                UpdateAndDeleteLock(session);
                 session.Message(InstallMessage.User | InstallMessage.Info | (InstallMessage)(MessageBoxIcon.Information) | (InstallMessage)MessageBoxButtons.OK, rec);
                 OpenOutlook(session);
             }
@@ -276,9 +275,10 @@ namespace WSUI.CA
         private static void UpdateAndDeleteLock(Session session)
         {
             var path = GetInstallationFolder(session);
+            var temp = GetTempPath();
             try
             {
-                string localversion = string.Format(TempFolder, path, VersionFilename);
+                string localversion = string.Format(TempFolder, temp, VersionFilename);
                 if (File.Exists(localversion))
                 {
                     session.Log(String.Format("Version local path: {0}...", localversion));
@@ -368,6 +368,7 @@ namespace WSUI.CA
             try
             {
                 File.Delete(string.Format("{0}{1}", path, LocFilename));
+                DeleteUpdateFolder(session);
                 session.Log("Silent updates is finished. Call index set up in default value (None).");
                 RegistryHelper.Instance.FinishSilentUpdate();
                 RegistryHelper.Instance.SetCallIndexKey(RegistryHelper.CallIndex.None);
@@ -378,13 +379,13 @@ namespace WSUI.CA
             }
         }
 
-        private static void DeleteTempFolder(string temp)
-        {
-            if (Directory.Exists(temp))
-            {
-                Directory.Delete(temp, true);
-            }
-        }
+        //private static void DeleteTempFolder(string temp)
+        //{
+        //    if (Directory.Exists(temp))
+        //    {
+        //        Directory.Delete(temp, true);
+        //    }
+        //}
 
         #endregion
 
