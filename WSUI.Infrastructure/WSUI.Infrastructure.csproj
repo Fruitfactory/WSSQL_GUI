@@ -71,11 +71,16 @@
     </Compile>
     <Compile Include="Attributes\FieldIndexAttribute.cs" />
     <Compile Include="Controls\Application\AppEmpty.cs" />
+    <Compile Include="Controls\BlockControl\BlockControl.xaml.cs">
+      <DependentUpon>BlockControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BlockControl\BlockPopupAdorner.cs" />
     <Compile Include="Controls\BusyControl\BusyIndicator.xaml.cs">
       <DependentUpon>BusyIndicator.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\BusyControl\BusyPopupAdorner.cs" />
     <Compile Include="Controls\BusyControl\IBusyPopupAdorner.cs" />
+    <Compile Include="Controls\Core\BasePopupAdorner.cs" />
     <Compile Include="Controls\HightliteHyperlink.xaml.cs">
       <DependentUpon>HightliteHyperlink.xaml</DependentUpon>
     </Compile>
@@ -144,6 +149,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\BlockControl\BlockControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\BusyControl\BusyIndicator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

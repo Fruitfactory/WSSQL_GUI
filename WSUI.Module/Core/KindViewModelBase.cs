@@ -333,6 +333,12 @@ namespace WSUI.Module.Core
 
         protected virtual void Search()
         {
+            if (!IsShouldSearch())
+            {
+                WSSqlLogger.Instance.LogWarning("Please, activate the 'OutlookFinder'");
+                return;
+            }
+
             if (_isQueryRun)
             {
                 WSSqlLogger.Instance.LogWarning("Query have already started");
@@ -446,6 +452,20 @@ namespace WSUI.Module.Core
                 return;
             ParentViewModel.MainDataSource.Clear();
         }
+
+
+        protected bool IsShouldSearch()
+        {
+            switch (Parent.ActivateStatus)
+            {
+                case ActivationState.Activated:
+                case ActivationState.Trial:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
 
         #region IKindItem
 

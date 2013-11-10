@@ -7,6 +7,7 @@ namespace WSUI.Core.Enums
     {
         None = 0,
         Activated,
+        Trial,
         NonActivated,
         Error
     }

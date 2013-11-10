@@ -524,6 +524,7 @@ namespace WSUIOutlookPlugin
             formWebPaneItem.FolderName = currentFullFolderName;
             //Apply the WebViewPane layout
             RefreshCurrentFolder();
+            _wsuiBootStraper.PassAction(new WSAction(WSActionType.Show, null));
         }
 
         public void DoHideWebViewPane()
@@ -543,6 +544,7 @@ namespace WSUIOutlookPlugin
                 {
                     Marshal.ReleaseComObject(currentFolder);
                 }
+            _wsuiBootStraper.PassAction(new WSAction(WSActionType.Hide, null));
         }
 
         #region Outlook Object Model routines

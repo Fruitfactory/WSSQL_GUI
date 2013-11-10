@@ -6,18 +6,18 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Threading;
-using WSPreview.PreviewHandler.Service;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Core;
+using WSUI.Core.Core.LimeLM;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Core.Win32;
+using WSUI.Infrastructure.Controls.BlockControl;
 using WSUI.Infrastructure.Controls.BusyControl;
 using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Service.Helpers;
@@ -80,6 +80,14 @@ namespace WSUI.Module.ViewModel
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
             OutlookPreviewHelper.Instance.PreviewHostType = HostType.Application;
+            InitializeCommands();
+        }
+
+        private void InitializeCommands()
+        {
+            ActivateCommand = new DelegateCommand(InternalActivate);
+            TryAgainCommand = new DelegateCommand(InternalTryAgain);
+            DeactivateCommand = new DelegateCommand(InternalDeactivate);
         }
 
         public bool Enabled
@@ -105,6 +113,45 @@ namespace WSUI.Module.ViewModel
                 OnChoose(_listItems[0].Kind);
             }
             OnPropertyChanged(() => KindsCollection);
+            UpdatedActivatedStatus();
+        }
+
+        private void UpdatedActivatedStatus()
+        {
+            ActivateStatus = TurboLimeActivate.Instance.State;
+            
+            switch (ActivateStatus)
+            {
+                case ActivationState.Trial:
+                    int days = TurboLimeActivate.Instance.DaysRemain;
+                    TextStatus = string.Format("Trial version. Trial period will be expired after {0} day(s).",
+                        ++days);
+                    break;
+                case ActivationState.Error:
+                    TextStatus = string.Format("Checking has return an error. Try Again >>");
+                    break;
+                case ActivationState.NonActivated:
+                    TextStatus = string.Format("You trial period has expired. Please, activate the 'OutlookFinder' >>");
+                    break;
+                
+            }
+            WSSqlLogger.Instance.LogInfo("Activated Status: {0}", ActivateStatus.ToString());
+            WSSqlLogger.Instance.LogInfo("Text Status: {0}", TextStatus);
+            OnPropertyChanged(() => ActivateStatus);
+            OnPropertyChanged(() => TextStatus);
+        }
+
+        private void UpdatedUiBloker()
+        {
+            switch (ActivateStatus)
+            {
+                case ActivationState.NonActivated:
+                    BlockPopupAdorner.Instance.Block = true;
+                    break;
+                default:
+                    BlockPopupAdorner.Instance.Block = false;
+                    break;
+            }
         }
 
         private void GetAllKinds()
@@ -356,6 +403,23 @@ namespace WSUI.Module.ViewModel
             return null;
         }
 
+        private void InternalActivate()
+        {
+            TurboLimeActivate.Instance.Activate(UpdatedActivatedStatus);
+        }
+
+        private void InternalTryAgain()
+        {
+            TurboLimeActivate.Instance.TryCheckAgain();
+            UpdatedActivatedStatus();
+        }
+
+        private void InternalDeactivate()
+        {
+            TurboLimeActivate.Instance.Deactivate();
+            UpdatedActivatedStatus();
+        }
+
         #endregion
 
         #region Implementation of IMainViewModel
@@ -397,7 +461,13 @@ namespace WSUI.Module.ViewModel
                         break;
                     _currentItem.SearchString = searchCriteria;
                     _currentItem.SearchCommand.Execute(null);
-                break;
+                    break;
+                case WSActionType.Show:
+                    //UpdatedUiBloker();
+                    break;
+                case WSActionType.Hide:
+                    //BlockPopupAdorner.Instance.Block = false;
+                    break;
             }
         }
 
@@ -408,6 +478,12 @@ namespace WSUI.Module.ViewModel
                 PreviewView.ClearPreview();
             }
         }
+
+        public ActivationState ActivateStatus { get; private set; }
+        public string TextStatus { get; private set; }
+        public ICommand ActivateCommand { get; private set; }
+        public ICommand DeactivateCommand { get; private set; }
+        public ICommand TryAgainCommand { get; private set; }
 
         #endregion
 

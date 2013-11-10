@@ -13,7 +13,7 @@ namespace WSUI.Core.Core.LimeLM
         private const string VersionId = "4d6ed75a527c1957550015.01792667";
 
         private const string ActivationAppName = "TurboActivate.exe";
-
+        private Action _callback;
 
         #region [static]
 
@@ -43,12 +43,14 @@ namespace WSUI.Core.Core.LimeLM
         {
             get
             {
-                ActivationState state = ActivationState.None;
+                ActivationState state = ActivationState.Error;
                 if (IsInternetError)
                     return ActivationState.Error;
                 if(IsActivated)
                     return ActivationState.Activated;
-                if(!IsActivated || IsTrialPeriodEnded)
+                if(!IsTrialPeriodEnded)
+                    return ActivationState.Trial;
+                if(!IsActivated)
                     return ActivationState.NonActivated;
                 return state;
             }
@@ -59,14 +61,15 @@ namespace WSUI.Core.Core.LimeLM
             IsActivated = CheckActivation();
         }
 
-        public void Activate()
+        public void Activate(Action callback)
         {
+            _callback = callback;
             InternalActivate();
         }
 
         public void Deactivate()
         {
-            InternalActivate();
+            InternalDeactivate();
         }
 
         #endregion
@@ -139,6 +142,11 @@ namespace WSUI.Core.Core.LimeLM
         {
             ((Process) sender).Exited -= ActivationProcessOnExited;
             IsActivated = TurboActivate.IsActivated();
+            if (_callback != null)
+            {
+                _callback();
+                _callback = null;
+            }
         }
 
         private void InternalDeactivate()

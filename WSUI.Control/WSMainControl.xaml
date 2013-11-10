@@ -33,7 +33,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>    
     
-        <AdornerDecorator Grid.Row="0">
+        <Border Grid.Row="0" BorderThickness="0">
             <Grid Margin="7" x:Name="grid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -67,7 +67,7 @@
             
             
             </Grid>
-        </AdornerDecorator>
+        </Border>
 
         <Button x:Name="CloseButton" Grid.Row="0"  Width="20"  HorizontalAlignment="Right" VerticalAlignment="Top"  FontFamily="Marlett" Content="r"  IsTabStop="False" 
                         Click="CloseButton_OnClick"
@@ -87,7 +87,7 @@
             </Button.Style>
         </Button>
 
-        <Grid Grid.Row="1" Visibility="{Binding ActivateStatus,Converter={StaticResource GridVisibility}}">
+        <Grid Grid.Row="1" Visibility="{Binding ActivateStatus,Converter={StaticResource GridVisibility},UpdateSourceTrigger=PropertyChanged}"><!---->
             <Grid.Resources>
                 <ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
@@ -101,14 +101,19 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             
-            <TextBlock x:Name="ActivationStatus" Grid.Column="0" Text="{Binding TextStatus}" Grid.ColumnSpan="2"></TextBlock>
+            <TextBlock x:Name="ActivationStatus" Grid.Column="0" Text="{Binding TextStatus,UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="2" Foreground="Red"
+                       FontSize="14" FontWeight="Bold"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
             
             <Button x:Name="ButtonActivate" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding ActivateCommand}"
-                    Visibility="{Binding ActivateStatus,Converter={StaticResource ButtonVisibility},ConverterParameter={x:Static enums:ActivationButtons.Activate}}"
+                    Visibility="{Binding ActivateStatus,Converter={StaticResource ButtonVisibility},ConverterParameter={x:Static enums:ActivationButtons.Activate},UpdateSourceTrigger=PropertyChanged}"
                     >Activate</Button>
             <Button x:Name="ButtonTryCheckAgain" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding TryAgainCommand}"
-                    Visibility="{Binding ActivateStatus,Converter={StaticResource ButtonVisibility},ConverterParameter={x:Static enums:ActivationButtons.TryAgain}}"
+                    Visibility="{Binding ActivateStatus,Converter={StaticResource ButtonVisibility},ConverterParameter={x:Static enums:ActivationButtons.TryAgain},UpdateSourceTrigger=PropertyChanged}"
                     >Try Check Again</Button>
+            <Button x:Name="ButtonDeactivate" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding DeactivateCommand}"
+                    Visibility="Collapsed"
+                    >Deactivate</Button>
 
         </Grid>
     </Grid>
