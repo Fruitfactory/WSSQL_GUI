@@ -135,11 +135,13 @@ namespace WSUI.Core.Core.LimeLM
 
         private void InternalActivate()
         {
+            string path = Path.Combine(Path.GetDirectoryName(typeof(TurboLimeActivate).Assembly.Location), ActivationAppName);
+            WSSqlLogger.Instance.LogInfo("Path Activate: {0}",path);
             Process activationProcess = new Process()
             {
                 StartInfo =
                 {
-                    FileName = Path.Combine(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location),ActivationAppName)
+                    FileName = path
                 },
                 EnableRaisingEvents = true
             };            

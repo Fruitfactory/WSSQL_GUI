@@ -174,7 +174,6 @@
             </Grid.ColumnDefinitions>
             <Grid.ToolTip>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=ItemUrl}" />
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
             </Grid.ToolTip>
@@ -202,7 +201,6 @@
             </Grid.ColumnDefinitions>
             <Grid.ToolTip>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=ItemUrl}" />
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
             </Grid.ToolTip> 
@@ -259,7 +257,6 @@
             </Grid.ColumnDefinitions>
             <Grid.ToolTip>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=ItemUrl}" />
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
             </Grid.ToolTip>
@@ -288,7 +285,6 @@
             </Grid.ColumnDefinitions>
             <Grid.ToolTip>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=ItemUrl}" />
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
             </Grid.ToolTip>
@@ -332,7 +328,6 @@
             </Grid.ColumnDefinitions>
             <Grid.ToolTip>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=ItemUrl}" />
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
             </Grid.ToolTip>
@@ -381,6 +376,7 @@
     <ContextMenu x:Key="contextMenu">
         <MenuItem Header="Open file"  Command="{Binding OpenCommand}"/>
         <MenuItem Header="Open folder"  Command="{Binding OpenFolderCommand}"/>
+        <MenuItem Header="Show filename" Command="{Binding ShowPathCommand}"></MenuItem>
     </ContextMenu>
 
 

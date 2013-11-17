@@ -80,6 +80,7 @@ namespace WSUI.Module.Core
             SearchCommand = new DelegateCommand<object>(o => Search(),o => CanSearch());
             OpenCommand = new DelegateCommand<object>(o => OpenFile(), o => CanOpenFile());
             OpenFolderCommand = new DelegateCommand<object>(o => OpenFolder(), o => CanOpenFile());
+            ShowPathCommand = new DelegateCommand(ShowPath,CanOpenFile);
             KeyDownCommand = new DelegateCommand<KeyEventArgs>(KeyDown, o => true);
             DoubleClickCommand = new DelegateCommand<MouseButtonEventArgs>(DoubleClick, o => true);
             Enabled = true;
@@ -566,6 +567,13 @@ namespace WSUI.Module.Core
 
         public ICommand OpenFolderCommand { get; protected set; }
 
+        public ICommand ShowPathCommand { get; protected set; }
+
+        private void ShowPath()
+        {
+            var filename = SearchItemHelper.GetFileName(Current);
+            MessageBoxService.Instance.Show("Filename", filename, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
 
         private void OpenItemFile(string fileName)
         {
