@@ -87,7 +87,8 @@
             </Button.Style>
         </Button>
 
-        <Grid Grid.Row="1" ><!--Visibility="{Binding ActivateStatus,Converter={StaticResource GridVisibility},UpdateSourceTrigger=PropertyChanged}"-->
+        <!--Visibility="{Binding ActivateStatus,Converter={StaticResource GridVisibility},UpdateSourceTrigger=PropertyChanged}"-->
+        <!--<Grid Grid.Row="1" >
             <Grid.Resources>
                 <ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
@@ -116,6 +117,6 @@
                     Visibility="Visible"
                     >Deactivate</Button>
 
-        </Grid>
+        </Grid>-->
     </Grid>
 </UserControl>

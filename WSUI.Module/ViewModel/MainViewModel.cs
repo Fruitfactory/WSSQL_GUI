@@ -142,6 +142,19 @@ namespace WSUI.Module.ViewModel
             OnPropertyChanged(() => TextStatus);
         }
 
+        private void CheckStateAndShowActivatedForm()
+        {
+            ActivateStatus = TurboLimeActivate.Instance.State;
+            switch (ActivateStatus)
+            {
+                case ActivationState.Trial:
+                case ActivationState.TrialEnded:
+                case ActivationState.NonActivated:
+                    TurboLimeActivate.Instance.Activate(UpdatedActivatedStatus);
+                    break;
+            }
+        }
+
         private void UpdatedUiBloker()
         {
             switch (ActivateStatus)
@@ -471,10 +484,9 @@ namespace WSUI.Module.ViewModel
                     _currentItem.SearchCommand.Execute(null);
                     break;
                 case WSActionType.Show:
-                    //UpdatedUiBloker();
+                    CheckStateAndShowActivatedForm();
                     break;
                 case WSActionType.Hide:
-                    //BlockPopupAdorner.Instance.Block = false;
                     break;
             }
         }

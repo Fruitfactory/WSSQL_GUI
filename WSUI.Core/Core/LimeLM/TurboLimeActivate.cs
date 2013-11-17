@@ -52,7 +52,7 @@ namespace WSUI.Core.Core.LimeLM
                 if(!IsTrialPeriodEnded)
                     return ActivationState.Trial;
                 if (IsTrialPeriodEnded && !IsActivated)
-                    return ActivationState.TrialEnded;
+                    return ActivationState.NonActivated;
                 return state;
             }
         }
