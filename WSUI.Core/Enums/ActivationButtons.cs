@@ -2,10 +2,9 @@
 
 namespace WSUI.Core.Enums
 {
-    [Flags]
     public enum ActivationButtons
     {
-        None = 0,
+        None,
         Activate,
         TryAgain
     }

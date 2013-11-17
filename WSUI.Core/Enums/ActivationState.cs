@@ -2,12 +2,12 @@
 
 namespace WSUI.Core.Enums
 {
-    [Flags]
     public enum ActivationState
     {
-        None = 0,
+        None,
         Activated,
         Trial,
+        TrialEnded,
         NonActivated,
         Error
     }

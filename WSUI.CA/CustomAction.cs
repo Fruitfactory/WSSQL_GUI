@@ -4,7 +4,11 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
 using System.Xml.Linq;
 using Microsoft.Deployment.WindowsInstaller;
@@ -47,13 +51,15 @@ namespace WSUI.CA
         #endregion
 
         #region elements fo manifest
+
         private const string InstallPathNodeName = "installationUrl";
         private const string VersionNodeName = "version";
         private const string ProductCodeNodeName = "productCode";
+
         #endregion
 
         #region [CA ClearFiles]
-        
+
         [CustomAction]
         public static ActionResult ClearFiles(Session session)
         {
@@ -67,12 +73,12 @@ namespace WSUI.CA
                 }
                 session.Log("Delete  files...");
                 DeleteUpdateFolder(session);
-                var list = new List<string>() {LocFilename};
+                var list = new List<string>() { LocFilename };
                 foreach (var filename in list)
                 {
-                    DeleteFile(session,path, filename);
+                    DeleteFile(session, path, filename);
                 }
-                DeleteRootFolder(session,path);
+                DeleteRootFolder(session, path);
             }
             catch (Exception)
             {
@@ -153,18 +159,20 @@ namespace WSUI.CA
         #endregion
 
         #region [CA operation with Outlook]
+
         [CustomAction]
         public static ActionResult CloseOutlook(Session session)
         {
             Process outlookProcess;
             ActionResult res = ActionResult.Success;
-            if (IsOutlookOpen(out outlookProcess,session))
+            if (IsOutlookOpen(out outlookProcess, session))
             {
                 try
                 {
                     if (outlookProcess != null)
                     {
-                        session.Log("Close outlook. IsOutllokClosedByInstaller = " + RegistryHelper.Instance.IsOutlookClosedByInstaller().ToString());
+                        session.Log("Close outlook. IsOutllokClosedByInstaller = " +
+                                    RegistryHelper.Instance.IsOutlookClosedByInstaller().ToString());
                         outlookProcess.Kill();
                         RegistryHelper.Instance.SetFlagClosedOutlookApplication();
                     }
@@ -182,7 +190,8 @@ namespace WSUI.CA
         [CustomAction]
         public static ActionResult OpenOutlook(Session session)
         {
-            session.Log("Open outlook. IsOutllokClosedByInstaller = " + RegistryHelper.Instance.IsOutlookClosedByInstaller().ToString());
+            session.Log("Open outlook. IsOutllokClosedByInstaller = " +
+                        RegistryHelper.Instance.IsOutlookClosedByInstaller().ToString());
             ActionResult res = ActionResult.Success;
             if (RegistryHelper.Instance.IsOutlookClosedByInstaller() && IsOutlookInstalled())
             {
@@ -218,8 +227,8 @@ namespace WSUI.CA
             }
             catch (Exception ex)
             {
-                session.Log("Error during checking: "+ ex.Message);
-                
+                session.Log("Error during checking: " + ex.Message);
+
             }
             return res;
         }
@@ -255,15 +264,17 @@ namespace WSUI.CA
                 if (RegistryHelper.Instance.IsOutlookClosedByInstaller())
                 {
                     rec.FormatString += "\nOutlook will be opened soon.";
-                    
+
                 }
                 UpdateAndDeleteLock(session);
-                session.Message(InstallMessage.User | InstallMessage.Info | (InstallMessage)(MessageBoxIcon.Information) | (InstallMessage)MessageBoxButtons.OK, rec);
+                session.Message(
+                    InstallMessage.User | InstallMessage.Info | (InstallMessage)(MessageBoxIcon.Information) |
+                    (InstallMessage)MessageBoxButtons.OK, rec);
                 OpenOutlook(session);
             }
             catch (Exception)
             {
-                result = ActionResult.NotExecuted;                
+                result = ActionResult.NotExecuted;
             }
             return result;
         }
@@ -288,7 +299,7 @@ namespace WSUI.CA
                 {
                     session.Log(String.Format("Version local path: {0} is not exist...", localversion));
                 }
-                Unlock(path,session);
+                Unlock(path, session);
             }
             catch (Exception ex)
             {
@@ -318,7 +329,7 @@ namespace WSUI.CA
                 if (docManifest.Descendants(MSINode).Any())
                 {
                     var msi = docManifest.Descendants("msi").First();
-                    UpdateMSINode(msi, productCode, newversion,session);
+                    UpdateMSINode(msi, productCode, newversion, session);
                 }
                 else
                 {
@@ -363,7 +374,7 @@ namespace WSUI.CA
             docManifest.Root.Add(msi);
         }
 
-        public static void Unlock(string path,Session session)
+        public static void Unlock(string path, Session session)
         {
             try
             {
@@ -386,6 +397,195 @@ namespace WSUI.CA
         //        Directory.Delete(temp, true);
         //    }
         //}
+
+        #endregion
+
+        #region [activate CA]
+
+        private const string ActivateFilesFolder = "ActivatePlugin";
+        private const string TurboActivateExeKey = "Turbo_Activate_exe";
+        private const string TurboActivateDllKey = "Turbo_Activate_dll";
+        private const string TurboActivate64DllKey = "Turbo_Activate64_dll";
+        private const string TurboActivateDatKey = "Turbo_Activate_dat";
+
+        private const string TurboActivateExeFilename = "TurboActivate.exe";
+        private const string TurboActivateDllFilename = "TurboActivate.dll";
+        private const string TurboActivate64DllFilename = "TurboActivate64.dll";
+        private const string TurboActivateDatFilename = "TurboActivate.dat";
+        private const string TurboActivateTemplate = "TurboActivate";
+
+        private const string QueryTemplate = "SELECT Data FROM Binary WHERE Name = '{0}' ";
+        private const int SizeCopy = 1024 * 50;
+
+        [CustomAction]
+        public static ActionResult ActivatePlugin(Session session)
+        {
+            if (RegistryHelper.Instance.IsSilendUpdate())
+                return ActionResult.Success;
+            try
+            {
+                string path = Path.Combine(Path.GetTempPath(), ActivateFilesFolder);
+                CreateFolder(path);
+                session.Log(string.Format("Path {0}", path));
+                ExtractFiles(session, path);
+                RunAndWaitActivator(session,path);
+                //CopyDatFileToInstallationFolder(session,path,GetInstallationFolder(session));
+                DeleteFolder(path);
+                session.Log(string.Format("Success"));
+                return ActionResult.Success;
+            }
+            catch (Exception ex)
+            {
+                session.Log("Activate: {0}", ex.Message);
+                return ActionResult.Failure;
+            }
+        }
+
+        private static void ExtractFiles(Session session, string path)
+        {
+            if (!CopyFileFromDatabase(session, path, TurboActivateDatKey, TurboActivateDatFilename))
+                throw new FileLoadException(TurboActivateDatFilename);
+            if (!CopyFileFromDatabase(session, path, TurboActivateDllKey, TurboActivateDllFilename))
+                throw new FileLoadException(TurboActivateDllFilename);
+            if (!CopyFileFromDatabase(session, path, TurboActivate64DllKey, TurboActivate64DllFilename))
+                throw new FileLoadException(TurboActivate64DllFilename);
+            if (!CopyFileFromDatabase(session, path, TurboActivateExeKey, TurboActivateExeFilename))
+                throw new FileLoadException(TurboActivateExeFilename);
+        }
+
+        [DllImport("User32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        private static void RunAndWaitActivator(Session session,string path)
+        {
+            string file = Path.Combine(path, TurboActivateExeFilename);
+            if (!File.Exists(file))
+                return;
+            try
+            {
+                Process p = new Process()
+                {
+                    StartInfo =
+                    {
+                        FileName = file
+                    },
+                    EnableRaisingEvents = true
+                };
+                p.Exited += POnExited;
+                p.Start();
+                BringToTopActivateWindow();
+                p.WaitForExit();
+                session.Log("Exit code {0}", p.ExitCode);
+            }
+            catch (Exception ex)
+            {
+                session.Log(string.Format("RunAndActivator: {0}",ex.Message));   
+            }
+        }
+
+        private static void BringToTopActivateWindow()
+        {
+            Task.Factory.StartNew(SetTop);
+        }
+
+        private static void SetTop()
+        {
+            while (true)
+            {
+                var list = Process.GetProcesses().Where(p => p.ProcessName.IndexOf(TurboActivateTemplate) > -1);
+                if(!list.Any())
+                    continue;
+                var ta = list.ElementAt(0);
+                if(ta.MainWindowHandle == IntPtr.Zero)
+                    continue;
+                SetForegroundWindow(ta.MainWindowHandle);
+                break;
+            }
+        }
+
+        private static void CopyDatFileToInstallationFolder(Session session, string sourcepath, string destinationpath)
+        {
+            if (string.IsNullOrEmpty(sourcepath) || string.IsNullOrEmpty(destinationpath))
+                return;
+            string sourceFile = Path.Combine(sourcepath, TurboActivateDatFilename);
+            string destinationFile = Path.Combine(destinationpath, TurboActivateDatFilename);
+            session.Log("Copy from '{0}' to '{1}'",sourceFile,destinationFile);
+            if(File.Exists(destinationFile))
+                File.Delete(destinationFile);
+            try
+            {
+                var srcFile = File.Open(sourceFile, FileMode.Open);
+                var destFile = File.Create(destinationFile);
+                byte[] buf = new byte[SizeCopy];
+                int len;
+                while ((len = srcFile.Read(buf, 0, buf.Length)) > 0)
+                {
+                    destFile.Write(buf, 0, len);
+                }
+            }
+            catch (Exception ex)
+            {
+                session.Log("CopyDatFileToInstallationFolder: {0}", ex.Message);
+            }
+        }
+
+        private static void POnExited(object sender, EventArgs eventArgs)
+        {
+            ((Process) sender).Exited -= POnExited;
+        }
+
+        private static bool CopyFileFromDatabase(Session session, string path, string key, string filename)
+        {
+            bool result = false;
+            try
+            {
+                string pathFile = path + "\\" + filename;
+                session.Log(string.Format("PathFile {0}", pathFile));
+                using (var file = File.Create(pathFile))
+                {
+                    using (var view = session.Database.OpenView(QueryTemplate, key))
+                    {
+                        view.Execute();
+                        using (Record rec = view.Fetch())
+                        {
+                            using (Stream stream = rec.GetStream("Data"))
+                            {
+                                byte[] buf = new byte[SizeCopy];
+                                int len;
+                                while ((len = stream.Read(buf, 0, buf.Length)) > 0)
+                                {
+                                    file.Write(buf, 0, len);
+                                }
+                            }
+                        }
+                    }
+                }
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                session.Log(string.Format("CopyFileFromDatabase: {0}", ex.Message));
+                result = false;
+            }
+            return result;
+        }
+
+        private static void CreateFolder(string folder)
+        {
+            if (!string.IsNullOrEmpty(folder) && !Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+        }
+
+        private static void DeleteFolder(string folder, bool recurs = true)
+        {
+            if (!string.IsNullOrEmpty(folder) && Directory.Exists(folder))
+            {
+                Directory.Delete(folder, recurs);
+            }
+        }
+
 
         #endregion
 

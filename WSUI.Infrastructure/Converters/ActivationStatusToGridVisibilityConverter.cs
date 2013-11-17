@@ -18,6 +18,8 @@ namespace WSUI.Infrastructure.Converters
                     return Visibility.Collapsed;
                 case ActivationState.Error:
                 case ActivationState.NonActivated:
+                case ActivationState.Trial:
+                case ActivationState.TrialEnded:
                     return Visibility.Visible;
             }
             return Visibility.Collapsed;

@@ -13,7 +13,7 @@ namespace WSUI.Infrastructure.Converters
         {
             ActivationState state = (ActivationState) value;
             ActivationButtons btn = (ActivationButtons) parameter;
-            if (state == ActivationState.NonActivated && btn == ActivationButtons.Activate)
+            if ((state == ActivationState.NonActivated || state == ActivationState.Trial || state == ActivationState.TrialEnded) && btn == ActivationButtons.Activate)
                 return Visibility.Visible;
             if (state == ActivationState.Error && btn == ActivationButtons.TryAgain)
                 return Visibility.Visible;

@@ -25,6 +25,7 @@ using WSUI.Infrastructure.Services;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Infrastructure;
+using WSUI.Module.Service.Dialogs.Message;
 using Application = System.Windows.Application;
 using WSPreview.PreviewHandler.Service.OutlookPreview;
 
@@ -123,14 +124,14 @@ namespace WSUI.Module.ViewModel
             switch (ActivateStatus)
             {
                 case ActivationState.Trial:
-                    int days = TurboLimeActivate.Instance.DaysRemain;
                     TextStatus = string.Format("Trial version. Trial period will be expired after {0} day(s).",
-                        ++days);
+                        TurboLimeActivate.Instance.DaysRemain);
                     break;
                 case ActivationState.Error:
                     TextStatus = string.Format("Checking has return an error. Try Again >>");
                     break;
                 case ActivationState.NonActivated:
+                case ActivationState.TrialEnded:
                     TextStatus = string.Format("You trial period has expired. Please, activate the 'OutlookFinder' >>");
                     break;
                 
@@ -416,8 +417,15 @@ namespace WSUI.Module.ViewModel
 
         private void InternalDeactivate()
         {
-            TurboLimeActivate.Instance.Deactivate();
-            UpdatedActivatedStatus();
+            if (TurboLimeActivate.Instance.Deactivate(true))
+            {
+                UpdatedActivatedStatus();
+            }
+            else
+            {
+                MessageBoxService.Instance.Show("Warning", "Something wrong during Deactivate", MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
         }
 
         #endregion

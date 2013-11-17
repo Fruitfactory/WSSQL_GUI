@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <Product Id="B8766561-20B2-4504-9FCC-2C00FF1B8941" Name="WSUIOutlookPlugin" Language="1033" Version="1.0.0" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="F3F4179D-8BD9-45B3-BF91-DC9A69E47A1C" Name="WSUIOutlookPlugin" Language="1033" Version="1.0.0" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="WSUIOutlookPlugin" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <Media Id="1" Cabinet="WSUI.OutlookPlugin.cab" EmbedCab="yes" />
@@ -17,8 +17,13 @@
     </Feature>
     <UIRef Id="WixUI_InstallDir" />
     <UIRef Id="WixUI_ErrorProgressText" />
+    <Binary Id="Turbo_Activate_dat" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)TurboActivate.dat" />
+    <Binary Id="Turbo_Activate_dll" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)TurboActivate.dll" />
+    <Binary Id="Turbo_Activate_exe" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)TurboActivate.exe" />
+    <Binary Id="Turbo_Activate64_dll" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)TurboActivate64.dll" />
     <Binary Id="adxregistrator_exe" SourceFile="$(var.ADX_PATH)\Redistributables\adxregistrator.exe" />
     <Binary Id="managedAction" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)WSUI.CA.dll" />
+    <!--<CustomAction Id="ActivatePlugin" BinaryKey="Turbo_Activate_exe" Execute="deferred" ExeCommand="" Return="ignore" />-->
     <CustomAction Id="RegisterDll" BinaryKey="adxregistrator_exe" Execute="deferred" ExeCommand="/install=&quot;[INSTALLFOLDER]$(var.WSUI.OutlookPlugin.TargetFileName)&quot; /privileges=user /returnExitCode=false" Impersonate="yes" />
     <CustomAction Id="UnregisterDll" BinaryKey="adxregistrator_exe" Execute="deferred" ExeCommand="/uninstall=&quot;[INSTALLFOLDER]$(var.WSUI.OutlookPlugin.TargetFileName)&quot; /privileges=user" Impersonate="yes" Return="ignore" />
     <CustomAction Id="DeleteFiles" BinaryKey="managedAction" DllEntry="ClearFiles" Execute="immediate" Return="check" />
@@ -27,6 +32,7 @@
     <CustomAction Id="SuccesMessage" BinaryKey="managedAction" DllEntry="SuccesMessage" Execute="immediate" Return="check" />
     <CustomAction Id="CancelMessage" BinaryKey="managedAction" DllEntry="CancelMessage" Execute="immediate" Return="check" />
     <CustomAction Id="ErrorMessage" BinaryKey="managedAction" DllEntry="ErrorMessage" Execute="immediate" Return="check" />
+    <CustomAction Id="ActivatePlugin" BinaryKey="managedAction" DllEntry="ActivatePlugin" Execute="immediate" Return="check" />
     <InstallExecuteSequence>
       <Custom Action="RegisterDll" After="SelfRegModules">NOT Installed</Custom>
       <Custom Action="UnregisterDll" After="SelfUnregModules">Installed</Custom>
@@ -35,6 +41,8 @@
       <Custom Action="SuccesMessage" OnExit="success">NOT Installed</Custom>
       <Custom Action="CancelMessage" OnExit="cancel">NOT Installed</Custom>
       <Custom Action="ErrorMessage" OnExit="error">NOT Installed</Custom>
+      <Custom Action="ActivatePlugin" After="SelfRegModules">NOT Installed</Custom>
+      <!--<Custom Action="ActivatePlugin" After="InstallInitialize">NOT Installed</Custom>-->
       <!--<Custom Action="OpenOutlook" After="InstallFinalize">NOT Installed OR Installed</Custom>-->
     </InstallExecuteSequence>
     <!-- Properties for all current versions of the .NET Framework are available here: http://wix.sourceforge.net/manual-wix3/wixnetfxextension.htm -->

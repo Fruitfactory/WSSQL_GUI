@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using WSUI.Core.Enums;
+using WSUI.Core.Logger;
 
 namespace WSUI.Core.Core.LimeLM
 {
@@ -50,8 +51,8 @@ namespace WSUI.Core.Core.LimeLM
                     return ActivationState.Activated;
                 if(!IsTrialPeriodEnded)
                     return ActivationState.Trial;
-                if(!IsActivated)
-                    return ActivationState.NonActivated;
+                if (IsTrialPeriodEnded && !IsActivated)
+                    return ActivationState.TrialEnded;
                 return state;
             }
         }
@@ -67,9 +68,9 @@ namespace WSUI.Core.Core.LimeLM
             InternalActivate();
         }
 
-        public void Deactivate()
+        public bool Deactivate(bool deleteKey = false)
         {
-            InternalDeactivate();
+            return InternalDeactivate(deleteKey);
         }
 
         #endregion
@@ -102,11 +103,7 @@ namespace WSUI.Core.Core.LimeLM
         private void Init()
         {
             TurboActivate.VersionGUID = VersionId;
-            IsActivated = CheckActivation();
-            if (!IsActivated)
-            {
-                IsTrialPeriodEnded = CheckTrialPeriod();
-            }
+            CheckActivationAndTrial();
         }
 
         private bool CheckActivation()
@@ -116,11 +113,23 @@ namespace WSUI.Core.Core.LimeLM
             return gr == IsGenuineResult.Genuine || gr == IsGenuineResult.GenuineFeaturesChanged ||
                    IsInternetError;
         }
+
+        private void CheckActivationAndTrial()
+        {
+            IsActivated = CheckActivation();
+            if (!IsActivated)
+            {
+                IsTrialPeriodEnded = CheckTrialPeriod();
+            }
+        }
+
         
         private bool CheckTrialPeriod()
         {
+            WSSqlLogger.Instance.LogInfo("UseTrial!!");
             TurboActivate.UseTrial();
             DaysRemain = TurboActivate.TrialDaysRemaining();
+            WSSqlLogger.Instance.LogInfo("DaysRemain = {0}",DaysRemain);
             return DaysRemain == 0;
         }
 
@@ -141,7 +150,7 @@ namespace WSUI.Core.Core.LimeLM
         private void ActivationProcessOnExited(object sender, EventArgs eventArgs)
         {
             ((Process) sender).Exited -= ActivationProcessOnExited;
-            IsActivated = TurboActivate.IsActivated();
+            CheckActivationAndTrial();
             if (_callback != null)
             {
                 _callback();
@@ -149,10 +158,19 @@ namespace WSUI.Core.Core.LimeLM
             }
         }
 
-        private void InternalDeactivate()
+        private bool InternalDeactivate(bool deleteKey)
         {
-            TurboActivate.Deactivate();
-            IsActivated = false;
+            try
+            {
+                TurboActivate.Deactivate(deleteKey);
+                CheckActivationAndTrial();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError("{0}",ex.Message);
+            }
+            return false;
         }
 
 
