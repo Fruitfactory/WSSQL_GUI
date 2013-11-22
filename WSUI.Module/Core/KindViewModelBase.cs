@@ -337,6 +337,8 @@ namespace WSUI.Module.Core
             if (!IsShouldSearch())
             {
                 WSSqlLogger.Instance.LogWarning("Please, activate the 'OutlookFinder'");
+                MessageBoxService.Instance.Show("Warning", "Please, activate the 'OutlookFinder'", MessageBoxButton.OK,
+                    MessageBoxImage.Asterisk);
                 return;
             }
 

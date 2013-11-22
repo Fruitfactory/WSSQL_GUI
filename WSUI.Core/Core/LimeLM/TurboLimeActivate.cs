@@ -9,7 +9,10 @@ namespace WSUI.Core.Core.LimeLM
 {
     public class TurboLimeActivate
     {
-        private const int DaysBetweenCheck = 1;
+        // O_o
+        private const int DaysBetweenCheck = 0; // we should use 0. In this case TurboActive verify activation with the server every time when we call IsGenuine()
+
+
         private const int GraceOfInerErr = 14;
         private const string VersionId = "4d6ed75a527c1957550015.01792667";
 
@@ -59,7 +62,7 @@ namespace WSUI.Core.Core.LimeLM
 
         public void TryCheckAgain()
         {
-            IsActivated = CheckActivation();
+            CheckActivationAndTrial();
         }
 
         public void Activate(Action callback)

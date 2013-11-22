@@ -144,6 +144,7 @@ namespace WSUI.Module.ViewModel
 
         private void CheckStateAndShowActivatedForm()
         {
+            TurboLimeActivate.Instance.TryCheckAgain();
             ActivateStatus = TurboLimeActivate.Instance.State;
             switch (ActivateStatus)
             {

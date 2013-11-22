@@ -14,14 +14,14 @@ namespace CSharp
             InitializeComponent();
 
             //TODO: goto the version page at LimeLM and paste this GUID here
-            TurboActivate.VersionGUID = "17738358944b7a7316ec5fe9.23132283";
+            TurboActivate.VersionGUID = "4d6ed75a527c1957550015.01792667";
 
             try
             {
                 // Check if we're activated, and every 90 days verify it with the activation servers
                 // In this example we won't show an error if the activation was done offline
                 // (see the 3rd parameter of the IsGenuine() function) -- http://wyday.com/limelm/help/offline-activation/
-                IsGenuineResult gr = TurboActivate.IsGenuine(90, 14, true);
+                IsGenuineResult gr = TurboActivate.IsGenuine(0, 14, true);
 
                 isActivated = gr == IsGenuineResult.Genuine ||
                               gr == IsGenuineResult.GenuineFeaturesChanged ||
