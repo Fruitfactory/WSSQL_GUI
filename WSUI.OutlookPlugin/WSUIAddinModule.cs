@@ -797,6 +797,14 @@ namespace WSUIOutlookPlugin
         private void CurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs firstChanceExceptionEventArgs)
         {
             WSSqlLogger.Instance.LogError("First Chance Exception (plugin): " + firstChanceExceptionEventArgs.Exception.Message);
+            if (firstChanceExceptionEventArgs.Exception is ReflectionTypeLoadException)
+            {        
+
+                foreach (var item in (firstChanceExceptionEventArgs.Exception as ReflectionTypeLoadException).LoaderExceptions)
+                {
+                    WSSqlLogger.Instance.LogError("Reflection Type Load: " + item.Message.ToString());
+                }
+            }
         }
 
         #region [event handlers for ribbon]

@@ -57,6 +57,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolkits\MahAppMetro\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -70,6 +74,8 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Attributes\FieldIndexAttribute.cs" />
+    <Compile Include="Behaviors\ChildListBoxBehavior.cs" />
+    <Compile Include="Behaviors\MainListBoxBehavior.cs" />
     <Compile Include="Controls\Application\AppEmpty.cs" />
     <Compile Include="Controls\BlockControl\BlockControl.xaml.cs">
       <DependentUpon>BlockControl.xaml</DependentUpon>
@@ -99,6 +105,8 @@
     <Compile Include="Converters\ActivationStatusToButtonVisibilityConverter.cs" />
     <Compile Include="Converters\ActivationStatusToGridVisibilityConverter.cs" />
     <Compile Include="Converters\StringToStringConverter.cs" />
+    <Compile Include="Helpers\AttachedProperty\ListBoxSelectedObjectAttachedProperty.cs" />
+    <Compile Include="Helpers\AttachedProperty\ListBoxShouldSetSelectAttachedProperty.cs" />
     <Compile Include="Helpers\Extensions\UIExtensions.cs" />
     <Compile Include="Implements\Rules\EmailContactSearchRule.cs" />
     <Compile Include="Implements\Rules\GeneralContactRule.cs" />

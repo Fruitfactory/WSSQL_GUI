@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <Product Id="E23A01F9-0CBF-434D-9D38-3AA0CCD2EFF0" Name="WSUIOutlookPlugin" Language="1033" Version="1.0.0" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
-    <Package InstallerVersion="200" Compressed="yes" Description="WSUIOutlookPlugin" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
+  <Product Id="FAC7AB40-8DD7-4C75-A11A-BC4F711101DB" Name="OutlookFinder" Language="1033" Version="1.0.0" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+    <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-    <Media Id="1" Cabinet="WSUI.OutlookPlugin.cab" EmbedCab="yes" />
+    <Media Id="1" Cabinet="OutlookFinder.cab" EmbedCab="yes" />
     <Condition Message="!(Setting the ALLUSERS property is not allowed.)">
       NOT ALLUSERS
     </Condition>
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
     <Property Id="ALLUSERS" Secure="yes" />
-    <Feature Id="ProductFeature" Title="WSUIOutlookPlugin" Level="1" ConfigurableDirectory="INSTALLFOLDER">
+    <Feature Id="ProductFeature" Title="OutlookFinder" Level="1" ConfigurableDirectory="INSTALLFOLDER">
       <ComponentRef Id="INSTALLFOLDER" />
       <ComponentRef Id="INSTALLFOLDERLIB" />
       <ComponentRef Id="INSTALLFOLDERLIB64" />
@@ -52,10 +52,10 @@
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="LocalAppDataFolder">
-        <Directory Id="INSTALLFOLDER" Name="WSUIOutlookPlugin">
+        <Directory Id="INSTALLFOLDER" Name="OutlookFinder">
           <Component Id="INSTALLFOLDER" Guid="c7b05686-b33f-4d75-ae82-aa8c069e6a7d">
             <RemoveFolder On="both" Id="INSTALLFOLDER" />
-            <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="WSUIOutlookPlugin" />
+            <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="OutlookFinder" />
           </Component>
           <Directory Id="INSTALLFOLDERLIB" Name="lib">
             <Component Id="INSTALLFOLDERLIB" Guid="129FC695-F5F1-4476-A5C4-B12642EE5324">

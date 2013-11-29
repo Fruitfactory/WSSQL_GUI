@@ -69,7 +69,7 @@
             </Grid>
         </Border>
 
-        <Button x:Name="CloseButton" 
+        <Button x:Name="CloseButton" IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
                 Grid.Row="0"  HorizontalAlignment="Right" VerticalAlignment="Top"
                 BorderThickness="1, 1, 1, 1" 
                 Focusable="True" Height="30" HorizontalContentAlignment="Center" IsTabStop="False" 

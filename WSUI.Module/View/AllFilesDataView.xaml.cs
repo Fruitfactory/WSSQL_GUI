@@ -35,7 +35,7 @@ namespace WSUI.Module.View
 
         private void ListBoxOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
         {
-            listBox.OnSelectedChanged(ref _oldIndex);
+            //listBox.OnSelectedChanged(ref _oldIndex);
         }
 
         #region Implementation of IDataView<AllFilesViewModel>
