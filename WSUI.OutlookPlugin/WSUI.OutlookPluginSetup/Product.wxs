@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <Product Id="FAC7AB40-8DD7-4C75-A11A-BC4F711101DB" Name="OutlookFinder" Language="1033" Version="1.0.0" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="16B82A7D-B79C-46DC-97B9-2AC62FDE2899" Name="OutlookFinder" Language="1033" Version="1.0.0" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <Media Id="1" Cabinet="OutlookFinder.cab" EmbedCab="yes" />
@@ -129,10 +129,10 @@
         <File Id="_Microsoft_Vbe_Interop_dll" Name="Microsoft.Vbe.Interop.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_Office_dll" Name="Office.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_PDFLibNet_dll" Name="PDFLibNet.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-        <File Id="_SciLexer_dll" Name="SciLexer.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <!--<File Id="_SciLexer_dll" Name="SciLexer.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_SciLexer64_dll" Name="SciLexer64.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_ScintillaNET_dll" Name="ScintillaNET.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-        <File Id="_ScintillaNET_xml" Name="ScintillaNET.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_ScintillaNET_xml" Name="ScintillaNET.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />-->
         <File Id="_System_Windows_Interactivity_dll" Name="System.Windows.Interactivity.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_WSPreview_dll_config" Name="WSPreview.dll.config" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_WSUI_Infrastructure_dll" Name="WSUI.Infrastructure.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />

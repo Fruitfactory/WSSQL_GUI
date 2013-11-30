@@ -2,12 +2,8 @@
 // Coded and published in January 2007 issue of MSDN Magazine 
 // http://msdn.microsoft.com/msdnmag/issues/07/01/PreviewHandlers/default.aspx
 
-using System;
-using System.IO;
 using System.Windows.Forms;
-using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
-using WSPreview.Controls.BinControl;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 
 namespace WSPreview.PreviewHandler.PreviewHandlers
@@ -29,8 +25,8 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
 
             protected override Control GetCustomerPreviewControl()
             {
-                BinPreviewControl ctrl = new BinPreviewControl();
-                return ctrl;
+                //BinPreviewControl ctrl = new BinPreviewControl();
+                return null;// ctrl;
             }
 
             protected override ControlsKey GetControlsKey()

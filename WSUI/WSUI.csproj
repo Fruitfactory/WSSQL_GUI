@@ -18,6 +18,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>90AD3E6FE5ACE09DEE1216E761299152D71E6CC5</ManifestCertificateThumbprint>
@@ -76,9 +77,6 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\Toolkits\Log4Net\net40-full\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="MahApps.Metro">
       <HintPath>..\..\..\C#\WpfApplication5\WpfApplication5\MahApps.Metro.dll</HintPath>
     </Reference>
