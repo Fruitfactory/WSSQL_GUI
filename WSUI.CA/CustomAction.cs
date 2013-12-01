@@ -584,6 +584,37 @@ namespace WSUI.CA
 
         #endregion
 
+        #region [deactivate CA]
+
+        private const string UnistallFile = "unistall.exe";
+
+        [CustomAction]
+        public static ActionResult Deactivate(Session session)
+        {
+            if(RegistryHelper.Instance.IsSilendUpdate())
+                return ActionResult.Success;
+            try
+            {
+                string fullname = string.Format("{0}\\{1}", GetInstallationFolder(session), UnistallFile);
+                if (string.IsNullOrEmpty(fullname) || !File.Exists(fullname))
+                {
+                    session.Log("Couldn't call unistall.exe");
+                    return ActionResult.Success;
+                }
+                var startinfo = new ProcessStartInfo(fullname, "unistall");
+                Process p = Process.Start(startinfo);
+                p.WaitForExit();
+            }
+            catch (Exception ex)
+            {
+                session.Log("Deactivate: {0}",ex.Message);
+                return ActionResult.Failure;
+            }
+            return ActionResult.Success;
+        }
+
+        #endregion
+
 
         #region [error message]
 
