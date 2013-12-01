@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <application name="outlookfinder">
   <product language="1033">
-    <version name="1.0.0" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/" productCode="{FAC7AB40-8DD7-4C75-A11A-BC4F711101DB}" updateType="directLink">
+    <version name="1.0.0" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/" productCode="{FF53AD05-013C-43C2-A998-35983A9A15EB}" updateType="directLink">
       <files msi="OutlookFinderSetup">
         <file>OutlookFinderSetup.msi</file>
       </files>
