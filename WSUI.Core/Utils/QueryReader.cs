@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using WSUI.Core.Interfaces;
+using WSUI.Core.Logger;
 
 namespace WSUI.Core.Utils 
 {
@@ -46,13 +47,20 @@ namespace WSUI.Core.Utils
 
 		    foreach (var tuple in _intermalList)
 		    {
-		        int index = tuple.Item3 - 1;
-		        if (index >= reader.FieldCount)
-		            break;
-		        object val = reader[index];
-                if(DBNull.Value.Equals(val))
-                    continue;
-                result.SetValue(tuple.Item3,val);
+		        try
+		        {
+                    int index = tuple.Item3 - 1;
+                    if (index >= reader.FieldCount)
+                        break;
+                    object val = reader[index];
+                    if (DBNull.Value.Equals(val))
+                        continue;
+                    result.SetValue(tuple.Item3, val);
+		        }
+		        catch (Exception ex)
+		        {
+                    WSSqlLogger.Instance.LogError("Readresult: {0}",ex.Message);
+                }
 		    }
 			return result;
 		}

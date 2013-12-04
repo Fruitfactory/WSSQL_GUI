@@ -8,7 +8,7 @@
                     xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
                     xmlns:listBox="clr-namespace:WSUI.Infrastructure.Controls.ListBox;assembly=WSUI.Infrastructure"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                    >
+                    xmlns:behaviors="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure">
                     
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
@@ -211,13 +211,13 @@
             </Grid.ToolTip> 
             <Expander Margin="0" Grid.Column="0" Style="{StaticResource EmailExpanderStyle}" ExpandDirection="Down">
                 <Grid>
-                    <ListBox IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Items}"
-                             SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=SelectedItem,Mode=OneWayToSource}"
-                             ItemTemplate="{StaticResource EmailItemTemplate}" >
+                    <ListBox ItemsSource="{Binding Items}"
                              
-                        <!--<i:Interaction.Behaviors>
+                             ItemTemplate="{StaticResource EmailItemTemplate}" ><!--SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=SelectedItem,Mode=OneWayToSource}"-->
+                             
+                        <i:Interaction.Behaviors>
                             <behaviors:ChildListBoxBehavior />
-                        </i:Interaction.Behaviors>-->
+                        </i:Interaction.Behaviors>
                     </ListBox>
                 </Grid>
             </Expander>    

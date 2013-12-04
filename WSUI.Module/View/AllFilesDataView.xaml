@@ -33,23 +33,22 @@
     </UserControl.Resources>
     <DockPanel LastChildFill="True" >
 
-        <ListBox x:Name="listBox" 
+        <listBox:WSUIListBox x:Name="listBox" Style="{StaticResource SimpleListBoxStyle}"
+                             ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
                 BorderBrush="Transparent"
                 Background="Transparent"                             
                  ItemsSource="{Binding Path=DataSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                  attch:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                 SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  attch:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
                  ItemTemplateSelector="{StaticResource templateSelector}"
                  ContextMenu="{StaticResource ResourceKey=contextMenu}"
                  IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
                  ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
                  service:DoubleClickBehabior.DoubleClickHandler="{Binding DoubleClickCommand}"
-                 IsSynchronizedWithCurrentItem="True"
                  >
             <!--<i:Interaction.Behaviors>
                 <behaviors:MainListBoxBehavior></behaviors:MainListBoxBehavior>
             </i:Interaction.Behaviors>-->
-        </ListBox>
+        </listBox:WSUIListBox>
     </DockPanel>
 </UserControl>

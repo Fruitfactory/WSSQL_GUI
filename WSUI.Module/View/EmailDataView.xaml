@@ -7,8 +7,9 @@
              xmlns:service="clr-namespace:WSUI.Module.Service"
              xmlns:ctrl="clr-namespace:WSUI.Infrastructure.Controls;assembly=WSUI.Infrastructure"
              x:Name="this"
-             xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure" 
-             >
+             xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
+             xmlns:listBox="clr-namespace:WSUI.Infrastructure.Controls.ListBox;assembly=WSUI.Infrastructure"
+             xmlns:attachedProperty="clr-namespace:WSUI.Infrastructure.Helpers.AttachedProperty;assembly=WSUI.Infrastructure">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -43,13 +44,19 @@
     
     <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
 
-        <ListBox x:Name="listBox" ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
+        <listBox:WSUIListBox x:Name="listBox" 
+                             Style="{StaticResource SimpleListBoxStyle}"
+                             ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
+                            BorderBrush="Transparent"
+                            Background="Transparent"            
+                             ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
                       ItemTemplateSelector="{StaticResource templateSelector}"
-                      SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                      attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
                       ContextMenu="{StaticResource ResourceKey=contextMenu}"
                       ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
                  service:DoubleClickBehabior.DoubleClickHandler="{Binding DoubleClickCommand}"
                       >
-        </ListBox>
+        </listBox:WSUIListBox>
     </Grid>
 </UserControl>
