@@ -8,7 +8,7 @@
     <AssemblyOriginatorKeyFile>WSUIModule.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trial|AnyCPU'">
-    <OutputPath>bin\Trial\</OutputPath>
+    <OutputPath>..\Routput\</OutputPath>
     <DefineConstants>TRACE;TRIAL</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>

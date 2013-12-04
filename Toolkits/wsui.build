@@ -2,7 +2,7 @@
 <project name="WSUI">
   
   <property name="project.name" value="WSOutlookPlugin" />
-  <property name="project.build.type" value="Release" unless="${property::exists('project.build.type')}"/>
+  <property name="project.build.type" value="Trial" unless="${property::exists('project.build.type')}"/>
   
   <property name="solution" value="WSSQLGUI.sln" />
   <property name="outlookplugin.project" value="WSUI.OutlookPlugin.csproj" />

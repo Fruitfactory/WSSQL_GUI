@@ -17,15 +17,16 @@
     <SuppressSpecificWarnings>1076</SuppressSpecificWarnings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <OutputPath>H:\Visual\WORK\WSUI\solution\ROutput\</OutputPath>
+    <OutputPath>h:\Visual\WORK\WSUI\solution\ROutput\</OutputPath>
     <DefineConstants>ADX_PATH=C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\;</DefineConstants>
     <SuppressSpecificWarnings>1076</SuppressSpecificWarnings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Trial|x86' ">
     <DefineConstants>ADX_PATH=C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\;TRIAL=true;</DefineConstants>
     <SuppressSpecificWarnings>1076</SuppressSpecificWarnings>
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <OutputPath>h:\Visual\WORK\WSUI\solution\ROutput\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Trial|AnyCPU' ">
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>

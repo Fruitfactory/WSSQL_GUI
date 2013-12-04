@@ -395,8 +395,10 @@ namespace WSUI.CA
 
         #endregion
 
-        #region [activate CA]
 
+
+        #region [activate CA]
+#if TRIAL
         private const string ActivateFilesFolder = "ActivatePlugin";
         private const string TurboActivateExeKey = "Turbo_Activate_exe";
         private const string TurboActivateDllKey = "Turbo_Activate_dll";
@@ -411,6 +413,8 @@ namespace WSUI.CA
 
         private const string QueryTemplate = "SELECT Data FROM Binary WHERE Name = '{0}' ";
         private const int SizeCopy = 1024 * 50;
+
+
 
         [CustomAction]
         public static ActionResult ActivatePlugin(Session session)
@@ -435,6 +439,7 @@ namespace WSUI.CA
                 return ActionResult.Failure;
             }
         }
+
 
         private static void ExtractFiles(Session session, string path)
         {
@@ -581,7 +586,7 @@ namespace WSUI.CA
             }
         }
 
-
+#endif
         #endregion
 
         #region [deactivate CA]
