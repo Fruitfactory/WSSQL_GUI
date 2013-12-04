@@ -166,3 +166,13 @@ pip-log.txt
 /WSSQLGUI.suo
 /WSSQLGUI.v11.suo
 /ClickTwice
+/WSADXPublisher/bin
+/WSGen/bin
+/WSPreview/bin
+/WSUI/bin
+/WSUI.CA/bin
+/WSUI.Control/bin
+/WSUI.Core/bin
+/WSUI.Infrastructure/bin
+/WSUI.Module/bin
+/WSUI.Unistall/bin
