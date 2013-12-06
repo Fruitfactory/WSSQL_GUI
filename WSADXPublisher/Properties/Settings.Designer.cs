@@ -12,7 +12,7 @@ namespace WSADXPublisher.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,17 +25,7 @@ namespace WSADXPublisher.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\WSUI\\solution\\ROutput\\WSUI.OutlookPluginSetup.m" +
-            "si")]
-        public string installerFile {
-            get {
-                return ((string)(this["installerFile"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\WSUI\\solution\\Clicktwice")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\WSUI\\solution\\Clicktwice\\full")]
         public string publishingLocation {
             get {
                 return ((string)(this["publishingLocation"]));
@@ -44,7 +34,7 @@ namespace WSADXPublisher.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/full")]
         public string installationUrl {
             get {
                 return ((string)(this["installationUrl"]));
@@ -90,15 +80,6 @@ namespace WSADXPublisher.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool showDownloaderWindow {
-            get {
-                return ((bool)(this["showDownloaderWindow"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("C:\\Program Files (x86)\\Add-in Express\\Add-in Express for .NET\\Bin\\")]
         public string AddInExpressBinFolderPath {
             get {
@@ -112,15 +93,6 @@ namespace WSADXPublisher.Properties {
         public string ADXPublisherConfigFilename {
             get {
                 return ((string)(this["ADXPublisherConfigFilename"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("wsui.outlookplugin.exe")]
-        public string downloaderFileName {
-            get {
-                return ((string)(this["downloaderFileName"]));
             }
         }
         
@@ -148,6 +120,51 @@ namespace WSADXPublisher.Properties {
         public bool showRunningApplicationsWarning {
             get {
                 return ((bool)(this["showRunningApplicationsWarning"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\WSUI\\solution\\ROutput\\OutlookFinderSetup.msi")]
+        public string installerFile {
+            get {
+                return ((string)(this["installerFile"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool showDownloaderWindow {
+            get {
+                return ((bool)(this["showDownloaderWindow"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("outlookfinder.exe")]
+        public string downloaderFileName {
+            get {
+                return ((string)(this["downloaderFileName"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\WSUI\\solution\\Clicktwice\\trial")]
+        public string publishingLocationTrial {
+            get {
+                return ((string)(this["publishingLocationTrial"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/trial")]
+        public string installationUrlTrial {
+            get {
+                return ((string)(this["installationUrlTrial"]));
             }
         }
     }

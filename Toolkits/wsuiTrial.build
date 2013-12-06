@@ -2,7 +2,7 @@
 <project name="WSUI">
   
   <property name="project.name" value="WSOutlookPlugin" />
-  <property name="project.build.type" value="Release" unless="${property::exists('project.build.type')}"/>
+  <property name="project.build.type" value="Trial" unless="${property::exists('project.build.type')}"/>
   
   <property name="solution" value="WSSQLGUI.sln" />
   <property name="outlookplugin.project" value="WSUI.OutlookPlugin.csproj" />
@@ -41,7 +41,7 @@
   <!-- set up settings for creating clicktwice installer -->
   <target name="setSettingsADX" depends="compilesolution">
     <echo message="Set publishing settings..." />
-    <exec program="wsadxpublisher.exe" basedir="${build.tools.dir}" commandline='/set' workingdir="." />
+    <exec program="wsadxpublisher.exe" basedir="${build.tools.dir}" commandline='/set /trial' workingdir="." />
   </target>  
   <!-- make clicktwice installer, generate version_file.xml and copy fo Clicktwice folder -->
   <target name="publishClickTwice" depends="setSettingsADX">
@@ -56,7 +56,7 @@
   
   <!-- copy ready files to folder pages\downloads\clicktwice-->
   <target name="copyFiles" depends="clearSettingsADX">
-    <exec program="copy.bat" verbose="true">
+    <exec program="copyTrial.bat" verbose="true">
       
     </exec>
   </target>

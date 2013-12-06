@@ -148,7 +148,9 @@ namespace WSUI.Module.ViewModel
             ActivateStatus = TurboLimeActivate.Instance.State;
             switch (ActivateStatus)
             {
+#if !TRIAL
                 case ActivationState.Trial:
+#endif
                 case ActivationState.TrialEnded:
                 case ActivationState.NonActivated:
                     TurboLimeActivate.Instance.Activate(UpdatedActivatedStatus);

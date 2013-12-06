@@ -2,14 +2,11 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WSADXPublisher.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="installerFile" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\Vincent\Documents\GitHub\WSUI\solution\ROutput\WSUI.OutlookPluginSetup.msi</Value>
-    </Setting>
     <Setting Name="publishingLocation" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\Vincent\Documents\GitHub\WSUI\solution\Clicktwice</Value>
+      <Value Profile="(Default)">C:\Users\Vincent\Documents\GitHub\WSUI\solution\Clicktwice\full</Value>
     </Setting>
     <Setting Name="installationUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/</Value>
+      <Value Profile="(Default)">http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/full</Value>
     </Setting>
     <Setting Name="certificateFile" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\Users\Vincent\Documents\GitHub\WSUI\solution\WSUI.OutlookPlugin\wsuiclicktwice.pfx</Value>
@@ -23,17 +20,11 @@
     <Setting Name="quietModeDuringUninstall" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="showDownloaderWindow" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="AddInExpressBinFolderPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\Bin\</Value>
     </Setting>
     <Setting Name="ADXPublisherConfigFilename" Type="System.String" Scope="Application">
       <Value Profile="(Default)">adxpublisher.exe.config</Value>
-    </Setting>
-    <Setting Name="downloaderFileName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">wsui.outlookplugin.exe</Value>
     </Setting>
     <Setting Name="targetFrameworkVersion" Type="System.String" Scope="Application">
       <Value Profile="(Default)">v4.0.30319</Value>
@@ -43,6 +34,21 @@
     </Setting>
     <Setting Name="showRunningApplicationsWarning" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="installerFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Vincent\Documents\GitHub\WSUI\solution\ROutput\OutlookFinderSetup.msi</Value>
+    </Setting>
+    <Setting Name="showDownloaderWindow" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="downloaderFileName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">outlookfinder.exe</Value>
+    </Setting>
+    <Setting Name="publishingLocationTrial" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Vincent\Documents\GitHub\WSUI\solution\Clicktwice\trial</Value>
+    </Setting>
+    <Setting Name="installationUrlTrial" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/trial</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -398,7 +398,7 @@ namespace WSUI.CA
 
 
         #region [activate CA]
-#if TRIAL
+#if !TRIAL
         private const string ActivateFilesFolder = "ActivatePlugin";
         private const string TurboActivateExeKey = "Turbo_Activate_exe";
         private const string TurboActivateDllKey = "Turbo_Activate_dll";
