@@ -176,3 +176,4 @@ pip-log.txt
 /WSUI.Infrastructure/bin
 /WSUI.Module/bin
 /WSUI.Unistall/bin
+/WSUI.Site/nbproject/private/
