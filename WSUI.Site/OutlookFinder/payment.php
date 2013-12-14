@@ -82,6 +82,22 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
 <head> 
 	<title>Buy <?=$AppName?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link href="css/metro-bootstrap.css" rel="stylesheet">
+    <link href="css/metro-bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/docs.css" rel="stylesheet">
+    <link href="js/prettify/prettify.css" rel="stylesheet">
+
+    <!-- Load JavaScript Libraries -->
+    <script src="js/jquery/jquery.min.js"></script>
+    <script src="js/jquery/jquery.widget.min.js"></script>
+    <script src="js/jquery/jquery.mousewheel.js"></script>
+    <script src="js/prettify/prettify.js"></script>
+
+    <!-- Metro UI CSS JavaScript plugins -->
+    <script src="js/metro/metro-loader.js"></script>
+    <title>Outlook Finder Plugin</title>
+
 <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.2.min.js"></script>
 <script type="text/javascript"><!--
 function calcTot(dollars, cents, quantity)
@@ -283,7 +299,7 @@ h3#su2{background-position:-91px -111px}
 h3#su3{background-position:-91px -187px}
 -->
 </style></head>
-<body><div class="content">
+<body class="metro"><div class="content">
 	<h1>Buy <?=$AppName?></h1>
 	<p><?= $AppName ?> costs <strong><?=$CurrencySign?><?=$single_price?></strong> per license. Your licenses will be e-mailed to you immediately after your order is processed.</p>
 

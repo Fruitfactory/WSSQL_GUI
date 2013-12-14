@@ -8,12 +8,12 @@ if (sizeof($_POST))
 	require('LimeLM.php');
 
 	//TODO: set your API key found in http://wyday.com/limelm/settings/
-	LimeLM::SetAPIKey('PASTE THE API KEY HERE');
+	LimeLM::SetAPIKey('1m115715277fb67cc5a51.73953699');
 
 	//TODO: set the version id to generate & find keys for
 	// the version id is found in the url. For example http://wyday.com/limelm/version/100/
 	// the version id is 100.
-	$version_id = 'PASTE THE VERSION ID';
+	$version_id = '1432';
 
 	$submitting = true;
 

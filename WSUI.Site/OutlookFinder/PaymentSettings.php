@@ -21,14 +21,14 @@ $debug_log = dirname(__FILE__).'/payment_debug.log';
 // If you set a payment setting to true then you'll also
 // have to configure the payment settings for that
 // particular payment method below.
-$UseAuthorizeNetCC = true;
-$UseAuthorizeNetBank = true;
+$UseAuthorizeNetCC = false;
+$UseAuthorizeNetBank = false;
 $UseMoneybookers = true;
 $UsePayPal = true;
 
 
 // dollars, cents
-$AppPrice = array(69, 99);
+$AppPrice = array(5, 00);
 $Currency = 'USD';
 
 // The currency symbol that the end-user will see.
@@ -42,26 +42,26 @@ $Currency = 'USD';
 // etc.
 $CurrencySign = '$';
 
-$CompanyName = 'YourCompany';
-$AppName = 'YourApp';
+$CompanyName = 'FruitFactory';
+$AppName = 'OutlookFinder';
 
 // api key found in http://wyday.com/limelm/settings/
-$LimeLM_ApiKey = 'PASTE THE API KEY HERE';
+$LimeLM_ApiKey = '1m115715277fb67cc5a51.73953699';
 
 // the version id is found in the url.
 // For example http://wyday.com/limelm/version/100/   the version id is '100'.
-$LimeLM_VersionID = 'PASTE THE VERSION ID';
+$LimeLM_VersionID = '1432';
 
 // URL of the "paychecker.php" script.
 // This is where Moneybookers and PayPal orders are confirmed and processed.
 // If you're not using Moneybookers or PayPal then you don't have to set this.
-$CheckScript = 'http://example.com/buy/paychecker.php';
+$CheckScript = 'http://127.0.0.1:35585/paychecker.php';//'http://outlookfinder.com/paychecker.php';//
 
 // Where the user can buy your products
-$BuyPage = 'http://example.com/buy/payment.php';
+$BuyPage = 'http://127.0.0.1:35585/payment.php'; //'http://outlookfinder.com/payment.php';//
 
 // Thank you page (once payment is made, user is sent to this page)
-$ThankYouPage = 'http://example.com/buy/pay-thankyou.php';
+$ThankYouPage =  'http://127.0.0.1:35585/pay-thankyou.php';//'http://outlookfinder.com/pay-thankyou.php';//
 
 // The logo to display on the PayPal / Moneybookers checkout
 // this site must be HTTPS or it won't display.
@@ -88,7 +88,7 @@ $AuthNetTest = true;
 $PayPalSandbox = true;
 
 // Paypal Email
-$PayPalEmail = 'your@email.com';
+$PayPalEmail = 'yariki@i.ua';
 
 
 

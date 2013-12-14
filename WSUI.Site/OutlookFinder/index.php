@@ -39,7 +39,7 @@
             <div class="row">
                 <div class="span4 bg-red">
                     <a class="span4 padding20 subheader text-center fg-white introduce_r downloadlink"
-                       href="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/trial/1033/1.0.0/outlookfinder.exe">Trial version
+                       href="http://outlookfinder.com/downloads/clicktwice/trial/1033/1.0.0/outlookfinder.exe">Trial version
                        <span class="icon-download-2"></span>
                     </a>
                 </div>
