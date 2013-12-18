@@ -15,6 +15,7 @@
     <script src="js/jquery/jquery.widget.min.js"></script>
     <script src="js/jquery/jquery.mousewheel.js"></script>
     <script src="js/prettify/prettify.js"></script>
+	<script src="js/docs.js"></script>
 
     <!-- Metro UI CSS JavaScript plugins -->
     <script src="js/metro/metro-loader.js"></script>
@@ -28,11 +29,12 @@
 
         <div class="grid container">
             <div class="row">
-                <div class="bg-white">
+               <div class="bg-white">
                     <div class="padding20 introduce bg-cyan">
                         <h1 class="ntm text-center fg-white">Outlook Finder</h1>
                     </div>
                 </div>
+                
 
             </div>
 

@@ -55,19 +55,19 @@ $LimeLM_VersionID = '1432';
 // URL of the "paychecker.php" script.
 // This is where Moneybookers and PayPal orders are confirmed and processed.
 // If you're not using Moneybookers or PayPal then you don't have to set this.
-$CheckScript = 'http://127.0.0.1:35585/paychecker.php';//'http://outlookfinder.com/paychecker.php';//
+$CheckScript = 'http://outlookfinder.com/paychecker.php';//'http://127.0.0.1:35585/paychecker.php';//
 
 // Where the user can buy your products
-$BuyPage = 'http://127.0.0.1:35585/payment.php'; //'http://outlookfinder.com/payment.php';//
+$BuyPage = 'http://outlookfinder.com/payment.php';//'http://127.0.0.1:35585/payment.php'; //
 
 // Thank you page (once payment is made, user is sent to this page)
-$ThankYouPage =  'http://127.0.0.1:35585/pay-thankyou.php';//'http://outlookfinder.com/pay-thankyou.php';//
+$ThankYouPage =  'http://outlookfinder.com/pay-thankyou.php';//'http://127.0.0.1:35585/pay-thankyou.php';//
 
 // The logo to display on the PayPal / Moneybookers checkout
 // this site must be HTTPS or it won't display.
 // Maximum size (PayPal): 150px (width) by 50px (height)
 // Maximum size (Moneybookers): 200px (width) by 50px (height)
-$YourLogo; // = 'https://example.com/buy/toplogo.png';
+$YourLogo = 'https://outlookfinder.com/images/logo_W_120.png';
 
 
 

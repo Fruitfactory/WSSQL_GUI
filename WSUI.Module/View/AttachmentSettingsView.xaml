@@ -8,24 +8,20 @@
              mc:Ignorable="d" 
              >
     <Grid Margin="0 5 0 5"  Focusable="False">
-        <TabControl Padding="0">
-            <TabItem Header="Search">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
-                        Controls:TextboxHelper.Watermark="Enter Search Criteria"
-                        Controls:TextboxHelper.ClearTextButton="True"
-                        Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
-                         Grid.Column="0" MinHeight="32"
-                             IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Command="{Binding Path=SearchCommand}" Content="Search" 
-                        Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" MinHeight="32"
-                            IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
-                </Grid>
-            </TabItem>
-        </TabControl>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
+                Controls:TextboxHelper.Watermark="Enter Search Criteria"
+                Controls:TextboxHelper.ClearTextButton="True"
+                Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
+                    Grid.Column="0" MinHeight="32"
+                        IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Command="{Binding Path=SearchCommand}" Content="Search" 
+                Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" MinHeight="32"
+                    IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
     </Grid>
 </UserControl>

@@ -1,3 +1,37 @@
+<?php
+$count = 0;
+$keys = array();
+if(sizeof($_POST))
+{
+	require("PaymentSettings.php");
+	require("LimeLM.php");
+	
+	global $LimeLM_VersionID, $LimeLM_ApiKey;
+	
+	LimeLM::SetAPIKey($LimeLM_ApiKey);
+	if(!empty($_POST["payer_email"]))	
+	{
+		try
+		{
+			$xml = new SimpleXMLElement(LimeLM::FindPKey($LimeLM_VersionID,$_POST["payer_email"]));
+			if($xml["stat"] == "ok")
+			{
+				foreach($xml->pkeys->pkey as $pkey)
+				{
+					array_push($keys,$pkey["key"]);
+				}	
+				$count = $xml->pkeys["total"];			
+			}
+		}
+		catch (Exception $e)
+		{	
+		}
+	}
+	
+}	
+
+?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> 
 <head> 
@@ -11,48 +45,33 @@
     <script src="js/jquery/jquery.widget.min.js"></script>
     <script src="js/jquery/jquery.mousewheel.js"></script>
     <script src="js/prettify/prettify.js"></script>
-
+	<script src="js/docs.js"></script>
     <!-- Metro UI CSS JavaScript plugins -->
     <script src="js/metro/metro-loader.js"></script>
 
 	<title>Thank you</title>
 </head>
 <body class="metro">
+	<header class="bg-dark" data-load="header.html"></header>
+	<div class="page">
+
+	<div class="grid container">
+
+
+	<div class="row">
+                <div class="bg-white">
+                    <div class="padding20 introduce bg-cyan">
+                        <h1 class="ntm text-center fg-white">Outlook Finder</h1>
+                    </div>
+                </div>
+
+            </div>
+	
+	<div class="row">
+
 	<h1>Thank you</h1>
 	
-<?php
-$count = 0;
-$keys = array();
-	if(sizeof($_POST))
-	{
-	require("PaymentSettings.php");
-		require("LimeLM.php");
-		
-		global $LimeLM_VersionID, $LimeLM_ApiKey;
-		
-		LimeLM::SetAPIKey($LimeLM_ApiKey);
-		if(!empty($_POST["payer_email"]))	
-		{
-			try
-			{
-				$xml = new SimpleXMLElement(LimeLM::FindPKey($LimeLM_VersionID,$_POST["payer_email"]));
-				if($xml["stat"] == "ok")
-				{
-					foreach($xml->pkeys->pkey as $pkey)
-					{
-						array_push($keys,$pkey["key"]);
-					}	
-					$count = $xml->pkeys["total"];			
-				}
-			}
-			catch (Exception $e)
-			{	
-			}
-		}
-		
-	}	
-		
-?>
+
 <?php  
 if($count > 0)
 {
@@ -71,6 +90,12 @@ yours product key</p>
 		?>
 </table>		
 <?php }?>
+	<hr/>
 	<p>Also your product key will be e-mailed to you shortly. <strong>If you don't recieve your product key in the next 10 minutes check your spam folder.</strong></p>
 	
+</div>	
+	
+</div>	
+	
+</div>	
 </body></html>

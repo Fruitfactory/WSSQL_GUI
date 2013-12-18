@@ -67,3 +67,8 @@ footer {
   width: 100%;
   height: 25px;
 }
+
+.metro .span05,
+.metro .size05 {
+  width: 30px !important;
+}

@@ -8,38 +8,20 @@
     <Grid Margin="0 5 0 5"  Focusable="False">
 
 
-        <TabControl Padding="0">
-            <TabItem Header="Search" >
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                        Controls:TextboxHelper.Watermark="Enter Search Criteria"
-                        Controls:TextboxHelper.ClearTextButton="True"
-                             Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
-                        Grid.Column="0" MinHeight="32"
-                             IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
-                        <Button Command="{Binding Path=SearchCommand}" Content="Search" HorizontalAlignment="Stretch"
-                            Grid.Column="1" MinHeight="32"
-                                IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Additional" Visibility="Collapsed">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.15*"/>
-                        <ColumnDefinition Width="0.25*"/>
-                        <ColumnDefinition Width="0.50*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Text="Folder:" Grid.Column="0" Margin="7 7 0 7"/>
-                    <ComboBox Grid.Column="1"  Margin="7 7 0 7" ItemsSource="{Binding FolderList,Mode=OneTime}" 
-                              SelectedValue="{Binding Path=Folder,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/><!--,IsAsync=True-->
-                    
-                </Grid>
-            </TabItem>
-        </TabControl>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                Controls:TextboxHelper.Watermark="Enter Search Criteria"
+                Controls:TextboxHelper.ClearTextButton="True"
+                        Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
+                Grid.Column="0" MinHeight="32"
+                        IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Command="{Binding Path=SearchCommand}" Content="Search" HorizontalAlignment="Stretch"
+                    Grid.Column="1" MinHeight="32"
+                        IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
     </Grid>
 </UserControl>
