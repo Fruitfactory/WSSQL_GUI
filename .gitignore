@@ -178,3 +178,8 @@ pip-log.txt
 /WSUI.Unistall/bin
 /WSUI.Site/nbproject/private/
 /WSUI.Site/OutlookFinder/nbproject/private/
+/Toolkits/wsgen.vshost.exe
+/Toolkits/wsgen.vshost.exe.config
+/Toolkits/wsgen.vshost.exe.manifest
+/UpgradeLog.htm
+/WSUI.Site/OutlookFinder/OutlookFinder.puo
