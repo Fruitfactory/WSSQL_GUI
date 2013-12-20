@@ -23,7 +23,7 @@ namespace WSUIOutlookPlugin
                 // recommendation from Add-In Express team
             {
                 InitializeComponent();
-                HookManager.KeyDown += HookManagerOnKeyDown;
+                //HookManager.KeyDown += HookManagerOnKeyDown;
                 WSSqlLogger.Instance.LogInfo("WSUIForm [ctor]");
                 ADXAfterFormHide += OnAdxAfterFormHide;
             }
@@ -42,6 +42,12 @@ namespace WSUIOutlookPlugin
             {
                 _wsuiBootStraper.PassAction(new WSAction(WSActionType.Copy, null));
             }
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            SetupKeyboardHook();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -67,7 +73,27 @@ namespace WSUIOutlookPlugin
         {
             wpfHost.Child = null;
             WSUIAddinModule.CurrentInstance.IsMainUIVisible = false;
+            SetupKeyboardHook(false);
+
         }
+
+        private void SetupKeyboardHook(bool isSetup = true)
+        {
+            if (_isDebugMode)
+                return;
+            if (isSetup)
+            {
+                HookManager.KeyDown += HookManagerOnKeyDown;
+                WSSqlLogger.Instance.LogInfo("KeyboardHooks were subsribed...");
+            }
+
+            else
+            {
+                HookManager.KeyDown -= HookManagerOnKeyDown;
+                WSSqlLogger.Instance.LogInfo("KeyboardHooks were unsubsribed...");
+            }
+        }
+
 
     }
 }

@@ -1,9 +1,13 @@
 <?php
+
+require("PaymentSettings.php");
+
 $count = 0;
 $keys = array();
+
 if(sizeof($_POST))
 {
-	require("PaymentSettings.php");
+	
 	require("LimeLM.php");
 	
 	global $LimeLM_VersionID, $LimeLM_ApiKey;
@@ -29,6 +33,9 @@ if(sizeof($_POST))
 	}
 	
 }	
+
+
+$path_down = getDownloadUrlForLastVersion();
 
 ?>
 
@@ -92,6 +99,7 @@ yours product key</p>
 <?php }?>
 	<hr/>
 	<p>Also your product key will be e-mailed to you shortly. <strong>If you don't recieve your product key in the next 10 minutes check your spam folder.</strong></p>
+	<p><a href="<?= $path_down ?>">Download</a> last version</p>
 	
 </div>	
 	

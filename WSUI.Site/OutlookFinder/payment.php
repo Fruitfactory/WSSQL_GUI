@@ -9,6 +9,7 @@ if (($UseAuthorizeNetCC || $UseAuthorizeNetBank) && !$AuthNetTest && !(isset($_S
 	exit;
 }
 
+
 if ($UseAuthorizeNetCC || $UseAuthorizeNetBank)
 {
 	require 'CCProcessor.php';
@@ -633,4 +634,10 @@ h3#su3{background-position:-91px -187px}
 		echo '<p><strong><font color="#FF0000">Debugging turned on</font> &mdash; All actions will be logged to log file.</strong></p>';
 	?>
 
-</div></div></body></html>
+</div></div> 
+
+
+
+
+
+</body></html>

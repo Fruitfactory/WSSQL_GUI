@@ -1,3 +1,10 @@
+<?php 
+require("PaymentSettings.php");
+$path_trial = getDownloadUrlforTrial();
+
+?>
+
+
 <!DOCTYPE html>
 <html>
 
@@ -41,7 +48,7 @@
             <div class="row">
                 <div class="span4 bg-red">
                     <a class="span4 padding20 subheader text-center fg-white introduce_r downloadlink"
-                       href="http://outlookfinder.com/downloads/clicktwice/trial/1033/1.0.0/outlookfinder.exe">Trial version
+                       href="<?= $path_trial ?>">Trial version
                        <span class="icon-download-2"></span>
                     </a>
                 </div>

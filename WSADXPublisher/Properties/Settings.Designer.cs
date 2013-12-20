@@ -12,7 +12,7 @@ namespace WSADXPublisher.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -34,7 +34,7 @@ namespace WSADXPublisher.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/full")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://outlookfinder.com/downloads/clicktwice/full")]
         public string installationUrl {
             get {
                 return ((string)(this["installationUrl"]));
@@ -161,7 +161,7 @@ namespace WSADXPublisher.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/trial")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://outlookfinder.com/downloads/clicktwice/trial")]
         public string installationUrlTrial {
             get {
                 return ((string)(this["installationUrlTrial"]));

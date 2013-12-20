@@ -12,6 +12,7 @@ $debug = true;
 $debug_log = dirname(__FILE__).'/payment_debug.log';
 
 
+
 // Set any of the following 4 boolean values to either
 // true or false based on whether you're using that
 // particular payment method. "payment.php" automatically
@@ -102,6 +103,13 @@ $MBEmail = 'your@email.com';
 // on the "Merchant tools" page. Then set it here.
 $SecretWord = 'PASTE YOUR SECRET WORD HERE';
 
+$versions_xml  = dirname(__FILE__).'/downloads/clicktwice/full/version_info.xml';
+$path_first = 'http://outlookfinder.com/downloads/clicktwice/full/1033/';
+$path_second = '/outlookfinder.exe';
+
+$versions_xml_trial  = dirname(__FILE__).'/downloads/clicktwice/trial/version_info.xml';
+$path_first_trial = 'http://outlookfinder.com/downloads/clicktwice/trial/1033/';
+
 
 
 
@@ -124,12 +132,43 @@ function debug_log($message, $success, $end = false)
 	fclose($fp);
 }
 
+function getDownloadUrl($verxml, $p_f, $p_s){
+	if(!file_exists($verxml))
+	{
+		$mes = 'Versions file not found: '.$verxml;
+		debug_log($mes,false);
+		return '';
+	}
+	
+	$xml = simplexml_load_file($verxml);
+	$count = count($xml->product->version);
+	if($count > 0){
+		$version = $xml->product->version[count-1]['name'];
+		debug_log('return path',true);
+		return $p_f.$version.$p_s;  	
+	}
+	debug_log('Versions in empty',false);
+	return '';
+	
+}
+
+function getDownloadUrlForLastVersion(){
+	global $versions_xml, $path_first, $path_second;
+	return getDownloadUrl($versions_xml,$path_first,$path_second);		
+}
+
+function getDownloadUrlforTrial(){
+	global $versions_xml_trial, $path_first_trial, $path_second;
+	return getDownloadUrl($versions_xml_trial,$path_first_trial,$path_second);	
+}
+
+
 function SendPKeys($quantity, $email, $first, $last)
 {
 	//Note: we put LimeLM in this directory. Change it as needed.
 	require('LimeLM.php');
 
-	global $LimeLM_VersionID, $LimeLM_ApiKey;
+	global $LimeLM_VersionID, $LimeLM_ApiKey,$CompanyName,$AppName;
 
 	$errors = false;
 
@@ -177,6 +216,8 @@ function SendPKeys($quantity, $email, $first, $last)
 		// append the last name
 		$customerName .= ' '.$last;
 
+	$path_to_download = getDownloadUrlForLastVersion();
+
 	$emailBody = $customerName.',
 
     Thank you for your order. Your product key is:
@@ -185,7 +226,7 @@ function SendPKeys($quantity, $email, $first, $last)
 
 
 This product key is licensed for '.$quantity.( $quantity > 1 ? ' users' : ' user' ).' of '.$AppName.'.
-
+Here is the url for donwloading last version:'.$path_to_download.' 
 Thank you,
 
 '.$CompanyName;
@@ -217,4 +258,8 @@ Thank you,
 
 	LimeLM::CleanUp();
 }
+
+
+
+
 ?>
