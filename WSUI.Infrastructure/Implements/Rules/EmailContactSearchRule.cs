@@ -15,7 +15,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         private const string WhereTemplate = " WHERE CONTAINS(System.Kind,'email') AND ";
 
         private const string NamesTemplate =
-            "(CONTAINS(System.Message.FromAddress,'\"{0}\"',1033) OR CONTAINS(System.Message.CcAddress,'\"{0}\"',1033) OR CONTAINS(System.Message.ToAddress,'\"{0}\"',1033) )";
+            "(CONTAINS(System.Message.FromAddress,'\"{0}*\"') OR CONTAINS(System.Message.CcAddress,'\"{0}*\"') OR CONTAINS(System.Message.ToAddress,'\"{0}*\"') OR CONTAINS(System.Search.Contents,'\"{0}*\"') )";
         private const string CollapseTemplate = "( {0} )";
         private const string DateTemplate = " AND System.Message.DateReceived < '{0}' ORDER BY System.Message.DateReceived DESC";
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
@@ -93,11 +93,14 @@ namespace WSUI.Infrastructure.Implements.Rules
                 result.Add(item);
                 WSSqlLogger.Instance.LogInfo("Item: {0}", item.ToString());
             }
+            if (Result.Any())
+            {
+                LastDate = Result.Last().DateReceived;
+            }
             Result.Clear();
             if (result.Count > 0)
             {
                 Result = result;
-                LastDate = Result.Last().DateReceived;
             }
         }
 
@@ -109,19 +112,14 @@ namespace WSUI.Infrastructure.Implements.Rules
             var arr = searchCriteria.Trim().Split(' ');
             if (arr != null && arr.Length > 0)
             {
-                var present = true;
-                foreach (var s in arr)
+                foreach (var email in from)
                 {
-                    fromAddress =
-                    from.FirstOrDefault(
-                        str =>
-                        str.IndexOf(s, StringComparison.CurrentCultureIgnoreCase) > -1 &&
-                        Regex.IsMatch(str, EmailPattern, RegexOptions.IgnoreCase));
-                    if (string.IsNullOrEmpty(fromAddress))
-                        present = false;
+                    if (arr.All(str => email.IndexOf(str) > -1) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase))
+                    {
+                        fromAddress = email;
+                        break;
+                    }
                 }
-                if (!present)
-                    fromAddress = string.Empty;
             }
             else
                 fromAddress =

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 using System.Windows.Threading;
 using Threads = System.Threading;
-using Tasks = System.Threading.Tasks;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using System.Diagnostics;
 using System.IO;
-using Microsoft.Build.Utilities;
 using Microsoft.Win32;
 
 namespace WSPreview.PreviewHandler.Service.Preview
@@ -141,120 +138,5 @@ namespace WSPreview.PreviewHandler.Service.Preview
 
 
         #endregion
-
-        #region [static public]
-
-        public static bool RegisterHandlers()
-        {
-            string gac = GetPathToGacutil();
-            string reg = GetPathToRegasm();
-
-            if(string.IsNullOrEmpty(gac) || string.IsNullOrEmpty(reg))
-                return false;
-
-            Assembly assembly = Assembly.GetAssembly(typeof(PreviewHandler.PreviewHandlerFramework.PreviewHandler));
-            string arg = string.Format(" -i {0}", assembly.Location);
-            ProcessStartInfo processInfo = new ProcessStartInfo(gac, arg);
-            processInfo.UseShellExecute = false;
-            Process process = Process.Start(processInfo);
-            process.WaitForExit();
-
-            arg = string.Format(" /codebase {0}", assembly.Location);
-            processInfo = new ProcessStartInfo(reg, arg);
-            processInfo.UseShellExecute = false;
-            process = Process.Start(processInfo);
-            process.WaitForExit();
-
-            //var listTypes = assembly.GetTypes().Where(type => type.IsSealed && (type.IsSubclassOf(typeof(WSPreview.PreviewHandler.PreviewHandlerFramework.FileBasedPreviewHandler)) || type.IsSubclassOf(typeof(WSPreview.PreviewHandler.PreviewHandlerFramework.StreamBasedPreviewHandler)))).ToList();
-            //listTypes.ForEach(type => PreviewHandler.PreviewHandlerFramework.PreviewHandler.Register(type));
-
-            return true;
-        }
-
-        
-        
-
-        public static bool UnregisterHandlers()
-        {
-            string gac = GetPathToGacutil();
-            string reg = GetPathToRegasm();
-
-            if (string.IsNullOrEmpty(gac) || string.IsNullOrEmpty(reg))
-                return false;
-
-            Assembly assembly = Assembly.GetAssembly(typeof(PreviewHandler.PreviewHandlerFramework.PreviewHandler));
-            string arg = string.Format(" /unregister {0}", assembly.Location);
-            ProcessStartInfo processInfo = new ProcessStartInfo(reg, arg);
-            processInfo.UseShellExecute = false;
-            Process process = Process.Start(processInfo);
-            process.WaitForExit();
-
-            arg = string.Format(" -u {0}", assembly.Location);
-            processInfo = new ProcessStartInfo(gac, arg);
-            processInfo.UseShellExecute = false;
-            process = Process.Start(processInfo);
-            process.WaitForExit();
-
-            //var listTypes = assembly.GetTypes().Where(type => type.IsSealed && (type.IsSubclassOf(typeof(WSPreview.PreviewHandler.PreviewHandlerFramework.FileBasedPreviewHandler)) || type.IsSubclassOf(typeof(WSPreview.PreviewHandler.PreviewHandlerFramework.StreamBasedPreviewHandler)))).ToList();
-            //listTypes.ForEach(type => PreviewHandler.PreviewHandlerFramework.PreviewHandler.Register(type));
-
-
-            return true;
-        }
-
-        #endregion
-
-        #region private static
-
-        private static string GetPathToRegasm()
-        {
-            string pathTemplate = "{0}\\regasm.exe";
-            string path = string.Format(pathTemplate, ToolLocationHelper.GetPathToDotNetFramework(TargetDotNetFrameworkVersion.VersionLatest));
-            if (File.Exists(path))
-                return path;
-            else
-                return null;
-        }
-
-
-        private static string GetPathToGacutil()
-        {
-            string pathTemplate = "{0}bin\\gacutil.exe";
-            string path = null;
-            RegistryKey winSdk = null;
-            if (Environment.Is64BitOperatingSystem)
-            {
-                winSdk = Registry.LocalMachine.OpenSubKey(HKLMWinSdk64);
-                
-            }
-            else
-            {
-                winSdk = Registry.LocalMachine.OpenSubKey(HKLMWinSdk32);
-            }
-            if (winSdk != null)
-            {
-                string[] sdks = winSdk.GetSubKeyNames();
-                foreach (string sub in sdks)
-                {
-                    RegistryKey k = winSdk.OpenSubKey(sub);
-                    if (k == null) continue;
-                    var folder = k.GetValue(InstallationFolder) as string;
-                    if (folder != null)
-                    {
-                        path = string.Format(pathTemplate, folder);
-                        break;
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(path) || !File.Exists(path))
-                return null;
-            else
-                return path;
-        }
-
-
-
-        #endregion
-
     }
 }

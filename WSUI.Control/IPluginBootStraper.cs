@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Microsoft.Practices.Unity;
 using WSUI.Core.Interfaces;
 
 namespace WSUI.Control
@@ -8,5 +9,6 @@ namespace WSUI.Control
         void Run();
         void PassAction(IWSAction action);
         DependencyObject View { get; }
+        IUnityContainer Container { get; }
     }
 }

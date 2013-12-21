@@ -6,6 +6,8 @@
         Cut,
         Paste,
         Search,
-        ShowContextMenu
+        ShowContextMenu,
+        Show,
+        Hide
     }
 }

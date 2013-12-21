@@ -76,5 +76,6 @@ namespace WSUI.Module.Interface
 
         void Init();
         void FilterData();
+
     }
 }

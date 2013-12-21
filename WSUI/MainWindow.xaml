@@ -25,7 +25,7 @@
     <AdornerDecorator>
         <Grid Margin="7" x:Name="grid">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="50" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -34,7 +34,11 @@
                 <ColumnDefinition Width="2"/>
                 <ColumnDefinition Width="0.5*"/>
             </Grid.ColumnDefinitions>
-            <ContentControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Margin="4"
+            <Image Grid.Row="0" Grid.Column="0" Source="../Images/logo.png" Stretch="Uniform" StretchDirection="Both" RenderOptions.BitmapScalingMode="HighQuality"></Image>
+            
+            
+            
+            <ContentControl Grid.Row="0" Grid.Column="1" Margin="4"
                             cal:RegionManager.RegionName="SearchRegion"/>
             <ContentControl Grid.Row="1" Grid.Column="0" Margin="4 4 0 4"
                             cal:RegionManager.RegionName="StrategyRegion" HorizontalAlignment="Stretch"/>

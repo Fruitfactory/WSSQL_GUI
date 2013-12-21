@@ -24,7 +24,7 @@ namespace WSUI.Infrastructure.Implements.Systems
 
 	    public override void Init()
 	    {
-            AddRule(new GeneralContactRule());
+            AddRule(new GeneralContactRule(200,75));
 	        base.Init();
 	    }
     }//end ContactSearchSystem

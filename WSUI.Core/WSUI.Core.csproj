@@ -1,5 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trial|AnyCPU'">
+    <OutputPath>..\Routput\</OutputPath>
+    <DefineConstants>TRACE;TA_BOTH_DLL</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>..\Routput\WSUI.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,14 +25,14 @@
     <AssemblyName>WSUI.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Output\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TA_BOTH_DLL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -26,9 +40,10 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\Routput\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;TA_BOTH_DLL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -38,7 +53,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\Toolkits\Log4Net\net40-full\log4net.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolkits\Log4Net\net40-client\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\Toolkits\Prism\Microsoft.Practices.Prism.dll</HintPath>
@@ -61,6 +77,8 @@
     <Compile Include="Core\Attributes\BaseWSUIAttribute.cs" />
     <Compile Include="Core\Attributes\FieldAttribute.cs" />
     <Compile Include="Core\BaseSearchData.cs" />
+    <Compile Include="Core\LimeLM\TurboActivate.cs" />
+    <Compile Include="Core\LimeLM\TurboLimeActivate.cs" />
     <Compile Include="Core\Rules\BaseRule.cs" />
     <Compile Include="Core\Rules\IRule.cs" />
     <Compile Include="Core\Rules\QuoteRule.cs" />
@@ -81,6 +99,8 @@
     <Compile Include="Data\EmailSearchObject.cs" />
     <Compile Include="Data\FileSearchObject.cs" />
     <Compile Include="Data\WSAction.cs" />
+    <Compile Include="Enums\ActivationButtons.cs" />
+    <Compile Include="Enums\ActivationState.cs" />
     <Compile Include="Enums\HostType.cs" />
     <Compile Include="Enums\TypeResult.cs" />
     <Compile Include="Enums\TypeSearchItem.cs" />

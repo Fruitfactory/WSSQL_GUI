@@ -3,15 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using WSUI.Core.Logger;
 
 namespace WSUI.Infrastructure.Helpers.Extensions
 {
     public static class UIExtensions
     {
+
+        private const string ParentCoreFieldName = "_parent";
+        private const BindingFlags PrivateFlags = BindingFlags.Instance | BindingFlags.NonPublic;
+
         public static T GetParent<T>(this DependencyObject obj) where T : class
         {
             try
@@ -35,6 +42,43 @@ namespace WSUI.Infrastructure.Helpers.Extensions
             var result = parent.GetType() == type;
             return result ? parent : parent.GetParent(type);
         }
+
+        public static T GetParentCore<T>(this FrameworkElement obj) where T : FrameworkElement 
+        {
+            try
+            {
+                var fi = GetField(ParentCoreFieldName, typeof (FrameworkElement), PrivateFlags);
+                if(fi ==  null)
+                    return default(T);
+                var result = obj.InternalGetParentCore<T>(fi);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            return default(T);
+        }
+
+        private static FieldInfo GetField(string name, Type type, BindingFlags flags)
+        {
+            var fi = type.GetField(name, flags);
+            return fi;
+        }
+
+        private static T InternalGetParentCore<T>(this FrameworkElement obj, FieldInfo fi) where  T: FrameworkElement
+        {
+            var parent = VisualTreeHelper.GetParent(obj) ?? GetFieldValue(obj, fi);
+            if (parent == null) return default(T);
+            var result = parent as T;
+            return result ?? ((FrameworkElement) parent).InternalGetParentCore<T>(fi);
+        }
+
+        private static object GetFieldValue(object obj, FieldInfo fi)
+        {
+            return fi.GetValue(obj);
+        }
+
 
         public static bool IsDisconnected(this DependencyObject obj)
         {
@@ -155,22 +199,30 @@ namespace WSUI.Infrastructure.Helpers.Extensions
 
         public static void OnSelectedChanged(this ListBox listBox, ref int oldIndex)
         {
-            if (oldIndex == -1)
+            try
             {
-                oldIndex = listBox.SelectedIndex;
-                return;
-            }
-            var currentIndex = listBox.SelectedIndex;
-            var listBoxItem = listBox.ItemContainerGenerator.ContainerFromIndex(oldIndex) as ListBoxItem;
-            if (oldIndex != currentIndex && listBoxItem != null)
-            {
-                var childrens = listBoxItem.GetAllVisualChildren().SelectMany(c => c.GetChildren<ListBox>()).OfType<ListBox>();
-                if (childrens.Any())
+                if (oldIndex == -1)
                 {
-                    childrens.ElementAt(0).SelectedIndex = -1;
+                    oldIndex = listBox.SelectedIndex;
+                    return;
                 }
+                var currentIndex = listBox.SelectedIndex;
+                var listBoxItem = listBox.ItemContainerGenerator.ContainerFromIndex(oldIndex) as ListBoxItem;
+                if (oldIndex != currentIndex && listBoxItem != null)
+                {
+                    var childrens = listBoxItem.GetAllVisualChildren().SelectMany(c => c.GetChildren<ListBox>()).OfType<ListBox>();
+                    if (childrens.Any())
+                    {
+                        childrens.ElementAt(0).SelectedIndex = -1;
+                    }
+                }
+                oldIndex = currentIndex;
             }
-            oldIndex = currentIndex;
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+                oldIndex = -1;
+            }
         }
 
     }

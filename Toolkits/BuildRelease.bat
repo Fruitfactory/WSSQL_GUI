@@ -1,0 +1,2 @@
+go clearSettingsADX
+pause

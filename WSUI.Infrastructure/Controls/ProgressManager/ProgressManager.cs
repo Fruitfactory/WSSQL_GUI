@@ -127,7 +127,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                     WSSqlLogger.Instance.LogError(string.Format("{0} - {1}","ShowSplash",ex.Message));
                 }
             }
-            ((Window)_progressForm).Show();
+            ((Window)_progressForm).ShowDialog();
             System.Windows.Threading.Dispatcher.Run();
         }
 

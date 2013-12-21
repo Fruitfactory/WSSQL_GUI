@@ -8,8 +8,16 @@ namespace WSADXPublisher
     class Program
     {
 
+        enum TypeInstaller : byte
+        {
+            Full,
+            Trial
+        }
+
+
         private const string SetArg = "/set";
         private const string ClearArg = "/clear";
+        private const string TrialArg = "/trial";
 
         private const string TempFileNamePattern = "{0}.tmp";
         private const string ClickTwiceSettings = "clickTwice.Settings";
@@ -46,7 +54,8 @@ namespace WSADXPublisher
             switch(args[0].ToLowerInvariant())
             {
                 case SetArg:
-                    SetConfiguration();
+                    TypeInstaller type = GetTypeInstaller(args);
+                    SetConfiguration(type);
                     break;
                 case ClearArg:
                     ClearConfiguration();
@@ -58,8 +67,17 @@ namespace WSADXPublisher
 
         }
 
+        private static TypeInstaller GetTypeInstaller(string[] args)
+        {
+            if (args.Length == 1)
+            {
+                return TypeInstaller.Full;
+            }
+            return args[1].ToLowerInvariant() == TrialArg ? TypeInstaller.Trial : TypeInstaller.Full;
+        }
 
-        static void SetConfiguration()
+
+        static void SetConfiguration(TypeInstaller type)
         {
             if(!CheckSettings())
                 return;
@@ -75,12 +93,12 @@ namespace WSADXPublisher
                 return;
             }
 
-            SetSettings(clickTwiceSet);
+            SetSettings(clickTwiceSet,type);
             doc.Save(Path.Combine(Properties.Settings.Default.AddInExpressBinFolderPath,
                                             Properties.Settings.Default.ADXPublisherConfigFilename));
         }
 
-        static void SetSettings(XElement el)
+        static void SetSettings(XElement el,TypeInstaller type)
         {
             if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == InstallerFile))
             {
@@ -95,7 +113,7 @@ namespace WSADXPublisher
                 XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == PublishingLocation).First();
                 if (val != null)
                 {
-                    val.Attribute(ValueAttribute).Value = Properties.Settings.Default.publishingLocation;
+                    val.Attribute(ValueAttribute).Value = type == TypeInstaller.Full ? Properties.Settings.Default.publishingLocation : Properties.Settings.Default.publishingLocationTrial;
                 }
             }
             if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == InstallationUrl))
@@ -103,7 +121,7 @@ namespace WSADXPublisher
                 XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == InstallationUrl).First();
                 if (val != null)
                 {
-                    val.Attribute(ValueAttribute).Value = Properties.Settings.Default.installationUrl;
+                    val.Attribute(ValueAttribute).Value = type == TypeInstaller.Full ? Properties.Settings.Default.installationUrl : Properties.Settings.Default.installationUrlTrial;
                 }
             }
             if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == CertificateFile))

@@ -2,9 +2,27 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>WSUIInfrastructure.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trial|AnyCPU'">
+    <OutputPath>..\Routput\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>..\Routput\WSUI.Infrastructure.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -40,7 +58,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\Toolkits\Log4Net\net40-full\log4net.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolkits\Log4Net\net40-client\log4net.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro">
       <HintPath>..\Toolkits\MahAppMetro\MahApps.Metro.dll</HintPath>
@@ -57,6 +76,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolkits\MahAppMetro\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -70,12 +93,19 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Attributes\FieldIndexAttribute.cs" />
+    <Compile Include="Behaviors\ChildListBoxBehavior.cs" />
+    <Compile Include="Behaviors\MainListBoxBehavior.cs" />
     <Compile Include="Controls\Application\AppEmpty.cs" />
+    <Compile Include="Controls\BlockControl\BlockControl.xaml.cs">
+      <DependentUpon>BlockControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BlockControl\BlockPopupAdorner.cs" />
     <Compile Include="Controls\BusyControl\BusyIndicator.xaml.cs">
       <DependentUpon>BusyIndicator.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\BusyControl\BusyPopupAdorner.cs" />
     <Compile Include="Controls\BusyControl\IBusyPopupAdorner.cs" />
+    <Compile Include="Controls\Core\BasePopupAdorner.cs" />
     <Compile Include="Controls\HightliteHyperlink.xaml.cs">
       <DependentUpon>HightliteHyperlink.xaml</DependentUpon>
     </Compile>
@@ -91,7 +121,11 @@
     <Compile Include="Controls\ProgressManager\ProgressWindow.xaml.cs">
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ActivationStatusToButtonVisibilityConverter.cs" />
+    <Compile Include="Converters\ActivationStatusToGridVisibilityConverter.cs" />
     <Compile Include="Converters\StringToStringConverter.cs" />
+    <Compile Include="Helpers\AttachedProperty\ListBoxSelectedObjectAttachedProperty.cs" />
+    <Compile Include="Helpers\AttachedProperty\ListBoxShouldSetSelectAttachedProperty.cs" />
     <Compile Include="Helpers\Extensions\UIExtensions.cs" />
     <Compile Include="Implements\Rules\EmailContactSearchRule.cs" />
     <Compile Include="Implements\Rules\GeneralContactRule.cs" />
@@ -142,6 +176,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\BlockControl\BlockControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\BusyControl\BusyIndicator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

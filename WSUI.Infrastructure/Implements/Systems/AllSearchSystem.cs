@@ -6,9 +6,6 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
-
-
 using WSUI.Core.Core.Search;
 using WSUI.Infrastructure.Implements.Rules;
 
@@ -24,7 +21,7 @@ namespace WSUI.Infrastructure.Implements.Systems
 
 	    public override void Init()
 	    {
-            AddRule(new GeneralContactRule(Lock1));
+            AddRule(new GeneralContactRule(75,0,Lock1));
             AddRule(new EmailSubjectSearchRule(Lock1));
             AddRule(new EmailContentSearchRule(Lock1));
             AddRule(new FileFilenameSearchRule(Lock1));

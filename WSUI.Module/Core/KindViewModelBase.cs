@@ -80,6 +80,7 @@ namespace WSUI.Module.Core
             SearchCommand = new DelegateCommand<object>(o => Search(),o => CanSearch());
             OpenCommand = new DelegateCommand<object>(o => OpenFile(), o => CanOpenFile());
             OpenFolderCommand = new DelegateCommand<object>(o => OpenFolder(), o => CanOpenFile());
+            ShowPathCommand = new DelegateCommand(ShowPath,CanOpenFile);
             KeyDownCommand = new DelegateCommand<KeyEventArgs>(KeyDown, o => true);
             DoubleClickCommand = new DelegateCommand<MouseButtonEventArgs>(DoubleClick, o => true);
             Enabled = true;
@@ -260,6 +261,7 @@ namespace WSUI.Module.Core
 
         protected virtual void OnStart()
         {
+            Enabled = false;
             ListData.Clear();
             OnPropertyChanged(() => Enabled);
             FireStart();
@@ -267,6 +269,7 @@ namespace WSUI.Module.Core
 
         protected virtual void OnComplete(bool res)
         {
+            Enabled = true;
             ProcessMainResult();
             OnPropertyChanged(() => DataSource);
             OnPropertyChanged(() => Enabled);
@@ -331,6 +334,14 @@ namespace WSUI.Module.Core
 
         protected virtual void Search()
         {
+            if (!IsShouldSearch())
+            {
+                WSSqlLogger.Instance.LogWarning("Please, activate the 'OutlookFinder'");
+                MessageBoxService.Instance.Show("Warning", "Please, activate the 'OutlookFinder'", MessageBoxButton.OK,
+                    MessageBoxImage.Asterisk);
+                return;
+            }
+
             if (_isQueryRun)
             {
                 WSSqlLogger.Instance.LogWarning("Query have already started");
@@ -445,6 +456,20 @@ namespace WSUI.Module.Core
             ParentViewModel.MainDataSource.Clear();
         }
 
+
+        protected bool IsShouldSearch()
+        {
+            switch (Parent.ActivateStatus)
+            {
+                case ActivationState.Activated:
+                case ActivationState.Trial:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+
         #region IKindItem
 
         public string Name
@@ -544,6 +569,13 @@ namespace WSUI.Module.Core
 
         public ICommand OpenFolderCommand { get; protected set; }
 
+        public ICommand ShowPathCommand { get; protected set; }
+
+        private void ShowPath()
+        {
+            var filename = SearchItemHelper.GetFileName(Current);
+            MessageBoxService.Instance.Show("Filename", filename, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
 
         private void OpenItemFile(string fileName)
         {

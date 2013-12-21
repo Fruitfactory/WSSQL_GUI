@@ -6,11 +6,16 @@
              xmlns:service="clr-namespace:WSUI.Module.Service"
              xmlns:ctrl="clr-namespace:WSUI.Infrastructure.Controls;assembly=WSUI.Infrastructure"                  
                     xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
-                    xmlns:listBox="clr-namespace:WSUI.Infrastructure.Controls.ListBox;assembly=WSUI.Infrastructure">
+                    xmlns:listBox="clr-namespace:WSUI.Infrastructure.Controls.ListBox;assembly=WSUI.Infrastructure"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:behaviors="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure">
+                    
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-        <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />-->
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <service:DateToStringConverter x:Key="dateConverter" />
@@ -174,7 +179,6 @@
             </Grid.ColumnDefinitions>
             <Grid.ToolTip>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=ItemUrl}" />
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
             </Grid.ToolTip>
@@ -202,16 +206,18 @@
             </Grid.ColumnDefinitions>
             <Grid.ToolTip>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=ItemUrl}" />
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
             </Grid.ToolTip> 
             <Expander Margin="0" Grid.Column="0" Style="{StaticResource EmailExpanderStyle}" ExpandDirection="Down">
                 <Grid>
                     <ListBox ItemsSource="{Binding Items}"
-                             SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=SelectedItem,Mode=OneWayToSource}"
-                             ItemTemplate="{StaticResource EmailItemTemplate}" 
-                             >
+                             
+                             ItemTemplate="{StaticResource EmailItemTemplate}" ><!--SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=SelectedItem,Mode=OneWayToSource}"-->
+                             
+                        <i:Interaction.Behaviors>
+                            <behaviors:ChildListBoxBehavior />
+                        </i:Interaction.Behaviors>
                     </ListBox>
                 </Grid>
             </Expander>    
@@ -259,7 +265,6 @@
             </Grid.ColumnDefinitions>
             <Grid.ToolTip>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=ItemUrl}" />
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
             </Grid.ToolTip>
@@ -288,7 +293,6 @@
             </Grid.ColumnDefinitions>
             <Grid.ToolTip>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=ItemUrl}" />
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
             </Grid.ToolTip>
@@ -332,7 +336,6 @@
             </Grid.ColumnDefinitions>
             <Grid.ToolTip>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=ItemUrl}" />
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
             </Grid.ToolTip>
@@ -381,6 +384,7 @@
     <ContextMenu x:Key="contextMenu">
         <MenuItem Header="Open file"  Command="{Binding OpenCommand}"/>
         <MenuItem Header="Open folder"  Command="{Binding OpenFolderCommand}"/>
+        <MenuItem Header="Show filename" Command="{Binding ShowPathCommand}"></MenuItem>
     </ContextMenu>
 
 
