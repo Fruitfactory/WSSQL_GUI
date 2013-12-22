@@ -37,6 +37,7 @@ namespace WSUI.Module.ViewModel
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;
         private IKindItem _currentItem = null;
+        private ILazyKind _selectedLazyKind = null;
         private bool _enabled = true;
         private const string Interface = "WSUI.Module.Interface.IKindItem";
 
@@ -70,6 +71,16 @@ namespace WSUI.Module.ViewModel
         {
             get;
             protected set;
+        }
+
+        public ILazyKind SelectedLazyKind
+        {
+            get { return _selectedLazyKind; }
+            set
+            {
+                _selectedLazyKind = value;
+                OnChoose(value.Kind);
+            }
         }
 
         public ObservableCollection<IWSCommand> Commands
@@ -111,7 +122,7 @@ namespace WSUI.Module.ViewModel
             if (_listItems.Count > 0)
             {
                 _listItems.ForEach(k => KindsCollection.Add(k));
-                OnChoose(_listItems[0].Kind);
+                SelectedLazyKind = _listItems[0];
             }
             OnPropertyChanged(() => KindsCollection);
             UpdatedActivatedStatus();
@@ -179,7 +190,7 @@ namespace WSUI.Module.ViewModel
 
             foreach (var type in types)
             {
-                var kind = new LazyKind(_container, type, this, OnChoose, OnPropertyChanged);
+                var kind = new LazyKind(_container, type, this, null, OnPropertyChanged);
                 kind.Initialize();
                 _listItems.Add(kind);
             }
@@ -352,16 +363,11 @@ namespace WSUI.Module.ViewModel
             var sendItem = sender as IKindItem;
             if(sendItem == null)
                 return;
-            var newItem = _listItems.Find(item => item.UIName == sendItem.UIName);
-            if(newItem == null)
-                return;
-            newItem.Toggle = true;
-            _listItems.ForEach(i => { if (i.UIName != newItem.UIName) i.Toggle = false; });
             Disconnect();
             string searchString = string.Empty;
             if(_currentItem  != null)
                 searchString = _currentItem.SearchString;
-            _currentItem = newItem.Kind;
+            _currentItem = sendItem;
             Connect();
             CurrentKindChanged(_currentItem);
             if (!string.IsNullOrEmpty(searchString) && searchString != _currentItem.SearchString)
@@ -465,7 +471,7 @@ namespace WSUI.Module.ViewModel
             var lazyKind = _listItems.Find(lk => lk.UIName == name);
             if (lazyKind != null)
             {
-                OnChoose(lazyKind.Kind);
+                SelectedLazyKind = lazyKind;
             }
         }
 

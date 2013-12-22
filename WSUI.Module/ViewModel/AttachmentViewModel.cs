@@ -21,7 +21,7 @@ using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId(KindsConstName.Attachments, 3)]
+    [KindNameId(KindsConstName.Attachments, 3, @"pack://application:,,,/WSUI.Module;Component/Images/Mail-Attachment.png")]
     public class AttachmentViewModel : KindViewModelBase, IUView<AttachmentViewModel>, IScrollableView
     {
         private int _countAdded = 0;
@@ -83,8 +83,6 @@ namespace WSUI.Module.ViewModel
             base.OnFilterData();
             _countProcess = ScrollBehavior.CountFirstProcess;
         }
-
-       
 
         public ISettingsView<AttachmentViewModel> SettingsView
         {

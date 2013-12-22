@@ -24,7 +24,7 @@ using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId(KindsConstName.People, 1)]
+    [KindNameId(KindsConstName.People, 1, @"pack://application:,,,/WSUI.Module;Component/Images/People.png")]
     public class ContactViewModel : KindViewModelBase,IUView<ContactViewModel>, IScrollableView
     {
         private ContactSearchData _contactData = null;
@@ -146,7 +146,6 @@ namespace WSUI.Module.ViewModel
             ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 400, CountSecondProcess = 100, LimitReaction = 99 };
             ScrollBehavior.SearchGo += OnScroolNeedSearch;
         }
-
 
         #region IUIView
 

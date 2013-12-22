@@ -5,6 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                               xmlns:Service="clr-namespace:WSUI.Module.Service">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid Margin="0 5 0 5"  Focusable="False">
 
 
@@ -16,12 +23,15 @@
             <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 Controls:TextboxHelper.Watermark="Enter Search Criteria"
                 Controls:TextboxHelper.ClearTextButton="True"
-                        Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
+                Style="{DynamicResource SearchMetroTextBox}"
+                VerticalAlignment="Center"    
+                VerticalContentAlignment="Center"
+                Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
                 Grid.Column="0" MinHeight="32"
                         IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
-                <Button Command="{Binding Path=SearchCommand}" Content="Search" HorizontalAlignment="Stretch"
+                <!--<Button Command="{Binding Path=SearchCommand}" Content="Search" HorizontalAlignment="Stretch"
                     Grid.Column="1" MinHeight="32"
-                        IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
+                        IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>-->
         </Grid>
     </Grid>
 </UserControl>

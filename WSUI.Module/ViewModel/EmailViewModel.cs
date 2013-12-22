@@ -26,7 +26,7 @@ using System.Diagnostics;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId(KindsConstName.Email,2)]
+    [KindNameId(KindsConstName.Email, 2, @"pack://application:,,,/WSUI.Module;Component/Images/Mail-1.png")]
     public class EmailViewModel : KindViewModelBase, IUView<EmailViewModel>, IScrollableView
     {
         
@@ -112,6 +112,7 @@ namespace WSUI.Module.ViewModel
                 ScrollBehavior.NeedSearch(scrollArgs);
             }
         }
+
 
         #region IUIView
 

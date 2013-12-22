@@ -27,7 +27,7 @@ using System.Diagnostics;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId(KindsConstName.Everything,0)]
+    [KindNameId(KindsConstName.Everything, 0, @"pack://application:,,,/WSUI.Module;Component/Images/View.png")]
     public class AllFilesViewModel : KindViewModelBase, IUView<AllFilesViewModel>, IScrollableView
     {
         private int _countAdded = 0;
@@ -230,8 +230,6 @@ namespace WSUI.Module.ViewModel
             ScrollBehavior.SearchGo += OnScroolNeedSearch;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
         }
-
-
         #region IUIView
 
         public ISettingsView<AllFilesViewModel> SettingsView { get; set; }

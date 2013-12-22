@@ -6,6 +6,13 @@
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:localctrl="clr-namespace:WSUI.Module.View.Controls"
                               xmlns:Service="clr-namespace:WSUI.Module.Service">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid Margin="0 5 0 5"  Focusable="False">
 
         <Grid>
@@ -13,18 +20,26 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Border BorderThickness="1" BorderBrush="Black">
-            <localctrl:TextboxAutoComplete SearchText="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+            
+                <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                Controls:TextboxHelper.Watermark="Enter Search Criteria"
+                Controls:TextboxHelper.ClearTextButton="True"
+                         Style="{DynamicResource SearchMetroTextBox}"
+                VerticalAlignment="Center"    
+                VerticalContentAlignment="Center"
+                        Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
+                Grid.Column="0" MinHeight="32"
+                        IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
+            <!--<localctrl:TextboxAutoComplete SearchText="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                 DataSource="{Binding Path=DataSourceSuggest,UpdateSourceTrigger=PropertyChanged}"
                                             Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
                                 Height="24"
                                 VerticalAlignment="Top" HorizontalAlignment="Stretch"
                                 Grid.Column="0" MinHeight="32"
-                                IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
-            </Border>
-            <Button Command="{Binding Path=SearchCommand}" Content="Search" 
+                                IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>-->
+            <!--<Button Command="{Binding Path=SearchCommand}" Content="Search" 
                 Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" MinHeight="32" 
-                    IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
+                    IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>-->
         </Grid>
 
     </Grid>
