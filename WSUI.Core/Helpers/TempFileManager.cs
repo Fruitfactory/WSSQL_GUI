@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using WSUI.Core.Data;
 using WSUI.Core.Logger;
 using WSUI.Core.Enums;
 using WSUI.Core.Core;
@@ -56,9 +57,9 @@ namespace WSUI.Core.Helpers
         #region public 
 
 
-        public string GenerateTempFileName(BaseSearchData searchitem)
+        public string GenerateTempFileName(BaseSearchObject searchitem)
         {
-            return InternalGetTempFilename(searchitem.ID, GetFilename(searchitem), GetExtension(searchitem));
+            return InternalGetTempFilename(searchitem.Id, GetFilename(searchitem), GetExtension(searchitem));
         }
 
         public string GenerateHtmlTempFileName(Guid id)
@@ -81,14 +82,14 @@ namespace WSUI.Core.Helpers
             return GetTempFilename(tempFolder, filename, id);
         }
 
-        public string GenerateTempFileNameWithCopy(BaseSearchData searchitem, string filename)
+        public string GenerateTempFileNameWithCopy(BaseSearchObject searchitem, string filename)
         {
-            string path = CheckAndGetExistTempFilepath(searchitem.ID);
+            string path = CheckAndGetExistTempFilepath(searchitem.Id);
             if (!string.IsNullOrEmpty(path))
                 return path;
             string file = Path.GetFileName(filename);
-            string tempFolder = CreateAndGetTempFolder(searchitem.ID);
-            string tempFilename = GetTempFilename(tempFolder, file, searchitem.ID);
+            string tempFolder = CreateAndGetTempFolder(searchitem.Id);
+            string tempFilename = GetTempFilename(tempFolder, file, searchitem.Id);
             if (string.IsNullOrEmpty(tempFilename))
                 return null;
             try
@@ -199,20 +200,20 @@ namespace WSUI.Core.Helpers
             }
         }
 
-        private string GetExtension(BaseSearchData searchItem)
+        private string GetExtension(BaseSearchObject searchItem)
         {
             string ext = null;
-            switch (searchItem.Type)
+            switch (searchItem.TypeItem)
             {
                 case Enums.TypeSearchItem.Email:
                     ext = ".msg";
                     break;
                 case Enums.TypeSearchItem.Attachment:
-                    string filename = searchItem.Path.Substring(searchItem.Path.LastIndexOf(':') + 1);
+                    string filename = searchItem.ItemUrl.Substring(searchItem.ItemUrl.LastIndexOf(':') + 1);
                     ext = Path.GetExtension(filename);
                     break;
                 case Enums.TypeSearchItem.Contact:
-                    ext = Path.GetExtension(searchItem.Path);
+                    ext = Path.GetExtension(searchItem.ItemUrl);
                     break;
                 case Enums.TypeSearchItem.Calendar:
                     ext = ".html";
@@ -221,15 +222,15 @@ namespace WSUI.Core.Helpers
             return ext;
         }
 
-        private string GetFilename(BaseSearchData searchItem)
+        private string GetFilename(BaseSearchObject searchItem)
         {
             string filename = string.Empty;
-            switch (searchItem.Type)
+            switch (searchItem.TypeItem)
             {
                 case TypeSearchItem.Attachment:
                     try
                     {
-                        filename = Path.GetFileNameWithoutExtension(searchItem.Name);
+                        filename = Path.GetFileNameWithoutExtension(searchItem.ItemName);
                     }
                     catch (Exception)
                     { //TODO should changed for getting from the path

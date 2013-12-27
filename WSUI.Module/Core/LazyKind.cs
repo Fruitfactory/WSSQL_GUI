@@ -30,7 +30,7 @@ namespace WSUI.Module.Core
             _parent = parent;
             _choose = choose;
             _propertychanged = propertychanged;
-            ChooseCommand = new DelegateCommand(() => OnChoose(), () => true);
+            ChooseCommand = new DelegateCommand(OnChoose, () => true);
         }
 
         #region Implementation of ILazyKind
@@ -50,6 +50,7 @@ namespace WSUI.Module.Core
             }
         }
         public string UIName { get; set; }
+        public string Icon { get; private set; }
         public int ID { get; protected set; }
         private bool _toggle;
         public bool Toggle
@@ -77,6 +78,7 @@ namespace WSUI.Module.Core
             }
             UIName = customAttr[0].Name;
             ID = customAttr[0].Id;
+            Icon = customAttr[0].Icon;
             Toggle = false;
             switch (_parent.Host)
             {

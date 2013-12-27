@@ -74,14 +74,32 @@ namespace WSUI.Core.Logger
             WriteLog(LevelLogging.Error, message);
         }
 
+        public void LogError(string format, params object[] args)
+        {
+            var message = string.Format(format, args);
+            LogError(message);
+        }
+
         public void LogInfo(string message)
         {
             WriteLog(LevelLogging.Info, message);
         }
 
+        public void LogInfo(string format, params object[] args)
+        {
+            var message = string.Format(format, args);
+            LogInfo(message);
+        }
+
         public void LogWarning(string message)
         {
             WriteLog(LevelLogging.Warning, message);
+        }
+
+        public void LogWarning(string format, params object[] args)
+        {
+            var message = string.Format(format, args);
+            LogWarning(message);
         }
         #endregion
 

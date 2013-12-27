@@ -1,2 +1,2 @@
-go deploy
+go copyFiles
 pause

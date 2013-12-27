@@ -11,7 +11,9 @@ using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Core;
+using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Service;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
@@ -22,7 +24,7 @@ using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId(KindsConstName.People, 1)]
+    [KindNameId(KindsConstName.People, 1, @"pack://application:,,,/WSUI.Module;Component/Images/People.png")]
     public class ContactViewModel : KindViewModelBase,IUView<ContactViewModel>, IScrollableView
     {
         private ContactSearchData _contactData = null;
@@ -68,6 +70,7 @@ namespace WSUI.Module.ViewModel
                                                   }
                                               };
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
+            SearchSystem = new ContactSearchSystem();
         }
 
         public ICommand EmailClickCommand { get; protected set; }
@@ -84,42 +87,7 @@ namespace WSUI.Module.ViewModel
             get { return _contactData != null ? Visibility.Visible : Visibility.Collapsed; }
         }
 
-        protected override void ReadData(IDataReader reader)
-        {
-            var item = ReadContactData(reader);
-            _listContacts.Add(item);
-        }
-
-        protected override string CreateQuery()
-        {
-            _countAdded = 0;
-            string res = ContactHelpers.GetContactQuery(SearchString.Trim(), FormatDate(ref _lastDate), TopQueryResult);
-            return res;
-        }
-
-        protected override void OnStart()
-        {
-            _listContacts.Clear();
-            base.OnStart();
-        }
-
-        protected override void OnComplete(bool res)
-        {
-            if (_listContacts.Count > 0)
-            {
-                var list = _listContacts.OfType<BaseSearchData>().ToList();
-                ProcessContactData(list);
-                if(list.Count > 0)
-                    _lastDate = list.ElementAt(list.Count - 1).DateModified;
-            }
-
-            ListData.OrderBy(b => b.Type);
-            base.OnComplete(res);
-            OnPropertyChanged(() => Contact);
-            OnPropertyChanged(() => Visible);
-            _countProcess = ScrollBehavior.CountSecondProcess;
-            TopQueryResult = ScrollBehavior.CountSecondProcess;
-        }
+        
 
         protected override void OnSearchStringChanged()
         {
@@ -129,6 +97,7 @@ namespace WSUI.Module.ViewModel
             if (string.IsNullOrEmpty(SearchString))
                 return;
             ClearDataSource();
+            base.OnSearchStringChanged();
             //_contactSuggesting.StartSuggesting(SearchString);
         }
 
@@ -138,22 +107,29 @@ namespace WSUI.Module.ViewModel
             _countProcess = ScrollBehavior.CountFirstProcess;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
         }
-        private void EmailClick (object address)
+
+        private void EmailClick(object address)
         {
             string adr = string.Empty;
             if (address is string)
-                adr = (string) address;
-            else if(address is EmailSearchData)
+                adr = (string)address;
+            else if (address is EmailContactSearchObject)
             {
-                adr = (address as EmailSearchData).From;
+                adr = (address as EmailContactSearchObject).EMail;
             }
-            else if (address is ContactSearchData)
+            else if (address is ContactSearchObject)
             {
-                var contact = (ContactSearchData) address;
-                adr = contact.EmailList != null && contact.EmailList.Count > 0 ? contact.EmailList[0] : string.Empty;
+                var contact = (ContactSearchObject)address;
+                adr = !string.IsNullOrEmpty(contact.EmailAddress)
+                    ? contact.EmailAddress
+                    : !string.IsNullOrEmpty(contact.EmailAddress2)
+                        ? contact.EmailAddress2
+                        : !string.IsNullOrEmpty(contact.EmailAddress3)
+                            ? contact.EmailAddress3
+                            : string.Empty;
             }
 
-            if(string.IsNullOrEmpty(adr))
+            if (string.IsNullOrEmpty(adr))
                 return;
             var email = OutlookHelper.Instance.CreateNewEmail();
             email.To = adr;
@@ -164,15 +140,12 @@ namespace WSUI.Module.ViewModel
         protected override void OnInit()
         {
             base.OnInit();
+            SearchSystem.Init();
+
             CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
             ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 400, CountSecondProcess = 100, LimitReaction = 99 };
-            ScrollBehavior.SearchGo += () =>
-            {
-                ShowMessageNoMatches = false;
-                Search();
-            };
+            ScrollBehavior.SearchGo += OnScroolNeedSearch;
         }
-
 
         #region IUIView
 
@@ -203,68 +176,7 @@ namespace WSUI.Module.ViewModel
         }
 
 
-        private BaseSearchData ReadContactData(IDataReader reader)
-        {
-            if (reader == null)
-                return null;
-            ContactItem item = new ContactItem();
-            ReadGroupData(reader, item);
-
-
-            switch (item.Kind[0])
-            {
-                case "contact":
-                    ContactSearchData data = new ContactSearchData()
-                    {
-                        Name = item.EmailAddress,
-                        Path = string.Empty,
-                        FirstName = item.FirstName,
-                        LastName = item.LastName,
-                        ID = Guid.NewGuid(),
-                        Type = TypeSearchItem.Contact
-                    };
-                    data.EmailList.Add(item.EmailAddress);
-                    data.EmailList.Add(item.EmailAddress2);
-                    data.EmailList.Add(item.EmailAddress3);
-                    data.Foto = OutlookHelper.Instance.GetContactFotoTempFileName(data);
-                    return data;
-                case "email":
-                    string fromAddress = ContactHelpers.GetEmailAddress(item.FromAddress, SearchString) ?? ContactHelpers.GetEmailAddress(item.CcAddress, SearchString) ?? ContactHelpers.GetEmailAddress(item.ToAddress, SearchString);
-                    if (string.IsNullOrEmpty(fromAddress))
-                        break;
-                    EmailSearchData si = new EmailSearchData()
-                    {
-                        Subject = item.Subject,
-                        Recepient = string.Format("{0}",
-                        item.ToAddress != null && item.ToAddress.Length > 0 ? item.ToAddress[0] : string.Empty),
-                        Name = fromAddress,
-                        Path = item.ItemUrl,
-                        Date = item.DateReceived,
-                        Count = string.Empty,
-                        Type = TypeSearchItem.Contact,
-                        ID = Guid.NewGuid(),
-                        From = fromAddress,
-                        Tag = "Click to email recipient"
-
-                    };
-
-                    return si;
-            }
-            return null;
-        }
-
-        private void ProcessContactData(IEnumerable<BaseSearchData> listData)
-        {
-            var groups = listData.GroupBy(c => !string.IsNullOrEmpty(c.Name) ?  c.Name.ToLower() : string.Empty );//
-
-            foreach (var group in groups)
-            {
-                if (string.IsNullOrEmpty(group.Key) || !group.Any())
-                    continue;
-                ListData.Add(group.ElementAt(0));
-                _countAdded++;
-            }
-        }
+       
 
     }
 }

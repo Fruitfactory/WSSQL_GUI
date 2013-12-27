@@ -1,0 +1,2 @@
+goTrial copyFiles
+pause

@@ -18,7 +18,7 @@ namespace WSUI.Module.Commands
         protected override bool OnCanExecute()
         {
             if (KindItem != null && KindItem.Current != null &&
-                KindItem.Current.Type == TypeSearchItem.Email)
+                KindItem.Current.TypeItem == TypeSearchItem.Email)
                 return true;
             return false;
         }

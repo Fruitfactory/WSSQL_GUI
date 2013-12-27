@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <Product Id="00166F11-CE56-421F-94A4-8FF0D578ED81" Name="WSUIOutlookPlugin" Language="1033" Version="1.0.0" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
-    <Package InstallerVersion="200" Compressed="yes" Description="WSUIOutlookPlugin" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
+  <Product Id="48E6B5E4-7417-40C4-BA34-EFADBD3D2A46" Name="OutlookFinder" Language="1033" Version="1.0.0" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+    <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-    <Media Id="1" Cabinet="WSUI.OutlookPlugin.cab" EmbedCab="yes" />
+    <Media Id="1" Cabinet="OutlookFinder.cab" EmbedCab="yes" />
     <Condition Message="!(Setting the ALLUSERS property is not allowed.)">
       NOT ALLUSERS
     </Condition>
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
     <Property Id="ALLUSERS" Secure="yes" />
-    <Feature Id="ProductFeature" Title="WSUIOutlookPlugin" Level="1" ConfigurableDirectory="INSTALLFOLDER">
+    <Feature Id="ProductFeature" Title="OutlookFinder" Level="1" ConfigurableDirectory="INSTALLFOLDER">
       <ComponentRef Id="INSTALLFOLDER" />
       <ComponentRef Id="INSTALLFOLDERLIB" />
       <ComponentRef Id="INSTALLFOLDERLIB64" />
@@ -17,24 +17,40 @@
     </Feature>
     <UIRef Id="WixUI_InstallDir" />
     <UIRef Id="WixUI_ErrorProgressText" />
+    <?ifndef TRIAL ?>
+    <Binary Id="Turbo_Activate_dat" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)TurboActivate.dat" />
+    <Binary Id="Turbo_Activate_dll" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)TurboActivate.dll" />
+    <Binary Id="Turbo_Activate_exe" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)TurboActivate.exe" />
+    <Binary Id="Turbo_Activate64_dll" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)TurboActivate64.dll" />
+    <?endif?>
     <Binary Id="adxregistrator_exe" SourceFile="$(var.ADX_PATH)\Redistributables\adxregistrator.exe" />
     <Binary Id="managedAction" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)WSUI.CA.dll" />
+    <!--<CustomAction Id="ActivatePlugin" BinaryKey="Turbo_Activate_exe" Execute="deferred" ExeCommand="" Return="ignore" />-->
     <CustomAction Id="RegisterDll" BinaryKey="adxregistrator_exe" Execute="deferred" ExeCommand="/install=&quot;[INSTALLFOLDER]$(var.WSUI.OutlookPlugin.TargetFileName)&quot; /privileges=user /returnExitCode=false" Impersonate="yes" />
     <CustomAction Id="UnregisterDll" BinaryKey="adxregistrator_exe" Execute="deferred" ExeCommand="/uninstall=&quot;[INSTALLFOLDER]$(var.WSUI.OutlookPlugin.TargetFileName)&quot; /privileges=user" Impersonate="yes" Return="ignore" />
+    <CustomAction Id="Deactivate" BinaryKey="managedAction" DllEntry="Deactivate" Execute="immediate" Return="check" />
     <CustomAction Id="DeleteFiles" BinaryKey="managedAction" DllEntry="ClearFiles" Execute="immediate" Return="check" />
     <CustomAction Id="CloseOutlook" BinaryKey="managedAction" DllEntry="CloseOutlook" Execute="immediate" Return="check" />
     <CustomAction Id="OpenOutlook" BinaryKey="managedAction" DllEntry="OpenOutlook" Execute="immediate" Return="check" />
     <CustomAction Id="SuccesMessage" BinaryKey="managedAction" DllEntry="SuccesMessage" Execute="immediate" Return="check" />
     <CustomAction Id="CancelMessage" BinaryKey="managedAction" DllEntry="CancelMessage" Execute="immediate" Return="check" />
     <CustomAction Id="ErrorMessage" BinaryKey="managedAction" DllEntry="ErrorMessage" Execute="immediate" Return="check" />
+    <?ifndef TRIAL ?>
+    <CustomAction Id="ActivatePlugin" BinaryKey="managedAction" DllEntry="ActivatePlugin" Execute="immediate" Return="check" />
+    <?endif?>
     <InstallExecuteSequence>
       <Custom Action="RegisterDll" After="SelfRegModules">NOT Installed</Custom>
       <Custom Action="UnregisterDll" After="SelfUnregModules">Installed</Custom>
+      <Custom Action="Deactivate" After="UnregisterDll">Installed</Custom>
       <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>
       <Custom Action="CloseOutlook" After="AppSearch">NOT Installed OR Installed OR REMOVE="ALL"</Custom>
       <Custom Action="SuccesMessage" OnExit="success">NOT Installed</Custom>
       <Custom Action="CancelMessage" OnExit="cancel">NOT Installed</Custom>
       <Custom Action="ErrorMessage" OnExit="error">NOT Installed</Custom>
+      <?ifndef TRIAL ?>
+      <Custom Action="ActivatePlugin" After="SelfRegModules">NOT Installed</Custom>
+      <?endif?>
+      <!--<Custom Action="ActivatePlugin" After="InstallInitialize">NOT Installed</Custom>-->
       <!--<Custom Action="OpenOutlook" After="InstallFinalize">NOT Installed OR Installed</Custom>-->
     </InstallExecuteSequence>
     <!-- Properties for all current versions of the .NET Framework are available here: http://wix.sourceforge.net/manual-wix3/wixnetfxextension.htm -->
@@ -44,10 +60,10 @@
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="LocalAppDataFolder">
-        <Directory Id="INSTALLFOLDER" Name="WSUIOutlookPlugin">
+        <Directory Id="INSTALLFOLDER" Name="OutlookFinder">
           <Component Id="INSTALLFOLDER" Guid="c7b05686-b33f-4d75-ae82-aa8c069e6a7d">
             <RemoveFolder On="both" Id="INSTALLFOLDER" />
-            <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="WSUIOutlookPlugin" />
+            <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="OutlookFinder" />
           </Component>
           <Directory Id="INSTALLFOLDERLIB" Name="lib">
             <Component Id="INSTALLFOLDERLIB" Guid="129FC695-F5F1-4476-A5C4-B12642EE5324">
@@ -121,16 +137,18 @@
         <File Id="_Microsoft_Vbe_Interop_dll" Name="Microsoft.Vbe.Interop.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_Office_dll" Name="Office.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_PDFLibNet_dll" Name="PDFLibNet.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-        <File Id="_SciLexer_dll" Name="SciLexer.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-        <File Id="_SciLexer64_dll" Name="SciLexer64.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-        <File Id="_ScintillaNET_dll" Name="ScintillaNET.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
-        <File Id="_ScintillaNET_xml" Name="ScintillaNET.xml" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_ICSharpCode_AvalonEdit_dll" Name="ICSharpCode.AvalonEdit.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_System_Windows_Interactivity_dll" Name="System.Windows.Interactivity.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_WSPreview_dll_config" Name="WSPreview.dll.config" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_WSUI_Infrastructure_dll" Name="WSUI.Infrastructure.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_WSUI_Module_dll" Name="WSUI.Module.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_Html_Agility_Pack_dll" Name="HtmlAgilityPack.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_WSUI_Core_dll" Name="WSUI.Core.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Turbo_Activate_dat" Name="TurboActivate.dat" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Turbo_Activate_dll" Name="TurboActivate.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Turbo_Activate_exe" Name="TurboActivate.exe" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Turbo_Activate64_dll" Name="TurboActivate64.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_unistall_exe" Name="unistall.exe" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
       </Component>
     </ComponentGroup>
   </Fragment>

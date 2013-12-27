@@ -26,6 +26,8 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         private const string WordRegex = @"(?<word>\w+)";
         private const string ExtOfImage = "png";
 
+        private const string NAEmpty = "<n/a>";
+
         #region pattern for html
 
         private const string PageBegin = @"<!DOCTYPE html><html lang='en'><head><title></title><meta charset='utf-8' http-equiv='Content-Type' content='text/html; charset=utf-8;'><style type='text/css'>.style1{width: 15%;color: gray;}.style2{width: 85%;}</style></head><body style='font-family: Arial, Helvetica, sans-serif'>";
@@ -388,16 +390,21 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         {
             string page = GetBeginingOfPreview(mail, filename);
 
-            page += string.Format(SenderRow, HighlightSearchString(mail.SenderName.ConvertToIso()));
+            page += string.Format(SenderRow, HighlightSearchString(GetConvertetString(mail.SenderName)));
             if (!string.IsNullOrEmpty(mail.CC))
-                page += string.Format(CCRow, HighlightSearchString(mail.CC.ConvertToIso()));
-            page += string.Format(ToRow, HighlightSearchString(mail.To.ConvertToIso()));
+                page += string.Format(CCRow, HighlightSearchString(GetConvertetString(mail.CC)));
+            page += string.Format(ToRow, HighlightSearchString(GetConvertetString(mail.To)));
             page += string.Format(SendRow, mail.ReceivedTime.ToString());
             page += GetAttachments(mail, filename);
             string temp = GetHtmlBodyHightlight(mail.HTMLBody);
             page += string.Format(EmailRow, temp);
             page += TableEnd + PageEnd;
             return page;
+        }
+
+        private string GetConvertetString(string str)
+        {
+            return !string.IsNullOrEmpty(str) ? str.ConvertToIso() : NAEmpty;
         }
 
         public string GetPreviewForAppointment(Outlook.AppointmentItem appointment, string filename)

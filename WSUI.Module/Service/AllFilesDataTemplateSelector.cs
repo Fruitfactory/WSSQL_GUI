@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using WSUI.Core.Core;
+using WSUI.Core.Data;
 using WSUI.Core.Enums;
 
 namespace WSUI.Module.Service
@@ -21,8 +22,8 @@ namespace WSUI.Module.Service
             if (item == null)
                 return NoneTemplate;
 
-            var bs = item as BaseSearchData;
-            switch (bs.Type)
+            var bs = item as BaseSearchObject;
+            switch (bs.TypeItem)
             {
                 case TypeSearchItem.None:
                     return NoneTemplate;

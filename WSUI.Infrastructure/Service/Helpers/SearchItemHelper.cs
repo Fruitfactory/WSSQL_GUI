@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using WSUI.Core.Core;
+using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
 
@@ -44,12 +45,12 @@ namespace WSUI.Infrastructure.Service.Helpers
             return TypeSearchItem.None;
         }
 
-        public static string GetFileName(BaseSearchData item, bool forPreview = true)
+        public static string GetFileName(BaseSearchObject item, bool forPreview = true)
         {
             if (item == null)
                 return null;
 
-            switch(item.Type)
+            switch(item.TypeItem)
             {
                 case TypeSearchItem.Email:
                     return OutlookHelper.Instance.GetEMailTempFileName(item);
@@ -59,7 +60,7 @@ namespace WSUI.Infrastructure.Service.Helpers
                     return OutlookHelper.Instance.GetCalendarTempFileName(item);    
                 case TypeSearchItem.File:
                 case TypeSearchItem.Picture:
-                    return forPreview ? GetNormalizeFilename(item, GetFileName(item.Path)) : GetFileName(item.Path);
+                    return forPreview ? GetNormalizeFilename(item, GetFileName(item.ItemUrl)) : GetFileName(item.ItemUrl);
                 default:
                     return null;
             }
@@ -83,7 +84,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             return null;
         }
 
-        private static string GetNormalizeFilename(BaseSearchData item, string filename)
+        private static string GetNormalizeFilename(BaseSearchObject item, string filename)
         {
             var ext = Path.GetExtension(filename);
             string normalFilename = string.Empty;

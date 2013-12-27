@@ -53,7 +53,7 @@ namespace WSUIOutlookPlugin
             this.KeyPreview = true;
             this.Location = new System.Drawing.Point(0, 0);
             this.Name = "WSUIForm";
-            this.Text = "WSUIForm";
+            this.Text = "Outlook Finder";
             this.ResumeLayout(false);
 
         }

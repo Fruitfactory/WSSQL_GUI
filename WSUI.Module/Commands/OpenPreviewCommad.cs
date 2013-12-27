@@ -23,7 +23,7 @@ namespace WSUI.Module.Commands
         {
 
             if (KindItem != null && KindItem.Current != null &&
-                ((KindItem.Current.Type & TypeSearchItem.FileAll) == KindItem.Current.Type))
+                ((KindItem.Current.TypeItem & TypeSearchItem.FileAll) == KindItem.Current.TypeItem))
                 return true;
             return false;
         }
@@ -31,7 +31,7 @@ namespace WSUI.Module.Commands
         protected override void OnExecute()
         {
             string fileName = string.Empty;
-            switch (KindItem.Current.Type)
+            switch (KindItem.Current.TypeItem)
             {
                 case TypeSearchItem.File:
                 case TypeSearchItem.Picture:

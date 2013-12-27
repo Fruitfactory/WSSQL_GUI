@@ -8,11 +8,11 @@ namespace WSUI.Module.Core
     public class KindNameIdAttribute : Attribute
     {
 
-        public KindNameIdAttribute(string name, int id)
+        public KindNameIdAttribute(string name, int id, string  icon)
         {
             Name = name;
             Id = id;
-
+            Icon = icon;
         }
 
         public string Name
@@ -24,5 +24,11 @@ namespace WSUI.Module.Core
         {
             get; protected set;
         }
+
+        public string Icon
+        {
+            get; protected set;
+        }
+
     }
 }
