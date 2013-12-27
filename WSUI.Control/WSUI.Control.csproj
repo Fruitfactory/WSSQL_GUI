@@ -133,7 +133,10 @@
   <ItemGroup>
     <None Include="WSUIOutlook.snk" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\logo_64.png" />
+    <Resource Include="Images\logo_txt.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\logo.png" />
   </ItemGroup>
