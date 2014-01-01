@@ -1,13 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using System.Reflection;
-using System.Globalization;
-using WSPreview.PreviewHandler;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using WSPreview.PreviewHandler.Controls.Office;
-using WSPreview.PreviewHandler.Service;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
 
@@ -33,15 +27,6 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
             public OutlookPreviewHandlerControl(OutlookPreviewHandler parent)
             {
                 _parent = parent;
-            }
-
-            public override void Load(FileInfo file)
-            {
-                if (_preview != null)
-                {
-                    _preview.HitString = _parent.HitString;
-                }
-                base.Load(file);
             }
 
             protected override Control GetCustomerPreviewControl()
@@ -75,6 +60,15 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
                 }
             }
 
+            protected override void PrepareForLoading()
+            {
+                base.PrepareForLoading();
+                if (_preview != null)
+                {
+                    _preview.HitString = _parent.HitString;
+                }
+
+            }
         }
 
         public string HitString

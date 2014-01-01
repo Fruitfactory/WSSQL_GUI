@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Documents.DocumentStructures;
+using System.Text;
 using System.Windows.Forms;
 using AddinExpress.MSO;
 using Microsoft.Practices.Prism.Events;
@@ -15,8 +11,8 @@ using WSUI.Control.Interfaces;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Logger;
+using WSUI.Core.Win32;
 using WSUI.Infrastructure.Service.Helpers;
-using WSUI.Infrastructure.Service.Interfaces;
 using WSUIOutlookPlugin.Events;
 using WSUIOutlookPlugin.Interfaces;
 using WSUIOutlookPlugin.Managers;
@@ -24,12 +20,10 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Globalization;
 using System.Reflection;
 using WSUI.Control;
-using Microsoft.Win32;
 using System.Diagnostics;
-using AddinExpress.OL;
 using WSUIOutlookPlugin.Core;
-using ADXOlExplorerItemTypes = AddinExpress.OL.ADXOlExplorerItemTypes;
 using WSUI.Infrastructure.Controls.Application;
+using Application = System.Windows.Forms.Application;
 
 namespace WSUIOutlookPlugin
 {
@@ -74,6 +68,8 @@ namespace WSUIOutlookPlugin
 
         private const int WM_LOADED = WM_USER + 1001;
         private ImageList wsuiImageList;
+        private ADXRibbonBox adxMainBox;
+        private ADXRibbonButton wsuiButtonSearch;
 
         private const string DefaultNamespace = "MAPI";
 
@@ -100,7 +96,7 @@ namespace WSUIOutlookPlugin
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
             
         }
-
+ 
         private void OnAddinInitialize(object sender, EventArgs eventArgs)
         {
             if (adxMainPluginCommandBar.UseForRibbon && this.HostMajorVersion > 12)
@@ -158,6 +154,8 @@ namespace WSUIOutlookPlugin
             this.wsuiHomeSearch = new AddinExpress.MSO.ADXRibbonEditBox(this.components);
             this.wsuiButtonSwitch = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.wsuiImageList = new System.Windows.Forms.ImageList(this.components);
+            this.adxMainBox = new AddinExpress.MSO.ADXRibbonBox(this.components);
+            this.wsuiButtonSearch = new AddinExpress.MSO.ADXRibbonButton(this.components);
             // 
             // outlookFormManager
             // 
@@ -222,7 +220,7 @@ namespace WSUIOutlookPlugin
             // 
             // buttonClose
             // 
-            this.buttonClose.Caption = "Close Outloook Finder";
+            this.buttonClose.Caption = "Close Outlook Finder";
             this.buttonClose.Id = "adxRibbonButton_28c7fe480c61454ca13d1a20e9ae3405";
             this.buttonClose.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.buttonClose.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
@@ -283,7 +281,7 @@ namespace WSUIOutlookPlugin
             // wsuiMainGroup
             // 
             this.wsuiMainGroup.Caption = "Outlook Finder";
-            this.wsuiMainGroup.Controls.Add(this.wsuiHomeSearch);
+            this.wsuiMainGroup.Controls.Add(this.adxMainBox);
             this.wsuiMainGroup.Controls.Add(this.wsuiButtonSwitch);
             this.wsuiMainGroup.Id = "adxRibbonGroup_f065ec953c074c6a9e1ba8cae6b9b786";
             this.wsuiMainGroup.ImageTransparentColor = System.Drawing.Color.Transparent;
@@ -303,7 +301,7 @@ namespace WSUIOutlookPlugin
             // 
             this.wsuiButtonSwitch.Caption = "Show/Hide";
             this.wsuiButtonSwitch.Id = "adxRibbonButton_295c2b7151ed437382c104f4c3d542ce";
-            this.wsuiButtonSwitch.Image = 0;
+            this.wsuiButtonSwitch.Image = 1;
             this.wsuiButtonSwitch.ImageList = this.wsuiImageList;
             this.wsuiButtonSwitch.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.wsuiButtonSwitch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
@@ -313,6 +311,21 @@ namespace WSUIOutlookPlugin
             this.wsuiImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("wsuiImageList.ImageStream")));
             this.wsuiImageList.TransparentColor = System.Drawing.Color.Transparent;
             this.wsuiImageList.Images.SetKeyName(0, "application-plus-red.png");
+            this.wsuiImageList.Images.SetKeyName(1, "logo_64.png");
+            // 
+            // adxMainBox
+            // 
+            this.adxMainBox.Controls.Add(this.wsuiHomeSearch);
+            this.adxMainBox.Controls.Add(this.wsuiButtonSearch);
+            this.adxMainBox.Id = "adxRibbonBox_650813691cb74c5db775e919c877f3ff";
+            this.adxMainBox.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            // 
+            // wsuiButtonSearch
+            // 
+            this.wsuiButtonSearch.Caption = "Search";
+            this.wsuiButtonSearch.Id = "adxRibbonButton_c993f00bdccb44988791d19e0e30e00a";
+            this.wsuiButtonSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.wsuiButtonSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // WSUIAddinModule
             // 
@@ -322,6 +335,7 @@ namespace WSUIOutlookPlugin
             this.AddinStartupComplete += new AddinExpress.MSO.ADXEvents_EventHandler(this.WSUIAddinModule_AddinStartupComplete);
 
         }
+
         #endregion
  
         #region Add-in Express automatic code
@@ -467,7 +481,7 @@ namespace WSUIOutlookPlugin
             _commandManager = adxMainPluginCommandBar.UseForRibbon
                 ? (IWSUICommandManager) new WSUICommandBarManager(buttonShow2007, buttonHide2007, adxCommandBarEditSearchText,
                     adxCommandBarButtonSearch)
-                : new WSUIRibbonManager(buttonShow,buttonClose,wsuiButtonSwitch,adxRibbonButtonSearch,adxRibbonEditBoxSearch,wsuiHomeSearch);
+                : new WSUIRibbonManager(buttonShow, buttonClose, wsuiButtonSwitch, adxRibbonButtonSearch, adxRibbonEditBoxSearch, wsuiHomeSearch, wsuiButtonSearch);
         }
 
         private void SetEventAggregatorToManager()

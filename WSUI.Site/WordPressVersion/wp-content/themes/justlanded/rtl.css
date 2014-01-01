@@ -1,0 +1,149 @@
+/*
+Theme Name: JustLanded for WordPress
+
+Adding support for language written in a Right To Left (RTL) direction is easy -
+it's just a matter of overwriting all the horizontal positioning attributes
+of your CSS stylesheet in a separate stylesheet file named rtl.css.
+
+http://codex.wordpress.org/Right_to_Left_Language_Support
+
+*/
+
+body {
+	direction: rtl;
+	unicode-bidi: embed;
+}
+
+/* Header */
+#main_nav .menu {
+    float:right;
+}
+
+#navigation_elements .social_elements ul {
+    float: left;
+}
+
+#phone {
+    float:left;
+    text-align: left;
+}
+
+#phone  a {
+    float:left;
+    margin-right:5px;
+}
+
+#logo {
+    float:right;
+}
+
+#logo h1 span {
+    float:right;
+}
+
+#logo img {
+    float:right;
+    margin: 0 0 0 15px;
+}
+
+#phone {
+    text-align:left;
+}
+
+/* Banner */
+
+#banner .ticks li {
+    background: url(images/sprite-rtl.png) no-repeat right -79px;
+    padding: 7px 35px 7px 0;
+}
+
+/* Content */
+
+.alignnone {
+    margin: 0px;
+}
+
+/* Testimonials */
+
+blockquote footer img {
+    float: right;
+    margin: 0 0 0 10px;
+}
+
+blockquote footer {
+    margin: 15px 0 0 0;
+}
+
+
+/* List of Features */
+.feature_image {
+	min-width: 60px;
+	float: right;
+}
+
+.section_features img {
+	float: right;
+	margin: 0 0 0 10px;
+}
+
+
+/* Newsletter */
+
+.newsletter_inner {
+	background-image: none;
+}
+
+.newsletter form {
+	float:left;
+	margin: 18px 0 0 18px;
+}
+
+.newsletter h2 {
+	float:right;
+	background: url(images/sprite-rtl.png) no-repeat right -175px;
+	margin: 5px 20px 0 0;
+	padding: 23px 70px 20px 0;
+}
+
+.newsletter input[type="text"] {
+	border-right: 0;
+	text-align: left;
+	float:right;
+}
+
+.newsletter input.submit {
+	float:left;
+	border-top-right-radius: 0;
+	-moz-border-radius-topright: 0;
+	-webkit-border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	-moz-border-radius-bottomright: 0;
+	-webkit-border-radius-bottom-right: 0;
+
+	border-top-left-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	-webkit-border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	-webkit-border-radius-bottom-left: 5px;
+
+}
+
+/* List Styles */
+
+.list_check ul li {
+    background: url(images/icons/icon_check.png) no-repeat right 5px;
+    padding: 6px 28px 6px 0;
+}
+
+/* Responsiveness */
+
+@media screen and (max-width: 460px) {
+    #logo h2 {
+        text-align:right;
+    }
+
+    #phone {
+        text-align:right;
+    }
+}

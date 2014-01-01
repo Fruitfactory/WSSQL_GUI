@@ -31,7 +31,6 @@ namespace WSUIOutlookPlugin.Managers
         {
             _buttonShow.Click += ButtonShowOnClick;
             _buttonHide.Click += ButtonHideOnClick;
-            _buttonSearch.Click += ButtonSearchOnClick; 
             _editCriteria.Change += EditCriteriaOnChange;
             _buttonShow.Enabled = true;
             _buttonHide.Enabled = false;

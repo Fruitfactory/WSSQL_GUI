@@ -24,7 +24,7 @@ $debug_log = dirname(__FILE__).'/payment_debug.log';
 // particular payment method below.
 $UseAuthorizeNetCC = false;
 $UseAuthorizeNetBank = false;
-$UseMoneybookers = true;
+$UseMoneybookers = false;
 $UsePayPal = true;
 
 
