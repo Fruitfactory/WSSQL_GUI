@@ -29,7 +29,7 @@ if (($UseAuthorizeNetCC || $UseAuthorizeNetBank) && !$AuthNetTest && !(isset($_S
 
 if ($UseAuthorizeNetCC || $UseAuthorizeNetBank)
 {
-    require dirname(__FILE__).'CCProcessor.php';
+    require dirname(__FILE__).'/CCProcessor.php';
     $cc_proc = new CCProcessor();
 }
 

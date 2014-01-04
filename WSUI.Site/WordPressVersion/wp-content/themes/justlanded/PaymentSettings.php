@@ -9,7 +9,7 @@
 
 // Enable debug logging
 $debug = true;
-$debug_log = dirname(__FILE__).'/payment_debug.log';
+$debug_log = getcwd().'/payment_debug.log';
 
 
 
@@ -56,13 +56,13 @@ $LimeLM_VersionID = '1432';
 // URL of the "paychecker.php" script.
 // This is where Moneybookers and PayPal orders are confirmed and processed.
 // If you're not using Moneybookers or PayPal then you don't have to set this.
-$CheckScript = 'http://outlookfinder.com/paychecker.php';//'http://127.0.0.1:35585/paychecker.php';//
+$CheckScript = 'http://localhost:8000/wp-content/themes/justlanded/paychecker.php';//'http://outlookfinder.com/paychecker.php';//
 
 // Where the user can buy your products
-$BuyPage = 'http://outlookfinder.com/payment.php';//'http://127.0.0.1:35585/payment.php'; //
+$BuyPage = 'http://localhost:8000/?page_id=30'; //'http://outlookfinder.com/payment.php';//
 
 // Thank you page (once payment is made, user is sent to this page)
-$ThankYouPage =  'http://outlookfinder.com/pay-thankyou.php';//'http://127.0.0.1:35585/pay-thankyou.php';//
+$ThankYouPage =  'http://localhost:8000/?page_id=32';//'http://outlookfinder.com/pay-thankyou.php';//
 
 // The logo to display on the PayPal / Moneybookers checkout
 // this site must be HTTPS or it won't display.
@@ -103,11 +103,11 @@ $MBEmail = 'your@email.com';
 // on the "Merchant tools" page. Then set it here.
 $SecretWord = 'PASTE YOUR SECRET WORD HERE';
 
-$versions_xml  = dirname(__FILE__).'/downloads/clicktwice/full/version_info.xml';
+$versions_xml  = getcwd().'/downloads/clicktwice/full/version_info.xml';
 $path_first = 'http://outlookfinder.com/downloads/clicktwice/full/1033/';
 $path_second = '/outlookfinder.exe';
 
-$versions_xml_trial  = dirname(__FILE__).'/downloads/clicktwice/trial/version_info.xml';
+$versions_xml_trial  = getcwd().'/downloads/clicktwice/trial/version_info.xml';
 $path_first_trial = 'http://outlookfinder.com/downloads/clicktwice/trial/1033/';
 
 
