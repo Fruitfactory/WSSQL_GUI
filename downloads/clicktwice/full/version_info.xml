@@ -1,15 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <application name="outlookfinder">
   <product language="1033">
-    <version name="1.0.0" installationUrl="http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/full/" productCode="{C8F8B50F-7174-4632-82E3-001F0D597FA2}" updateType="directLink">
-      <files msi="OutlookFinderSetup" customActionAssembly="" customActionClass="">
+    <version name="1.0.0" installationUrl="http://outlookfinder.com/downloads/clicktwice/full/" productCode="{D918675D-729E-4518-B97E-C2564AAAA292}" updateType="directLink">
+      <files msi="OutlookFinderSetup">
         <file>OutlookFinderSetup.msi</file>
       </files>
       <preferences>
         <showInstallUI>true</showInstallUI>
         <showUninstallUI>false</showUninstallUI>
-        <webPage>
-        </webPage>
+        <webPage />
         <showDownloaderWindow>true</showDownloaderWindow>
         <showRunningApplicationsWarning>false</showRunningApplicationsWarning>
       </preferences>
