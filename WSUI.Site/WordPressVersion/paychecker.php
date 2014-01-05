@@ -1,5 +1,5 @@
 <?php
-include('PaymentSettings.php');
+include(getcwd().'/wp-content/themes/justlanded/PaymentSettings.php');
 
 function ValidateMB()
 {

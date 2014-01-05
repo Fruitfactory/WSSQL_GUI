@@ -243,7 +243,7 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         text-indent:-9999px;
         display:block;
         float:left;
-        background-image:url(sprites.png);
+        background-image:url(http://outlookfinder.com/images/sprites.png);
         height:35px;
         width:289px;
         margin-right:15px
@@ -292,7 +292,7 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
     ?>
 
     h3#su1,h3#su2,h3#su3{
-        background:url(sprites.png) no-repeat -91px -35px;
+        background:url(http://outlookfinder.com/images/sprites.png) no-repeat -91px -35px;
         color:#002C6D;
         margin:30px 0 20px;
         padding:2px 0 0 36px;
@@ -599,7 +599,7 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         ?>
 
         <div id="totalline" class="large">Your total: <strong><?=$CurrencySign?><span id="total_price"><?=$single_price?> per license</span></strong></div>
-        <div><input type="image" src="order.png" name="submit" id="submit" alt="Place my order" style="width:180px;height:38px;vertical-align:middle;"/>&nbsp;&nbsp;<strong id="progress"></strong></div>
+        <div><input type="image" src="http://outlookfinder.com/images/order.png" name="submit" id="submit" alt="Place my order" style="width:180px;height:38px;vertical-align:middle;"/>&nbsp;&nbsp;<strong id="progress"></strong></div>
         </form>
         </div>
         <?php
