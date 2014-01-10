@@ -282,7 +282,34 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         cursor:pointer;
         cursor:hand;
     }
-
+    table.price-table {
+        border-left: 1px solid white;
+        border-top: 1px solid white;
+        margin: 20px auto;
+        float: none;
+        clear: both;
+    }
+    table.price-table tr th {
+        background: none repeat scroll 0% 0% rgb(161, 191, 206);
+        color: rgb(11, 58, 81);
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px 0px 10px 20px;
+        border-bottom: 1px solid white;
+        border-right: 1px solid white;
+    }
+    
+    table.price-table tr.bg-01 td {
+        background: none repeat scroll 0% 0% rgb(235, 242, 247);
+    }
+    table.price-table td {
+        font-size: 14px;
+        color: rgb(18, 60, 81);
+        padding: 10px 0px 10px 20px;
+        border-bottom: 1px solid white;
+        border-right: 1px solid white;
+    }
+    
     <?php
     if (!$AuthNetCCSelected)
         echo '#cc_info{display:none}';
@@ -318,8 +345,6 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
 
     <div class="row">
         <div class="row">
-        <p><?= $AppName ?> costs <strong><?=$CurrencySign?><?=$single_price?></strong> per license. Your licenses will be e-mailed to you immediately after your order is processed.</p>
-
         <?php
         if ($PayPalSelected)
             $defAction = $PayPalSandbox ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr';
@@ -330,7 +355,7 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         ?>
         </div>
 
-        <div class="row">
+        <div class="row" style="text-align: center;">
 
         <form action="<?=$defAction?>" method="post" id="signup_form">
         <?php
@@ -354,18 +379,20 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         </table>
         <?php } ?>
 
-        <h3 id="su<?= $headerShown++ ?>">Number of licenses</h3>
-        <table>
-        <tr<?php if ($cc_proc && $cc_proc->quantity_err) echo ' class="error"'; ?>>
-            <th><label for="quantity">Number of licenses </label></th>
-            <td><input type="text" name="quantity" id="quantity" value="<?= $cc_proc ? $cc_proc->quantity : 1 ?>" size="2"/></td>
-        </tr>
-        <?php if ($cc_proc && $cc_proc->quantity_err){ ?><tr class="error"><th> </th><td><div class="error">You must enter a quantity greater than 0</div></td></tr><?php } ?>
-        <tr>
-            <th>Price per license </th>
-            <td class="large"><?=$CurrencySign?><?=$single_price?></td>
-        </tr>
+        <table class="price-table" style="width: 600px;">
+            <tbody>
+                <tr>
+                    <th width="70%">Item name</th>
+                    <th width="30%">Price (<?=$CurrencySign?>)</th>
+                </tr>
+                <tr class="bg-01">
+                    <td><?= $AppName?></td>
+                    <td class="large"><?=$CurrencySign?><?=$single_price?></td>
+                </tr>
+            </tbody>
         </table>
+        
+        
 
         <?php
         if ($TotalPaymentMethods == 1 && ($UseAuthorizeNetCC || $UseAuthorizeNetBank))
@@ -598,7 +625,6 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         }
         ?>
 
-        <div id="totalline" class="large">Your total: <strong><?=$CurrencySign?><span id="total_price"><?=$single_price?> per license</span></strong></div>
         <div><input type="image" src="http://outlookfinder.com/images/order.png" name="submit" id="submit" alt="Place my order" style="width:180px;height:38px;vertical-align:middle;"/>&nbsp;&nbsp;<strong id="progress"></strong></div>
         </form>
         </div>
@@ -608,34 +634,34 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         // Don't delete these lines. You won't see them on your
         // live site if you have everything configured correctly.
 
-        if (!function_exists('curl_init'))
-        echo '<p><strong><font color="#FF0000">The curl extension is required, but not installed on this server.</font></strong></p>';
-
-        if (!extension_loaded('simplexml'))
-        echo '<p><strong><font color="#FF0000">The SimpleXML extension is required, but not installed on this server.</font></strong></p>';
-
-
-        if ($UsePayPal && $PayPalSandbox)
-        echo '<p><strong><font color="#FF0000">PayPal sandbox is on</font> &mdash; payments will not be sent to your live account. To disable sandbox mode set <code>$PayPalSandbox = false;</code> in <code>PaymentSettings.php</code>.</strong></p>';
-
-        if (($UseAuthorizeNetCC || $UseAuthorizeNetBank) && $AuthNetTest)
-        {
-        echo '<p><strong><font color="#FF0000">Authorize.Net payments is in Test Mode</font> &mdash; payments will not be sent to your live account. To turn off test mode set <code>$AuthNetTest = false;</code> in <code>PaymentSettings.php</code>.</strong></p>';
-
-        if (!(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')))
-        {
-            echo '<p><strong><font color="#FF0000">Authorize.Net payments <em>requires</em> a secure connection (https://).</font> &mdash; when you set <code>$AuthNetTest = false;</code> in <code>PaymentSettings.php</code> this page will automatically redirect you to the secure version of this page (https://) if you visit it from the non-secure version (http://). However, in test mode you can use the non-secure version to remove the hassle of creating self-signed SSL certificates.</strong></p>';
-        }
-        }
-
-        if ($debug)
-        echo '<p><strong><font color="#FF0000">Debugging turned on</font> &mdash; All actions will be logged to log file.</strong></p>';
-        ?>
+//        if (!function_exists('curl_init'))
+//        echo '<p><strong><font color="#FF0000">The curl extension is required, but not installed on this server.</font></strong></p>';
+//
+//        if (!extension_loaded('simplexml'))
+//        echo '<p><strong><font color="#FF0000">The SimpleXML extension is required, but not installed on this server.</font></strong></p>';
+//
+//
+//        if ($UsePayPal && $PayPalSandbox)
+//        echo '<p><strong><font color="#FF0000">PayPal sandbox is on</font> &mdash; payments will not be sent to your live account. To disable sandbox mode set <code>$PayPalSandbox = false;</code> in <code>PaymentSettings.php</code>.</strong></p>';
+//
+//        if (($UseAuthorizeNetCC || $UseAuthorizeNetBank) && $AuthNetTest)
+//        {
+//        echo '<p><strong><font color="#FF0000">Authorize.Net payments is in Test Mode</font> &mdash; payments will not be sent to your live account. To turn off test mode set <code>$AuthNetTest = false;</code> in <code>PaymentSettings.php</code>.</strong></p>';
+//
+//        if (!(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')))
+//        {
+//            echo '<p><strong><font color="#FF0000">Authorize.Net payments <em>requires</em> a secure connection (https://).</font> &mdash; when you set <code>$AuthNetTest = false;</code> in <code>PaymentSettings.php</code> this page will automatically redirect you to the secure version of this page (https://) if you visit it from the non-secure version (http://). However, in test mode you can use the non-secure version to remove the hassle of creating self-signed SSL certificates.</strong></p>';
+//        }
+//        }
+//
+//        if ($debug)
+//        echo '<p><strong><font color="#FF0000">Debugging turned on</font> &mdash; All actions will be logged to log file.</strong></p>';
+//        ?>
 
     </div>
 
 <!-- payment end html -->
 
-
+<p></p>
 </article>
 <?php get_footer(); ?>
