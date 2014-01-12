@@ -45,6 +45,7 @@
                  IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
                  ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
                  service:DoubleClickBehabior.DoubleClickHandler="{Binding DoubleClickCommand}"
+                 HorizontalContentAlignment="Stretch"
                  >
             <!--<i:Interaction.Behaviors>
                 <behaviors:MainListBoxBehavior></behaviors:MainListBoxBehavior>

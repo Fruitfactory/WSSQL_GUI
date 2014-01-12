@@ -45,17 +45,18 @@
     <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
 
         <listBox:WSUIListBox x:Name="listBox" 
-                             Style="{StaticResource SimpleListBoxStyle}"
-                             ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
-                            BorderBrush="Transparent"
-                            Background="Transparent"            
-                             ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
-                      ItemTemplateSelector="{StaticResource templateSelector}"
-                      attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource SimpleListBoxStyle}"
+                        ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
+                        BorderBrush="Transparent"
+                        Background="Transparent"            
+                        ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
+                        ItemTemplateSelector="{StaticResource templateSelector}"
+                        attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                         attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
-                      ContextMenu="{StaticResource ResourceKey=contextMenu}"
-                      ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
-                 service:DoubleClickBehabior.DoubleClickHandler="{Binding DoubleClickCommand}"
+                        ContextMenu="{StaticResource ResourceKey=contextMenu}"
+                        ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
+                        service:DoubleClickBehabior.DoubleClickHandler="{Binding DoubleClickCommand}"
+                        HorizontalContentAlignment="Stretch"
                       >
         </listBox:WSUIListBox>
     </Grid>

@@ -787,18 +787,18 @@ namespace WSUIOutlookPlugin
 
         void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            WSSqlLogger.Instance.LogError("Unhandled Exception (plugin): " + e.ExceptionObject.ToString());
+            WSSqlLogger.Instance.LogError("Unhandled Exception (plugin): {0}",e.ExceptionObject.ToString());
         }
 
         private void CurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs firstChanceExceptionEventArgs)
         {
-            WSSqlLogger.Instance.LogError("First Chance Exception (plugin): " + firstChanceExceptionEventArgs.Exception.Message);
+            WSSqlLogger.Instance.LogError("First Chance Exception (plugin): {0}\n{1}" ,firstChanceExceptionEventArgs.Exception.Message,firstChanceExceptionEventArgs.Exception.StackTrace);
             if (firstChanceExceptionEventArgs.Exception is ReflectionTypeLoadException)
             {        
 
                 foreach (var item in (firstChanceExceptionEventArgs.Exception as ReflectionTypeLoadException).LoaderExceptions)
                 {
-                    WSSqlLogger.Instance.LogError("Reflection Type Load: " + item.Message.ToString());
+                    WSSqlLogger.Instance.LogError("Reflection Type Load: {0}", item.Message.ToString());
                 }
             }
         }
