@@ -56,13 +56,13 @@ $LimeLM_VersionID = '1432';
 // URL of the "paychecker.php" script.
 // This is where Moneybookers and PayPal orders are confirmed and processed.
 // If you're not using Moneybookers or PayPal then you don't have to set this.
-$CheckScript = 'http://localhost:8000/wp-content/themes/justlanded/paychecker.php';//'http://outlookfinder.com/paychecker.php';//
+$CheckScript = 'http://outlookfinder.com/paychecker.php';//'http://www.outlookfinder.dev/paychecker.php';//
 
 // Where the user can buy your products
-$BuyPage = 'http://localhost:8000/?page_id=30'; //'http://outlookfinder.com/payment.php';//
+$BuyPage = 'http://outlookfinder.com/buy/';//'http://www.outlookfinder.dev/buy/'; //
 
 // Thank you page (once payment is made, user is sent to this page)
-$ThankYouPage =  'http://localhost:8000/?page_id=32';//'http://outlookfinder.com/pay-thankyou.php';//
+$ThankYouPage =  'http://outlookfinder.com/thank-you/';//'http://www.outlookfinder.dev/thank-you/';//
 
 // The logo to display on the PayPal / Moneybookers checkout
 // this site must be HTTPS or it won't display.
@@ -89,7 +89,7 @@ $AuthNetTest = true;
 $PayPalSandbox = true;
 
 // Paypal Email
-$PayPalEmail = 'yariki@i.ua';
+$PayPalEmail = 'yariki-ya@yandex.ru';
 
 
 
@@ -179,7 +179,7 @@ function SendPKeys($quantity, $email, $first, $last)
 	{
 		// Generate the product key - set the number of activations using the quantity
 		$xml = new SimpleXMLElement(LimeLM::GeneratePKeys($LimeLM_VersionID, 1, $quantity, $email));
-
+                debug_log('Generating keys',true);        
 		if ($xml['stat'] == 'ok')
 		{
 			foreach ($xml->pkeys->pkey as $pkey)

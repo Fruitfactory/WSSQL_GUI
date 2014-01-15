@@ -1395,3 +1395,22 @@ if(!function_exists('justlanded_get_youtube_id')) {
 		endif;
 	}
 }
+
+// yariki shortcode
+require( dirname(__FILE__).'/PaymentSettings.php');
+function auto_start_download(){
+    $filename = getDownloadUrlforTrial();
+    return '<iframe width="0" height="0" src="'.$filename.'">';
+}
+add_shortcode('autostartdownload', 'auto_start_download');
+
+function get_download_link($attr){
+    extract(shortcode_atts(array(
+        'title' => '',
+        'caption' => ''
+    ),$attr));
+    
+    $filename = getDownloadUrlforTrial();
+    return '<a title="'.$title.'" href="'.$filename.'">'.$caption.'</a>';
+}
+add_shortcode('getdownloadlink', 'get_download_link');
