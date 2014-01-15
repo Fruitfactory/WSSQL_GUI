@@ -26,7 +26,7 @@ namespace WSUI.Infrastructure.Implements.Systems
             AddRule(new EmailContentSearchRule(Lock1));
             AddRule(new FileFilenameSearchRule(Lock1));
             AddRule(new FileContentSearchRule(Lock1));
-            AddRule(new AttachmentFilenameSearchRule(Lock1));
+            AddRule(new BaseAttachmentSearchRule(Lock1));
 	        base.Init();
 	    }
     }//end AllSearchSystem
