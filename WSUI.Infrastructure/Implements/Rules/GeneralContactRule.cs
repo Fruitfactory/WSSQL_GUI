@@ -90,8 +90,10 @@ namespace WSUI.Infrastructure.Implements.Rules
             {
                 foreach (var emailContact in resultEmailContact)
                 {
+                    if(listExistEmails.Contains(emailContact.EMail.ToLowerInvariant()))
+                        continue;
                     Result.Add(emailContact);
-                    listExistEmails.Add(emailContact.EMail);
+                    listExistEmails.Add(emailContact.EMail.ToLowerInvariant());
                 }    
             }
             var resultContacts =
@@ -101,19 +103,22 @@ namespace WSUI.Infrastructure.Implements.Rules
                 foreach (var contactSearchObject in resultContacts)
                 {
                     if (IsEmail(contactSearchObject.EmailAddress) &&
-                        !listExistEmails.Contains(contactSearchObject.EmailAddress))
+                        !listExistEmails.Contains(contactSearchObject.EmailAddress.ToLowerInvariant()))
                     {
                         Result.Add(contactSearchObject);
+                        listExistEmails.Add(contactSearchObject.EmailAddress.ToLowerInvariant());
                     }
                     else if (IsEmail(contactSearchObject.EmailAddress2) &&
-                             !listExistEmails.Contains(contactSearchObject.EmailAddress2))
+                             !listExistEmails.Contains(contactSearchObject.EmailAddress2.ToLowerInvariant()))
                     {
                         Result.Add(contactSearchObject);
+                        listExistEmails.Add(contactSearchObject.EmailAddress2.ToLowerInvariant());
                     }
                     else if (IsEmail(contactSearchObject.EmailAddress3) &&
-                             !listExistEmails.Contains(contactSearchObject.EmailAddress3))
+                             !listExistEmails.Contains(contactSearchObject.EmailAddress3.ToLowerInvariant()))
                     {
                         Result.Add(contactSearchObject);
+                        listExistEmails.Add(contactSearchObject.EmailAddress3.ToLowerInvariant());
                     }
                 }
             }

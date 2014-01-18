@@ -11,6 +11,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="../Service/ResourceTemplate.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -23,15 +24,15 @@
             <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
                 Controls:TextboxHelper.Watermark="Enter Search Criteria"
                 Controls:TextboxHelper.ClearTextButton="True"
-                     Style="{DynamicResource SearchMetroTextBox}"
                 VerticalAlignment="Center"    
                 VerticalContentAlignment="Center"
                 Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
                     Grid.Column="0" MinHeight="32"
                         IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
-            <!--<Button Command="{Binding Path=SearchCommand}" Content="Search" 
+            <Button Command="{Binding Path=SearchCommand}" 
+                    Style="{StaticResource SearchButton}"
                 Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" MinHeight="32"
-                    IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>-->
+                    IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
     </Grid>
 </UserControl>

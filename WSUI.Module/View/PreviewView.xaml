@@ -27,7 +27,8 @@
                                                     Height="6" Visibility="Visible" HorizontalAlignment="Stretch"
                                                     />-->
 
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding Path=Commands,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Path=Commands,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                      IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" IsItemsHost="True"/>

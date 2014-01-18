@@ -29,17 +29,6 @@ namespace WSUI.Module.ViewModel
     [KindNameId(KindsConstName.Email, 2, @"pack://application:,,,/WSUI.Module;Component/Images/Mail-1.png")]
     public class EmailViewModel : KindViewModelBase, IUView<EmailViewModel>, IScrollableView
     {
-        
-        private const string OrderTemplate = " ORDER BY System.Message.DateReceived DESC";//, System.Search.EntryID DECS
-        private const string FilterByFolder = " AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) ";
-        private const int CountFirstProcess = 45;
-        private const int CountSecondAndOtherProcess = 7;
-        private readonly List<string> _listID = new List<string>();
-        private readonly List<EmailGroupData> _listEmails = new List<EmailGroupData>(); 
-        private int _countAdded;
-        private int _countProcess;
-        private object _lock = new object();
-
         public ICommand ScrollChangeCommand { get; protected set; }
 
         public EmailViewModel(IUnityContainer container, ISettingsView<EmailViewModel> settingsView, IDataView<EmailViewModel> dataView)
@@ -78,19 +67,13 @@ namespace WSUI.Module.ViewModel
             base.OnSearchStringChanged();
             ClearDataSource();
             ClearMainDataSource();
-            _countProcess = ScrollBehavior.CountFirstProcess;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
-            lock (_lock)
-                _listID.Clear();
             ShowMessageNoMatches = true;
         }
 
         protected override void OnFilterData()
         {
-            _countProcess = ScrollBehavior.CountFirstProcess;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
-            lock(_lock)
-                _listID.Clear();
             ShowMessageNoMatches = true;
             base.OnFilterData();
         }
@@ -100,8 +83,8 @@ namespace WSUI.Module.ViewModel
         protected override void OnStart()
         {
             ListData.Clear();
-            _listEmails.Clear();
             FireStart();
+            Enabled = false;
         }
 
         private void OnScroll(object args)
@@ -129,22 +112,6 @@ namespace WSUI.Module.ViewModel
         }
 
         #endregion
-
-        class EmailGroupData : ISearchData
-        {
-            [FieldIndex(0)]
-            public string Subject { get; set; }
-            [FieldIndex(1)]
-            public string ItemName { get; set; }
-            [FieldIndex(2)]
-            public string ItemUrl { get; set; }
-            [FieldIndex(3)]
-            public string[] ToAddress { get; set; }
-            [FieldIndex(4)]
-            public DateTime DateReceived { get; set; }
-            [FieldIndex(5)]
-            public string ConversationId { get; set; }
-        }
 
     }
 }

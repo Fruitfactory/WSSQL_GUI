@@ -23,7 +23,8 @@
                     SelectedItem="{Binding SelectedLazyKind,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                     ItemContainerStyle="{StaticResource WSUIMetroListBoxItem}"
                     ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                    ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}">
         </ListBox>
         
     </Grid>

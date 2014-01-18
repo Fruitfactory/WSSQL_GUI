@@ -163,6 +163,9 @@
     <Compile Include="Controls\Office\OutlookFilePreview.Designer.cs">
       <DependentUpon>OutlookFilePreview.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Office\WebFilePreview.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\Office\WebUtils\DWebBrowserEvents2.cs" />
     <Compile Include="Controls\Office\WebUtils\ExtWebBrowser.cs">
       <SubType>Component</SubType>
@@ -197,6 +200,7 @@
     <Compile Include="PreviewHandlerFramework\ControlsKey.cs" />
     <Compile Include="PreviewHandlerFramework\IOutlookPreviewHelper.cs" />
     <Compile Include="PreviewHandlerFramework\KeyControlAttribute.cs" />
+    <Compile Include="PreviewHandlers\WebPreviewHandler.cs" />
     <Compile Include="Service\OutlookPreview\OutlookPreviewHelper.cs" />
     <Compile Include="Service\Preview\HelperPreviewHandlers.cs" />
     <Compile Include="PInvoke\WindowAPI.cs" />

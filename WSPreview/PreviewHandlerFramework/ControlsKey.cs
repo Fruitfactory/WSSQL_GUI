@@ -11,6 +11,7 @@
         Pdf,
         Rtf,
         Source,
-        Bin
+        Bin,
+        Web
     }
 }

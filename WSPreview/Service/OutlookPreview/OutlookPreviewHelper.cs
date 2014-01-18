@@ -259,13 +259,25 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
                 htmlDoc.LoadHtml(body);
                 HightlightAllNodes(htmlDoc.DocumentNode);
-                htmlDoc.Save(stream, Encoding.UTF8);
-                stream.Position = 0;
-                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                {
-                    return reader.ReadToEnd();
-                }
+                return GetContentOfTag(htmlDoc.DocumentNode);
             }
+        }
+
+        private string GetContentOfTag(HtmlNode node, string tagName = "body")
+        {
+            if (node == null)
+                return string.Empty;
+            if (node.Name == tagName)
+                return node.InnerHtml;
+            string path = string.Empty;
+            foreach (var child in node.ChildNodes)
+            {
+                path = GetContentOfTag(child);
+                if(string.IsNullOrEmpty(path))
+                    continue;
+                break;
+            }
+            return path;
         }
 
         private void HightlightAllNodes(HtmlNode node)

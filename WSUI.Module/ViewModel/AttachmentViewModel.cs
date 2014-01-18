@@ -66,6 +66,7 @@ namespace WSUI.Module.ViewModel
             _list.Clear();
             ListData.Clear();
             FireStart();
+            Enabled = false;
         }
 
         protected override void OnSearchStringChanged()

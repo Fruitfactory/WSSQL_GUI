@@ -26,12 +26,15 @@ namespace WSUI.Core.Data
         [Field("System.Message.ConversationIndex", 10, false)]
         public string ConversationIndex { get; set; }
 
+        [Field("System.Message.FromAddress", 11, false)]
+        public string[] FromAddress { get; set; }
+
 	    public string Recepient
 	    {
 	        get
 	        {
-	            return ToAddress != null && ToAddress.Length > 0
-	                ? ToAddress[0]
+                return FromAddress != null && FromAddress.Length > 0
+                    ? FromAddress[0]
 	                : string.Empty;
 	        }
 	    }
@@ -57,6 +60,9 @@ namespace WSUI.Core.Data
 	                break;
                 case 10:
 	                ConversationIndex = value as string;
+	                break;
+                case 11:
+	                FromAddress = value as string[];
 	                break;
 	        }
 	    }
