@@ -22,6 +22,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerFramework
             try
             {
                 Control ctrl = GetPreviewControl();
+                PrepareForLoading();
                 if (ctrl != null)
                 {
                     if (ctrl is IPreviewControl)
@@ -40,6 +41,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerFramework
             try
             {
                 Control ctrl = GetPreviewControl();
+                PrepareForLoading();
                 if (ctrl != null)
                 {
                     if (ctrl is IPreviewControl)
@@ -117,6 +119,11 @@ namespace WSPreview.PreviewHandler.PreviewHandlerFramework
             {
                 Controls[0].Bounds = this.ClientRectangle;
             }
+        }
+
+        protected virtual void PrepareForLoading()
+        {
+            
         }
 
     }

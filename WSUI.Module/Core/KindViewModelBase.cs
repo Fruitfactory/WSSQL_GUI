@@ -9,15 +9,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
-using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Prism.Commands;
 using WSUI.Core.Core;
+using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Core.Extensions;
+using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Attributes;
 using WSUI.Infrastructure.Controls.BusyControl;
@@ -47,7 +48,7 @@ namespace WSUI.Module.Core
         protected string _query = string.Empty;
         protected string _prefix = string.Empty;
         protected bool _toggle = false;
-        protected readonly List<BaseSearchData> ListData = new List<BaseSearchData>();
+        protected readonly List<BaseSearchObject> ListData = new List<BaseSearchObject>();
         protected Dictionary<TypeSearchItem, ICommandStrategy> CommandStrategies;
         protected IMainViewModel ParentViewModel;
         protected volatile bool IsInterupt = false;
@@ -63,10 +64,13 @@ namespace WSUI.Module.Core
 
         private volatile bool _isQueryRun = false;
         private object _lock = new object();
-        private BaseSearchData _current = null;
+        private BaseSearchObject _current = null;
         private string _searchString = string.Empty;
         private ICommandStrategy _currentStrategy;
         private ManualResetEvent _eventForContinue;
+
+        // new 
+        protected ISearchSystem SearchSystem { get; set; }
 
 
         protected KindViewModelBase(IUnityContainer container)
@@ -76,10 +80,11 @@ namespace WSUI.Module.Core
             SearchCommand = new DelegateCommand<object>(o => Search(),o => CanSearch());
             OpenCommand = new DelegateCommand<object>(o => OpenFile(), o => CanOpenFile());
             OpenFolderCommand = new DelegateCommand<object>(o => OpenFolder(), o => CanOpenFile());
+            ShowPathCommand = new DelegateCommand(ShowPath,CanOpenFile);
             KeyDownCommand = new DelegateCommand<KeyEventArgs>(KeyDown, o => true);
             DoubleClickCommand = new DelegateCommand<MouseButtonEventArgs>(DoubleClick, o => true);
             Enabled = true;
-            DataSource = new ObservableCollection<BaseSearchData>();
+            DataSource = new ObservableCollection<BaseSearchObject>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
             _lastDate = GetCurrentDate();
         }
@@ -256,31 +261,17 @@ namespace WSUI.Module.Core
 
         protected virtual void OnStart()
         {
+            Enabled = false;
             ListData.Clear();
-            //Enabled = false;
             OnPropertyChanged(() => Enabled);
             FireStart();
         }
 
         protected virtual void OnComplete(bool res)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() => 
-            {
-                if (ListData.Count == 0 && ShowMessageNoMatches)
-                {
-                    DataSource.Clear();
-                    var message = new BaseSearchData() { Name = string.Format("Search for '{0}' returned no matches. Try different keywords.", SearchString), Type = TypeSearchItem.None };
-                    ListData.Add(message);
-                    ListData.ForEach(s => DataSource.Add(s));
-                }
-                else
-                {
-                    
-                    ListData.ForEach(s => DataSource.Add(s));
-                }
-            }), null);
+            Enabled = true;
+            ProcessMainResult();
             OnPropertyChanged(() => DataSource);
-            //Enabled = true;
             OnPropertyChanged(() => Enabled);
             FireComplete(res);
             //Application.Current.Dispatcher.BeginInvoke(new Action(() => BusyPopupAdorner.Instance.IsBusy = false), null);
@@ -290,6 +281,34 @@ namespace WSUI.Module.Core
             }
         }
 
+        protected virtual void ProcessMainResult()
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var result = SearchSystem.GetResult();
+                if (result.All(i => i.Result.Count == 0) && ShowMessageNoMatches)
+                {
+                    DataSource.Clear();
+                    var message = new FileSearchObject()
+                    {
+                        ItemName = string.Format("Search for '{0}' returned no matches. Try different keywords.", SearchString),
+                        TypeItem = TypeSearchItem.None
+                    };
+                    DataSource.Add(message);
+                }
+                else
+                {
+                    result.OrderBy(i => i.Priority).ForEach(it =>
+                    {
+                        foreach (var systemSearchResult in it.Result)
+                        {
+                            DataSource.Add(systemSearchResult as BaseSearchObject);
+                        }
+                    });
+                }
+            }), null);
+        }
+
         protected virtual void OnError(bool res)
         {
             EventHandler<EventArgs<bool>> temp = Error;
@@ -297,12 +316,12 @@ namespace WSUI.Module.Core
                 temp(this,new EventArgs<bool>(res));
         }
 
-        protected virtual void OnCurrentItemChanged(BaseSearchData data)
+        protected virtual void OnCurrentItemChanged(BaseSearchObject data)
         {
-            EventHandler<EventArgs<BaseSearchData>> temp = CurrentItemChanged;
+            EventHandler<EventArgs<BaseSearchObject>> temp = CurrentItemChanged;
             if (temp != null)
             {
-                temp(this,new EventArgs<BaseSearchData>(data));
+                temp(this, new EventArgs<BaseSearchObject>(data));
             }
         }
 
@@ -315,6 +334,14 @@ namespace WSUI.Module.Core
 
         protected virtual void Search()
         {
+            if (!IsShouldSearch())
+            {
+                WSSqlLogger.Instance.LogWarning("Please, activate the 'OutlookFinder'");
+                MessageBoxService.Instance.Show("Warning", "Please, activate the 'OutlookFinder'", MessageBoxButton.OK,
+                    MessageBoxImage.Asterisk);
+                return;
+            }
+
             if (_isQueryRun)
             {
                 WSSqlLogger.Instance.LogWarning("Query have already started");
@@ -329,27 +356,25 @@ namespace WSUI.Module.Core
                 
             OnStart();
             MainWindowInfo mwi = GetWindowInfo();
-            _query = CreateQuery();
-            if(_eventForContinue == null)
-                _eventForContinue = new ManualResetEvent(false);
-            var thread = new Thread(() => DoQuery(mwi));
-            thread.Priority = ThreadPriority.Highest;
-            var thread2 = new Thread(DoAdditionalQuery);
-            thread2.Priority = ThreadPriority.Highest;
-            thread.Start();
-            _eventForContinue.Reset();
-            thread2.Start();
+            
+            SearchSystem.SetSearchCriteria(SearchString);
+            SearchSystem.Search();
+
             //BusyPopupAdorner.Instance.Message = "Searching...";
             //BusyPopupAdorner.Instance.IsBusy = true;
-            ProgressManager.Instance.StartOperation(new ProgressOperation()
+            if (!ProgressManager.Instance.InProgress)
             {
-                Caption = "Searching...",
-                DelayTime = 2500,
-                Canceled = false,
-                Location = new Point(mwi.MainWindowRect.Left, mwi.MainWindowRect.Top),
-                Size = new Size(mwi.MainWindowRect.Width, mwi.MainWindowRect.Height),
-                MainHandle = mwi.MainWindowHandle
-            });
+                ProgressManager.Instance.StartOperation(new ProgressOperation()
+                {
+                    Caption = "Searching...",
+                    DelayTime = 2500,
+                    Canceled = false,
+                    Location = new Point(mwi.MainWindowRect.Left, mwi.MainWindowRect.Top),
+                    Size = new Size(mwi.MainWindowRect.Width, mwi.MainWindowRect.Height),
+                    MainHandle = mwi.MainWindowHandle
+                });
+                
+            }
         }
 
         protected virtual bool CanSearch()
@@ -360,6 +385,7 @@ namespace WSUI.Module.Core
         protected virtual void OnSearchStringChanged()
         {
             _lastDate = GetCurrentDate();
+            SearchSystem.Reset();
         }
 
         protected virtual void OnInit()
@@ -369,6 +395,27 @@ namespace WSUI.Module.Core
             RuleCollection.Add(new QuoteRule());
             RuleCollection.Add(new WordRule());
             RuleCollection.ForEach(rule => rule.InitRule());
+
+            if (SearchSystem != null)
+            {
+                SearchSystem.SearchStarted += SearchSystemOnSearchStarted;
+                SearchSystem.SearchFinished += SearchSystemOnSearchFinished;
+                SearchSystem.SearchStoped += SearchSystemOnSearchStoped;
+            }
+        }
+
+        private void SearchSystemOnSearchStoped(object o)
+        {
+            OnError(false);
+        }
+
+        private void SearchSystemOnSearchFinished(object o)
+        {
+            OnComplete(true);
+        }
+
+        private void SearchSystemOnSearchStarted(object o)
+        {
         }
 
         protected virtual void OnFilterData()
@@ -376,7 +423,7 @@ namespace WSUI.Module.Core
             _lastDate = GetCurrentDate();
             if (string.IsNullOrEmpty(SearchString))
                 return;
-
+            SearchSystem.Reset();
             ClearDataSource();
             Search();
         }
@@ -409,6 +456,20 @@ namespace WSUI.Module.Core
             ParentViewModel.MainDataSource.Clear();
         }
 
+
+        protected bool IsShouldSearch()
+        {
+            switch (Parent.ActivateStatus)
+            {
+                case ActivationState.Activated:
+                case ActivationState.Trial:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+
         #region IKindItem
 
         public string Name
@@ -435,7 +496,7 @@ namespace WSUI.Module.Core
         public int ID { get; protected set; }
         public string UIName { get; protected set; }
         public bool Toggle { get { return _toggle; } set { _toggle = value; OnPropertyChanged(() => Toggle); } }
-        public ObservableCollection<BaseSearchData> DataSource { get; protected set; }
+        public ObservableCollection<BaseSearchObject> DataSource { get; protected set; }
         public ICommand ChooseCommand { get; protected set; }
         public ICommand SearchCommand { get; protected set; }
         public ICommand KeyDownCommand { get; protected set; }
@@ -443,10 +504,10 @@ namespace WSUI.Module.Core
         public event EventHandler Start;
         public event EventHandler<EventArgs<bool>> Complete;
         public event EventHandler<EventArgs<bool>> Error;
-        public event EventHandler<EventArgs<BaseSearchData>> CurrentItemChanged;
+        public event EventHandler<EventArgs<BaseSearchObject>> CurrentItemChanged;
         public event EventHandler Choose;
 
-        public BaseSearchData Current
+        public BaseSearchObject Current
         {
             get { return _current; }
             set
@@ -478,8 +539,6 @@ namespace WSUI.Module.Core
 
         #endregion
 
-
-
         public List<string> FolderList
         {
             get
@@ -510,6 +569,13 @@ namespace WSUI.Module.Core
 
         public ICommand OpenFolderCommand { get; protected set; }
 
+        public ICommand ShowPathCommand { get; protected set; }
+
+        private void ShowPath()
+        {
+            var filename = SearchItemHelper.GetFileName(Current);
+            MessageBoxService.Instance.Show("Filename", filename, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
 
         private void OpenItemFile(string fileName)
         {
@@ -551,12 +617,12 @@ namespace WSUI.Module.Core
         {
             if(Current == null)
                 return;
-            if (!CommandStrategies.ContainsKey(Current.Type))
+            if (!CommandStrategies.ContainsKey(Current.TypeItem))
             {
                 _currentStrategy = null;
             }
             else
-                _currentStrategy = CommandStrategies[Current.Type];
+                _currentStrategy = CommandStrategies[Current.TypeItem];
             
             OnPropertyChanged(() => Commands);
         }
@@ -644,5 +710,12 @@ namespace WSUI.Module.Core
         }
 
 
+        protected void OnScroolNeedSearch()
+        {
+            if (SearchSystem.IsSearching)
+                return;
+            ShowMessageNoMatches = false;
+            Search();
+        }
     }
 }

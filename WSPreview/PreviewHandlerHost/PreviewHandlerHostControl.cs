@@ -136,13 +136,13 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             PreviewHandlerInfo handler = null;
             Type comType = null;
             var extens = Path.GetExtension(_filePath).ToUpperInvariant();
-            if (!string.IsNullOrEmpty(extens) && _dataHandler.Extensions.ContainsKey(extens) && !_filePath.ToLower().EndsWith(".msg"))
+            if (!string.IsNullOrEmpty(extens) && _dataHandler.Extensions.ContainsKey(extens) && !IsBlockedExt(_filePath))
             {
                 handler = _dataHandler.Extensions[extens].Handler;
             }
 
             // check application handlers
-            if (_filePath.ToLower().EndsWith(".msg") || handler == null)
+            if (IsBlockedExt(_filePath) || handler == null)
             {
                 _comInstance = GetOwnPreviewHandler();
                 if (_comInstance == null)
@@ -174,6 +174,13 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                 _comInstance = null;
                 SecondChance();
             }
+        }
+
+        private bool IsBlockedExt(string filename)
+        {
+            return filename.ToLower().EndsWith(".msg") ||
+                   filename.ToLower().EndsWith(".html") ||
+                   filename.ToLower().EndsWith(".htm");
         }
 
         private void Control_Resize(object sender, EventArgs e)

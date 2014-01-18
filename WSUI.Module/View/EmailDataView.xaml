@@ -7,8 +7,9 @@
              xmlns:service="clr-namespace:WSUI.Module.Service"
              xmlns:ctrl="clr-namespace:WSUI.Infrastructure.Controls;assembly=WSUI.Infrastructure"
              x:Name="this"
-             xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure" 
-             >
+             xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
+             xmlns:listBox="clr-namespace:WSUI.Infrastructure.Controls.ListBox;assembly=WSUI.Infrastructure"
+             xmlns:attachedProperty="clr-namespace:WSUI.Infrastructure.Helpers.AttachedProperty;assembly=WSUI.Infrastructure">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -43,44 +44,20 @@
     
     <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
 
-        <ListBox x:Name="listBox" ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
-                      ItemTemplateSelector="{StaticResource templateSelector}"
-                      SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                      ContextMenu="{StaticResource ResourceKey=contextMenu}"
-                      ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
-                 service:DoubleClickBehabior.DoubleClickHandler="{Binding DoubleClickCommand}"
+        <listBox:WSUIListBox x:Name="listBox" 
+                        Style="{StaticResource SimpleListBoxStyle}"
+                        ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
+                        BorderBrush="Transparent"
+                        Background="Transparent"            
+                        ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
+                        ItemTemplateSelector="{StaticResource templateSelector}"
+                        attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
+                        ContextMenu="{StaticResource ResourceKey=contextMenu}"
+                        ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
+                        service:DoubleClickBehabior.DoubleClickHandler="{Binding DoubleClickCommand}"
+                        HorizontalContentAlignment="Stretch"
                       >
-            
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="35"/>
-                            <ColumnDefinition Width="0.25*"/>
-                            <ColumnDefinition Width="0.75*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" />
-
-                        <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3"
-                           Grid.Column="1"></TextBlock>
-
-                        <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                            Grid.Column="2"  Margin="5" ></ctrl:HightliteTextBlock>
-
-                        <ctrl:HightliteTextBlock Text="{Binding Path=Name,Converter={StaticResource ResourceKey=StringConverter}}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                            Grid.Column="3"  Margin="5" ></ctrl:HightliteTextBlock>
-
-                        <TextBlock Grid.Column="4"  Text="{Binding Path=Date,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>
-                    </Grid>
-
-
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-
-
-        </ListBox>
+        </listBox:WSUIListBox>
     </Grid>
 </UserControl>

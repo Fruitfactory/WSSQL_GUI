@@ -61,16 +61,4 @@
     </exec>
   </target>
   
-  <!-- run script which commit and push out installer on GitHub -->
-  <target name="deploy" depends="copyFiles">
-    <exec program="bash.exe" basedir="C:\Program Files (x86)\Git\bin\" verbose="true">
-      <environment>
-        <variable name="HOME" value="${environment::get-variable('userprofile')}"/>
-        <variable name="ADDPATH" value=".:/usr/local/bin:/mingw/bin:/bin:/bin"/>
-      </environment>
-      <arg file="deploy.sh" />
-    </exec>
-  </target>
-  
-
 </project>

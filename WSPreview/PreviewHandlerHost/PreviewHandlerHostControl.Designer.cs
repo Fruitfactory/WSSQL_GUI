@@ -37,17 +37,17 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             this.webMessage.Location = new System.Drawing.Point(0, 0);
             this.webMessage.MinimumSize = new System.Drawing.Size(20, 20);
             this.webMessage.Name = "webMessage";
-            this.webMessage.Size = new System.Drawing.Size(148, 148);
+            this.webMessage.Size = new System.Drawing.Size(150, 150);
             this.webMessage.TabIndex = 0;
             // 
             // PreviewHandlerHostControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.webMessage);
+            this.DoubleBuffered = true;
             this.Name = "PreviewHandlerHostControl";
-            this.Size = new System.Drawing.Size(148, 148);
             this.Resize += new System.EventHandler(this.Control_Resize);
             this.ResumeLayout(false);
 

@@ -3,7 +3,9 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using WSUI.Core.Core;
+using WSUI.Core.Data;
 using WSUI.Infrastructure.Models;
+using System.Text.RegularExpressions;
 
 namespace WSUI.Module.Service
 {
@@ -54,7 +56,7 @@ namespace WSUI.Module.Service
         {
             int count = 0;
             int.TryParse(value as string, out count);
-            return count <= 1 ? string.Empty : string.Format("[{0}]", count);
+            return count < 1 ? string.Empty : string.Format("[{0}]", count);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -86,27 +88,31 @@ namespace WSUI.Module.Service
         #endregion
     }
 
-    [ValueConversion(typeof(BaseSearchData),typeof(string))]
+    [ValueConversion(typeof(BaseSearchObject), typeof(string))]
     public class ObjectToNameConverter : IValueConverter
     {
+        private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string result = string.Empty;
-            var contact = value as ContactSearchData;
+            var contact = value as ContactSearchObject;
             if (contact != null)
             {
                 
-                result = string.Format("{0} {1} ({2})", contact.FirstName, contact.LastName,
-                                       contact.EmailList != null && contact.EmailList.Count > 0
-                                           ? contact.EmailList[0]
-                                           : string.Empty);
+                var strEmail = IsEmail(contact.EmailAddress) ?? IsEmail(contact.EmailAddress2) ?? IsEmail(contact.EmailAddress3);
+                if(string.IsNullOrEmpty(contact.FirstName) || string.IsNullOrEmpty(contact.LastName))
+                {
+                    result = string.Format("{0} ({0})", strEmail);
+                }
+                else
+                 result = string.Format("{0} {1} ({2})", contact.FirstName, contact.LastName,strEmail);
 
                 return result;
             }
-            var email = value as EmailSearchData;
+            var email = value as EmailContactSearchObject;
             if (email != null)
             {
-                result = string.Format("{0} ({1})", email.From, email.From);
+                result = string.Format("{0} ({0})", email.EMail);
                 return result;
             }
             return result;
@@ -114,7 +120,12 @@ namespace WSUI.Module.Service
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return null;
+        }
+
+        private string IsEmail(string email)
+        {
+            return !string.IsNullOrEmpty(email) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase) ? email : null;
         }
     }
 

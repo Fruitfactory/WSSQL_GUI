@@ -6,10 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
+using MahApps.Metro.Controls;
 using Microsoft.Practices.Prism.Commands;
 using WSUI.Core.Enums;
+using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Attributes;
+using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Models;
 using WSUI.Infrastructure.Service;
 using WSUI.Infrastructure.Service.Helpers;
@@ -23,21 +26,9 @@ using System.Diagnostics;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId(KindsConstName.Email,2)]
+    [KindNameId(KindsConstName.Email, 2, @"pack://application:,,,/WSUI.Module;Component/Images/Mail-1.png")]
     public class EmailViewModel : KindViewModelBase, IUView<EmailViewModel>, IScrollableView
     {
-        
-        private const string OrderTemplate = " ORDER BY System.Message.DateReceived DESC";//, System.Search.EntryID DECS
-        private const string FilterByFolder = " AND CONTAINS(System.ItemPathDisplay,'{0}*',1033) ";
-        private const int CountFirstProcess = 45;
-        private const int CountSecondAndOtherProcess = 7;
-        private readonly List<string> _listID = new List<string>();
-        private readonly List<EmailGroupData> _listEmails = new List<EmailGroupData>(); 
-        private int _countAdded;
-        private int _countProcess;
-        private object _lock = new object();
-
-
         public ICommand ScrollChangeCommand { get; protected set; }
 
         public EmailViewModel(IUnityContainer container, ISettingsView<EmailViewModel> settingsView, IDataView<EmailViewModel> dataView)
@@ -55,46 +46,19 @@ namespace WSUI.Module.ViewModel
             _prefix = "Email";
             Folder = OutlookHelper.AllFolders;
             TopQueryResult = 50;
+            SearchSystem = new EmailSearchSystem();
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
         }
 
-        protected override void ReadData(IDataReader reader)
-        {
-            EmailGroupData item = new EmailGroupData();
-            ReadGroupData(reader, item);
-            if (item != null && !string.IsNullOrEmpty(item.Subject))
-            {
-                _listEmails.Add(item);
-            }
-        }
-
-        protected override string CreateQuery()
-        {
-            _countAdded = 0;
-            IsInterupt = false;
-            var folder = Folder;
-            var searchCriteria = SearchString.Trim();
-            string res = string.Empty;
-
-            ProcessSearchCriteria(searchCriteria);
-
-            res = string.Format(QueryTemplate, folder != OutlookHelper.AllFolders ? string.Format(FilterByFolder, folder) : string.Empty, string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}\"'", _listW[0]) : _andClause, FormatDate(ref _lastDate), TopQueryResult, OrderTemplate);
-
-            return res;
-
-        }
+       
 
         protected override void OnInit()
         {
             base.OnInit();
+            SearchSystem.Init();
             CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
             ScrollBehavior = new ScrollBehavior() {CountFirstProcess = 300,CountSecondProcess = 100 ,LimitReaction = 85};
-            ScrollBehavior.SearchGo += () =>
-                                           {
-                                               ShowMessageNoMatches = false;
-                                               Search();
-                                               
-                                           };
+            ScrollBehavior.SearchGo += OnScroolNeedSearch;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
         }
 
@@ -103,71 +67,24 @@ namespace WSUI.Module.ViewModel
             base.OnSearchStringChanged();
             ClearDataSource();
             ClearMainDataSource();
-            _countProcess = ScrollBehavior.CountFirstProcess;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
-            lock (_lock)
-                _listID.Clear();
             ShowMessageNoMatches = true;
         }
 
         protected override void OnFilterData()
         {
-            _countProcess = ScrollBehavior.CountFirstProcess;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
-            lock(_lock)
-                _listID.Clear();
             ShowMessageNoMatches = true;
             base.OnFilterData();
         }
 
-        protected override void OnComplete(bool res)
-        {
-            var watchGroup = new Stopwatch();
-            watchGroup.Start();
-            var groups = _listEmails.GroupBy(e => e.ConversationId);
-            lock (_lock)
-            {
-                foreach (var group in groups)
-                {
-                    var data = group.FirstOrDefault();
-                    if (string.IsNullOrEmpty(data.ConversationId) || _listID.Any(s => s == data.ConversationId))
-                        continue;
-                    _listID.Add(data.ConversationId);
-                    string tag = string.Empty;
-                    EmailSearchData newValue = new EmailSearchData()
-                    {
-                        Subject = data.Subject,
-                        ConversationId = data.ConversationId,
-                        Count = group.Count().ToString(),
-                        Date = data.DateReceived,
-                        DateModified = data.DateReceived,
-                        Recepient = data.ToAddress != null && data.ToAddress.Length > 0 ? data.ToAddress[0] : string.Empty,
-                        Display = data.ItemName,
-                        Path = data.ItemUrl,
-                        ID = Guid.NewGuid(),
-                        Name = data.Subject
-                    };
-
-                    TypeSearchItem type = SearchItemHelper.GetTypeItem(data.ItemUrl);
-                    newValue.Type = type;
-                    ListData.Add(newValue);
-                    _countAdded++;
-                }
-                if (_listEmails.Count > 0)
-                    _lastDate = _listEmails[_listEmails.Count - 1].DateReceived;
-            }
-            watchGroup.Stop();
-            WSSqlLogger.Instance.LogInfo("Grouping (Email) Elapsed: " + watchGroup.ElapsedMilliseconds.ToString());
-            base.OnComplete(res);
-            TopQueryResult = ScrollBehavior.CountSecondProcess;
-            _countProcess = ScrollBehavior.CountSecondProcess;
-        }
+        
 
         protected override void OnStart()
         {
             ListData.Clear();
-            _listEmails.Clear();
             FireStart();
+            Enabled = false;
         }
 
         private void OnScroll(object args)
@@ -178,6 +95,7 @@ namespace WSUI.Module.ViewModel
                 ScrollBehavior.NeedSearch(scrollArgs);
             }
         }
+
 
         #region IUIView
 
@@ -194,22 +112,6 @@ namespace WSUI.Module.ViewModel
         }
 
         #endregion
-
-        class EmailGroupData : ISearchData
-        {
-            [FieldIndex(0)]
-            public string Subject { get; set; }
-            [FieldIndex(1)]
-            public string ItemName { get; set; }
-            [FieldIndex(2)]
-            public string ItemUrl { get; set; }
-            [FieldIndex(3)]
-            public string[] ToAddress { get; set; }
-            [FieldIndex(4)]
-            public DateTime DateReceived { get; set; }
-            [FieldIndex(5)]
-            public string ConversationId { get; set; }
-        }
 
     }
 }

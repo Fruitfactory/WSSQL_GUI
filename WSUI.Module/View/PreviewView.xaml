@@ -11,13 +11,8 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+                <ResourceDictionary Source="../Service/ResourceTemplate.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -32,7 +27,8 @@
                                                     Height="6" Visibility="Visible" HorizontalAlignment="Stretch"
                                                     />-->
 
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding Path=Commands,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Path=Commands,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                      IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
@@ -40,15 +36,46 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Command="{Binding}" ToolTip="{Binding Path=Tooltip}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="24" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Image Source="{Binding Path=Icon}" Width="24" Height="24" Grid.Column="0"/>
-                            <TextBlock Text="{Binding Path=Caption}" Grid.Column="1"/>
-                        </Grid>
+                    <Button>
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Margin" Value="2 0 2 0"></Setter>
+                                <Setter Property="ToolTip" Value="{Binding Tooltip}"></Setter>
+                                <Setter Property="Command" Value="{Binding}"></Setter>
+                                <Setter Property="Foreground" >
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="{StaticResource NormalForegroundColor}"></SolidColorBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid Background="{TemplateBinding Background}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <Image Source="{Binding Path=Icon}" Width="32" Height="32" MaxHeight="32" MaxWidth="32"
+                                                Grid.Column="0" Stretch="Fill"/>
+                                                                <TextBlock Text="{Binding Path=Caption}" Grid.Column="1" 
+                                                  HorizontalAlignment="Left" 
+                                                   VerticalAlignment="Center" Style="{StaticResource ItemTextBlock}"/>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Background" Value="{StaticResource WhiteBrush}"></Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="Button.IsMouseOver" Value="True">
+                                        <Setter Property="Button.Background" Value="{StaticResource HighLightColorItemBrush}" />
+                                    </Trigger>
+                                    <Trigger Property="Button.IsPressed" Value="True">
+                                        <Setter Property="Button.Background" Value="{StaticResource AccentColor2Brush}" />
+                                        <Setter Property="Button.Foreground" Value="{StaticResource HoverForegroundColorBrush}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
                     </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

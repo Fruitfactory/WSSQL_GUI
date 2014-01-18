@@ -14,6 +14,7 @@
     </StartupObject>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>WSUI.OutlookPlugin.snk</AssemblyOriginatorKeyFile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,6 +41,23 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trial|AnyCPU'">
+    <OutputPath>..\Routput\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>true</RegisterForComInterop>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>..\ROutput\WSUI.OutlookPlugin.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Reference Include="AddinExpress.OL.2005, Version=7.1.4050.2005, Culture=neutral, PublicKeyToken=e69a7e0f3592d2b8, processorArchitecture=MSIL">
@@ -94,6 +112,8 @@
     <!--<None Include="WSUI.OutlookPlugin.snk" /> -->
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\application-plus-red.png" />
+    <Content Include="Images\logo_64.png" />
     <Content Include="Loader\adxloader.dll" />
     <Content Include="Loader\adxloader64.dll" />
   </ItemGroup>
@@ -103,6 +123,9 @@
     </Compile>
     <Compile Include="Core\DllPreloader.cs" />
     <Compile Include="Core\UpdateHelper.cs" />
+    <Compile Include="Events\WSUIHideWindow.cs" />
+    <Compile Include="Events\WSUIOpenWindow.cs" />
+    <Compile Include="Events\WSUISearch.cs" />
     <Compile Include="Hooks\GlobalEventProvider.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -113,6 +136,10 @@
     <Compile Include="Hooks\MouseEventExtArgs.cs" />
     <Compile Include="Interfaces\IMainForm.cs" />
     <Compile Include="Interfaces\IUpdatable.cs" />
+    <Compile Include="Interfaces\IWSUICommandManager.cs" />
+    <Compile Include="Core\BaseCommandManager.cs" />
+    <Compile Include="Managers\WSUICommandBarManager.cs" />
+    <Compile Include="Managers\WSUIRibbonManager.cs" />
     <Compile Include="WSUIAddinModule.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -154,7 +181,9 @@
       <Name>WSUI.Module</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core\Controls\" />
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>xcopy $(SolutionDir)Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\Microsoft\Microsoft.Ink.dll $(TargetDir) /F /R /Y /I
@@ -176,6 +205,12 @@ xcopy $(SolutionDir)Toolkits\GflSdk\lib64\libgfl340.dll $(TargetDir)lib64\ /F /R
 xcopy $(SolutionDir)Toolkits\GflSdk\lib64\libgfle340.dll $(TargetDir)lib64\ /F /R /Y /I
 
 xcopy $(SolutionDir)Toolkits\PDFSharp\x86\PDFLibNet.dll $(TargetDir)lib\ /F /R /Y /I
-xcopy $(SolutionDir)Toolkits\PDFSharp\x64\PDFLibNet.dll $(TargetDir)lib64\ /F /R /Y /I</PostBuildEvent>
+xcopy $(SolutionDir)Toolkits\PDFSharp\x64\PDFLibNet.dll $(TargetDir)lib64\ /F /R /Y /I
+
+xcopy $(SolutionDir)Toolkits\TurboApi\Api\x86\TurboActivate.dll $(TargetDir) /F /R /Y /I
+copy $(SolutionDir)Toolkits\TurboApi\Api\x64\TurboActivate.dll $(TargetDir)\TurboActivate64.dll 
+xcopy $(SolutionDir)Toolkits\TurboApi\Api\x86\TurboActivate.exe $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\TurboApi\Dats\1.0.0\TurboActivate.dat $(TargetDir) /F /R /Y /I
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

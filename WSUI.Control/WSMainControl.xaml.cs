@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WSUI.Control.Interfaces;
 using WSUI.Module.Interface;
 
 namespace WSUI.Control
@@ -18,7 +19,7 @@ namespace WSUI.Control
     /// <summary>
     /// Interaction logic for WSMainControl.xaml
     /// </summary>
-    public partial class WSMainControl : UserControl, IMainView
+    public partial class WSMainControl : UserControl, IMainView, IWSMainControl
     {
         public WSMainControl()
         {
@@ -65,6 +66,17 @@ namespace WSUI.Control
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
+        }
+
+        public event EventHandler Close;
+
+        private void CloseButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            EventHandler temp = Close;
+            if (temp != null)
+            {
+                temp(this, EventArgs.Empty);
+            }
         }
 
     }

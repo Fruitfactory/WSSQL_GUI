@@ -61,15 +61,15 @@ namespace WSUI
                                                                       }));
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            ThemeManager.ChangeTheme(this, ThemeManager.DefaultAccents.First(a => a.Name == "Blue"), Theme.Light);
-        }
+        //private void Button_Click(object sender, RoutedEventArgs e)
+        //{
+        //    ThemeManager.ChangeTheme(this, ThemeManager.DefaultAccents.First(a => a.Name == "Blue"), Theme.Light);
+        //}
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            ThemeManager.ChangeTheme(this, ThemeManager.DefaultAccents.First(a => a.Name == "Blue"), Theme.Dark);
-        }
+        //private void Button_Click_1(object sender, RoutedEventArgs e)
+        //{
+        //    ThemeManager.ChangeTheme(this, ThemeManager.DefaultAccents.First(a => a.Name == "Blue"), Theme.Dark);
+        //}
 
         public override void EndInit()
         {

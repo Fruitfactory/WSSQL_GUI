@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using WSUI.Core.Core;
+using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
@@ -91,16 +92,16 @@ namespace WSUI.Infrastructure.Service.Helpers
 
         #region public
 
-        public string GetEMailTempFileName(BaseSearchData itemsearch)
+        public string GetEMailTempFileName(BaseSearchObject itemsearch)
         {
             if (itemsearch == null)
                 return null;
-            string mapiUrl = itemsearch.Path;
+            string mapiUrl = itemsearch.ItemUrl;
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
             dynamic mailItem = GetMailItem(entryID);
             if (mailItem == null)
             {
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Mail not found", itemsearch.Path));
+                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Mail not found", itemsearch.ItemUrl));
                 return null;
             }
             string tempFilename = TempFileManager.Instance.GenerateTempFileName(itemsearch);
@@ -116,18 +117,18 @@ namespace WSUI.Infrastructure.Service.Helpers
             return tempFilename;
         }
 
-        public string GetAttachmentTempFileName(BaseSearchData item)
+        public string GetAttachmentTempFileName(BaseSearchObject item)
         {
             if (item == null)
                 return null;
-            string mapi = item.Path;
+            string mapi = item.ItemUrl;
             string entryID = EIDFromEncodeStringWDS30(mapi.Substring(mapi.IndexOf(ATSUFFIX) - IDLENGHT, IDLENGHT));
             string fileNameAttach = mapi.Substring(mapi.LastIndexOf(':') + 1);
             dynamic mi = GetMailItem(entryID);
             Outlook.Attachment att = GetAttacment(mi, fileNameAttach);
             if (att == null)
             {
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1} - {2}", "Attachment not found", item.Name, item.Path));
+                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1} - {2}", "Attachment not found", item.ItemName, item.ItemUrl));
                 return null;
             }
             string tempFileName = TempFileManager.Instance.GenerateTempFileName(item);
@@ -147,12 +148,12 @@ namespace WSUI.Infrastructure.Service.Helpers
             return tempFileName;
         }
 
-        public List<string> GetAttachments(BaseSearchData itemsearch)
+        public List<string> GetAttachments(BaseSearchObject itemsearch)
         {
             List<string> list = new List<string>();
             if (itemsearch == null)
                 return null;
-            string mapiUrl = itemsearch.Path;
+            string mapiUrl = itemsearch.ItemUrl;
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
             dynamic mi = GetMailItem(entryID);
             if (mi == null)
@@ -165,18 +166,18 @@ namespace WSUI.Infrastructure.Service.Helpers
             return list;
         }
 
-        public string GetContactFotoTempFileName(ContactSearchData data)
+        public string GetContactFotoTempFileName(ContactSearchObject data)
         {
             if (data == null)
                 return string.Empty;
-            string mapiUrl = data.Path;
+            string mapiUrl = data.ItemUrl;
             Outlook.ContactItem ci = GetContact(data);
             if (ci == null)
                 return string.Empty;
             Outlook.Attachment att  = GetFotoAttachment(ci);
             if (att == null)
                 return string.Empty;
-            data.Path = att.DisplayName;
+            data.ItemUrl = att.DisplayName;
 
             string tempFilename = TempFileManager.Instance.GenerateTempFileName(data);
             
@@ -195,11 +196,11 @@ namespace WSUI.Infrastructure.Service.Helpers
             return newMail;
         }
 
-        public dynamic GetEmailItem(BaseSearchData data)
+        public dynamic GetEmailItem(BaseSearchObject data)
         {
             if (data == null)
                 return null;
-            string mapiUrl = data.Path;
+            string mapiUrl = data.ItemUrl;
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
             dynamic mailItem = GetMailItem(entryID);
             return mailItem;
@@ -262,16 +263,16 @@ namespace WSUI.Infrastructure.Service.Helpers
             return sbEID.ToString();
         }
 
-        public string GetCalendarTempFileName(BaseSearchData itemSearch)
+        public string GetCalendarTempFileName(BaseSearchObject itemSearch)
         {
             if(itemSearch == null)
                 return string.Empty;
-            string mapiUrl = itemSearch.Path;
+            string mapiUrl = itemSearch.ItemUrl;
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
             dynamic appointmentItem = GetAppointment(entryID);
             if (appointmentItem == null)
             {
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}","Appointment not found",itemSearch.Path));
+                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}","Appointment not found",itemSearch.ItemUrl));
                 return null;
             }
             string tempFile = TempFileManager.Instance.GenerateTempFileName(itemSearch);
@@ -531,7 +532,7 @@ namespace WSUI.Infrastructure.Service.Helpers
         }
 
 
-        private Outlook.ContactItem GetContact(ContactSearchData data)
+        private Outlook.ContactItem GetContact(ContactSearchObject data)
         {
             if (this.OutlookApp == null)
                 return null;

@@ -19,7 +19,7 @@ namespace WSUI.Module.Service
 
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
 
-        public static  string GetContactQuery(string searchCriteria, string lastDate,int top = 5)
+        public static string GetContactQuery(string searchCriteria, string lastDate,int top = 5)
         {
             searchCriteria = searchCriteria.Trim();
             string res = String.Empty;

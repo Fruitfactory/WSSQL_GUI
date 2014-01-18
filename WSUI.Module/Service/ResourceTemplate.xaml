@@ -5,13 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:service="clr-namespace:WSUI.Module.Service"
              xmlns:ctrl="clr-namespace:WSUI.Infrastructure.Controls;assembly=WSUI.Infrastructure"                  
-                    xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure" 
+                    xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
+                    xmlns:listBox="clr-namespace:WSUI.Infrastructure.Controls.ListBox;assembly=WSUI.Infrastructure"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:behaviors="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure">
                     
-                    >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-        <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />-->
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <service:DateToStringConverter x:Key="dateConverter" />
@@ -26,6 +30,16 @@
         <Setter Property="Width"  Value="16"/>
         <Setter Property="Height" Value="16"/>
         <Setter Property="Margin" Value="5"/>
+        
+    </Style>
+
+    <Style x:Key="ExpanderImageStyle" TargetType="{x:Type Image}">
+        <Setter Property="Width"  Value="12"/>
+        <Setter Property="Height" Value="12"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Visibility" Value="Visible"></Setter>
     </Style>
 
     <Style x:Key="NameStyleWidthColumn" TargetType="ColumnDefinition">
@@ -45,9 +59,102 @@
         <Setter Property="Width" Value="Auto" />
     </Style>
 
+    <Style x:Key="ExpanderUpHeaderStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Visibility" Value="Visible"></Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Padding="{TemplateBinding Padding}">
+                        <Grid SnapsToDevicePixels="False" Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Image x:Name="image" Source="..\Images\plus.png" Style="{StaticResource ExpanderImageStyle}" />
+                            </Grid>
+                            <ContentPresenter HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center" SnapsToDevicePixels="True" Grid.Column="1" RecognizesAccessKey="True"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter Property="Source" TargetName="image" Value="..\Images\plus.png"></Setter>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Source" TargetName="image" Value="..\Images\minus.png"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Count}" Value="0">
+                <Setter Property="Visibility" Value="Hidden"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="EmailExpanderStyle" TargetType="{x:Type Expander}">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Expander}">
+                    <Border SnapsToDevicePixels="true" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
+                        <DockPanel>
+                            <Grid DockPanel.Dock="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="16" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ToggleButton Grid.Column="0" x:Name="HeaderSite"  Margin="0" MinHeight="0" MinWidth="0" Style="{StaticResource ExpanderUpHeaderStyle}" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" FontStretch="{TemplateBinding FontStretch}" FontStyle="{TemplateBinding FontStyle}" FontWeight="{TemplateBinding FontWeight}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                                <Grid Grid.Column="1" HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
+                                        <ColumnDefinition Width="0.25*"/>
+                                        <ColumnDefinition Width="0.75*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" />
+
+                                    <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3"
+                                       Grid.Column="1"></TextBlock>
+
+                                    <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"
+                                            Grid.Column="2"  Margin="5" ></ctrl:HightliteTextBlock>
+
+                                    <ctrl:HightliteTextBlock Text="{Binding Path=ItemName,Converter={StaticResource ResourceKey=StringConverter}}"  Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"
+                                            Grid.Column="3"   Margin="5"></ctrl:HightliteTextBlock>
+
+                                    <TextBlock Grid.Column="4"  Text="{Binding Path=DateReceived,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>
+                                </Grid>
+
+                            </Grid>
+                            <ContentPresenter x:Name="ExpandSite" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="0"  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Focusable="false" Visibility="Collapsed" DockPanel.Dock="Bottom"/>
+                        </DockPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="true">
+                            <Setter Property="Visibility" TargetName="ExpandSite" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <DataTemplate x:Key="NoneTemplate" >
-        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
+        <Grid HorizontalAlignment="Left" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition  Width="*"/>
@@ -55,14 +162,14 @@
 
             <Image Grid.Column="0" Source="..\Images\document-smiley-sad.png" Style="{StaticResource ImageStyle}" />
 
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+            <ctrl:HightliteTextBlock Text="{Binding Path=ItemName}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                                             Grid.Column="1" Margin="5"/>
         </Grid>
         
     </DataTemplate>
 
-    <DataTemplate x:Key="EmailTemplate">
-        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
+    <DataTemplate x:Key="EmailItemTemplate">
+        <Grid HorizontalAlignment="Left" Margin="8 0 0 0" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
@@ -70,25 +177,55 @@
                 <ColumnDefinition Width="0.75*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-
+            <Grid.ToolTip>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
+                </StackPanel>
+            </Grid.ToolTip>
+            
             <Image Grid.Column="0" Source="..\Images\mail.png" Style="{StaticResource ImageStyle}" />
 
             <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="0 3 0 3"
                            Grid.Column="1"></TextBlock>
-<!--ctrl:HightliteTextBlock-->
             <ctrl:HightliteTextBlock Text="{Binding Path=Recepient}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"
-                                            Grid.Column="2"  Margin="5" ></ctrl:HightliteTextBlock><!--Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"-->
+                                            Grid.Column="2"  Margin="5" ></ctrl:HightliteTextBlock>
 
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name,Converter={StaticResource ResourceKey=StringConverter}}"  Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"
-                                            Grid.Column="3"   Margin="5"></ctrl:HightliteTextBlock><!--Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"--> 
-            
-            <TextBlock Grid.Column="4"  Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>
+            <ctrl:HightliteTextBlock Text="{Binding Path=ItemName,Converter={StaticResource ResourceKey=StringConverter}}"  Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"
+                                            Grid.Column="3"   Margin="5"></ctrl:HightliteTextBlock>
+
+            <TextBlock Grid.Column="4"  Text="{Binding Path=DateReceived,Converter={StaticResource dateConverter}}"  Margin="5 5 1 5" Foreground="Black"/>
         </Grid>
-        
+
     </DataTemplate>
 
+
+    <DataTemplate x:Key="EmailTemplate">
+        <Grid HorizontalAlignment="Left" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.ToolTip>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
+                </StackPanel>
+            </Grid.ToolTip> 
+            <Expander Margin="0" Grid.Column="0" Style="{StaticResource EmailExpanderStyle}" ExpandDirection="Down">
+                <Grid>
+                    <ListBox ItemsSource="{Binding Items}"
+                             
+                             ItemTemplate="{StaticResource EmailItemTemplate}" ><!--SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=SelectedItem,Mode=OneWayToSource}"-->
+                             
+                        <i:Interaction.Behaviors>
+                            <behaviors:ChildListBoxBehavior />
+                        </i:Interaction.Behaviors>
+                    </ListBox>
+                </Grid>
+            </Expander>    
+        </Grid>
+    </DataTemplate>
+    
     <DataTemplate x:Key="UserTemplate">
-        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
+        <Grid HorizontalAlignment="Left" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -118,7 +255,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="FileTemplate">
-        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
+        <Grid HorizontalAlignment="Left" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
@@ -128,26 +265,25 @@
             </Grid.ColumnDefinitions>
             <Grid.ToolTip>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=Path}" />
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
             </Grid.ToolTip>
 
-            <Image  Source="{Binding Path=Name,Converter={StaticResource ResourceKey=nameConverter}}" Style="{StaticResource ImageStyle}" 
+            <Image  Source="{Binding Path=ItemName,Converter={StaticResource ResourceKey=nameConverter}}" Style="{StaticResource ImageStyle}" 
                     Grid.Column="0"/>
             <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
                            Grid.Column="1"></TextBlock>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+            <ctrl:HightliteTextBlock Text="{Binding Path=ItemName}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                                         Grid.Column="2" Grid.ColumnSpan="2"  Margin="5"/>
 
-            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" Grid.Column="4" Foreground="Black"/>
+            <TextBlock Text="{Binding Path=DateCreated,Converter={StaticResource dateConverter}}"  Margin="5" Grid.Column="4" Foreground="Black"/>
 
         </Grid>
         
     </DataTemplate>
 
     <DataTemplate x:Key="AttachmentTemplate">
-        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
+        <Grid HorizontalAlignment="Left" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
@@ -157,16 +293,15 @@
             </Grid.ColumnDefinitions>
             <Grid.ToolTip>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=Path}" />
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
             </Grid.ToolTip>
 
-            <Image  Source="{Binding Path=Name,Converter={StaticResource ResourceKey=nameConverter}}" Style="{StaticResource ImageStyle}" 
+            <Image  Source="{Binding Path=ItemUrl,Converter={StaticResource ResourceKey=nameConverter}}" Style="{StaticResource ImageStyle}" 
                     Grid.Column="0"/>
             <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
                            Grid.Column="1"></TextBlock>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+            <ctrl:HightliteTextBlock Text="{Binding Path=ItemName}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                                         Grid.Column="2" Grid.ColumnSpan="2"  Margin="5"/>
             <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" Grid.Column="4" Foreground="Black"/>
         </Grid>
@@ -175,7 +310,7 @@
     
     <DataTemplate x:Key="CalendarTemplate">
 
-        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
+        <Grid HorizontalAlignment="Left" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
@@ -185,26 +320,31 @@
             <Image Grid.Column="0" Source="..\Images\date.png" Style="{StaticResource ImageStyle}" />
             <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
                            Grid.Column="1"></TextBlock>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+            <ctrl:HightliteTextBlock Text="{Binding Path=ItemName}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                                         Grid.Column="2"   Margin="5"/>
             <TextBlock Grid.Column="3"  Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>
         </Grid>
     </DataTemplate>
 
     <DataTemplate x:Key="PictureTemplate">
-        <Grid HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
+        <Grid HorizontalAlignment="Left" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
+            <Grid.ToolTip>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
+                </StackPanel>
+            </Grid.ToolTip>
             <Image Grid.Column="0" Source="..\Images\pictures.png" Style="{StaticResource ImageStyle}" />
             <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
                            Grid.Column="1"></TextBlock>
-            <ctrl:HightliteTextBlock Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+            <ctrl:HightliteTextBlock Text="{Binding Path=ItemName}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                                         Grid.Column="2"   Margin="5"/>
-            <TextBlock Grid.Column="3"  Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>
+            <TextBlock Grid.Column="3"  Text="{Binding Path=DateCreated,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>
         </Grid>
     </DataTemplate>
     
@@ -212,7 +352,7 @@
         <DockPanel LastChildFill="True" HorizontalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Image Grid.Column="0" Source="..\Images\more1.png" Style="{StaticResource ImageStyle}" DockPanel.Dock="Left"/>
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <ctrl:HightliteHyperlink Text="{Binding Path=Name}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
+                <ctrl:HightliteHyperlink Text="{Binding Path=ItemName}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
                                                            Margin="5">
                     <ctrl:HightliteHyperlink.Style>
                         <Style TargetType="ctrl:HightliteTextBlockBase">
@@ -244,6 +384,7 @@
     <ContextMenu x:Key="contextMenu">
         <MenuItem Header="Open file"  Command="{Binding OpenCommand}"/>
         <MenuItem Header="Open folder"  Command="{Binding OpenFolderCommand}"/>
+        <MenuItem Header="Show filename" Command="{Binding ShowPathCommand}"></MenuItem>
     </ContextMenu>
 
 
@@ -329,5 +470,137 @@
         </Setter>
     </Style>
 
+    <Color x:Key="HighLightColorItem" >#FFF4F4F4</Color>
 
+    <Style x:Key="ItemTextBlock" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource DefaultFont}"></Setter>
+        <Setter Property="FontSize" Value="{StaticResource NormalFontSize}"></Setter>
+        <Setter Property="Margin" Value="14 0 7 0"></Setter>
+    </Style>
+
+
+    <Style x:Key="WSUIMetroListBoxItem" TargetType="{x:Type ListBoxItem}">
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="Margin" Value="0 2 0 0" />
+        <!--<Setter Property="IsSelected" Value="{Binding Toggle, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+
+                    <Grid x:Name="Border">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding Path=Icon}" Width="32" Height="32" MaxHeight="32" MaxWidth="32" />
+                        <TextBlock Grid.Column="1" x:Name="KindName" Text="{Binding Path=UIName}" 
+                                           VerticalAlignment="Center" Style="{StaticResource ItemTextBlock}"></TextBlock>
+
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="False">
+                            <Setter Property="Foreground">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{DynamicResource TextBoxText}"></SolidColorBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource AccentSelectedColorBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{DynamicResource HighLightColorItem}" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource GrayBrush5}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsEnabled" Value="False" />
+                                <Condition Property="IsSelected" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource GrayBrush5}" />
+                                <Setter Property="Foreground" Value="{DynamicResource AccentSelectedColorBrush}" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True" />
+                                <Condition Property="Selector.IsSelectionActive" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Border" Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{DynamicResource AccentColor2}" />
+                                </Setter.Value>
+                            </Setter>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <SolidColorBrush x:Key="HighLightColorItemBrush" Color="{StaticResource HighLightColorItem}"></SolidColorBrush>
+    <SolidColorBrush x:Key="AccentColor2Brush" Color="{StaticResource AccentColor2}"></SolidColorBrush>
+    <SolidColorBrush x:Key="HoverForegroundColorBrush" Color="{StaticResource HoverForegroundColor}"></SolidColorBrush>
+    <SolidColorBrush x:Key="AccentColorBrush" Color="{StaticResource AccentColor}" />
+    <SolidColorBrush x:Key="AccentDarkColorBrush" Color="{StaticResource AccentDarkColor}" />
+    
+    
+    <Style x:Key="SearchButton" TargetType="Button">
+        <Setter Property="Visibility" Value="Visible"/>
+        <Setter Property="Foreground" Value="{StaticResource AccentSelectedColorBrush}"/>
+        <Setter Property="Background" Value="{StaticResource AccentColor2Brush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentColor2Brush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border SnapsToDevicePixels="True"
+				            BorderThickness="1"
+				            BorderBrush="{TemplateBinding BorderBrush}" 
+				            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <Viewbox>
+                                <Grid>
+                                    <Grid Name="backgroundGrid" Width="32" Height="32" Visibility="Collapsed" />
+                                    <Path Data="F1M-185.925,-2026.96L-203.062,-2048.74C-197.485,-2056.51 -197.433,-2067.31 -203.64,-2075.2 -211.167,-2084.76 -225.019,-2086.42 -234.588,-2078.89 -244.154,-2071.36 -245.808,-2057.51 -238.282,-2047.94 -231.986,-2039.95 -221.274,-2037.5 -212.337,-2041.31L-195.262,-2019.61 -185.925,-2026.96z M-231.201,-2053.51C-235.653,-2059.17 -234.674,-2067.36 -229.02,-2071.81 -223.36,-2076.26 -215.169,-2075.29 -210.721,-2069.63 -206.269,-2063.97 -207.245,-2055.78 -212.902,-2051.33 -218.559,-2046.88 -226.752,-2047.86 -231.201,-2053.51z" Stretch="Uniform" Fill="#FFFFFFFF" Width="24" Height="24" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                                        <Path.RenderTransform>
+                                            <TransformGroup>
+                                                <TransformGroup.Children>
+                                                    <RotateTransform Angle="0" />
+                                                    <ScaleTransform ScaleX="0.75" ScaleY="0.75" />
+                                                </TransformGroup.Children>
+                                            </TransformGroup>
+                                        </Path.RenderTransform>
+                                    </Path>
+                                </Grid>
+                            </Viewbox>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" Value="{StaticResource AccentColorBrush}" />
+                            <Setter Property="Background" Value="{StaticResource AccentColorBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="{StaticResource AccentDarkColorBrush}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource AccentDarkColorBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{DynamicResource GrayBrush5}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource GrayBrush5}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
 </ResourceDictionary>

@@ -22,6 +22,7 @@
                  ContextMenu="{StaticResource ResourceKey=contextMenu}"
                  ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
                  service:DoubleClickBehabior.DoubleClickHandler="{Binding DoubleClickCommand}"
+                 HorizontalContentAlignment="Stretch"
                  >
 
         </ListBox>

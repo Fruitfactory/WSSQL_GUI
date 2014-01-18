@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project name="WSUI">
+  
+  <property name="project.name" value="WSOutlookPlugin" />
+  <property name="project.build.type" value="Trial" unless="${property::exists('project.build.type')}"/>
+  
+  <property name="solution" value="WSSQLGUI.sln" />
+  <property name="outlookplugin.project" value="WSUI.OutlookPlugin.csproj" />
+  
+  <property name="working.dir" value="${path::get-full-path('..')}"/>
+  <property name="build.tools.dir" value="${working.dir}\Toolkits" />
+  <property name="source.directory" value="${working.dir}" />
+  <property name="bin.dir" value="${working.dir}\ROutput" />
+  
+  <!-- clear folder where we store builded files -->
+  <target name="cleanROutput" unless="${target::has-executed('cleanROutput')}">
+    <echo message="Clean Routput directory..." />
+    <delete dir="${bin.dir}" failonerror="false"  if="${directory::exists(bin.dir)}"/>
+  </target>
+
+  <!-- create new empty folder for storing files -->
+  <target name="createROutput" unless="${target::has-executed('createROutput')}">
+      <echo message="Create ROutput directory..." />
+      <mkdir dir="${bin.dir}" failonerror="true" unless="${directory::exists(bin.dir)}"/>
+  </target>
+  
+  <!-- run updating version and GUID for installer project and generate Version.cs -->
+  <target name="updatedVersionInfo" unless="${target::has-executed('updatedVersionInfo')}" >
+    <echo message="Update version info..." />
+    <exec program="wsgen.exe" basedir="${build.tools.dir}" commandline='"${source.directory}"' workingdir="." />
+  </target>
+ 
+  <!-- compile solution by Visual Studio and write buid log into ROutput folder -->
+  <target name="compilesolution" depends="updatedVersionInfo, cleanROutput, createROutput">
+    <echo message="Compiling Solution..." />
+
+    <exec program="devenv.com"  basedir="C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE"
+			  commandline='"${source.directory}\${solution}" /Build "${project.build.type}|Mixed Platforms" /Out "${bin.dir}\Build_WSUI_Solution.log" ' workingdir="." />
+  </target>
+
+  <!-- set up settings for creating clicktwice installer -->
+  <target name="setSettingsADX" depends="compilesolution">
+    <echo message="Set publishing settings..." />
+    <exec program="wsadxpublisher.exe" basedir="${build.tools.dir}" commandline='/set /trial' workingdir="." />
+  </target>  
+  <!-- make clicktwice installer, generate version_file.xml and copy fo Clicktwice folder -->
+  <target name="publishClickTwice" depends="setSettingsADX">
+    <echo message="Publish..." />
+    <exec program="adxpublisher.exe" basedir="C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\Bin" commandline='/OutputType=ClickTwice' workingdir="." />    
+  </target>
+  <!-- clear settings which we set on  setSettingsADX step-->
+  <target name="clearSettingsADX" depends="publishClickTwice">
+    <echo message="Clear publishing settings..." />
+    <exec program="wsadxpublisher.exe" basedir="${build.tools.dir}" commandline='/clear' workingdir="." />
+  </target>
+  
+  <!-- copy ready files to folder pages\downloads\clicktwice-->
+  <target name="copyFiles" depends="clearSettingsADX">
+    <exec program="copyTrial.bat" verbose="true">
+      
+    </exec>
+  </target>
+  
+</project>

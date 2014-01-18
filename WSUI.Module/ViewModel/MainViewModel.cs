@@ -6,17 +6,18 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Threading;
-using WSPreview.PreviewHandler.Service;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Core;
+using WSUI.Core.Core.LimeLM;
+using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Core.Win32;
+using WSUI.Infrastructure.Controls.BlockControl;
 using WSUI.Infrastructure.Controls.BusyControl;
 using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Service.Helpers;
@@ -24,6 +25,7 @@ using WSUI.Infrastructure.Services;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Infrastructure;
+using WSUI.Module.Service.Dialogs.Message;
 using Application = System.Windows.Application;
 using WSPreview.PreviewHandler.Service.OutlookPreview;
 
@@ -35,10 +37,11 @@ namespace WSUI.Module.ViewModel
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;
         private IKindItem _currentItem = null;
+        private ILazyKind _selectedLazyKind = null;
         private bool _enabled = true;
         private const string Interface = "WSUI.Module.Interface.IKindItem";
 
-        private BaseSearchData _currentData = null;
+        private BaseSearchObject _currentData = null;
 
 
         public MainViewModel(IUnityContainer container, IRegionManager region, IKindsView kindView, IPreviewView previewView)
@@ -49,7 +52,7 @@ namespace WSUI.Module.ViewModel
             kindView.Model = this;
             PreviewView = previewView;
             previewView.Model = this;
-            MainDataSource = new List<BaseSearchData>();
+            MainDataSource = new List<BaseSearchObject>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
         }
 
@@ -70,6 +73,16 @@ namespace WSUI.Module.ViewModel
             protected set;
         }
 
+        public ILazyKind SelectedLazyKind
+        {
+            get { return _selectedLazyKind; }
+            set
+            {
+                _selectedLazyKind = value;
+                OnChoose(value.Kind);
+            }
+        }
+
         public ObservableCollection<IWSCommand> Commands
         {
             get { return _currentItem != null ? _currentItem.Commands : null; }
@@ -79,6 +92,14 @@ namespace WSUI.Module.ViewModel
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
             OutlookPreviewHelper.Instance.PreviewHostType = HostType.Application;
+            InitializeCommands();
+        }
+
+        private void InitializeCommands()
+        {
+            ActivateCommand = new DelegateCommand(InternalActivate);
+            TryAgainCommand = new DelegateCommand(InternalTryAgain);
+            DeactivateCommand = new DelegateCommand(InternalDeactivate);
         }
 
         public bool Enabled
@@ -101,9 +122,64 @@ namespace WSUI.Module.ViewModel
             if (_listItems.Count > 0)
             {
                 _listItems.ForEach(k => KindsCollection.Add(k));
-                OnChoose(_listItems[0].Kind);
+                SelectedLazyKind = _listItems[0];
             }
             OnPropertyChanged(() => KindsCollection);
+            UpdatedActivatedStatus();
+        }
+
+        private void UpdatedActivatedStatus()
+        {
+            ActivateStatus = TurboLimeActivate.Instance.State;
+            
+            switch (ActivateStatus)
+            {
+                case ActivationState.Trial:
+                    TextStatus = string.Format("Trial version. Trial period will be expired after {0} day(s).",
+                        TurboLimeActivate.Instance.DaysRemain);
+                    break;
+                case ActivationState.Error:
+                    TextStatus = string.Format("Checking has return an error. Try Again >>");
+                    break;
+                case ActivationState.NonActivated:
+                case ActivationState.TrialEnded:
+                    TextStatus = string.Format("You trial period has expired. Please, activate the 'OutlookFinder' >>");
+                    break;
+                
+            }
+            WSSqlLogger.Instance.LogInfo("Activated Status: {0}", ActivateStatus.ToString());
+            WSSqlLogger.Instance.LogInfo("Text Status: {0}", TextStatus);
+            OnPropertyChanged(() => ActivateStatus);
+            OnPropertyChanged(() => TextStatus);
+        }
+
+        private void CheckStateAndShowActivatedForm()
+        {
+            TurboLimeActivate.Instance.TryCheckAgain();
+            ActivateStatus = TurboLimeActivate.Instance.State;
+            switch (ActivateStatus)
+            {
+#if !TRIAL
+                case ActivationState.Trial:
+#endif
+                case ActivationState.TrialEnded:
+                case ActivationState.NonActivated:
+                    TurboLimeActivate.Instance.Activate(UpdatedActivatedStatus);
+                    break;
+            }
+        }
+
+        private void UpdatedUiBloker()
+        {
+            switch (ActivateStatus)
+            {
+                case ActivationState.NonActivated:
+                    BlockPopupAdorner.Instance.Block = true;
+                    break;
+                default:
+                    BlockPopupAdorner.Instance.Block = false;
+                    break;
+            }
         }
 
         private void GetAllKinds()
@@ -114,7 +190,7 @@ namespace WSUI.Module.ViewModel
 
             foreach (var type in types)
             {
-                var kind = new LazyKind(_container, type, this, OnChoose, OnPropertyChanged);
+                var kind = new LazyKind(_container, type, this, null, OnPropertyChanged);
                 kind.Initialize();
                 _listItems.Add(kind);
             }
@@ -196,7 +272,7 @@ namespace WSUI.Module.ViewModel
             _currentItem.CurrentItemChanged += OnCurrentItemChanged;
         }
 
-        private void OnCurrentItemChanged(object sender, EventArgs<BaseSearchData> args)
+        private void OnCurrentItemChanged(object sender, EventArgs<BaseSearchObject> args)
         {
             if(args.Value == null)
                 return;
@@ -208,14 +284,18 @@ namespace WSUI.Module.ViewModel
                 Tuple<Point, Size> mwi = GetMainWindowInfo();
                 //BusyPopupAdorner.Instance.Message = "Loading...";
                 //BusyPopupAdorner.Instance.IsBusy = true;
-                ProgressManager.Instance.StartOperation(new ProgressOperation()
+                if (!ProgressManager.Instance.InProgress)
                 {
-                    Caption = "Loading...",
-                    DelayTime = 250,
-                    Canceled = false,
-                    Location = mwi.Item1,
-                    Size = mwi.Item2
-                });
+                    ProgressManager.Instance.StartOperation(new ProgressOperation()
+                    {
+                        Caption = "Loading...",
+                        DelayTime = 250,
+                        Canceled = false,
+                        Location = mwi.Item1,
+                        Size = mwi.Item2
+                    });
+                }
+                Enabled = false;
                 Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
             }
             catch (Exception ex)
@@ -248,10 +328,12 @@ namespace WSUI.Module.ViewModel
             }
             finally
             {
+                //Application.Current.Dispatcher.BeginInvoke(new Action(() => BusyPopupAdorner.Instance.IsBusy = false), null);
                 if (ProgressManager.Instance.InProgress)
                 {
                     ProgressManager.Instance.StopOperation();
                 }
+                Enabled = true;
             }
         }
 
@@ -281,16 +363,11 @@ namespace WSUI.Module.ViewModel
             var sendItem = sender as IKindItem;
             if(sendItem == null)
                 return;
-            var newItem = _listItems.Find(item => item.UIName == sendItem.UIName);
-            if(newItem == null)
-                return;
-            newItem.Toggle = true;
-            _listItems.ForEach(i => { if (i.UIName != newItem.UIName) i.Toggle = false; });
             Disconnect();
             string searchString = string.Empty;
             if(_currentItem  != null)
                 searchString = _currentItem.SearchString;
-            _currentItem = newItem.Kind;
+            _currentItem = sendItem;
             Connect();
             CurrentKindChanged(_currentItem);
             if (!string.IsNullOrEmpty(searchString) && searchString != _currentItem.SearchString)
@@ -349,13 +426,37 @@ namespace WSUI.Module.ViewModel
             return null;
         }
 
+        private void InternalActivate()
+        {
+            TurboLimeActivate.Instance.Activate(UpdatedActivatedStatus);
+        }
+
+        private void InternalTryAgain()
+        {
+            TurboLimeActivate.Instance.TryCheckAgain();
+            UpdatedActivatedStatus();
+        }
+
+        private void InternalDeactivate()
+        {
+            if (TurboLimeActivate.Instance.Deactivate(true))
+            {
+                UpdatedActivatedStatus();
+            }
+            else
+            {
+                MessageBoxService.Instance.Show("Warning", "Something wrong during Deactivate", MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
+        }
+
         #endregion
 
         #region Implementation of IMainViewModel
 
         public event EventHandler Start;
         public event EventHandler Complete;
-        public List<BaseSearchData> MainDataSource { get; protected set; }
+        public List<BaseSearchObject> MainDataSource { get; protected set; }
 
         public void Clear()
         {
@@ -370,7 +471,7 @@ namespace WSUI.Module.ViewModel
             var lazyKind = _listItems.Find(lk => lk.UIName == name);
             if (lazyKind != null)
             {
-                OnChoose(lazyKind.Kind);
+                SelectedLazyKind = lazyKind;
             }
         }
 
@@ -390,7 +491,12 @@ namespace WSUI.Module.ViewModel
                         break;
                     _currentItem.SearchString = searchCriteria;
                     _currentItem.SearchCommand.Execute(null);
-                break;
+                    break;
+                case WSActionType.Show:
+                    CheckStateAndShowActivatedForm();
+                    break;
+                case WSActionType.Hide:
+                    break;
             }
         }
 
@@ -401,6 +507,12 @@ namespace WSUI.Module.ViewModel
                 PreviewView.ClearPreview();
             }
         }
+
+        public ActivationState ActivateStatus { get; private set; }
+        public string TextStatus { get; private set; }
+        public ICommand ActivateCommand { get; private set; }
+        public ICommand DeactivateCommand { get; private set; }
+        public ICommand TryAgainCommand { get; private set; }
 
         #endregion
 

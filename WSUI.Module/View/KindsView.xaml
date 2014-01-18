@@ -6,17 +6,27 @@
             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                               HorizontalContentAlignment="Stretch"
              >
-    <DockPanel HorizontalAlignment="Stretch" x:Name="panel" Margin="40 0 0 0">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Service/ResourceTemplate.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>        
         
-        <ItemsControl ItemsSource="{Binding Path=KindsCollection,UpdateSourceTrigger=PropertyChanged}" 
-                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <ToggleButton Command="{Binding Path=ChooseCommand}" Content="{Binding Path=UIName}"
-                                  HorizontalContentAlignment="Right" Margin="0 2 0 2" FontSize="16" Width="{Binding ElementName=panel,Path=Width}"
-                                  IsChecked="{Binding Toggle,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </DockPanel>
+        <ListBox Grid.Row="1" Style="{StaticResource MetroListBox}" ItemsSource="{Binding KindsCollection}" Height="Auto"
+                    SelectedItem="{Binding SelectedLazyKind,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    ItemContainerStyle="{StaticResource WSUIMetroListBoxItem}"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}">
+        </ListBox>
+        
+    </Grid>
+
 </UserControl>

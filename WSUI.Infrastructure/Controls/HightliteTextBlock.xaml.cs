@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 using WSUI.Infrastructure.Service.Helpers;
+using WSUI.Core.Extensions;
 
 namespace WSUI.Infrastructure.Controls
 {
@@ -18,18 +19,19 @@ namespace WSUI.Infrastructure.Controls
 
         protected override void OnRender(DrawingContext drawingContext)
         {
+            
             if (string.IsNullOrEmpty(Hightlight) || string.IsNullOrEmpty(Text))
             {
-                textBlock.Text = Text;
+                textBlock.Text = Text.ConvertToIso();
                 base.OnRender(drawingContext);
                 return;
             }
-
+            Text = Text.ConvertToIso();
             var textlbock = textBlock;
             var mCol = HelperFunctions.GetMatches(Text, Hightlight); //Regex.Matches(Text, string.Format(@"({0})", Regex.Escape(Hightlight)), RegexOptions.IgnoreCase);
             if (mCol.Count == 0)
             {
-                textlbock.Text = this.Text;
+                textlbock.Text = Text;
                 base.OnRender(drawingContext);
                 return;
             }

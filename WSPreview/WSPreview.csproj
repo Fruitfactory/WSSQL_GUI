@@ -12,8 +12,7 @@
     <AssemblyName>WSPreview</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,19 +41,35 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>WSUIPreview.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trial|AnyCPU'">
+    <OutputPath>..\Routput\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>..\ROutput\WSPreview.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\Toolkits\AgilityPack\Net40\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit">
+      <HintPath>..\Toolkits\AvalonEdit\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.2.329, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Toolkits\Log4Net\net40-full\log4net.dll</HintPath>
+      <HintPath>..\Toolkits\Log4Net\net40-client\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Build" />
-    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Microsoft.Ink, Version=1.7.2600.2180, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <HintPath>..\Toolkits\Microsoft\Microsoft.Ink.dll</HintPath>
     </Reference>
@@ -83,14 +98,13 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\Toolkits\Interop\Office\Office.dll</HintPath>
     </Reference>
-    <Reference Include="ScintillaNET">
-      <HintPath>..\Toolkits\Scintilla\ScintillaNET.dll</HintPath>
-    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -98,14 +112,13 @@
     <Reference Include="System.Xml" />
     <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
-    <Compile Include="Controls\BinControl\BinPreviewControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Controls\BinControl\BinPreviewControl.cs" />
     <Compile Include="Controls\Calendar\CalendarIcsPreview.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -150,6 +163,9 @@
     <Compile Include="Controls\Office\OutlookFilePreview.Designer.cs">
       <DependentUpon>OutlookFilePreview.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Office\WebFilePreview.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\Office\WebUtils\DWebBrowserEvents2.cs" />
     <Compile Include="Controls\Office\WebUtils\ExtWebBrowser.cs">
       <SubType>Component</SubType>
@@ -184,6 +200,7 @@
     <Compile Include="PreviewHandlerFramework\ControlsKey.cs" />
     <Compile Include="PreviewHandlerFramework\IOutlookPreviewHelper.cs" />
     <Compile Include="PreviewHandlerFramework\KeyControlAttribute.cs" />
+    <Compile Include="PreviewHandlers\WebPreviewHandler.cs" />
     <Compile Include="Service\OutlookPreview\OutlookPreviewHelper.cs" />
     <Compile Include="Service\Preview\HelperPreviewHandlers.cs" />
     <Compile Include="PInvoke\WindowAPI.cs" />

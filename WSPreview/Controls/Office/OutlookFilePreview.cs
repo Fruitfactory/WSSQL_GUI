@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using WSPreview.PreviewHandler.Controls.Office.WebUtils;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using WSUI.Core.Interfaces;
@@ -24,6 +25,14 @@ namespace WSPreview.PreviewHandler.Controls.Office
         public OutlookFilePreview()
         {
             BeforeNavigate += WebEmailOnBeforeNavigate;
+            Navigating += OnNavigating;
+            Navigated += OnNavigated;
+            ScriptErrorsSuppressed = true;
+        }
+
+        private void OnNavigated(object sender, WebBrowserNavigatedEventArgs webBrowserNavigatedEventArgs)
+        {
+            
         }
 
         #region public
@@ -98,6 +107,11 @@ namespace WSPreview.PreviewHandler.Controls.Office
             }
         }
 
+        private void OnNavigating(object sender, WebBrowserNavigatingEventArgs e)
+        {
+
+        }
+
         private void WebEmailOnBeforeNavigate(object sender, WebBrowserNavigatingEventArgs args)
         {
             string path = string.Empty;
@@ -118,6 +132,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
             {
                 try
                 {
+                    System.Diagnostics.Debug.WriteLine(GetDefaultBrowserPath());
                     args.Cancel = true;
                     Process.Start(path);
                 }
@@ -130,6 +145,35 @@ namespace WSPreview.PreviewHandler.Controls.Office
             {
                 WSSqlLogger.Instance.LogInfo("Path is empty. Outlook Preview");
             }
+        }
+
+        public static string GetDefaultBrowserPath()
+        {
+            string defaultBrowserPath = null;
+            RegistryKey regkey;
+
+            // Check if we are on Vista or Higher
+            OperatingSystem OS = Environment.OSVersion;
+            if ((OS.Platform == PlatformID.Win32NT) && (OS.Version.Major >= 6))
+            {
+                regkey = Registry.ClassesRoot.OpenSubKey("http\\shell\\open\\command", false);
+                if (regkey != null)
+                {
+                    defaultBrowserPath = regkey.GetValue("").ToString();
+                }
+                else
+                {
+                    regkey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Classes\\IE.HTTP\\shell\\open\\command", false);
+                    defaultBrowserPath = regkey.GetValue("").ToString();
+                }
+            }
+            else
+            {
+                regkey = Registry.ClassesRoot.OpenSubKey("http\\shell\\open\\command", false);
+                defaultBrowserPath = regkey.GetValue("").ToString();
+            }
+
+            return defaultBrowserPath;
         }
 
     }
