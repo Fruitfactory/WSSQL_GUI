@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using WSUI.Core.Core;
 using WSUI.Core.Data;
 using WSUI.Infrastructure.Services;
 

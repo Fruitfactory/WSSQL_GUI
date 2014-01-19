@@ -8,7 +8,6 @@ using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
-using WSUI.Module.Service;
 using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands

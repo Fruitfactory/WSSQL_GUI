@@ -7,7 +7,6 @@ using WSUI.Core.Logger;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
-using WSUI.Module.Service;
 using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands

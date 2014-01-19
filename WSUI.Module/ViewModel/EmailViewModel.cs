@@ -1,19 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.OleDb;
-using System.Linq;
-using System.Text;
-using System.Windows.Controls;
 using System.Windows.Input;
-using MahApps.Metro.Controls;
 using Microsoft.Practices.Prism.Commands;
 using WSUI.Core.Enums;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
-using WSUI.Infrastructure.Attributes;
 using WSUI.Infrastructure.Implements.Systems;
-using WSUI.Infrastructure.Models;
 using WSUI.Infrastructure.Service;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
@@ -21,8 +9,6 @@ using WSUI.Module.Interface;
 using Microsoft.Practices.Unity;
 using WSUI.Module.Service;
 using WSUI.Module.Strategy;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace WSUI.Module.ViewModel
 {
@@ -76,15 +62,6 @@ namespace WSUI.Module.ViewModel
             TopQueryResult = ScrollBehavior.CountFirstProcess;
             ShowMessageNoMatches = true;
             base.OnFilterData();
-        }
-
-        
-
-        protected override void OnStart()
-        {
-            ListData.Clear();
-            FireStart();
-            Enabled = false;
         }
 
         private void OnScroll(object args)
