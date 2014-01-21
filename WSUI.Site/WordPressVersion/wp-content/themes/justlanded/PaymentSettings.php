@@ -5,6 +5,9 @@
 
 //==== General Config ====
 
+include ( dirname(__FILE__).'/downloadlink.php');
+
+
 //TODO: disable debug & sandbox when you're using this on your live site.
 
 // Enable debug logging
@@ -103,12 +106,6 @@ $MBEmail = 'your@email.com';
 // on the "Merchant tools" page. Then set it here.
 $SecretWord = 'PASTE YOUR SECRET WORD HERE';
 
-$versions_xml  = getcwd().'/downloads/clicktwice/full/version_info.xml';
-$path_first = 'http://outlookfinder.com/downloads/clicktwice/full/1033/';
-$path_second = '/outlookfinder.exe';
-
-$versions_xml_trial  = getcwd().'/downloads/clicktwice/trial/version_info.xml';
-$path_first_trial = 'http://outlookfinder.com/downloads/clicktwice/trial/1033/';
 
 
 
@@ -132,35 +129,7 @@ function debug_log($message, $success, $end = false)
 	fclose($fp);
 }
 
-function getDownloadUrl($verxml, $p_f, $p_s){
-	if(!file_exists($verxml))
-	{
-		$mes = 'Versions file not found: '.$verxml;
-		debug_log($mes,false);
-		return '';
-	}
-	
-	$xml = simplexml_load_file($verxml);
-	$count = count($xml->product->version);
-	if($count > 0){
-		$version = $xml->product->version[count-1]['name'];
-		debug_log('return path',true);
-		return $p_f.$version.$p_s;  	
-	}
-	debug_log('Versions in empty',false);
-	return '';
-	
-}
 
-function getDownloadUrlForLastVersion(){
-	global $versions_xml, $path_first, $path_second;
-	return getDownloadUrl($versions_xml,$path_first,$path_second);		
-}
-
-function getDownloadUrlforTrial(){
-	global $versions_xml_trial, $path_first_trial, $path_second;
-	return getDownloadUrl($versions_xml_trial,$path_first_trial,$path_second);	
-}
 
 
 function SendPKeys($quantity, $email, $first, $last)

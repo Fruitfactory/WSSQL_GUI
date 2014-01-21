@@ -16,7 +16,7 @@ do_action('justlanded_after_page_options'); // custom hook
 ?>
 
 <?php
-
+include ( dirname(__FILE__).'/downloadlink.php');
 require( dirname(__FILE__).'/PaymentSettings.php');
 
 $count = 0;
