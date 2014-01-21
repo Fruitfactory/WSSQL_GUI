@@ -10,8 +10,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="../Service/ResourceTemplate.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="../Service/SearchButtonStyle.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -28,7 +27,7 @@
                 VerticalContentAlignment="Center"
                 Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
                     Grid.Column="0" MinHeight="32" IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Command="{Binding Path=SearchCommand}" 
+            <Button Command="{Binding Path=SearchCommand}"
                     Style="{StaticResource SearchButton}"
                 Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" MinHeight="32"
                     IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>

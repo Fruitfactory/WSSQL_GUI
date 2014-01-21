@@ -2,9 +2,11 @@
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using GDIDraw.Service;
 using WSPreview.PreviewHandler.Controls.Office.WebUtils;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using WSUI.Core.Logger;
+using Html = HtmlAgilityPack;
 
 namespace WSPreview.PreviewHandler.Controls.Office
 {
@@ -15,7 +17,6 @@ namespace WSPreview.PreviewHandler.Controls.Office
         public WebFilePreview()
         {
             BeforeNavigate += OnBeforeNavigate;
-            Navigating += OnNavigating;
             ScriptErrorsSuppressed = true;
         }
 
@@ -26,6 +27,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
             try
             {
                 var content = File.ReadAllText(filename);
+                ClearAllTagsA(content);
                 DocumentText = content;
             }
             catch (Exception ex)
@@ -46,11 +48,29 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         #region [private]
 
-        private void OnNavigating(object sender, WebBrowserNavigatingEventArgs e)
+        private string ClearAllTagsA( string content )
         {
-            
+            if (string.IsNullOrEmpty(content))
+                return string.Empty;
+            Html.HtmlDocument doc = new Html.HtmlDocument();
+            doc.LoadHtml(content);
+            ClearAllA(doc.DocumentNode);
+            return doc.DocumentNode.InnerText;
         }
 
+        private void ClearAllA(Html.HtmlNode node)
+        {
+            if (node == null || node.ChildNodes.Count == 0) return;
+
+            if (node.Name.ToLowerInvariant() == Extensions.LinkTag)
+            {
+                node.RemoveTargetFromTagA();
+            }
+            foreach (var child in node.ChildNodes)
+            {
+                ClearAllA(child);                
+            }
+        }
 
         private void OnBeforeNavigate(object sender, WebBrowserNavigatingEventArgs e)
         {
