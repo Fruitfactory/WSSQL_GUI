@@ -16,8 +16,8 @@ namespace WSUI.Core.Helpers
         #region static 
         private static TempFileManager _instance = null;
         private static string TempFileName = "{0}\\{1}";
-        private static string TempFolder = "{0}WSSQL";
-        private static string TempFolderFile = "{0}WSSQL\\{1}";
+        private static string TempFolder = "{0}OutlookFinder";
+        private static string TempFolderFile = "{0}OutlookFinder\\{1}";
         private static readonly object _lockObject = new object();
 
         #endregion
