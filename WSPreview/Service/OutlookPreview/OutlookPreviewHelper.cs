@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using GDIDraw.Service;
 using HtmlAgilityPack;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using WSUI.Core.Logger;
@@ -253,14 +254,11 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         private string GetHtmlBodyHightlight(string body)
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                HtmlDocument htmlDoc = new HtmlDocument();
+            HtmlDocument htmlDoc = new HtmlDocument();
 
-                htmlDoc.LoadHtml(body);
-                HightlightAllNodes(htmlDoc.DocumentNode);
-                return GetContentOfTag(htmlDoc.DocumentNode);
-            }
+            htmlDoc.LoadHtml(body);
+            HightlightAllNodes(htmlDoc.DocumentNode);
+            return GetContentOfTag(htmlDoc.DocumentNode);
         }
 
         private string GetContentOfTag(HtmlNode node, string tagName = "body")
@@ -290,9 +288,12 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
                 nodeText.Text = HighlightSearchString(nodeText.Text);
                 return;
             }
-
             foreach (var childNode in node.ChildNodes)
             {
+                if (childNode.Name.ToLowerInvariant() == Extensions.LinkTag)
+                {
+                    childNode.RemoveTargetFromTagA();
+                }
                 HightlightAllNodes(childNode);
             }
         }

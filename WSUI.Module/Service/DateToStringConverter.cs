@@ -2,9 +2,7 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using WSUI.Core.Core;
 using WSUI.Core.Data;
-using WSUI.Infrastructure.Models;
 using System.Text.RegularExpressions;
 
 namespace WSUI.Module.Service

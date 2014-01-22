@@ -1397,7 +1397,7 @@ if(!function_exists('justlanded_get_youtube_id')) {
 }
 
 // yariki shortcode
-require( dirname(__FILE__).'/PaymentSettings.php');
+include( dirname(__FILE__).'/downloadlink.php');
 function auto_start_download(){
     $filename = getDownloadUrlforTrial();
     return '<iframe width="0" height="0" src="'.$filename.'">';

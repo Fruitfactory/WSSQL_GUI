@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using WSUI.Core.Core;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 

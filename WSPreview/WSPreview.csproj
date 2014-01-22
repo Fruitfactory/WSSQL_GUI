@@ -191,6 +191,7 @@
     <Compile Include="Controls\RtfControl\RtfPreviewControl.Designer.cs">
       <DependentUpon>RtfPreviewControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Service\Extensions.cs" />
     <Compile Include="Controls\SourceControl\SourceViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
