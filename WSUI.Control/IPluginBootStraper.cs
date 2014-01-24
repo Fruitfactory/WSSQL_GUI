@@ -10,5 +10,6 @@ namespace WSUI.Control
         void PassAction(IWSAction action);
         DependencyObject View { get; }
         IUnityContainer Container { get; }
+        bool IsPluginBusy { get; }
     }
 }

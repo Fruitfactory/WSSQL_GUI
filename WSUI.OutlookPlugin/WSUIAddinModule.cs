@@ -807,7 +807,7 @@ namespace WSUIOutlookPlugin
 
         private void PassSearchActionToSearchEngine(string text)
         {
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text) || _wsuiBootStraper.IsPluginBusy)
                 return;
             if (!WSUIAddinModule.CurrentInstance.IsMainUIVisible)
             {

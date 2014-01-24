@@ -49,6 +49,9 @@ namespace WSUI.Module.ViewModel
             SearchSystem.Init();
             var fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
             CommandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
+            CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
+            CommandStrategies.Add(TypeSearchItem.File, fileAttach);
+            CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 100, CountSecondProcess = 50, LimitReaction = 75 };
             ScrollBehavior.SearchGo += OnScroolNeedSearch;
         }

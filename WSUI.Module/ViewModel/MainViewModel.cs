@@ -341,6 +341,7 @@ namespace WSUI.Module.ViewModel
             if(temp != null)
                 temp(this,null);
             Enabled = _currentItem.Enabled;
+            IsBusy = true;
         }
 
         private void OnComplete(object sender, EventArgs<bool> e)
@@ -349,6 +350,7 @@ namespace WSUI.Module.ViewModel
             if (temp != null)
                 temp(this,null);
             Enabled = _currentItem.Enabled;
+            IsBusy = false;
         }
 
         private void OnError(object sender, EventArgs<bool> e)
@@ -511,6 +513,7 @@ namespace WSUI.Module.ViewModel
         public ICommand ActivateCommand { get; private set; }
         public ICommand DeactivateCommand { get; private set; }
         public ICommand TryAgainCommand { get; private set; }
+        public bool IsBusy { get; private set; }
 
         #endregion
 

@@ -113,5 +113,10 @@ namespace WSUI.Control
         {
             get { return this.Shell; }
         }
+
+        public bool IsPluginBusy 
+        {
+            get { return _mainViewModel.IsBusy; }
+        }
     }
 }

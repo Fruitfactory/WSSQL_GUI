@@ -22,5 +22,6 @@ namespace WSUI.Module.Interface
         ICommand ActivateCommand { get; }
         ICommand DeactivateCommand { get; }
         ICommand TryAgainCommand { get; }
+        bool IsBusy { get; }
     }
 }
