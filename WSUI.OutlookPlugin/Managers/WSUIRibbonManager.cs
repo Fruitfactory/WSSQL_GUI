@@ -49,6 +49,8 @@ namespace WSUIOutlookPlugin.Managers
             _buttonSwitch.OnClick += ButtonSwitchOnOnClick;
             _homeEditCriteria.OnChange += HomeEditCriteriaOnOnChange;
             _editCriteria.OnChange += HomeEditCriteriaOnOnChange;
+            _buttonSearch.OnClick += ButtonSearchOnOnClick;
+            _buttonSearch1.OnClick += ButtonMainSearchOnOnClick;
             _buttonShow.Enabled = true;
             _buttonHide.Enabled = false;
         }
@@ -60,18 +62,21 @@ namespace WSUIOutlookPlugin.Managers
                 return;
             InternalSearchPublich(editBox.Text);
             ApplyButtonsRibbonEnable(false);
+            System.Diagnostics.Debug.WriteLine("Change Hone Criteria....");
         }
 
         private void ButtonMainSearchOnOnClick(object sender, IRibbonControl control, bool pressed)
         {
             InternalSearchPublich(_homeEditCriteria.Text);
             ApplyButtonsRibbonEnable(false);
+            System.Diagnostics.Debug.WriteLine("Home button search click....");
         }
 
         private void ButtonSearchOnOnClick(object sender, IRibbonControl control, bool pressed)
         {
             InternalSearchPublich(_editCriteria.Text);
             ApplyButtonsRibbonEnable(false);
+            System.Diagnostics.Debug.WriteLine("OutlookFinder button search click....");
         }
 
         private void ButtonSwitchOnOnClick(object sender, IRibbonControl control, bool pressed)
