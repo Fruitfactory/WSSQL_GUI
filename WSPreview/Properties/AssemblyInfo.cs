@@ -10,7 +10,7 @@ using log4net;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("FruitFactory")]
 [assembly: AssemblyProduct("WSPreview")]
-[assembly: AssemblyCopyright("Copyright © FruitFactory 2013")]
+[assembly: AssemblyCopyright("Copyright © FruitFactory 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

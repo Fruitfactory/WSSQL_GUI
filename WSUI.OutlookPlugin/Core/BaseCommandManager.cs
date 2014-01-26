@@ -4,7 +4,7 @@ using WSUIOutlookPlugin.Interfaces;
 
 namespace WSUIOutlookPlugin.Core
 {
-    public abstract class BaseCommandManager : IWSUICommandManager
+    public abstract class BaseCommandManager : ICommandManager
     {
         private IEventAggregator _eventAggregator;
         
@@ -13,30 +13,9 @@ namespace WSUIOutlookPlugin.Core
             _eventAggregator = aggregator;
         }
 
-        public virtual void SetShowHideButtonsEnabling(bool isShowButtonEnable, bool isHideButtonEnable)
+        protected IEventAggregator GetAggregator()
         {
-            
-        }
-
-        protected virtual void InternalShowPublish()
-        {
-            if (_eventAggregator == null)
-                return;
-            _eventAggregator.GetEvent<WSUIOpenWindow>().Publish(true);
-        }
-
-        protected virtual void InternalHidePublish()
-        {
-            if (_eventAggregator == null)
-                return;
-            _eventAggregator.GetEvent<WSUIHideWindow>().Publish(true);
-        }
-
-        protected virtual void InternalSearchPublich(string searchString)
-        {
-            if(_eventAggregator == null)
-                return;
-            _eventAggregator.GetEvent<WSUISearch>().Publish(searchString);
+            return _eventAggregator;
         }
 
     }

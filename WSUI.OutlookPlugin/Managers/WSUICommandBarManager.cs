@@ -4,7 +4,7 @@ using WSUIOutlookPlugin.Core;
 
 namespace WSUIOutlookPlugin.Managers
 {
-    public class WSUICommandBarManager : BaseCommandManager
+    public class WSUICommandBarManager : SearchCommandManager
     {
         private readonly ADXCommandBarButton _buttonShow;
         private readonly ADXCommandBarButton _buttonHide;

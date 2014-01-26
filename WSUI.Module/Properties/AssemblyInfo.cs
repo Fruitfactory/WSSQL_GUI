@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("FruitFactory")]
 [assembly: AssemblyProduct("WSUI.Module")]
-[assembly: AssemblyCopyright("Copyright © FruitFactory 2013")]
+[assembly: AssemblyCopyright("Copyright © FruitFactory 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -108,7 +108,12 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Loader\adxloader.dll.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <!--<None Include="WSUI.OutlookPlugin.snk" /> -->
   </ItemGroup>
   <ItemGroup>
@@ -121,7 +126,14 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="About\WSUIAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="About\WSUIAbout.Designer.cs">
+      <DependentUpon>WSUIAbout.cs</DependentUpon>
+    </Compile>
     <Compile Include="Core\DllPreloader.cs" />
+    <Compile Include="Core\SearchCommandManager.cs" />
     <Compile Include="Core\UpdateHelper.cs" />
     <Compile Include="Events\WSUIHideWindow.cs" />
     <Compile Include="Events\WSUIOpenWindow.cs" />
@@ -134,12 +146,24 @@
     <Compile Include="Hooks\HookManager.Structures.cs" />
     <Compile Include="Hooks\HookManager.Windows.cs" />
     <Compile Include="Hooks\MouseEventExtArgs.cs" />
+    <Compile Include="Interfaces\ICommandManager.cs" />
     <Compile Include="Interfaces\IMainForm.cs" />
     <Compile Include="Interfaces\IUpdatable.cs" />
     <Compile Include="Interfaces\IWSUICommandManager.cs" />
     <Compile Include="Core\BaseCommandManager.cs" />
+    <Compile Include="Managers\WSUIAboutCommandManager.cs" />
     <Compile Include="Managers\WSUICommandBarManager.cs" />
     <Compile Include="Managers\WSUIRibbonManager.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="WSUIAddinModule.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -152,6 +176,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="About\WSUIAbout.resx">
+      <DependentUpon>WSUIAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="WSUIAddinModule.resx">
       <DependentUpon>WSUIAddinModule.cs</DependentUpon>
     </EmbeddedResource>
