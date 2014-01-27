@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<application name="outlookfinder">
+  <product language="1033">
+    <version name="1.0.0" installationUrl="http://outlookfinder.com/downloads/clicktwice/trial/" productCode="{53ED25D9-2251-43A0-A7AB-C31F7908B895}" updateType="directLink">
+      <files msi="OutlookFinderSetup">
+        <file>OutlookFinderSetup.msi</file>
+      </files>
+      <preferences>
+        <showInstallUI>true</showInstallUI>
+        <showUninstallUI>false</showUninstallUI>
+        <webPage />
+        <showDownloaderWindow>true</showDownloaderWindow>
+        <showRunningApplicationsWarning>false</showRunningApplicationsWarning>
+      </preferences>
+    </version>
+  </product>
+</application>
