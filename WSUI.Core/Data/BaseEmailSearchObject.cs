@@ -42,13 +42,22 @@ namespace WSUI.Core.Data
         [Field("System.Message.FromName", 12, false)]
 	    public string FromName { get; set; }
 
+        [Field("System.Message.FromAddress", 13, false)]
+        public string[] SenderAddress { get; set; }
+
+        [Field("System.Message.FromName", 14, false)]
+        public string SenderName { get; set; }
+
+
 	    public string Recepient
 	    {
 	        get
 	        {
 	            if (string.IsNullOrEmpty(_fromEmailName))
 	            {
-	                _fromEmailName = GetEmailOrName();
+	                _fromEmailName = GetFromEmailOrName();
+	                if (string.IsNullOrEmpty(_fromEmailName))
+	                    _fromEmailName = GetSenderEmailOrName();
 	            }
 	            return _fromEmailName;
 	        }
@@ -82,15 +91,21 @@ namespace WSUI.Core.Data
                 case 12:
 	                FromName = value as string;
 	                break;
+                case 13:
+	                SenderAddress = value as string[];
+	                break;
+                case 14:
+	                SenderName = value as string;
+	                break;
 	        }
 	    }
 
 
-        private string GetEmailOrName()
+        private string GetFromEmailOrName()
         {
             if (FromAddress == null || FromAddress.Length == 0)
             {
-                return FromName;
+                return GetFieldValue(FromName);
             }
             foreach (string email in FromAddress)
             {
@@ -100,8 +115,31 @@ namespace WSUI.Core.Data
                     break;
                 }
             }
-            return string.IsNullOrEmpty(_fromEmailName) ? (_fromEmailName = FromName) : _fromEmailName;
+            return string.IsNullOrEmpty(_fromEmailName) ? (_fromEmailName = GetFieldValue(FromName)) : _fromEmailName;
         }
+
+	    private string GetSenderEmailOrName()
+	    {
+            if (SenderAddress == null || SenderAddress.Length == 0)
+            {
+                return GetFieldValue(SenderName);
+            }
+            foreach (string email in SenderAddress)
+            {
+                if (IsEmail(email))
+                {
+                    _fromEmailName = email;
+                    break;
+                }
+            }
+            return string.IsNullOrEmpty(_fromEmailName) ? (_fromEmailName = GetFieldValue(SenderName)) : _fromEmailName;
+	    }
+
+	    private string GetFieldValue(string val)
+	    {
+	        return string.IsNullOrEmpty(val) ? string.Empty : val;
+	    }
+
 
         private bool IsEmail(string email)
         {
