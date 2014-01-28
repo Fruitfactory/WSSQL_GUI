@@ -13,7 +13,7 @@ namespace WSUI.Core.Data
 {
 	public class EmailSearchObject : BaseEmailSearchObject 
     {
-        [Field("System.Subject", 12, false)]    
+        [Field("System.Subject", 13, false)]    
 		public string Subject{ get;  set;} 
 
 		public EmailSearchObject()
@@ -26,7 +26,7 @@ namespace WSUI.Core.Data
 	        base.SetValue(index, value);
 	        switch (index)
 	        {
-	            case 12:
+	            case 13:
                     Subject = value as string;
                     break;
 	        }

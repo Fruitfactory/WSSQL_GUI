@@ -9,11 +9,21 @@
 
 using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using WSUI.Core.Core.Attributes;
 namespace WSUI.Core.Data 
 {
-	public class BaseEmailSearchObject : BaseSearchObject 
+	public class BaseEmailSearchObject : BaseSearchObject
     {
+
+        #region [needs]
+
+	    private string _fromEmailName = string.Empty;
+        private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
+
+        #endregion
+
+
         [Field("System.Message.ConversationID", 7, false)]
 		public string ConversationId{ get;  set;}
 
@@ -29,17 +39,22 @@ namespace WSUI.Core.Data
         [Field("System.Message.FromAddress", 11, false)]
         public string[] FromAddress { get; set; }
 
+        [Field("System.Message.FromName", 12, false)]
+	    public string FromName { get; set; }
+
 	    public string Recepient
 	    {
 	        get
 	        {
-                return FromAddress != null && FromAddress.Length > 0
-                    ? FromAddress[0]
-	                : string.Empty;
+	            if (string.IsNullOrEmpty(_fromEmailName))
+	            {
+	                _fromEmailName = GetEmailOrName();
+	            }
+	            return _fromEmailName;
 	        }
 	    }
 
-		public BaseEmailSearchObject()
+        public BaseEmailSearchObject()
         {
 
 		}
@@ -64,8 +79,35 @@ namespace WSUI.Core.Data
                 case 11:
 	                FromAddress = value as string[];
 	                break;
+                case 12:
+	                FromName = value as string;
+	                break;
 	        }
 	    }
+
+
+        private string GetEmailOrName()
+        {
+            if (FromAddress == null || FromAddress.Length == 0)
+            {
+                return FromName;
+            }
+            foreach (string email in FromAddress)
+            {
+                if (IsEmail(email))
+                {
+                    _fromEmailName = email;
+                    break;
+                }
+            }
+            return string.IsNullOrEmpty(_fromEmailName) ? (_fromEmailName = FromName) : _fromEmailName;
+        }
+
+        private bool IsEmail(string email)
+        {
+            return !string.IsNullOrEmpty(email) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase);
+        }
+
     }//end BaseEmailSearchObject
 
 }//end namespace Data

@@ -16,7 +16,7 @@ namespace WSUI.Core.Data
 {
 	public class AttachmentSearchObject : BaseEmailSearchObject 
     {
-        [Field("System.DateModified", 12, false)]
+        [Field("System.DateModified", 13, false)]
 		public DateTime DateModified{ get;  set;} 
 
 		public AttachmentSearchObject()
@@ -29,7 +29,7 @@ namespace WSUI.Core.Data
 	        base.SetValue(index, value);
 	        switch (index)
 	        {
-                case 12:
+                case 13:
 	                DateModified = (DateTime) Convert.ChangeType(value, typeof (DateTime), CultureInfo.InvariantCulture);
 	                break;
 	        }
