@@ -40,13 +40,13 @@ namespace WSUI.Core.Data
         public string[] FromAddress { get; set; }
 
         [Field("System.Message.FromName", 12, false)]
-	    public string FromName { get; set; }
+	    public string[] FromName { get; set; }
 
-        [Field("System.Message.FromAddress", 13, false)]
+        [Field("System.Message.SenderAddress", 13, false)]
         public string[] SenderAddress { get; set; }
 
-        [Field("System.Message.FromName", 14, false)]
-        public string SenderName { get; set; }
+        [Field("System.Message.SenderName", 14, false)]
+        public string[] SenderName { get; set; }
 
 
 	    public string Recepient
@@ -55,9 +55,9 @@ namespace WSUI.Core.Data
 	        {
 	            if (string.IsNullOrEmpty(_fromEmailName))
 	            {
-	                _fromEmailName = GetFromEmailOrName();
+	                _fromEmailName = GetEmailOrName(FromAddress,FromName);
 	                if (string.IsNullOrEmpty(_fromEmailName))
-	                    _fromEmailName = GetSenderEmailOrName();
+	                    _fromEmailName = GetEmailOrName(SenderAddress,SenderName);
 	            }
 	            return _fromEmailName;
 	        }
@@ -89,21 +89,21 @@ namespace WSUI.Core.Data
 	                FromAddress = value as string[];
 	                break;
                 case 12:
-	                FromName = value as string;
+	                FromName = value as string[];
 	                break;
                 case 13:
 	                SenderAddress = value as string[];
 	                break;
                 case 14:
-	                SenderName = value as string;
+	                SenderName = value as string[];
 	                break;
 	        }
 	    }
 
 
-        private string GetFromEmailOrName()
+        private string GetEmailOrName(string[] address,string[] name)
         {
-            if (FromAddress == null || FromAddress.Length == 0)
+            if (address == null || address.Length == 0)
             {
                 return GetFieldValue(FromName);
             }
@@ -118,26 +118,9 @@ namespace WSUI.Core.Data
             return string.IsNullOrEmpty(_fromEmailName) ? (_fromEmailName = GetFieldValue(FromName)) : _fromEmailName;
         }
 
-	    private string GetSenderEmailOrName()
+	    private string GetFieldValue(string[] val)
 	    {
-            if (SenderAddress == null || SenderAddress.Length == 0)
-            {
-                return GetFieldValue(SenderName);
-            }
-            foreach (string email in SenderAddress)
-            {
-                if (IsEmail(email))
-                {
-                    _fromEmailName = email;
-                    break;
-                }
-            }
-            return string.IsNullOrEmpty(_fromEmailName) ? (_fromEmailName = GetFieldValue(SenderName)) : _fromEmailName;
-	    }
-
-	    private string GetFieldValue(string val)
-	    {
-	        return string.IsNullOrEmpty(val) ? string.Empty : val;
+	        return val != null && val.Length > 0 ? val[0]: string.Empty;
 	    }
 
 

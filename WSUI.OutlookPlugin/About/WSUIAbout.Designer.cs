@@ -36,11 +36,11 @@
             this.labelCopyright = new System.Windows.Forms.Label();
             this.labelProductName = new System.Windows.Forms.Label();
             this.panelMiddle = new System.Windows.Forms.Panel();
+            this.linkSite = new System.Windows.Forms.LinkLabel();
             this.linkSupport = new System.Windows.Forms.LinkLabel();
             this.textBoxInfo = new System.Windows.Forms.TextBox();
             this.panelBottom = new System.Windows.Forms.Panel();
             this.buttonOk = new System.Windows.Forms.Button();
-            this.linkSite = new System.Windows.Forms.LinkLabel();
             this.mainGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.boxLogo)).BeginInit();
             this.panelTop.SuspendLayout();
@@ -65,7 +65,7 @@
             this.mainGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
             this.mainGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.mainGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.mainGrid.Size = new System.Drawing.Size(314, 307);
+            this.mainGrid.Size = new System.Drawing.Size(322, 318);
             this.mainGrid.TabIndex = 0;
             // 
             // boxLogo
@@ -89,7 +89,7 @@
             this.panelTop.Location = new System.Drawing.Point(78, 3);
             this.panelTop.Name = "panelTop";
             this.panelTop.Padding = new System.Windows.Forms.Padding(5, 15, 5, 15);
-            this.panelTop.Size = new System.Drawing.Size(233, 69);
+            this.panelTop.Size = new System.Drawing.Size(241, 69);
             this.panelTop.TabIndex = 1;
             // 
             // labelRights
@@ -132,15 +132,28 @@
             this.panelMiddle.Location = new System.Drawing.Point(3, 78);
             this.panelMiddle.Name = "panelMiddle";
             this.panelMiddle.Padding = new System.Windows.Forms.Padding(10);
-            this.panelMiddle.Size = new System.Drawing.Size(308, 181);
+            this.panelMiddle.Size = new System.Drawing.Size(316, 192);
             this.panelMiddle.TabIndex = 2;
+            // 
+            // linkSite
+            // 
+            this.linkSite.AutoSize = true;
+            this.linkSite.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.linkSite.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.linkSite.Location = new System.Drawing.Point(9, 130);
+            this.linkSite.Name = "linkSite";
+            this.linkSite.Size = new System.Drawing.Size(55, 13);
+            this.linkSite.TabIndex = 2;
+            this.linkSite.TabStop = true;
+            this.linkSite.Text = "linkLabel1";
+            this.linkSite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSite_LinkClicked);
             // 
             // linkSupport
             // 
             this.linkSupport.AutoSize = true;
             this.linkSupport.Cursor = System.Windows.Forms.Cursors.Hand;
             this.linkSupport.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.linkSupport.Location = new System.Drawing.Point(9, 102);
+            this.linkSupport.Location = new System.Drawing.Point(9, 113);
             this.linkSupport.Name = "linkSupport";
             this.linkSupport.Size = new System.Drawing.Size(55, 13);
             this.linkSupport.TabIndex = 1;
@@ -157,7 +170,7 @@
             this.textBoxInfo.Multiline = true;
             this.textBoxInfo.Name = "textBoxInfo";
             this.textBoxInfo.ReadOnly = true;
-            this.textBoxInfo.Size = new System.Drawing.Size(290, 86);
+            this.textBoxInfo.Size = new System.Drawing.Size(298, 97);
             this.textBoxInfo.TabIndex = 0;
             this.textBoxInfo.TabStop = false;
             this.textBoxInfo.WordWrap = false;
@@ -167,9 +180,9 @@
             this.mainGrid.SetColumnSpan(this.panelBottom, 3);
             this.panelBottom.Controls.Add(this.buttonOk);
             this.panelBottom.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelBottom.Location = new System.Drawing.Point(3, 265);
+            this.panelBottom.Location = new System.Drawing.Point(3, 276);
             this.panelBottom.Name = "panelBottom";
-            this.panelBottom.Size = new System.Drawing.Size(308, 39);
+            this.panelBottom.Size = new System.Drawing.Size(316, 39);
             this.panelBottom.TabIndex = 3;
             // 
             // buttonOk
@@ -181,29 +194,16 @@
             this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOk.Location = new System.Drawing.Point(121, 7);
             this.buttonOk.Name = "buttonOk";
-            this.buttonOk.Size = new System.Drawing.Size(67, 23);
+            this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 0;
             this.buttonOk.Text = "Ok";
             this.buttonOk.UseVisualStyleBackColor = true;
-            // 
-            // linkSite
-            // 
-            this.linkSite.AutoSize = true;
-            this.linkSite.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.linkSite.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.linkSite.Location = new System.Drawing.Point(9, 119);
-            this.linkSite.Name = "linkSite";
-            this.linkSite.Size = new System.Drawing.Size(55, 13);
-            this.linkSite.TabIndex = 2;
-            this.linkSite.TabStop = true;
-            this.linkSite.Text = "linkLabel1";
-            this.linkSite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSite_LinkClicked);
             // 
             // WSUIAbout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(314, 307);
+            this.ClientSize = new System.Drawing.Size(322, 318);
             this.Controls.Add(this.mainGrid);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
