@@ -15,15 +15,22 @@ namespace WSUIOutlookPlugin.Managers
 
         private ADXRibbonButton _buttonHelp;
         private ADXRibbonButton _buttonAbout;
+        //main toolbar
+        private ADXRibbonButton _buttonMainHelp;
+        private ADXRibbonButton _buttonMainAbout;
 
         #endregion
 
-        public WSUIAboutCommandManager(ADXRibbonButton buttonHelp, ADXRibbonButton buttonAbout)
+        public WSUIAboutCommandManager(ADXRibbonButton buttonHelp, ADXRibbonButton buttonAbout, ADXRibbonButton buttonMainHelp, ADXRibbonButton buttonMainAbout)
         {
             _buttonHelp = buttonHelp;
             _buttonAbout = buttonAbout;
+            _buttonMainAbout = buttonMainAbout;
+            _buttonMainHelp = buttonMainHelp;
             _buttonAbout.OnClick += ButtonAboutOnOnClick;
             _buttonHelp.OnClick += ButtonHelpOnOnClick;
+            _buttonMainAbout.OnClick += ButtonAboutOnOnClick;
+            _buttonMainHelp.OnClick += ButtonHelpOnOnClick;
         }
 
         private void ButtonHelpOnOnClick(object sender, IRibbonControl control, bool pressed)

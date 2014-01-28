@@ -53,7 +53,7 @@ namespace WSUIOutlookPlugin
         private ADXCommandBarButton adxCommandBarButtonSearch;
 
         //Outlook 2010
-        private ADXRibbonGroup adxRibbonGroupSearch;
+        private ADXRibbonGroup groupSearch;
         private ADXRibbonEditBox adxRibbonEditBoxSearch;
         private ADXRibbonButton adxRibbonButtonSearch;
         private ADXRibbonBox adxRibbonBoxSearch;
@@ -68,12 +68,16 @@ namespace WSUIOutlookPlugin
         private ImageList wsuiImageList;
         private ADXRibbonBox adxMainBox;
         private ADXRibbonButton wsuiButtonSearch;
-        private ADXRibbonGroup groupHelp;
         private ADXRibbonSplitButton btnSplit;
         private ADXRibbonMenu menuHelp;
         private ADXRibbonButton btnHelp;
         private ADXRibbonMenuSeparator adxRibbonMenuSeparator1;
         private ADXRibbonButton btnAbout;
+        private ADXRibbonSplitButton btnMainSplit;
+        private ADXRibbonMenu mnuMain;
+        private ADXRibbonButton btnMainHelp;
+        private ADXRibbonMenuSeparator btnMainMenuSeparatotr;
+        private ADXRibbonButton btnMainAbout;
 
         private const string DefaultNamespace = "MAPI";
 
@@ -142,12 +146,17 @@ namespace WSUIOutlookPlugin
             this.outlookFormManager = new AddinExpress.OL.ADXOlFormsManager(this.components);
             this.formWebPaneItem = new AddinExpress.OL.ADXOlFormsCollectionItem(this.components);
             this.wsuiTab = new AddinExpress.MSO.ADXRibbonTab(this.components);
-            this.adxRibbonGroupSearch = new AddinExpress.MSO.ADXRibbonGroup(this.components);
+            this.groupSearch = new AddinExpress.MSO.ADXRibbonGroup(this.components);
             this.adxRibbonBoxSearch = new AddinExpress.MSO.ADXRibbonBox(this.components);
             this.adxRibbonEditBoxSearch = new AddinExpress.MSO.ADXRibbonEditBox(this.components);
             this.adxRibbonButtonSearch = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.buttonShow = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.wsuiImageList = new System.Windows.Forms.ImageList(this.components);
+            this.btnSplit = new AddinExpress.MSO.ADXRibbonSplitButton(this.components);
+            this.menuHelp = new AddinExpress.MSO.ADXRibbonMenu(this.components);
+            this.btnHelp = new AddinExpress.MSO.ADXRibbonButton(this.components);
+            this.adxRibbonMenuSeparator1 = new AddinExpress.MSO.ADXRibbonMenuSeparator(this.components);
+            this.btnAbout = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.adxMainPluginCommandBar = new AddinExpress.MSO.ADXOlExplorerCommandBar(this.components);
             this.buttonShow2007 = new AddinExpress.MSO.ADXCommandBarButton(this.components);
             this.buttonHide2007 = new AddinExpress.MSO.ADXCommandBarButton(this.components);
@@ -159,12 +168,11 @@ namespace WSUIOutlookPlugin
             this.wsuiHomeSearch = new AddinExpress.MSO.ADXRibbonEditBox(this.components);
             this.wsuiButtonSearch = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.wsuiButtonSwitch = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.groupHelp = new AddinExpress.MSO.ADXRibbonGroup(this.components);
-            this.btnSplit = new AddinExpress.MSO.ADXRibbonSplitButton(this.components);
-            this.menuHelp = new AddinExpress.MSO.ADXRibbonMenu(this.components);
-            this.btnHelp = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.adxRibbonMenuSeparator1 = new AddinExpress.MSO.ADXRibbonMenuSeparator(this.components);
-            this.btnAbout = new AddinExpress.MSO.ADXRibbonButton(this.components);
+            this.btnMainSplit = new AddinExpress.MSO.ADXRibbonSplitButton(this.components);
+            this.mnuMain = new AddinExpress.MSO.ADXRibbonMenu(this.components);
+            this.btnMainHelp = new AddinExpress.MSO.ADXRibbonButton(this.components);
+            this.btnMainMenuSeparatotr = new AddinExpress.MSO.ADXRibbonMenuSeparator(this.components);
+            this.btnMainAbout = new AddinExpress.MSO.ADXRibbonButton(this.components);
             // 
             // outlookFormManager
             // 
@@ -184,19 +192,19 @@ namespace WSUIOutlookPlugin
             // wsuiTab
             // 
             this.wsuiTab.Caption = "Outlook Finder";
-            this.wsuiTab.Controls.Add(this.adxRibbonGroupSearch);
-            this.wsuiTab.Controls.Add(this.groupHelp);
+            this.wsuiTab.Controls.Add(this.groupSearch);
             this.wsuiTab.Id = "adxRibbonTab_500b5beadf3a45d9b11245e305940d6c";
             this.wsuiTab.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
-            // adxRibbonGroupSearch
+            // groupSearch
             // 
-            this.adxRibbonGroupSearch.Caption = "Outlook Finder";
-            this.adxRibbonGroupSearch.Controls.Add(this.adxRibbonBoxSearch);
-            this.adxRibbonGroupSearch.Controls.Add(this.buttonShow);
-            this.adxRibbonGroupSearch.Id = "adxRibbonGroup_c94173390d39441fa25cda51a851cd7a";
-            this.adxRibbonGroupSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.adxRibbonGroupSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            this.groupSearch.Caption = "Outlook Finder";
+            this.groupSearch.Controls.Add(this.adxRibbonBoxSearch);
+            this.groupSearch.Controls.Add(this.buttonShow);
+            this.groupSearch.Controls.Add(this.btnSplit);
+            this.groupSearch.Id = "adxRibbonGroup_c94173390d39441fa25cda51a851cd7a";
+            this.groupSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.groupSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // adxRibbonBoxSearch
             // 
@@ -236,6 +244,45 @@ namespace WSUIOutlookPlugin
             this.wsuiImageList.TransparentColor = System.Drawing.Color.Transparent;
             this.wsuiImageList.Images.SetKeyName(0, "application-plus-red.png");
             this.wsuiImageList.Images.SetKeyName(1, "logo_64.png");
+            // 
+            // btnSplit
+            // 
+            this.btnSplit.Caption = "More";
+            this.btnSplit.Controls.Add(this.menuHelp);
+            this.btnSplit.Id = "adxRibbonSplitButton_54dfcdd5b26847d19e5fb423558dbdcd";
+            this.btnSplit.Image = 1;
+            this.btnSplit.ImageList = this.wsuiImageList;
+            this.btnSplit.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.btnSplit.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            // 
+            // menuHelp
+            // 
+            this.menuHelp.Controls.Add(this.btnHelp);
+            this.menuHelp.Controls.Add(this.adxRibbonMenuSeparator1);
+            this.menuHelp.Controls.Add(this.btnAbout);
+            this.menuHelp.Id = "adxRibbonMenu_0e49baf968b443deaa578f34388228fc";
+            this.menuHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.menuHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            this.menuHelp.ShowCaption = false;
+            // 
+            // btnHelp
+            // 
+            this.btnHelp.Caption = "Help";
+            this.btnHelp.Id = "adxRibbonButton_32e3a315cb2240e690bd8a996bff0ffc";
+            this.btnHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.btnHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            // 
+            // adxRibbonMenuSeparator1
+            // 
+            this.adxRibbonMenuSeparator1.Id = "adxRibbonMenuSeparator_0f5aee07dd7b4c2689f6d1e780c9f15a";
+            this.adxRibbonMenuSeparator1.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            // 
+            // btnAbout
+            // 
+            this.btnAbout.Caption = "About";
+            this.btnAbout.Id = "adxRibbonButton_ca1899db162c46dca40d0d2791d231c7";
+            this.btnAbout.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.btnAbout.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // adxMainPluginCommandBar
             // 
@@ -295,6 +342,7 @@ namespace WSUIOutlookPlugin
             this.wsuiMainGroup.Caption = "Outlook Finder";
             this.wsuiMainGroup.Controls.Add(this.adxMainBox);
             this.wsuiMainGroup.Controls.Add(this.wsuiButtonSwitch);
+            this.wsuiMainGroup.Controls.Add(this.btnMainSplit);
             this.wsuiMainGroup.Id = "adxRibbonGroup_f065ec953c074c6a9e1ba8cae6b9b786";
             this.wsuiMainGroup.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.wsuiMainGroup.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
@@ -332,52 +380,43 @@ namespace WSUIOutlookPlugin
             this.wsuiButtonSwitch.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.wsuiButtonSwitch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
-            // groupHelp
+            // btnMainSplit
             // 
-            this.groupHelp.Caption = "More";
-            this.groupHelp.Controls.Add(this.btnSplit);
-            this.groupHelp.Id = "adxRibbonGroup_282c7eb85edf45e98aa6818b68584631";
-            this.groupHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.groupHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            this.btnMainSplit.Caption = "More";
+            this.btnMainSplit.Controls.Add(this.mnuMain);
+            this.btnMainSplit.Id = "adxRibbonSplitButton_9b5edc2e0af14b188c856fdddb98dcbe";
+            this.btnMainSplit.Image = 1;
+            this.btnMainSplit.ImageList = this.wsuiImageList;
+            this.btnMainSplit.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.btnMainSplit.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
-            // btnSplit
+            // mnuMain
             // 
-            this.btnSplit.Caption = "More";
-            this.btnSplit.Controls.Add(this.menuHelp);
-            this.btnSplit.Id = "adxRibbonSplitButton_54dfcdd5b26847d19e5fb423558dbdcd";
-            this.btnSplit.Image = 1;
-            this.btnSplit.ImageList = this.wsuiImageList;
-            this.btnSplit.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnSplit.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            this.mnuMain.Controls.Add(this.btnMainHelp);
+            this.mnuMain.Controls.Add(this.btnMainMenuSeparatotr);
+            this.mnuMain.Controls.Add(this.btnMainAbout);
+            this.mnuMain.Id = "adxRibbonMenu_eef51eb086df4c2886195868fb76cef8";
+            this.mnuMain.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.mnuMain.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
-            // menuHelp
+            // btnMainHelp
             // 
-            this.menuHelp.Controls.Add(this.btnHelp);
-            this.menuHelp.Controls.Add(this.adxRibbonMenuSeparator1);
-            this.menuHelp.Controls.Add(this.btnAbout);
-            this.menuHelp.Id = "adxRibbonMenu_0e49baf968b443deaa578f34388228fc";
-            this.menuHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.menuHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            this.menuHelp.ShowCaption = false;
+            this.btnMainHelp.Caption = "Help";
+            this.btnMainHelp.Id = "adxRibbonButton_e8264c95d9934ff5a85549d2fbeecd7e";
+            this.btnMainHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.btnMainHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
-            // btnHelp
+            // btnMainMenuSeparatotr
             // 
-            this.btnHelp.Caption = "Help";
-            this.btnHelp.Id = "adxRibbonButton_32e3a315cb2240e690bd8a996bff0ffc";
-            this.btnHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            this.btnMainMenuSeparatotr.Id = "adxRibbonMenuSeparator_1001098bd1ed42f7837be7469856176d";
+            this.btnMainMenuSeparatotr.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
-            // adxRibbonMenuSeparator1
+            // btnMainAbout
             // 
-            this.adxRibbonMenuSeparator1.Id = "adxRibbonMenuSeparator_0f5aee07dd7b4c2689f6d1e780c9f15a";
-            this.adxRibbonMenuSeparator1.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // btnAbout
-            // 
-            this.btnAbout.Caption = "About";
-            this.btnAbout.Id = "adxRibbonButton_ca1899db162c46dca40d0d2791d231c7";
-            this.btnAbout.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnAbout.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            this.btnMainAbout.Caption = "About";
+            this.btnMainAbout.Id = "adxRibbonButton_610ffe76131f40c3b097201812603434";
+            this.btnMainAbout.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.btnMainAbout.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // WSUIAddinModule
             // 
@@ -536,7 +575,7 @@ namespace WSUIOutlookPlugin
                 : new WSUIRibbonManager(buttonShow, wsuiButtonSwitch, adxRibbonButtonSearch, adxRibbonEditBoxSearch, wsuiHomeSearch, wsuiButtonSearch);
             if (!adxMainPluginCommandBar.UseForRibbon)
             {
-                _aboutCommandManager = new WSUIAboutCommandManager(btnHelp,btnAbout);
+                _aboutCommandManager = new WSUIAboutCommandManager(btnHelp,btnAbout,btnMainHelp,btnMainAbout);
             }
         }
 
