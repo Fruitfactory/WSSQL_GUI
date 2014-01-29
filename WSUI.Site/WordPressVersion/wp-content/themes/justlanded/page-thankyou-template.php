@@ -84,7 +84,7 @@ $path_down = getDownloadUrlForLastVersion();
     </div>
 </article>
 <div id="auto_download">
-    <?php do_action('autostartdownloadfull'); ?>
+    <?php do_action('auto_start_download_full'); ?>
 </div>
 
 <?php get_footer(); ?>

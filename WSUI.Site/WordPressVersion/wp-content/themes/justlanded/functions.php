@@ -1409,7 +1409,6 @@ function auto_start_download_full(){
     echo '<iframe width="0" height="0" src="'.$filename.'"></iframe>';
 }
 add_action('auto_start_download_full', 'auto_start_download_full');
-add_shortcode('auto_start_download_full_s', 'auto_start_download_full');
 
 function get_download_link($attr){
     extract(shortcode_atts(array(
