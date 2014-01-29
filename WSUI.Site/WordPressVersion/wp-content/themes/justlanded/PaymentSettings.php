@@ -74,6 +74,7 @@ $ThankYouPage =  'http://outlookfinder.com/thank-you/';//'http://www.outlookfind
 $YourLogo = 'https://outlookfinder.com/images/logo_W_120.png';
 
 $InstallerPage = "http://outlookfinder.com/installer/";
+$LicenseYear = 1;
 
 
 
@@ -139,7 +140,7 @@ function SendPKeys($quantity, $email, $first, $last)
 	//Note: we put LimeLM in this directory. Change it as needed.
 	require(dirname(__FILE__).'/LimeLM.php');
 
-	global $LimeLM_VersionID, $LimeLM_ApiKey,$CompanyName,$AppName, $InstallerPage;
+	global $LimeLM_VersionID, $LimeLM_ApiKey,$CompanyName,$AppName, $InstallerPage, $LicenseYear;
 
 	$errors = false;
 
@@ -195,14 +196,13 @@ function SendPKeys($quantity, $email, $first, $last)
 
 '.$product_keys.'
 
-
-This product key is licensed for '.$quantity.( $quantity > 1 ? ' users' : ' user' ).' of '.$AppName.'.
-Here is the url for donwloading last version:
+This product key is licensed for '.$quantity.( $quantity > 1 ? ' users' : ' user' ).' of '.$AppName.' for '.$LicenseYear.' year.
+Here is the url for downloading the latest version:
 '.$InstallerPage.'
     
-Thank you,
+Thank you for purchasing '.$AppName.'
 
-'.$CompanyName;
+The '.$AppName.' team';
 
 	if (!empty($product_keys))
 	{
