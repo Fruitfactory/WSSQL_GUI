@@ -1398,11 +1398,18 @@ if(!function_exists('justlanded_get_youtube_id')) {
 
 // yariki shortcode
 include( dirname(__FILE__).'/downloadlink.php');
-function auto_start_download(){
+function auto_start_download_trial(){
     $filename = getDownloadUrlforTrial();
-    return '<iframe width="0" height="0" src="'.$filename.'">';
+    return '<iframe width="0" height="0" src="'.$filename.'"></iframe>';
 }
-add_shortcode('autostartdownload', 'auto_start_download');
+add_shortcode('auto_start_download', 'auto_start_download_trial');
+
+function auto_start_download_full(){
+    $filename = getDownloadUrlForLastVersion();
+    echo '<iframe width="0" height="0" src="'.$filename.'"></iframe>';
+}
+add_action('auto_start_download_full', 'auto_start_download_full');
+add_shortcode('auto_start_download_full_s', 'auto_start_download_full');
 
 function get_download_link($attr){
     extract(shortcode_atts(array(
@@ -1413,4 +1420,4 @@ function get_download_link($attr){
     $filename = getDownloadUrlforTrial();
     return '<a title="'.$title.'" href="'.$filename.'">'.$caption.'</a>';
 }
-add_shortcode('getdownloadlink', 'get_download_link');
+add_shortcode('get_download_link', 'get_download_link');

@@ -79,8 +79,12 @@ $path_down = getDownloadUrlForLastVersion();
         </table>		
         <?php }?>
                 <hr/>
-                <p>Also your product key will be e-mailed to you shortly. <strong>If you don't recieve your product key in the next 10 minutes check your spam folder.</strong></p>
+                <p>Also your product key will be e-mailed to you shortly. <strong>If you don't receive your product key in the next 10 minutes check your spam folder.</strong></p>
                 <p><a href="<?= $path_down ?>">Download</a> last version</p>
     </div>
 </article>
+<div id="auto_download">
+    <?php do_action('autostartdownloadfull'); ?>
+</div>
+
 <?php get_footer(); ?>
