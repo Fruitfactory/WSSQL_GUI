@@ -472,6 +472,7 @@ namespace WSUI.Module.ViewModel
             if (lazyKind != null)
             {
                 SelectedLazyKind = lazyKind;
+                OnPropertyChanged(() => SelectedLazyKind);
             }
         }
 
