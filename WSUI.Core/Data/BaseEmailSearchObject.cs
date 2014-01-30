@@ -92,10 +92,10 @@ namespace WSUI.Core.Data
 	                FromName = value as string[];
 	                break;
                 case 13:
-	                SenderAddress = value as string[];
+	                SenderAddress = CheckValidType(value);
 	                break;
                 case 14:
-	                SenderName = value as string[];
+                    SenderName = CheckValidType(value);
 	                break;
 	        }
 	    }
@@ -129,6 +129,15 @@ namespace WSUI.Core.Data
             return !string.IsNullOrEmpty(email) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase);
         }
 
+        private string[] CheckValidType(object val)
+        {
+            if (val != null && val.GetType().IsArray)
+            {
+                return val as string[];
+            }
+            return new string[] { val as string };
+        }
+ 
     }//end BaseEmailSearchObject
 
 }//end namespace Data
