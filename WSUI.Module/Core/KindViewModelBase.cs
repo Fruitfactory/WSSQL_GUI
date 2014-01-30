@@ -371,7 +371,6 @@ namespace WSUI.Module.Core
                     Size = new Size(mwi.MainWindowRect.Width, mwi.MainWindowRect.Height),
                     MainHandle = mwi.MainWindowHandle
                 });
-                
             }
         }
 
@@ -384,6 +383,9 @@ namespace WSUI.Module.Core
         {
             _lastDate = GetCurrentDate();
             SearchSystem.Reset();
+            ClearDataSource();
+            if (Parent != null)
+                Parent.ForceClosePreview();
         }
 
         protected virtual void OnInit()

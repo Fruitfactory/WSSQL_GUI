@@ -66,10 +66,7 @@ namespace WSUI.Module.ViewModel
 
         protected override void OnSearchStringChanged()
         {
-            ClearDataSource();
-            OnPropertyChanged(() => DataSource);
-            if (ParentViewModel != null && ParentViewModel.MainDataSource != null)
-                ParentViewModel.MainDataSource.Clear();
+            ClearMainDataSource();
             _isFirstTime = true;
             base.OnSearchStringChanged();
         }

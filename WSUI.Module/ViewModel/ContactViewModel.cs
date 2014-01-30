@@ -86,12 +86,8 @@ namespace WSUI.Module.ViewModel
 
         protected override void OnSearchStringChanged()
         {
-            _countProcess = ScrollBehavior.CountFirstProcess;
+            //_countProcess = ScrollBehavior.CountFirstProcess;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
-            _lastDate = GetCurrentDate();
-            if (string.IsNullOrEmpty(SearchString))
-                return;
-            ClearDataSource();
             base.OnSearchStringChanged();
             //_contactSuggesting.StartSuggesting(SearchString);
         }
@@ -99,7 +95,7 @@ namespace WSUI.Module.ViewModel
         protected override void OnFilterData()
         {
             base.OnFilterData();
-            _countProcess = ScrollBehavior.CountFirstProcess;
+            //_countProcess = ScrollBehavior.CountFirstProcess;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
         }
 

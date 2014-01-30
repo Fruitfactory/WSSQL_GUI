@@ -51,7 +51,6 @@ namespace WSUI.Module.ViewModel
         protected override void OnSearchStringChanged()
         {
             base.OnSearchStringChanged();
-            ClearDataSource();
             ClearMainDataSource();
             TopQueryResult = ScrollBehavior.CountFirstProcess;
             ShowMessageNoMatches = true;

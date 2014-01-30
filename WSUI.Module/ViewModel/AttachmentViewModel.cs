@@ -66,7 +66,6 @@ namespace WSUI.Module.ViewModel
         {
             _listId.Clear();
             _countProcess = ScrollBehavior.CountFirstProcess;
-            ClearDataSource();
             base.OnSearchStringChanged();
 
         }
