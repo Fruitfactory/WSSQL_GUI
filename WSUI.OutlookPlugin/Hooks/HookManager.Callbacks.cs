@@ -220,15 +220,13 @@ namespace WSUIOutlookPlugin.Hooks
             if (s_MouseHookHandle == 0)
             {
                 //See comment of this field. To avoid GC to clean it up.
-                IntPtr handle = GetOutlookApplication();
                 s_MouseDelegate = MouseHookProc;
                 //install hook
-                s_MouseHookHandle = SetWindowsHookEx(
-                    WH_MOUSE_LL,
-                    s_MouseDelegate,
-                    Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]),
-                    0); 
-                //Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0])
+                using (Process curProcess = Process.GetCurrentProcess())
+                using (ProcessModule curModule = curProcess.MainModule)
+                {
+                    s_MouseHookHandle = SetWindowsHookEx(WH_MOUSE_LL, s_MouseDelegate, GetModuleHandle(curModule.ModuleName), 0);
+                }
                 //If SetWindowsHookEx fails.
                 if (s_MouseHookHandle == 0)
                 {
@@ -387,13 +385,13 @@ namespace WSUIOutlookPlugin.Hooks
             {
                 //See comment of this field. To avoid GC to clean it up.
                 s_KeyboardDelegate = KeyboardHookProc;
-                Module callassembly = Assembly.GetCallingAssembly().GetModules()[0];
                 //install hook
-                s_KeyboardHookHandle = SetWindowsHookEx(
-                    WH_KEYBOARD_LL,
-                    s_KeyboardDelegate,
-                    IntPtr.Zero,
-                    0);
+                using (Process curProcess = Process.GetCurrentProcess())
+                using (ProcessModule curModule = curProcess.MainModule)
+                {
+                    s_KeyboardHookHandle = SetWindowsHookEx(WH_KEYBOARD_LL,s_KeyboardDelegate,GetModuleHandle(curModule.ModuleName),0);
+                }
+                
                 //If SetWindowsHookEx fails.
                 if (s_KeyboardHookHandle == 0)
                 {
@@ -441,12 +439,7 @@ namespace WSUIOutlookPlugin.Hooks
 
         #endregion
 
-
-        private static IntPtr GetOutlookApplication()
-        {
-            const string OutlookProcessName = "OUTLOOK";
-            var outlook = Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith(OutlookProcessName));
-            return outlook.Any() ? outlook.First().Handle : IntPtr.Zero;
-        }
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern IntPtr GetModuleHandle(string lpModuleName);
     }
 }

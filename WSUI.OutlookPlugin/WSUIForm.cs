@@ -23,7 +23,6 @@ namespace WSUIOutlookPlugin
                 // recommendation from Add-In Express team
             {
                 InitializeComponent();
-                //HookManager.KeyDown += HookManagerOnKeyDown;
                 WSSqlLogger.Instance.LogInfo("WSUIForm [ctor]");
                 ADXAfterFormHide += OnAdxAfterFormHide;
             }
