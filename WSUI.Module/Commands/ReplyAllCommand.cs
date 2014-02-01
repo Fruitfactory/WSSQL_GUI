@@ -33,16 +33,16 @@ namespace WSUI.Module.Commands
                 {
                     if (mail is MailItem)
                     {
-                        var replyallmail = (mail as MailItem).ReplyAll();
+                        var replyallmail = (mail as _MailItem).ReplyAll();
                         replyallmail.Display(false);
-                        (mail as MailItem).Close(OlInspectorClose.olDiscard);
+                        (mail as _MailItem).Close(OlInspectorClose.olDiscard);
 
                     }
                     else if (mail is MeetingItem)
                     {
-                        var replyallmail = (mail as MeetingItem).ReplyAll();
+                        var replyallmail = (mail as _MeetingItem).ReplyAll();
                         replyallmail.Display(false);
-                        (mail as MeetingItem).Close(OlInspectorClose.olDiscard);
+                        (mail as _MeetingItem).Close(OlInspectorClose.olDiscard);
 
                     }
                 }

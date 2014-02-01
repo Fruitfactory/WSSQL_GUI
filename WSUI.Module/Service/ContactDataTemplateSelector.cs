@@ -23,7 +23,6 @@ namespace WSUI.Module.Service
                 default:
                     return NoneTemplate;
             }
-            return null;
         }
 
     }

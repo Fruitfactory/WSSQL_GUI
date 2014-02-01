@@ -11,8 +11,6 @@ namespace WSUI.Module.View
     /// </summary>
     public partial class AllFilesDataView : IDataView<AllFilesViewModel>
     {
-        private int _oldIndex = -1;
-
         public AllFilesDataView()
         {
             InitializeComponent();

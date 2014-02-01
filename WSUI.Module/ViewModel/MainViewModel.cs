@@ -421,7 +421,6 @@ namespace WSUI.Module.ViewModel
             catch (Exception ex)
             {
                 WSSqlLogger.Instance.LogError(ex.Message);
-                return null;
             }
             return null;
         }

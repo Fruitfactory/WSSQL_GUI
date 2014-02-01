@@ -132,7 +132,7 @@ namespace WSUI.Module.View.Controls
         {
             get { return _controls.Count; }
         }
-
+#pragma warning disable 67
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnKeyDownFired(KeyEventArgs e)

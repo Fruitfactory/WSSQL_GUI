@@ -15,7 +15,7 @@ namespace WSPreview.PreviewHandler.Service.Preview
     {
 
         #region private static fields
-
+#pragma warning disable 414
         private static string HKLMWinSdk32 = "SOFTWARE\\Microsoft\\Microsoft SDKs\\Windows";
         private static string HKLMWinSdk64 = "SOFTWARE\\Wow6432Node\\Microsoft\\Microsoft SDKs\\Windows";
         private static string InstallationFolder = "InstallationFolder";

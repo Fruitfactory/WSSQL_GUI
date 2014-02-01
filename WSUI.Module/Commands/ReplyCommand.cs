@@ -32,18 +32,18 @@ namespace WSUI.Module.Commands
                 {
 
 
-                    if (mail is MailItem)
+                    if (mail is _MailItem)
                     {
-                        var replymail = (mail as MailItem).Reply();
+                        var replymail = (mail as _MailItem).Reply();
                         replymail.Display(false);
-                        (mail as MailItem).Close(OlInspectorClose.olDiscard);
+                        (mail as _MailItem).Close(OlInspectorClose.olDiscard);
 
                     }
-                    else if (mail is MeetingItem)
+                    else if (mail is _MeetingItem)
                     {
-                        var replymail = (mail as MeetingItem).Reply();
+                        var replymail = (mail as _MeetingItem).Reply();
                         replymail.Display(false);
-                        (mail as MeetingItem).Close(OlInspectorClose.olDiscard);
+                        (mail as _MeetingItem).Close(OlInspectorClose.olDiscard);
 
                     }
                 }

@@ -25,9 +25,6 @@ namespace WSUI.Module.ViewModel
         private ContactSearchData _contactData = null;
         private ContactSuggestingService _contactSuggesting;
         private readonly List<BaseSearchData> _listContacts = new List<BaseSearchData>(); 
-
-        private int _countAdded = 0;
-        private int _countProcess;
         
         public ContactViewModel(IUnityContainer container, ISettingsView<ContactViewModel> settingsView, IDataView<ContactViewModel> dataView)
             :base(container)

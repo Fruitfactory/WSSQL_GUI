@@ -23,7 +23,6 @@ namespace WSUI.Module.ViewModel
     [KindNameId(KindsConstName.Everything, 0, @"pack://application:,,,/WSUI.Module;Component/Images/View.png")]
     public class AllFilesViewModel : KindViewModelBase, IUView<AllFilesViewModel>, IScrollableView
     {
-        private int _countAdded = 0;
         private const int FirstPriority = 1;
         private const int CountForSkip = 5;
 

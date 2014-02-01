@@ -16,7 +16,6 @@ namespace WSUI.Core.Logger
     {
 
         private const string Filename = "log4net.config";
-        private Stopwatch _watch;
 
         #region fields
         private ILog _log;

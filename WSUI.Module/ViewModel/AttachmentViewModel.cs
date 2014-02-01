@@ -16,7 +16,6 @@ namespace WSUI.Module.ViewModel
     [KindNameId(KindsConstName.Attachments, 3, @"pack://application:,,,/WSUI.Module;Component/Images/Mail-Attachment.png")]
     public class AttachmentViewModel : KindViewModelBase, IUView<AttachmentViewModel>, IScrollableView
     {
-        private int _countAdded = 0;
         private int _countProcess;
         private List<BaseSearchData> _list = new List<BaseSearchData>();
         private List<string> _listId = new List<string>();

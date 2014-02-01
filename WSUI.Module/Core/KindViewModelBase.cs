@@ -65,7 +65,6 @@ namespace WSUI.Module.Core
         private BaseSearchObject _current = null;
         private string _searchString = string.Empty;
         private ICommandStrategy _currentStrategy;
-        private ManualResetEvent _eventForContinue;
 
         // new 
         protected ISearchSystem SearchSystem { get; set; }
@@ -85,171 +84,6 @@ namespace WSUI.Module.Core
             DataSource = new ObservableCollection<BaseSearchObject>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
             _lastDate = GetCurrentDate();
-        }
-
-        protected virtual void DoQuery(object mwi)
-        {
-            _isQueryRun = true;
-            WSSqlLogger.Instance.LogInfo("Begin query!");
-            if (string.IsNullOrEmpty(_query))
-            {
-                _eventForContinue.Set();
-                return;
-            }
-            WSSqlLogger.Instance.LogInfo(string.Format("QUERY: {0}",_query));
-            OleDbDataReader dataReader = null;
-            OleDbConnection connection = new OleDbConnection(ConnectionString);
-            OleDbCommand cmd = new OleDbCommand(_query, connection);
-            cmd.CommandTimeout = 0;
-            
-            var watch = new Stopwatch();
-            watch.Start();
-            try
-            {
-
-                connection.Open();
-
-                var watchOleDbCommand = new Stopwatch();
-                watchOleDbCommand.Start();
-                dataReader = cmd.ExecuteReader();
-                watchOleDbCommand.Stop();
-                WSSqlLogger.Instance.LogInfo("dataReader = cmd.ExecuteReader(); Elapsed: " + watchOleDbCommand.ElapsedMilliseconds.ToString());
-
-                while (dataReader.Read())
-                {
-                    try
-                    {
-                        ReadData(dataReader);
-                        if (IsInterupt)
-                            break;
-                    }
-                    catch (Exception ex)
-                    {
-                        WSSqlLogger.Instance.LogError(String.Format("{0} - {1}","DoQuery _ main cycle", ex.Message));
-                    }
-                }
-
-            }
-            catch (System.Data.OleDb.OleDbException oleDbException)
-            {
-                WSSqlLogger.Instance.LogError(String.Format("{0} - {1}","DoQuery",oleDbException.Message));
-            }
-            finally
-            {
-                // Always call Close when done reading.
-                if (dataReader != null)
-                {
-                    dataReader.Close();
-                    dataReader.Dispose();
-                }
-                // Close the connection when done with it.
-                if (connection.State == System.Data.ConnectionState.Open)
-                {
-                    connection.Close();
-                }
-                
-                watch.Stop();
-                System.Diagnostics.Debug.WriteLine("DoQuery {0}",watch.ElapsedMilliseconds);
-                WSSqlLogger.Instance.LogInfo("End query! Elapsed: " + watch.ElapsedMilliseconds.ToString());
-                _eventForContinue.Set();
-            }
-        }
-
-        protected virtual void DoAdditionalQuery()
-        {
-            _eventForContinue.WaitOne();
-            var watch = new Stopwatch();
-            watch.Start();
-            OnComplete(true);
-            watch.Stop();
-            System.Diagnostics.Debug.WriteLine("DoAdditionalQuery {0}", watch.ElapsedMilliseconds);
-            WSSqlLogger.Instance.LogInfo("End additional query! Elapsed: " + watch.ElapsedMilliseconds.ToString());
-            _isQueryRun = false;
-        }
-
-        protected virtual void ReadData(IDataReader reader)
-        {
-            
-        }
-
-        protected  virtual void ReadGroupData(IDataReader reader, ISearchData data)
-        {
-
-            foreach (var pi in data.GetType().GetProperties().Where(pi => pi.GetCustomAttributes(typeof(FieldIndexAttribute),false).Length > 0))
-            {
-                uint index =
-                    ((FieldIndexAttribute[]) pi.GetCustomAttributes(typeof (FieldIndexAttribute), false))[0].Index;
-                if (index < reader.FieldCount)
-                {
-                    object obj = reader[(int)index];
-                    if (obj is Array)
-                    {
-                        pi.SetValue(data, obj, null);    
-                    }
-                    else if (!reader.IsDBNull((int)index))
-                    {
-                        var value = Convert.ChangeType(obj, pi.PropertyType, CultureInfo.InvariantCulture);
-                        pi.SetValue(data, value, null);    
-                    }
-                    
-                }
-            }
-        }
-
-
-        protected virtual string CreateQuery()
-        {
-            var searchCriteria = SearchString.Trim();
-            string res = string.Empty;
-            
-            ProcessSearchCriteria(searchCriteria);
-
-            res = string.Format(QueryTemplate, string.IsNullOrEmpty(_andClause) ? string.Format("'\"{0}*\"'", _listW[0]) : _andClause);
-
-            return res;
-        }
-
-        protected void ProcessSearchCriteria(string searchCriteria)
-        {
-            _andClause = string.Empty;
-            _listW = new List<string>();
-
-            foreach (var rule in RuleCollection.OrderBy(i => i.Priority))
-            {
-                _listW.AddRange(rule.ApplyRule(searchCriteria));
-                searchCriteria = rule.ClearCriteriaAccordingRule(searchCriteria);
-            }
-
-            if (_listW.Count > 1)
-            {
-                StringBuilder temp = new StringBuilder();
-                temp.Append(string.Format("'\"{0}*\"", _listW[0]));
-                for (int i = 1; i < _listW.Count; i++)
-                {
-                    temp.Append(string.Format(QueryAnd, _listW[i]));
-                }
-                _andClause = temp.ToString() + "'";
-            }
-        }
-
-        protected virtual string LikeCriteria()
-        {
-            if (_listW.Count == 0)
-                return string.Empty;
-            var temp = new StringBuilder();
-
-            temp.Append(string.Format("Contains(System.ItemName,'\"{0}*\"') ", _listW[0]));
-
-            if (_listW.Count > 1)
-                for (int i = 1; i < _listW.Count; i++)
-                    temp.Append(string.Format(OrLikeTemplate, _listW.ElementAt(i)));
-
-            return temp.ToString();
-        }
-
-        protected string FormatDate(ref DateTime date)
-        {
-            return date.ToString("yyyy/MM/dd hh:mm:ss").Replace('.', '/');
         }
 
         protected virtual DateTime GetCurrentDate()
@@ -688,7 +522,6 @@ namespace WSUI.Module.Core
             catch (Exception ex)
             {
                 WSSqlLogger.Instance.LogError(ex.Message);
-                return null;
             }
             return null;
         }
