@@ -227,6 +227,7 @@
     <DataTemplate x:Key="UserTemplate">
         <Grid HorizontalAlignment="Left" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="16" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -237,9 +238,9 @@
                     </StackPanel>
                 </ToolTip>
             </Grid.ToolTip>
-            <Image Grid.Column="0" Source="..\Images\user.png" Style="{StaticResource ImageStyle}" />
+            <Image Grid.Column="1" Source="..\Images\user.png" Style="{StaticResource ImageStyle}" />
             <ctrl:HightliteHyperlink Text="{Binding Converter={StaticResource objectConverter}}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                        Grid.Column="1"   Margin="5">
+                                                        Grid.Column="2"   Margin="5">
                 <ctrl:HightliteHyperlink.Style>
                     <Style TargetType="ctrl:HightliteTextBlockBase">
                         <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Blue"/>
@@ -257,6 +258,7 @@
     <DataTemplate x:Key="FileTemplate">
         <Grid HorizontalAlignment="Left" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="16" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
                 <ColumnDefinition Width="*" />
@@ -270,13 +272,13 @@
             </Grid.ToolTip>
 
             <Image  Source="{Binding Path=ItemName,Converter={StaticResource ResourceKey=nameConverter}}" Style="{StaticResource ImageStyle}" 
-                    Grid.Column="0"/>
+                    Grid.Column="1"/>
             <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
-                           Grid.Column="1"></TextBlock>
+                           Grid.Column="2"></TextBlock>
             <ctrl:HightliteTextBlock Text="{Binding Path=ItemName}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                        Grid.Column="2" Grid.ColumnSpan="2"  Margin="5"/>
+                                                        Grid.Column="3" Grid.ColumnSpan="2"  Margin="5"/>
 
-            <TextBlock Text="{Binding Path=DateCreated,Converter={StaticResource dateConverter}}"  Margin="5" Grid.Column="4" Foreground="Black"/>
+            <TextBlock Text="{Binding Path=DateCreated,Converter={StaticResource dateConverter}}"  Margin="5" Grid.Column="5" Foreground="Black"/>
 
         </Grid>
         
@@ -285,6 +287,7 @@
     <DataTemplate x:Key="AttachmentTemplate">
         <Grid HorizontalAlignment="Left" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="16" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
                 <ColumnDefinition Width="*" />
@@ -298,12 +301,12 @@
             </Grid.ToolTip>
 
             <Image  Source="{Binding Path=ItemUrl,Converter={StaticResource ResourceKey=nameConverter}}" Style="{StaticResource ImageStyle}" 
-                    Grid.Column="0"/>
+                    Grid.Column="1"/>
             <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
-                           Grid.Column="1"></TextBlock>
+                           Grid.Column="2"></TextBlock>
             <ctrl:HightliteTextBlock Text="{Binding Path=ItemName}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                        Grid.Column="2" Grid.ColumnSpan="2"  Margin="5"/>
-            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" Grid.Column="4" Foreground="Black"/>
+                                                        Grid.Column="3" Grid.ColumnSpan="2"  Margin="5"/>
+            <TextBlock Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" Grid.Column="5" Foreground="Black"/>
         </Grid>
     </DataTemplate>
 
@@ -312,23 +315,25 @@
 
         <Grid HorizontalAlignment="Left" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="16" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Image Grid.Column="0" Source="..\Images\date.png" Style="{StaticResource ImageStyle}" />
+            <Image Grid.Column="1" Source="..\Images\date.png" Style="{StaticResource ImageStyle}" />
             <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
-                           Grid.Column="1"></TextBlock>
+                           Grid.Column="2"></TextBlock>
             <ctrl:HightliteTextBlock Text="{Binding Path=ItemName}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                        Grid.Column="2"   Margin="5"/>
-            <TextBlock Grid.Column="3"  Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>
+                                                        Grid.Column="3"   Margin="5"/>
+            <TextBlock Grid.Column="4"  Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>
         </Grid>
     </DataTemplate>
 
     <DataTemplate x:Key="PictureTemplate">
         <Grid HorizontalAlignment="Left" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="16" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Style="{StaticResource ResourceKey=CountStyleWidthColumn}"/>
                 <ColumnDefinition Width="*"/>
@@ -339,12 +344,12 @@
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
             </Grid.ToolTip>
-            <Image Grid.Column="0" Source="..\Images\pictures.png" Style="{StaticResource ImageStyle}" />
+            <Image Grid.Column="1" Source="..\Images\pictures.png" Style="{StaticResource ImageStyle}" />
             <TextBlock Text="{Binding Count,Converter={StaticResource countConverter}}" FontWeight="Bold" Foreground="Red" Margin="5"
-                           Grid.Column="1"></TextBlock>
+                           Grid.Column="2"></TextBlock>
             <ctrl:HightliteTextBlock Text="{Binding Path=ItemName}" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}"  
-                                                        Grid.Column="2"   Margin="5"/>
-            <TextBlock Grid.Column="3"  Text="{Binding Path=DateCreated,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>
+                                                        Grid.Column="3"   Margin="5"/>
+            <TextBlock Grid.Column="4"  Text="{Binding Path=DateCreated,Converter={StaticResource dateConverter}}"  Margin="5" Foreground="Black"/>
         </Grid>
     </DataTemplate>
     
