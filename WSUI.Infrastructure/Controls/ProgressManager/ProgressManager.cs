@@ -120,7 +120,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                 {
                     _progressForm.ProcessCommand(ProgressFormCommand.Settings, _currentOperation);
                     ((Window) _progressForm).Closed += OnClosedForm;
-                    WSSqlLogger.Instance.LogInfo(">>>Show dialog");
+                    WSSqlLogger.Instance.LogInfo("Show dialog");
                 }
                 catch (Exception ex)
                 {
@@ -136,7 +136,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
         {
             ((Window) _progressForm).Dispatcher.BeginInvokeShutdown(DispatcherPriority.Background);
             WSSqlLogger.Instance.LogInfo(
-                ">>>Close dialog");
+                "Close dialog");
         }
 
         public void StopOperation()
@@ -151,7 +151,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                     _stackOperation.Pop();
                 }
             }
-            WSSqlLogger.Instance.LogInfo(">>>Stop progress");
+            WSSqlLogger.Instance.LogInfo("Stop progress");
             CloseProgressForm();
         }
 
