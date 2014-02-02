@@ -220,6 +220,8 @@ namespace WSUI.Module.Core
             ClearDataSource();
             if (Parent != null)
                 Parent.ForceClosePreview();
+            if(IsSearchCriteriaEmpty)
+                OnPropertyChanged(() => Commands);
         }
 
         protected virtual void OnInit()
@@ -303,6 +305,11 @@ namespace WSUI.Module.Core
             }
         }
 
+        protected bool IsSearchCriteriaEmpty
+        {
+            get { return string.IsNullOrEmpty(SearchString); }
+        }
+
 
         #region IKindItem
 
@@ -367,7 +374,7 @@ namespace WSUI.Module.Core
         {
             get
             {
-                return _currentStrategy != null ? _currentStrategy.Commands : null;
+                return IsSearchCriteriaEmpty || _currentStrategy == null ? null : _currentStrategy.Commands ;
             }
         }
 

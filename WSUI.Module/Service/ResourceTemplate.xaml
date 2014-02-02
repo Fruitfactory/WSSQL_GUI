@@ -540,6 +540,18 @@
                                 </Setter.Value>
                             </Setter>
                         </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True"></Condition>
+                                <Condition Property="IsMouseOver" Value="True"></Condition>
+                                <Condition Property="IsFocused" Value="False"></Condition>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Foreground">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{DynamicResource TextBoxText}"></SolidColorBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
