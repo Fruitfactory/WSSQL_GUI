@@ -61,8 +61,6 @@ namespace WSUI.Module.ViewModel
         public ICommand FlyCommand { get; private set; }
         public ICommand EmailClickCommand { get; protected set; }
 
-        
-
         protected override void OnSearchStringChanged()
         {
             ClearMainDataSource();
@@ -70,8 +68,6 @@ namespace WSUI.Module.ViewModel
             base.OnSearchStringChanged();
         }
 
- 
- 
         private void OnScroll(object args)
         {
             var scrollArgs = args as ScrollData;
