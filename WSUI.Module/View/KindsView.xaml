@@ -17,6 +17,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>        
         
         <ListBox Grid.Row="1" Style="{StaticResource MetroListBox}" ItemsSource="{Binding KindsCollection}" Height="Auto"
@@ -26,6 +27,22 @@
                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
                  IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}">
         </ListBox>
+
+        <Border Grid.Row="2" Visibility="{Binding VisibleTrialLabel,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Margin="5">
+            <TextBlock Foreground="Red" TextWrapping="Wrap">
+                <Run>You have</Run>
+                <Run Text="{Binding DaysLeft,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></Run>
+                <Run>days left in your trial.</Run>
+                <LineBreak></LineBreak>
+                <Run>We hope you are enjoying OutlookFinder.</Run>
+                <LineBreak></LineBreak>
+                <Run>Click here to purchase a license.</Run>
+                <LineBreak></LineBreak>
+                <Hyperlink Command="{Binding BuyCommand}">Purchase</Hyperlink>
+            </TextBlock>
+        </Border>
+        
+        
         
     </Grid>
 

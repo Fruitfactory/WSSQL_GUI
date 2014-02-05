@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -31,6 +32,12 @@ namespace WSUI.Module.ViewModel
 {
     public class MainViewModel : ViewModelBase, IMainViewModel
     {
+        #region [urls]
+
+        private const string BuyUrl = "http://outlookfinder.com/buy/";
+
+        #endregion
+
         private List<LazyKind> _listItems;
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;
@@ -95,9 +102,7 @@ namespace WSUI.Module.ViewModel
 
         private void InitializeCommands()
         {
-            ActivateCommand = new DelegateCommand(InternalActivate);
-            TryAgainCommand = new DelegateCommand(InternalTryAgain);
-            DeactivateCommand = new DelegateCommand(InternalDeactivate);
+            BuyCommand = new DelegateCommand(InternalBuy);
         }
 
         public bool Enabled
@@ -130,25 +135,10 @@ namespace WSUI.Module.ViewModel
         {
             ActivateStatus = TurboLimeActivate.Instance.State;
             
-            switch (ActivateStatus)
-            {
-                case ActivationState.Trial:
-                    TextStatus = string.Format("Trial version. Trial period will be expired after {0} day(s).",
-                        TurboLimeActivate.Instance.DaysRemain);
-                    break;
-                case ActivationState.Error:
-                    TextStatus = string.Format("Checking has return an error. Try Again >>");
-                    break;
-                case ActivationState.NonActivated:
-                case ActivationState.TrialEnded:
-                    TextStatus = string.Format("You trial period has expired. Please, activate the 'OutlookFinder' >>");
-                    break;
-                
-            }
             WSSqlLogger.Instance.LogInfo("Activated Status: {0}", ActivateStatus.ToString());
-            WSSqlLogger.Instance.LogInfo("Text Status: {0}", TextStatus);
             OnPropertyChanged(() => ActivateStatus);
-            OnPropertyChanged(() => TextStatus);
+            OnPropertyChanged(() => VisibleTrialLabel);
+            OnPropertyChanged(() => DaysLeft);
         }
 
         private void CheckStateAndShowActivatedForm()
@@ -163,19 +153,6 @@ namespace WSUI.Module.ViewModel
                 case ActivationState.TrialEnded:
                 case ActivationState.NonActivated:
                     TurboLimeActivate.Instance.Activate(UpdatedActivatedStatus);
-                    break;
-            }
-        }
-
-        private void UpdatedUiBloker()
-        {
-            switch (ActivateStatus)
-            {
-                case ActivationState.NonActivated:
-                    BlockPopupAdorner.Instance.Block = true;
-                    break;
-                default:
-                    BlockPopupAdorner.Instance.Block = false;
                     break;
             }
         }
@@ -425,9 +402,16 @@ namespace WSUI.Module.ViewModel
             return null;
         }
 
-        private void InternalActivate()
+        private void InternalBuy()
         {
-            TurboLimeActivate.Instance.Activate(UpdatedActivatedStatus);
+            try
+            {
+                Process.Start(BuyUrl);
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError("Buy: {0}",ex.Message);
+            }
         }
 
         private void InternalTryAgain()
@@ -509,11 +493,32 @@ namespace WSUI.Module.ViewModel
         }
 
         public ActivationState ActivateStatus { get; private set; }
-        public string TextStatus { get; private set; }
-        public ICommand ActivateCommand { get; private set; }
-        public ICommand DeactivateCommand { get; private set; }
-        public ICommand TryAgainCommand { get; private set; }
+        public ICommand BuyCommand { get; private set; }
         public bool IsBusy { get; private set; }
+
+        public string DaysLeft 
+        {
+            get
+            {
+#if !TRIAL
+                return string.Empty;
+#else
+                return TurboLimeActivate.Instance.DaysRemain.ToString();
+#endif
+            }
+        }
+
+        public Visibility VisibleTrialLabel 
+        {
+            get
+            {
+#if !TRIAL
+                return Visibility.Collapsed;
+#else
+                return ActivateStatus == ActivationState.Activated ? Visibility.Collapsed : Visibility.Visible;
+#endif
+            }
+        }
 
         #endregion
 

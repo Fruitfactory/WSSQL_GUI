@@ -111,8 +111,13 @@ namespace WSUIOutlookPlugin.Core
 
         public bool CanUpdate()
         {
+            WSSqlLogger.Instance.LogInfo("Module  != null: {0}",Module != null);
+            if (Module != null)
+            {
+                WSSqlLogger.Instance.LogInfo("Module.IsMSINetworkDeployed(): {0}", Module.IsMSINetworkDeployed());
+                WSSqlLogger.Instance.LogInfo("Module.IsMSIUpdatable(): {0}", Module.IsMSIUpdatable());    
+            }
             return Module != null && Module.IsMSINetworkDeployed() && Module.IsMSIUpdatable();
-
         }
 
         public void Lock()

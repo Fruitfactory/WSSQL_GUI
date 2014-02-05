@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
@@ -18,10 +19,8 @@ namespace WSUI.Module.Interface
         HostType Host { get;  }
         void ForceClosePreview();
         ActivationState ActivateStatus { get; }
-        string TextStatus { get; }
-        ICommand ActivateCommand { get; }
-        ICommand DeactivateCommand { get; }
-        ICommand TryAgainCommand { get; }
+        ICommand BuyCommand { get; }
         bool IsBusy { get; }
+        Visibility VisibleTrialLabel { get; }
     }
 }

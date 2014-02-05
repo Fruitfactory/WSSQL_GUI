@@ -244,13 +244,15 @@ namespace WSUIOutlookPlugin
             this.wsuiImageList.TransparentColor = System.Drawing.Color.Transparent;
             this.wsuiImageList.Images.SetKeyName(0, "application-plus-red.png");
             this.wsuiImageList.Images.SetKeyName(1, "logo_64.png");
+            this.wsuiImageList.Images.SetKeyName(2, "gear.png");
+            this.wsuiImageList.Images.SetKeyName(3, "question.png");
             // 
             // btnSplit
             // 
             this.btnSplit.Caption = "More";
             this.btnSplit.Controls.Add(this.menuHelp);
             this.btnSplit.Id = "adxRibbonSplitButton_54dfcdd5b26847d19e5fb423558dbdcd";
-            this.btnSplit.Image = 1;
+            this.btnSplit.Image = 2;
             this.btnSplit.ImageList = this.wsuiImageList;
             this.btnSplit.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.btnSplit.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
@@ -269,6 +271,8 @@ namespace WSUIOutlookPlugin
             // 
             this.btnHelp.Caption = "Help";
             this.btnHelp.Id = "adxRibbonButton_32e3a315cb2240e690bd8a996bff0ffc";
+            this.btnHelp.Image = 3;
+            this.btnHelp.ImageList = this.wsuiImageList;
             this.btnHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.btnHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
@@ -385,7 +389,7 @@ namespace WSUIOutlookPlugin
             this.btnMainSplit.Caption = "More";
             this.btnMainSplit.Controls.Add(this.mnuMain);
             this.btnMainSplit.Id = "adxRibbonSplitButton_9b5edc2e0af14b188c856fdddb98dcbe";
-            this.btnMainSplit.Image = 1;
+            this.btnMainSplit.Image = 2;
             this.btnMainSplit.ImageList = this.wsuiImageList;
             this.btnMainSplit.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.btnMainSplit.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
@@ -403,6 +407,8 @@ namespace WSUIOutlookPlugin
             // 
             this.btnMainHelp.Caption = "Help";
             this.btnMainHelp.Id = "adxRibbonButton_e8264c95d9934ff5a85549d2fbeecd7e";
+            this.btnMainHelp.Image = 3;
+            this.btnMainHelp.ImageList = this.wsuiImageList;
             this.btnMainHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.btnMainHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 

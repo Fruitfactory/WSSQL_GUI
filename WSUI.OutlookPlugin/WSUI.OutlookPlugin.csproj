@@ -109,7 +109,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Loader\adxloader.dll.manifest" />
+    <None Include="Loader\adxloader.dll.manifest">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -118,7 +120,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\application-plus-red.png" />
+    <Content Include="Images\gear.png" />
     <Content Include="Images\logo_64.png" />
+    <Content Include="Images\question.png" />
     <Content Include="Loader\adxloader.dll" />
     <Content Include="Loader\adxloader64.dll" />
   </ItemGroup>
@@ -221,9 +225,6 @@ xcopy $(SolutionDir)Toolkits\Microsoft\Microsoft.Ink.dll $(TargetDir) /F /R /Y /
 xcopy $(SolutionDir)Toolkits\PDFSharp\PDFLibNet.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\Interop\Excel\Microsoft.Office.Interop.Excel.dll $(TargetDir) /F /R /Y /I
-xcopy $(SolutionDir)Toolkits\Scintilla\SciLexer.dll $(TargetDir) /F /R /Y /I
-xcopy $(SolutionDir)Toolkits\Scintilla\SciLexer64.dll $(TargetDir) /F /R /Y /I
-xcopy $(SolutionDir)Toolkits\Scintilla\ScintillaNET.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\Interop\Word\Microsoft.Office.Interop.Word.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\Interop\Office\Office.dll $(TargetDir) /F /R /Y /I
 
