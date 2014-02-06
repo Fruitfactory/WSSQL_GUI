@@ -39,8 +39,7 @@ namespace WSUI.Core.Core.LimeLM
 
         public int DaysRemain
         {
-            get;
-            private set;
+            get { return TurboActivate.TrialDaysRemaining(); }
         }
 
         public ActivationState State
@@ -131,9 +130,9 @@ namespace WSUI.Core.Core.LimeLM
         {
             WSSqlLogger.Instance.LogInfo("UseTrial!!");
             TurboActivate.UseTrial();
-            DaysRemain = TurboActivate.TrialDaysRemaining();
-            WSSqlLogger.Instance.LogInfo("DaysRemain = {0}",DaysRemain);
-            return DaysRemain == 0;
+            int days = DaysRemain;
+            WSSqlLogger.Instance.LogInfo("DaysRemain = {0}",days);
+            return days == 0;
         }
 
         private void InternalActivate()

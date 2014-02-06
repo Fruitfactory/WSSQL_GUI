@@ -32,7 +32,7 @@ $UsePayPal = true;
 
 
 // dollars, cents
-$AppPrice = array(5, 00);
+$AppPrice = array(1, 00);
 $Currency = 'USD';
 
 // The currency symbol that the end-user will see.
@@ -92,10 +92,10 @@ $AuthNetTest = true;
 //==== PayPal Config ====
 
 // Use PayPal Sandbox (set to false on your live server)
-$PayPalSandbox = true;
+$PayPalSandbox = false;
 
 // Paypal Email
-$PayPalEmail = 'yariki-ya@yandex.ru';
+$PayPalEmail = 'info@outlookfinder.com';//'yariki-ya@yandex.ru';
 
 
 
