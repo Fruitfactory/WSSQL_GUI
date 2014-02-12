@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <publishConfiguration version="1.0" lastOpenedMSI="H:\Visual\WORK\WSUI\solution\ROutput\OutlookFinderSetup.msi">
-  <application version="1.0.0" language="1033" publishingLocation="H:\Visual\WORK\WSUI\solution\ClickTwice" installationUrl="http://readyshare.routerlogin.net/shares/NetShare/FTP/downloads/clicktwice/trial/" customActionLocation="" customActionClassName="">
+  <application version="1.0.0" language="1033" publishingLocation="H:\Visual\WORK\WSUI\solution\ClickTwice\trial" installationUrl="http://readyshare.routerlogin.net/shares/NetShare/FTP/downloads/clicktwice/trial/" customActionLocation="" customActionClassName="">
     <signingOptions>
       <certificatePath>H:\Visual\WORK\WSUI\solution\WSUI.OutlookPlugin\wsuiclicktwice.pfx</certificatePath>
     </signingOptions>
     <iconPath>H:\Visual\WORK\WSUI\solution\WSUI\Search.ico</iconPath>
-    <preferences showInstallUI="true" showUninstallUI="false" webPage="" showDownloaderWindow="true" showRunningApplicationsWarning="true" />
-    <prerequisites createSetupProgram="false" installFromVendor="false">
-      <product code=".NETFramework,Version=v4.0" displayName="Microsoft .NET Framework 4 (x86 and x64)" />
+    <preferences showInstallUI="true" showUninstallUI="true" webPage="" showDownloaderWindow="true" showRunningApplicationsWarning="true" />
+    <prerequisites createSetupProgram="false" installFromVendor="true">
+      <product code=".NETFramework,Version=v4.0,Profile=Client" displayName="Microsoft .NET Framework 4 Client Profile (x86 a x64)" />
       <product code="Microsoft.Visual.C++.10.0.x86" displayName="Visual C++ 2010 Runtime Libraries (x86)" />
     </prerequisites>
     <ftp userName="" passive="0" anonimous="0" />

@@ -32,7 +32,7 @@ $UsePayPal = true;
 
 
 // dollars, cents
-$AppPrice = array(1, 00);
+$AppPrice = array(4, 95);
 $Currency = 'USD';
 
 // The currency symbol that the end-user will see.

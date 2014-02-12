@@ -22,7 +22,7 @@ namespace WSUIOutlookPlugin.Core
 
         private const string WSUIPluginUpdatetingMutexName = "Global\\WSUIPluginUpdating";
 
-        private const string UpdatedFilename = "WSUI.OutlookPluginSetup.msi";
+        private const string UpdatedFilename = "OutlookFinderSetup.msi";
         private const string ManifestFilename = "adxloader.dll.manifest";
         private const string VersionFilename = "version_info.xml";
         private const string TempFolder = "{0}\\Update\\{1}";
@@ -47,6 +47,14 @@ namespace WSUIOutlookPlugin.Core
         private const string VersionNode = "version";
         private const string ProductCodeNode = "productCode";
         private const int IntervalForUpdate = 30*1000;
+
+#if !TRIAL
+        //private const string InstalationUrl = "http://outlookfinder.com/downloads/clicktwice/full/";
+        private const string InstalationUrl = "http://readyshare.routerlogin.net/shares/NetShare/FTP/downloads/clicktwice/full/";
+#else
+        //private const string InstalationUrl = "http://outlookfinder.com/downloads/clicktwice/trial/";
+        private const string InstalationUrl = "http://readyshare.routerlogin.net/shares/NetShare/FTP/downloads/clicktwice/trial/";
+#endif
 
         #endregion
 
@@ -232,8 +240,10 @@ namespace WSUIOutlookPlugin.Core
         {
             string manifest = localpath + UpdateHelper.ManifestFilename;
             XDocument doc = XDocument.Load(manifest);
-            var msi = doc.Descendants("msi").First();
-
+            var msi = doc.Descendants("msi").FirstOrDefault();
+            if (msi == null)
+                return string.Empty;
+            
             if (msi.Descendants(InstallPathNodeName).Count() > 0)
             {
                 var installPath = msi.Descendants(InstallPathNodeName).First();
@@ -265,17 +275,23 @@ namespace WSUIOutlookPlugin.Core
 
         private void UpdateTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
-            UpdateOnTimer();
             if (_updateTimer == null)
                 return;
             _updateTimer.Elapsed -= UpdateTimerOnElapsed;
             _updateTimer.Stop();
             _updateTimer.Dispose();
             _updateTimer = null;
+            UpdateOnTimer();
         }
 
         private void UpdateOnTimer()
         {
+            if (!IsMsiNodePresent())
+            {
+                WSSqlLogger.Instance.LogWarning("MSI node is absent...");
+                CreateMSINode();
+            }
+
             if (CanUpdate())
             {
                 if (!IsUpdating())
@@ -289,6 +305,64 @@ namespace WSUIOutlookPlugin.Core
                 WSSqlLogger.Instance.LogInfo(string.Format("Can update = {0}", CanUpdate()));
                 WSSqlLogger.Instance.LogInfo("Not updatable...");
             }
+        }
+
+        private void CreateMSINode()
+        {
+            string remoteFile = Path.Combine(InstalationUrl, VersionFilename);
+            string localFile = Path.Combine(_path, VersionFilename);
+            WebClient web = new WebClient();//{Credentials = new NetworkCredential("admin","yariki123!")}
+            try
+            {
+                web.DownloadFile(remoteFile, localFile);
+                if (!File.Exists(localFile))
+                    return;
+                XDocument docVersion = XDocument.Load(localFile);
+                XDocument docManifest = XDocument.Load(Path.Combine(_path,ManifestFilename));
+
+                string language = docVersion.Descendants("product").First().Attribute("language").Value;
+                var listVersions =
+                    docVersion.Descendants("version").Select(
+                        el => el.Attribute("name") != null ? el.Attribute("name").Value : string.Empty).ToList();
+                listVersions.Sort();
+                string newversion = listVersions[listVersions.Count - 1];
+                var element = docVersion.Descendants("version").Where(el => el.Attribute("name").Value == newversion).First();
+                CreateAndAddNode(docManifest,element,language);
+                docManifest.Save(Path.Combine(_path, ManifestFilename));
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError("CreateMSINode: {0}",ex.Message);
+            }
+            finally
+            {
+                if (web != null)
+                {
+                    web.Dispose();
+                    web = null;
+                }
+                if(File.Exists(localFile))
+                    File.Delete(localFile);
+            }
+        }
+
+        private void CreateAndAddNode(XDocument docManifest, XElement elementNewestVersion, string language)
+        {
+            XElement msi = new XElement(MSINode);
+            string prodCode = elementNewestVersion.Attribute(ProductCodeNode).Value;
+            string installUrl = elementNewestVersion.Attribute(InstallPathNodeName).Value;
+            string newVersion = elementNewestVersion.Attribute("name").Value;
+            XElement pc = new XElement(ProductCodeNode, prodCode);
+            XElement iu = new XElement(InstallPathNodeName, installUrl);
+            XElement ver = new XElement(VersionNode, newVersion);
+            XElement lan = new XElement(LanguageNode, language);
+            msi.Add(pc, iu, ver, lan);
+            docManifest.Root.Add(msi);
+        }
+
+        private bool IsMsiNodePresent()
+        {
+            return !string.IsNullOrEmpty(GetInstalationPath(_path));
         }
     }
 }
