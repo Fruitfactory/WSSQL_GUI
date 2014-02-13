@@ -208,18 +208,21 @@
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                 </StackPanel>
-            </Grid.ToolTip> 
-            <Expander Margin="0" Grid.Column="0" Style="{StaticResource EmailExpanderStyle}" ExpandDirection="Down">
+            </Grid.ToolTip>
+            <Expander Margin="0" Grid.Column="0" Style="{StaticResource EmailExpanderStyle}" ExpandDirection="Down"  >
                 <Grid>
                     <ListBox ItemsSource="{Binding Items}"
                              
-                             ItemTemplate="{StaticResource EmailItemTemplate}" ><!--SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=SelectedItem,Mode=OneWayToSource}"-->
+                             ItemTemplate="{StaticResource EmailItemTemplate}" >
                              
                         <i:Interaction.Behaviors>
                             <behaviors:ChildListBoxBehavior />
                         </i:Interaction.Behaviors>
                     </ListBox>
                 </Grid>
+                <i:Interaction.Behaviors>
+                    <behaviors:ExpanderEmailBehavior></behaviors:ExpanderEmailBehavior>
+                </i:Interaction.Behaviors>
             </Expander>    
         </Grid>
     </DataTemplate>
