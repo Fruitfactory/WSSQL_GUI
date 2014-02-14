@@ -21,7 +21,7 @@ namespace WSUI.Core.Data
 	public class BaseSearchObject :  ISearchObject
     {
         #region [needs]
-
+        private const int IncludeParentCount = 1; 
 	    private readonly IList<ISearchObject> _internaList = new List<ISearchObject>();
 
         #endregion
@@ -84,7 +84,7 @@ namespace WSUI.Core.Data
 
 	    public string Count
 	    {
-	        get { return Items.Count().ToString(CultureInfo.InvariantCulture); }
+	        get { return Items.Any() ? (Items.Count() + IncludeParentCount).ToString(CultureInfo.InvariantCulture) : string.Empty; }
 	    }
 
 	    public void AddItem(ISearchObject item)
