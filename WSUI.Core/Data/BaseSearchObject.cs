@@ -84,7 +84,7 @@ namespace WSUI.Core.Data
 
 	    public string Count
 	    {
-	        get { return Items.Any() ? (Items.Count() + IncludeParentCount).ToString(CultureInfo.InvariantCulture) : string.Empty; }
+	        get { return Items.Any() ? (Items.Count() + IncludeParentCount).ToString(CultureInfo.InvariantCulture) : 0.ToString(); }
 	    }
 
 	    public void AddItem(ISearchObject item)
