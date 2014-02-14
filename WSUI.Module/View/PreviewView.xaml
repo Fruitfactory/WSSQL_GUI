@@ -28,7 +28,7 @@
                                                     />-->
 
         <ItemsControl Grid.Row="1" ItemsSource="{Binding Path=Commands,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                      IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}">
+                      IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}" Margin="10 0 0 0">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
