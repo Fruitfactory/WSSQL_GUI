@@ -45,6 +45,9 @@ namespace WSUIOutlookPlugin
         
         private const string ADXHTMLFileName = "ADXOlFormGeneral.html";
         private const int WM_USER = 0x0400;
+        private const int WM_CLOSE = 0x0010; 
+        private const int WM_QUIT = 0x0012;
+        private const int WM_DESTROY = 0x0002;
         private ADXOlExplorerCommandBar adxMainPluginCommandBar;
         // Outlook 2007
         private ADXCommandBarButton buttonShow2007;
@@ -102,9 +105,8 @@ namespace WSUIOutlookPlugin
             WSSqlLogger.Instance.LogInfo(string.Format("WSUIAddinModule [ctor]: {0}ms", watch.ElapsedMilliseconds));
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
-            
         }
- 
+
         private void OnAddinInitialize(object sender, EventArgs eventArgs)
         {
             if (adxMainPluginCommandBar.UseForRibbon && this.HostMajorVersion > 12)
@@ -123,6 +125,18 @@ namespace WSUIOutlookPlugin
                         RunPluginUI();
                     }
                     break;
+                //case WM_CLOSE:
+                //    WSSqlLogger.Instance.LogInfo("Message: WM_CLOSE");
+                //    break;
+                //case WM_QUIT:
+                //    WSSqlLogger.Instance.LogInfo("Message: WM_QUIT");
+                //    break;
+                //case WM_DESTROY:
+                //    WSSqlLogger.Instance.LogInfo("Message: WM_DESTROY");
+                //    break;
+                //default:
+                //    WSSqlLogger.Instance.LogInfo("Message: {0}",e.Message);
+                //    break;
             }
         }
 

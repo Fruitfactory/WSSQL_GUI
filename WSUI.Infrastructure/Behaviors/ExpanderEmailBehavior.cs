@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interactivity;
@@ -9,6 +10,8 @@ namespace WSUI.Infrastructure.Behaviors
 {
     public class ExpanderEmailBehavior : Behavior<Expander>
     {
+        private const string TemplatePartExpanderImageName = "ExpanderImage";
+
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -18,9 +21,11 @@ namespace WSUI.Infrastructure.Behaviors
 
         private void AssociatedObjectOnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            if (mouseButtonEventArgs.Source == null || sender == null)
-                return;
-            if (mouseButtonEventArgs.Source != sender)
+            var fe = mouseButtonEventArgs.OriginalSource as FrameworkElement;
+            if (mouseButtonEventArgs.Source == null 
+                || sender == null 
+                || mouseButtonEventArgs.Source != sender 
+                || ( fe != null && fe.Name == TemplatePartExpanderImageName))
                 return;
 
             var item = AssociatedObject.GetParentCore<ListBoxItem>();
@@ -38,7 +43,7 @@ namespace WSUI.Infrastructure.Behaviors
 
         protected override void OnDetaching()
         {
-            AssociatedObject.PreviewMouseLeftButtonDown -= AssociatedObjectOnPreviewMouseLeftButtonDown;
+            AssociatedObject.PreviewMouseLeftButtonDown -= AssociatedObjectOnPreviewMouseLeftButtonDown; 
             base.OnDetaching();
         }
 

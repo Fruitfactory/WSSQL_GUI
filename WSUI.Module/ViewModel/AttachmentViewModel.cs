@@ -40,8 +40,6 @@ namespace WSUI.Module.ViewModel
             SearchSystem = new AttachmentSearchSystem();
         }
 
-        
-
         protected override void OnInit()
         {
             base.OnInit();
