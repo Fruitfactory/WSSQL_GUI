@@ -1,7 +1,10 @@
 ﻿using System.Windows;
+using System.Windows.Interop;
+using WSPreview.PreviewHandler.PreviewHandlerHost;
 using WSUI.Core.Interfaces;
 using WSUI.Module.Interface;
 using WSUI.Module.ViewModel;
+using WSUI.Core.Win32;
 
 namespace WSUI.Module.View
 {
@@ -15,6 +18,7 @@ namespace WSUI.Module.View
         public PreviewView()
         {
             InitializeComponent();
+            
         }
 
        

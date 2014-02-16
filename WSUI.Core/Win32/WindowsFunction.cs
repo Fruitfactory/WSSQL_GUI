@@ -52,6 +52,9 @@ namespace WSUI.Core.Win32
         [DllImport("user32", CharSet = CharSet.Auto)]
         public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+
         #endregion
 
         public static Point TransformToScreen(Point point, Visual relativeTo)

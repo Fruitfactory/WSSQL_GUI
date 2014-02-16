@@ -213,6 +213,10 @@
   <ItemGroup>
     <Resource Include="Images\logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\logo_64.png" />
+    <Resource Include="Images\logo_txt.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy $(SolutionDir)Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll $(TargetDir) /F /R /Y /I

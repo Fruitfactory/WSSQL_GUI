@@ -83,11 +83,11 @@
             
         </ItemsControl>
         
-        <WindowsFormsHost Grid.Row="2" x:Name="_preview">
+        <WindowsFormsHost Grid.Row="2" >
             <preview:PreviewHandlerHostControl x:Name="_previewControl">
             </preview:PreviewHandlerHostControl >
         </WindowsFormsHost>
-
+        
         <Popup Name="popup" IsOpen="False" PlacementTarget="{Binding ElementName=grid}" 
                >
             <Border BorderBrush="Red" BorderThickness="3">

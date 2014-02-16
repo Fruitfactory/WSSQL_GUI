@@ -34,10 +34,17 @@
                 <ColumnDefinition Width="2"/>
                 <ColumnDefinition Width="0.5*"/>
             </Grid.ColumnDefinitions>
-            <Image Grid.Row="0" Grid.Column="0" Source="../Images/logo.png" Stretch="Uniform" StretchDirection="Both" RenderOptions.BitmapScalingMode="HighQuality"></Image>
-            
-            
-            
+
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.33*"></ColumnDefinition>
+                    <ColumnDefinition Width="0.66*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/WSUI;Component/Images/logo_64.png" Stretch="Uniform" StretchDirection="Both"></Image>
+                <Image Grid.Column="1" RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/WSUI;Component/Images/logo_txt.png" Stretch="Uniform" StretchDirection="Both"></Image>
+            </Grid>
+
+
             <ContentControl Grid.Row="0" Grid.Column="1" Margin="4"
                             cal:RegionManager.RegionName="SearchRegion"/>
             <ContentControl Grid.Row="1" Grid.Column="0" Margin="4 4 0 4"
