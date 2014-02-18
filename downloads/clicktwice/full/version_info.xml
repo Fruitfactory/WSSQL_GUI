@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <application name="outlookfinder">
   <product language="1033">
-    <version name="1.0.0" installationUrl="http://outlookfinder.com/downloads/clicktwice/full/" productCode="{7CEED254-AAD6-4EA9-BA79-29A50F8B1218}" updateType="directLink">
+    <version name="1.0.0" installationUrl="http://outlookfinder.com/downloads/clicktwice/full/" productCode="{AECF4294-7CC4-4180-B788-5B5F9C51551D}" updateType="directLink">
       <files msi="OutlookFinderSetup">
         <file>OutlookFinderSetup.msi</file>
       </files>
