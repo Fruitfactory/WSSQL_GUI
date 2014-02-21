@@ -1,13 +1,13 @@
-﻿namespace WSUI.Core.Enums
+﻿namespace WSUI.Core.Enums {
+public enum WSActionType
 {
-    public enum WSActionType
-    {
-        Copy,
-        Cut,
-        Paste,
-        Search,
-        ShowContextMenu,
-        Show,
-        Hide
-    }
+  Copy,
+  Cut,
+  Paste,
+  Search,
+  ShowContextMenu,
+  Show,
+  Hide,
+  Quit
+}
 }

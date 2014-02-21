@@ -118,20 +118,20 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <metadata name="outlookFormManager.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>323, 17</value>
+    <value>347, 17</value>
   </metadata>
   <metadata name="wsuiTab.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>480, 17</value>
+    <value>517, 17</value>
   </metadata>
   <metadata name="wsuiImageList.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>572, 17</value>
+    <value>613, 17</value>
   </metadata>
   <data name="wsuiImageList.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
-        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAA+
-        CwAAAk1TRnQBSQFMAgEBBAEAAZABAAGQAQABEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAA6
+        CwAAAk1TRnQBSQFMAgEBBAEAAZgBAAGYAQABEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAASADAAEBAQABCAYAAQgYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
@@ -162,34 +162,36 @@
         AfsB/wEAAaQCoAEAA4ADAAH/AgAB/wMAAv8BAAH/AwAB/wEAAf8BAAL/AgAD//8A/wD/AP8AGAAB/wHy
         AfMB8gIJAfAB8gHzAfIjAAGTDm8BkwQAAZoDUwG0A7MB9AkAAfIC7wHyCgAB/wG8AbUCrgG1AbwB/wQA
         AW8BFgzjARYBbwMABlMBUgOzAdoFAAHyAe8B9AHvAvAB7wH0Ae8B8gYAAfMBzwKtAs4CrQHPAfMDAAFv
-        AeMFFwJGBRcB4wFvAgAJUwOzAdoDAAHyAfcBvALvAu4C7wG8AfcB8gQAAfMBzwGtAs4CrQLOAa0BzwHz
-        AgACbwVGArwFRgJvAQAGUwEbAf8BGgFTAboDswH0AgAB7wHuAe8B7gHvArwB7wHuAe8B7gHvAwAB/wG0
-        BK0C8wStAbQB/wEAAm8FRgLwBUYCbwEABFMBGwUAAVMEswIAAfQB7wHuAQcB8QL0AfEBBwHuAe8B9AMA
-        AfABzwStAvMFrQHwAQACbwNGBvEDRgJvAfMEUwcABLMBAAHyAgcB7wG8Ae4CBwHuAbwB7wIHAfICAAG1
-        Ac8ErQKnBa0BtQEAAm8DRgbzA0YCbwF6A1MB9AcAAbMDsgEABAcB8AEHAgABBwHwBAcCAAG0Ac8DrQGn
-        AvEBpwStAbQBAAJvBUYC9AVGAm8BegNTAfQHAAGzA7IBAAK8AgcB8AEHAgABBwHwAgcCvAIAAbQBzwOt
-        AacBzwG8AbUDpwGtAbQBAAEWAW8FRgL/BUYBbwEWARsDUwGZBwAEsgEAAfMCvAHvAfABBwLvAQcB8AHv
-        ArwB8wIAAbUBtAWtAbQBvAG0AYYBpwGtAbUBAAIWDBcCFgEABFMB8wUAAbMEsgIAAf8BvAHwAbwB8QLy
-        AfEBvAHwAbwB/wMAAd0BtAHPAq0CtQEJAf8BtQGtAs8B3QEAAhYDFwlGAW8BFgEAAeUDUwGsAbICAAH/
-        BbIB8QIAAfAB8gG8AfIBBwLyAQcB8QG8AfIB8AMAAf8BtAHVAc8BrQT/AbQBzwK0Af8BAAEWAZQC4wGu
-        A7MEcgNZAXQCAARTCawDAAHzAbwB8wLwAvIC8AHzAbwB8wQAAfMBtALVBM8C1QG0AfMCAASUAe0D2wGY
-        A5cDegF5AwABWQNTB6wFAAHzAfAB/wHwAf8B9AHwAf8B8AHzBgAB8wK0BNUCtAHzAwAB9AGUAhYB9wO0
-        BJgDegH0BAABmgNTAYsDrAHwCQAB8wLxAfMKAAH/Ad0BtQK0AbUB3QH/GgAB/wEaAXoBGiYAAUIBTQE+
-        BwABPgMAASgDAAFAAwABIAMAAQEBAAEBBgABARYAA/+BAAL/AeABBwT/AgAB8AEHAfwBPwHwAQ8CAAHg
-        AQMB4AEHAeABBwIAAcABAQHAAQMBwAEDAgABgAEAAcABAwGAAQECAAGDAeABwAEDAYABAQIAAQcB8AGA
-        AQEBgAEBAgABBwHwAoEBgAEBAgABBwHwAoEBgAEBAgABBwHwAYABAQGAAQECAAGDAeABwAEDAYABAQIA
-        AYEBgAHAAQMBgAEBAgABwAEBAcABAwHAAQMCAAHgAQMB4AEHAeABBwIAAfABBwH8AT8B8AEPAv8B/AE/
-        BP8L
+        AeMFFwJGBRcB4wFvAgAJUwOzAdoDAAHyAfcBvALvArwC7wG8AfcB8gQAAfMBzwGtAs4CrQLOAa0BzwHz
+        AgACbwVGArwFRgJvAQAGUwEbAf8BGgFTAboDswH0AgAB7wG8Ae8BvAHvArwB7wG8Ae8BvAHvAwAB/wG0
+        BK0C8wStAbQB/wEAAm8FRgLwBUYCbwEABFMBGwUAAVMEswIAAfQB7wG8AQcB8QL0AfEBBwG8Ae8B9AMA
+        AfABzwStAvMFrQHwAQACbwNGBvEDRgJvAfMEUwcABLMBAAHyAgcB7wK8AgcCvAHvAgcB8gIAAbUBzwSt
+        AqcFrQG1AQACbwNGBvMDRgJvAXoDUwH0BwABswOyAQAEBwHwAQcCAAEHAfAEBwIAAbQBzwOtAacC8QGn
+        BK0BtAEAAm8FRgL0BUYCbwF6A1MB9AcAAbMDsgEAArwCBwHwAQcCAAEHAfACBwK8AgABtAHPA60BpwHP
+        AbwBtQOnAa0BtAEAARYBbwVGAv8FRgFvARYBGwNTAZkHAASyAQAB8wK8Ae8B8AEHAu8BBwHwAe8CvAHz
+        AgABtQG0Ba0BtAG8AbQBhgGnAa0BtQEAAhYMFwIWAQAEUwHzBQABswSyAgAB/wG8AfABvAHxAvIB8QG8
+        AfABvAH/AwAB3QG0Ac8CrQK1AQkB/wG1Aa0CzwHdAQACFgMXCUYBbwEWAQAB5QNTAawBsgIAAf8FsgHx
+        AgAB8AHyAbwB8gEHAvIBBwHxAbwB8gHwAwAB/wG0AdUBzwGtBP8BtAHPArQB/wEAARYBlALjAa4DswRy
+        A1kBdAIABFMJrAMAAfMBvAHzAvAC8gLwAfMBvAHzBAAB8wG0AtUEzwLVAbQB8wIABJQB7QPbAZgDlwN6
+        AXkDAAFZA1MHrAUAAfMB8AH/AfAB/wH0AfAB/wHwAfMGAAHzArQE1QK0AfMDAAH0AZQCFgH3A7QEmAN6
+        AfQEAAGaA1MBiwOsAfAJAAHzAvEB8woAAf8B3QG1ArQBtQHdAf8aAAH/ARoBegEaJgABQgFNAT4HAAE+
+        AwABKAMAAUADAAEgAwABAQEAAQEGAAEBFgAD/4EAAv8B4AEHBP8CAAHwAQcB/AE/AfABDwIAAeABAwHg
+        AQcB4AEHAgABwAEBAcABAwHAAQMCAAGAAQABwAEDAYABAQIAAYMB4AHAAQMBgAEBAgABBwHwAYABAQGA
+        AQECAAEHAfACgQGAAQECAAEHAfACgQGAAQECAAEHAfABgAEBAYABAQIAAYMB4AHAAQMBgAEBAgABgQGA
+        AcABAwGAAQECAAHAAQEBwAEDAcABAwIAAeABAwHgAQcB4AEHAgAB8AEHAfwBPwHwAQ8C/wH8AT8E/ws=
 </value>
   </data>
   <metadata name="adxMainPluginCommandBar.Name" xml:space="preserve">
     <value>adxMainPluginCommandBar</value>
   </metadata>
   <metadata name="adxMainPluginCommandBar.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>133, 17</value>
+    <value>140, 17</value>
   </metadata>
   <metadata name="wsuiMainTab.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>141, 59</value>
+  </metadata>
+  <metadata name="OutlookFinderEvents.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>264, 59</value>
   </metadata>
   <metadata name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>

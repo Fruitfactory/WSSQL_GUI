@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Win32;
 using System.Windows.Forms;
 using WSUI.Core.Helpers;
+using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace WSUI.CA
 {
@@ -22,6 +24,7 @@ namespace WSUI.CA
         private const string LogFilename = "install.log";
 
         private const string OutllokAppName = "outlook";
+        private const string OutlookId = "Outlook.Application";
 
         private const string ManifestFilename = "adxloader.dll.manifest";
         private const string VersionFilename = "version_info.xml";
@@ -158,7 +161,7 @@ namespace WSUI.CA
         [CustomAction]
         public static ActionResult CloseOutlook(Session session)
         {
-            Process outlookProcess;
+            Outlook._Application outlookProcess;
             ActionResult res = ActionResult.Success;
             if (IsOutlookOpen(out outlookProcess, session))
             {
@@ -168,7 +171,8 @@ namespace WSUI.CA
                     {
                         session.Log("Close outlook. IsOutllokClosedByInstaller = " +
                                     RegistryHelper.Instance.IsOutlookClosedByInstaller().ToString());
-                        outlookProcess.Kill();
+                        outlookProcess.Quit();
+                        WaitForClosingOutlook(session);
                         RegistryHelper.Instance.SetFlagClosedOutlookApplication();
                     }
                     res = ActionResult.Success;
@@ -205,7 +209,7 @@ namespace WSUI.CA
             return res;
         }
 
-        private static bool IsOutlookOpen(out Process pr, Session session)
+        private static bool IsOutlookOpen(out Outlook._Application pr, Session session)
         {
             bool res = false;
             pr = null;
@@ -216,7 +220,7 @@ namespace WSUI.CA
                 res = outlook.Any();
                 if (res)
                 {
-                    pr = outlook.ElementAt(0);
+                    pr = System.Runtime.InteropServices.Marshal.GetActiveObject(OutlookId) as Outlook._Application;
                 }
 
             }
@@ -235,6 +239,16 @@ namespace WSUI.CA
             string path = subKey.GetValue("Path") as string;
             return !string.IsNullOrEmpty(path);
         }
+
+        private static void WaitForClosingOutlook( Session session)
+        {
+            Outlook._Application app;
+            while (IsOutlookOpen(out app, session))
+            {
+                Thread.Sleep(100);
+            };
+        }
+
 
 
         #endregion
