@@ -95,6 +95,7 @@
     <Compile Include="Attributes\FieldIndexAttribute.cs" />
     <Compile Include="Behaviors\ChildListBoxBehavior.cs" />
     <Compile Include="Behaviors\ExpanderEmailBehavior.cs" />
+    <Compile Include="Behaviors\GridListItemBehavior.cs" />
     <Compile Include="Behaviors\MainListBoxBehavior.cs" />
     <Compile Include="Controls\Application\AppEmpty.cs" />
     <Compile Include="Controls\BlockControl\BlockControl.xaml.cs">
