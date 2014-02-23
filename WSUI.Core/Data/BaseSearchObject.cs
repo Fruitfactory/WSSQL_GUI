@@ -47,7 +47,7 @@ namespace WSUI.Core.Data
 
 		public Guid Id {get;private set;}
 		
-		protected BaseSearchObject()
+		public BaseSearchObject()
         {
 			Id = Guid.NewGuid();
 		}

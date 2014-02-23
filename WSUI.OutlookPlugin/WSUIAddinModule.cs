@@ -819,6 +819,7 @@ namespace WSUIOutlookPlugin
                             catch
                             {
                                 _folder = null;
+                                _folder = null;
                             }
                             finally
                             {

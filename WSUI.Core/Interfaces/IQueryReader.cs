@@ -13,7 +13,7 @@ using System.Data;
 
 namespace WSUI.Core.Interfaces 
 {
-	public interface IQueryReader  
+	public interface IQueryReader 
     {
 
 		/// 

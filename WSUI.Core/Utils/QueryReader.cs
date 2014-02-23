@@ -11,29 +11,34 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
+using System.Linq.Expressions;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 
 namespace WSUI.Core.Utils 
 {
-	public class QueryReader : IQueryReader
+    internal static class New<T> where T : new()
+    {
+        public static readonly Func<T> Instance = Expression.Lambda<Func<T>>(Expression.New(typeof (T))).Compile();
+    }
+
+	public class QueryReader<T> : IQueryReader where T : new()
     {
         #region [needs]
 
-	    private Type _type;
 	    private IList<Tuple<string, string, int, bool>> _intermalList; 
 
         #endregion
 
-        private QueryReader(Type type,IList<Tuple<string, string, int, bool>> fields )
+        private QueryReader(IList<Tuple<string, string, int, bool>> fields )
         {
-            _type = type;
             _intermalList = fields;
         }
 
-	    public static QueryReader CreateNewReader(Type type,IList<Tuple<string, string, int, bool>> listFields )
+	    public static QueryReader<T> CreateNewReader<T>(IList<Tuple<string, string, int, bool>> listFields ) where T : new()
 	    {
-	        return new QueryReader(type,listFields); 
+	        return new QueryReader<T>(listFields); 
 	    }
 
 		/// 
@@ -41,7 +46,11 @@ namespace WSUI.Core.Utils
 		/// <param name="type"></param>
 		public object ReadResult(IDataReader reader)
 		{
-		    var result = Activator.CreateInstance(_type) as ISearchObject;
+		    var watch = new Stopwatch();
+            watch.Start();
+            var result = Activator.CreateInstance(typeof(T)) as ISearchObject;//New<T>.Instance.Invoke() as ISearchObject;
+            watch.Stop();
+            System.Diagnostics.Debug.WriteLine("Ctor object: " + watch.ElapsedMilliseconds);
 		    if (result == null)
 		        return null;
 

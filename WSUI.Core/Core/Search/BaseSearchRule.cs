@@ -25,8 +25,8 @@ using WSUI.Core.Utils;
 
 namespace WSUI.Core.Core.Search 
 {
-	public class BaseSearchRule<T> : ISearch, ISearchRule, IRuleQueryGenerator where T : class
-    {
+	public class BaseSearchRule<T> : ISearch, ISearchRule, IRuleQueryGenerator where T : class, new()
+	{
         #region [needs private]
 
 	    private const string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
@@ -121,7 +121,6 @@ namespace WSUI.Core.Core.Search
 	                connection = new OleDbConnection(ConnectionString);
 	                var cmd = new OleDbCommand(query, connection);
 	                cmd.CommandTimeout = 0;
-
 	                try
 	                {
 	                    watch = new Stopwatch();
@@ -130,17 +129,15 @@ namespace WSUI.Core.Core.Search
 	                    watch.Stop();
 	                    WSSqlLogger.Instance.LogInfo("ConnectionOpen<{0}>: {1}", typeof (T).Name, watch.ElapsedMilliseconds);
 
-	                    var watchOleDbCommand = new Stopwatch();
-	                    watchOleDbCommand.Start();
+	                    (watch = new Stopwatch()).Start();
 	                    using (var dataReader = cmd.ExecuteReader())
 	                    {
-	                        watchOleDbCommand.Stop();
+                            watch.Stop();
 	                        WSSqlLogger.Instance.LogInfo("dataReader<{0}> Elapsed: {1}", typeof (T).Name,
-	                            watchOleDbCommand.ElapsedMilliseconds);
+                                watch.ElapsedMilliseconds);
 
-	                        watch = new Stopwatch();
-	                        watch.Start();
-	                        while (dataReader.Read())
+                            (watch = new Stopwatch()).Start(); 
+                            while (dataReader.Read())
 	                        {
 	                            try
 	                            {
@@ -150,7 +147,7 @@ namespace WSUI.Core.Core.Search
 	                            }
 	                            catch (Exception ex)
 	                            {
-	                                WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery _ main cycle", typeof (T).Name,
+	                                WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery MainCycle", typeof (T).Name,
 	                                    ex.Message);
 	                            }
 	                        }
@@ -271,7 +268,7 @@ namespace WSUI.Core.Core.Search
 
         protected IQueryReader Reader
 	    {
-            get { return _reader ?? (_reader = QueryReader.CreateNewReader(typeof(T),FieldCash.Instance.GetFields(typeof(T),false))); }	        
+            get { return _reader ?? (_reader = QueryReader<T>.CreateNewReader<T>(FieldCash.Instance.GetFields(typeof(T),false))); }	        
 	    }
 
 	    protected DateTime GetCurrentDateTime()
