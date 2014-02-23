@@ -27,13 +27,15 @@ namespace WSUI.Core.Utils
     {
         #region [needs]
 
-	    private IList<Tuple<string, string, int, bool>> _intermalList; 
+	    private IList<Tuple<string, string, int, bool>> _intermalList;
+        private Func<T> _create;
 
         #endregion
 
         private QueryReader(IList<Tuple<string, string, int, bool>> fields )
         {
             _intermalList = fields;
+            _create = New<T>.Instance;
         }
 
 	    public static QueryReader<T> CreateNewReader<T>(IList<Tuple<string, string, int, bool>> listFields ) where T : new()
@@ -46,11 +48,7 @@ namespace WSUI.Core.Utils
 		/// <param name="type"></param>
 		public object ReadResult(IDataReader reader)
 		{
-		    var watch = new Stopwatch();
-            watch.Start();
-            var result = Activator.CreateInstance(typeof(T)) as ISearchObject;//New<T>.Instance.Invoke() as ISearchObject;
-            watch.Stop();
-            System.Diagnostics.Debug.WriteLine("Ctor object: " + watch.ElapsedMilliseconds);
+            var result = _create.Invoke() as ISearchObject;//Activator.CreateInstance(typeof(T)) as ISearchObject;//
 		    if (result == null)
 		        return null;
 
