@@ -1,12 +1,12 @@
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Unity;
 using WSUI.Core.Enums;
 using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Service;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
-using Microsoft.Practices.Unity;
 using WSUI.Module.Service;
 using WSUI.Module.Strategy;
 
@@ -24,8 +24,6 @@ namespace WSUI.Module.ViewModel
             SettingsView.Model = this;
             DataView = dataView;
             DataView.Model = this;
-            QueryTemplate = " SELECT TOP {3}  System.Subject,System.ItemName,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Message.ConversationID FROM SystemIndex WHERE System.Kind = 'email' AND System.Message.DateReceived < '{2}' {0}AND CONTAINS(*,{1}) {4}";
-            QueryAnd = " AND \"{0}\"";
             ID = 2;
             _name = "Email";
             UIName = _name;
@@ -36,15 +34,13 @@ namespace WSUI.Module.ViewModel
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
         }
 
-       
-
         protected override void OnInit()
         {
             base.OnInit();
             SearchSystem.Init();
             CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
-            ScrollBehavior = new ScrollBehavior() {CountFirstProcess = 300,CountSecondProcess = 100 ,LimitReaction = 85};
-            ScrollBehavior.SearchGo += OnScroolNeedSearch;
+            ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 300, CountSecondProcess = 100, LimitReaction = 85 };
+            ScrollBehavior.SearchGo += OnScrollNeedSearch;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
         }
 
@@ -72,7 +68,6 @@ namespace WSUI.Module.ViewModel
             }
         }
 
-
         #region IUIView
 
         public ISettingsView<EmailViewModel> SettingsView
@@ -87,7 +82,6 @@ namespace WSUI.Module.ViewModel
             set;
         }
 
-        #endregion
-
+        #endregion IUIView
     }
 }

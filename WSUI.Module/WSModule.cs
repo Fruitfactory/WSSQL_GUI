@@ -64,8 +64,7 @@ namespace WSUI.Module
             _unityContainer.RegisterType<ISettingsView<AttachmentViewModel>, AttachmentSettingsView>();
             _unityContainer.RegisterType<IDataView<AttachmentViewModel>, AttachmentDataView>();
             watch.Stop();
-            WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces",watch.ElapsedMilliseconds));
+            WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));
         }
-
     }
 }

@@ -1,22 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Unity;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Service;
+using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
-using Microsoft.Practices.Unity;
-using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Service;
 using WSUI.Module.Strategy;
-using System.Diagnostics;
 
 namespace WSUI.Module.ViewModel
 {
@@ -37,15 +37,12 @@ namespace WSUI.Module.ViewModel
             DataView = dataView;
             DataView.Model = this;
             // init
-            QueryTemplate =
-                "SELECT TOP {3} System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateCreated,System.Subject,System.Message.ToAddress,System.Message.DateReceived,System.Size FROM SystemIndex WHERE System.Kind <> 'folder' AND System.Kind <> 'contact' AND System.DateCreated < '{1}' AND (Contains(*,{0},1033) OR ( {2} ) OR (Contains(System.Search.Contents,{0},1033) ) ) ORDER BY System.DateCreated DESC";//System.Search.Contents
-            QueryAnd = " AND \"{0}\""; 
             ID = 0;
             _name = "Everything";
             UIName = _name;
             _prefix = "AllFiles";
             IsOpen = false;
-            FlyCommand = new DelegateCommand<object>( o =>
+            FlyCommand = new DelegateCommand<object>(o =>
                                                           {
                                                               IsOpen = !IsOpen;
                                                               OnPropertyChanged(() => IsOpen);
@@ -56,9 +53,10 @@ namespace WSUI.Module.ViewModel
             SearchSystem = new AllSearchSystem();
         }
 
-        
         public bool IsOpen { get; set; }
+
         public ICommand FlyCommand { get; private set; }
+
         public ICommand EmailClickCommand { get; protected set; }
 
         protected override void OnSearchStringChanged()
@@ -98,7 +96,7 @@ namespace WSUI.Module.ViewModel
                     watch.Start();
                     if (_isFirstTime)
                     {
-                        ContactForFirstTime(result.Where(i => i.Priority <= FirstPriority).OrderBy(i => i.Priority));                            
+                        ContactForFirstTime(result.Where(i => i.Priority <= FirstPriority).OrderBy(i => i.Priority));
                     }
                     foreach (var col in result.Where(i => i.Priority > FirstPriority).OrderBy(i => i.Priority))
                     {
@@ -112,7 +110,6 @@ namespace WSUI.Module.ViewModel
                 }
                 _isFirstTime = false;
             }), null);
-            
         }
 
         private void ContactForFirstTime(IEnumerable<ISystemSearchResult> result)
@@ -138,22 +135,6 @@ namespace WSUI.Module.ViewModel
                 }
             }
         }
-
-        //private bool IsEmail(object value)
-        //{
-        //    if (value.GetType().IsArray)
-        //    {
-        //        return (value as Array).Cast<string>().Any(i => i.IndexOf(KindGroup) > -1);
-        //    }
-        //    return false;
-        //}
-
-        //private void GetContactResult()
-        //{
-        //    if(_listContacts == null || _listContacts.Count == 0)
-        //        return;
-        //    _listContacts.ForEach(c => ListData.Add(c));
-        //}
 
         private void EmailClick(object obj)
         {
@@ -212,21 +193,19 @@ namespace WSUI.Module.ViewModel
             CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
             ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 300, CountSecondProcess = 100, LimitReaction = 99 };
-            ScrollBehavior.SearchGo += OnScroolNeedSearch;
+            ScrollBehavior.SearchGo += OnScrollNeedSearch;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
         }
+
         #region IUIView
 
         public ISettingsView<AllFilesViewModel> SettingsView { get; set; }
 
         public IDataView<AllFilesViewModel> DataView { get; set; }
 
-        #endregion
+        #endregion IUIView
 
         private volatile bool _isFirstTime = true;
 
-
-
     }
-
 }

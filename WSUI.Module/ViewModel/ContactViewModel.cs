@@ -1,41 +1,36 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
-using WSUI.Core.Core;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Infrastructure.Implements.Systems;
+using WSUI.Infrastructure.Models;
 using WSUI.Infrastructure.Service;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
-using WSUI.Infrastructure.Models;
 using WSUI.Module.Service;
 using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
     [KindNameId(KindsConstName.People, 1, @"pack://application:,,,/WSUI.Module;Component/Images/People.png")]
-    public class ContactViewModel : KindViewModelBase,IUView<ContactViewModel>, IScrollableView
+    public class ContactViewModel : KindViewModelBase, IUView<ContactViewModel>, IScrollableView
     {
         private ContactSearchData _contactData = null;
         private ContactSuggestingService _contactSuggesting;
-        private readonly List<BaseSearchData> _listContacts = new List<BaseSearchData>(); 
-        
+
         public ContactViewModel(IUnityContainer container, ISettingsView<ContactViewModel> settingsView, IDataView<ContactViewModel> dataView)
-            :base(container)
+            : base(container)
         {
             SettingsView = settingsView;
             SettingsView.Model = this;
             DataView = dataView;
             DataView.Model = this;
 
-            QueryTemplate = "GROUP ON System.DateCreated  ORDER BY System.DateCreated DESC  OVER ( SELECT System.ItemName, System.Contact.FirstName, System.Contact.LastName,System.Contact.EmailAddress,System.Contact.EmailAddress2,System.Contact.EmailAddress3, System.Subject,System.ItemUrl,System.Message.ToAddress,System.Message.DateReceived, System.Kind,System.Message.FromAddress, System.DateCreated  FROM SystemIndex WHERE ";
-            QueryAnd = " OR ( CONTAINS(System.Contact.FirstName,'\"{0}*\"') OR CONTAINS(System.Contact.LastName,'\"{0}*\"') ))) ";
             ID = 1;
             _name = "People";
             UIName = _name;
@@ -53,12 +48,11 @@ namespace WSUI.Module.ViewModel
                                                       Application.Current.Dispatcher.BeginInvoke(
                                                           new Action(
                                                               () =>
-                                                                  {
-                                                                      e.Value.ForEach(s => DataSourceSuggest.Add(s));
-                                                                      OnPropertyChanged(() => DataSourceSuggest);
-                                                                  }),
+                                                              {
+                                                                  e.Value.ForEach(s => DataSourceSuggest.Add(s));
+                                                                  OnPropertyChanged(() => DataSourceSuggest);
+                                                              }),
                                                           null);
-                                                      
                                                   }
                                               };
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
@@ -79,20 +73,15 @@ namespace WSUI.Module.ViewModel
             get { return _contactData != null ? Visibility.Visible : Visibility.Collapsed; }
         }
 
-        
-
         protected override void OnSearchStringChanged()
         {
-            //_countProcess = ScrollBehavior.CountFirstProcess;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
             base.OnSearchStringChanged();
-            //_contactSuggesting.StartSuggesting(SearchString);
         }
 
         protected override void OnFilterData()
         {
             base.OnFilterData();
-            //_countProcess = ScrollBehavior.CountFirstProcess;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
         }
 
@@ -132,27 +121,30 @@ namespace WSUI.Module.ViewModel
 
             CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
             ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 400, CountSecondProcess = 100, LimitReaction = 99 };
-            ScrollBehavior.SearchGo += OnScroolNeedSearch;
+            ScrollBehavior.SearchGo += OnScrollNeedSearch;
         }
 
         #region IUIView
 
         public ISettingsView<ContactViewModel> SettingsView
         {
-            get; set;
+            get;
+            set;
         }
 
         public IDataView<ContactViewModel> DataView
         {
-            get; set;
+            get;
+            set;
         }
 
-        #endregion
+        #endregion IUIView
+
         #region Implementation of IScrollableView
 
         public ICommand ScrollChangeCommand { get; private set; }
 
-        #endregion
+        #endregion Implementation of IScrollableView
 
         private void OnScroll(object args)
         {
@@ -162,9 +154,6 @@ namespace WSUI.Module.ViewModel
                 ScrollBehavior.NeedSearch(scrollArgs);
             }
         }
-
-
-       
 
     }
 }

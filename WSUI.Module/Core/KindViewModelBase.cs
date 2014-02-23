@@ -550,7 +550,7 @@ namespace WSUI.Module.Core
         }
 
 
-        protected void OnScroolNeedSearch()
+        protected void OnScrollNeedSearch()
         {
             if (SearchSystem.IsSearching)
                 return;

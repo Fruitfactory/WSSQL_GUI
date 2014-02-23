@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
-using WSUI.Core.Core;
 using WSUI.Core.Enums;
 using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Service;
@@ -16,21 +14,13 @@ namespace WSUI.Module.ViewModel
     [KindNameId(KindsConstName.Attachments, 3, @"pack://application:,,,/WSUI.Module;Component/Images/Mail-Attachment.png")]
     public class AttachmentViewModel : KindViewModelBase, IUView<AttachmentViewModel>, IScrollableView
     {
-        private int _countProcess;
-        private List<BaseSearchData> _list = new List<BaseSearchData>();
-        private List<string> _listId = new List<string>();
-        private object _lock = new object();
-
-        public AttachmentViewModel(IUnityContainer container, ISettingsView<AttachmentViewModel> settingsView, IDataView<AttachmentViewModel> dataView ) : base(container)
+        public AttachmentViewModel(IUnityContainer container, ISettingsView<AttachmentViewModel> settingsView, IDataView<AttachmentViewModel> dataView)
+            : base(container)
         {
             SettingsView = settingsView;
             SettingsView.Model = this;
             DataView = dataView;
             DataView.Model = this;
-
-            QueryTemplate =
-                "SELECT System.ItemName, System.ItemUrl,System.Kind,System.Message.ConversationID,System.ItemNameDisplay, System.DateModified,System.Size FROM SystemIndex WHERE Contains(System.ItemUrl,'at=') AND System.DateModified < '{2}'  AND ( ( {0} ) OR  Contains(System.Search.Contents,{1})) ORDER BY System.DateModified DESC"; //Contains(System.ItemName,'{0}*')  OR System.Search.Contents  AND System.DateCreated < '{2}'
-            QueryAnd = " AND \"{0}\"";
             ID = 3;
             _name = "Attachments";
             UIName = _name;
@@ -50,45 +40,26 @@ namespace WSUI.Module.ViewModel
             CommandStrategies.Add(TypeSearchItem.File, fileAttach);
             CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 100, CountSecondProcess = 50, LimitReaction = 75 };
-            ScrollBehavior.SearchGo += OnScroolNeedSearch;
-        }
-
-        protected override void OnStart()
-        {
-            _list.Clear();
-            base.OnStart();
-        }
-
-        protected override void OnSearchStringChanged()
-        {
-            _listId.Clear();
-            _countProcess = ScrollBehavior.CountFirstProcess;
-            base.OnSearchStringChanged();
-
-        }
-
-        protected override void OnFilterData()
-        {
-            _listId.Clear();
-            base.OnFilterData();
-            _countProcess = ScrollBehavior.CountFirstProcess;
+            ScrollBehavior.SearchGo += OnScrollNeedSearch;
         }
 
         public ISettingsView<AttachmentViewModel> SettingsView
         {
-            get; set;
+            get;
+            set;
         }
 
         public IDataView<AttachmentViewModel> DataView
         {
-            get; set;
+            get;
+            set;
         }
 
         #region Implementation of IScrollableView
 
         public ICommand ScrollChangeCommand { get; private set; }
 
-        #endregion
+        #endregion Implementation of IScrollableView
 
         private void OnScroll(object args)
         {
@@ -98,9 +69,6 @@ namespace WSUI.Module.ViewModel
                 ScrollBehavior.NeedSearch(scrollArgs);
             }
         }
-
-
-        
 
     }
 }
