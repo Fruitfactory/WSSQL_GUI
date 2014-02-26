@@ -13,11 +13,16 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 
 namespace WSUI.Core.Utils 
 {
+    // this approach really create objets must faster then Activator.CreateInstance
+    // for example 10 000 000 objects:
+    // Activator.CreateInstance - 2774 ms
+    // New<T> - 1425 ms
     internal static class New<T> where T : new()
     {
         public static readonly Func<T> Instance = Expression.Lambda<Func<T>>(Expression.New(typeof (T))).Compile();
@@ -29,6 +34,7 @@ namespace WSUI.Core.Utils
 
 	    private IList<Tuple<string, string, int, bool>> _intermalList;
         private Func<T> _create;
+	    private object _lock = new object();
 
         #endregion
 
@@ -48,14 +54,36 @@ namespace WSUI.Core.Utils
 		/// <param name="type"></param>
 		public object ReadResult(IDataReader reader)
 		{
-            var result = _create.Invoke() as ISearchObject;//Activator.CreateInstance(typeof(T)) as ISearchObject;//
+            var result = _create.Invoke() as ISearchObject;
 		    if (result == null)
 		        return null;
+		    var watch = new Stopwatch();
+            watch.Start();
 
-		    foreach (var tuple in _intermalList)
-		    {
-		        try
-		        {
+            //Parallel.ForEach(_intermalList, tuple =>
+            //{
+            //    try
+            //    {
+            //        int index = tuple.Item3 - 1;
+            //        if (index >= reader.FieldCount)
+            //            return;
+            //        object val = null;
+            //        lock (_lock) 
+            //         val = reader[index];
+            //        if (DBNull.Value.Equals(val))
+            //            return;
+            //        result.SetValue(tuple.Item3, val);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        WSSqlLogger.Instance.LogError("Readresult: {0}", ex.Message);
+            //    }
+            //});  
+            
+            foreach (var tuple in _intermalList)
+            {
+                try
+                {
                     int index = tuple.Item3 - 1;
                     if (index >= reader.FieldCount)
                         break;
@@ -63,12 +91,15 @@ namespace WSUI.Core.Utils
                     if (DBNull.Value.Equals(val))
                         continue;
                     result.SetValue(tuple.Item3, val);
-		        }
-		        catch (Exception ex)
-		        {
-                    WSSqlLogger.Instance.LogError("Readresult: {0}",ex.Message);
                 }
-		    }
+                catch (Exception ex)
+                {
+                    WSSqlLogger.Instance.LogError("Readresult: {0}", ex.Message);
+                }
+            }
+
+            watch.Stop();
+            System.Diagnostics.Debug.WriteLine("Fill values: {0}", watch.ElapsedMilliseconds);
 			return result;
 		}
 
