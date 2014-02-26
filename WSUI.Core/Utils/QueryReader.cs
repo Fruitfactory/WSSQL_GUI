@@ -57,49 +57,25 @@ namespace WSUI.Core.Utils
             var result = _create.Invoke() as ISearchObject;
 		    if (result == null)
 		        return null;
-		    var watch = new Stopwatch();
-            watch.Start();
-
-            //Parallel.ForEach(_intermalList, tuple =>
-            //{
-            //    try
-            //    {
-            //        int index = tuple.Item3 - 1;
-            //        if (index >= reader.FieldCount)
-            //            return;
-            //        object val = null;
-            //        lock (_lock) 
-            //         val = reader[index];
-            //        if (DBNull.Value.Equals(val))
-            //            return;
-            //        result.SetValue(tuple.Item3, val);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        WSSqlLogger.Instance.LogError("Readresult: {0}", ex.Message);
-            //    }
-            //});  
-            
-            foreach (var tuple in _intermalList)
+            Parallel.ForEach(_intermalList, tuple =>
             {
                 try
                 {
                     int index = tuple.Item3 - 1;
                     if (index >= reader.FieldCount)
-                        break;
-                    object val = reader[index];
+                        return;
+                    object val = null;
+                    lock (_lock)
+                        val = reader[index];
                     if (DBNull.Value.Equals(val))
-                        continue;
+                        return;
                     result.SetValue(tuple.Item3, val);
                 }
                 catch (Exception ex)
                 {
                     WSSqlLogger.Instance.LogError("Readresult: {0}", ex.Message);
                 }
-            }
-
-            watch.Stop();
-            System.Diagnostics.Debug.WriteLine("Fill values: {0}", watch.ElapsedMilliseconds);
+            });  
 			return result;
 		}
 
