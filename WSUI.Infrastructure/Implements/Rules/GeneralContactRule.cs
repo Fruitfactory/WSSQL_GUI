@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
+using WSUI.Core.Enums;
 using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
@@ -133,6 +134,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         public override void Init()
         {
             base.Init();
+            ObjectType = RuleObjectType.Contact;
             _listContactsRules.ForEach(r =>
             {
                 r.Init();

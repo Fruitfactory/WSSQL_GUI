@@ -38,6 +38,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 	    {
 	        CountFirstProcess = 50;
 	        CountSecondProcess = 25;
+            ObjectType = RuleObjectType.File;
 	        base.Init();
 	    }
 

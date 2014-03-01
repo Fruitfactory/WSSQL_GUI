@@ -13,6 +13,7 @@ using System.Text;
 using WSUI.Core.Core.Rules;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
+using WSUI.Core.Enums;
 
 namespace WSUI.Infrastructure.Implements.Rules 
 {
@@ -70,6 +71,7 @@ namespace WSUI.Infrastructure.Implements.Rules
             RuleName = "Contact";
             CountFirstProcess = 100;
             CountSecondProcess = 50;
+            ObjectType = RuleObjectType.Contact;
             base.Init();
         }
 

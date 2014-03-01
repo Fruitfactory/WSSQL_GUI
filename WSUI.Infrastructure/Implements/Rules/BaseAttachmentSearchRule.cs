@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////
 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -68,6 +69,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 	    {
 	        CountFirstProcess = 50;
 	        CountSecondProcess = 20;
+            ObjectType = RuleObjectType.File;
 	        base.Init();
 	    }
 

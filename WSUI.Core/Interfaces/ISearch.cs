@@ -9,6 +9,7 @@
 
 using System;
 using System.Threading;
+using WSUI.Core.Enums;
 
 namespace WSUI.Core.Interfaces {
 	public interface ISearch       {
@@ -34,7 +35,9 @@ namespace WSUI.Core.Interfaces {
 			get;
 		}
 
-		void Init();
+	    RuleObjectType ObjectType { get; }
+
+	    void Init();
 	    void SetProcessingRecordCount(int first, int second);
 
 	}//end ISearch

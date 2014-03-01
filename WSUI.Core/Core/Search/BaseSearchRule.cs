@@ -25,7 +25,7 @@ using WSUI.Core.Utils;
 
 namespace WSUI.Core.Core.Search 
 {
-	public class BaseSearchRule<T> : ISearch, ISearchRule, IRuleQueryGenerator where T : class, new()
+	public abstract class BaseSearchRule<T> : ISearch, ISearchRule, IRuleQueryGenerator where T : class, new()
 	{
         #region [needs private]
 
@@ -235,6 +235,7 @@ namespace WSUI.Core.Core.Search
 
 	    public bool IsSearching { get { return _isSearching; }  }
 	    public int Priority { get; protected set; }
+	    public RuleObjectType ObjectType { get; protected set; }
 
 	    protected virtual void ProcessResult()
 		{

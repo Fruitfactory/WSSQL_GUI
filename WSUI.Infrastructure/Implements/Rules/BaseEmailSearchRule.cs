@@ -11,11 +11,13 @@ using System.Collections.Generic;
 using System.Linq;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
+using WSUI.Core.Enums;
+using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 
 namespace WSUI.Infrastructure.Implements.Rules 
 {
-	public class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject>
+	public class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject> , IEmailSearchRule
     {
         #region [needs]
 
@@ -36,6 +38,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 	    {
 	        CountFirstProcess = 150;
 	        CountSecondProcess = 75;
+            ObjectType = RuleObjectType.Email;
 	        base.Init();
 	    }
 
@@ -72,6 +75,27 @@ namespace WSUI.Infrastructure.Implements.Rules
                 LastDate = Result.Last().DateReceived;    
 	        }
 	    }
+
+	    public IEnumerable<string> GetConversationId()
+	    {
+	        return Result.Select(e => e.ConversationId);
+	    }
+
+	    public void ApplyFilter(IEnumerable<string> conversationIds)
+	    {
+	        if (conversationIds == null || !conversationIds.Any())
+	            return;
+	        for (int i = 0; i < Result.Count; i++)
+	        {
+	            var obj = Result[i];
+	            if (conversationIds.Contains(obj.ConversationId))
+	            {
+	                Result.Remove(obj);
+	                i--;
+	            }
+	        }
+	    }
+
     }//end BaseEmailSearchRule
 
 }//end namespace Implements

@@ -114,7 +114,7 @@ namespace WSUI.Core.Core.Search
 
 		}
 
-		protected IList<ISearch> GetRules()
+		protected IEnumerable<ISearch> GetRules()
         {
 			return _listRules;
 		}
@@ -131,7 +131,7 @@ namespace WSUI.Core.Core.Search
                     WSSqlLogger.Instance.LogInfo("List of Events is empty");
                     return;
 		        }
-                _listRules.ForEach(item => item.Search()); // OrderBy(i => i.Priority)
+                _listRules.ForEach(item => item.Search());
 		        WaitHandle.WaitAll(events);
                 WSSqlLogger.Instance.LogInfo("+++++++++++++++++ searching is DONE!!!!+++++++++++++++");
 		        if (_needStop)
@@ -141,6 +141,7 @@ namespace WSUI.Core.Core.Search
                     WSSqlLogger.Instance.LogError("Searching was stoped");
                     return;
 		        }
+                ProcessData();
 		        foreach (var item in _listRules.OrderBy(i => i.Priority))
 		        {
 		            var result = (item as ISearchRule).GetResults();
