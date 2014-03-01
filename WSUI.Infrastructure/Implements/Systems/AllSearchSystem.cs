@@ -52,6 +52,8 @@ namespace WSUI.Infrastructure.Implements.Systems
                 emailRule.ApplyFilter(listIds);
                 listIds.AddRange(emailRule.GetConversationId());
 	        }
+            if(listIds.Any())
+                listIds.Clear();
 	    }
 
     }//end AllSearchSystem

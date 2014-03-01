@@ -24,10 +24,11 @@ if(!function_exists('getDownloadUrl')){
             }
 
             $xml = simplexml_load_file($verxml);
-            $count = count($xml->product->version);
+            $count = $xml->product->version->count();
             if($count > 0){
-                    $version = $xml->product->version[count-1]['name'];
-                    return $p_f.$version.$p_s;  	
+                    $ver = $xml->product->version[$count -1];
+                    $verapp = $ver['name'];
+                    return $p_f.$verapp.$p_s;  	
             }
             return '';
 
