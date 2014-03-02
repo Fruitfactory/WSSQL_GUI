@@ -49,11 +49,11 @@ namespace WSUIOutlookPlugin.Core
         private const int IntervalForUpdate = 30*1000;
 
 #if !TRIAL
-        //private const string InstalationUrl = "http://outlookfinder.com/downloads/clicktwice/full/";
-        private const string InstalationUrl = "http://readyshare.routerlogin.net/shares/NetShare/FTP/downloads/clicktwice/full/";
+        private const string InstalationUrl = "http://outlookfinder.com/downloads/clicktwice/full/";
+        //private const string InstalationUrl = "http://readyshare.routerlogin.net/shares/NetShare/FTP/downloads/clicktwice/full/";
 #else
-        //private const string InstalationUrl = "http://outlookfinder.com/downloads/clicktwice/trial/";
-        private const string InstalationUrl = "http://readyshare.routerlogin.net/shares/NetShare/FTP/downloads/clicktwice/trial/";
+        private const string InstalationUrl = "http://outlookfinder.com/downloads/clicktwice/trial/";
+        //private const string InstalationUrl = "http://readyshare.routerlogin.net/shares/NetShare/FTP/downloads/clicktwice/trial/";
 #endif
 
         #endregion

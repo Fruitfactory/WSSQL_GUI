@@ -115,7 +115,7 @@ namespace WSPreview.PreviewHandler
         {
             get
             {
-                return GetForegroundWindow() == this.Handle.ToInt32();
+                return true;// GetForegroundWindow() == this.Handle.ToInt32() ;
             }
         }
         private bool MouseInPage(Point p)
