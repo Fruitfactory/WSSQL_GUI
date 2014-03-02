@@ -141,6 +141,7 @@
     <Compile Include="Implements\Rules\ContactSearchRule.cs" />
     <Compile Include="Implements\Systems\ContactSearchSystem.cs" />
     <Compile Include="Implements\Rules\EmailContentSearchRule.cs" />
+    <Compile Include="Implements\Systems\Core\BaseAllEmailSearchSystem.cs" />
     <Compile Include="Implements\Systems\EmailSearchSystem.cs" />
     <Compile Include="Implements\Rules\EmailSubjectSearchRule.cs" />
     <Compile Include="Implements\Rules\FileContentSearchRule.cs" />

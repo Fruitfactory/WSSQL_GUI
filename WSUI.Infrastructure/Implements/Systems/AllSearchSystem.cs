@@ -6,17 +6,12 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using WSUI.Core.Core.Search;
-using WSUI.Core.Enums;
-using WSUI.Core.Interfaces;
 using WSUI.Infrastructure.Implements.Rules;
+using WSUI.Infrastructure.Implements.Systems.Core;
 
 namespace WSUI.Infrastructure.Implements.Systems 
 {
-	public class AllSearchSystem : BaseSearchSystem 
+	public class AllSearchSystem : BaseAllEmailSearchSystem
     {
 
 		public AllSearchSystem()
@@ -36,25 +31,6 @@ namespace WSUI.Infrastructure.Implements.Systems
 	        base.Init();
 	    }
 
-	    protected override void ProcessData()
-	    {
-	        IEnumerable<ISearch> rules = GetRules();
-            ProcessEmails(rules.Where(r => r.ObjectType == RuleObjectType.Email && r is IEmailSearchRule).OfType<IEmailSearchRule>());
-	    }
-
-	    private void ProcessEmails(IEnumerable<IEmailSearchRule> emailRules)
-	    {
-	        if (emailRules == null || !emailRules.Any())
-	            return;
-	        var listIds = (emailRules.First() as IEmailSearchRule).GetConversationId().ToList();
-	        foreach (var emailRule in emailRules.Skip(1))
-	        {
-                emailRule.ApplyFilter(listIds);
-                listIds.AddRange(emailRule.GetConversationId());
-	        }
-            if(listIds.Any())
-                listIds.Clear();
-	    }
 
     }//end AllSearchSystem
 

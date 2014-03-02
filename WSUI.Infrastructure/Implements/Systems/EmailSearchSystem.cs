@@ -9,12 +9,13 @@
 
 using WSUI.Core.Core.Search;
 using WSUI.Infrastructure.Implements.Rules;
+using WSUI.Infrastructure.Implements.Systems.Core;
 
-namespace WSUI.Infrastructure.Implements.Systems 
+namespace WSUI.Infrastructure.Implements.Systems
 {
-	public class EmailSearchSystem : BaseSearchSystem 
+    public class EmailSearchSystem : BaseAllEmailSearchSystem
     {
-		public EmailSearchSystem()
+        public EmailSearchSystem()
         {
 		}
 
