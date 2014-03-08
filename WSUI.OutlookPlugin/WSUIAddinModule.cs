@@ -13,6 +13,7 @@ using WSUI.Control;
 using WSUI.Control.Interfaces;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Controls.Application;
 using WSUI.Infrastructure.Service.Helpers;
@@ -640,8 +641,9 @@ namespace WSUIOutlookPlugin
 
         public void DoShowWebViewPane()
         {
-            string currentFullFolderName = GetFullPathOfDefaultFolder();
-            formWebPaneItem.FolderName = currentFullFolderName;
+            var folderValue = GetFullPathOfDefaultFolder();
+            SetOutlookFolderProperties(folderValue.Item2.EntryID,folderValue.Item2.WebViewURL);
+            formWebPaneItem.FolderName = folderValue.Item1;
             //Apply the WebViewPane layout
             RefreshCurrentFolder();
             _wsuiBootStraper.PassAction(new WSAction(WSActionType.Show, null));
@@ -699,10 +701,10 @@ namespace WSUIOutlookPlugin
             return outlookNqamespace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox);
         }
 
-        private string GetFullPathOfDefaultFolder()
+        private Tuple<string,Outlook.MAPIFolder> GetFullPathOfDefaultFolder()
         {
             var folder = GetDefaultFolder();
-            return folder != null ? GetFullFolderName(folder) : string.Empty;
+            return new Tuple<string, Outlook.MAPIFolder>(folder != null ? GetFullFolderName(folder) : string.Empty,folder);
         }
 
         private void RefreshCurrentFolder(bool isOpenUI = true)
@@ -901,6 +903,7 @@ namespace WSUIOutlookPlugin
 
         private void WSUIAddinModule_AddinStartupComplete(object sender, EventArgs e)
         {
+            RestoreOutlookFolder();
             CheckUpdate();
             this.SendMessage(WM_LOADED, IntPtr.Zero, IntPtr.Zero);
             OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
@@ -974,7 +977,42 @@ namespace WSUIOutlookPlugin
         {
             DoHideWebViewPane();
             _wsuiBootStraper.PassAction(new WSAction(WSActionType.Quit, null));
+            SetOutlookFolderProperties(string.Empty,string.Empty);
             WSSqlLogger.Instance.LogInfo("Shutdown...");
         }
+
+
+        private void SetOutlookFolderProperties(string folderName, string folderWebUrl)
+        {
+            RegistryHelper.Instance.SetOutlookFolderName(folderName);
+            RegistryHelper.Instance.SetOutlookFolderWebUrl(folderWebUrl);
+        }
+
+        public void RestoreOutlookFolder()
+        {
+            if (RegistryHelper.Instance.IsShouldRestoreOutlookFolder())
+            {
+                WSSqlLogger.Instance.LogInfo("{0}","OUtlookFolder is empty");
+                return;
+            }
+                
+            string id = RegistryHelper.Instance.GetOutllokFolderName();
+            Outlook.NameSpace outlookNamespace = OutlookApp.GetNamespace(DefaultNamespace);
+            if (outlookNamespace == null || string.IsNullOrEmpty(id))
+                return;
+            WSSqlLogger.Instance.LogInfo("OutlookFolder ID: {0}",id);
+            Outlook.MAPIFolder folder = outlookNamespace.GetFolderFromID(id, Type.Missing);
+            if (folder == null)
+                return;
+            folder.WebViewURL = RegistryHelper.Instance.GetOutlookFolderWebUrl();
+            folder.WebViewOn = true;
+
+            WSSqlLogger.Instance.LogInfo("WebViewURL: {0}",folder.WebViewURL);
+
+            Marshal.ReleaseComObject(folder);
+            Marshal.ReleaseComObject(outlookNamespace);
+        }
+
+
     }
 }

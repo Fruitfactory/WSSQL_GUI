@@ -242,14 +242,39 @@ namespace WSUI.CA
 
         private static void WaitForClosingOutlook( Session session)
         {
+            const int Times = 35; // => 3.5 sek
+            int count = 0;
             Outlook._Application app;
             while (IsOutlookOpen(out app, session))
             {
                 Thread.Sleep(100);
+                if (Times == count)
+                    break;
+                count++;
             };
+            if (IsOutlookOpen(out app, session))
+            {
+                CloseHardOutlook(app,session);
+            }
         }
 
-
+        private static void CloseHardOutlook(Outlook._Application application, Session session)
+        {
+            session.Log("Hard close of Outlook");
+            var process = Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith(OutllokAppName.ToUpper()));
+            if (!process.Any())
+                return;
+            try
+            {
+                session.Log("Kill the Outlook");
+                process.ElementAt(0).Kill();
+                session.Log("Good kill the Outlook");
+            }
+            catch (Exception ex)
+            {
+                session.Log(ex.Message);
+            }
+        }
 
         #endregion
 

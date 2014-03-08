@@ -65,6 +65,7 @@ namespace WSUI.Module.Core
         private BaseSearchObject _current = null;
         private string _searchString = string.Empty;
         private ICommandStrategy _currentStrategy;
+        private bool _canSearch = true;
 
         // new 
         protected ISearchSystem SearchSystem { get; set; }
@@ -166,6 +167,7 @@ namespace WSUI.Module.Core
 
         protected virtual void Search()
         {
+            _canSearch = false;
             if (!IsShouldSearch())
             {
                 WSSqlLogger.Instance.LogWarning("Please, activate the 'OutlookFinder'");
@@ -210,7 +212,7 @@ namespace WSUI.Module.Core
 
         protected virtual bool CanSearch()
         {
-            return true;
+            return _canSearch;
         }
 
         protected virtual void OnSearchStringChanged()
@@ -222,6 +224,7 @@ namespace WSUI.Module.Core
                 Parent.ForceClosePreview();
             if(IsSearchCriteriaEmpty)
                 OnPropertyChanged(() => Commands);
+            _canSearch = true;
         }
 
         protected virtual void OnInit()
@@ -476,7 +479,8 @@ namespace WSUI.Module.Core
             switch (keys.Key)
             {
                 case Key.Enter:
-                    SearchCommand.Execute(null);
+                    if(SearchCommand.CanExecute(null))
+                        SearchCommand.Execute(null);
                     break;
             }
         }

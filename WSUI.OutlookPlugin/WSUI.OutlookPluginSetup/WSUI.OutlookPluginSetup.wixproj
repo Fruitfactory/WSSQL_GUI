@@ -59,6 +59,18 @@
       <Name>WixNetFxExtension</Name>
     </WixExtension>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Image\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\favicon1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Image\dialog.bmp" />
+    <Content Include="Image\logo_64.ico" />
+    <Content Include="Image\main.ico" />
+    <Content Include="Image\top.bmp" />
+  </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <Target Name="BeforeBuild">
   </Target>
