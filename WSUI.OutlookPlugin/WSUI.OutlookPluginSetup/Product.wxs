@@ -11,7 +11,7 @@
     <Property Id="ARPPRODUCTICON" Value="MainIcon.exe" />
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
     <WixVariable Id="WixUIBannerBmp" Value="Image\top.bmp" />
-    <WixVariable Id="WixUIDialogBmp" Value="Image\dialog.bmp" />
+    <!--<WixVariable Id="WixUIDialogBmp" Value="Image\dialog.bmp" />-->
     <Property Id="ALLUSERS" Secure="yes" />
     <Feature Id="ProductFeature" Title="OutlookFinder" Level="1" ConfigurableDirectory="INSTALLFOLDER">
       <ComponentRef Id="INSTALLFOLDER" />
