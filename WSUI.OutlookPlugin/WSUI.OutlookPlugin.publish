@@ -34,4 +34,21 @@
     </preferences>
     <prerequisites createSetupProgram="false" installFromVendor="true" />
   </application>
+  <application version="1.0.3.0">
+    <signingOptions>
+      <certificatePath>C:\Users\Vincent\Documents\GitHub\WSSQL_GUI_2\Toolkits\ClickOnceKey\WSUIOutlookPluginKey.pfx</certificatePath>
+    </signingOptions>
+    <deploymentOptions>
+      <providerURL>http://fruitfactory.github.io/WSSQL_GUI/downloads/clickonce/wsui.outlookplugin.application</providerURL>
+      <runAfterInstalling>false</runAfterInstalling>
+    </deploymentOptions>
+    <preferences>
+      <showErrors>true</showErrors>
+      <showGUI>true</showGUI>
+      <generateLogFile>false</generateLogFile>
+      <showRegMsg>true</showRegMsg>
+      <showRunningApplicationsWarning>true</showRunningApplicationsWarning>
+    </preferences>
+    <prerequisites createSetupProgram="false" installFromVendor="true" />
+  </application>
 </publishConfiguration>

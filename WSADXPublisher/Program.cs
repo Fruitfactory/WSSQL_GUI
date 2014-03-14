@@ -36,6 +36,8 @@ namespace WSADXPublisher
         private const string TargetApplicationNames = "targetApplicationNames";
         private const string TargetFrameworkVersion = "targetFrameworkVersion";
         private const string ShowRunningApplicationsWarning = "showRunningApplicationsWarning";
+        private const string CertificatePassword = "certificatePassword";
+        private const string TimestampUrl = "timestampUrl";
 
         #endregion
 
@@ -130,6 +132,22 @@ namespace WSADXPublisher
                 if (val != null)
                 {
                     val.Attribute(ValueAttribute).Value = Properties.Settings.Default.certificateFile;
+                }
+            }
+            if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == CertificatePassword))
+            {
+                XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == CertificatePassword).First();
+                if (val != null)
+                {
+                    val.Attribute(ValueAttribute).Value = Properties.Settings.Default.certificatePassword;
+                }
+            }
+            if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == TimestampUrl))
+            {
+                XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == TimestampUrl).First();
+                if (val != null)
+                {
+                    val.Attribute(ValueAttribute).Value = Properties.Settings.Default.timestampUrl;
                 }
             }
             if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == IconFileName))
@@ -330,6 +348,22 @@ namespace WSADXPublisher
             if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == CertificateFile))
             {
                 XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == CertificateFile).First();
+                if (val != null)
+                {
+                    val.Attribute(ValueAttribute).Value = string.Empty;
+                }
+            }
+            if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == CertificatePassword))
+            {
+                XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == CertificatePassword).First();
+                if (val != null)
+                {
+                    val.Attribute(ValueAttribute).Value = string.Empty;
+                }
+            }
+            if (el.Descendants().Any(e => e.Attribute(KeyAttribute).Value == TimestampUrl))
+            {
+                XElement val = el.Descendants().Where(e => e.Attribute(KeyAttribute).Value == TimestampUrl).First();
                 if (val != null)
                 {
                     val.Attribute(ValueAttribute).Value = string.Empty;

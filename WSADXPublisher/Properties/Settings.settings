@@ -8,9 +8,6 @@
     <Setting Name="installationUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://outlookfinder.com/downloads/clicktwice/full</Value>
     </Setting>
-    <Setting Name="certificateFile" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\Vincent\Documents\GitHub\WSUI\solution\WSUI.OutlookPlugin\wsuiclicktwice.pfx</Value>
-    </Setting>
     <Setting Name="iconFileName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\Users\Vincent\Documents\GitHub\WSUI\solution\WSUI\Search.ico</Value>
     </Setting>
@@ -49,6 +46,15 @@
     </Setting>
     <Setting Name="installationUrlTrial" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://outlookfinder.com/downloads/clicktwice/trial</Value>
+    </Setting>
+    <Setting Name="certificateFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Vincent\Documents\GitHub\WSUI\solution\Toolkits\Certificate\mycert.pfx</Value>
+    </Setting>
+    <Setting Name="certificatePassword" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Seattle98</Value>
+    </Setting>
+    <Setting Name="timestampUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://timestamp.comodoca.com/authenticode</Value>
     </Setting>
   </Settings>
 </SettingsFile>

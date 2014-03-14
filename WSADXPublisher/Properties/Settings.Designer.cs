@@ -12,7 +12,7 @@ namespace WSADXPublisher.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "10.0.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -38,16 +38,6 @@ namespace WSADXPublisher.Properties {
         public string installationUrl {
             get {
                 return ((string)(this["installationUrl"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\WSUI\\solution\\WSUI.OutlookPlugin\\wsuiclicktwice" +
-            ".pfx")]
-        public string certificateFile {
-            get {
-                return ((string)(this["certificateFile"]));
             }
         }
         
@@ -165,6 +155,33 @@ namespace WSADXPublisher.Properties {
         public string installationUrlTrial {
             get {
                 return ((string)(this["installationUrlTrial"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\WSUI\\solution\\Toolkits\\Certificate\\mycert.pfx")]
+        public string certificateFile {
+            get {
+                return ((string)(this["certificateFile"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Seattle98")]
+        public string certificatePassword {
+            get {
+                return ((string)(this["certificatePassword"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://timestamp.comodoca.com/authenticode")]
+        public string timestampUrl {
+            get {
+                return ((string)(this["timestampUrl"]));
             }
         }
     }

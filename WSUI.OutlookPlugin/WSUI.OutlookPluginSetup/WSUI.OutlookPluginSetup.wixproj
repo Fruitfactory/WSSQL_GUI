@@ -77,4 +77,7 @@
   <Target Name="AfterBuild">
     <GenerateBootstrapper ApplicationFile="$(TargetFileName)" ApplicationName="WSUIOutlookPlugin" BootstrapperItems="@(BootstrapperFile)" ComponentsLocation="HomeSite" CopyComponents="False" OutputPath="$(OutputPath)" Path="C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bootstrapper\" ApplicationRequiresElevation="False" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p Seattle98  /f "$(SolutionDir)Toolkits\Certificate\mycert.pfx" /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  $(TargetFileName)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
