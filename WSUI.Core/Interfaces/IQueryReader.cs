@@ -20,6 +20,8 @@ namespace WSUI.Core.Interfaces
 		/// <param name="reader"></param>
 		/// <param name="type"></param>
         object ReadResult(IDataReader reader);
-	}//end IQueryReader
+
+	    object ReadResult(DataRow row);
+    }//end IQueryReader
 
 }//end namespace Interfaces

@@ -44,9 +44,9 @@ namespace WSUI.Core.Utils
             _create = New<T>.Instance;
         }
 
-	    public static QueryReader<T> CreateNewReader<T>(IList<Tuple<string, string, int, bool>> listFields ) where T : new()
+        public static QueryReader<T1> CreateNewReader<T1>(IList<Tuple<string, string, int, bool>> listFields) where T1 : new()
 	    {
-	        return new QueryReader<T>(listFields); 
+            return new QueryReader<T1>(listFields); 
 	    }
 
 		/// 
@@ -79,6 +79,33 @@ namespace WSUI.Core.Utils
 			return result;
 		}
 
-	}//end QueryReader
+	    public object ReadResult(DataRow row)
+	    {
+            var result = _create.Invoke() as ISearchObject;
+            if (result == null)
+                return null;
+	        var count = row.Table.Columns.Count;
+            Parallel.ForEach(_intermalList, tuple =>
+            {
+                try
+                {
+                    int index = tuple.Item3 - 1;
+                    if (index >= count)
+                        return;
+                    object val = null;
+                    lock (_lock)
+                        val = row[index];
+                    if (DBNull.Value.Equals(val))
+                        return;
+                    result.SetValue(tuple.Item3, val);
+                }
+                catch (Exception ex)
+                {
+                    WSSqlLogger.Instance.LogError("Readresult: {0}", ex.Message);
+                }
+            });
+            return result;
+	    }
+    }//end QueryReader
 
 }//end namespace Utils
