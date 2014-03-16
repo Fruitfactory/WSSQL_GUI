@@ -8,6 +8,7 @@
 
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -116,11 +117,12 @@ namespace WSUI.Core.Core.Search
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
                 Stopwatch watch = null;
-                //lock (Lock)
+                connection = new OleDbConnection(ConnectionString);
+                var cmd = new OleDbCommand(query, connection);
+                cmd.CommandTimeout = 0;
+                lock (Lock)
                 {
-                    connection = new OleDbConnection(ConnectionString);
-                    var cmd = new OleDbCommand(query, connection);
-                    cmd.CommandTimeout = 0;
+
                     try
                     {
                         watch = new Stopwatch();
@@ -135,34 +137,32 @@ namespace WSUI.Core.Core.Search
 
 
                             (watch = new Stopwatch()).Start();
-                            lock(Lock)
-                                dataReader = cmd.ExecuteReader();
-                            //using (var dataReader = cmd.ExecuteReader())
+                            using (dataReader = cmd.ExecuteReader())
                             {
                                 watch.Stop();
-                                WSSqlLogger.Instance.LogInfo("dataReader<{0}> Elapsed: {1}", typeof(T).Name,
+                                WSSqlLogger.Instance.LogInfo("dataReader<{0}> Elapsed: {1}", typeof (T).Name,
                                     watch.ElapsedMilliseconds);
 
                                 (watch = new Stopwatch()).Start();
-                                lock (Lock)
-                                    while (dataReader.Read())
+                                while (dataReader.Read())
+                                {
+                                    try
                                     {
-                                        try
-                                        {
-                                            ReadData(dataReader);
-                                            if (IsInterupt || NeedStop)
-                                                break;
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery MainCycle",
-                                                typeof(T).Name,
-                                                ex.Message);
-                                        }
+                                        ReadData(dataReader);
+                                        if (IsInterupt || NeedStop)
+                                            break;
                                     }
+                                    catch (Exception ex)
+                                    {
+                                        WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery MainCycle",
+                                            typeof (T).Name,
+                                            ex.Message);
+                                    }
+                                }
                                 watch.Stop();
-                                WSSqlLogger.Instance.LogInfo("ReadData<{0}>: {1}", typeof(T).Name,
+                                WSSqlLogger.Instance.LogInfo("ReadData<{0}>: {1}", typeof (T).Name,
                                     watch.ElapsedMilliseconds);
+
                             }
                         }
                         catch (Exception ex)
@@ -179,6 +179,7 @@ namespace WSUI.Core.Core.Search
                     {
                         WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery", typeof(T).Name, oleDbException.Message);
                     }
+
                 }
                 // additional process
                 if (!NeedStop)
@@ -337,6 +338,50 @@ namespace WSUI.Core.Core.Search
             _listMessage.Clear();
             Result.Clear();
         }
+
+        private DataTable GetDataTableFromDataReader(IDataReader reader)
+        {
+            DataTable table = reader.GetSchemaTable();
+            DataTable resultTable = new DataTable();
+            foreach (DataRow dataRow in table.Rows)
+            {
+                DataColumn dataColumn = new DataColumn();
+                dataColumn.ColumnName = dataRow["ColumnName"].ToString();
+                dataColumn.DataType = Type.GetType(dataRow["DataType"].ToString());
+                dataColumn.ReadOnly = (bool)dataRow["IsReadOnly"];
+                dataColumn.AutoIncrement = (bool)dataRow["IsAutoIncrement"];
+                dataColumn.Unique = (bool)dataRow["IsUnique"];
+
+                resultTable.Columns.Add(dataColumn);
+            }
+
+            while (reader.Read())
+            {
+                DataRow dataRow = resultTable.NewRow();
+                for (int i = 0; i < resultTable.Columns.Count - 1; i++)
+                {
+                    dataRow[i] = reader[i];
+                }
+                resultTable.Rows.Add(dataRow);
+            }
+
+            return resultTable;
+
+        }
+
+        private DataTable GetDataTableByAdapter(string query, OleDbConnection connection)
+        {
+            DataTable dt = new DataTable();
+            new OleDbDataAdapter(query, connection).Fill(dt);
+            return dt;
+        }
+
+        private DataTable GetDataTableFast(IDataReader rdr)
+        {
+            DataTable resultTable = GetDataTableFromDataReader(rdr);
+            return resultTable;
+        }
+
 
     }//end BaseSearchRule
 

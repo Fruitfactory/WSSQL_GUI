@@ -18,16 +18,11 @@
     </UserControl.Resources>
     <Grid x:Name="grid" IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <!--<Controls:ProgressIndicator Grid.Row="0"  ProgressColour="{StaticResource AccentColorBrush}"
-                                                    Height="6" Visibility="Visible" HorizontalAlignment="Stretch"
-                                                    />-->
-
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding Path=Commands,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+        <ItemsControl Grid.Row="0" ItemsSource="{Binding Path=Commands,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                       IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}" Margin="10 0 0 0">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -83,17 +78,9 @@
             
         </ItemsControl>
         
-        <WindowsFormsHost Grid.Row="2" >
-            <preview:PreviewHandlerHostControl x:Name="_previewControl">
+        <WindowsFormsHost Grid.Row="1" >
+            <preview:PreviewHandlerHostControl x:Name="_previewControl" Visible="True">
             </preview:PreviewHandlerHostControl >
         </WindowsFormsHost>
-        
-        <Popup Name="popup" IsOpen="False" PlacementTarget="{Binding ElementName=grid}" 
-               >
-            <Border BorderBrush="Red" BorderThickness="3">
-                <TextBlock Text="Loading..."/>
-            </Border>
-        </Popup>
-
     </Grid>
 </UserControl>

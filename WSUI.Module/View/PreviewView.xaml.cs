@@ -13,15 +13,11 @@ namespace WSUI.Module.View
     /// </summary>
     public partial class PreviewView : IPreviewView
     {
-        //private PreviewHandlerHostControl _previewControl;
-        
         public PreviewView()
         {
             InitializeComponent();
             
         }
-
-       
 
         #region Implementation of IPreviewView
 

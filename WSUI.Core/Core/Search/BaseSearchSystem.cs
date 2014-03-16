@@ -131,9 +131,13 @@ namespace WSUI.Core.Core.Search
                     WSSqlLogger.Instance.LogInfo("List of Events is empty");
                     return;
 		        }
+		        var watchSearch = new Stopwatch();
+                watchSearch.Start();
                 _listRules.ForEach(item => item.Search());
 		        WaitHandle.WaitAll(events);
-                WSSqlLogger.Instance.LogInfo("+++++++++++++++++ searching is DONE!!!!+++++++++++++++");
+                watchSearch.Stop();
+                WSSqlLogger.Instance.LogInfo("+++++++++++++++++ searching is DONE!!!!+++++++++++++++ {0} ms",watchSearch.ElapsedMilliseconds);
+
 		        if (_needStop)
 		        {
 		            RaiseSearchStopped();
