@@ -117,67 +117,64 @@ namespace WSUI.Core.Core.Search
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
                 Stopwatch watch = null;
-                connection = new OleDbConnection(ConnectionString);
-                var cmd = new OleDbCommand(query, connection);
-                cmd.CommandTimeout = 0;
                 lock (Lock)
                 {
-
+                    OleDbDataReader dataReader = null;
                     try
                     {
+                        connection = new OleDbConnection(ConnectionString);
+                        var cmd = new OleDbCommand(query, connection);
+                        cmd.CommandTimeout = 0;
                         watch = new Stopwatch();
                         watch.Start();
                         connection.Open();
                         watch.Stop();
-                        WSSqlLogger.Instance.LogInfo("ConnectionOpen<{0}>: {1}", typeof(T).Name, watch.ElapsedMilliseconds);
-
-                        OleDbDataReader dataReader = null;
-                        try
+                        WSSqlLogger.Instance.LogInfo("ConnectionOpen<{0}>: {1}", typeof(T).Name,
+                            watch.ElapsedMilliseconds);
+                        (watch = new Stopwatch()).Start();
+                        using (dataReader = cmd.ExecuteReader())
                         {
-
+                            watch.Stop();
+                            WSSqlLogger.Instance.LogInfo("dataReader<{0}> Elapsed: {1}", typeof(T).Name,
+                                watch.ElapsedMilliseconds);
 
                             (watch = new Stopwatch()).Start();
-                            using (dataReader = cmd.ExecuteReader())
+                            while (dataReader.Read())
                             {
-                                watch.Stop();
-                                WSSqlLogger.Instance.LogInfo("dataReader<{0}> Elapsed: {1}", typeof (T).Name,
-                                    watch.ElapsedMilliseconds);
-
-                                (watch = new Stopwatch()).Start();
-                                while (dataReader.Read())
+                                try
                                 {
-                                    try
-                                    {
-                                        ReadData(dataReader);
-                                        if (IsInterupt || NeedStop)
-                                            break;
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery MainCycle",
-                                            typeof (T).Name,
-                                            ex.Message);
-                                    }
+                                    ReadData(dataReader);
+                                    if (NeedStop) //IsInterupt || 
+                                        break;
                                 }
-                                watch.Stop();
-                                WSSqlLogger.Instance.LogInfo("ReadData<{0}>: {1}", typeof (T).Name,
-                                    watch.ElapsedMilliseconds);
-
+                                catch (Exception ex)
+                                {
+                                    WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery MainCycle",
+                                        typeof(T).Name,
+                                        ex.Message);
+                                }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            WSSqlLogger.Instance.LogInfo("ReadData<{0}>: {1}", typeof(T).Name, ex.Message);
-                        }
-                        finally
-                        {
-                            if (dataReader != null)
-                                dataReader.Close();
+                            watch.Stop();
+                            WSSqlLogger.Instance.LogInfo("ReadData<{0}>: {1}", typeof(T).Name,
+                                watch.ElapsedMilliseconds);
+
                         }
                     }
                     catch (OleDbException oleDbException)
                     {
-                        WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery", typeof(T).Name, oleDbException.Message);
+                        WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery", typeof(T).Name,
+                            oleDbException.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        WSSqlLogger.Instance.LogInfo("ReadData<{0}>: {1}", typeof(T).Name, ex.Message);
+                    }
+                    finally
+                    {
+                        if (dataReader != null)
+                            dataReader.Close();
+                        if (connection != null)
+                            connection.Close();
                     }
 
                 }
@@ -206,8 +203,6 @@ namespace WSUI.Core.Core.Search
             }
             finally
             {
-                if (connection != null && connection.State == ConnectionState.Open)
-                    connection.Close();
                 CountAdded = 0;
                 TopQueryResult = CountProcess = CountSecondProcess;
                 _isSearching = false;
@@ -215,7 +210,6 @@ namespace WSUI.Core.Core.Search
                 IsInterupt = false;
                 Event.Set();
             }
-
         }
 
         /// 

@@ -81,6 +81,7 @@ namespace WSUI.Module.Core
             ShowPathCommand = new DelegateCommand(ShowPath,CanOpenFile);
             KeyDownCommand = new DelegateCommand<KeyEventArgs>(KeyDown, o => true);
             DoubleClickCommand = new DelegateCommand<MouseButtonEventArgs>(DoubleClick, o => true);
+            ClearCriteriaCommand = new DelegateCommand<object>(ClearCriteriaClicked,o => true);
             Enabled = true;
             DataSource = new ObservableCollection<BaseSearchObject>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
@@ -344,6 +345,7 @@ namespace WSUI.Module.Core
         public ICommand ChooseCommand { get; protected set; }
         public ICommand SearchCommand { get; protected set; }
         public ICommand KeyDownCommand { get; protected set; }
+        public ICommand ClearCriteriaCommand { get; private set; }
         public ICommand DoubleClickCommand { get; protected set; }
         public event EventHandler Start;
         public event EventHandler<EventArgs<bool>> Complete;
@@ -553,6 +555,12 @@ namespace WSUI.Module.Core
             OpenFile();
         }
 
+        private void ClearCriteriaClicked(object arg)
+        {
+            if (Parent == null)
+                return;
+            Parent.PassAction(new WSAction(WSActionType.ClearText,arg));
+        }
 
         protected void OnScrollNeedSearch()
         {

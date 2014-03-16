@@ -23,6 +23,7 @@
             <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 Controls:TextboxHelper.Watermark="Enter Search Criteria"
                 Controls:TextboxHelper.ClearTextButton="True"
+                Controls:TextboxHelper.ClearTextCommand="{Binding ClearCriteriaCommand}"
                 VerticalAlignment="Center"    
                 VerticalContentAlignment="Center"
                 Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
