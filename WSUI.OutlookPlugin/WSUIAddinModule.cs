@@ -918,7 +918,7 @@ namespace WSUIOutlookPlugin
 
         private void CurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs firstChanceExceptionEventArgs)
         {
-            WSSqlLogger.Instance.LogError("First Chance Exception (plugin): {0}\n{1}", firstChanceExceptionEventArgs.Exception.Message, firstChanceExceptionEventArgs.Exception.StackTrace);
+            WSSqlLogger.Instance.LogError("First Chance Exception (plugin): {0} [{1}][{2}]{3}{4}", firstChanceExceptionEventArgs.Exception.Message, firstChanceExceptionEventArgs.Exception.Source, firstChanceExceptionEventArgs.Exception.TargetSite.Name, Environment.NewLine, firstChanceExceptionEventArgs.Exception.StackTrace);
             if (firstChanceExceptionEventArgs.Exception is ReflectionTypeLoadException)
             {
                 foreach (var item in (firstChanceExceptionEventArgs.Exception as ReflectionTypeLoadException).LoaderExceptions)
@@ -984,8 +984,10 @@ namespace WSUIOutlookPlugin
 
         private void SetOutlookFolderProperties(string folderName, string folderWebUrl)
         {
-            RegistryHelper.Instance.SetOutlookFolderName(folderName);
-            RegistryHelper.Instance.SetOutlookFolderWebUrl(folderWebUrl);
+            if(!string.IsNullOrEmpty(folderName))
+                RegistryHelper.Instance.SetOutlookFolderName(folderName);
+            if(!string.IsNullOrEmpty(folderWebUrl))
+                RegistryHelper.Instance.SetOutlookFolderWebUrl(folderWebUrl);
         }
 
         public void RestoreOutlookFolder()
