@@ -442,6 +442,15 @@ namespace WSUI.Module.ViewModel
             }
         }
 
+        private void ClearTextCriteriaForAllKinds()
+        {
+            _listItems.ForEach(k =>
+            {
+                if (k.Kind != null)
+                    k.Kind.SearchString = string.Empty;
+            });
+        }
+
         #endregion private
 
         #region Implementation of IMainViewModel
@@ -502,6 +511,9 @@ namespace WSUI.Module.ViewModel
 
                 case WSActionType.Quit:
                     Clear();
+                    break;
+                case WSActionType.ClearText:
+                    ClearTextCriteriaForAllKinds();
                     break;
             }
         }

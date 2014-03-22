@@ -8,6 +8,7 @@ public enum WSActionType
   ShowContextMenu,
   Show,
   Hide,
-  Quit
+  Quit,
+  ClearText  
 }
 }

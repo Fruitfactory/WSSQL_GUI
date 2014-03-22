@@ -120,39 +120,16 @@ namespace WSUI.Core.Core.Search
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
                 Stopwatch watch = null;
-                DataTable resultTable = null;
-                lock (Lock)
-                {
-
-                    try
-                    {
-                        connection = new OleDbConnection(ConnectionString);
-                        watch = new Stopwatch();
-                        watch.Start();
-                        connection.Open();
-                        watch.Stop();
-                        WSSqlLogger.Instance.LogInfo("ConnectionOpen<{0}>: {1}", typeof (T).Name,
-                            watch.ElapsedMilliseconds);
-                        resultTable = GetDataTableByAdapter(query, connection);
-
-                    }
-                    catch (OleDbException oleDbException)
-                    {
-                        WSSqlLogger.Instance.LogError("{0}<{1}>: {2}", "DoQuery", typeof (T).Name,
-                            oleDbException.Message);
-                    }
-                    finally
-                    {
-                        if (connection != null && connection.State == ConnectionState.Open)
-                            connection.Close();
-                    }
-                }
+                DataTable resultTable = IndexerDataReader.Instance.GetDataByAdapter(query);
                 // additional process
                 if (!NeedStop && resultTable != null)
                 {
+                    (watch = new Stopwatch()).Start();
                     CreateDataObject(resultTable);
-                    watch = new Stopwatch();
-                    watch.Start();
+                    watch.Stop();
+                    WSSqlLogger.Instance.LogInfo("CreateDataObject<{0}>: {1}",typeof(T).Name,watch.ElapsedMilliseconds);
+
+                    (watch = new Stopwatch()).Start();
                     ProcessResult();
                     _typeResult = TypeResult.Ok;
                     watch.Stop();
@@ -180,17 +157,16 @@ namespace WSUI.Core.Core.Search
                 IsInterupt = false;
                 Event.Set();
             }
-
         }
 
         protected virtual void CreateDataObject(DataTable data)
         {
             if(data.Rows.Count == 0)
                 return;
-            Parallel.ForEach(data.AsEnumerable(), row =>
+            foreach (var row in data.AsEnumerable())
             {
                 ReadData(row);
-            });
+            }
         }
 
         /// 
@@ -324,49 +300,7 @@ namespace WSUI.Core.Core.Search
             Result.Clear();
         }
 
-        private DataTable GetDataTableFromDataReader(IDataReader reader)
-        {
-            DataTable table = reader.GetSchemaTable();
-            DataTable resultTable = new DataTable();
-            foreach (DataRow dataRow in table.Rows)
-            {
-                DataColumn dataColumn = new DataColumn();
-                dataColumn.ColumnName = dataRow["ColumnName"].ToString();
-                dataColumn.DataType = Type.GetType(dataRow["DataType"].ToString());
-                dataColumn.ReadOnly = (bool)dataRow["IsReadOnly"];
-                dataColumn.AutoIncrement = (bool)dataRow["IsAutoIncrement"];
-                dataColumn.Unique = (bool)dataRow["IsUnique"];
-
-                resultTable.Columns.Add(dataColumn);
-            }
-
-            while (reader.Read())
-            {
-                DataRow dataRow = resultTable.NewRow();
-                for (int i = 0; i < resultTable.Columns.Count - 1; i++)
-                {
-                    dataRow[i] = reader[i];
-                }
-                resultTable.Rows.Add(dataRow);
-            }
-
-            return resultTable;
-
-        }
-
-        private DataTable GetDataTableByAdapter(string query, OleDbConnection connection)
-        {
-            DataTable dt = new DataTable();
-            new OleDbDataAdapter(query, connection).Fill(dt);
-            return dt;
-        }
-
-        private DataTable GetDataTableFast(IDataReader rdr)
-        {
-            DataTable resultTable = GetDataTableFromDataReader(rdr);
-            return resultTable;
-        }
-
+        
 
     }//end BaseSearchRule
 

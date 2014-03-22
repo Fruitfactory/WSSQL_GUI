@@ -80,7 +80,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                                                               }
                                                               
                                                               ShowProgressForm();
-                                                              WSSqlLogger.Instance.LogInfo("Show progress delay > 0 ----------------------------------");
+                                                              //WSSqlLogger.Instance.LogInfo("Show progress delay > 0 ----------------------------------");
                                                           });
 
                 }
@@ -88,7 +88,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                 {
                     
                     ShowProgressForm();
-                    WSSqlLogger.Instance.LogInfo(">>>Show progress delay == 0");
+                    //WSSqlLogger.Instance.LogInfo(">>>Show progress delay == 0");
                 }
             }
         }
@@ -120,7 +120,7 @@ namespace WSUI.Infrastructure.Controls.ProgressManager
                 {
                     _progressForm.ProcessCommand(ProgressFormCommand.Settings, _currentOperation);
                     ((Window) _progressForm).Closed += OnClosedForm;
-                    WSSqlLogger.Instance.LogInfo("Show dialog");
+                    //WSSqlLogger.Instance.LogInfo("Show dialog");
                 }
                 catch (Exception ex)
                 {

@@ -20,13 +20,18 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
+            <TextBox  
+               Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                 Controls:TextboxHelper.Watermark="Enter Search Criteria"
                 Controls:TextboxHelper.ClearTextButton="True"
+                Controls:TextboxHelper.ClearTextCommand="{Binding ClearCriteriaCommand}"
+                Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
+                IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"
                 VerticalAlignment="Center"    
                 VerticalContentAlignment="Center"
-                Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
-                    Grid.Column="0" MinHeight="32" IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
+                
+                    Grid.Column="0" MinHeight="32" />
+            <!---->
             <Button Command="{Binding Path=SearchCommand}"
                     Style="{StaticResource SearchButton}"
                 Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" MinHeight="32"

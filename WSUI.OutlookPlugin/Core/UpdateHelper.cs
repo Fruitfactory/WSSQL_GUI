@@ -311,7 +311,7 @@ namespace WSUIOutlookPlugin.Core
         {
             string remoteFile = Path.Combine(InstalationUrl, VersionFilename);
             string localFile = Path.Combine(_path, VersionFilename);
-            WebClient web = new WebClient();//{Credentials = new NetworkCredential("admin","yariki123!")}
+            WebClient web = new WebClient();
             try
             {
                 web.DownloadFile(remoteFile, localFile);
