@@ -54,11 +54,4 @@
     <exec program="wsadxpublisher.exe" basedir="${build.tools.dir}" commandline='/clear' workingdir="." />
   </target>
   
-  <!-- copy ready files to folder pages\downloads\clicktwice-->
-  <target name="copyFiles" depends="clearSettingsADX">
-    <exec program="copy.bat" verbose="true">
-      
-    </exec>
-  </target>
-  
 </project>

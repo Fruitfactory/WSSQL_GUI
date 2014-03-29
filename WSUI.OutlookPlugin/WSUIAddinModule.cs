@@ -618,6 +618,17 @@ namespace WSUIOutlookPlugin
 
         private void outlookFormManager_ADXBeforeFolderSwitchEx(object sender, AddinExpress.OL.BeforeFolderSwitchExEventArgs args)
         {
+            System.Diagnostics.Debug.WriteLine("_refresh: {0}, Source: {1}, Destination: {2}",
+                _refreshCurrentFolderExecuting,((Outlook.MAPIFolder)args.SrcFolder).FullFolderPath, ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath);
+            string fullPathSrc = ((Outlook.MAPIFolder)args.SrcFolder).FullFolderPath;
+            string fullPathDst = ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath;
+            if (fullPathDst == fullPathSrc)
+            {
+                formWebPaneItem.FolderName = string.Empty;
+                ClearFolderWebViewProperties((Outlook.MAPIFolder)args.DstFolder);
+                RefreshCurrentFolder(false, (Outlook.MAPIFolder)args.DstFolder);
+                return;
+            }
             if (!_refreshCurrentFolderExecuting)
             {
                 if (args.SrcFolder != null)
@@ -631,25 +642,25 @@ namespace WSUIOutlookPlugin
                     {
                         formWebPaneItem.FolderName = string.Empty;
                         ClearFolderWebViewProperties((Outlook.MAPIFolder)args.SrcFolder);
-
-                        if (_commandManager != null)
-                            _commandManager.SetShowHideButtonsEnabling(true, false);
                     }
+
                 }
+                if (_commandManager != null)
+                    _commandManager.SetShowHideButtonsEnabling(true, false);
             }
         }
 
         public void DoShowWebViewPane()
         {
             var folderValue = GetFullPathOfDefaultFolder();
-            SetOutlookFolderProperties(folderValue.Item2.EntryID,folderValue.Item2.WebViewURL);
+            SetOutlookFolderProperties(folderValue.Item2.EntryID, folderValue.Item2.WebViewURL);
             formWebPaneItem.FolderName = folderValue.Item1;
             //Apply the WebViewPane layout
             RefreshCurrentFolder();
             _wsuiBootStraper.PassAction(new WSAction(WSActionType.Show, null));
         }
 
-        public void DoHideWebViewPane()
+        public void DoHideWebViewPane(Outlook.MAPIFolder folder = null)
         {
             if (!ExistsVisibleForm(formWebPaneItem))
                 return;
@@ -660,7 +671,7 @@ namespace WSUIOutlookPlugin
                     formWebPaneItem.FolderName = string.Empty;
                     ClearFolderWebViewProperties(currentFolder);
                     //Restore Standard View
-                    RefreshCurrentFolder(false);
+                    RefreshCurrentFolder(false,folder);
                 }
                 finally
                 {
@@ -701,19 +712,19 @@ namespace WSUIOutlookPlugin
             return outlookNqamespace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox);
         }
 
-        private Tuple<string,Outlook.MAPIFolder> GetFullPathOfDefaultFolder()
+        private Tuple<string, Outlook.MAPIFolder> GetFullPathOfDefaultFolder()
         {
             var folder = GetDefaultFolder();
-            return new Tuple<string, Outlook.MAPIFolder>(folder != null ? GetFullFolderName(folder) : string.Empty,folder);
+            return new Tuple<string, Outlook.MAPIFolder>(folder != null ? GetFullFolderName(folder) : string.Empty, folder);
         }
 
-        private void RefreshCurrentFolder(bool isOpenUI = true)
+        private void RefreshCurrentFolder(bool isOpenUI = true, Outlook.MAPIFolder folder = null)
         {
             _refreshCurrentFolderExecuting = true;
             try
             {
                 Outlook.Explorer activeExplorer = (OutlookApp as Outlook._Application).ActiveExplorer();
-                Outlook.MAPIFolder currentFolder = isOpenUI ? GetDefaultFolder() : _lastMapiFolder;//activeExplorer.CurrentFolder;
+                Outlook.MAPIFolder currentFolder = folder ?? (isOpenUI ? GetDefaultFolder() : _lastMapiFolder);//activeExplorer.CurrentFolder;
                 Outlook.NameSpace nameSpace = (OutlookApp as Outlook._Application).GetNamespace(DefaultNamespace);
                 Outlook.MAPIFolder outboxFolder = nameSpace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderOutbox);
                 _lastMapiFolder = isOpenUI ? activeExplorer.CurrentFolder : null;
@@ -899,6 +910,15 @@ namespace WSUIOutlookPlugin
             return false;
         }
 
+        private void CloseVisibleForm(AddinExpress.OL.ADXOlFormsCollectionItem Item)
+        {
+            for (int i = 0; i < Item.FormInstanceCount; i++)
+            {
+                Item.FormInstances(i).Close();
+            }
+        }
+
+
         #endregion Outlook Object Model routines
 
         private void WSUIAddinModule_AddinStartupComplete(object sender, EventArgs e)
@@ -977,16 +997,16 @@ namespace WSUIOutlookPlugin
         {
             DoHideWebViewPane();
             _wsuiBootStraper.PassAction(new WSAction(WSActionType.Quit, null));
-            SetOutlookFolderProperties(string.Empty,string.Empty);
+            SetOutlookFolderProperties(string.Empty, string.Empty);
             WSSqlLogger.Instance.LogInfo("Shutdown...");
         }
 
 
         private void SetOutlookFolderProperties(string folderName, string folderWebUrl)
         {
-            if(!string.IsNullOrEmpty(folderName))
+            if (!string.IsNullOrEmpty(folderName))
                 RegistryHelper.Instance.SetOutlookFolderName(folderName);
-            if(!string.IsNullOrEmpty(folderWebUrl))
+            if (!string.IsNullOrEmpty(folderWebUrl))
                 RegistryHelper.Instance.SetOutlookFolderWebUrl(folderWebUrl);
         }
 
@@ -994,22 +1014,22 @@ namespace WSUIOutlookPlugin
         {
             if (RegistryHelper.Instance.IsShouldRestoreOutlookFolder())
             {
-                WSSqlLogger.Instance.LogInfo("{0}","OUtlookFolder is empty");
+                WSSqlLogger.Instance.LogInfo("{0}", "OUtlookFolder is empty");
                 return;
             }
-                
+
             string id = RegistryHelper.Instance.GetOutllokFolderName();
             Outlook.NameSpace outlookNamespace = OutlookApp.GetNamespace(DefaultNamespace);
             if (outlookNamespace == null || string.IsNullOrEmpty(id))
                 return;
-            WSSqlLogger.Instance.LogInfo("OutlookFolder ID: {0}",id);
+            WSSqlLogger.Instance.LogInfo("OutlookFolder ID: {0}", id);
             Outlook.MAPIFolder folder = outlookNamespace.GetFolderFromID(id, Type.Missing);
             if (folder == null)
                 return;
             folder.WebViewURL = RegistryHelper.Instance.GetOutlookFolderWebUrl();
             folder.WebViewOn = true;
 
-            WSSqlLogger.Instance.LogInfo("WebViewURL: {0}",folder.WebViewURL);
+            WSSqlLogger.Instance.LogInfo("WebViewURL: {0}", folder.WebViewURL);
 
             Marshal.ReleaseComObject(folder);
             Marshal.ReleaseComObject(outlookNamespace);

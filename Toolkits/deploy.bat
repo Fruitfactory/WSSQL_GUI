@@ -1,2 +1,2 @@
-go copyFiles
+go clearSettingsADX
 pause

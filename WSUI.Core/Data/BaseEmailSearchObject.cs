@@ -48,6 +48,8 @@ namespace WSUI.Core.Data
         [Field("System.Message.SenderName", 14, false)]
         public string[] SenderName { get; set; }
 
+        [Field("System.Message.HasAttachments", 15, false)]
+        public bool HasAttachments { get; set; }
 
 	    public string Recepient
 	    {
@@ -62,7 +64,7 @@ namespace WSUI.Core.Data
 	            return _fromEmailName;
 	        }
 	    }
-
+        
         public BaseEmailSearchObject()
         {
 
@@ -97,6 +99,9 @@ namespace WSUI.Core.Data
                 case 14:
                     SenderName = CheckValidType(value);
 	                break;
+                case 15:
+	                HasAttachments = (bool) value;
+                    break;
 	        }
 	    }
 

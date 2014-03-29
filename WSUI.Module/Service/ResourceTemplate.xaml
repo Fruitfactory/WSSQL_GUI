@@ -21,6 +21,15 @@
         <Setter Property="Height" Value="16" />
         <Setter Property="Margin" Value="5" />
     </Style>
+    
+    <Style x:Key="ImageStyleEmail" TargetType="{x:Type Image}" BasedOn="{StaticResource ImageStyle}">
+        <Setter Property="Source" Value="..\Images\mail.png"></Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding HasAttachments}" Value="True">
+                <Setter Property="Source" Value="..\Images\mail_attachment.png"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
 
     <Style x:Key="ExpanderImageStyle" TargetType="{x:Type Image}">
         <Setter Property="Width" Value="12" />
@@ -131,7 +140,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Image Style="{StaticResource ImageStyle}" Grid.Column="0" Source="..\Images\mail.png" />
+                                    <Image Style="{StaticResource ImageStyleEmail}" Grid.Column="0"/>
 
                                     <TextBlock Grid.Column="1" Margin="0 3 0 3" FontWeight="Bold" Foreground="Red" Text="{Binding Count,Converter={StaticResource countConverter}}"></TextBlock>
 
@@ -186,7 +195,7 @@
                 </StackPanel>
             </Grid.ToolTip>
 
-            <Image Style="{StaticResource ImageStyle}" Grid.Column="0" Source="..\Images\mail.png" />
+            <Image Style="{StaticResource ImageStyleEmail}" Grid.Column="0" />
 
             <TextBlock Grid.Column="1" Margin="0 3 0 3" FontWeight="Bold" Foreground="Red" Text="{Binding Count,Converter={StaticResource countConverter}}"></TextBlock>
             <ctrl:HightliteTextBlock Grid.Column="2" Margin="5" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}" Text="{Binding Path=Recepient}"></ctrl:HightliteTextBlock>
