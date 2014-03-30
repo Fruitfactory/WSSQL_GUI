@@ -5,7 +5,7 @@ namespace WSUI.Core.Data
 {
     public class EmailContactSearchObject : BaseEmailSearchObject
     {
-        [Field("System.Message.CcAddress",16,false)]
+        [Field("System.Message.CcAddress",15,false)]
         public string[] CcAddress { get; set; }
 
         public EmailContactSearchObject()
@@ -22,7 +22,7 @@ namespace WSUI.Core.Data
             base.SetValue(index, value);
             switch (index)
             {
-                case 16:
+                case 15:
                     CcAddress = value as string[];
                     break;
             }

@@ -3,21 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using WSUI.Core.Core;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
+using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
-using WSUI.Infrastructure.Service.Interfaces;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 
-using WSUI.Infrastructure.Models;
-
-
-namespace WSUI.Infrastructure.Service.Helpers
+namespace WSUI.Core.Helpers
 {
     public class OutlookHelper : IOutlookHelper, IDisposable
     {
@@ -164,6 +160,18 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
             
             return list;
+        }
+
+        public bool HasAttachment(BaseSearchObject item)
+        {
+            if(item == null)
+                return false;
+            string mapiUrl = item.ItemUrl;
+            string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
+            var mi = (Outlook.MailItem)GetMailItem(entryID);
+            if (mi == null)
+                return false;
+            return mi.Attachments.Count > 0;
         }
 
         public string GetContactFotoTempFileName(ContactSearchObject data)

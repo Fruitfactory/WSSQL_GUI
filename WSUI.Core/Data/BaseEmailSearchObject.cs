@@ -11,6 +11,8 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using WSUI.Core.Core.Attributes;
+using WSUI.Core.Helpers;
+
 namespace WSUI.Core.Data 
 {
 	public class BaseEmailSearchObject : BaseSearchObject
@@ -48,8 +50,20 @@ namespace WSUI.Core.Data
         [Field("System.Message.SenderName", 14, false)]
         public string[] SenderName { get; set; }
 
-        [Field("System.Message.HasAttachments", 15, false)]
-        public bool HasAttachments { get; set; }
+        //[Field("System.Message.HasAttachments", 15, false)]
+	    private bool? _internalHasAttachment = null;
+        public bool HasAttachments 
+        {
+            get { return InternalCheckAttachment(); }
+        }
+
+	    private bool InternalCheckAttachment()
+	    {
+	        if (_internalHasAttachment.HasValue)
+	            return _internalHasAttachment.Value;
+	        _internalHasAttachment = OutlookHelper.Instance.HasAttachment(this);
+	        return _internalHasAttachment.Value;
+	    }
 
 	    public string Recepient
 	    {
@@ -99,8 +113,8 @@ namespace WSUI.Core.Data
                 case 14:
                     SenderName = CheckValidType(value);
 	                break;
-                case 15:
-	                HasAttachments = (bool) value;
+                //case 15:
+                //    HasAttachments = (bool) value;
                     break;
 	        }
 	    }

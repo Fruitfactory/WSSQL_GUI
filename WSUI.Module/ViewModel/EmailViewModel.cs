@@ -2,6 +2,7 @@ using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Enums;
+using WSUI.Core.Helpers;
 using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Service;
 using WSUI.Infrastructure.Service.Helpers;

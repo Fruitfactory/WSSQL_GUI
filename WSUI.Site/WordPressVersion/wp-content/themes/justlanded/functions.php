@@ -1420,3 +1420,9 @@ function get_download_link($attr){
     return '<a title="'.$title.'" href="'.$filename.'">'.$caption.'</a>';
 }
 add_shortcode('get_download_link', 'get_download_link');
+
+function insert_payment_table(){
+    $string_data = '<input type="hidden" id="insertTable"></input>';
+    return  $string_data;
+}
+add_shortcode('insert_payment_table', 'insert_payment_table');

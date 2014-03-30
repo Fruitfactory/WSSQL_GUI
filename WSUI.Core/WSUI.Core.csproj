@@ -56,6 +56,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolkits\Log4Net\net40-client\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\Toolkits\Prism\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
@@ -110,11 +114,13 @@
     <Compile Include="Extensions\CommonExtensions.cs" />
     <Compile Include="Extensions\FieldsExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Helpers\OutlookHelper.cs" />
     <Compile Include="Helpers\RegistryHelper.cs" />
     <Compile Include="Helpers\TempFileManager.cs" />
     <Compile Include="Interfaces\IEmailSearchRule.cs" />
     <Compile Include="Interfaces\IFieldCash.cs" />
     <Compile Include="Interfaces\IIndexerDataReader.cs" />
+    <Compile Include="Interfaces\IOutlookHelper.cs" />
     <Compile Include="Interfaces\IQueryGenerator.cs" />
     <Compile Include="Interfaces\IQueryReader.cs" />
     <Compile Include="Interfaces\IResultMessage.cs" />

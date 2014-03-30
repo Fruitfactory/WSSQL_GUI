@@ -160,10 +160,8 @@
     <Compile Include="Service\HelperConst.cs" />
     <Compile Include="Service\Helpers\EmailGroupReaderHelpers.cs" />
     <Compile Include="Service\Helpers\HelperFunctions.cs" />
-    <Compile Include="Service\Helpers\OutlookHelper.cs" />
     <Compile Include="Service\Helpers\SearchItemHelper.cs" />
     <Compile Include="Service\Helpers\TaskFinderHelper.cs" />
-    <Compile Include="Service\Interfaces\IOutlookHelper.cs" />
     <Compile Include="Service\Rules\BaseRule.cs" />
     <Compile Include="Service\Rules\IRule.cs" />
     <Compile Include="Service\Rules\QuoteRule.cs" />

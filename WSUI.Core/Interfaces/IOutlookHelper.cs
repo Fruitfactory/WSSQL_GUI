@@ -2,7 +2,7 @@
 using WSUI.Core.Core;
 using WSUI.Core.Data;
 
-namespace WSUI.Infrastructure.Service.Interfaces
+namespace WSUI.Core.Interfaces 
 {
     interface IOutlookHelper
     {

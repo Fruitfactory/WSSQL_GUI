@@ -17,6 +17,7 @@ using Microsoft.Practices.Prism.Commands;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Extensions;
+using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Attributes;

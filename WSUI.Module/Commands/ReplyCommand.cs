@@ -1,7 +1,7 @@
 using Microsoft.Office.Interop.Outlook;
 using WSUI.Core.Enums;
+using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
-using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Module.Service.Dialogs.Message;

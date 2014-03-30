@@ -6,6 +6,7 @@ using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Core.Helpers;
 using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Models;
 using WSUI.Infrastructure.Service;

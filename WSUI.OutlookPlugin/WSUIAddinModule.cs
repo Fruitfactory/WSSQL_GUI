@@ -938,7 +938,8 @@ namespace WSUIOutlookPlugin
 
         private void CurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs firstChanceExceptionEventArgs)
         {
-            WSSqlLogger.Instance.LogError("First Chance Exception (plugin): {0} [{1}][{2}]{3}{4}", firstChanceExceptionEventArgs.Exception.Message, firstChanceExceptionEventArgs.Exception.Source, firstChanceExceptionEventArgs.Exception.TargetSite.Name, Environment.NewLine, firstChanceExceptionEventArgs.Exception.StackTrace);
+            if (firstChanceExceptionEventArgs.Exception != null && firstChanceExceptionEventArgs.Exception.TargetSite != null)
+                WSSqlLogger.Instance.LogError("First Chance Exception (plugin): {0} [{1}][{2}]{3}{4}", firstChanceExceptionEventArgs.Exception.Message, firstChanceExceptionEventArgs.Exception.Source, firstChanceExceptionEventArgs.Exception.TargetSite.Name, Environment.NewLine, firstChanceExceptionEventArgs.Exception.StackTrace);
             if (firstChanceExceptionEventArgs.Exception is ReflectionTypeLoadException)
             {
                 foreach (var item in (firstChanceExceptionEventArgs.Exception as ReflectionTypeLoadException).LoaderExceptions)
