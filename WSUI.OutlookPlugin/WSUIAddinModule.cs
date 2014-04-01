@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AddinExpress.MSO;
 using Microsoft.Practices.Prism.Events;
@@ -618,15 +620,12 @@ namespace WSUIOutlookPlugin
 
         private void outlookFormManager_ADXBeforeFolderSwitchEx(object sender, AddinExpress.OL.BeforeFolderSwitchExEventArgs args)
         {
-            System.Diagnostics.Debug.WriteLine("_refresh: {0}, Source: {1}, Destination: {2}",
-                _refreshCurrentFolderExecuting,((Outlook.MAPIFolder)args.SrcFolder).FullFolderPath, ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath);
-            string fullPathSrc = ((Outlook.MAPIFolder)args.SrcFolder).FullFolderPath;
-            string fullPathDst = ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath;
-            if (fullPathDst == fullPathSrc)
+
+            if (!_refreshCurrentFolderExecuting && _lastMapiFolder != null && ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath == _lastMapiFolder.FullFolderPath)
             {
                 formWebPaneItem.FolderName = string.Empty;
                 ClearFolderWebViewProperties((Outlook.MAPIFolder)args.DstFolder);
-                RefreshCurrentFolder(false, (Outlook.MAPIFolder)args.DstFolder);
+                Task.Factory.StartNew(new Action(() => RefreshCurrentFolder(false,_lastMapiFolder)));
                 return;
             }
             if (!_refreshCurrentFolderExecuting)
@@ -733,6 +732,7 @@ namespace WSUIOutlookPlugin
                     SetExplorerFolder(activeExplorer, outboxFolder);
                     Application.DoEvents();
                     SetExplorerFolder(activeExplorer, currentFolder);
+                    Application.DoEvents();
                 }
                 finally
                 {
@@ -756,10 +756,12 @@ namespace WSUIOutlookPlugin
         {
             try
             {
-                if (_outlookVersion == 2000 || _outlookVersion == 2002)//|| _outlookVersion == 2007 || _outlookVersion == 2010
+                if (_outlookVersion == 2000 || _outlookVersion == 2002)
+                    //|| _outlookVersion == 2007 || _outlookVersion == 2010
                     Explorer.CurrentFolder = Folder;
                 else
-                    Explorer.GetType().InvokeMember("SelectFolder", BindingFlags.InvokeMethod, null, Explorer, new object[] { Folder });
+                    Explorer.SelectFolder(Folder);
+                // Explorer.GetType().InvokeMember("SelectFolder", BindingFlags.InvokeMethod, null, Explorer, new object[] { Folder });
             }
             catch (Exception ex)
             {
