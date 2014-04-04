@@ -22,7 +22,11 @@ namespace WSUI.Infrastructure.Service.Helpers
                 return TypeSearchItem.Contact;
             else if(itemurl.IndexOf(MAPIPREFIX) > -1 && itemurl.LastIndexOf(ATSUFFIX) > -1)
                 return TypeSearchItem.Attachment;
-            else if (tag == "calendar") 
+            else if (tag == "calendar" && itemurl.IndexOf(FILEPREFIX) > -1)
+            {
+                return TypeSearchItem.File;
+            }
+            else if (tag == "calendar")
             {
                 return TypeSearchItem.Calendar;
             }

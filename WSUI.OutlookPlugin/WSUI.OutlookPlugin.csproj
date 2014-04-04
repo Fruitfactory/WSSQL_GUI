@@ -243,6 +243,11 @@ xcopy $(SolutionDir)Toolkits\TurboApi\Api\x86\TurboActivate.dll $(TargetDir) /F 
 copy $(SolutionDir)Toolkits\TurboApi\Api\x64\TurboActivate.dll $(TargetDir)\TurboActivate64.dll 
 xcopy $(SolutionDir)Toolkits\TurboApi\Api\x86\TurboActivate.exe $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\TurboApi\Dats\1.0.0\TurboActivate.dat $(TargetDir) /F /R /Y /I
+
+xcopy $(SolutionDir)Toolkits\DDayICal\antlr.runtime.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\DDayICal\DDay.Collections.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\DDayICal\DDay.iCal.dll $(TargetDir) /F /R /Y /I
+
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

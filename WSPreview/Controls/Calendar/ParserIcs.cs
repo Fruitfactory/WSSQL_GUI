@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -9,6 +10,7 @@ namespace WSPreview.PreviewHandler.Controls.Calendar
     static class ParserIcs
     {
         public const string DateFormat = "yyyyMMddTHHmmssZ";
+        public const string DateFormat2 = "yyyyMMddTHHmmss"; // 1601 HHHHHrrrrrrrr!!!!!!
         public static IFormatProvider Format = System.Globalization.CultureInfo.InvariantCulture;
 
 
@@ -43,14 +45,24 @@ namespace WSPreview.PreviewHandler.Controls.Calendar
             {
                 res = match.Groups[1].Value;
             }
-            if (type == typeof(DateTime) && res != null)
+            if (type == typeof(DateTime) && !string.IsNullOrEmpty(res as string))
             {
-                res = DateTime.ParseExact(res.ToString().Replace("\r", "").Replace("\n",""), DateFormat, Format);
+                DateTime temp = DateTime.MinValue;
+                DateTime.TryParseExact(res.ToString().Replace("\r", "").Replace("\n", ""), DateFormat2, Format,
+                    DateTimeStyles.AssumeLocal, out temp);
+                res = temp == DateTime.MinValue ? DateTime.ParseExact(res.ToString().Replace("\r", "").Replace("\n", ""), DateFormat, Format) : temp;
             }
-            else
+            else if (!string.IsNullOrEmpty(res as string))
                 res = Convert.ChangeType(res, type);
+            else
+                res = type.GetDefault();
 
             return res;//type == typeof(DateTime) && res != null ? DateTime.ParseExact(res.ToString(),DateFormat,Format) : Convert.ChangeType(res, type);
+        }
+
+        public static object GetDefault<T>(this T type) where T : Type
+        {
+            return default(T);
         }
 
         private static string GetMultValue(string content, ParseAttribute attr)

@@ -154,6 +154,9 @@
         <File Id="_Turbo_Activate64_dll" Name="TurboActivate64.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_unistall_exe" Name="unistall.exe" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_WSUI_OutlookPlugin_dll_config" Name="WSUI.OutlookPlugin.dll.config" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_antlr_runtime_dll" Name="antlr.runtime.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_DDay_Collections_dll" Name="DDay.Collections.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_DDay_iCal_dll" Name="DDay.iCal.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
       </Component>
     </ComponentGroup>
   </Fragment>

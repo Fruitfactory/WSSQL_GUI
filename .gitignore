@@ -186,3 +186,5 @@ pip-log.txt
 /WSUI.Site/WordPressVersion/nbproject/private/
 /Toolkits/uploader.vshost.exe
 /Toolkits/uploader.vshost.exe.config
+
+/Toolkits/*.manifest

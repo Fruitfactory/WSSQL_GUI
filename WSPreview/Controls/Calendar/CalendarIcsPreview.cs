@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Data;
 using System.IO;
@@ -11,6 +12,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using DDay.iCal;
+using WSUI.Core.Extensions;
 
 namespace WSPreview.PreviewHandler.Controls.Calendar
 {
@@ -55,9 +58,8 @@ namespace WSPreview.PreviewHandler.Controls.Calendar
             try
             {
                 file = File.OpenText(_filename);
-                string content = file.ReadToEnd();
-                FileIcsProperty obj = new FileIcsProperty();
-                ParserIcs.ParseContent(content,obj);
+                var calendar = iCalendar.LoadFromFile(_filename).FirstOrDefault();
+                FileIcsProperty obj = ParseCalendarFile(calendar);
                 DocumentText = GeneratePreview(obj);
             }
             catch (Exception ex)
@@ -124,6 +126,41 @@ namespace WSPreview.PreviewHandler.Controls.Calendar
                 }
             }
             return res;
+        }
+
+        private FileIcsProperty ParseCalendarFile(IICalendar calendar)
+        {
+            if (calendar == null)
+                return ReturnDefault();
+            var e = calendar.Events.FirstOrDefault();
+            if (e == null)
+                return ReturnDefault();
+            return new FileIcsProperty()
+            {
+                DateCreated = e.Created.Local,
+                DateEnd = e.End.Local,
+                DateStart = e.Start.Local,
+                Description = e.Description,
+                MailTo = "",
+                Organizer = e.Organizer.CommonName,
+                Status = e.Status.ToString(),
+                Summary = e.Summary
+            };
+        }
+
+        private FileIcsProperty ReturnDefault()
+        {
+            return new FileIcsProperty()
+            {
+                DateCreated = DateTime.MinValue,
+                DateEnd = DateTime.MinValue,
+                DateStart = DateTime.MinValue,
+                Description = string.Empty,
+                MailTo = string.Empty,
+                Organizer = "",
+                Status = "",
+                Summary = ""
+            };
         }
 
     }
