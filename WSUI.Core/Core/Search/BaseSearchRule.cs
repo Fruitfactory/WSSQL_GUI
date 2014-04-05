@@ -15,7 +15,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using WSUI.Core.Enums;
+using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Core.Rules;
 using WSUI.Core.Logger;
@@ -107,7 +109,6 @@ namespace WSUI.Core.Core.Search
 
         protected virtual void DoQuery()
         {
-            OleDbConnection connection = null;
             try
             {
                 _isSearching = true;
@@ -159,10 +160,8 @@ namespace WSUI.Core.Core.Search
         {
             if(data.Rows.Count == 0)
                 return;
-            foreach (var row in data.AsEnumerable())
-            {
-                ReadData(row);
-            }
+            //data.AsEnumerable().ForEach(ReadData);
+            Parallel.ForEach(data.AsEnumerable(), ReadData);
         }
 
         /// 

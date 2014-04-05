@@ -51,7 +51,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
 	    protected override void ProcessResult()
 	    {
-	        var groups = Result.GroupBy(i => i.ItemName);
+	        var groups = Result.OrderByDescending(i => i.DateCreated).GroupBy(i => i.ItemName);
 	        var result = new List<FileSearchObject>();
 	        foreach (var item in groups)
 	        {

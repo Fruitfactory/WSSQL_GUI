@@ -83,7 +83,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
 	    protected override void ProcessResult()
 	    {
-            var groups = Result.GroupBy(i => new { Name = i.ItemName, Size = i.Size });
+            var groups = Result.OrderByDescending(i => i.DateCreated).GroupBy(i => new { Name = i.ItemName, Size = i.Size });
 	        var result = new List<AttachmentSearchObject>();
             WSSqlLogger.Instance.LogInfo(string.Format("Count attachments: {0}", groups.Count()));
             foreach (var group in groups)

@@ -50,7 +50,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
 	    protected override void ProcessResult()
         {
-	        var groped = Result.GroupBy(e => e.ConversationId);
+	        var groped = Result.OrderByDescending(i => i.DateCreated).GroupBy(e => e.ConversationId);
 	        var result = new List<EmailSearchObject>();
             foreach (var group in groped)
 	        {
