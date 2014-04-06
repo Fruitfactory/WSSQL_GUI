@@ -13,7 +13,7 @@ namespace WSUploader
     class Program
     {
         const string FileConfigName = "wsgen.exe.config";
-        private const string FolderPattern = "{0}/1033/{1}";
+        private const string FolderPattern = "{0}\\1033\\{1}";
 
         static void Main(string[] args)
         {
@@ -28,17 +28,26 @@ namespace WSUploader
                 request.Credentials = new NetworkCredential(Properties.Settings.Default.Username,Properties.Settings.Default.Password);
                 string locaPath = string.Format(FolderPattern, Properties.Settings.Default.LocalFullPath, buildNumber);
                 locaPath = Path.Combine(locaPath, "OutlookFinderSetup.msi");
-                var stream = new FileStream(locaPath, FileMode.Open, FileAccess.Read);
-                var reader = new BinaryReader(stream);
-
-                Stream requesStream = request.GetRequestStream();
+                using (var stream = new FileStream(locaPath, FileMode.Open, FileAccess.Read))
+                using (var reader = new BinaryReader(stream))
+                using (Stream requestStream = request.GetRequestStream())
+                {
+                    const int BufferSize = 1024 * 400;   
+                    byte[] buffer = new byte[BufferSize];
+                    int bytes;
+                    while ((bytes = reader.Read(buffer, 0, BufferSize)) > 0)
+                    {
+                        requestStream.Write(buffer,0,bytes);
+                    }
+                }
+                Console.WriteLine("Done.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
 
-            Console.ReadKey();
+            Console.ReadLine();
         }
 
         private static string GetBuildNumber()

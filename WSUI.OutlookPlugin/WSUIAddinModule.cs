@@ -620,12 +620,14 @@ namespace WSUIOutlookPlugin
 
         private void outlookFormManager_ADXBeforeFolderSwitchEx(object sender, AddinExpress.OL.BeforeFolderSwitchExEventArgs args)
         {
-
-            if (!_refreshCurrentFolderExecuting && _lastMapiFolder != null && ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath == _lastMapiFolder.FullFolderPath)
+            WSSqlLogger.Instance.LogInfo("Switch1 folders, {0}, {1}", ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath, ((Outlook.MAPIFolder)args.SrcFolder).FullFolderPath);
+            WSSqlLogger.Instance.LogInfo("_refreshCurrentFolderExecuting:{1}, _lastMapiFolder_notnull:{1}, _lastMapiFolder_Folder:{2} ", _refreshCurrentFolderExecuting, _lastMapiFolder != null, _lastMapiFolder !=  null ? _lastMapiFolder.FullFolderPath : "");
+            if (!_refreshCurrentFolderExecuting && _lastMapiFolder != null && ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath == _lastMapiFolder.FullFolderPath)// 
             {
                 formWebPaneItem.FolderName = string.Empty;
                 ClearFolderWebViewProperties((Outlook.MAPIFolder)args.DstFolder);
-                Task.Factory.StartNew(new Action(() => RefreshCurrentFolder(false,_lastMapiFolder)));
+                WSSqlLogger.Instance.LogInfo("Switch2 folders, {0}, {1}", ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath, ((Outlook.MAPIFolder)args.SrcFolder).FullFolderPath);
+                Task.Factory.StartNew(new Action(() => RefreshCurrentFolder(false,_lastMapiFolder)));//SwitchFolders(((Outlook.MAPIFolder)args.DstFolder))
                 return;
             }
             if (!_refreshCurrentFolderExecuting)
@@ -751,6 +753,42 @@ namespace WSUIOutlookPlugin
                 _refreshCurrentFolderExecuting = false;
             }
         }
+
+        private void SwitchFolders(Outlook.MAPIFolder folder)
+        {
+            _refreshCurrentFolderExecuting = true;
+            try
+            {
+                Outlook.Explorer activeExplorer = (OutlookApp as Outlook._Application).ActiveExplorer();
+                Outlook.MAPIFolder currentFolder = folder;
+                Outlook.NameSpace nameSpace = (OutlookApp as Outlook._Application).GetNamespace(DefaultNamespace);
+                Outlook.MAPIFolder outboxFolder = nameSpace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderOutbox);
+                _lastMapiFolder = null;
+                try
+                {
+                    SetExplorerFolder(activeExplorer, outboxFolder);
+                    Application.DoEvents();
+                    SetExplorerFolder(activeExplorer, currentFolder);
+                    Application.DoEvents();
+                }
+                finally
+                {
+                    if (nameSpace != null)
+                        Marshal.ReleaseComObject(nameSpace);
+                    if (currentFolder != null)
+                        Marshal.ReleaseComObject(currentFolder);
+                    if (outboxFolder != null)
+                        Marshal.ReleaseComObject(outboxFolder);
+                    if (activeExplorer != null)
+                        Marshal.ReleaseComObject(activeExplorer);
+                }
+            }
+            finally
+            {
+                _refreshCurrentFolderExecuting = false;
+            }
+        }
+
 
         private void SetExplorerFolder(Outlook.Explorer Explorer, Outlook.MAPIFolder Folder)
         {

@@ -160,7 +160,6 @@ namespace WSUI.Core.Core.Search
         {
             if(data.Rows.Count == 0)
                 return;
-            //data.AsEnumerable().ForEach(ReadData);
             Parallel.ForEach(data.AsEnumerable(), ReadData);
         }
 
