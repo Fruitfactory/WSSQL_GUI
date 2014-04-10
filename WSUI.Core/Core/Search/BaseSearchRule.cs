@@ -121,16 +121,16 @@ namespace WSUI.Core.Core.Search
                 // additional process
                 if (!NeedStop && resultTable != null)
                 {
-                    (watch = new Stopwatch()).Start();
+                    //(watch = new Stopwatch()).Start();
                     CreateDataObject(resultTable);
-                    watch.Stop();
-                    WSSqlLogger.Instance.LogInfo("CreateDataObject<{0}>: {1}",typeof(T).Name,watch.ElapsedMilliseconds);
+                    //watch.Stop();
+                    //WSSqlLogger.Instance.LogInfo("CreateDataObject<{0}>: {1}",typeof(T).Name,watch.ElapsedMilliseconds);
 
-                    (watch = new Stopwatch()).Start();
+                    //(watch = new Stopwatch()).Start();
                     ProcessResult();
                     _typeResult = TypeResult.Ok;
-                    watch.Stop();
-                    WSSqlLogger.Instance.LogInfo("ProcessResult<{0}>: {1}", typeof(T).Name, watch.ElapsedMilliseconds);
+                    //watch.Stop();
+                    //WSSqlLogger.Instance.LogInfo("ProcessResult<{0}>: {1}", typeof(T).Name, watch.ElapsedMilliseconds);
                 }
                 else
                 {
