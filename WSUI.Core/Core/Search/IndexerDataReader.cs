@@ -41,7 +41,15 @@ namespace WSUI.Core.Core.Search
             DataTable data = null;
             lock (_lock)
             {
-                data = GetDataTableByAdapter(query, _connection);
+                try
+                {
+                    data = GetDataTableByAdapter(query, _connection);
+                }
+                finally
+                {
+                    _connection.Close();
+                }
+                
             }
             return data;
         }
