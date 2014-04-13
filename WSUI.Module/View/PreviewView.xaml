@@ -7,6 +7,7 @@
              xmlns:preview="clr-namespace:WSPreview.PreviewHandler.PreviewHandlerHost;assembly=WSPreview"
              mc:Ignorable="d" 
              SizeChanged="MetroContentControl_SizeChanged"
+             
              >
     <UserControl.Resources>
         <ResourceDictionary>

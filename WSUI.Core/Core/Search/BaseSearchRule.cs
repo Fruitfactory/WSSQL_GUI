@@ -116,7 +116,7 @@ namespace WSUI.Core.Core.Search
                 if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
-                Stopwatch watch = null;
+                //Stopwatch watch = null;
                 DataTable resultTable = IndexerDataReader.Instance.GetDataByAdapter(query);
                 // additional process
                 if (!NeedStop && resultTable != null)

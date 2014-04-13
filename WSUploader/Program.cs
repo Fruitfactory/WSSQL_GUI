@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Instrumentation;
 using System.Net;
+using System.Reflection.Emit;
 using System.Text;
 using System.Xml.Linq;
 
@@ -17,6 +18,7 @@ namespace WSUploader
         const string FileConfigName = "wsgen.exe.config";
         private const string FolderPattern = "{0}\\1033\\{1}";
         private const string FolderPatternFtp = "{0}/1033/{1}";
+        private const string versionInfoFile = "version_info.xml";
 
         static void Main(string[] args)
         {
@@ -25,54 +27,15 @@ namespace WSUploader
                 return;
             try
             {
-                string remotePath = string.Format(FolderPatternFtp, Properties.Settings.Default.RemoteFullPath, "OutlookFinderSetup.msi");//, buildNumber
-                string rem = "ftp://213.108.40.45:8888/shares/NetShare/11111111";
-                var request = (FtpWebRequest)WebRequest.Create(rem);
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.UseBinary = true;
-                request.UsePassive = false;
-                request.KeepAlive = true;
-                request.Credentials = new NetworkCredential(Properties.Settings.Default.Username, Properties.Settings.Default.Password);
-                string locaPath = string.Format(FolderPattern, Properties.Settings.Default.LocalFullPath, buildNumber);
-                locaPath = Path.Combine(locaPath, "OutlookFinderSetup.msi");
-
-                //using (FtpConnection ftp = new FtpConnection(Properties.Settings.Default.FtpServer, Properties.Settings.Default.Username, Properties.Settings.Default.Password))
-                //{
-                //    ftp.Open();
-                //    ftp.Login();
-                //    if (ftp.DirectoryExists("/shares"))
-                //    {
-                //        Console.WriteLine("shares is exist");
-                //    }
-                //    else
-                //        Console.WriteLine("shares isn't exist");
-                //}
-
-                ftp f = new ftp("ftp://readyshare.routerlogin.net/", Properties.Settings.Default.Username, Properties.Settings.Default.Password);
-
-                f.upload("shares/NetShare",locaPath);
-
-                //using (var stream = new FileStream(locaPath, FileMode.Open, FileAccess.Read))
-                //using (var reader = new BinaryReader(stream))
-                //using (Stream requestStream = request.GetRequestStream())
-                {
-                    //const int BufferSize = 1024 * 400;
-                    //byte[] buffer = new byte[BufferSize];
-                    //int bytes;
-                    //while ((bytes = reader.Read(buffer, 0, BufferSize)) > 0)
-                    //{
-                    //    requestStream.Write(buffer, 0, bytes);
-                    //}
-                }
-
-                
+                UploadFullVersion(buildNumber);
+                UploadTrialVersion(buildNumber);
                 Console.WriteLine("Done.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
+            Console.WriteLine("Please, press ENTER to exit");
             Console.ReadLine();
         }
 
@@ -92,5 +55,143 @@ namespace WSUploader
             Console.WriteLine(build);
             return build;
         }
+
+
+        static ftp GetFtp()
+        {
+            return new ftp(Properties.Settings.Default.FtpServer, Properties.Settings.Default.Username, Properties.Settings.Default.Password);
+        }
+
+        static bool FolderFullExists(string folder)
+        {
+            return FolderExists(Properties.Settings.Default.RemoteFullPath, folder);
+        }
+
+        static bool FolderTrialExists(string folder)
+        {
+            return FolderExists(Properties.Settings.Default.RemoteTrialPath, folder);
+        }
+
+        private static bool FolderExists(string baseFolder, string folder)
+        {
+            string fullPath = baseFolder + "/1033/";
+            var ftp = GetFtp();
+            var list = ftp.directoryListSimple(fullPath);
+            string lowerFolder = folder.ToLowerInvariant();
+            return list != null && list.Length > 0 && list.Any(s => s.ToLowerInvariant() == lowerFolder);
+        }
+
+        static string CreateFullFolder(string folder)
+        {
+            return CreateFolder(Properties.Settings.Default.RemoteFullPath, folder);
+        }
+
+        static string CreateTrialFolder(string folder)
+        {
+            return CreateFolder(Properties.Settings.Default.RemoteTrialPath, folder);
+        }
+
+        static string CreateFolder(string baseFolder, string folder)
+        {
+            string fullPath = baseFolder + "/1033/" + folder;
+            var ftp = GetFtp();
+            ftp.createDirectory(fullPath);
+            return fullPath;
+        }
+
+        static void UploadFullVersion(string buildVersion)
+        {
+            string locaPathFolder = string.Format(FolderPattern, Properties.Settings.Default.LocalFullPath, buildVersion);
+            string remoteFolder = string.Empty;
+            try
+            {
+                if (!FolderFullExists(buildVersion))
+                {
+                    remoteFolder = CreateFullFolder(buildVersion);
+                }
+                if (string.IsNullOrEmpty(remoteFolder))
+                {
+                    Console.WriteLine("Remote '{0}' folder haven't been created",buildVersion);
+                    return;
+                }
+                    
+                var localFiles = (new DirectoryInfo(locaPathFolder)).EnumerateFiles();
+                if (!localFiles.Any())
+                {
+                    Console.WriteLine("Couldn't find local files");
+                    return;
+                }
+                foreach (var localFile in localFiles)
+                {
+                    Upload(remoteFolder + "/" + localFile.Name,localFile.FullName);
+                }
+                UploadFullVersionInfo();
+                    
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        static void UploadTrialVersion(string buildVersion)
+        {
+            string locaPathFolder = string.Format(FolderPattern, Properties.Settings.Default.LocalTrialPath, buildVersion);
+            string remoteFolder = string.Empty;
+            try
+            {
+                if (!FolderTrialExists(buildVersion))
+                {
+                    remoteFolder = CreateTrialFolder(buildVersion);
+                }
+                if (string.IsNullOrEmpty(remoteFolder))
+                {
+                    Console.WriteLine("Remote '{0}' folder haven't been created", buildVersion);
+                    return;
+                }
+
+                var localFiles = (new DirectoryInfo(locaPathFolder)).EnumerateFiles();
+                if (!localFiles.Any())
+                {
+                    Console.WriteLine("Couldn't find local files");
+                    return;
+                }
+                foreach (var localFile in localFiles)
+                {
+                    Upload(remoteFolder + "/" + localFile.Name, localFile.FullName);
+                }
+                UploadTrialVersionInfo();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        static void UploadFullVersionInfo()
+        {
+            var fi = new FileInfo(Properties.Settings.Default.LocalFullPath + "\\" + versionInfoFile);
+            if (fi.Exists)
+            {
+                Upload(Properties.Settings.Default.RemoteFullPath + "/" + fi.Name, fi.FullName);
+            }
+        }
+
+        static void UploadTrialVersionInfo()
+        {
+            var fi = new FileInfo(Properties.Settings.Default.LocalTrialPath + "\\" + versionInfoFile);
+            if (fi.Exists)
+            {
+                Upload(Properties.Settings.Default.RemoteTrialPath + "/" + fi.Name, fi.FullName);
+            }
+        }
+
+        static void Upload(string remoteFile, string localFile)
+        {
+            var ftp = GetFtp();
+            ftp.upload(remoteFile,localFile);
+        }
+
+
     }
 }

@@ -6,22 +6,17 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
-using System;
-using System.Collections.Generic;
 using System.Data;
 
-namespace WSUI.Core.Interfaces 
+namespace WSUI.Core.Interfaces
 {
-	public interface IQueryReader 
+    public interface IQueryReader
     {
-
-		/// 
-		/// <param name="reader"></param>
-		/// <param name="type"></param>
+        ///
+        /// <param name="reader"></param>
+        /// <param name="type"></param>
         object ReadResult(IDataReader reader);
 
-	    object ReadResult(DataRow row);
+        object ReadResult(DataRow row);
     }//end IQueryReader
-
 }//end namespace Interfaces

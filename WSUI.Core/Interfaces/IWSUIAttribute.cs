@@ -6,12 +6,9 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
-
-
-namespace WSUI.Core.Interfaces {
-	public interface IWSUIAttribute  {
-
-	}//end IWSUIAttribute
-
+namespace WSUI.Core.Interfaces
+{
+    public interface IWSUIAttribute
+    {
+    }//end IWSUIAttribute
 }//end namespace Interfaces

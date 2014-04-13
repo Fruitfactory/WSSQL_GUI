@@ -6,6 +6,7 @@ namespace WSUI.Core.Interfaces
     public interface IWSAction
     {
         WSActionType Action { get; }
+
         Object Data { get; }
     }
 }

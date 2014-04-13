@@ -1,2 +1,1 @@
 goTrial clearSettingsADX
-pause

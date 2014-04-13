@@ -1,92 +1,81 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
-using System.Data.OleDb;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Unity;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Extensions;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
-using WSUI.Infrastructure.Attributes;
+using WSUI.Core.Win32;
 using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Service.Rules;
 using WSUI.Infrastructure.Services;
 using WSUI.Module.Interface;
-using Microsoft.Practices.Unity;
 using WSUI.Module.Service;
+using WSUI.Module.Service.Dialogs.Message;
 using Application = System.Windows.Application;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
-using WSUI.Module.Service.Dialogs.Message;
-using WSUI.Core.Win32;
 
 namespace WSUI.Module.Core
 {
     public abstract class KindViewModelBase : ViewModelBase, IKindItem
     {
-        protected readonly string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
-        protected const string OrLikeTemplate = " AND Contains(System.ItemName,'\"{0}*\"') ";
 
-
-        protected string QueryTemplate;
-        protected string QueryAnd;
+        
+        
         protected string _name = string.Empty;
-        protected string _query = string.Empty;
+        
         protected string _prefix = string.Empty;
         protected bool _toggle = false;
         protected readonly List<BaseSearchObject> ListData = new List<BaseSearchObject>();
         protected Dictionary<TypeSearchItem, ICommandStrategy> CommandStrategies;
         protected IMainViewModel ParentViewModel;
-        protected volatile bool IsInterupt = false;
+        
         protected volatile bool ShowMessageNoMatches = true;
         protected readonly IUnityContainer Container;
-        protected List<IRule> RuleCollection;
+        
         protected readonly object Lock = new object();
-        protected string _andClause;
-        protected List<string> _listW;
-        protected IScrollBehavior ScrollBehavior =  null;
+        
+        
+        protected IScrollBehavior ScrollBehavior = null;
         protected int TopQueryResult = 100;
-        protected DateTime _lastDate;
+        
 
         private volatile bool _isQueryRun = false;
-        private object _lock = new object();
+        
         private BaseSearchObject _current = null;
         private string _searchString = string.Empty;
         private ICommandStrategy _currentStrategy;
         private bool _canSearch = true;
 
-        // new 
+        // new
         protected ISearchSystem SearchSystem { get; set; }
-
 
         protected KindViewModelBase(IUnityContainer container)
         {
             Container = container;
             ChooseCommand = new DelegateCommand<object>(o => OnChoose(), o => true);
-            SearchCommand = new DelegateCommand<object>(o => Search(),o => CanSearch());
+            SearchCommand = new DelegateCommand<object>(o => Search(), o => CanSearch());
             OpenCommand = new DelegateCommand<object>(o => OpenFile(), o => CanOpenFile());
             OpenFolderCommand = new DelegateCommand<object>(o => OpenFolder(), o => CanOpenFile());
-            ShowPathCommand = new DelegateCommand(ShowPath,CanOpenFile);
+            ShowPathCommand = new DelegateCommand(ShowPath, CanOpenFile);
             KeyDownCommand = new DelegateCommand<KeyEventArgs>(KeyDown, o => true);
             DoubleClickCommand = new DelegateCommand<MouseButtonEventArgs>(DoubleClick, o => true);
-            ClearCriteriaCommand = new DelegateCommand<object>(ClearCriteriaClicked,o => true);
+            ClearCriteriaCommand = new DelegateCommand<object>(ClearCriteriaClicked, o => true);
             Enabled = true;
             DataSource = new ObservableCollection<BaseSearchObject>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
-            _lastDate = GetCurrentDate();
         }
 
         protected virtual DateTime GetCurrentDate()
@@ -147,8 +136,8 @@ namespace WSUI.Module.Core
         protected virtual void OnError(bool res)
         {
             EventHandler<EventArgs<bool>> temp = Error;
-            if(temp != null)
-                temp(this,new EventArgs<bool>(res));
+            if (temp != null)
+                temp(this, new EventArgs<bool>(res));
         }
 
         protected virtual void OnCurrentItemChanged(BaseSearchObject data)
@@ -189,10 +178,10 @@ namespace WSUI.Module.Core
                 WSSqlLogger.Instance.LogWarning("Search criteria is empty");
                 return;
             }
-                
+
             OnStart();
             MainWindowInfo mwi = GetWindowInfo();
-            
+
             SearchSystem.SetSearchCriteria(SearchString);
             SearchSystem.Search();
 
@@ -219,23 +208,18 @@ namespace WSUI.Module.Core
 
         protected virtual void OnSearchStringChanged()
         {
-            _lastDate = GetCurrentDate();
             SearchSystem.Reset();
             ClearDataSource();
             if (Parent != null)
                 Parent.ForceClosePreview();
-            if(IsSearchCriteriaEmpty)
+            if (IsSearchCriteriaEmpty)
                 OnPropertyChanged(() => Commands);
             _canSearch = true;
         }
 
         protected virtual void OnInit()
         {
-            CommandStrategies  = new Dictionary<TypeSearchItem, ICommandStrategy>();
-            RuleCollection = new List<IRule>();
-            RuleCollection.Add(new QuoteRule());
-            RuleCollection.Add(new WordRule());
-            RuleCollection.ForEach(rule => rule.InitRule());
+            CommandStrategies = new Dictionary<TypeSearchItem, ICommandStrategy>();
 
             if (SearchSystem != null)
             {
@@ -261,7 +245,6 @@ namespace WSUI.Module.Core
 
         protected virtual void OnFilterData()
         {
-            _lastDate = GetCurrentDate();
             if (string.IsNullOrEmpty(SearchString))
                 return;
             SearchSystem.Reset();
@@ -269,7 +252,7 @@ namespace WSUI.Module.Core
             Search();
         }
 
-        protected  void ClearDataSource()
+        protected void ClearDataSource()
         {
             DataSource.Clear();
             OnPropertyChanged(() => DataSource);
@@ -291,12 +274,11 @@ namespace WSUI.Module.Core
 
         protected void ClearMainDataSource()
         {
-            if(ParentViewModel.MainDataSource == null 
+            if (ParentViewModel.MainDataSource == null
               || ParentViewModel.MainDataSource.Count == 0)
                 return;
             ParentViewModel.MainDataSource.Clear();
         }
-
 
         protected bool IsShouldSearch()
         {
@@ -315,7 +297,6 @@ namespace WSUI.Module.Core
             get { return string.IsNullOrEmpty(SearchString); }
         }
 
-
         #region IKindItem
 
         public string Name
@@ -333,25 +314,41 @@ namespace WSUI.Module.Core
                 OnPropertyChanged(() => SearchString);
             }
         }
+
         public IMainViewModel Parent
         {
             get { return ParentViewModel; }
             set { ParentViewModel = value; }
         }
+
         public string Prefix { get { return _prefix; } }
+
         public int ID { get; protected set; }
+
         public string UIName { get; protected set; }
+
         public bool Toggle { get { return _toggle; } set { _toggle = value; OnPropertyChanged(() => Toggle); } }
+
         public ObservableCollection<BaseSearchObject> DataSource { get; protected set; }
+
         public ICommand ChooseCommand { get; protected set; }
+
         public ICommand SearchCommand { get; protected set; }
+
         public ICommand KeyDownCommand { get; protected set; }
+
         public ICommand ClearCriteriaCommand { get; private set; }
+
         public ICommand DoubleClickCommand { get; protected set; }
+
         public event EventHandler Start;
+
         public event EventHandler<EventArgs<bool>> Complete;
+
         public event EventHandler<EventArgs<bool>> Error;
+
         public event EventHandler<EventArgs<BaseSearchObject>> CurrentItemChanged;
+
         public event EventHandler Choose;
 
         public BaseSearchObject Current
@@ -359,10 +356,9 @@ namespace WSUI.Module.Core
             get { return _current; }
             set
             {
-                _current = value; 
+                _current = value;
                 OnCurrentItemChanged(_current);
                 ChooseStrategy();
-
             }
         }
 
@@ -380,11 +376,11 @@ namespace WSUI.Module.Core
         {
             get
             {
-                return IsSearchCriteriaEmpty || _currentStrategy == null ? null : _currentStrategy.Commands ;
+                return IsSearchCriteriaEmpty || _currentStrategy == null ? null : _currentStrategy.Commands;
             }
         }
 
-        #endregion
+        #endregion IKindItem
 
         public List<string> FolderList
         {
@@ -402,15 +398,15 @@ namespace WSUI.Module.Core
 
         public string Folder
         {
-            get; set; 
+            get;
+            set;
         }
-
 
         public bool Enabled
         {
-            get; set;
+            get;
+            set;
         }
-
 
         public ICommand OpenCommand { get; protected set; }
 
@@ -438,7 +434,7 @@ namespace WSUI.Module.Core
             }
         }
 
-        private  bool CanOpenFile()
+        private bool CanOpenFile()
         {
             return Current != null;
         }
@@ -450,19 +446,18 @@ namespace WSUI.Module.Core
             OpenItemFile(filename);
         }
 
-
         private void OpenFile()
         {
             var fileName = SearchItemHelper.GetFileName(Current);
-            if(FileService.IsDirectory(fileName))
+            if (FileService.IsDirectory(fileName))
                 return;
-            
+
             OpenItemFile(fileName);
         }
 
         private void ChooseStrategy()
         {
-            if(Current == null)
+            if (Current == null)
                 return;
             if (!CommandStrategies.ContainsKey(Current.TypeItem))
             {
@@ -470,7 +465,7 @@ namespace WSUI.Module.Core
             }
             else
                 _currentStrategy = CommandStrategies[Current.TypeItem];
-            
+
             OnPropertyChanged(() => Commands);
         }
 
@@ -482,7 +477,7 @@ namespace WSUI.Module.Core
             switch (keys.Key)
             {
                 case Key.Enter:
-                    if(SearchCommand.CanExecute(null))
+                    if (SearchCommand.CanExecute(null))
                         SearchCommand.Execute(null);
                     break;
             }
@@ -500,6 +495,7 @@ namespace WSUI.Module.Core
                     mwi.MainWindowRect = rect;
                     mwi.MainWindowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
                     break;
+
                 case HostType.Plugin:
                     FormCollection formsCollection = System.Windows.Forms.Application.OpenForms;
                     if (formsCollection.Count > 0)
@@ -513,16 +509,16 @@ namespace WSUI.Module.Core
                         ApplyMainWindowInfo(mwi);
                     }
                     break;
+
                 default:
                     ApplyMainWindowInfo(mwi);
                     break;
-
             }
 
             return mwi;
         }
 
-        private Tuple<IntPtr,Rect> GetForegroundWindowInfo()
+        private Tuple<IntPtr, Rect> GetForegroundWindowInfo()
         {
             try
             {
@@ -560,7 +556,7 @@ namespace WSUI.Module.Core
         {
             if (Parent == null)
                 return;
-            Parent.PassAction(new WSAction(WSActionType.ClearText,arg));
+            Parent.PassAction(new WSAction(WSActionType.ClearText, arg));
         }
 
         protected void OnScrollNeedSearch()

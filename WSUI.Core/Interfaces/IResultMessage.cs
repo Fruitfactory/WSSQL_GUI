@@ -6,14 +6,10 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
-
-
-namespace WSUI.Core.Interfaces 
+namespace WSUI.Core.Interfaces
 {
-	public interface IResultMessage     
+    public interface IResultMessage
     {
-		string Message{ get;  set;} 
-	}//end IResultMessage
-
+        string Message { get; set; }
+    }//end IResultMessage
 }//end namespace Interfaces

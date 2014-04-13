@@ -13,9 +13,9 @@ namespace WSUI.Core.Interfaces
         TypeSearchItem TypeItem { get; set; }
 
         void SetValue(int index, object value);
-		
-		IEnumerable<ISearchObject> Items { get;}
-		
-		void  AddItem(ISearchObject item);
+
+        IEnumerable<ISearchObject> Items { get; }
+
+        void AddItem(ISearchObject item);
     }
 }

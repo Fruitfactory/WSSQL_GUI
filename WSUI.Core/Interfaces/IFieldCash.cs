@@ -6,18 +6,15 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using System;
 using System.Collections.Generic;
 
-namespace WSUI.Core.Interfaces 
+namespace WSUI.Core.Interfaces
 {
-	public interface IFieldCash  
+    public interface IFieldCash
     {
-	    /// 
-	    /// <param name="type"></param>
-	    /// <param name="exludeIngnored"></param>
-	    IList<Tuple<string,string,int,bool>> GetFields(Type type,bool exludeIngnored);
-	}//end IFieldCash
-
-}//end namespace Interfaces
+        /// <param name="type"></param>
+        /// <param name="exludeIngnored"></param>
+        IList<Tuple<string, string, int, bool>> GetFields(Type type, bool exludeIngnored);
+    } //end IFieldCash
+} //end namespace Interfaces

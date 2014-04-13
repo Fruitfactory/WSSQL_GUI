@@ -1,7 +1,7 @@
-using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Office.Interop.Outlook;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Data;
@@ -10,21 +10,23 @@ using WSUI.Core.Helpers;
 using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Models;
 using WSUI.Infrastructure.Service;
-using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Module.Service;
 using WSUI.Module.Strategy;
+using Action = System.Action;
+using Application = System.Windows.Application;
 
 namespace WSUI.Module.ViewModel
 {
     [KindNameId(KindsConstName.People, 1, @"pack://application:,,,/WSUI.Module;Component/Images/People.png")]
     public class ContactViewModel : KindViewModelBase, IUView<ContactViewModel>, IScrollableView
     {
-        private ContactSearchData _contactData = null;
+        private readonly ContactSearchData _contactData = null;
         private ContactSuggestingService _contactSuggesting;
 
-        public ContactViewModel(IUnityContainer container, ISettingsView<ContactViewModel> settingsView, IDataView<ContactViewModel> dataView)
+        public ContactViewModel(IUnityContainer container, ISettingsView<ContactViewModel> settingsView,
+            IDataView<ContactViewModel> dataView)
             : base(container)
         {
             SettingsView = settingsView;
@@ -42,20 +44,20 @@ namespace WSUI.Module.ViewModel
             EmailClickCommand = new DelegateCommand<object>(o => EmailClick(o), o => true);
             _contactSuggesting = new ContactSuggestingService();
             _contactSuggesting.Suggest += (o, e) =>
-                                              {
-                                                  DataSourceSuggest = new ObservableCollection<string>();
-                                                  if (e.Value != null)
-                                                  {
-                                                      Application.Current.Dispatcher.BeginInvoke(
-                                                          new Action(
-                                                              () =>
-                                                              {
-                                                                  e.Value.ForEach(s => DataSourceSuggest.Add(s));
-                                                                  OnPropertyChanged(() => DataSourceSuggest);
-                                                              }),
-                                                          null);
-                                                  }
-                                              };
+            {
+                DataSourceSuggest = new ObservableCollection<string>();
+                if (e.Value != null)
+                {
+                    Application.Current.Dispatcher.BeginInvoke(
+                        new Action(
+                            () =>
+                            {
+                                e.Value.ForEach(s => DataSourceSuggest.Add(s));
+                                OnPropertyChanged(() => DataSourceSuggest);
+                            }),
+                        null);
+                }
+            };
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
             SearchSystem = new ContactSearchSystem();
         }
@@ -90,14 +92,14 @@ namespace WSUI.Module.ViewModel
         {
             string adr = string.Empty;
             if (address is string)
-                adr = (string)address;
+                adr = (string) address;
             else if (address is EmailContactSearchObject)
             {
                 adr = (address as EmailContactSearchObject).EMail;
             }
             else if (address is ContactSearchObject)
             {
-                var contact = (ContactSearchObject)address;
+                var contact = (ContactSearchObject) address;
                 adr = !string.IsNullOrEmpty(contact.EmailAddress)
                     ? contact.EmailAddress
                     : !string.IsNullOrEmpty(contact.EmailAddress2)
@@ -109,9 +111,9 @@ namespace WSUI.Module.ViewModel
 
             if (string.IsNullOrEmpty(adr))
                 return;
-            var email = OutlookHelper.Instance.CreateNewEmail();
+            MailItem email = OutlookHelper.Instance.CreateNewEmail();
             email.To = adr;
-            email.BodyFormat = Microsoft.Office.Interop.Outlook.OlBodyFormat.olFormatHTML;
+            email.BodyFormat = OlBodyFormat.olFormatHTML;
             email.Display(false);
         }
 
@@ -121,31 +123,9 @@ namespace WSUI.Module.ViewModel
             SearchSystem.Init();
 
             CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
-            ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 400, CountSecondProcess = 100, LimitReaction = 99 };
+            ScrollBehavior = new ScrollBehavior {CountFirstProcess = 400, CountSecondProcess = 100, LimitReaction = 99};
             ScrollBehavior.SearchGo += OnScrollNeedSearch;
         }
-
-        #region IUIView
-
-        public ISettingsView<ContactViewModel> SettingsView
-        {
-            get;
-            set;
-        }
-
-        public IDataView<ContactViewModel> DataView
-        {
-            get;
-            set;
-        }
-
-        #endregion IUIView
-
-        #region Implementation of IScrollableView
-
-        public ICommand ScrollChangeCommand { get; private set; }
-
-        #endregion Implementation of IScrollableView
 
         private void OnScroll(object args)
         {
@@ -156,5 +136,18 @@ namespace WSUI.Module.ViewModel
             }
         }
 
+        #region IUIView
+
+        public ISettingsView<ContactViewModel> SettingsView { get; set; }
+
+        public IDataView<ContactViewModel> DataView { get; set; }
+
+        #endregion IUIView
+
+        #region Implementation of IScrollableView
+
+        public ICommand ScrollChangeCommand { get; private set; }
+
+        #endregion Implementation of IScrollableView
     }
 }

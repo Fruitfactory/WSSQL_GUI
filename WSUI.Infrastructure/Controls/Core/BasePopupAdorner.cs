@@ -19,7 +19,7 @@ namespace WSUI.Infrastructure.Controls.Core
 
         protected BasePopupAdorner()
         {
-            _popup = new Popup{IsOpen = false,AllowsTransparency = true};
+            _popup = new Popup{IsOpen = false,AllowsTransparency = false};
             _popup.LayoutUpdated += PopupOnLayoutUpdated;
 
         }

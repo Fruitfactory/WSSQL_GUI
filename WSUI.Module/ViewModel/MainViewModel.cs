@@ -37,18 +37,18 @@ namespace WSUI.Module.ViewModel
 
         #endregion [urls]
 
-        private List<LazyKind> _listItems;
+        private const string Interface = "WSUI.Module.Interface.IKindItem";
 
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;
-        private IKindItem _currentItem = null;
-        private ILazyKind _selectedLazyKind = null;
+        private BaseSearchObject _currentData;
+        private IKindItem _currentItem;
         private bool _enabled = true;
-        private const string Interface = "WSUI.Module.Interface.IKindItem";
+        private List<LazyKind> _listItems;
+        private ILazyKind _selectedLazyKind;
 
-        private BaseSearchObject _currentData = null;
-
-        public MainViewModel(IUnityContainer container, IRegionManager region, IKindsView kindView, IPreviewView previewView)
+        public MainViewModel(IUnityContainer container, IRegionManager region, IKindsView kindView,
+            IPreviewView previewView)
         {
             _container = container;
             _regionManager = region;
@@ -60,30 +60,15 @@ namespace WSUI.Module.ViewModel
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
         }
 
-        public IKindsView KindsView
-        {
-            get;
-            protected set;
-        }
+        public IKindsView KindsView { get; protected set; }
 
-        public IPreviewView PreviewView
-        {
-            get;
-            protected set;
-        }
+        public IPreviewView PreviewView { get; protected set; }
 
-        public ObservableCollection<LazyKind> KindsCollection
-        {
-            get;
-            protected set;
-        }
+        public ObservableCollection<LazyKind> KindsCollection { get; protected set; }
 
         public ILazyKind SelectedLazyKind
         {
-            get
-            {
-                return _selectedLazyKind;
-            }
+            get { return _selectedLazyKind; }
             set
             {
                 _selectedLazyKind = value;
@@ -93,30 +78,12 @@ namespace WSUI.Module.ViewModel
 
         public ObservableCollection<IWSCommand> Commands
         {
-            get
-            {
-                return _currentItem != null ? _currentItem.Commands : null;
-            }
-        }
-
-        public virtual void Init()
-        {
-            Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
-            OutlookPreviewHelper.Instance.PreviewHostType = HostType.Application;
-            InitializeCommands();
-        }
-
-        private void InitializeCommands()
-        {
-            BuyCommand = new DelegateCommand(InternalBuy);
+            get { return _currentItem != null ? _currentItem.Commands : null; }
         }
 
         public bool Enabled
         {
-            get
-            {
-                return _enabled;
-            }
+            get { return _enabled; }
             set
             {
                 _enabled = value;
@@ -168,11 +135,11 @@ namespace WSUI.Module.ViewModel
 
         private void GetAllKinds()
         {
-            var types =
-              AppDomain.CurrentDomain.GetAssemblies().SelectMany(
-                a => a.GetTypes().Where(t => !t.IsAbstract && t.IsClass && t.GetInterface(Interface, true) != null));
+            IEnumerable<Type> types =
+                AppDomain.CurrentDomain.GetAssemblies().SelectMany(
+                    a => a.GetTypes().Where(t => !t.IsAbstract && t.IsClass && t.GetInterface(Interface, true) != null));
 
-            foreach (var type in types)
+            foreach (Type type in types)
             {
                 var kind = new LazyKind(_container, type, this, null, OnPropertyChanged);
                 kind.Initialize();
@@ -183,7 +150,7 @@ namespace WSUI.Module.ViewModel
             {
                 if (x.ID < y.ID)
                     return -1;
-                else if (x.ID > y.ID)
+                if (x.ID > y.ID)
                     return 1;
                 return 0;
             });
@@ -194,7 +161,7 @@ namespace WSUI.Module.ViewModel
             IRegion regionSearch = _regionManager.Regions[RegionNames.SearchRegion];
             if (regionSearch != null)
             {
-                var view = GetView(kindItem, "SettingsView");
+                object view = GetView(kindItem, "SettingsView");
                 if (view != null && !regionSearch.Views.Contains(view))
                 {
                     regionSearch.Add(view);
@@ -206,7 +173,7 @@ namespace WSUI.Module.ViewModel
             IRegion regionData = _regionManager.Regions[RegionNames.DataRegion];
             if (regionData != null)
             {
-                var view = GetView(kindItem, "DataView");
+                object view = GetView(kindItem, "DataView");
                 if (view != null && !regionData.Views.Contains(view))
                 {
                     regionData.Add(view);
@@ -223,9 +190,9 @@ namespace WSUI.Module.ViewModel
 
         private object GetView(object viewModel, string propertyName)
         {
-            var prop = viewModel.GetType().GetProperty(propertyName,
-                       BindingFlags.Public | BindingFlags.NonPublic |
-                       BindingFlags.Instance);
+            PropertyInfo prop = viewModel.GetType().GetProperty(propertyName,
+                BindingFlags.Public | BindingFlags.NonPublic |
+                BindingFlags.Instance);
             if (prop != null)
             {
                 return prop.GetValue(viewModel, null);
@@ -269,7 +236,7 @@ namespace WSUI.Module.ViewModel
                 //BusyPopupAdorner.Instance.IsBusy = true;
                 if (!ProgressManager.Instance.InProgress)
                 {
-                    ProgressManager.Instance.StartOperation(new ProgressOperation()
+                    ProgressManager.Instance.StartOperation(new ProgressOperation
                     {
                         Caption = "Loading...",
                         DelayTime = 250,
@@ -291,14 +258,14 @@ namespace WSUI.Module.ViewModel
         {
             try
             {
-                var filename = SearchItemHelper.GetFileName(_currentData);
+                string filename = SearchItemHelper.GetFileName(_currentData);
                 if (PreviewView != null)
                 {
                     if (!string.IsNullOrEmpty(filename))
                     {
                         PreviewView.SetSearchPattern(_currentItem != null
-                                                     ? _currentItem.SearchString
-                                                     : string.Empty);
+                            ? _currentItem.SearchString
+                            : string.Empty);
                         PreviewView.SetPreviewFile(filename);
                     }
                     else
@@ -322,7 +289,7 @@ namespace WSUI.Module.ViewModel
 
         private void OnStart(object sender, EventArgs e)
         {
-            var temp = Start;
+            EventHandler temp = Start;
             if (temp != null)
                 temp(this, null);
             Enabled = _currentItem.Enabled;
@@ -331,7 +298,7 @@ namespace WSUI.Module.ViewModel
 
         private void OnComplete(object sender, EventArgs<bool> e)
         {
-            var temp = Complete;
+            EventHandler temp = Complete;
             if (temp != null)
                 temp(this, null);
             Enabled = _currentItem.Enabled;
@@ -363,13 +330,14 @@ namespace WSUI.Module.ViewModel
 
         private Tuple<Point, Size> GetMainWindowInfo()
         {
-            Point pt = new Point();
-            Size sz = new Size();
+            var pt = new Point();
+            var sz = new Size();
             switch (Host)
             {
                 case HostType.Application:
                     pt = Application.Current.MainWindow.PointToScreen(new Point(0, 0));
-                    sz = new Size(Application.Current.MainWindow.ActualWidth, Application.Current.MainWindow.ActualHeight);
+                    sz = new Size(Application.Current.MainWindow.ActualWidth,
+                        Application.Current.MainWindow.ActualHeight);
 
                     break;
 
@@ -397,11 +365,11 @@ namespace WSUI.Module.ViewModel
         {
             try
             {
-                var hwnd = WindowsFunction.GetForegroundWindow();
+                IntPtr hwnd = WindowsFunction.GetForegroundWindow();
                 WindowsFunction.RECT rect;
                 WindowsFunction.GetWindowRect(hwnd, out rect);
-                Point pt = new Point(rect.Left, rect.Top);
-                Size sz = new Size(rect.Right - rect.Left, rect.Bottom - rect.Top);
+                var pt = new Point(rect.Left, rect.Top);
+                var sz = new Size(rect.Right - rect.Left, rect.Bottom - rect.Top);
                 return new Tuple<Point, Size>(pt, sz);
             }
             catch (Exception ex)
@@ -438,7 +406,7 @@ namespace WSUI.Module.ViewModel
             else
             {
                 MessageBoxService.Instance.Show("Warning", "Something wrong during Deactivate", MessageBoxButton.OK,
-                                                MessageBoxImage.Warning);
+                    MessageBoxImage.Warning);
             }
         }
 
@@ -455,15 +423,23 @@ namespace WSUI.Module.ViewModel
 
         #region Implementation of IMainViewModel
 
+        public string DaysLeft
+        {
+            get
+            {
+#if !TRIAL
+                return string.Empty;
+#else
+      return TurboLimeActivate.Instance.DaysRemain.ToString();
+#endif
+            }
+        }
+
         public event EventHandler Start;
 
         public event EventHandler Complete;
 
-        public List<BaseSearchObject> MainDataSource
-        {
-            get;
-            protected set;
-        }
+        public List<BaseSearchObject> MainDataSource { get; protected set; }
 
         public void Clear()
         {
@@ -475,7 +451,7 @@ namespace WSUI.Module.ViewModel
             if (string.IsNullOrEmpty(name))
                 return;
 
-            var lazyKind = _listItems.Find(lk => lk.UIName == name);
+            LazyKind lazyKind = _listItems.Find(lk => lk.UIName == name);
             if (lazyKind != null)
             {
                 SelectedLazyKind = lazyKind;
@@ -495,7 +471,7 @@ namespace WSUI.Module.ViewModel
                     break;
 
                 case WSActionType.Search:
-                    string searchCriteria = action.Data as string;
+                    var searchCriteria = action.Data as string;
                     if (string.IsNullOrEmpty(searchCriteria))
                         break;
                     _currentItem.SearchString = searchCriteria;
@@ -512,6 +488,7 @@ namespace WSUI.Module.ViewModel
                 case WSActionType.Quit:
                     Clear();
                     break;
+
                 case WSActionType.ClearText:
                     ClearTextCriteriaForAllKinds();
                     break;
@@ -526,35 +503,11 @@ namespace WSUI.Module.ViewModel
             }
         }
 
-        public ActivationState ActivateStatus
-        {
-            get;
-            private set;
-        }
+        public ActivationState ActivateStatus { get; private set; }
 
-        public ICommand BuyCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand BuyCommand { get; private set; }
 
-        public bool IsBusy
-        {
-            get;
-            private set;
-        }
-
-        public string DaysLeft
-        {
-            get
-            {
-#if !TRIAL
-                return string.Empty;
-#else
-      return TurboLimeActivate.Instance.DaysRemain.ToString();
-#endif
-            }
-        }
+        public bool IsBusy { get; private set; }
 
         public Visibility VisibleTrialLabel
         {
@@ -569,5 +522,17 @@ namespace WSUI.Module.ViewModel
         }
 
         #endregion Implementation of IMainViewModel
+
+        public virtual void Init()
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
+            OutlookPreviewHelper.Instance.PreviewHostType = HostType.Application;
+            InitializeCommands();
+        }
+
+        private void InitializeCommands()
+        {
+            BuyCommand = new DelegateCommand(InternalBuy);
+        }
     }
 }

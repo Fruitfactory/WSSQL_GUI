@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
+using Microsoft.Office.Interop.Outlook;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Data;
@@ -13,11 +12,12 @@ using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Service;
-using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Module.Service;
 using WSUI.Module.Strategy;
+using Action = System.Action;
+using Application = System.Windows.Application;
 
 namespace WSUI.Module.ViewModel
 {
@@ -26,11 +26,10 @@ namespace WSUI.Module.ViewModel
     {
         private const int FirstPriority = 1;
         private const int CountForSkip = 5;
-
-        public ICommand ScrollChangeCommand { get; protected set; }
+        private volatile bool _isFirstTime = true;
 
         public AllFilesViewModel(IUnityContainer container, ISettingsView<AllFilesViewModel> settingsView,
-                                 IDataView<AllFilesViewModel> dataView)
+            IDataView<AllFilesViewModel> dataView)
             : base(container)
         {
             SettingsView = settingsView;
@@ -44,11 +43,11 @@ namespace WSUI.Module.ViewModel
             _prefix = "AllFiles";
             IsOpen = false;
             FlyCommand = new DelegateCommand<object>(o =>
-                                                          {
-                                                              IsOpen = !IsOpen;
-                                                              OnPropertyChanged(() => IsOpen);
-                                                          },
-                                                          o => true);
+            {
+                IsOpen = !IsOpen;
+                OnPropertyChanged(() => IsOpen);
+            },
+                o => true);
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
             EmailClickCommand = new DelegateCommand<object>(o => EmailClick(o), o => true);
             SearchSystem = new AllSearchSystem();
@@ -59,6 +58,12 @@ namespace WSUI.Module.ViewModel
         public ICommand FlyCommand { get; private set; }
 
         public ICommand EmailClickCommand { get; protected set; }
+
+        #region IScrollableView Members
+
+        public ICommand ScrollChangeCommand { get; protected set; }
+
+        #endregion IScrollableView Members
 
         protected override void OnSearchStringChanged()
         {
@@ -80,13 +85,14 @@ namespace WSUI.Module.ViewModel
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                var result = SearchSystem.GetResult();
+                IList<ISystemSearchResult> result = SearchSystem.GetResult();
                 if (result.All(i => i.Result.Count == 0) && ShowMessageNoMatches)
                 {
                     DataSource.Clear();
-                    var message = new FileSearchObject()
+                    var message = new FileSearchObject
                     {
-                        ItemName = string.Format("Search for '{0}' returned no matches. Try different keywords.", SearchString),
+                        ItemName =
+                            string.Format("Search for '{0}' returned no matches. Try different keywords.", SearchString),
                         TypeItem = TypeSearchItem.None
                     };
                     DataSource.Add(message);
@@ -99,9 +105,11 @@ namespace WSUI.Module.ViewModel
                     {
                         ContactForFirstTime(result.Where(i => i.Priority <= FirstPriority).OrderBy(i => i.Priority));
                     }
-                    foreach (var col in result.Where(i => i.Priority > FirstPriority).OrderBy(i => i.Priority))
+                    foreach (
+                        ISystemSearchResult col in
+                            result.Where(i => i.Priority > FirstPriority).OrderBy(i => i.Priority))
                     {
-                        foreach (var it in col.Result)
+                        foreach (ISearchObject it in col.Result)
                         {
                             DataSource.Add(it as BaseSearchObject);
                         }
@@ -117,11 +125,11 @@ namespace WSUI.Module.ViewModel
         {
             if (result.Sum(it => it.Result.Count) > CountForSkip)
             {
-                foreach (var systemSearchResult in result.SelectMany(i => i.Result).Take(5))
+                foreach (ISearchObject systemSearchResult in result.SelectMany(i => i.Result).Take(5))
                 {
                     DataSource.Add(systemSearchResult as BaseSearchObject);
                 }
-                var commandSearchData = new CommandSearchObject()
+                var commandSearchData = new CommandSearchObject
                 {
                     ItemName = "More",
                     TypeItem = TypeSearchItem.Command,
@@ -130,7 +138,7 @@ namespace WSUI.Module.ViewModel
             }
             else
             {
-                foreach (var item in result.SelectMany(i => i.Result))
+                foreach (ISearchObject item in result.SelectMany(i => i.Result))
                 {
                     DataSource.Add(item as BaseSearchObject);
                 }
@@ -149,14 +157,14 @@ namespace WSUI.Module.ViewModel
         {
             string adr = string.Empty;
             if (obj is string)
-                adr = (string)obj;
+                adr = (string) obj;
             else if (obj is EmailContactSearchObject)
             {
                 adr = (obj as EmailContactSearchObject).EMail;
             }
             else if (obj is ContactSearchObject)
             {
-                var contact = (ContactSearchObject)obj;
+                var contact = (ContactSearchObject) obj;
                 adr = !string.IsNullOrEmpty(contact.EmailAddress)
                     ? contact.EmailAddress
                     : !string.IsNullOrEmpty(contact.EmailAddress2)
@@ -167,9 +175,9 @@ namespace WSUI.Module.ViewModel
             }
             if (string.IsNullOrEmpty(adr))
                 return false;
-            var email = OutlookHelper.Instance.CreateNewEmail();
+            MailItem email = OutlookHelper.Instance.CreateNewEmail();
             email.To = adr;
-            email.BodyFormat = Microsoft.Office.Interop.Outlook.OlBodyFormat.olFormatHTML;
+            email.BodyFormat = OlBodyFormat.olFormatHTML;
             email.Display(false);
 
             return true;
@@ -188,12 +196,12 @@ namespace WSUI.Module.ViewModel
             base.OnInit();
             SearchSystem.Init();
             CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
-            var fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
+            ICommandStrategy fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
             CommandStrategies.Add(TypeSearchItem.File, fileAttach);
             CommandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
             CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
-            ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 300, CountSecondProcess = 100, LimitReaction = 99 };
+            ScrollBehavior = new ScrollBehavior {CountFirstProcess = 300, CountSecondProcess = 100, LimitReaction = 99};
             ScrollBehavior.SearchGo += OnScrollNeedSearch;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
         }
@@ -205,8 +213,5 @@ namespace WSUI.Module.ViewModel
         public IDataView<AllFilesViewModel> DataView { get; set; }
 
         #endregion IUIView
-
-        private volatile bool _isFirstTime = true;
-
     }
 }

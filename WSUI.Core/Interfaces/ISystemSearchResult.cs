@@ -6,15 +6,14 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using System.Collections.Generic;
-using WSUI.Core.Data;
-namespace WSUI.Core.Interfaces 
-{
-	public interface ISystemSearchResult   
-    {
-	    int Priority{get;}
-        IList<ISearchObject> Result { get; }
-	}//end ISystemSearchResult
 
+namespace WSUI.Core.Interfaces
+{
+    public interface ISystemSearchResult
+    {
+        int Priority { get; }
+
+        IList<ISearchObject> Result { get; }
+    }//end ISystemSearchResult
 }//end namespace Interfaces

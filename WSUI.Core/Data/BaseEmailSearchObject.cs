@@ -115,7 +115,7 @@ namespace WSUI.Core.Data
 	                break;
                 //case 15:
                 //    HasAttachments = (bool) value;
-                    break;
+                    //break;
 	        }
 	    }
 

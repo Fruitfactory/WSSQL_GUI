@@ -1,10 +1,8 @@
-﻿
-using WSUI.Core.Core;
-using WSUI.Core.Data;
+﻿using WSUI.Core.Data;
 
-namespace WSUI.Core.Interfaces 
+namespace WSUI.Core.Interfaces
 {
-    interface IOutlookHelper
+    internal interface IOutlookHelper
     {
         string GetEMailTempFileName(BaseSearchObject itemsearch);
 

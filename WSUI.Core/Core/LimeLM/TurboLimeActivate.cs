@@ -48,7 +48,10 @@ namespace WSUI.Core.Core.LimeLM
             {
                 ActivationState state = ActivationState.Error;
                 if (IsInternetError)
+                {
+                    WSSqlLogger.Instance.LogWarning("Check - Internet connection is available or Lime services (servers) are available.");
                     return ActivationState.Error;
+                }
                 if(IsActivated)
                     return ActivationState.Activated;
                 if(!IsTrialPeriodEnded)

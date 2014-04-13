@@ -11,10 +11,12 @@ using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
-    [KindNameId(KindsConstName.Attachments, 3, @"pack://application:,,,/WSUI.Module;Component/Images/Mail-Attachment.png")]
+    [KindNameId(KindsConstName.Attachments, 3,
+        @"pack://application:,,,/WSUI.Module;Component/Images/Mail-Attachment.png")]
     public class AttachmentViewModel : KindViewModelBase, IUView<AttachmentViewModel>, IScrollableView
     {
-        public AttachmentViewModel(IUnityContainer container, ISettingsView<AttachmentViewModel> settingsView, IDataView<AttachmentViewModel> dataView)
+        public AttachmentViewModel(IUnityContainer container, ISettingsView<AttachmentViewModel> settingsView,
+            IDataView<AttachmentViewModel> dataView)
             : base(container)
         {
             SettingsView = settingsView;
@@ -30,36 +32,32 @@ namespace WSUI.Module.ViewModel
             SearchSystem = new AttachmentSearchSystem();
         }
 
-        protected override void OnInit()
-        {
-            base.OnInit();
-            SearchSystem.Init();
-            var fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
-            CommandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
-            CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
-            CommandStrategies.Add(TypeSearchItem.File, fileAttach);
-            CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
-            ScrollBehavior = new ScrollBehavior() { CountFirstProcess = 100, CountSecondProcess = 50, LimitReaction = 75 };
-            ScrollBehavior.SearchGo += OnScrollNeedSearch;
-        }
+        #region IUView<AttachmentViewModel> Members
 
-        public ISettingsView<AttachmentViewModel> SettingsView
-        {
-            get;
-            set;
-        }
+        public ISettingsView<AttachmentViewModel> SettingsView { get; set; }
 
-        public IDataView<AttachmentViewModel> DataView
-        {
-            get;
-            set;
-        }
+        public IDataView<AttachmentViewModel> DataView { get; set; }
+
+        #endregion IUView<AttachmentViewModel> Members
 
         #region Implementation of IScrollableView
 
         public ICommand ScrollChangeCommand { get; private set; }
 
         #endregion Implementation of IScrollableView
+
+        protected override void OnInit()
+        {
+            base.OnInit();
+            SearchSystem.Init();
+            ICommandStrategy fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
+            CommandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
+            CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
+            CommandStrategies.Add(TypeSearchItem.File, fileAttach);
+            CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
+            ScrollBehavior = new ScrollBehavior {CountFirstProcess = 100, CountSecondProcess = 50, LimitReaction = 75};
+            ScrollBehavior.SearchGo += OnScrollNeedSearch;
+        }
 
         private void OnScroll(object args)
         {
@@ -69,6 +67,5 @@ namespace WSUI.Module.ViewModel
                 ScrollBehavior.NeedSearch(scrollArgs);
             }
         }
-
     }
 }

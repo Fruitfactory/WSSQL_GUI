@@ -6,17 +6,17 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using System.Collections.Generic;
 using WSUI.Core.Enums;
-namespace WSUI.Core.Interfaces 
-{
-	public interface ISearchResult  
-    {
-		TypeResult Type{ get; } 
-		IList<IResultMessage> Messages{ get; } 
-		IList<ISearchObject> OperationResult{ get; } 
-		
-	}//end ISearchResult
 
+namespace WSUI.Core.Interfaces
+{
+    public interface ISearchResult
+    {
+        TypeResult Type { get; }
+
+        IList<IResultMessage> Messages { get; }
+
+        IList<ISearchObject> OperationResult { get; }
+    }//end ISearchResult
 }//end namespace Interfaces

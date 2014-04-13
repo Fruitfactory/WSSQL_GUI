@@ -6,20 +6,17 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using System;
 
-namespace WSUI.Core.Interfaces 
+namespace WSUI.Core.Interfaces
 {
-	public interface IQueryGenerator   
-	{
-
-		/// 
-		/// <param name="type">type which use for generating query</param>
-		/// <param name="searchCriteria">search string</param>
-		/// <param name="topResult"></param>
-		/// <param name="exludeIgnored">should we ignore property</param>
-		string GenerateQuery(Type type, string searchCriteria, int topResult, IRuleQueryGenerator ruleQueryGenerator, bool exludeIgnored);
-	}//end IQueryGenerator
-
+    public interface IQueryGenerator
+    {
+        ///
+        /// <param name="type">type which use for generating query</param>
+        /// <param name="searchCriteria">search string</param>
+        /// <param name="topResult"></param>
+        /// <param name="exludeIgnored">should we ignore property</param>
+        string GenerateQuery(Type type, string searchCriteria, int topResult, IRuleQueryGenerator ruleQueryGenerator, bool exludeIgnored);
+    }//end IQueryGenerator
 }//end namespace Interfaces

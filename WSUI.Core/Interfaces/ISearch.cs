@@ -6,40 +6,41 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
-using System;
 using System.Threading;
 using WSUI.Core.Enums;
 
-namespace WSUI.Core.Interfaces {
-	public interface ISearch       {
-		/// <summary>
-		/// @param ="criteris"
-		/// </summary>
-		/// <param name="criteria"></param>
-		void SetSearchCriteria(string criteria);
+namespace WSUI.Core.Interfaces
+{
+    public interface ISearch
+    {
+        /// <summary>
+        /// @param ="criteris"
+        /// </summary>
+        /// <param name="criteria"></param>
+        void SetSearchCriteria(string criteria);
 
-		void Search();
+        void Search();
 
-		void Stop();
+        void Stop();
 
-		AutoResetEvent GetEvent();
+        AutoResetEvent GetEvent();
 
-		void Reset();
+        void Reset();
 
-		bool IsSearching{
-			get;
-		}
+        bool IsSearching
+        {
+            get;
+        }
 
-		int Priority{
-			get;
-		}
+        int Priority
+        {
+            get;
+        }
 
-	    RuleObjectType ObjectType { get; }
+        RuleObjectType ObjectType { get; }
 
-	    void Init();
-	    void SetProcessingRecordCount(int first, int second);
+        void Init();
 
-	}//end ISearch
-
+        void SetProcessingRecordCount(int first, int second);
+    }//end ISearch
 }//end namespace Interfaces

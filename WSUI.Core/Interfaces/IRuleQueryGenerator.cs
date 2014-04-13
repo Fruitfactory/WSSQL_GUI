@@ -6,16 +6,15 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using System.Collections.Generic;
 using WSUI.Core.Core.Rules;
 
-namespace WSUI.Core.Interfaces {
-	public interface IRuleQueryGenerator  {
-
-		/// 
-		/// <param name="listCriteriaRules"></param>
-		string GenerateWherePart(IList<IRule> listCriteriaRules);
-	}//end IRuleQueryGenerator
-
+namespace WSUI.Core.Interfaces
+{
+    public interface IRuleQueryGenerator
+    {
+        ///
+        /// <param name="listCriteriaRules"></param>
+        string GenerateWherePart(IList<IRule> listCriteriaRules);
+    }//end IRuleQueryGenerator
 }//end namespace Interfaces

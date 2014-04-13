@@ -6,36 +6,33 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using System;
 using System.Collections.Generic;
 
-namespace WSUI.Core.Interfaces 
+namespace WSUI.Core.Interfaces
 {
-	public interface ISearchSystem  
+    public interface ISearchSystem
     {
+        void Init();
 
-		void Init();
+        void Reset();
 
-		void Reset();
+        ///
+        /// <param name="searchCriteris"></param>
+        void SetSearchCriteria(string searchCriteris);
 
-		/// 
-		/// <param name="searchCriteris"></param>
-		void SetSearchCriteria(string searchCriteris);
+        void Search();
 
-		void Search();
+        void Stop();
 
-		void Stop();
+        event Action<object> SearchStarted;
 
-		event Action<object> SearchStarted;
+        event Action<object> SearchFinished;
 
-		event Action<object> SearchFinished;
+        event Action<object> SearchStoped;
 
-		event Action<object> SearchStoped;
-
-		IList<ISystemSearchResult> GetResult();
+        IList<ISystemSearchResult> GetResult();
 
         bool IsSearching { get; }
-	}//end ISearchSystem
-
+    }//end ISearchSystem
 }//end namespace Interfaces

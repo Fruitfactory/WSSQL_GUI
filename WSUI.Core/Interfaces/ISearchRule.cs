@@ -6,17 +6,10 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
-
-
-namespace WSUI.Core.Interfaces 
+namespace WSUI.Core.Interfaces
 {
-
-	public interface ISearchRule 
-	{
-
-		ISearchResult GetResults();
-
-	}//end ISearchTemplateRule
-
+    public interface ISearchRule
+    {
+        ISearchResult GetResults();
+    }//end ISearchTemplateRule
 }//end namespace Interfaces
