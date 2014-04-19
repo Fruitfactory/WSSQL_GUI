@@ -159,13 +159,13 @@ namespace WSUI.Module.Core
         protected virtual void Search()
         {
             _canSearch = false;
-            if (!IsShouldSearch())
-            {
-                WSSqlLogger.Instance.LogWarning("Please, activate the 'OutlookFinder'");
-                MessageBoxService.Instance.Show("Warning", "Please, activate the 'OutlookFinder'", MessageBoxButton.OK,
-                    MessageBoxImage.Asterisk);
-                return;
-            }
+            //if (!IsShouldSearch())
+            //{
+            //    WSSqlLogger.Instance.LogWarning("Please, activate the 'OutlookFinder'");
+            //    MessageBoxService.Instance.Show("Warning", "Please, activate the 'OutlookFinder'", MessageBoxButton.OK,
+            //        MessageBoxImage.Asterisk);
+            //    return;
+            //}
 
             if (_isQueryRun)
             {

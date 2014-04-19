@@ -6,12 +6,14 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Linq;
 using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
-using System.Windows.Forms;
 using WSUI.Core.Helpers;
-using Outlook = Microsoft.Office.Interop.Outlook;
+using Exception = System.Exception;
+using View = Microsoft.Deployment.WindowsInstaller.View;
 
 namespace WSUI.CA
 {
@@ -32,7 +34,6 @@ namespace WSUI.CA
 
         private const string InstallFolder = "INSTALLFOLDER";
 
-
         //<msi>
         //    <installationUrl>http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/</installationUrl>
         //    <language>1033</language>
@@ -46,7 +47,7 @@ namespace WSUI.CA
         private const string VersionNode = "version";
         private const string ProductCodeNode = "productCode";
 
-        #endregion
+        #endregion [needs]
 
         #region elements fo manifest
 
@@ -54,7 +55,7 @@ namespace WSUI.CA
         private const string VersionNodeName = "version";
         private const string ProductCodeNodeName = "productCode";
 
-        #endregion
+        #endregion elements fo manifest
 
         #region [CA ClearFiles]
 
@@ -63,7 +64,7 @@ namespace WSUI.CA
         {
             try
             {
-                var path = GetInstallationFolder(session);
+                string path = GetInstallationFolder(session);
                 if (RegistryHelper.Instance.IsSilendUpdate())
                 {
                     session.Log("Silent update...");
@@ -71,8 +72,8 @@ namespace WSUI.CA
                 }
                 session.Log("Delete  files...");
                 DeleteUpdateFolder(session);
-                var list = new List<string>() { LocFilename };
-                foreach (var filename in list)
+                var list = new List<string> {LocFilename};
+                foreach (string filename in list)
                 {
                     DeleteFile(session, path, filename);
                 }
@@ -88,7 +89,7 @@ namespace WSUI.CA
             return ActionResult.Success;
         }
 
-        #endregion
+        #endregion [CA ClearFiles]
 
         private static string GetInstallationFolder(Session session)
         {
@@ -154,27 +155,26 @@ namespace WSUI.CA
             return true;
         }
 
-        #endregion
+        #endregion [private for delete files]
 
         #region [CA operation with Outlook]
 
         [CustomAction]
         public static ActionResult CloseOutlook(Session session)
         {
-            Outlook._Application outlookProcess;
-            ActionResult res = ActionResult.Success;
-            if (IsOutlookOpen(out outlookProcess, session))
+            _Application outlookProcess;
+            var res = ActionResult.Success;
+            if (IsOutlookOpen())
             {
                 try
                 {
-                    if (outlookProcess != null)
-                    {
-                        session.Log("Close outlook. IsOutllokClosedByInstaller = " +
-                                    RegistryHelper.Instance.IsOutlookClosedByInstaller().ToString());
-                        outlookProcess.Quit();
-                        WaitForClosingOutlook(session);
-                        RegistryHelper.Instance.SetFlagClosedOutlookApplication();
-                    }
+                    session.Log("Close outlook. IsOutllokClosedByInstaller = " +
+                                RegistryHelper.Instance.IsOutlookClosedByInstaller());
+                    CloseAllOutlookInstancesLite(session);
+                    Thread.Sleep(1000); // wait for closing
+                    if (IsOutlookOpen())
+                        CloseAllOutlookInstancesHard(session);
+                    RegistryHelper.Instance.SetFlagClosedOutlookApplication();
                     res = ActionResult.Success;
                 }
                 catch (Exception ex)
@@ -190,15 +190,14 @@ namespace WSUI.CA
         public static ActionResult OpenOutlook(Session session)
         {
             session.Log("Open outlook. IsOutllokClosedByInstaller = " +
-                        RegistryHelper.Instance.IsOutlookClosedByInstaller().ToString());
-            ActionResult res = ActionResult.Success;
+                        RegistryHelper.Instance.IsOutlookClosedByInstaller());
+            var res = ActionResult.Success;
             if (RegistryHelper.Instance.IsOutlookClosedByInstaller() && IsOutlookInstalled())
             {
                 try
                 {
                     Process.Start("OUTLOOK.EXE");
                     RegistryHelper.Instance.ResetFlagClosedOutlookApplication();
-
                 }
                 catch (Exception ex)
                 {
@@ -209,65 +208,62 @@ namespace WSUI.CA
             return res;
         }
 
-        private static bool IsOutlookOpen(out Outlook._Application pr, Session session)
+        private static bool IsOutlookOpen()
         {
-            bool res = false;
-            pr = null;
-            try
+            return GetAllOutlookInstances().Any();
+        }
+
+        private static IEnumerable<Process> GetAllOutlookInstances()
+        {
+            return Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith(OutllokAppName.ToUpper()));
+        }
+
+        private static _Application GetOutlook()
+        {
+            return Marshal.GetActiveObject(OutlookId) as _Application;
+        }
+
+        private static void CloseAllOutlookInstancesLite(Session session)
+        {
+            foreach (Process allOutlookInstance in GetAllOutlookInstances())
             {
-                var outlook =
-                    Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith(OutllokAppName.ToUpper()));
-                res = outlook.Any();
-                if (res)
+                try
                 {
-                    pr = System.Runtime.InteropServices.Marshal.GetActiveObject(OutlookId) as Outlook._Application;
+                    _Application app = GetOutlook();
+                    if (app != null)
+                        app.Quit();
                 }
-
+                catch (Exception ex)
+                {
+                    allOutlookInstance.Kill();
+                    session.Log("{0}", ex.Message);
+                }
             }
-            catch (Exception ex)
+        }
+
+        private static void CloseAllOutlookInstancesHard(Session session)
+        {
+            foreach (Process allOutlookInstance in GetAllOutlookInstances())
             {
-                session.Log("Error during checking: " + ex.Message);
-
+                CloseHardOutlook(allOutlookInstance, session);
             }
-            return res;
         }
 
         private static bool IsOutlookInstalled()
         {
             const string SubKey = "Software\\microsoft\\windows\\currentversion\\app paths\\OUTLOOK.EXE";
             RegistryKey subKey = Registry.LocalMachine.OpenSubKey(SubKey);
-            string path = subKey.GetValue("Path") as string;
+            var path = subKey.GetValue("Path") as string;
             return !string.IsNullOrEmpty(path);
         }
 
-        private static void WaitForClosingOutlook( Session session)
-        {
-            const int Times = 35; // => 3.5 sek
-            int count = 0;
-            Outlook._Application app;
-            while (IsOutlookOpen(out app, session))
-            {
-                Thread.Sleep(100);
-                if (Times == count)
-                    break;
-                count++;
-            };
-            if (IsOutlookOpen(out app, session))
-            {
-                CloseHardOutlook(app,session);
-            }
-        }
-
-        private static void CloseHardOutlook(Outlook._Application application, Session session)
+        private static void CloseHardOutlook(Process app, Session session)
         {
             session.Log("Hard close of Outlook");
-            var process = Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith(OutllokAppName.ToUpper()));
-            if (!process.Any())
-                return;
             try
             {
                 session.Log("Kill the Outlook");
-                process.ElementAt(0).Kill();
+                app.Kill();
                 session.Log("Good kill the Outlook");
             }
             catch (Exception ex)
@@ -276,14 +272,14 @@ namespace WSUI.CA
             }
         }
 
-        #endregion
+        #endregion [CA operation with Outlook]
 
         #region [succes message]
 
         [CustomAction]
         public static ActionResult SuccesMessage(Session session)
         {
-            ActionResult result = ActionResult.Success;
+            var result = ActionResult.Success;
 
             if (!RegistryHelper.Instance.IsSilendUpdate())
             {
@@ -293,17 +289,16 @@ namespace WSUI.CA
             //session.Log("Second entry to SuccesMessage...");
             try
             {
-                Record rec = new Record();
+                var rec = new Record();
                 rec.FormatString = "Update was successful.";
                 if (RegistryHelper.Instance.IsOutlookClosedByInstaller())
                 {
                     rec.FormatString += "\nOutlook will be opened soon.";
-
                 }
                 UpdateAndDeleteLock(session);
                 session.Message(
-                    InstallMessage.User | InstallMessage.Info | (InstallMessage)(MessageBoxIcon.Information) |
-                    (InstallMessage)MessageBoxButtons.OK, rec);
+                    InstallMessage.User | InstallMessage.Info | (InstallMessage) (MessageBoxIcon.Information) |
+                    (InstallMessage) MessageBoxButtons.OK, rec);
                 OpenOutlook(session);
             }
             catch (Exception)
@@ -313,14 +308,14 @@ namespace WSUI.CA
             return result;
         }
 
-        #endregion
+        #endregion [succes message]
 
         #region [update installation info]
 
         private static void UpdateAndDeleteLock(Session session)
         {
-            var path = GetInstallationFolder(session);
-            var temp = GetTempPath();
+            string path = GetInstallationFolder(session);
+            string temp = GetTempPath();
             try
             {
                 string localversion = string.Format(TempFolder, temp, VersionFilename);
@@ -351,18 +346,22 @@ namespace WSUI.CA
 
                 string language = docVersion.Descendants("product").First().Attribute("language").Value;
 
-                var listVersions =
+                List<string> listVersions =
                     docVersion.Descendants("version").Select(
                         el => el.Attribute("name") != null ? el.Attribute("name").Value : string.Empty).ToList();
-                listVersions.Sort();
-                string newversion = listVersions[listVersions.Count - 1];
-                var element =
+                List<string> sortedList = listVersions.Select(s => s.Split('.').Select(str => int.Parse(str)).ToArray())
+                    .OrderBy(arr => arr[0])
+                    .ThenBy(arr => arr[1])
+                    .ThenBy(arr => arr[2])
+                    .Select(arr => string.Join(".", arr)).ToList();
+                string newversion = sortedList[sortedList.Count - 1];
+                XElement element =
                     docVersion.Descendants("version").Where(el => el.Attribute("name").Value == newversion).First();
-                var productCode = element.Attribute(ProductCodeNodeName).Value;
+                string productCode = element.Attribute(ProductCodeNodeName).Value;
 
                 if (docManifest.Descendants(MSINode).Any())
                 {
-                    var msi = docManifest.Descendants("msi").First();
+                    XElement msi = docManifest.Descendants("msi").First();
                     UpdateMSINode(msi, productCode, newversion, session);
                 }
                 else
@@ -382,13 +381,13 @@ namespace WSUI.CA
         {
             if (msi.Descendants(VersionNodeName).Count() > 0)
             {
-                var el = msi.Descendants(VersionNodeName).First();
+                XElement el = msi.Descendants(VersionNodeName).First();
                 el.Value = newversion;
                 session.Log(string.Format("New version: {0}", newversion));
             }
             if (msi.Descendants(ProductCodeNodeName).Count() > 0)
             {
-                var el = msi.Descendants(ProductCodeNodeName).First();
+                XElement el = msi.Descendants(ProductCodeNodeName).First();
                 el.Value = productCode;
                 session.Log(string.Format("Product code: {0}", productCode));
             }
@@ -396,14 +395,14 @@ namespace WSUI.CA
 
         private static void CreateMSINode(XDocument docManifest, XElement elementNewestVersion, string language)
         {
-            XElement msi = new XElement(MSINode);
+            var msi = new XElement(MSINode);
             string prodCode = elementNewestVersion.Attribute(ProductCodeNode).Value;
             string installUrl = elementNewestVersion.Attribute(InstallPathNodeName).Value;
             string newVersion = elementNewestVersion.Attribute("name").Value;
-            XElement pc = new XElement(ProductCodeNode, prodCode);
-            XElement iu = new XElement(InstallPathNodeName, installUrl);
-            XElement ver = new XElement(VersionNode, newVersion);
-            XElement lan = new XElement(LanguageNode, language);
+            var pc = new XElement(ProductCodeNode, prodCode);
+            var iu = new XElement(InstallPathNodeName, installUrl);
+            var ver = new XElement(VersionNode, newVersion);
+            var lan = new XElement(LanguageNode, language);
             msi.Add(pc, iu, ver, lan);
             docManifest.Root.Add(msi);
         }
@@ -418,7 +417,7 @@ namespace WSUI.CA
                 RegistryHelper.Instance.FinishSilentUpdate();
                 RegistryHelper.Instance.SetCallIndexKey(RegistryHelper.CallIndex.None);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 session.Log("Unlock: " + ex.Message);
             }
@@ -432,11 +431,10 @@ namespace WSUI.CA
         //    }
         //}
 
-        #endregion
-
-
+        #endregion [update installation info]
 
         #region [activate CA]
+
 #if !TRIAL
         private const string ActivateFilesFolder = "ActivatePlugin";
         private const string TurboActivateExeKey = "Turbo_Activate_exe";
@@ -451,9 +449,7 @@ namespace WSUI.CA
         private const string TurboActivateTemplate = "TurboActivate";
 
         private const string QueryTemplate = "SELECT Data FROM Binary WHERE Name = '{0}' ";
-        private const int SizeCopy = 1024 * 50;
-
-
+        private const int SizeCopy = 1024*50;
 
         [CustomAction]
         public static ActionResult ActivatePlugin(Session session)
@@ -466,7 +462,7 @@ namespace WSUI.CA
                 CreateFolder(path);
                 session.Log(string.Format("Path {0}", path));
                 ExtractFiles(session, path);
-                RunAndWaitActivator(session,path);
+                RunAndWaitActivator(session, path);
                 //CopyDatFileToInstallationFolder(session,path,GetInstallationFolder(session));
                 DeleteFolder(path);
                 session.Log(string.Format("Success"));
@@ -478,7 +474,6 @@ namespace WSUI.CA
                 return ActionResult.Failure;
             }
         }
-
 
         private static void ExtractFiles(Session session, string path)
         {
@@ -495,14 +490,14 @@ namespace WSUI.CA
         [DllImport("User32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        private static void RunAndWaitActivator(Session session,string path)
+        private static void RunAndWaitActivator(Session session, string path)
         {
             string file = Path.Combine(path, TurboActivateExeFilename);
             if (!File.Exists(file))
                 return;
             try
             {
-                Process p = new Process()
+                var p = new Process
                 {
                     StartInfo =
                     {
@@ -518,7 +513,7 @@ namespace WSUI.CA
             }
             catch (Exception ex)
             {
-                session.Log(string.Format("RunAndActivator: {0}",ex.Message));   
+                session.Log(string.Format("RunAndActivator: {0}", ex.Message));
             }
         }
 
@@ -531,11 +526,12 @@ namespace WSUI.CA
         {
             while (true)
             {
-                var list = Process.GetProcesses().Where(p => p.ProcessName.IndexOf(TurboActivateTemplate) > -1);
-                if(!list.Any())
+                IEnumerable<Process> list =
+                    Process.GetProcesses().Where(p => p.ProcessName.IndexOf(TurboActivateTemplate) > -1);
+                if (!list.Any())
                     continue;
-                var ta = list.ElementAt(0);
-                if(ta.MainWindowHandle == IntPtr.Zero)
+                Process ta = list.ElementAt(0);
+                if (ta.MainWindowHandle == IntPtr.Zero)
                     continue;
                 SetForegroundWindow(ta.MainWindowHandle);
                 break;
@@ -548,14 +544,14 @@ namespace WSUI.CA
                 return;
             string sourceFile = Path.Combine(sourcepath, TurboActivateDatFilename);
             string destinationFile = Path.Combine(destinationpath, TurboActivateDatFilename);
-            session.Log("Copy from '{0}' to '{1}'",sourceFile,destinationFile);
-            if(File.Exists(destinationFile))
+            session.Log("Copy from '{0}' to '{1}'", sourceFile, destinationFile);
+            if (File.Exists(destinationFile))
                 File.Delete(destinationFile);
             try
             {
-                var srcFile = File.Open(sourceFile, FileMode.Open);
-                var destFile = File.Create(destinationFile);
-                byte[] buf = new byte[SizeCopy];
+                FileStream srcFile = File.Open(sourceFile, FileMode.Open);
+                FileStream destFile = File.Create(destinationFile);
+                var buf = new byte[SizeCopy];
                 int len;
                 while ((len = srcFile.Read(buf, 0, buf.Length)) > 0)
                 {
@@ -580,16 +576,16 @@ namespace WSUI.CA
             {
                 string pathFile = path + "\\" + filename;
                 session.Log(string.Format("PathFile {0}", pathFile));
-                using (var file = File.Create(pathFile))
+                using (FileStream file = File.Create(pathFile))
                 {
-                    using (var view = session.Database.OpenView(QueryTemplate, key))
+                    using (View view = session.Database.OpenView(QueryTemplate, key))
                     {
                         view.Execute();
                         using (Record rec = view.Fetch())
                         {
                             using (Stream stream = rec.GetStream("Data"))
                             {
-                                byte[] buf = new byte[SizeCopy];
+                                var buf = new byte[SizeCopy];
                                 int len;
                                 while ((len = stream.Read(buf, 0, buf.Length)) > 0)
                                 {
@@ -626,7 +622,8 @@ namespace WSUI.CA
         }
 
 #endif
-        #endregion
+
+        #endregion [activate CA]
 
         #region [deactivate CA]
 
@@ -635,7 +632,7 @@ namespace WSUI.CA
         [CustomAction]
         public static ActionResult Deactivate(Session session)
         {
-            if(RegistryHelper.Instance.IsSilendUpdate())
+            if (RegistryHelper.Instance.IsSilendUpdate())
                 return ActionResult.Success;
             try
             {
@@ -651,20 +648,19 @@ namespace WSUI.CA
             }
             catch (Exception ex)
             {
-                session.Log("Deactivate: {0}",ex.Message);
+                session.Log("Deactivate: {0}", ex.Message);
                 return ActionResult.Failure;
             }
             return ActionResult.Success;
         }
 
-        #endregion
-
+        #endregion [deactivate CA]
 
         #region [error message]
 
         public static ActionResult ErrorMessage(Session session)
         {
-            ActionResult result = ActionResult.Success;
+            var result = ActionResult.Success;
             if (!RegistryHelper.Instance.IsSilendUpdate())
             {
                 session.Log("Isn't silent update.");
@@ -672,9 +668,11 @@ namespace WSUI.CA
             }
             try
             {
-                Record rec = new Record();
+                var rec = new Record();
                 rec.FormatString = "Update was finished with error.\nPlease, see log.";
-                session.Message(InstallMessage.User | InstallMessage.Error | (InstallMessage)(MessageBoxIcon.Error) | (InstallMessage)MessageBoxButtons.OK, rec);
+                session.Message(
+                    InstallMessage.User | InstallMessage.Error | (InstallMessage) (MessageBoxIcon.Error) |
+                    (InstallMessage) MessageBoxButtons.OK, rec);
             }
             catch (Exception)
             {
@@ -683,13 +681,13 @@ namespace WSUI.CA
             return result;
         }
 
-        #endregion
+        #endregion [error message]
 
         #region [cancel message]
 
         public static ActionResult CancelMessage(Session session)
         {
-            ActionResult result = ActionResult.Success;
+            var result = ActionResult.Success;
             if (!RegistryHelper.Instance.IsSilendUpdate())
             {
                 session.Log("Isn't silent update.");
@@ -697,9 +695,11 @@ namespace WSUI.CA
             }
             try
             {
-                Record rec = new Record();
+                var rec = new Record();
                 rec.FormatString = "Update was canceled by user.";
-                session.Message(InstallMessage.User | InstallMessage.Info | (InstallMessage)(MessageBoxIcon.Warning) | (InstallMessage)MessageBoxButtons.OK, rec);
+                session.Message(
+                    InstallMessage.User | InstallMessage.Info | (InstallMessage) (MessageBoxIcon.Warning) |
+                    (InstallMessage) MessageBoxButtons.OK, rec);
             }
             catch (Exception)
             {
@@ -708,7 +708,6 @@ namespace WSUI.CA
             return result;
         }
 
-        #endregion
-
+        #endregion [cancel message]
     }
 }

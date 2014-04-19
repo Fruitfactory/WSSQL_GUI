@@ -80,7 +80,7 @@
         </ItemsControl>
         
         <WindowsFormsHost Grid.Row="1" >
-            <preview:PreviewHandlerHostControl x:Name="_previewControl" Visible="True">
+            <preview:PreviewHandlerHostControl x:Name="_previewControl" Visible="True" >
             </preview:PreviewHandlerHostControl >
         </WindowsFormsHost>
     </Grid>

@@ -188,3 +188,5 @@ pip-log.txt
 /Toolkits/uploader.vshost.exe.config
 
 /Toolkits/*.manifest
+/GflWrapper/Output
+/GflWrapper/ROutput

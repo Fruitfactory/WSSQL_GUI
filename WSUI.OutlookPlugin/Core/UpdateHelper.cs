@@ -324,8 +324,12 @@ namespace WSUIOutlookPlugin.Core
                 var listVersions =
                     docVersion.Descendants("version").Select(
                         el => el.Attribute("name") != null ? el.Attribute("name").Value : string.Empty).ToList();
-                listVersions.Sort();
-                string newversion = listVersions[listVersions.Count - 1];
+                var sortedList = listVersions.Select(s => s.Split('.').Select(str => int.Parse(str)).ToArray())
+                .OrderBy(arr => arr[0])
+                .ThenBy(arr => arr[1])
+                .ThenBy(arr => arr[2])
+                .Select(arr => string.Join(".", arr)).ToList();
+                string newversion = sortedList[sortedList.Count - 1];
                 var element = docVersion.Descendants("version").Where(el => el.Attribute("name").Value == newversion).First();
                 CreateAndAddNode(docManifest,element,language);
                 docManifest.Save(Path.Combine(_path, ManifestFilename));

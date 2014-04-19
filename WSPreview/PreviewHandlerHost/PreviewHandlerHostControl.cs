@@ -31,6 +31,8 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
     public partial class PreviewHandlerHostControl : UserControl
     {
 
+        private System.Windows.Forms.WebBrowser webMessage = new System.Windows.Forms.WebBrowser();
+
         private string _filePath;
         private string _searchCriteria;
         private object _comInstance = null;
@@ -121,8 +123,11 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         /// </summary>
         private void GeneratePreview()
         {
-          
-            webMessage.Visible = false;
+            if (this.Controls.Contains(webMessage))
+            {
+                this.Controls.Remove(webMessage);
+                webMessage.Visible = false;
+            }
             ClearAllStreams();
             if (_comInstance != null)
             {
@@ -151,6 +156,8 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                     if (comType == null)
                     {
                         string ext = Path.GetExtension(_filePath).ToLower();
+                        webMessage.Dock = DockStyle.Fill;
+                        this.Controls.Add(webMessage);
                         webMessage.Visible = true;
                         var str = Regex.Replace(Properties.Resources.NoPreview, "replace", ext);
                         webMessage.DocumentText = str;

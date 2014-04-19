@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -7,6 +8,7 @@ namespace WSUI.Infrastructure.Service.Helpers
 {
     public static class HelperFunctions
     {
+        private static char[] SpecialChars = new char[]{'@'};
 
         public class MatchInfo
         {
@@ -51,7 +53,15 @@ namespace WSUI.Infrastructure.Service.Helpers
 
         public static List<MatchInfo> GetMatches(string text,string inputSequence)
         {
-            var list = GetWordList(inputSequence);
+            List<string> list = null;
+            if (inputSequence.IndexOfAny(SpecialChars) > -1)
+            {
+                list = new List<string>(){inputSequence};
+            }
+            else
+            {
+                list = GetWordList(inputSequence);    
+            }
             if (ReferenceEquals(list, null))
                 return null;
             var listMatches = new List<MatchInfo>();

@@ -54,7 +54,7 @@ namespace GflWrapper {
 		 	GFL_ERROR error =  gflLibraryInit();
 			if(error || String::IsNullOrEmpty(_fileName))
 				return false;
-			String^ ext = Path::GetExtension(_fileName)->Replace(".","");
+			String^ ext = Path::GetExtension(_fileName)->Replace(".","")->ToLowerInvariant();
 			
 			char* extChar = GetCString(ext);
 			bool res = false;// gflFormatIsSupported(extChar);

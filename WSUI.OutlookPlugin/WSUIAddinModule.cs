@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AddinExpress.MSO;
@@ -18,7 +17,6 @@ using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Controls.Application;
-using WSUI.Infrastructure.Service.Helpers;
 using WSUIOutlookPlugin.Core;
 using WSUIOutlookPlugin.Events;
 using WSUIOutlookPlugin.Interfaces;
@@ -94,6 +92,7 @@ namespace WSUIOutlookPlugin
         #endregion [const]
 
         public WSUIAddinModule()
+
         {
             AppDomain.CurrentDomain.SetupInformation.ShadowCopyFiles = "false";
             Application.EnableVisualStyles();
@@ -621,13 +620,13 @@ namespace WSUIOutlookPlugin
         private void outlookFormManager_ADXBeforeFolderSwitchEx(object sender, AddinExpress.OL.BeforeFolderSwitchExEventArgs args)
         {
             WSSqlLogger.Instance.LogInfo("Switch1 folders, {0}, {1}", ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath, ((Outlook.MAPIFolder)args.SrcFolder).FullFolderPath);
-            WSSqlLogger.Instance.LogInfo("_refreshCurrentFolderExecuting:{1}, _lastMapiFolder_notnull:{1}, _lastMapiFolder_Folder:{2} ", _refreshCurrentFolderExecuting, _lastMapiFolder != null, _lastMapiFolder !=  null ? _lastMapiFolder.FullFolderPath : "");
-            if (!_refreshCurrentFolderExecuting && _lastMapiFolder != null && ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath == _lastMapiFolder.FullFolderPath)// 
+            WSSqlLogger.Instance.LogInfo("_refreshCurrentFolderExecuting:{1}, _lastMapiFolder_notnull:{1}, _lastMapiFolder_Folder:{2} ", _refreshCurrentFolderExecuting, _lastMapiFolder != null, _lastMapiFolder != null ? _lastMapiFolder.FullFolderPath : "");
+            if (!_refreshCurrentFolderExecuting && _lastMapiFolder != null && ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath == _lastMapiFolder.FullFolderPath)//
             {
                 formWebPaneItem.FolderName = string.Empty;
                 ClearFolderWebViewProperties((Outlook.MAPIFolder)args.DstFolder);
                 WSSqlLogger.Instance.LogInfo("Switch2 folders, {0}, {1}", ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath, ((Outlook.MAPIFolder)args.SrcFolder).FullFolderPath);
-                Task.Factory.StartNew(new Action(() => RefreshCurrentFolder(false,_lastMapiFolder)));//SwitchFolders(((Outlook.MAPIFolder)args.DstFolder))
+                Task.Factory.StartNew(new Action(() => RefreshCurrentFolder(false, _lastMapiFolder)));//SwitchFolders(((Outlook.MAPIFolder)args.DstFolder))
                 return;
             }
             if (!_refreshCurrentFolderExecuting)
@@ -644,7 +643,6 @@ namespace WSUIOutlookPlugin
                         formWebPaneItem.FolderName = string.Empty;
                         ClearFolderWebViewProperties((Outlook.MAPIFolder)args.SrcFolder);
                     }
-
                 }
                 if (_commandManager != null)
                     _commandManager.SetShowHideButtonsEnabling(true, false);
@@ -672,7 +670,7 @@ namespace WSUIOutlookPlugin
                     formWebPaneItem.FolderName = string.Empty;
                     ClearFolderWebViewProperties(currentFolder);
                     //Restore Standard View
-                    RefreshCurrentFolder(false,folder);
+                    RefreshCurrentFolder(false, folder);
                 }
                 finally
                 {
@@ -788,7 +786,6 @@ namespace WSUIOutlookPlugin
                 _refreshCurrentFolderExecuting = false;
             }
         }
-
 
         private void SetExplorerFolder(Outlook.Explorer Explorer, Outlook.MAPIFolder Folder)
         {
@@ -958,7 +955,6 @@ namespace WSUIOutlookPlugin
             }
         }
 
-
         #endregion Outlook Object Model routines
 
         private void WSUIAddinModule_AddinStartupComplete(object sender, EventArgs e)
@@ -1015,6 +1011,7 @@ namespace WSUIOutlookPlugin
         #endregion [event handlers for ribbon]
 
         private void outlookFormManager_OnInitialize()
+
         {
             if ((OutlookApp != null) && (_outlookVersion == 0))
             {
@@ -1041,7 +1038,6 @@ namespace WSUIOutlookPlugin
             SetOutlookFolderProperties(string.Empty, string.Empty);
             WSSqlLogger.Instance.LogInfo("Shutdown...");
         }
-
 
         private void SetOutlookFolderProperties(string folderName, string folderWebUrl)
         {
@@ -1075,7 +1071,5 @@ namespace WSUIOutlookPlugin
             Marshal.ReleaseComObject(folder);
             Marshal.ReleaseComObject(outlookNamespace);
         }
-
-
     }
 }
