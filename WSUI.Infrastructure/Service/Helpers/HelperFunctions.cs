@@ -8,7 +8,7 @@ namespace WSUI.Infrastructure.Service.Helpers
 {
     public static class HelperFunctions
     {
-        private static char[] SpecialChars = new char[]{'@'};
+        private static char[] SpecialChars = new char[] { '@', '.', ',' };
 
         public class MatchInfo
         {

@@ -74,7 +74,7 @@ namespace WSUI.Module.Core
             DoubleClickCommand = new DelegateCommand<MouseButtonEventArgs>(DoubleClick, o => true);
             ClearCriteriaCommand = new DelegateCommand<object>(ClearCriteriaClicked, o => true);
             Enabled = true;
-            DataSource = new ObservableCollection<BaseSearchObject>();
+            DataSource = new ObservableCollection<ISearchObject>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
         }
 
@@ -329,7 +329,7 @@ namespace WSUI.Module.Core
 
         public bool Toggle { get { return _toggle; } set { _toggle = value; OnPropertyChanged(() => Toggle); } }
 
-        public ObservableCollection<BaseSearchObject> DataSource { get; protected set; }
+        public ObservableCollection<ISearchObject> DataSource { get; protected set; }
 
         public ICommand ChooseCommand { get; protected set; }
 

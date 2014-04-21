@@ -168,17 +168,17 @@ namespace WSUI.Infrastructure.Controls
       if (string.IsNullOrEmpty(Hightlight) || string.IsNullOrEmpty(Text))
       {
         ClearInlines();
-        AddInline(GenerateRun(Text.ConvertToIso()));
+        AddInline(GenerateRun(Text.ConvertToMostEfficientEncoding()));
         base.OnRender(drawingContext);
         return;
       }
-      Text = Text.ConvertToIso();
+      Text = Text.ConvertToMostEfficientEncoding();
 
       var mCol = HelperFunctions.GetMatches(Text, Hightlight); //Regex.Matches(Text, string.Format(@"({0})", Regex.Escape(Hightlight)), RegexOptions.IgnoreCase);
       if (mCol.Count == 0)
       {
         ClearInlines();
-        AddInline(GenerateRun(Text.ConvertToIso()));
+        AddInline(GenerateRun(Text.ConvertToMostEfficientEncoding()));
         base.OnRender(drawingContext);
         return;
       }

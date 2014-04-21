@@ -3,10 +3,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using Microsoft.Office.Interop.Outlook;
+using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Core.Extensions;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
@@ -109,10 +111,7 @@ namespace WSUI.Module.ViewModel
                         ISystemSearchResult col in
                             result.Where(i => i.Priority > FirstPriority).OrderBy(i => i.Priority))
                     {
-                        foreach (ISearchObject it in col.Result)
-                        {
-                            DataSource.Add(it as BaseSearchObject);
-                        }
+                        CollectionExtensions.AddRange(DataSource, col.Result);
                     }
                     watch.Stop();
                     WSSqlLogger.Instance.LogInfo("ProcessMainResult (AllViewModel): {0}", watch.ElapsedMilliseconds);
