@@ -1,0 +1,23 @@
+[01/04/2014 9:17 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/04/2014 9:17 AM] - SUCCESS :Validating PayPal order 1
+[01/04/2014 9:17 AM] - SUCCESS :IPN successfully verified.
+[01/04/2014 9:17 AM] - SUCCESS :Creating product Information to send.
+[01/04/2014 9:17 AM] - FAILURE :Failed to generate product keys: (111) You have no more activations left in your Free plan. Upgrade your account for more activations.
+[01/04/2014 9:17 AM] - FAILURE :Versions file not found: /home/coffxbmx/outlookfinder/wp-content/themes/justlanded/downloads/clicktwice/full/version_info.xml
+[01/04/2014 9:17 AM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 
+    [pkey_emailed] => 0
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/04/2014 9:17 AM] - FAILURE :Error sending product Email to iyariki.ya@hotmail.com.
+[01/04/2014 9:17 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
