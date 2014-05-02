@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,6 +12,7 @@ using System.Xml.Linq;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
+using WSUI.Core.Core.LimeLM;
 using WSUI.Core.Helpers;
 using Exception = System.Exception;
 using View = Microsoft.Deployment.WindowsInstaller.View;
@@ -72,7 +74,7 @@ namespace WSUI.CA
                 }
                 session.Log("Delete  files...");
                 DeleteUpdateFolder(session);
-                var list = new List<string> {LocFilename};
+                var list = new List<string> { LocFilename };
                 foreach (string filename in list)
                 {
                     DeleteFile(session, path, filename);
@@ -297,8 +299,8 @@ namespace WSUI.CA
                 }
                 UpdateAndDeleteLock(session);
                 session.Message(
-                    InstallMessage.User | InstallMessage.Info | (InstallMessage) (MessageBoxIcon.Information) |
-                    (InstallMessage) MessageBoxButtons.OK, rec);
+                    InstallMessage.User | InstallMessage.Info | (InstallMessage)(MessageBoxIcon.Information) |
+                    (InstallMessage)MessageBoxButtons.OK, rec);
                 OpenOutlook(session);
             }
             catch (Exception)
@@ -449,7 +451,33 @@ namespace WSUI.CA
         private const string TurboActivateTemplate = "TurboActivate";
 
         private const string QueryTemplate = "SELECT Data FROM Binary WHERE Name = '{0}' ";
-        private const int SizeCopy = 1024*50;
+        private const int SizeCopy = 1024 * 50;
+        private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
+
+        [CustomAction]
+        public static ActionResult EmailValidation(Session session)
+        {
+            const string EmailValidProperty = "EMAILVALID";
+            try
+            {
+                string email = session["EMAILVALUE"];
+                bool res = Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase);
+                session[EmailValidProperty] = res.ToString();
+                session.Log(session[EmailValidProperty]);
+                if (!res)
+                {
+                    session["EMAILVALUE"] = string.Empty;
+                    session["WIXUI_EXITDIALOGOPTIONALTEXT"] = "Email is not valid.";
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                session.Log(ex.Message);
+            }
+            return ActionResult.Success;
+        }
+
 
         [CustomAction]
         public static ActionResult ActivatePlugin(Session session)
@@ -458,13 +486,35 @@ namespace WSUI.CA
                 return ActionResult.Success;
             try
             {
-                string path = Path.Combine(Path.GetTempPath(), ActivateFilesFolder);
-                CreateFolder(path);
+                string path = Path.GetDirectoryName(typeof (CustomActions).Assembly.Location);
                 session.Log(string.Format("Path {0}", path));
                 ExtractFiles(session, path);
-                RunAndWaitActivator(session, path);
-                //CopyDatFileToInstallationFolder(session,path,GetInstallationFolder(session));
-                DeleteFolder(path);
+                string email = session["EMAILVALUE"];
+
+                if (string.IsNullOrEmpty(email))
+                {
+                    session.Log("Email is empty");
+                    return ActionResult.Failure;
+                }
+                try
+                {
+                    var key = LimeLMApi.GenerateAndReturnKey(email);
+                    if (string.IsNullOrEmpty(key))
+                    {
+                        session.Log("The key hasn't been generated.");
+                    }
+                    else
+                    {
+                        session.Log("KEY " + key);
+                        TurboActivate.CheckAndSavePKey(key.Trim(), TurboActivate.TA_Flags.TA_USER);
+                        TurboActivate.Activate();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    session.Log(ex.Message);
+                }
+                CopyDatFileToInstallationFolder(session, path, GetInstallationFolder(session));
                 session.Log(string.Format("Success"));
                 return ActionResult.Success;
             }
@@ -566,7 +616,7 @@ namespace WSUI.CA
 
         private static void POnExited(object sender, EventArgs eventArgs)
         {
-            ((Process) sender).Exited -= POnExited;
+            ((Process)sender).Exited -= POnExited;
         }
 
         private static bool CopyFileFromDatabase(Session session, string path, string key, string filename)
@@ -671,8 +721,8 @@ namespace WSUI.CA
                 var rec = new Record();
                 rec.FormatString = "Update was finished with error.\nPlease, see log.";
                 session.Message(
-                    InstallMessage.User | InstallMessage.Error | (InstallMessage) (MessageBoxIcon.Error) |
-                    (InstallMessage) MessageBoxButtons.OK, rec);
+                    InstallMessage.User | InstallMessage.Error | (InstallMessage)(MessageBoxIcon.Error) |
+                    (InstallMessage)MessageBoxButtons.OK, rec);
             }
             catch (Exception)
             {
@@ -698,8 +748,8 @@ namespace WSUI.CA
                 var rec = new Record();
                 rec.FormatString = "Update was canceled by user.";
                 session.Message(
-                    InstallMessage.User | InstallMessage.Info | (InstallMessage) (MessageBoxIcon.Warning) |
-                    (InstallMessage) MessageBoxButtons.OK, rec);
+                    InstallMessage.User | InstallMessage.Info | (InstallMessage)(MessageBoxIcon.Warning) |
+                    (InstallMessage)MessageBoxButtons.OK, rec);
             }
             catch (Exception)
             {

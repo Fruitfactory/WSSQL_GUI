@@ -60,6 +60,12 @@
     <Reference Include="Microsoft.Deployment.WindowsInstaller" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\WSUI.Core\Core\LimeLM\LimeLM.cs">
+      <Link>LimeLM\LimeLM.cs</Link>
+    </Compile>
+    <Compile Include="..\WSUI.Core\Core\LimeLM\TurboActivate.cs">
+      <Link>LimeLM\TurboActivate.cs</Link>
+    </Compile>
     <Compile Include="..\WSUI.Core\Helpers\RegistryHelper.cs">
       <Link>RegistryHelper.cs</Link>
     </Compile>

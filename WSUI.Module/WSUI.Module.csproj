@@ -214,8 +214,8 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Service\Dialogs\Message\MessageView.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Service\ResourceTemplate.xaml">
       <SubType>Designer</SubType>

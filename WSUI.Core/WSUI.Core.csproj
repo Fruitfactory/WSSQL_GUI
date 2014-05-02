@@ -56,6 +56,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolkits\Log4Net\net40-client\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="MahApps.Metro, Version=0.10.0.1, Culture=neutral, PublicKeyToken=fa99175fddbc0f1f, processorArchitecture=MSIL">
+      <HintPath>..\Toolkits\MahAppMetro\MahApps.Metro.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Outlook, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll</HintPath>
@@ -67,6 +70,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -81,6 +85,7 @@
     <Compile Include="Core\Attributes\BaseWSUIAttribute.cs" />
     <Compile Include="Core\Attributes\FieldAttribute.cs" />
     <Compile Include="Core\BaseSearchData.cs" />
+    <Compile Include="Core\LimeLM\LimeLM.cs" />
     <Compile Include="Core\LimeLM\TurboActivate.cs" />
     <Compile Include="Core\LimeLM\TurboLimeActivate.cs" />
     <Compile Include="Core\Rules\BaseRule.cs" />
@@ -177,6 +182,18 @@
     <Compile Include="Interfaces\IWSUIAttribute.cs" />
     <Compile Include="Logger\WSSqlLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Dialog\Interfaces\IWSUIEmailViewModel.cs" />
+    <Compile Include="Utils\Dialog\Interfaces\IWSUIView.cs" />
+    <Compile Include="Utils\Dialog\Interfaces\IWSUIViewModel.cs" />
+    <Compile Include="Utils\Dialog\ViewModel\WSUIBaseDialogViewModel.cs" />
+    <Compile Include="Utils\Dialog\ViewModel\WSUIEmailViewModel.cs" />
+    <Compile Include="Utils\Dialog\View\WSUIEmailView.xaml.cs">
+      <DependentUpon>WSUIEmailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\Dialog\WSUIDialogWindow.xaml.cs">
+      <DependentUpon>WSUIDialogWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\Dialog\WSUIRelayCommand.cs" />
     <Compile Include="Utils\FieldCash.cs" />
     <Compile Include="Utils\QueryGenerator.cs" />
     <Compile Include="Utils\QueryReader.cs" />
@@ -188,7 +205,19 @@
     </None>
     <None Include="WSUI.Core.snk" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Utils\Dialog\View\WSUIEmailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Utils\Dialog\WSUIDialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

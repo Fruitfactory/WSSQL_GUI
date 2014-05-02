@@ -127,6 +127,8 @@ namespace WSUI.Module.ViewModel
                 case ActivationState.Trial:
 #endif
                 case ActivationState.TrialEnded:
+                    MessageBoxService.Instance.Show("Trial", "The trial period has been expired", MessageBoxButton.OK,MessageBoxImage.Asterisk);
+                    break;
                 case ActivationState.NonActivated:
                     TurboLimeActivate.Instance.Activate(UpdatedActivatedStatus);
                     break;

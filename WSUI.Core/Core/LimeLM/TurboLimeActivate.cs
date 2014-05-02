@@ -2,13 +2,49 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using Microsoft.Office.Interop.Outlook;
 using WSUI.Core.Enums;
 using WSUI.Core.Logger;
+using WSUI.Core.Utils.Dialog;
+using WSUI.Core.Utils.Dialog.Interfaces;
+using WSUI.Core.Utils.Dialog.View;
+using WSUI.Core.Utils.Dialog.ViewModel;
+using Action = System.Action;
+using Exception = System.Exception;
 
 namespace WSUI.Core.Core.LimeLM
 {
     public class TurboLimeActivate
     {
+
+#region [internal class for new licensing]
+
+        class CheckActivationResult
+        {
+            public CheckActivationResult(bool isActivated, bool isTrial, bool checkInOldWay)
+            {
+                IsActivated = isActivated;
+                IsTrial = isTrial;
+                CheckInOldWay = checkInOldWay;
+            }
+
+            public bool IsActivated { get; private set; }
+            public bool IsTrial { get; private set; }
+            public bool CheckInOldWay { get; private set; }
+        }
+
+#endregion
+
+        #region [fields const]
+
+        private const string TrialExpires = "trial_expires";
+        private const string TimesUsed = "times_used";
+        private const string UserEmail = "user_email";
+        private const string IsTrialKey = "is_trial_key";
+
+        #endregion
+
+
         // O_o
         private const int DaysBetweenCheck = 0; // we should use 0. In this case TurboActive verify activation with the server every time when we call IsGenuine()
 
@@ -119,16 +155,55 @@ namespace WSUI.Core.Core.LimeLM
                    IsInternetError;
         }
 
+        private CheckActivationResult CheckActivationNew()
+        {
+            //TODO: First check if the user is activated, if not then don't continue
+            //      with any of the following code. It won't work.
+
+            // Use the IsGenuineEx() function to check if they're activated.
+            // For more info see the "Using TurboActivate" article
+            // for your particular language.
+
+            string trialExpires = TurboActivate.GetFeatureValue(TrialExpires, null);
+            bool isTrial = int.Parse(TurboActivate.GetFeatureValue(IsTrialKey, null)) > 0;
+            bool isActivated = false;
+            bool checkInOldWay = true;
+            WSSqlLogger.Instance.LogInfo("Expires date: {0}",trialExpires);
+
+            if (trialExpires != null)
+            {
+                // this is a trial product key
+                // verify the trial hasn't expired
+                bool stillInTrial = TurboActivate.IsDateValid(trialExpires,
+                    TurboActivate.TA_DateCheckFlags.TA_HAS_NOT_EXPIRED);
+                isActivated = stillInTrial;
+                checkInOldWay = false;
+            }
+            else
+            {
+                isActivated = false;
+                checkInOldWay = true;
+            }
+
+            return new CheckActivationResult(isActivated,isTrial,checkInOldWay);
+        }
+
         private void CheckActivationAndTrial()
         {
             IsActivated = CheckActivation();
-            if (!IsActivated)
+            if (IsActivated)
+            {
+                var checkResult = CheckActivationNew();
+                IsActivated = checkResult.IsActivated; // according "trial_expires" value
+                IsTrialPeriodEnded = checkResult.IsTrial && !checkResult.IsActivated;
+            }
+            else
             {
                 IsTrialPeriodEnded = CheckTrialPeriod();
             }
         }
 
-        
+
         private bool CheckTrialPeriod()
         {
             WSSqlLogger.Instance.LogInfo("UseTrial!!");
@@ -140,23 +215,40 @@ namespace WSUI.Core.Core.LimeLM
 
         private void InternalActivate()
         {
-            string path = Path.Combine(Path.GetDirectoryName(typeof(TurboLimeActivate).Assembly.Location), ActivationAppName);
-            WSSqlLogger.Instance.LogInfo("Path Activate: {0}",path);
-            Process activationProcess = new Process()
+            // TODO: ask for email. generate key, activate them. and then repeat checking.
+            if (!IsTrialPeriodEnded)
             {
-                StartInfo =
+                WSSqlLogger.Instance.LogInfo("Old way for licensing!!");
+                IWSUIEmailViewModel viewModel = new WSUIEmailViewModel(new WSUIEmailView());
+                var dlg = new WSUIDialogWindow(viewModel){Width = 400, Height = 250};
+                var result = dlg.ShowDialog();
+                if (result.HasValue && result.Value && !string.IsNullOrEmpty(viewModel.Email1))
                 {
-                    FileName = path
-                },
-                EnableRaisingEvents = true
-            };            
-            activationProcess.Exited += ActivationProcessOnExited;
-            activationProcess.Start();
+                    try
+                    {
+                        var key = LimeLMApi.GenerateAndReturnKey(viewModel.Email1);
+                        if (string.IsNullOrEmpty(key))
+                        {
+                            WSSqlLogger.Instance.LogWarning("The key hasn't been generated.");
+                        }
+                        else
+                        {
+                            TurboActivate.CheckAndSavePKey(key.Trim(), TurboActivate.TA_Flags.TA_USER);
+                            TurboActivate.Activate();
+                            ActivationProcess();
+                            WSSqlLogger.Instance.LogInfo("Activated");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        WSSqlLogger.Instance.LogError(ex.Message);
+                    }
+                }
+            }
         }
 
-        private void ActivationProcessOnExited(object sender, EventArgs eventArgs)
+        private void ActivationProcess()
         {
-            ((Process) sender).Exited -= ActivationProcessOnExited;
             CheckActivationAndTrial();
             if (_callback != null)
             {
