@@ -20,6 +20,7 @@ namespace WSUI.Core.Helpers
         private const string CallIndexKey = "CallIndex";
         private const string OutlookFolderName = "OutlookFolderName";
         private const string OutlookFolderWebUrl = "OutlookFolderWebUrl";
+        private const string PKeyId = "Id";
 
 
         private RegistryKey _baseRegistry = Registry.CurrentUser;
@@ -122,6 +123,16 @@ namespace WSUI.Core.Helpers
         public string GetOutlookFolderWebUrl()
         {
             return ReadKey(OutlookFolderWebUrl);
+        }
+
+        public void SetPKetId(string id)
+        {
+            Write(PKeyId,id);
+        }
+
+        public string GetPKeyId()
+        {
+            return ReadKey(PKeyId);
         }
 
         #region [restore outlook folders]

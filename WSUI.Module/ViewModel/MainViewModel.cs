@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
@@ -111,6 +112,7 @@ namespace WSUI.Module.ViewModel
         {
             ActivateStatus = TurboLimeActivate.Instance.State;
 
+
             WSSqlLogger.Instance.LogInfo("Activated Status: {0}", ActivateStatus.ToString());
             OnPropertyChanged(() => ActivateStatus);
             OnPropertyChanged(() => VisibleTrialLabel);
@@ -124,15 +126,20 @@ namespace WSUI.Module.ViewModel
             switch (ActivateStatus)
             {
 #if !TRIAL
-                case ActivationState.Trial:
+                //case ActivationState.Trial:
 #endif
                 case ActivationState.TrialEnded:
-                    MessageBoxService.Instance.Show("Trial", "The trial period has been expired", MessageBoxButton.OK,MessageBoxImage.Asterisk);
+                    MessageBoxService.Instance.Show("Trial", "The trial period has been expired", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     break;
                 case ActivationState.NonActivated:
                     TurboLimeActivate.Instance.Activate(UpdatedActivatedStatus);
                     break;
+                case ActivationState.Trial:
+                case ActivationState.Activated:
+                    
+                    break;
             }
+            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => TurboLimeActivate.Instance.IncreaseTimeUsedFlag()));
         }
 
         private void GetAllKinds()
@@ -430,7 +437,7 @@ namespace WSUI.Module.ViewModel
             get
             {
 #if !TRIAL
-                return string.Empty;
+                return TurboLimeActivate.Instance.DaysRemain.ToString(); //return string.Empty;
 #else
       return TurboLimeActivate.Instance.DaysRemain.ToString();
 #endif
@@ -516,7 +523,7 @@ namespace WSUI.Module.ViewModel
             get
             {
 #if !TRIAL
-                return Visibility.Collapsed;
+                return ActivateStatus == ActivationState.Activated ? Visibility.Collapsed : Visibility.Visible; //return Visibility.Collapsed;
 #else
       return ActivateStatus == ActivationState.Activated ? Visibility.Collapsed : Visibility.Visible;
 #endif

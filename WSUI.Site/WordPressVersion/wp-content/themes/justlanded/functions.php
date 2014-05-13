@@ -1406,9 +1406,9 @@ add_shortcode('auto_start_download', 'auto_start_download_trial');
 
 function auto_start_download_full(){
     $filename = getDownloadUrlForLastVersion();
-    echo '<iframe width="0" height="0" src="'.$filename.'"></iframe>';
+    return '<iframe width="0" height="0" src="'.$filename.'"></iframe>';
 }
-add_action('auto_start_download_full', 'auto_start_download_full');
+add_shortcode('auto_start_downlodFull', 'auto_start_download_full');
 
 function get_download_link($attr){
     extract(shortcode_atts(array(
@@ -1420,6 +1420,17 @@ function get_download_link($attr){
     return '<a title="'.$title.'" href="'.$filename.'">'.$caption.'</a>';
 }
 add_shortcode('get_download_link', 'get_download_link');
+
+function get_download_link_full($attr){
+    extract(shortcode_atts(array(
+        'title' => '',
+        'caption' => ''
+    ),$attr));
+    
+    $filename = getDownloadUrlForLastVersion();
+    return '<a title="'.$title.'" href="'.$filename.'">'.$caption.'</a>';
+}
+add_shortcode('get_download_link_full', 'get_download_link_full');
 
 function insert_payment_table(){
     $string_data = '<input type="hidden" id="insertTable"></input>';

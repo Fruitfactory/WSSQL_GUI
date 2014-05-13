@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.Office.Interop.Outlook;
 using WSUI.Core.Enums;
+using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
 using WSUI.Core.Utils.Dialog;
 using WSUI.Core.Utils.Dialog.Interfaces;
@@ -42,6 +43,9 @@ namespace WSUI.Core.Core.LimeLM
         private const string UserEmail = "user_email";
         private const string IsTrialKey = "is_trial_key";
 
+        private const int TimeUsedId = 2568; // can get from https://wyday.com/limelm/version/2568/edit-feature/
+
+
         #endregion
 
 
@@ -75,7 +79,7 @@ namespace WSUI.Core.Core.LimeLM
 
         public int DaysRemain
         {
-            get { return TurboActivate.TrialDaysRemaining(); }
+            get; private set;
         }
 
         public ActivationState State
@@ -114,6 +118,27 @@ namespace WSUI.Core.Core.LimeLM
             return InternalDeactivate(deleteKey);
         }
 
+        public void IncreaseTimeUsedFlag()
+        {
+            try
+            {
+                string sCount = TurboActivate.GetFeatureValue(TimesUsed);
+                int iCount;
+                int.TryParse(sCount, out iCount);
+                string pkeyid = RegistryHelper.Instance.GetPKeyId();
+                int c = iCount + 1;
+                if (!string.IsNullOrEmpty(pkeyid))
+                {
+                    var result = LimeLMApi.SetDetails(pkeyid, 0, null, new string[] { TimesUsed }, new string[] { c.ToString() });
+                    WSSqlLogger.Instance.LogInfo("Times used: {0}, Result: {1}",c,result);
+                }
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+        }
+
         #endregion
 
         #region [private property]
@@ -149,10 +174,19 @@ namespace WSUI.Core.Core.LimeLM
 
         private bool CheckActivation()
         {
-            IsGenuineResult gr = TurboActivate.IsGenuine(DaysBetweenCheck, GraceOfInerErr, true);
-            IsInternetError = gr == IsGenuineResult.InternetError;
-            return gr == IsGenuineResult.Genuine || gr == IsGenuineResult.GenuineFeaturesChanged ||
-                   IsInternetError;
+            try
+            {
+                IsGenuineResult gr = TurboActivate.IsGenuine(DaysBetweenCheck, GraceOfInerErr, true);
+                IsInternetError = gr == IsGenuineResult.InternetError;
+                WSSqlLogger.Instance.LogInfo("GenuineResult: {0}", gr);
+                return gr == IsGenuineResult.Genuine || gr == IsGenuineResult.GenuineFeaturesChanged ||
+                       IsInternetError;
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError("Error occured during checking activation: [{0}]",ex.Message);
+                return false;
+            }
         }
 
         private CheckActivationResult CheckActivationNew()
@@ -163,28 +197,36 @@ namespace WSUI.Core.Core.LimeLM
             // Use the IsGenuineEx() function to check if they're activated.
             // For more info see the "Using TurboActivate" article
             // for your particular language.
-
-            string trialExpires = TurboActivate.GetFeatureValue(TrialExpires, null);
-            bool isTrial = int.Parse(TurboActivate.GetFeatureValue(IsTrialKey, null)) > 0;
+            bool isTrial = false;
             bool isActivated = false;
             bool checkInOldWay = true;
-            WSSqlLogger.Instance.LogInfo("Expires date: {0}",trialExpires);
-
-            if (trialExpires != null)
+            try
             {
-                // this is a trial product key
-                // verify the trial hasn't expired
-                bool stillInTrial = TurboActivate.IsDateValid(trialExpires,
-                    TurboActivate.TA_DateCheckFlags.TA_HAS_NOT_EXPIRED);
-                isActivated = stillInTrial;
-                checkInOldWay = false;
-            }
-            else
-            {
-                isActivated = false;
-                checkInOldWay = true;
-            }
+                string trialExpires = TurboActivate.GetFeatureValue(TrialExpires, null);
+                isTrial = int.Parse(TurboActivate.GetFeatureValue(IsTrialKey, null)) > 0;
+                WSSqlLogger.Instance.LogInfo("Expires date: {0}", trialExpires);
 
+                if (trialExpires != null)
+                {
+                    // this is a trial product key
+                    // verify the trial hasn't expired
+                    bool stillInTrial = TurboActivate.IsDateValid(trialExpires,
+                        TurboActivate.TA_DateCheckFlags.TA_HAS_NOT_EXPIRED);
+                    DaysRemain = (DateTime.Parse(trialExpires).Date - DateTime.Now.Date).Days;
+                    isActivated = stillInTrial;
+                    checkInOldWay = false;
+                }
+                else
+                {
+                    isActivated = false;
+                    checkInOldWay = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError("Error occured during checking new activation: [{0}]",ex.Message);
+            }
+            
             return new CheckActivationResult(isActivated,isTrial,checkInOldWay);
         }
 
@@ -194,29 +236,19 @@ namespace WSUI.Core.Core.LimeLM
             if (IsActivated)
             {
                 var checkResult = CheckActivationNew();
-                IsActivated = checkResult.IsActivated; // according "trial_expires" value
-                IsTrialPeriodEnded = checkResult.IsTrial && !checkResult.IsActivated;
+                IsActivated = !checkResult.IsTrial && checkResult.IsActivated; // according "trial_expires" value
+                IsTrialPeriodEnded = !checkResult.IsTrial;
             }
             else
             {
-                IsTrialPeriodEnded = CheckTrialPeriod();
+                IsTrialPeriodEnded = true;
             }
-        }
-
-
-        private bool CheckTrialPeriod()
-        {
-            WSSqlLogger.Instance.LogInfo("UseTrial!!");
-            TurboActivate.UseTrial();
-            int days = DaysRemain;
-            WSSqlLogger.Instance.LogInfo("DaysRemain = {0}",days);
-            return days == 0;
         }
 
         private void InternalActivate()
         {
             // TODO: ask for email. generate key, activate them. and then repeat checking.
-            if (!IsTrialPeriodEnded)
+            if (IsTrialPeriodEnded)
             {
                 WSSqlLogger.Instance.LogInfo("Old way for licensing!!");
                 IWSUIEmailViewModel viewModel = new WSUIEmailViewModel(new WSUIEmailView());
@@ -227,13 +259,14 @@ namespace WSUI.Core.Core.LimeLM
                     try
                     {
                         var key = LimeLMApi.GenerateAndReturnKey(viewModel.Email1);
-                        if (string.IsNullOrEmpty(key))
+                        if (key == null)
                         {
                             WSSqlLogger.Instance.LogWarning("The key hasn't been generated.");
                         }
                         else
                         {
-                            TurboActivate.CheckAndSavePKey(key.Trim(), TurboActivate.TA_Flags.TA_USER);
+                            RegistryHelper.Instance.SetPKetId(key.Item1.Trim());
+                            TurboActivate.CheckAndSavePKey(key.Item2.Trim(), TurboActivate.TA_Flags.TA_USER);
                             TurboActivate.Activate();
                             ActivationProcess();
                             WSSqlLogger.Instance.LogInfo("Activated");

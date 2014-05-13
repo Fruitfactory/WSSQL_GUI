@@ -499,15 +499,23 @@ namespace WSUI.CA
                 try
                 {
                     var key = LimeLMApi.GenerateAndReturnKey(email);
-                    if (string.IsNullOrEmpty(key))
+                    if (key == null)
                     {
                         session.Log("The key hasn't been generated.");
                     }
                     else
                     {
-                        session.Log("KEY " + key);
-                        TurboActivate.CheckAndSavePKey(key.Trim(), TurboActivate.TA_Flags.TA_USER);
-                        TurboActivate.Activate();
+                        session.Log("ID - KEY: " + key.Item1 + " - " + key.Item2);
+                        RegistryHelper.Instance.SetPKetId(key.Item1.Trim());
+                        if (TurboActivate.CheckAndSavePKey(key.Item2.Trim(), TurboActivate.TA_Flags.TA_USER))
+                        {
+                            TurboActivate.Activate();
+                            session.Log("Activated.");
+                        }
+                        else
+                        {
+                            session.Log("Key wasn't saved");
+                        }
                     }
                 }
                 catch (Exception ex)

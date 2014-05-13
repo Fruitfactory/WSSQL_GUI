@@ -282,10 +282,10 @@ namespace WSUI.Core.Core.LimeLM
         }
 
 
-        public static string GenerateAndReturnKey(string email)
+        public static Tuple<string,string> GenerateAndReturnKey(string email)
         {
             string trialExp = DateTime.Now.AddDays(DefaultTrialPeriod).ToString("yyyy-MM-dd HH:mm:ss");
-            string resp = LimeLMApi.GeneratePKeys(LimeLMApi.VersionId, LimeLMApi.Quantity, 1, email, new[] { TrialExpires, UserEmail, IsTrialKey }, new[] { trialExp, email, 1.ToString() });
+            string resp = LimeLMApi.GeneratePKeys(LimeLMApi.VersionId, LimeLMApi.Quantity, 1, email, new[] { TrialExpires, UserEmail, IsTrialKey,TimesUsed }, new[] { trialExp, email, 1.ToString(),0.ToString() });
             using (XmlReader reader = XmlReader.Create(new StringReader(resp)))
             {
                 reader.ReadToFollowing("rsp");
@@ -299,9 +299,9 @@ namespace WSUI.Core.Core.LimeLM
 
                 reader.ReadToFollowing("pkeys");
 
-                List<string> pkeys = new List<string>();
-                GetPKeys(reader, pkeys);
-                return pkeys.Count > 0 ? pkeys[0] : string.Empty;
+                List<Tuple<string, string>> pkeys = new List<Tuple<string, string>>();
+                GetIdAndPKeys(reader,pkeys);
+                return pkeys.Count > 0 ? pkeys[0] : null;
             }
         }
 
@@ -317,6 +317,20 @@ namespace WSUI.Core.Core.LimeLM
                     pkeys.Add(reader["key"]);
             }
         }
+
+        static void GetIdAndPKeys(XmlReader reader, List<Tuple<string, string>> pkeys)
+        {
+            while (reader.Read())
+            {
+                //end of node </pkeys>
+                if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName.Equals("pkeys"))
+                    return;
+
+                if (reader.NodeType == XmlNodeType.Element && reader.LocalName.Equals("pkey"))
+                    pkeys.Add(new Tuple<string, string>(reader["id"],reader["key"]));
+            }
+        }
+
         static string PostRequest(List<KeyValuePair<string, object>> postData)
         {
             if (APIKey == null)
