@@ -58,12 +58,13 @@ function ValidatePP()
 	debug_log('Validating PayPal order '.$_POST['item_number'], true);
 
 	// Only send a product key if the payment has completed successfully
+        debug_log('PAYMENT_STATUS: '.$_POST['payment_status']);
 	if ($_POST['payment_status'] != 'Completed')
 	{
 		debug_log('Invalid payment_status: '.$_POST['payment_status'],false);
 		return false;
 	}
-
+        debug_log('RECEIVER EMAIL: '.$_POST['receiver_email']);
 	if ($_POST['receiver_email'] != $PayPalEmail)
 	{
 		debug_log('Invalid Reciver E-Mail : '.$_POST['reciver_email'],false);
@@ -112,11 +113,11 @@ function ValidatePP()
 
 // Begin checking :
 debug_log('paychecker intiated by '.$_SERVER['REMOTE_ADDR'], true);
-
+$userEmail = $_GET['userEmail'];
 
 if ($_GET['paypal'])
 {
-	// validate PayPal order
+	 //validate PayPal order
 	if (!ValidatePP())
 		exit;
 
@@ -145,7 +146,12 @@ debug_log('Creating product Information to send.',true);
 
 // This calls the function in PaymentSettings.php that
 // creates the product keys and send them to the user
-SendPKeys($quantity, $custEmail, $firstName, $lastName);
+if($userEmail)
+{
+    UpdateLicensing($userEmail);
+}
+else
+    SendPKeys($quantity, $custEmail, $firstName, $lastName);
 
 debug_log('paychecker finished.',true,true);
 ?>

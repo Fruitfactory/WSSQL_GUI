@@ -112,6 +112,11 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         return (dollars * quantity + Math.floor((cents * quantity) / 100)).toString()+'.'+zeroString+n;
     }
 
+    function isEmail(email){
+       var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+       return testEmail.test(email);
+    }
+
     jQuery(document).ready(function ($){
 
         $("#quantity").keypress(function(evt){
@@ -140,7 +145,17 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         $("#total_price").text(total);
 
 
-        $("#signup_form").submit(function(){
+        $("#signup_form").submit(function(event){
+            
+            
+             var emailVal = $("#useremail").val();
+            if(!isEmail(emailVal)){
+                $("#validateResult").text("Email is not valid").show().fadeOut(1000);
+                event.preventDefault();
+                return;
+            }
+            
+            
             $("#submit").prop("disabled", true);
             <?php
             if ($TotalPaymentMethods == 1)
@@ -163,6 +178,52 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
             <?php
             }
             ?>
+        });
+
+
+         $("#useremail").keypress(function(event){
+           if(event.keyCode == 13){
+                event.preventDefault();
+                return;
+           }
+        });       
+
+        $("#submit").click(function(){
+            var emailVal = $("#useremail").val();
+            if(!isEmail(emailVal)){
+                $("#validateResult").text("Email is not valid").show().fadeOut(1000);
+                return;
+            }
+            //method=limelm.pkey.find&version_id=1432&email=yariki4@gmail.com&api_key=1m115715277fb67cc5a51.73953699
+            //{method:methodApi,version_id:version,email:emailVal,api_key:apiKey,format:'json'},
+            //'?method=limelm.pkey.find&version_id=1432&email='+emailVal+'&api_key=1m115715277fb67cc5a51.73953699&format=json' ,
+            // + '?method=limelm.pkey.find&version_id='+version+'&email='+emailVal+'&api_key='+apiKey+'&format=json'
+            var urlLimeLM = 'http://outlookfinder.com/findChecker.php';//'http://www.outlookfinder.dev/findChecker.php'; //
+            
+            $.ajax({
+               type : 'GET',
+               dataType: 'json',
+               crossDomain:true,
+               url:urlLimeLM,
+               data:{userEmail:emailVal},
+               complete:function(response, textStatus){
+                        var pStatus = $.parseJSON(response.responseText);
+                        if(pStatus === null)
+                            return;
+                        switch(pStatus.stat){
+                            case 'ok':
+                                var valNotify = $("#notify_url").val();
+                                valNotify = valNotify + "&userEmail="+emailVal;
+                                $("#notify_url").val(valNotify);
+                                $("#signup_form").submit();
+                                break;
+                            case 'fail':
+                                $("#validateResult").text(pStatus.message).show().fadeOut(1000);
+                                break;
+                        }
+                    }
+            });
+            
         });
 
         $("#Bank").click(function(){
@@ -375,6 +436,14 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
                         <td><?= $AppName?></td>
                         <td class="large"><?=$CurrencySign?><?=$single_price?></td>
                     </tr>
+                     <tr class="bg-01">
+                        <td>
+                            Enter your email address: 
+                        </td>
+                        <td>
+                            <input type="text" id="useremail" /><span id="validateResult" style="color:red"></span>  
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         
@@ -449,7 +518,7 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         <input type="hidden" name="rm" value="2"/>
         <input type="hidden" name="return" value="<?=$ThankYouPage?>"/>
         <input type="hidden" name="cancel_return" value="<?=$BuyPage?>"/>
-        <input type="hidden" name="notify_url" value="<?=$CheckScript.'?paypal=1'?>"/>
+        <input type="hidden" name="notify_url" id="notify_url" value="<?=$CheckScript.'?paypal=1'?>"/>
         <?php
         if ($YourLogo)
             echo '<input type="hidden" name="image_url" value="'.$YourLogo.'"/>';
@@ -470,9 +539,8 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
             echo '<input type="hidden" name="logo_url" value="'.$YourLogo.'"/>';
         }
         ?>
-
-        <div><input type="image" src="http://outlookfinder.com/images/order.png" name="submit" id="submit" alt="Place my order" style="width:180px;height:38px;vertical-align:middle;"/>&nbsp;&nbsp;<strong id="progress"></strong></div>
         </form>
+            <div><input type="image" src="http://outlookfinder.com/images/order.png" name="submit" id="submit" alt="Place my order" style="width:180px;height:38px;vertical-align:middle;"/>&nbsp;&nbsp;<strong id="progress"></strong></div>
         </div>
        
     </div>

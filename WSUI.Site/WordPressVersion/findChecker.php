@@ -30,7 +30,7 @@ if ($userEmail) {
         if ($xml['stat'] == 'ok') {
             $response = array('stat' => 'ok', 'count' => $xml->pkeys['total'], 'message' => 'Key was founded.');
         } else { //failure
-            $response = array('stat' => 'fail', 'count' => 0, 'message' => $xml->err['code'] == '1' ? 'No key was fonded for that email.' : 'Error code' . $xml->err['code']);
+            $response = array('stat' => 'fail', 'count' => 0, 'message' => $xml->err['code'] == '1' ? "Key wasn't  found for this email." : "Error code" . $xml->err['code']);
         }
     } catch (Exception $e) {
         $success = false;

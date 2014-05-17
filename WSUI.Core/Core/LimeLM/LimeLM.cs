@@ -282,10 +282,37 @@ namespace WSUI.Core.Core.LimeLM
         }
 
 
-        public static Tuple<string,string> GenerateAndReturnKey(string email)
+        public static bool IsEmailPresent(string email)
+        {
+            string resp = LimeLMApi.FindPKey(LimeLMApi.VersionId, email);
+            using (XmlReader reader = XmlReader.Create(new StringReader(resp)))
+            {
+                reader.ReadToFollowing("rsp");
+                return reader["stat"] == "ok";
+            }
+        }
+
+        public static Tuple<string, string> FindAndReturnKey(string email)
+        {
+            string resp = LimeLMApi.FindPKey(LimeLMApi.VersionId, email);
+            using (XmlReader reader = XmlReader.Create(new StringReader(resp)))
+            {
+                reader.ReadToFollowing("rsp");
+                if (reader["stat"] == "ok")
+                {
+                    reader.ReadToFollowing("pkeys");
+                    List<Tuple<string, string>> pkeys = new List<Tuple<string, string>>();
+                    GetIdAndPKeys(reader, pkeys);
+                    return pkeys.Count > 0 ? pkeys[0] : null;
+                }
+                return null;
+            }
+        }
+
+        public static Tuple<string, string> GenerateAndReturnKey(string email)
         {
             string trialExp = DateTime.Now.AddDays(DefaultTrialPeriod).ToString("yyyy-MM-dd HH:mm:ss");
-            string resp = LimeLMApi.GeneratePKeys(LimeLMApi.VersionId, LimeLMApi.Quantity, 1, email, new[] { TrialExpires, UserEmail, IsTrialKey,TimesUsed }, new[] { trialExp, email, 1.ToString(),0.ToString() });
+            string resp = LimeLMApi.GeneratePKeys(LimeLMApi.VersionId, LimeLMApi.Quantity, 1, email, new[] { TrialExpires, UserEmail, IsTrialKey, TimesUsed }, new[] { trialExp, email, 1.ToString(), 0.ToString() });
             using (XmlReader reader = XmlReader.Create(new StringReader(resp)))
             {
                 reader.ReadToFollowing("rsp");
@@ -300,7 +327,7 @@ namespace WSUI.Core.Core.LimeLM
                 reader.ReadToFollowing("pkeys");
 
                 List<Tuple<string, string>> pkeys = new List<Tuple<string, string>>();
-                GetIdAndPKeys(reader,pkeys);
+                GetIdAndPKeys(reader, pkeys);
                 return pkeys.Count > 0 ? pkeys[0] : null;
             }
         }
@@ -327,7 +354,7 @@ namespace WSUI.Core.Core.LimeLM
                     return;
 
                 if (reader.NodeType == XmlNodeType.Element && reader.LocalName.Equals("pkey"))
-                    pkeys.Add(new Tuple<string, string>(reader["id"],reader["key"]));
+                    pkeys.Add(new Tuple<string, string>(reader["id"], reader["key"]));
             }
         }
 

@@ -135,7 +135,7 @@ function debug_log($message, $success, $end = false)
 
 
 
-function SendPKeys($quantity, $email, $first, $last)
+function SendPKeys($quantity, $email, $first, $last, $userEmail)
 {
 	//Note: we put LimeLM in this directory. Change it as needed.
 	require(dirname(__FILE__).'/LimeLM.php');
@@ -232,6 +232,50 @@ The '.$AppName.' team';
 	LimeLM::CleanUp();
 }
 
+
+function UpdateLicensing($userEmail)
+{
+    //Note: we put LimeLM in this directory. Change it as needed.
+    require(dirname(__FILE__).'/LimeLM.php');
+
+    global $LimeLM_VersionID, $LimeLM_ApiKey,$CompanyName,$AppName, $InstallerPage, $LicenseYear;
+
+    $errors = false;
+
+    
+    $trial_field = "trial_expires";
+    $is_trial = "is_trial_key";
+    
+    
+    $date = new DateTime(date('Y-m-d H:i:s')); // date('Y-m-d H:i:s', time());
+    $date->modify('+365 day');
+    $trialDate = $date->format('Y-m-d H:i:s');
+    // set your API key
+    LimeLM::SetAPIKey($LimeLM_ApiKey);
+
+    // my comde begin
+    $version_id = '1432';
+    
+   $xml = new SimpleXMLElement(LimeLM::FindPKey($version_id, $userEmail));
+
+    if ($xml['stat'] == 'ok')
+    {
+            // list the product keys
+            foreach ($xml->pkeys->pkey as $pkey)
+            {
+
+                    $privateKey = $pkey['key'];
+                    $keyId = $pkey['id'];
+                    LimeLM::SetPKeyDetails($keyId, 1, $userEmail, array( $trial_field,$is_trial), array($trialDate,"0"));
+                    //debug_log($pkeys, true);
+            }
+
+    }
+    
+    // my comde end
+    
+    LimeLM::CleanUp();
+}
 
 
 

@@ -94,6 +94,7 @@ namespace WSUI.CA
         #endregion [CA ClearFiles]
 
         private static string GetInstallationFolder(Session session)
+
         {
             return session[InstallFolder];
         }
@@ -461,15 +462,23 @@ namespace WSUI.CA
             try
             {
                 string email = session["EMAILVALUE"];
-                bool res = Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase);
+                bool isValid = Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase);
+                bool isPresent = LimeLMApi.IsEmailPresent(email);
+                bool res = isValid && isPresent;
+
+                session.Log("IsValid Email: " + isValid);
+                session.Log("IsPresent Email: " + isPresent);
+
                 session[EmailValidProperty] = res.ToString();
                 session.Log(session[EmailValidProperty]);
                 if (!res)
                 {
                     session["EMAILVALUE"] = string.Empty;
-                    session["WIXUI_EXITDIALOGOPTIONALTEXT"] = "Email is not valid.";
+                    session["WIXUI_EXITDIALOGOPTIONALTEXT"] = !isValid ? "Email is not valid." 
+                        : !isPresent ? "Please, enter the same email you entered on the website to download the software next time." 
+                        : string.Empty;
+                    session["EMAILVALIDMESSAGE"] = session["WIXUI_EXITDIALOGOPTIONALTEXT"];
                 }
-                
             }
             catch (Exception ex)
             {
@@ -478,6 +487,44 @@ namespace WSUI.CA
             return ActionResult.Success;
         }
 
+        private static DialogResult ShowInputDialog(ref string input, string title)
+        {
+            System.Drawing.Size size = new System.Drawing.Size(200, 70);
+            Form inputBox = new Form();
+
+            inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            inputBox.ClientSize = size;
+            inputBox.Text = title;
+
+            System.Windows.Forms.TextBox textBox = new TextBox();
+            textBox.Size = new System.Drawing.Size(size.Width - 10, 23);
+            textBox.Location = new System.Drawing.Point(5, 5);
+            textBox.Text = input;
+            inputBox.Controls.Add(textBox);
+
+            Button okButton = new Button();
+            okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            okButton.Name = "okButton";
+            okButton.Size = new System.Drawing.Size(75, 23);
+            okButton.Text = "&OK";
+            okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, 39);
+            inputBox.Controls.Add(okButton);
+
+            Button cancelButton = new Button();
+            cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new System.Drawing.Size(75, 23);
+            cancelButton.Text = "&Cancel";
+            cancelButton.Location = new System.Drawing.Point(size.Width - 80, 39);
+            inputBox.Controls.Add(cancelButton);
+
+            inputBox.AcceptButton = okButton;
+            inputBox.CancelButton = cancelButton;
+
+            DialogResult result = inputBox.ShowDialog();
+            input = textBox.Text;
+            return result;
+        }
 
         [CustomAction]
         public static ActionResult ActivatePlugin(Session session)
@@ -486,7 +533,7 @@ namespace WSUI.CA
                 return ActionResult.Success;
             try
             {
-                string path = Path.GetDirectoryName(typeof (CustomActions).Assembly.Location);
+                string path = Path.GetDirectoryName(typeof(CustomActions).Assembly.Location);
                 session.Log(string.Format("Path {0}", path));
                 ExtractFiles(session, path);
                 string email = session["EMAILVALUE"];
@@ -498,7 +545,7 @@ namespace WSUI.CA
                 }
                 try
                 {
-                    var key = LimeLMApi.GenerateAndReturnKey(email);
+                    var key = LimeLMApi.FindAndReturnKey(email);
                     if (key == null)
                     {
                         session.Log("The key hasn't been generated.");

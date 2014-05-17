@@ -180,41 +180,24 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
             ?>
         });
 
+
+        $("#useremail").keypress(function(event){
+           if(event.keyCode == 13){
+                event.preventDefault();
+                return;
+           }
+        });    
+
         $("#submit").click(function(){
             var emailVal = $("#useremail").val();
             if(!isEmail(emailVal)){
                 $("#validateResult").text("Email is not valid").show().fadeOut(1000);
                 return;
             }
-            //method=limelm.pkey.find&version_id=1432&email=yariki4@gmail.com&api_key=1m115715277fb67cc5a51.73953699
-            //{method:methodApi,version_id:version,email:emailVal,api_key:apiKey,format:'json'},
-            //'?method=limelm.pkey.find&version_id=1432&email='+emailVal+'&api_key=1m115715277fb67cc5a51.73953699&format=json' ,
-            // + '?method=limelm.pkey.find&version_id='+version+'&email='+emailVal+'&api_key='+apiKey+'&format=json'
-            var urlLimeLM = 'http://outlookfinder.com/findChecker.php';//'http://www.outlookfinder.dev/findChecker.php'; //
-            
-            $.ajax({
-               type : 'GET',
-               dataType: 'json',
-               crossDomain:true,
-               url:urlLimeLM,
-               data:{userEmail:emailVal},
-               complete:function(response, textStatus){
-                        var pStatus = $.parseJSON(response.responseText);
-                        if(pStatus === null)
-                            return;
-                        switch(pStatus.stat){
-                            case 'ok':
-                                var valNotify = $("#notify_url").val();
-                                valNotify = valNotify + "&userEmail="+emailVal;
-                                $("#notify_url").val(valNotify);
-                                $("#signup_form").submit();
-                                break;
-                            case 'fail':
-                                $("#validateResult").text(pStatus.message).show().fadeOut(1000);
-                                break;
-                        }
-                    }
-            });
+            var valNotify = $("#notify_url").val();
+            valNotify = valNotify + "&userEmail="+emailVal;
+            $("#notify_url").val(valNotify);
+            $("#signup_form").submit();
             
         });
 
@@ -428,9 +411,9 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
                         <td><?= $AppName?></td>
                         <td class="large"><?=$CurrencySign?><?=$single_price?></td>
                     </tr>
-                    <tr>
+                     <tr class="bg-01">
                         <td>
-                            Please, repeat an email: 
+                            Enter an email: 
                         </td>
                         <td>
                             <input type="text" id="useremail" /><span id="validateResult" style="color:red"></span>  
@@ -544,6 +527,6 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
 </div>
 </div>
  
-    <p><iframe style="visibility: collapse" id="loadResp"/></p>
+<p></p>
 </article>
 <?php get_footer(); ?>

@@ -213,6 +213,7 @@ namespace WSUI.Core.Core.LimeLM
                     bool stillInTrial = TurboActivate.IsDateValid(trialExpires,
                         TurboActivate.TA_DateCheckFlags.TA_HAS_NOT_EXPIRED);
                     DaysRemain = (DateTime.Parse(trialExpires).Date - DateTime.Now.Date).Days;
+                    DaysRemain = DaysRemain <= 0 ? 0 : DaysRemain;
                     isActivated = stillInTrial;
                     checkInOldWay = false;
                 }

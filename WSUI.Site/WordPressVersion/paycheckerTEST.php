@@ -1,55 +1,6 @@
 <?php
 include(getcwd().'/wp-content/themes/justlanded/PaymentSettingsTEST.php');
 
-function ValidateMB()
-{
-	// Check product ID , Amount , Currency , Recivers email
-	global $AppPrice, $Currency, $MBEmail, $SecretWord;
-
-	debug_log('Validating Moneybookers order', true);
-
-	// Status codes (see: 2.3.7 Detailed status description) :
-	//-3 chargeback / -2 failed / 2 processed / 0 pending / -1 cancelled
-	if ($_POST['status'] != 2)
-	{
-		debug_log('Status was not "2": '.$_POST['status'],false);
-		return false;
-	}
-
-	// make sure we're getting the money
-	if ($_POST['pay_to_email'] != $MBEmail)
-	{
-		debug_log('Invalid Reciver E-Mail : '.$_POST['pay_to_email'],false);
-		return false;
-	}
-
-	// multiply Price * Quantity without using nasty lossy floats
-	$exected_price = ($AppPrice[0] * $_POST['quantity'] + (int)(($AppPrice[1] * $_POST['quantity']) / 100)).'.'.str_pad((($AppPrice[1] * $_POST['quantity']) % 100), 2, '0', STR_PAD_LEFT);
-
-	// validate the price
-	if ($Currency != $_POST['currency'] || $exected_price != $_POST['amount'])
-	{
-		debug_log('Difference in price. Expected = '.$exected_price." $Currency | Paid = ".$_POST['amount'].' '.$_POST['currency'], false);
-		return false;
-	}
-
-	// Validate the Moneybookers signature
-	$concatFields = $_POST['merchant_id'].$_POST['transaction_id'].strtoupper(md5($SecretWord)).$_POST['mb_amount'].$_POST['mb_currency'].$_POST['status'];
-
-	if (strtoupper(md5($concatFields)) == $_POST['md5sig'])
-	{
-		// Valid transaction.
-		debug_log('IPN successfully verified.',true);
-		return true;
-	}
-	else
-	{
-		// Invalid transaction. Check the log for details.
-		debug_log('IPN validation failed.',false);
-		return false;
-	}
-}
-
 function ValidatePP()
 {
 	// Check product ID , Amount , Currency , Recivers email
@@ -126,17 +77,6 @@ if ($_GET['paypal'])
 	$lastName = $_POST['last_name'];
 	$custEmail = $_POST['payer_email'];
 }
-else if ($_GET['moneybookers'])
-{
-	// validate Moneybookers order
-	if (!ValidateMB())
-		exit;
-
-	$quantity = $_POST['quantity'];
-	$firstName = $_POST['first_name'];
-	$lastName = $_POST['last_name'];
-	$custEmail = $_POST['pay_from_email'];
-}
 else
 	exit;
 
@@ -146,12 +86,12 @@ debug_log('Creating product Information to send.',true);
 
 // This calls the function in PaymentSettings.php that
 // creates the product keys and send them to the user
-if($userEmail)
+if(IsEmailExist($userEmail))
 {
     UpdateLicensing($userEmail);
 }
 else
-    SendPKeys($quantity, $custEmail, $firstName, $lastName);
+    SendPKeys($quantity, $custEmail, $firstName, $lastName,$userEmail);
 
 debug_log('paychecker finished.',true,true);
 ?>
