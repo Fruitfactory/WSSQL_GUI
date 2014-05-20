@@ -1397,7 +1397,7 @@ if(!function_exists('justlanded_get_youtube_id')) {
 }
 
 // yariki shortcode
-include( dirname(__FILE__).'/downloadlink.php');
+include_once( dirname(__FILE__).'/downloadlink.php');
 function auto_start_download_trial(){
     $filename = getDownloadUrlforTrial();
     return '<iframe width="0" height="0" src="'.$filename.'"></iframe>';
@@ -1437,3 +1437,75 @@ function insert_payment_table(){
     return  $string_data;
 }
 add_shortcode('insert_payment_table', 'insert_payment_table');
+
+
+
+// yariki filters
+
+add_filter('wpcf7_posted_data', 'wpcf7_generate_Lime_Key_posted_data');
+include('PaymentSettings.php');
+include_once (dirname(__FILE__) . '/LimeLM.php');
+function wpcf7_generate_Lime_Key_posted_data($posted_data) {
+
+    if (!isset($posted_data["your-email"]))
+        return $posted_data;
+
+    $emailCustomer = $posted_data["your-email"];
+
+    $isOk = false;
+
+
+    global $LimeLM_VersionID, $LimeLM_ApiKey, $CompanyName, $AppName, $InstallerPage, $LicenseYear, $TrialField, $IsTrial, $UserEmail, $TimesUsed;
+
+    $date = new DateTime(date('Y-m-d H:i:s'));
+    $date->modify('+14 day');
+    $trialDate = $date->format('Y-m-d H:i:s');
+
+    $errors = false;
+
+    // set your API key
+    LimeLM::SetAPIKey($LimeLM_ApiKey);
+
+    try {
+        // Generate the product key - set the number of activations using the quantity
+		debug_log($TrialField."  ".$trialDate,true);
+		debug_log($UserEmail."  ".$emailCustomer,true);
+		debug_log($IsTrial."  1",true);
+		debug_log($TimesUsed."  0",true);
+		
+		
+		
+        $xml = new SimpleXMLElement(LimeLM::GeneratePKeys($LimeLM_VersionID, 1, 1, $emailCustomer, array($TrialField, $UserEmail, $IsTrial, $TimesUsed), array($trialDate, $emailCustomer, "1", "0")));
+        debug_log('Generating keys', true);
+        debug_log("Xml: ".$xml->asXML(),true);
+		
+		
+		
+		
+        $isOk = $xml['stat'] == 'ok';
+        if (!$isOk) { //failure
+            // use the error code & message
+            debug_log('Failed to generate product keys: (' . $xml->err['code'] . ') ' . $xml->err['msg'], false);
+        }
+    } catch (Exception $e) {
+        debug_log('Failed to generate product keys, caught exception: ' . $e->getMessage(), false);
+    }
+
+    $emailBody = $emailCustomer . ',
+    
+    Thank you for trying ' . $AppName . '
+    The'.$AppName.' is licensed for ' . 14 . ' days.
+        
+The ' . $AppName . ' team';
+    // Send Email to the buyer
+    $emailSent = mail($emailCustomer, 'Your ' . $AppName . ' trial product key', $emailBody, $headers);
+
+    if (!$emailSent) {
+        $errors = true;
+        debug_log('Error sending product Email to ' . $emailCustomer . '.', false);
+    }
+
+    LimeLM::CleanUp();
+
+    return $posted_data;
+}

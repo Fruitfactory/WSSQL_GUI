@@ -76,6 +76,10 @@ $YourLogo = 'https://outlookfinder.com/images/logo_W_120.png';
 $InstallerPage = "http://outlookfinder.com/installer/";
 $LicenseYear = 1;
 
+$TrialField = 'trial_expires';
+$IsTrial = 'is_trial_key';
+$UserEmail = 'user_email';
+$TimesUsed = 'times_used';
 
 
 

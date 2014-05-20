@@ -16,7 +16,7 @@ do_action('justlanded_after_page_options'); // custom hook
 ?>
 
 <?php
-require( dirname(__FILE__).'/PaymentSettingsTEST.php');
+include_once ( dirname(__FILE__).'/PaymentSettingsTEST.php');
 
 // Only force HTTPS when using Autorize.Net and *not* in test mode
 if (($UseAuthorizeNetCC || $UseAuthorizeNetBank) && !$AuthNetTest && !(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')))
@@ -188,18 +188,50 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
            }
         });    
 
-        $("#submit").click(function(){
+       $("#submit").click(function(){
             var emailVal = $("#useremail").val();
             if(!isEmail(emailVal)){
                 $("#validateResult").text("Email is not valid").show().fadeOut(1000);
                 return;
             }
-            var valNotify = $("#notify_url").val();
-            valNotify = valNotify + "&userEmail="+emailVal;
-            $("#notify_url").val(valNotify);
-            $("#signup_form").submit();
+            
+            var urlLimeLM = 'http://outlookfinder.com/findChecker.php';//'http://www.outlookfinder.dev/findChecker.php'; //
+            $.ajax({
+               type : 'GET',
+               dataType: 'json',
+               crossDomain:true,
+               url:urlLimeLM,
+               data:{userEmail:emailVal},
+               complete:function(response, textStatus){
+                        var pStatus = $.parseJSON(response.responseText);
+                        if(pStatus === null)
+                            return;
+                        var parameter = "";
+                        switch(pStatus.stat){
+                            case 'ok':
+                                parameter = "?existEmail=1";
+                                break;
+                            case 'fail':
+                                parameter = "?newCustomer=1";
+                                break;
+                        }
+                        var valNotify = $("#notify_url").val();
+                        valNotify = valNotify + "&userEmail="+emailVal;
+                        $("#notify_url").val(valNotify);
+                        
+                        var valReturnUrl = $("#returnUrl").val();
+                        valReturnUrl = valReturnUrl + parameter;
+                        $("#returnUrl").val(valReturnUrl);
+                        
+                        $("#signup_form").submit();
+                    }
+            });
             
         });
+        
+        
+        
+        
 
         $("#Bank").click(function(){
             $("#signup_form").attr("action", "");
@@ -491,7 +523,7 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         <input type="hidden" name="currency_code" value="<?=$Currency?>"/>
         <input type="hidden" name="lc" value="US"/>
         <input type="hidden" name="rm" value="2"/>
-        <input type="hidden" name="return" value="<?=$ThankYouPage?>"/>
+        <input type="hidden" name="return" id="returnUrl" value="<?=$ThankYouPage?>"/>
         <input type="hidden" name="cancel_return" value="<?=$BuyPage?>"/>
         <input type="hidden" name="notify_url" id="notify_url" value="<?=$CheckScript.'?paypal=1'?>"/>
         <?php

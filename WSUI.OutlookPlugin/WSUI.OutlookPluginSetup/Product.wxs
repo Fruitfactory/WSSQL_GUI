@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="E913E043-B3EF-4ED5-A9BC-DFEACFF90FF0" Name="OutlookFinder" Language="1033" Version="1.0.12" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="14DBBA29-CE21-4C43-B4C0-917EE643D183" Name="OutlookFinder" Language="1033" Version="1.0.12" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <Media Id="1" Cabinet="OutlookFinder.cab" EmbedCab="yes" />
@@ -88,8 +88,9 @@
         <Control Id="Title" Type="Text" Transparent="yes" NoPrefix="yes" Text="Enter Email" X="15" Y="6" Width="219" Height="28" />
         <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
         <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
-        <Control Type="Text" Id="EmailLabel" Text="Please, enter the same email you entered on the website to download the software:" Width="290" Height="10" X="20" Y="105" />
-        <Control Id="EmailEdit" Type="Edit" Property="EMAILVALUE" X="20" Y="117" Width="250" Height="16" />
+        <Control Type="Text" Id="EmailLabel" Text="Please, enter the same email you entered on the website " Width="290" Height="10" X="20" Y="105" />
+        <Control Type="Text" Id="EmailLabel_2" Text="to download the software:" Width="290" Height="10" X="20" Y="117" />
+        <Control Id="EmailEdit" Type="Edit" Property="EMAILVALUE" X="20" Y="129" Width="250" Height="16" />
       </Dialog>
       <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
       <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />

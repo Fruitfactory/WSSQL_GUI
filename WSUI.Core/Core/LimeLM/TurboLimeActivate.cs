@@ -110,7 +110,7 @@ namespace WSUI.Core.Core.LimeLM
         public void Activate(Action callback)
         {
             _callback = callback;
-            InternalActivate();
+            //InternalActivate();
         }
 
         public bool Deactivate(bool deleteKey = false)
@@ -212,6 +212,7 @@ namespace WSUI.Core.Core.LimeLM
                     // verify the trial hasn't expired
                     bool stillInTrial = TurboActivate.IsDateValid(trialExpires,
                         TurboActivate.TA_DateCheckFlags.TA_HAS_NOT_EXPIRED);
+                    WSSqlLogger.Instance.LogInfo("Is Still in Trial: {0}", stillInTrial);
                     DaysRemain = (DateTime.Parse(trialExpires).Date - DateTime.Now.Date).Days;
                     DaysRemain = DaysRemain <= 0 ? 0 : DaysRemain;
                     isActivated = stillInTrial;
@@ -238,7 +239,7 @@ namespace WSUI.Core.Core.LimeLM
             {
                 var checkResult = CheckActivationNew();
                 IsActivated = !checkResult.IsTrial && checkResult.IsActivated; // according "trial_expires" value
-                IsTrialPeriodEnded = !checkResult.IsTrial;
+                IsTrialPeriodEnded = checkResult.IsTrial && !checkResult.IsActivated;
             }
             else
             {

@@ -1,5 +1,5 @@
 <?php
-include(getcwd().'/wp-content/themes/justlanded/PaymentSettingsTEST.php');
+include_once (getcwd().'/wp-content/themes/justlanded/PaymentSettingsTEST.php');
 
 function ValidatePP()
 {
@@ -68,14 +68,14 @@ $userEmail = $_GET['userEmail'];
 
 if ($_GET['paypal'])
 {
-	 //validate PayPal order
-	if (!ValidatePP())
-		exit;
+	//validate PayPal order
+	//if (!ValidatePP())
+	//	exit;
 
 	$quantity = $_POST['quantity'];
 	$firstName = $_POST['first_name'];
 	$lastName = $_POST['last_name'];
-	$custEmail = $_POST['payer_email'];
+	$custEmail =$_POST['payer_email'];
 }
 else
 	exit;
@@ -88,7 +88,7 @@ debug_log('Creating product Information to send.',true);
 // creates the product keys and send them to the user
 if(IsEmailExist($userEmail))
 {
-    UpdateLicensing($userEmail);
+    UpdateLicensing($quantity, $custEmail, $firstName, $lastName,$userEmail);
 }
 else
     SendPKeys($quantity, $custEmail, $firstName, $lastName,$userEmail);

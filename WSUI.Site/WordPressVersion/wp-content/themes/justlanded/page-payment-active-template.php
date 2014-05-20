@@ -16,7 +16,7 @@ do_action('justlanded_after_page_options'); // custom hook
 ?>
 
 <?php
-require( dirname(__FILE__).'/PaymentSettings.php');
+require_once( dirname(__FILE__).'/PaymentSettings.php');
 
 // Only force HTTPS when using Autorize.Net and *not* in test mode
 if (($UseAuthorizeNetCC || $UseAuthorizeNetBank) && !$AuthNetTest && !(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')))

@@ -17,50 +17,44 @@ do_action('justlanded_after_page_options'); // custom hook
 
 <?php
 include ( dirname(__FILE__).'/downloadlink.php');
-require( dirname(__FILE__).'/PaymentSettingsTEST.php');
+include_once ( dirname(__FILE__).'/PaymentSettingsTEST.php');
+
+$isExistingEmail = $_GET["existEmail"];
+$isNewCustomer = $_GET["newCustomer"];
+
 
 $count = 0;
 $keys = array();
 
-//if(sizeof($_POST))
-//{
-//	
-//	require(dirname(__FILE__).'/LimeLM.php');
-//	
-//	global $LimeLM_VersionID, $LimeLM_ApiKey;
-//	
-//	LimeLM::SetAPIKey($LimeLM_ApiKey);
-//	if(!empty($_POST["payer_email"]))	
-//	{
-//		try
-//		{
-//			$xml = new SimpleXMLElement(LimeLM::FindPKey($LimeLM_VersionID,$_POST["payer_email"]));
-//			if($xml["stat"] == "ok")
-//			{
-//				foreach($xml->pkeys->pkey as $pkey)
-//				{
-//					array_push($keys,$pkey["key"]);
-//				}	
-//				$count = $xml->pkeys["total"];			
-//			}
-//		}
-//		catch (Exception $e)
-//		{	
-//		}
-//	}
-//	
-//}	
-//
-//
-//$path_down = getDownloadUrlForLastVersion();
+$path_down = getDownloadUrlForLastVersion();
 
 ?>
 
 <?php get_header(); ?>
 <article id="content"<?php if (justlanded_get_option('show_page_banner', 0, $data) == true) { echo ' class="row"'; } ?>>
+    <?php
+        if($isExistingEmail){
+    ?>
     <div class="row">
         <h1>Thank you for pushing our software.</h1>
+         <p>You should restart Outlook to take effect.</p>
+        <p>Here is the link for downloading the latest version: <a href="<?= $path_down ?>">download</a></p>
     </div>
+    <?php }
+        else if ($isNewCustomer){
+    ?>
+    <div class="row">
+        <h1>Thank you for pushing our software.</h1>
+        <p>Here is the link for downloading the latest version: <a href="<?= $path_down ?>">download</a></p>
+    </div>
+    <?php } ?>
 </article>
+<div id="auto_download">
+    <?php 
+    if($isNewCustomer){
+      do_action('autostartdownloadfull');  
+    }?>
+</div>
+
 
 <?php get_footer(); ?>

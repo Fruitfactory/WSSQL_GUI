@@ -6,7 +6,7 @@
 //==== General Config ====
 
 include ( dirname(__FILE__) . '/downloadlink.php');
-
+include_once (dirname(__FILE__) . '/LimeLM.php');
 
 //TODO: disable debug & sandbox when you're using this on your live site.
 // Enable debug logging
@@ -56,14 +56,11 @@ $LimeLM_VersionID = '1432';
 // URL of the "paychecker.php" script.
 // This is where Moneybookers and PayPal orders are confirmed and processed.
 // If you're not using Moneybookers or PayPal then you don't have to set this.
-$CheckScript = 'http://outlookfinder.com/paycheckerTEST.php';//'http://www.outlookfinder.com/paychecker.php';//
-
+$CheckScript = 'http://outlookfinder.com/paycheckerTEST.php'; //'http://www.outlookfinder.com/paychecker.php';//
 // Where the user can buy your products
-$BuyPage = 'http://outlookfinder.com/buy-test/';//'http://www.outlookfinder.dev/buy/'; //
-
+$BuyPage = 'http://outlookfinder.com/buy-test/'; //'http://www.outlookfinder.dev/buy/'; //
 // Thank you page (once payment is made, user is sent to this page)
-$ThankYouPage =  'http://outlookfinder.com/thank-you-test/';//'http://www.outlookfinder.dev/thank-you/';//
-
+$ThankYouPage = 'http://outlookfinder.com/thank-you-test/'; //'http://www.outlookfinder.dev/thank-you/';//
 // The logo to display on the PayPal / Moneybookers checkout
 // this site must be HTTPS or it won't display.
 // Maximum size (PayPal): 150px (width) by 50px (height)
@@ -73,10 +70,10 @@ $YourLogo = 'https://outlookfinder.com/images/logo_W_120.png';
 $InstallerPage = "http://outlookfinder.com/installer/";
 $LicenseYear = 1;
 
-$TrialField = "trial_expires";
-$IsTrial = "is_trial_key";
-$UserEmail = "user_email";
-$TimesUsed = "times_used";
+$TrialField = 'trial_expires';
+$IsTrial = 'is_trial_key';
+$UserEmail = 'user_email';
+$TimesUsed = 'times_used';
 
 
 
@@ -123,9 +120,9 @@ function debug_log($message, $success, $end = false) {
 
 function SendPKeys($quantity, $email, $first, $last, $userEmail) {
     //Note: we put LimeLM in this directory. Change it as needed.
-    require(dirname(__FILE__) . '/LimeLM.php');
-
-    global $LimeLM_VersionID, $LimeLM_ApiKey, $CompanyName, $AppName, $InstallerPage, $LicenseYear,$TrialField,$IsTrial,$TimesUsed,$UserEmail;
+    //require(dirname(__FILE__) . '/LimeLM.php');
+    debug_log('Generating keys...', true);
+    global $LimeLM_VersionID, $LimeLM_ApiKey, $CompanyName, $AppName, $InstallerPage, $LicenseYear, $TrialField, $IsTrial, $TimesUsed, $UserEmail;
 
     $errors = false;
 
@@ -133,13 +130,13 @@ function SendPKeys($quantity, $email, $first, $last, $userEmail) {
     LimeLM::SetAPIKey($LimeLM_ApiKey);
 
     try {
-        
+
         $date = new DateTime(date('Y-m-d H:i:s')); // date('Y-m-d H:i:s', time());
         $date->modify('+365 day');
         $trialDate = $date->format('Y-m-d H:i:s');
 
         // Generate the product key - set the number of activations using the quantity
-        $xml = new SimpleXMLElement(LimeLM::GeneratePKeys($LimeLM_VersionID, 1, $quantity, $userEmail,array($TrialField, $IsTrial,$TimesUsed,$UserEmail), array($trialDate, "0","0",$userEmail)));
+        $xml = new SimpleXMLElement(LimeLM::GeneratePKeys($LimeLM_VersionID, 1, $quantity, $userEmail, array($TrialField, $IsTrial, $TimesUsed, $UserEmail), array($trialDate, "0", "0", $userEmail)));
         debug_log('Generating keys', true);
         if ($xml['stat'] == 'ok') {
             foreach ($xml->pkeys->pkey as $pkey) {
@@ -209,40 +206,69 @@ The ' . $AppName . ' team';
     LimeLM::CleanUp();
 }
 
-function UpdateLicensing($userEmail) {
+function UpdateLicensing($quantity, $email, $first, $last, $customerEmail) {
     //Note: we put LimeLM in this directory. Change it as needed.
-    require(dirname(__FILE__) . '/LimeLM.php');
-
-    global $LimeLM_VersionID, $LimeLM_ApiKey, $CompanyName, $AppName, $InstallerPage, $LicenseYear,$TrialField,$IsTrial,$TimesUsed,$UserEmail;
+    //require(dirname(__FILE__) . '/LimeLM.php');
+    debug_log('Updating keys...', true);
+    global $LimeLM_VersionID, $LimeLM_ApiKey, $CompanyName, $AppName, $InstallerPage, $LicenseYear, $TrialField, $IsTrial, $TimesUsed, $UserEmail;
 
     $errors = false;
 
     $date = new DateTime(date('Y-m-d H:i:s')); // date('Y-m-d H:i:s', time());
     $date->modify('+365 day');
     $trialDate = $date->format('Y-m-d H:i:s');
-    // set your API key
-    LimeLM::SetAPIKey($LimeLM_ApiKey);
+    try {
+        // set your API key
+        LimeLM::SetAPIKey($LimeLM_ApiKey);
 
-    $xml = new SimpleXMLElement(LimeLM::FindPKey($LimeLM_VersionID, $userEmail));
+        $xml = new SimpleXMLElement(LimeLM::FindPKey($LimeLM_VersionID, $customerEmail));
+        debug_log($xml['stat'] == 'ok', true);
+        if ($xml['stat'] == 'ok') {
+            debug_log('Found key...', true);
+            // list the product keys
+            foreach ($xml->pkeys->pkey as $pkey) {
 
-    if ($xml['stat'] == 'ok') {
-        // list the product keys
-        foreach ($xml->pkeys->pkey as $pkey) {
+                $privateKey = $pkey['key'];
+                $keyId = $pkey['id'];
+                LimeLM::SetPKeyDetails($keyId, 1, $customerEmail, array($TrialField, $IsTrial), array($trialDate, "0"));
+                //debug_log($pkeys, true);
+            }
 
-            $privateKey = $pkey['key'];
-            $keyId = $pkey['id'];
-            LimeLM::SetPKeyDetails($keyId, 1, $userEmail, array($TrialField, $IsTrial), array($trialDate, "0"));
-            //debug_log($pkeys, true);
+            // form the customer name
+            $customerName = $first;
+
+            if (!empty($last))
+            // append the last name
+                $customerName .= ' ' . $last;
+
+            $path_to_download = getDownloadUrlForLastVersion();
+
+            $emailBody = $customerName . ',
+
+    Thank you for your order. You should restart Outlook to take effect.
+Here is the url for downloading the latest version:
+' . $InstallerPage . '
+
+
+The ' . $AppName . ' team';
+
+            if (!empty($customerEmail)) {
+                // Send Email to the buyer
+                $emailSent = mail($customerEmail, 'Your ' . $AppName . ' product key', $emailBody, $headers);
+            }
         }
+    } catch (Exception $ex) {
+        debug_log($e->getMessage(), false);
     }
+
 
     LimeLM::CleanUp();
 }
 
 function IsEmailExist($userEmail) {
     //Note: we put LimeLM in this directory. Change it as needed.
-    require(dirname(__FILE__) . '/LimeLM.php');
-
+    //require(dirname(__FILE__) . '/LimeLM.php');
+    debug_log('IsEmailExist...', true);
     global $LimeLM_VersionID, $LimeLM_ApiKey, $CompanyName, $AppName, $InstallerPage, $LicenseYear;
 
     LimeLM::SetAPIKey($LimeLM_ApiKey);
@@ -252,8 +278,8 @@ function IsEmailExist($userEmail) {
     try {
         // Find product keys using the email
         $xml = new SimpleXMLElement(LimeLM::FindPKey($LimeLM_VersionID, $userEmail));
-
         $result = $xml['stat'] == 'ok';
+        debug_log('Result '.$result, true);
     } catch (Exception $e) {
         $success = false;
         debug_log($e->getMessage(), $success);
