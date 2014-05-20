@@ -190,3 +190,4 @@ pip-log.txt
 /Toolkits/*.manifest
 /GflWrapper/Output
 /GflWrapper/ROutput
+/WSUI.Site/*.log
