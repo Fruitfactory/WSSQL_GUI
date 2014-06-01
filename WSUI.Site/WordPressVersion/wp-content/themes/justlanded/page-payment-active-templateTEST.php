@@ -195,7 +195,7 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
                 return;
             }
             
-            var urlLimeLM = 'http://outlookfinder.com/findChecker.php';//'http://www.outlookfinder.dev/findChecker.php'; //
+            var urlLimeLM = 'https://outlookfinder.com/findChecker.php';//'http://www.outlookfinder.dev/findChecker.php'; //
             $.ajax({
                type : 'GET',
                dataType: 'json',
@@ -547,7 +547,7 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         }
         ?>
         </form>
-            <div><input type="image" src="http://outlookfinder.com/images/order.png" name="submit" id="submit" alt="Place my order" style="width:180px;height:38px;vertical-align:middle;"/>&nbsp;&nbsp;<strong id="progress"></strong></div>
+            <div><input type="image" src="https://outlookfinder.com/images/order.png" name="submit" id="submit" alt="Place my order" style="width:180px;height:38px;vertical-align:middle;"/>&nbsp;&nbsp;<strong id="progress"></strong></div>
         </div>
        
     </div>

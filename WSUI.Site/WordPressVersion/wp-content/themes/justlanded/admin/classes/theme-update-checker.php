@@ -90,7 +90,9 @@ class ThemeUpdateChecker {
 		if ( !empty($queryArgs) ){
 			$url = add_query_arg($queryArgs, $url);
 		}
-		
+
+		$options['headers']['Accept-Encoding'] = '';
+
 		//Send the request.
 		$result = wp_remote_get($url, $options);
 		

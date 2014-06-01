@@ -17,10 +17,10 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'coffxbmx_otlkfdr');
+define('DB_NAME', 'coffxbmx_otldev');
 
 /** MySQL database username */
-define('DB_USER', 'coffxbmx_otlkfdr');
+define('DB_USER', 'coffxbmx_otldev');
 
 /** MySQL database password */
 define('DB_PASSWORD', 'PSj6R1W[0@');
@@ -80,6 +80,10 @@ define('WPLANG', '');
  * in their development environments.
  */
 define('WP_DEBUG', false);
+
+define('WP_SITEURL', 'http://dev.outlookfinder.com');
+define('WP_HOME', 'http://dev.outlookfinder.com');
+
 
 /* That's all, stop editing! Happy blogging. */
 

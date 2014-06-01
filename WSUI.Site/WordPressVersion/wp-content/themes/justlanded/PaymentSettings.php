@@ -117,23 +117,26 @@ $SecretWord = 'PASTE YOUR SECRET WORD HERE';
 
 
 
-function debug_log($message, $success, $end = false)
-{
-	global $debug, $debug_log;
+if (!function_exists('debug_log')) {
 
-	if (!$debug || !$debug_log)
-		return;
+    function debug_log($message, $success, $end = false) {
+        global $debug, $debug_log;
 
-	// Timestamp
-	$text = '['.date('m/d/Y g:i A').'] - '.(($success)?'SUCCESS :':'FAILURE :').$message. "\n";
+        if (!$debug || !$debug_log)
+            return;
 
-	if ($end)
-		$text .= "\n------------------------------------------------------------------\n\n";
+        // Timestamp
+        $text = '[' . date('m/d/Y g:i A') . '] - ' . (($success) ? 'SUCCESS :' : 'FAILURE :') . $message . "\n";
 
-	// Write to log
-	$fp=fopen($debug_log, 'a');
-	fwrite($fp, $text);
-	fclose($fp);
+        if ($end)
+            $text .= "\n------------------------------------------------------------------\n\n";
+
+        // Write to log
+        $fp = fopen($debug_log, 'a');
+        fwrite($fp, $text);
+        fclose($fp);
+    }
+
 }
 
 

@@ -98,6 +98,20 @@ if (isset($justlanded_custom_blocks['justlanded_top_menu']) && !function_exists(
 }
 
 /*
+ * Content before top menu
+ * [custom_block id="justlanded_before_top_menu"][/custom_block]
+ *
+ */
+if (isset($justlanded_custom_blocks['justlanded_before_top_menu']) && !function_exists('justlanded_before_top_menu')) {
+	function justlanded_before_top_menu() {
+		global $justlanded_custom_blocks;
+		echo $justlanded_custom_blocks['justlanded_before_top_menu'];
+	}
+	add_action('justlanded_before_top_menu', 'justlanded_before_top_menu');
+}
+
+
+/*
  * Content after top menu
  * [custom_block id="justlanded_after_top_menu"][/custom_block]
  *
@@ -162,6 +176,7 @@ if (isset($justlanded_custom_blocks['justlanded_after_block_template']) && !func
  * Output before and after the page banner block is rendered
  * [custom_block id="justlanded_before_page_banner"][/custom_block]
  * [custom_block id="justlanded_after_page_banner"][/custom_block]
+ * [custom_block id="justlanded_after_page_banner_section"][/custom_block]
  *
  */
 
@@ -180,6 +195,15 @@ if (isset($justlanded_custom_blocks['justlanded_after_page_banner']) && !functio
 	}
 	add_action('justlanded_after_page_banner', 'justlanded_after_page_banner');
 }
+
+if (isset($justlanded_custom_blocks['justlanded_after_page_banner_section']) && !function_exists('justlanded_after_page_banner_section')) {
+	function justlanded_after_page_banner_section() {
+		global $justlanded_custom_blocks;
+		echo $justlanded_custom_blocks['justlanded_after_page_banner_section'];
+	}
+	add_action('justlanded_after_page_banner_section', 'justlanded_after_page_banner_section');
+}
+
 
 /*
  * LANDING PAGE BANNER

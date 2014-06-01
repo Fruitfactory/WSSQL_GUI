@@ -16,7 +16,7 @@ do_action('justlanded_after_page_options'); // custom hook
 ?>
 
 <?php
-require_once( dirname(__FILE__).'/PaymentSettings.php');
+include_once( dirname(__FILE__).'/PaymentSettings.php');
 
 // Only force HTTPS when using Autorize.Net and *not* in test mode
 if (($UseAuthorizeNetCC || $UseAuthorizeNetBank) && !$AuthNetTest && !(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')))
@@ -198,7 +198,7 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
             //{method:methodApi,version_id:version,email:emailVal,api_key:apiKey,format:'json'},
             //'?method=limelm.pkey.find&version_id=1432&email='+emailVal+'&api_key=1m115715277fb67cc5a51.73953699&format=json' ,
             // + '?method=limelm.pkey.find&version_id='+version+'&email='+emailVal+'&api_key='+apiKey+'&format=json'
-            var urlLimeLM = 'http://outlookfinder.com/findChecker.php';//'http://www.outlookfinder.dev/findChecker.php'; //
+            var urlLimeLM = 'https://outlookfinder.com/findChecker.php';//'http://www.outlookfinder.dev/findChecker.php'; //
             
             $.ajax({
                type : 'GET',
@@ -540,7 +540,7 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         }
         ?>
         </form>
-            <div><input type="image" src="http://outlookfinder.com/images/order.png" name="submit" id="submit" alt="Place my order" style="width:180px;height:38px;vertical-align:middle;"/>&nbsp;&nbsp;<strong id="progress"></strong></div>
+            <div><input type="image" src="https://outlookfinder.com/images/order.png" name="submit" id="submit" alt="Place my order" style="width:180px;height:38px;vertical-align:middle;"/>&nbsp;&nbsp;<strong id="progress"></strong></div>
         </div>
        
     </div>

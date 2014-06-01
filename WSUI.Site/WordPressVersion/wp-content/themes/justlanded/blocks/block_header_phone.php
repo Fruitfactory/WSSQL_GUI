@@ -16,7 +16,7 @@
 
 ?>
 <!--Start of Phone-->
-<aside id="phone" class="one_third last"><?php echo @$data['header_info_label']; ?> <a href="tel://<?php echo $phone_link; ?>" title="<?php echo @$data['header_info_label']; ?>"><?php echo @$data['header_phone']; ?></a></aside>
+<aside id="phone" class="one_third last"><?php echo @$data['header_info_label']; ?> <a href="tel:<?php echo $phone_link; ?>" title="<?php echo @$data['header_info_label']; ?>"><?php echo @$data['header_phone']; ?></a></aside>
 <!--End of Phone-->
 <?php
 } elseif (@$data['header_email'] != "") {

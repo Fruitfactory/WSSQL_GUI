@@ -69,8 +69,8 @@ $userEmail = $_GET['userEmail'];
 if ($_GET['paypal'])
 {
 	//validate PayPal order
-	//if (!ValidatePP())
-	//	exit;
+	if (!ValidatePP())
+		exit;
 
 	$quantity = $_POST['quantity'];
 	$firstName = $_POST['first_name'];
@@ -86,12 +86,12 @@ debug_log('Creating product Information to send.',true);
 
 // This calls the function in PaymentSettings.php that
 // creates the product keys and send them to the user
-if(IsEmailExist($userEmail))
+if(IsEmailExistTEST($userEmail))
 {
-    UpdateLicensing($quantity, $custEmail, $firstName, $lastName,$userEmail);
+    UpdateLicensingTEST($quantity, $custEmail, $firstName, $lastName,$userEmail);
 }
 else
-    SendPKeys($quantity, $custEmail, $firstName, $lastName,$userEmail);
+    SendPKeysTEST($quantity, $custEmail, $firstName, $lastName,$userEmail);
 
 debug_log('paychecker finished.',true,true);
 ?>

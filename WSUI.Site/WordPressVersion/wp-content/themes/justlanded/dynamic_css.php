@@ -2,6 +2,8 @@
 do_action("justlanded_before_dynamic_css_output");
 $protocol = is_ssl() ?'https':'http';
 
+if ( isset ($data['disable_responsiveness']) && $data['disable_responsiveness'] == 1 ) $responsive = false; else $responsive = true;
+
 $fonts = array();
 if (isset($data) && is_array($data)) {
 
@@ -83,11 +85,13 @@ background-size: cover;
 -o-background-size: cover;
 }
 
+<?php if ($responsive) : ?>
 @media (min-width:1025px) {
 #banner {
 background-attachment: fixed;
 }
 }
+<?php endif; ?>
 
 <?php }} else { ?>
 #banner {
@@ -170,6 +174,7 @@ border-bottom-left-radius: 0;
 -moz-border-radius-bottomleft: 0;
 }
 
+<?php if ($responsive) : ?>
 @media screen and (max-width: 460px) {
  a.button_buy, a.button_try {
     border-radius: <?php echo @$data['action_buttons_radius'];?>px;
@@ -177,16 +182,17 @@ border-bottom-left-radius: 0;
     -moz-border-radius: <?php echo @$data['action_buttons_radius'];?>px;
  }
 }
+<?php endif; ?>
 <?php } ?>
 
 <?php if (isset($data['banner_text_adapt']) && $data['banner_text_adapt'] == 1) { ?>
 @media screen and (min-width: 1006px) {
-#banner {
-height:auto;
-}
-#banner .buttons, #banner .buttons_big {
-margin: 0 0 -60px 0 !important;
-}
+	#banner {
+	height:auto;
+	}
+	#banner .buttons, #banner .buttons_big {
+	margin: 0 0 -60px 0 !important;
+	}
 }
 <?php } ?>
 

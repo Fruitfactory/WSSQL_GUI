@@ -11,7 +11,9 @@ include(JUSTLANDED_MAIN_DIR . 'custom.php');
 <head>
 <meta http-equiv="content-type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
 <title><?php wp_title(' | ', true, 'right'); ?></title>
+<?php if (!isset($data['disable_responsiveness']) || ( isset($data['disable_responsiveness']) && $data['disable_responsiveness'] == 0 ) ) : ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+<?php endif; ?>
 <link rel="stylesheet" type="text/css" href="<?php echo get_stylesheet_uri(); ?>" />
 <?php if (trim(@$data['custom_favicon']) != "") {
  echo '<link rel="shortcut icon" href="'. @$data['custom_favicon'] .'" />';
@@ -26,7 +28,8 @@ include(JUSTLANDED_MAIN_DIR . 'custom.php');
 <header>
 <?php if(!function_exists('justlanded_head_above_banner')) { ?>
 <?php
- global $template;
+do_action('justlanded_before_top_menu');
+global $template;
 if (isset($data['hide_menu']) && $data['hide_menu'] == 1) {
     do_action('justlanded_no_top_menu');
 }

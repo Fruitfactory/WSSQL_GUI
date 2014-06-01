@@ -444,8 +444,8 @@ class Options_Machine
                     if (count($subsets) > 1) {
                         foreach ($subsets as $subset) {
                             $subset_checked = '';
-                            if (@$typography_stored['subset'][$subset] == 1) $subset_checked = ' checked="checked"';
-                            $subset_part .= '<input type="checkbox" class="checkbox of-input'.$gclass.'" name="' . $value['id'] . '[subset][' . $subset . ']" id="' . $value['id'] . '_subset_' . $subset . '" value="1"' . $subset_checked . '><label class="multicheck" for="' . $value['id'] . '_subset_' . $subset . '">' . $subset . '</label>';
+                            if (isset($typography_stored['subset'][$subset]) && $typography_stored['subset'][$subset] == 1) $subset_checked = ' checked="checked"';
+                            $subset_part .= '<input type="checkbox" class="checkbox of-input'.$gclass.'" name="' . $value['id'] . '[subset][' . $subset . ']" id="' . $value['id'] . '_subset_' . $subset . '" value="1"' . $subset_checked . '><label class="multicheck" for="' . $value['id'] . '_subset_' . $subset . '">' . $subset . '</label> ';
                         }
                     }
                     $output .= '<div class="controls typography-subset">';
@@ -453,10 +453,11 @@ class Options_Machine
                     $output .= '</div>';
 
 
-                    $output .= '<div class="controls">';
-                    $output .= '<div class="of-typography of-typography-preview'.$gclass.'" id="' . $value['id'] . '_preview">Bright vixens jump; dozy fowl quack.</div>';
-                    $output .= '</div>';
-
+					if (JUSTLANDED_OPTIONS_FONT_PREVIEW == true) {
+						$output .= '<div class="controls">';
+						$output .= '<div class="of-typography of-typography-preview'.$gclass.'" id="' . $value['id'] . '_preview">Bright vixens jump; dozy fowl quack.</div>';
+						$output .= '</div>';
+					}
 
                     break;
 
@@ -779,11 +780,13 @@ class Options_Machine
                     }
 
                     $x=0;
+					$output .= '<select name="site_default_profile" id="' . $value['id'] . "_" . $x . '">';
                     foreach ($of_options_profiles as $option => $name) {
                         if (!isset($value['id']) && isset($value['name'])) $value['id'] = strtolower(str_replace(" ", "", $value['name']));
-                        $output .= '<input class="of-input of-radio'.$gclass.'" name="site_default_profile" id="' . $value['id'] . "_" . $x . '" type="radio" value="' . $option . '" ' . checked(SITE_DEFAULT_PROFILE, $option, false) . ' /><label for="' . $value['id'] . "_" . $x . '" class="radio">' . $name . '</label><br/>';
+                        $output .= '<option  value="' . $option . '" ' . selected(SITE_DEFAULT_PROFILE, $option, false) . ' />' . $name . '</option>';
                         $x++;
                     }
+					$output .= '</select>';
                     break;
 
                 //site default settings profile

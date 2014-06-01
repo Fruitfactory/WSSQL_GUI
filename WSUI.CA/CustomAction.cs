@@ -12,6 +12,8 @@ using System.Xml.Linq;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
+using WSUI.CA.ClosePromt;
+using WSUI.CA.EmailValidate;
 using WSUI.Core.Core.LimeLM;
 using WSUI.Core.Helpers;
 using Exception = System.Exception;
@@ -161,6 +163,44 @@ namespace WSUI.CA
         #endregion [private for delete files]
 
         #region [CA operation with Outlook]
+
+
+        [CustomAction]
+        public static ActionResult ClosePrompt(Session session)
+        {
+            session.Log("Begin PromptToCloseApplications");
+            try
+            {
+                var productName = session["ProductName"];
+                var processes = session["PromptToCloseProcesses"].Split(',');
+                var displayNames = session["PromptToCloseDisplayNames"].Split(',');
+
+                if (processes.Length != displayNames.Length)
+                {
+                    session.Log(@"Please check that 'PromptToCloseProcesses' and 'PromptToCloseDisplayNames' exist and have same number of items.");
+                    return ActionResult.Failure;
+                }
+
+                for (var i = 0; i < processes.Length; i++)
+                {
+                    session.Log("Prompting process {0} with name {1} to close.", processes[i], displayNames[i]);
+                    using (var prompt = new PromptCloseApplication(productName, processes[i], displayNames[i]))
+                        if (!prompt.Prompt())
+                            return ActionResult.Failure;
+                }
+                RegistryHelper.Instance.SetFlagClosedOutlookApplication();
+            }
+            catch (Exception ex)
+            {
+                session.Log("Missing properties or wrong values. Please check that 'PromptToCloseProcesses' and 'PromptToCloseDisplayNames' exist and have same number of items. \nException:" + ex.Message);
+                return ActionResult.Failure;
+            }
+
+            session.Log("End PromptToCloseApplications");
+            return ActionResult.Success;
+        }
+
+
 
         [CustomAction]
         public static ActionResult CloseOutlook(Session session)
@@ -461,6 +501,7 @@ namespace WSUI.CA
             const string EmailValidProperty = "EMAILVALID";
             try
             {
+                var productName = session["ProductName"];
                 string email = session["EMAILVALUE"];
                 bool isValid = Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase);
                 bool isPresent = LimeLMApi.IsEmailPresent(email);
@@ -469,15 +510,31 @@ namespace WSUI.CA
                 session.Log("IsValid Email: " + isValid);
                 session.Log("IsPresent Email: " + isPresent);
 
-                session[EmailValidProperty] = res.ToString();
-                session.Log(session[EmailValidProperty]);
                 if (!res)
                 {
-                    session["EMAILVALUE"] = string.Empty;
-                    session["WIXUI_EXITDIALOGOPTIONALTEXT"] = !isValid ? "Email is not valid." 
-                        : !isPresent ? "Please, enter the same email you entered on the website to download the software next time." 
-                        : string.Empty;
-                    session["EMAILVALIDMESSAGE"] = session["WIXUI_EXITDIALOGOPTIONALTEXT"];
+                    using (var emailForm = new EmailValidateApplication(productName))
+                    {
+                        var result = emailForm.PromtEmail();
+                        session.Log("Result validation: " + result.ToString());
+                        if (result)
+                        {
+                            session[EmailValidProperty] = result.ToString();
+                            session.Log(session[EmailValidProperty]);
+                            var mail = emailForm.GetEmail();
+                            session["EMAILVALUE"] = mail;
+                            session.Log("Valid email: " + session["EMAILVALUE"]);
+                        }
+                        else
+                        {
+                            session[EmailValidProperty] = result.ToString();
+                            session.Log(session[EmailValidProperty]);
+                            session["EMAILVALUE"] = string.Empty;
+                            session["WIXUI_EXITDIALOGOPTIONALTEXT"] = !isValid ? "Email is not valid."
+                                : !isPresent ? "Please, enter the same email you entered on the website to download the software next time."
+                                : string.Empty;
+                            session["EMAILVALIDMESSAGE"] = session["WIXUI_EXITDIALOGOPTIONALTEXT"];
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -485,45 +542,6 @@ namespace WSUI.CA
                 session.Log(ex.Message);
             }
             return ActionResult.Success;
-        }
-
-        private static DialogResult ShowInputDialog(ref string input, string title)
-        {
-            System.Drawing.Size size = new System.Drawing.Size(200, 70);
-            Form inputBox = new Form();
-
-            inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            inputBox.ClientSize = size;
-            inputBox.Text = title;
-
-            System.Windows.Forms.TextBox textBox = new TextBox();
-            textBox.Size = new System.Drawing.Size(size.Width - 10, 23);
-            textBox.Location = new System.Drawing.Point(5, 5);
-            textBox.Text = input;
-            inputBox.Controls.Add(textBox);
-
-            Button okButton = new Button();
-            okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            okButton.Name = "okButton";
-            okButton.Size = new System.Drawing.Size(75, 23);
-            okButton.Text = "&OK";
-            okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, 39);
-            inputBox.Controls.Add(okButton);
-
-            Button cancelButton = new Button();
-            cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            cancelButton.Name = "cancelButton";
-            cancelButton.Size = new System.Drawing.Size(75, 23);
-            cancelButton.Text = "&Cancel";
-            cancelButton.Location = new System.Drawing.Point(size.Width - 80, 39);
-            inputBox.Controls.Add(cancelButton);
-
-            inputBox.AcceptButton = okButton;
-            inputBox.CancelButton = cancelButton;
-
-            DialogResult result = inputBox.ShowDialog();
-            input = textBox.Text;
-            return result;
         }
 
         [CustomAction]

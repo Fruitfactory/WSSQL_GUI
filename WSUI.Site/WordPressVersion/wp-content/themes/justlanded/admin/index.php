@@ -71,7 +71,8 @@ define( 'OF_HELP_SIDEBAR', implode('', $help_sidebar_content));
 
 do_action("justlanded_before_profile_settings");
 
-if (!defined('MAXPROFILES')) define( 'MAXPROFILES', 10);
+if (!defined('MAXPROFILES')) define( 'MAXPROFILES', 20);
+if (!defined('JUSTLANDED_OPTIONS_FONT_PREVIEW')) define( 'JUSTLANDED_OPTIONS_FONT_PREVIEW', false);
 
 $active_profile = get_option($theme_name.'_profile_active');
 if ($active_profile == 0)
@@ -209,7 +210,7 @@ function justlanded_custom_menu_css() {
     echo $custom_menu_css;
 }
 
-if ( is_user_logged_in() && (is_super_admin() || !is_admin_bar_showing())) {
+if ( is_user_logged_in() && ( is_super_admin() || !is_admin_bar_showing()) ) {
     add_action( 'wp_head', 'justlanded_custom_menu_css' );
 }
 add_action( 'admin_head', 'justlanded_custom_menu_css' );
@@ -240,11 +241,13 @@ if (!function_exists('justlanded_update_check')) {
         $justlanded_update_checker->addResultFilter('justlanded_update_check_results');
         $justlanded_update_checker->addHttpRequestArgFilter('justlanded_update_check_http_args');
 
-        /*
+
         // for debugging purposes = check for updates every time
+		/*
         $justlanded_update_checker->checkForUpdates();
         $justlanded_update_checker->requestUpdate();
-        */
+		*/
+
     }
 }
 if (!function_exists('justlanded_update_check_query_args')) {
@@ -262,6 +265,7 @@ if (!function_exists('justlanded_update_check_http_args')) {
 if (!function_exists('justlanded_update_check_results')) {
     function justlanded_update_check_results($thupdate, $result) {
         global $justlanded_admin_notice;
+
         if (is_object($result)) $result = (array)$result;
         if(isset($result) && is_array($result) && isset($result['response']) && isset($result['response']['code']) && $result['response']['code'] == 404) {
             $justlanded_admin_notice = __('An error has occurred while trying to retrieve update information for JustLanded for WordPress. Please contact support@shapingrain.com if this problem reoccurs.', 'justlanded');

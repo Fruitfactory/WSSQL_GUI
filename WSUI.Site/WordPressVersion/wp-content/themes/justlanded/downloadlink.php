@@ -8,11 +8,11 @@
 
 
 $versions_xml  = getcwd().'/downloads/clicktwice/full/version_info.xml';
-$path_first = 'http://outlookfinder.com/downloads/clicktwice/full/1033/';
+$path_first = 'https://outlookfinder.com/downloads/clicktwice/full/1033/';
 $path_second = '/outlookfinder.exe';
 
 $versions_xml_trial  = getcwd().'/downloads/clicktwice/trial/version_info.xml';
-$path_first_trial = 'http://outlookfinder.com/downloads/clicktwice/trial/1033/';
+$path_first_trial = 'https://outlookfinder.com/downloads/clicktwice/trial/1033/';
 
 if(!function_exists('getDownloadUrl')){ 
 

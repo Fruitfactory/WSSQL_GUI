@@ -76,7 +76,8 @@ if (!function_exists('of_options')) {
 				"blogger"               => "Blogger",
 				"weibo"                 => "Weibo",
 				"houzz"                 => "Houzz",
-				"yelp"					=> "Yelp"
+				"yelp"					=> "Yelp",
+				"slideshare"			=> "Slideshare",
 			),
 			"enabled" => array(
 				"placebo" => "placebo", //REQUIRED!
@@ -246,7 +247,7 @@ if (!function_exists('of_options')) {
 		do_action("justlanded_options_before_profiles");
 
 		$of_options[] = array("name" => "Site Default Profile",
-							  "desc" => "This profile will be used as a default throughout the site.",
+							  "desc" => "This profile will be used when no specific profile is selected, and for the blog.",
 							  "descposition" => "heading",
 							  "id" => "site_default_profile",
 							  "std" => "1",
@@ -287,6 +288,12 @@ if (!function_exists('of_options')) {
 							  "std" => 0,
 							  "type" => "checkbox");
 
+		$of_options[] = array("name" => "Use 'sticky' menu?",
+							  "desc" => "Check this if you would like the menu bar to always be visible.",
+							  "id" => "sticky_menu",
+							  "std" => 0,
+							  "type" => "checkbox");
+
 		$menus = get_terms( 'nav_menu', array( 'hide_empty' => true ) );
 		$of_menus = array();
 		if (is_array($menus) && count($menus) > 0) {
@@ -322,6 +329,20 @@ if (!function_exists('of_options')) {
 							  "id" => "custom_home_url",
 							  "std" => "",
 							  "type" => "text");
+
+		/*
+		$of_options[] = array("name" => "Custom Site Title",
+		                      "desc" => "If this is left empty, the site's default title will be used.",
+		                      "id" => "custom_home_text",
+		                      "std" => "",
+		                      "type" => "text");
+
+		$of_options[] = array("name" => "Custom Site Tagline",
+		                      "desc" => "If this is left empty, the site's default tagline will be used.",
+		                      "id" => "custom_home_tagline",
+		                      "std" => "",
+		                      "type" => "text");
+		*/
 
 		$of_options[] = array("name" => "Hide main site/page title and tagline?",
 							  "desc" => "Check this if you would like to hide the main site/page title and the tag line. Use this if you'd like a logo-only header.",
@@ -583,7 +604,7 @@ if (!function_exists('of_options')) {
 
 		do_action("justlanded_options_after_custom_codes");
 
-		$of_options[] = array("name" => "Other Settings",
+		$of_options[] = array("name" => "Advanced Settings",
 							  "desc" => "",
 							  "id" => "introduction_general_advanced",
 							  "std" => "",
@@ -617,6 +638,15 @@ if (!function_exists('of_options')) {
 								  "shortcodes"  => "No filters, parse shortcodes only (no formatting etc.)",
 								  "none"        => "Do not apply filters"
 							  ));
+
+		$of_options[] = array("name" => "Responsiveness",
+							  "type" => "sectionheader");
+
+		$of_options[] = array("name" => "Disable responsiveness? (Experimental)",
+							  "desc" => "If this is checked, an alternative stylesheet will be used and the theme will no longer be responsive.",
+							  "id" => "disable_responsiveness",
+							  "std" => 0,
+							  "type" => "checkbox");
 
 
 		do_action("justlanded_options_after_general");
@@ -900,6 +930,13 @@ if (!function_exists('of_options')) {
 							  "descposition" => "heading",
 							  "type" => "sectionheader");
 
+		$of_options[] = array("name" => "General Fonts",
+		                      "id" => "introduction_general_fonts",
+		                      "std" => "These fonts are used throughout the site. If 'em' is selected for the body font size, all other font sizes using 'em' will be based on the body font's size.
+		                      <br />See <a href=\"https://www.google.com/fonts\" target=\"_blank\">Google Fonts</a> for font previews in all supported charsets and styles.",
+		                      "icon" => true,
+		                      "type" => "info");
+
 		do_action("justlanded_options_before_fonts_general");
 
 		$of_options[] = array("name" => "Body Font",
@@ -941,6 +978,13 @@ if (!function_exists('of_options')) {
 							  "desc" => "These fonts are only used on the landing page.",
 							  "descposition" => "heading",
 							  "type" => "sectionheader");
+
+		$of_options[] = array("name" => "Landing Page Fonts",
+		                      "id" => "introduction_landing_fonts",
+		                      "std" => "These fonts are used on landing pages. When a landing page block is used on a regular content page, it may be rendered differently in accordance with global styles.
+		                      <br />See <a href=\"https://www.google.com/fonts\" target=\"_blank\">Google Fonts</a> for font previews in all supported charsets and styles.",
+		                      "icon" => true,
+		                      "type" => "info");
 
 		do_action("justlanded_options_before_fonts_landing");
 
@@ -1033,6 +1077,14 @@ if (!function_exists('of_options')) {
 							  "desc" => "These fonts are only used for blog posts and on WordPress pages.",
 							  "descposition" => "heading",
 							  "type" => "sectionheader");
+
+		$of_options[] = array("name" => "Blog Fonts",
+		                      "id" => "introduction_blog_fonts",
+		                      "std" => "These fonts are used on blog and archive pages. General styles such as H1-H6 are also applied to regular content pages.
+		                      <br />See <a href=\"https://www.google.com/fonts\" target=\"_blank\">Google Fonts</a> for font previews in all supported charsets and styles.",
+		                      "icon" => true,
+		                      "type" => "info");
+
 
 		do_action("justlanded_options_before_fonts_blog");
 
@@ -1769,6 +1821,13 @@ if (!function_exists('of_options')) {
 							  "std" => "#",
 							  "type" => "text");
 
+		$of_options[] = array("name" => "Slideshare URL",
+		                      "desc" => "This is your Slideshare profile URL.",
+		                      "id" => "social_slideshare",
+		                      "std" => "#",
+		                      "type" => "text");
+
+
 		$of_options[] = array("name" => "RSS URL",
 							  "desc" => "This is your RSS Feed's URL.",
 							  "id" => "social_rss",
@@ -2266,7 +2325,7 @@ if (!function_exists('of_options')) {
 							  "std" => "This is your final chance to convince a customer",
 							  "type" => "text");
 
-		$of_options_payment = array("visa" => "Visa", "americanexpress" => "American Express", "mastercard" => "MasterCard", "paypal" => "PayPal", "ideal" => "iDeal");
+		$of_options_payment = array("visa" => "Visa", "americanexpress" => "American Express", "mastercard" => "MasterCard", "paypal" => "PayPal", "ideal" => "iDeal", "bitcoin" => "Bitcoin");
 		do_action("justlanded_options_after_payment_array");
 
 		$of_options[] = array("name" => "Accepted Payment Methods",
@@ -2317,7 +2376,7 @@ if (!function_exists('of_options')) {
 							  "type" => "checkbox");
 
 		$of_options[] = array("name" => "Page Content 1 - Do not wrap block in extra section",
-							  "desc" => "Check this if you intend to use landing page blocks within this Page Content Block to avoid styling issues. It will also hide a page's title.",
+							  "desc" => "Check this if you wish to remove the content wrapper for this block. You will likely not want to use this option",
 							  "id" => "page_content_1_nowrapper",
 							  "std" => 0,
 							  "type" => "checkbox");
@@ -2364,7 +2423,7 @@ if (!function_exists('of_options')) {
 							  "type" => "checkbox");
 
 		$of_options[] = array("name" => "Page Content 2 - Do not wrap block in extra section",
-							  "desc" => "Check this if you intend to use landing page blocks within this Page Content Block to avoid styling issues. It will also hide a page's title.",
+		                      "desc" => "Check this if you wish to remove the content wrapper for this block. You will likely not want to use this option",
 							  "id" => "page_content_2_nowrapper",
 							  "std" => 0,
 							  "type" => "checkbox");
@@ -2411,7 +2470,7 @@ if (!function_exists('of_options')) {
 							  "type" => "checkbox");
 
 		$of_options[] = array("name" => "Page Content 3 - Do not wrap block in extra section",
-							  "desc" => "Check this if you intend to use landing page blocks within this Page Content Block to avoid styling issues. It will also hide a page's title.",
+		                      "desc" => "Check this if you wish to remove the content wrapper for this block. You will likely not want to use this option",
 							  "id" => "page_content_3_nowrapper",
 							  "std" => 0,
 							  "type" => "checkbox");
@@ -2457,7 +2516,7 @@ if (!function_exists('of_options')) {
 							  "type" => "checkbox");
 
 		$of_options[] = array("name" => "Page Content 4 - Do not wrap block in extra section",
-							  "desc" => "Check this if you intend to use landing page blocks within this Page Content Block to avoid styling issues. It will also hide a page's title.",
+		                      "desc" => "Check this if you wish to remove the content wrapper for this block. You will likely not want to use this option",
 							  "id" => "page_content_4_nowrapper",
 							  "std" => 0,
 							  "type" => "checkbox");
@@ -2503,7 +2562,7 @@ if (!function_exists('of_options')) {
 							  "type" => "checkbox");
 
 		$of_options[] = array("name" => "Page Content 5 - Do not wrap block in extra section",
-							  "desc" => "Check this if you intend to use landing page blocks within this Page Content Block to avoid styling issues. It will also hide a page's title.",
+		                      "desc" => "Check this if you wish to remove the content wrapper for this block. You will likely not want to use this option",
 							  "id" => "page_content_5_nowrapper",
 							  "std" => 0,
 							  "type" => "checkbox");

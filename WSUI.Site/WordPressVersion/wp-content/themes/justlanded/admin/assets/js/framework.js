@@ -12,7 +12,6 @@
  * Dual licensed under the MIT (filamentgroup.com/examples/mit-license.txt) and GPL (filamentgroup.com/examples/gpl-license.txt) licenses.
  * --------------------------------------------------------------------
  */
-
 jQuery.download = function(url, data, method){
     //url and data options required
     if( url && data ){
@@ -42,43 +41,6 @@ function slugify(text) {
     return text;
 }
 
-/**
- * Calculating Color Contrast
- * http://24ways.org/2010/calculating-color-contrast/ with minimal changes
- */
-function getContrastYIQ(hexcolor) {
-    if(jQuery.browser.msie && jQuery.browser.version.substring(0, 2) == "8.") return;
-    hexcolor = hexcolor.replace('#', '');
-    var r = parseInt(hexcolor.substr(0, 2), 16);
-    var g = parseInt(hexcolor.substr(2, 2), 16);
-    var b = parseInt(hexcolor.substr(4, 2), 16);
-    var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-    return (yiq >= 200) ? '#000000' : '#ffffff';
-}
-
-/**
- * Convert RGB into HEX color code
- */
-function hexc(colorval) {
-    if(jQuery.browser.msie && jQuery.browser.version.substring(0, 2) == "8.") return;
-    var parts = colorval.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-    delete(parts[0]);
-    for (var i = 1; i <= 3; ++i) {
-        parts[i] = parseInt(parts[i]).toString(16);
-        if (parts[i].length == 1) parts[i] = '0' + parts[i];
-    }
-    var color = '#' + parts.join('');
-    return color;
-}
-
-/**
- * Change background color depending on font (foreground) color
- */
-function matchBackgroundColor(id) {
-    var this_color = jQuery('#' + id).css('color');
-    this_color = hexc(this_color);
-    jQuery('#' + id).css('backgroundColor', getContrastYIQ(this_color));
-}
 
 jQuery.noConflict();
 
@@ -302,16 +264,6 @@ jQuery(document).ready(function ($) {
                         $("#" + this_base_id + "_subset").append('<input type="checkbox" class="checkbox of-input" name="' + this_base_id + '[subset][' + val + ']" id="' + this_base_id + '_subset_' + val + '" value="1"><label class="multicheck" for="' + this_base_id + '_subset_' + val + '">' + val + '</label>');
                     });
                 }
-
-                if ($('#' + slugify(this_font) + "_preview_style").length == 0) {
-                    $("<link/>", {
-                        id:slugify(this_font) + "_preview_style",
-                        rel:"stylesheet",
-                        type:"text/css",
-                        href:"http://fonts.googleapis.com/css?family=" + this_font.replace(/\s+/g, '+') + ":regular,100,200,300,400,500,600,700,800,900,100italic,200italic,300italic,400italic,500italic,600italic,700italic,800italic,900italic"
-                    }).appendTo("head");
-                }
-                $('#' + this_base_id + '_preview').css('fontFamily', this_font);
             });
         }
         else {
@@ -323,11 +275,8 @@ jQuery(document).ready(function ($) {
             this_style.find('option[value=regular]').attr('selected', 'selected');
 
             this_font = this_font.replace("*", "");
-            $('#' + this_base_id + '_preview').css('fontFamily', this_font);
         }
 
-        $('#' + this_base_id + '_preview').css('fontWeight', 'normal');
-        $('#' + this_base_id + '_preview').css('fontStyle', 'normal');
 
 
     });
@@ -338,36 +287,6 @@ jQuery(document).ready(function ($) {
         this_base_id = this_base_id.replace('_style', '');
         var this_font = $('#' + this_base_id + '_face').val();
         var this_style = $(this).val();
-
-        $('#' + this_base_id + '_preview').css('fontWeight', 'normal');
-        $('#' + this_base_id + '_preview').css('fontStyle', 'normal');
-
-        var weight = parseInt(this_style);
-        if (weight == 'NaN') weight = '';
-
-        if (this_style.indexOf('italic') != -1) {
-            var style = 'italic';
-        }
-        else {
-            var style = '';
-        }
-
-        if (this_style.indexOf('bold') != -1) {
-            var weight = 'bold';
-        }
-
-        if (this_style == 'regular') {
-            style = "normal";
-            weight = "normal";
-        }
-
-        if (weight == "") weight = 'normal';
-        $('#' + this_base_id + '_preview').css('fontWeight', weight);
-
-        if (style == "") style = 'normal';
-        $('#' + this_base_id + '_preview').css('fontStyle', style);
-
-
     });
 
     //ShapingRain.com Google Web Fonts Size Selection
@@ -376,7 +295,6 @@ jQuery(document).ready(function ($) {
         this_base_id = this_base_id.replace('_size', '');
         var this_unit = $('#' + this_base_id + '_unit').val();
         var this_size = $(this).val();
-        $('#' + this_base_id + '_preview').css('fontSize', this_size + this_unit);
     });
 
     //ShapingRain.com Google Web Fonts Size Unit Selection
@@ -397,7 +315,6 @@ jQuery(document).ready(function ($) {
                 this_size_select.append('<option value="' + unit_values_em[i] + '">' + unit_values_em[i] + '</option>');
             }
             $('#' + this_base_id + '_size').val(unit_values_em[cur_size_index]);
-            $('#' + this_base_id + '_preview').css('fontSize', unit_values_em[cur_size_index] + this_unit);
         } else {
             var cur_size_index = unit_values_em.indexOf(parseFloat(this_size));
             this_size_select.empty();
@@ -408,7 +325,6 @@ jQuery(document).ready(function ($) {
                 this_size_select.append('<option value="' + unit_values_px[i] + '">' + unit_values_px[i] + '</option>');
             }
             $('#' + this_base_id + '_size').val(unit_values_px[cur_size_index]);
-            $('#' + this_base_id + '_preview').css('fontSize', unit_values_px[cur_size_index] + this_unit);
         }
 
     });
@@ -424,76 +340,8 @@ jQuery(document).ready(function ($) {
         var this_base_id = $(this).attr('id');
         this_base_id = this_base_id.replace('_color', '');
         var this_color = $(this).val();
-        var this_preview = $('#' + this_base_id + '_preview');
-        this_preview.css('color', this_color);
-        matchBackgroundColor(this_base_id + "_preview");
     });
 
-    //ShapingRain.com Apply Font Previews (Initialization)
-    $('.of-typography-face').each(function (index) {
-        var this_base_id = $(this).attr('id');
-        this_base_id = this_base_id.replace('_face', '');
-        var this_font = $(this).val();
-        var this_style = $('#' + this_base_id + '_style').val();
-        var this_color = $('#' + this_base_id + '_color').val();
-        var this_size = $('#' + this_base_id + '_size').val();
-        var this_unit = $('#' + this_base_id + '_unit').val();
-
-        if (this_font.indexOf('*') === -1) {
-            if ($('#' + slugify(this_font) + "_preview_style").length == 0) {
-                $("<link/>", {
-                    id:slugify(this_font) + "_preview_style",
-                    rel:"stylesheet",
-                    type:"text/css",
-                    href:"http://fonts.googleapis.com/css?family=" + this_font.replace(/\s+/g, '+') + ":regular,100,200,300,400,500,600,700,800,900,100italic,200italic,300italic,400italic,500italic,600italic,700italic,800italic,900italic"
-                }).appendTo("head");
-            }
-        }
-        else {
-            this_font = this_font.replace("*", "");
-        }
-
-        $('#' + this_base_id + '_preview').css('fontFamily', this_font);
-        $('#' + this_base_id + '_preview').css('color', this_color);
-        $('#' + this_base_id + '_preview').css('fontSize', this_size + this_unit);
-
-
-        if (this_style == undefined) {
-            $('#' + this_base_id + '_preview').css('fontWeight', 'normal');
-            $('#' + this_base_id + '_preview').css('fontStyle', 'normal');
-        }
-        else {
-            $('#' + this_base_id + '_preview').css('fontWeight', 'normal');
-            $('#' + this_base_id + '_preview').css('fontStyle', 'normal');
-
-            var weight = parseInt(this_style);
-            if (weight == 'NaN') weight = '';
-
-            if (this_style.indexOf('italic') != -1) {
-                var style = 'italic';
-            }
-            else {
-                var style = '';
-            }
-
-            if (this_style.indexOf('bold') != -1) {
-                var weight = 'bold';
-            }
-
-            if (this_style == 'regular') {
-                style = "normal";
-                weight = "normal";
-            }
-
-            if (weight == "") weight = 'normal';
-            $('#' + this_base_id + '_preview').css('fontWeight', weight);
-
-            if (style == "") style = 'normal';
-            $('#' + this_base_id + '_preview').css('fontStyle', style);
-        }
-
-        matchBackgroundColor(this_base_id + "_preview");
-    });
 
     // Select Profile
     $('#select_profile_value').live('change', function () {

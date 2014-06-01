@@ -14,7 +14,9 @@ else {
 }
 ?>
 <?php if (justlanded_is_archive_or_index()) { ?></a><?php } ?>
+<?php if (justlanded_get_option('hide_page_titles', 0, $data) == 1 && is_single() ) { /* do nothing, we do not want a headline here */ } else { ?>
 <<?php echo $headline_tag;?> class="entry-title"><?php if(justlanded_is_archive_or_index()) {?><a href="<?php the_permalink(); ?>" title="<?php printf( __('Read %s', 'justlanded'), the_title_attribute('echo=0') ); ?>" rel="bookmark"><?php } ?><?php the_title(); ?><?php if (justlanded_is_archive_or_index()) { ?></a><?php } ?></<?php echo $headline_tag;?>>
+<?php } ?>
 <?php get_template_part( 'entry', 'meta' ); ?>
 <?php
 if ((is_archive() || is_search() || is_home() || is_category() || is_tag())) {

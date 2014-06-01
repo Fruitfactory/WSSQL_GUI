@@ -100,25 +100,31 @@ $MBEmail = 'your@email.com';
 // on the "Merchant tools" page. Then set it here.
 $SecretWord = 'PASTE YOUR SECRET WORD HERE';
 
-function debug_log($message, $success, $end = false) {
-    global $debug, $debug_log;
 
-    if (!$debug || !$debug_log)
-        return;
 
-    // Timestamp
-    $text = '[' . date('m/d/Y g:i A') . '] - ' . (($success) ? 'SUCCESS :' : 'FAILURE :') . $message . "\n";
+if (!function_exists('debug_log')) {
 
-    if ($end)
-        $text .= "\n------------------------------------------------------------------\n\n";
+    function debug_log($message, $success, $end = false) {
+        global $debug, $debug_log;
 
-    // Write to log
-    $fp = fopen($debug_log, 'a');
-    fwrite($fp, $text);
-    fclose($fp);
+        if (!$debug || !$debug_log)
+            return;
+
+        // Timestamp
+        $text = '[' . date('m/d/Y g:i A') . '] - ' . (($success) ? 'SUCCESS :' : 'FAILURE :') . $message . "\n";
+
+        if ($end)
+            $text .= "\n------------------------------------------------------------------\n\n";
+
+        // Write to log
+        $fp = fopen($debug_log, 'a');
+        fwrite($fp, $text);
+        fclose($fp);
+    }
+
 }
 
-function SendPKeys($quantity, $email, $first, $last, $userEmail) {
+function SendPKeysTEST($quantity, $email, $first, $last, $userEmail) {
     //Note: we put LimeLM in this directory. Change it as needed.
     //require(dirname(__FILE__) . '/LimeLM.php');
     debug_log('Generating keys...', true);
@@ -180,10 +186,10 @@ Thank you for purchasing ' . $AppName . '
 
 The ' . $AppName . ' team';
 
-    if (!empty($product_keys)) {
-        // Send Email to the buyer
-        $emailSent = mail($userEmail, 'Your ' . $AppName . ' product key', $emailBody, $headers);
-    }
+//    if (!empty($product_keys)) {
+//        // Send Email to the buyer
+//        $emailSent = mail($userEmail, 'Your ' . $AppName . ' product key', $emailBody, $headers);
+//    }
 
     // generate an array you can insert into your database
     $new_order_info = array(
@@ -206,7 +212,7 @@ The ' . $AppName . ' team';
     LimeLM::CleanUp();
 }
 
-function UpdateLicensing($quantity, $email, $first, $last, $customerEmail) {
+function UpdateLicensingTEST($quantity, $email, $first, $last, $customerEmail) {
     //Note: we put LimeLM in this directory. Change it as needed.
     //require(dirname(__FILE__) . '/LimeLM.php');
     debug_log('Updating keys...', true);
@@ -252,10 +258,10 @@ Here is the url for downloading the latest version:
 
 The ' . $AppName . ' team';
 
-            if (!empty($customerEmail)) {
-                // Send Email to the buyer
-                $emailSent = mail($customerEmail, 'Your ' . $AppName . ' product key', $emailBody, $headers);
-            }
+//            if (!empty($customerEmail)) {
+//                // Send Email to the buyer
+//                $emailSent = mail($customerEmail, 'Your ' . $AppName . ' product key', $emailBody, $headers);
+//            }
         }
     } catch (Exception $ex) {
         debug_log($e->getMessage(), false);
@@ -265,7 +271,7 @@ The ' . $AppName . ' team';
     LimeLM::CleanUp();
 }
 
-function IsEmailExist($userEmail) {
+function IsEmailExistTEST($userEmail) {
     //Note: we put LimeLM in this directory. Change it as needed.
     //require(dirname(__FILE__) . '/LimeLM.php');
     debug_log('IsEmailExist...', true);

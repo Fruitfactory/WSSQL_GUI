@@ -1439,11 +1439,22 @@ function insert_payment_table(){
 add_shortcode('insert_payment_table', 'insert_payment_table');
 
 
+function insert_gumroad($attr){
+    extract(shortcode_atts(array(
+        'title' => '',
+        'price' => '',
+        'url' => '',
+        'button_caption'=> ''
+    ),$attr));
+    $html = '<div id="pricing-panel"><div id="the-price"> <span class="currency">$</span><span class="price-number">'.$price.'</span><span class="price-text">'.$title.'</span></div><a class="button_gum" href="'.$url.'">'.$button_caption.'</a></div>';
+    return $html;
+}
+add_shortcode('insert_gumroad', 'insert_gumroad');
 
 // yariki filters
 
 add_filter('wpcf7_posted_data', 'wpcf7_generate_Lime_Key_posted_data');
-include('PaymentSettings.php');
+include_once(dirname(__FILE__) .'/PaymentSettings.php');
 include_once (dirname(__FILE__) . '/LimeLM.php');
 function wpcf7_generate_Lime_Key_posted_data($posted_data) {
 
@@ -1498,12 +1509,12 @@ function wpcf7_generate_Lime_Key_posted_data($posted_data) {
         
 The ' . $AppName . ' team';
     // Send Email to the buyer
-    $emailSent = mail($emailCustomer, 'Your ' . $AppName . ' trial product key', $emailBody, $headers);
-
-    if (!$emailSent) {
-        $errors = true;
-        debug_log('Error sending product Email to ' . $emailCustomer . '.', false);
-    }
+//    $emailSent = mail($emailCustomer, 'Your ' . $AppName . ' trial product key', $emailBody, $headers);
+//
+//    if (!$emailSent) {
+//        $errors = true;
+//        debug_log('Error sending product Email to ' . $emailCustomer . '.', false);
+//    }
 
     LimeLM::CleanUp();
 

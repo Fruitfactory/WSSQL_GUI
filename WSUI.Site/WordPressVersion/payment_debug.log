@@ -1,0 +1,1331 @@
+[01/04/2014 2:13 PM] - SUCCESS :return path
+[01/05/2014 10:09 AM] - SUCCESS :return path
+[01/05/2014 5:09 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/05/2014 5:09 AM] - SUCCESS :Validating PayPal order 1
+[01/05/2014 5:09 AM] - SUCCESS :IPN successfully verified.
+[01/05/2014 5:09 AM] - SUCCESS :Creating product Information to send.
+[01/05/2014 5:09 AM] - SUCCESS :Generating keys
+[01/05/2014 5:09 AM] - FAILURE :Failed to generate product keys: (111) You have no more activations left in your Free plan. Upgrade your account for more activations.
+[01/05/2014 5:09 AM] - SUCCESS :return path
+[01/05/2014 5:09 AM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 
+    [pkey_emailed] => 0
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/05/2014 5:09 AM] - FAILURE :Error sending product Email to iyariki.ya@hotmail.com.
+[01/05/2014 5:09 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/06/2014 12:58 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/06/2014 12:58 PM] - SUCCESS :Validating PayPal order 1
+[01/06/2014 12:58 PM] - SUCCESS :IPN successfully verified.
+[01/06/2014 12:58 PM] - SUCCESS :Creating product Information to send.
+[01/06/2014 12:58 PM] - SUCCESS :Generating keys
+[01/06/2014 12:58 PM] - FAILURE :Failed to generate product keys: (111) You have no more activations left in your Free plan. Upgrade your account for more activations.
+[01/06/2014 12:58 PM] - SUCCESS :return path
+[01/06/2014 12:58 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 
+    [pkey_emailed] => 0
+    [first_name] => Vincent
+    [last_name] => Payette
+    [email] => vpayette@hotmail.com
+)
+
+[01/06/2014 12:58 PM] - FAILURE :Error sending product Email to vpayette@hotmail.com.
+[01/06/2014 12:58 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/06/2014 3:16 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/06/2014 3:16 PM] - SUCCESS :Validating PayPal order 1
+[01/06/2014 3:16 PM] - SUCCESS :IPN successfully verified.
+[01/06/2014 3:16 PM] - SUCCESS :Creating product Information to send.
+[01/06/2014 3:16 PM] - SUCCESS :Generating keys
+[01/06/2014 3:16 PM] - FAILURE :Failed to generate product keys: (111) You have no more activations left in your Free plan. Upgrade your account for more activations.
+[01/06/2014 3:16 PM] - SUCCESS :return path
+[01/06/2014 3:16 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 
+    [pkey_emailed] => 0
+    [first_name] => Vincent
+    [last_name] => Payette
+    [email] => vpayette@hotmail.com
+)
+
+[01/06/2014 3:16 PM] - FAILURE :Error sending product Email to vpayette@hotmail.com.
+[01/06/2014 3:16 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/06/2014 8:17 PM] - SUCCESS :return path
+[01/06/2014 8:17 PM] - SUCCESS :return path
+[01/06/2014 3:21 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/06/2014 3:21 PM] - SUCCESS :Validating PayPal order 1
+[01/06/2014 3:21 PM] - SUCCESS :IPN successfully verified.
+[01/06/2014 3:21 PM] - SUCCESS :Creating product Information to send.
+[01/06/2014 3:21 PM] - SUCCESS :Generating keys
+[01/06/2014 3:21 PM] - FAILURE :Failed to generate product keys: (111) You have no more activations left in your Free plan. Upgrade your account for more activations.
+[01/06/2014 3:21 PM] - SUCCESS :return path
+[01/06/2014 3:21 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 
+    [pkey_emailed] => 0
+    [first_name] => Vincent
+    [last_name] => Payette
+    [email] => vpayette@hotmail.com
+)
+
+[01/06/2014 3:21 PM] - FAILURE :Error sending product Email to vpayette@hotmail.com.
+[01/06/2014 3:21 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/06/2014 8:21 PM] - SUCCESS :return path
+[01/06/2014 6:31 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/06/2014 6:31 PM] - SUCCESS :Validating PayPal order 1
+[01/06/2014 6:31 PM] - SUCCESS :IPN successfully verified.
+[01/06/2014 6:31 PM] - SUCCESS :Creating product Information to send.
+[01/06/2014 6:31 PM] - SUCCESS :Generating keys
+[01/06/2014 6:31 PM] - FAILURE :Failed to generate product keys: (111) You have no more activations left in your Free plan. Upgrade your account for more activations.
+[01/06/2014 6:31 PM] - SUCCESS :return path
+[01/06/2014 6:31 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 
+    [pkey_emailed] => 0
+    [first_name] => Vincent
+    [last_name] => Payette
+    [email] => vpayette@hotmail.com
+)
+
+[01/06/2014 6:31 PM] - FAILURE :Error sending product Email to vpayette@hotmail.com.
+[01/06/2014 6:31 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/06/2014 11:31 PM] - SUCCESS :return path
+[01/06/2014 11:31 PM] - SUCCESS :return path
+[01/09/2014 1:33 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/09/2014 1:33 PM] - SUCCESS :Validating PayPal order 1
+[01/09/2014 1:33 PM] - SUCCESS :IPN successfully verified.
+[01/09/2014 1:33 PM] - SUCCESS :Creating product Information to send.
+[01/09/2014 1:33 PM] - SUCCESS :Generating keys
+[01/09/2014 1:33 PM] - FAILURE :Failed to generate product keys: (111) You have no more activations left in your Free plan. Upgrade your account for more activations.
+[01/09/2014 1:33 PM] - SUCCESS :return path
+[01/09/2014 1:33 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 
+    [pkey_emailed] => 0
+    [first_name] => Vincent
+    [last_name] => Payette
+    [email] => vpayette@hotmail.com
+)
+
+[01/09/2014 1:33 PM] - FAILURE :Error sending product Email to vpayette@hotmail.com.
+[01/09/2014 1:33 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/09/2014 6:33 PM] - SUCCESS :return path
+[01/09/2014 6:33 PM] - SUCCESS :return path
+[01/09/2014 3:52 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/09/2014 3:52 PM] - SUCCESS :Validating PayPal order 1
+[01/09/2014 3:52 PM] - SUCCESS :IPN successfully verified.
+[01/09/2014 3:52 PM] - SUCCESS :Creating product Information to send.
+[01/09/2014 3:52 PM] - SUCCESS :Generating keys
+[01/09/2014 3:52 PM] - SUCCESS :return path
+[01/09/2014 3:52 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => FBST-94MU-TCV9-U37S-5PHP-IH7I-ZSTA
+
+    [pkey_emailed] => 1
+    [first_name] => Vincent
+    [last_name] => Payette
+    [email] => vpayette@hotmail.com
+)
+
+[01/09/2014 3:52 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/09/2014 8:52 PM] - SUCCESS :return path
+[01/09/2014 8:54 PM] - SUCCESS :return path
+[01/10/2014 9:37 PM] - SUCCESS :return path
+[01/10/2014 4:38 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/10/2014 4:38 PM] - SUCCESS :Validating PayPal order 1
+[01/10/2014 4:38 PM] - SUCCESS :IPN successfully verified.
+[01/10/2014 4:38 PM] - SUCCESS :Creating product Information to send.
+[01/10/2014 4:38 PM] - SUCCESS :Generating keys
+[01/10/2014 4:38 PM] - SUCCESS :return path
+[01/10/2014 4:38 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => JXFB-GWDU-J6AA-ZII7-UPJP-ZVRV-S2TA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/10/2014 4:38 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/10/2014 9:38 PM] - SUCCESS :return path
+[01/10/2014 4:55 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/10/2014 4:55 PM] - SUCCESS :Validating PayPal order 1
+[01/10/2014 4:55 PM] - SUCCESS :IPN successfully verified.
+[01/10/2014 4:55 PM] - SUCCESS :Creating product Information to send.
+[01/10/2014 4:55 PM] - SUCCESS :Generating keys
+[01/10/2014 4:55 PM] - SUCCESS :return path
+[01/10/2014 4:55 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 4YR4-25DY-UUTK-I7S7-A64V-EJSB-ZWTA
+
+    [pkey_emailed] => 1
+    [first_name] => Vincent
+    [last_name] => Payette
+    [email] => vpayette@hotmail.com
+)
+
+[01/10/2014 4:55 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/10/2014 9:55 PM] - SUCCESS :return path
+[01/11/2014 2:27 PM] - SUCCESS :return path
+[01/11/2014 9:27 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/11/2014 9:27 AM] - SUCCESS :Validating PayPal order 1
+[01/11/2014 9:27 AM] - SUCCESS :IPN successfully verified.
+[01/11/2014 9:27 AM] - SUCCESS :Creating product Information to send.
+[01/11/2014 9:27 AM] - SUCCESS :Generating keys
+[01/11/2014 9:27 AM] - SUCCESS :return path
+[01/11/2014 9:27 AM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => SXZF-RDZA-MPI5-WGYE-P4TE-W4JW-6ATA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/11/2014 9:27 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/11/2014 2:28 PM] - SUCCESS :return path
+[01/11/2014 11:05 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/11/2014 11:05 AM] - SUCCESS :Validating PayPal order 1
+[01/11/2014 11:05 AM] - SUCCESS :IPN successfully verified.
+[01/11/2014 11:05 AM] - SUCCESS :Creating product Information to send.
+[01/11/2014 11:05 AM] - SUCCESS :Generating keys
+[01/11/2014 11:05 AM] - SUCCESS :return path
+[01/11/2014 11:05 AM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 8WKX-YJJ5-UJYI-4N86-GFKC-A8H4-FETA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/11/2014 11:05 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/11/2014 4:09 PM] - SUCCESS :return path
+[01/11/2014 11:10 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/11/2014 11:10 AM] - SUCCESS :Validating PayPal order 1
+[01/11/2014 11:10 AM] - SUCCESS :IPN successfully verified.
+[01/11/2014 11:10 AM] - SUCCESS :Creating product Information to send.
+[01/11/2014 11:10 AM] - SUCCESS :Generating keys
+[01/11/2014 11:10 AM] - SUCCESS :return path
+[01/11/2014 11:10 AM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => S4Q5-987R-Y3CC-2USY-C4NB-WEX5-BATA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/11/2014 11:10 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/11/2014 4:10 PM] - SUCCESS :return path
+[01/11/2014 11:17 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/11/2014 11:17 AM] - SUCCESS :Validating PayPal order 1
+[01/11/2014 11:17 AM] - SUCCESS :IPN successfully verified.
+[01/11/2014 11:17 AM] - SUCCESS :Creating product Information to send.
+[01/11/2014 11:17 AM] - SUCCESS :Generating keys
+[01/11/2014 11:17 AM] - SUCCESS :return path
+[01/11/2014 11:17 AM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => TPAM-SJT6-XTWI-8BRE-MTZ7-T248-NSTA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/11/2014 11:17 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/11/2014 4:18 PM] - SUCCESS :return path
+[01/11/2014 4:19 PM] - SUCCESS :return path
+[01/11/2014 11:19 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/11/2014 11:19 AM] - SUCCESS :Validating PayPal order 1
+[01/11/2014 11:19 AM] - SUCCESS :IPN successfully verified.
+[01/11/2014 11:19 AM] - SUCCESS :Creating product Information to send.
+[01/11/2014 11:19 AM] - SUCCESS :Generating keys
+[01/11/2014 11:19 AM] - SUCCESS :return path
+[01/11/2014 11:19 AM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => NBU2-9BYW-HX9S-JGWM-KEXF-9EGT-TATA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/11/2014 11:19 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/11/2014 4:19 PM] - SUCCESS :return path
+[01/11/2014 11:21 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/11/2014 11:21 AM] - SUCCESS :Validating PayPal order 1
+[01/11/2014 11:21 AM] - SUCCESS :IPN successfully verified.
+[01/11/2014 11:21 AM] - SUCCESS :Creating product Information to send.
+[01/11/2014 11:21 AM] - SUCCESS :Generating keys
+[01/11/2014 11:21 AM] - SUCCESS :return path
+[01/11/2014 11:21 AM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => WRWV-DJQW-RFG4-KV8K-4EYW-3GEK-3NTA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/11/2014 11:21 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/11/2014 4:21 PM] - SUCCESS :return path
+[01/11/2014 11:26 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/11/2014 11:26 AM] - SUCCESS :Validating PayPal order 1
+[01/11/2014 11:26 AM] - SUCCESS :IPN successfully verified.
+[01/11/2014 11:26 AM] - SUCCESS :Creating product Information to send.
+[01/11/2014 11:26 AM] - SUCCESS :Generating keys
+[01/11/2014 11:26 AM] - SUCCESS :return path
+[01/11/2014 11:26 AM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => Z7II-43YG-XHVR-3KF8-JF54-KSZR-56TA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/11/2014 11:26 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/11/2014 4:26 PM] - SUCCESS :return path
+[01/12/2014 11:16 PM] - SUCCESS :return path
+[01/13/2014 1:02 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/13/2014 1:02 PM] - SUCCESS :Validating PayPal order 1
+[01/13/2014 1:02 PM] - SUCCESS :IPN successfully verified.
+[01/13/2014 1:02 PM] - SUCCESS :Creating product Information to send.
+[01/13/2014 1:02 PM] - SUCCESS :Generating keys
+[01/13/2014 1:02 PM] - SUCCESS :return path
+[01/13/2014 1:02 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => FWJA-UGKJ-HP5K-9YJT-AYB3-ENWN-BITA
+
+    [pkey_emailed] => 1
+    [first_name] => Vincent
+    [last_name] => Payette
+    [email] => vpayette@hotmail.com
+)
+
+[01/13/2014 1:02 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/13/2014 6:02 PM] - SUCCESS :return path
+[01/13/2014 2:01 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/13/2014 2:01 PM] - SUCCESS :Validating PayPal order 1
+[01/13/2014 2:01 PM] - SUCCESS :IPN successfully verified.
+[01/13/2014 2:01 PM] - SUCCESS :Creating product Information to send.
+[01/13/2014 2:01 PM] - SUCCESS :Generating keys
+[01/13/2014 2:01 PM] - SUCCESS :return path
+[01/13/2014 2:01 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => BBIE-R6CY-5MPQ-CKCI-3C5I-HWSI-7STA
+
+    [pkey_emailed] => 1
+    [first_name] => Vincent
+    [last_name] => Payette
+    [email] => vpayette@hotmail.com
+)
+
+[01/13/2014 2:01 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/13/2014 7:01 PM] - SUCCESS :return path
+[01/13/2014 2:10 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/13/2014 2:10 PM] - SUCCESS :Validating PayPal order 1
+[01/13/2014 2:10 PM] - SUCCESS :IPN successfully verified.
+[01/13/2014 2:10 PM] - SUCCESS :Creating product Information to send.
+[01/13/2014 2:10 PM] - SUCCESS :Generating keys
+[01/13/2014 2:10 PM] - SUCCESS :return path
+[01/13/2014 2:10 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => A822-9M73-ANQ4-F4K7-JC63-JVRW-CATA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/13/2014 2:10 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/13/2014 7:10 PM] - SUCCESS :return path
+[01/14/2014 11:50 PM] - SUCCESS :return path
+[01/14/2014 11:50 PM] - SUCCESS :return path
+[01/14/2014 11:50 PM] - SUCCESS :return path
+[01/14/2014 11:50 PM] - SUCCESS :return path
+[01/14/2014 11:55 PM] - SUCCESS :return path
+[01/14/2014 11:55 PM] - SUCCESS :return path
+[01/14/2014 11:56 PM] - SUCCESS :return path
+[01/14/2014 11:56 PM] - SUCCESS :return path
+[01/15/2014 6:53 AM] - SUCCESS :return path
+[01/15/2014 6:53 AM] - SUCCESS :return path
+[01/15/2014 6:54 AM] - SUCCESS :return path
+[01/15/2014 6:54 AM] - SUCCESS :return path
+[01/15/2014 6:56 AM] - SUCCESS :return path
+[01/15/2014 6:56 AM] - SUCCESS :return path
+[01/15/2014 6:56 AM] - SUCCESS :return path
+[01/15/2014 6:56 AM] - SUCCESS :return path
+[01/15/2014 10:59 PM] - SUCCESS :return path
+[01/15/2014 10:59 PM] - SUCCESS :return path
+[01/16/2014 10:55 AM] - SUCCESS :return path
+[01/16/2014 10:55 AM] - SUCCESS :return path
+[01/18/2014 11:29 PM] - SUCCESS :return path
+[01/18/2014 11:29 PM] - SUCCESS :return path
+[01/20/2014 7:17 PM] - SUCCESS :return path
+[01/20/2014 7:17 PM] - SUCCESS :return path
+[01/21/2014 5:48 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/21/2014 5:48 PM] - SUCCESS :Validating PayPal order 1
+[01/21/2014 5:48 PM] - SUCCESS :IPN successfully verified.
+[01/21/2014 5:48 PM] - SUCCESS :Creating product Information to send.
+[01/21/2014 5:48 PM] - SUCCESS :Generating keys
+[01/21/2014 5:48 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => H9PH-M53K-Y53R-WTGB-8T8R-MY27-P6TA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/21/2014 5:48 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/22/2014 2:31 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/22/2014 2:31 PM] - SUCCESS :Validating PayPal order 1
+[01/22/2014 2:31 PM] - SUCCESS :IPN successfully verified.
+[01/22/2014 2:31 PM] - SUCCESS :Creating product Information to send.
+[01/22/2014 2:31 PM] - SUCCESS :Generating keys
+[01/22/2014 2:31 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 3784-BIFB-E8GH-GQH9-2VRX-MCYG-WWTA
+
+    [pkey_emailed] => 1
+    [first_name] => Vincent
+    [last_name] => Payette
+    [email] => vpayette@hotmail.com
+)
+
+[01/22/2014 2:31 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/27/2014 2:53 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/27/2014 2:53 PM] - SUCCESS :Validating PayPal order 1
+[01/27/2014 2:53 PM] - SUCCESS :IPN successfully verified.
+[01/27/2014 2:53 PM] - SUCCESS :Creating product Information to send.
+[01/27/2014 2:53 PM] - SUCCESS :Generating keys
+[01/27/2014 2:53 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => CBI9-V2RN-QVNZ-AYIY-2QKJ-YM4P-QNTA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/27/2014 2:53 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/27/2014 3:33 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/27/2014 3:33 PM] - SUCCESS :Validating PayPal order 1
+[01/27/2014 3:33 PM] - SUCCESS :IPN successfully verified.
+[01/27/2014 3:33 PM] - SUCCESS :Creating product Information to send.
+[01/27/2014 3:33 PM] - SUCCESS :Generating keys
+[01/27/2014 3:33 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => RFY6-HY9I-MWEH-JE8J-ENJ4-8SNP-S2TA
+
+    [pkey_emailed] => 1
+    [first_name] => Vincent
+    [last_name] => Payette
+    [email] => vpayette@hotmail.com
+)
+
+[01/27/2014 3:33 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/27/2014 7:44 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/27/2014 7:44 PM] - SUCCESS :Validating PayPal order 1
+[01/27/2014 7:44 PM] - SUCCESS :IPN successfully verified.
+[01/27/2014 7:44 PM] - SUCCESS :Creating product Information to send.
+[01/27/2014 7:44 PM] - SUCCESS :Generating keys
+[01/27/2014 7:44 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => ESYW-AAJR-DCRF-9NAJ-MC6E-RFIF-U6TA
+
+    [pkey_emailed] => 1
+    [first_name] => Vincent
+    [last_name] => Payette
+    [email] => vpayette@hotmail.com
+)
+
+[01/27/2014 7:44 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/29/2014 3:10 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/29/2014 3:10 PM] - SUCCESS :Validating PayPal order 1
+[01/29/2014 3:10 PM] - SUCCESS :IPN successfully verified.
+[01/29/2014 3:10 PM] - SUCCESS :Creating product Information to send.
+[01/29/2014 3:10 PM] - SUCCESS :Generating keys
+[01/29/2014 3:10 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => N825-6I59-XWY3-35Q4-8US7-8U3P-KATA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/29/2014 3:10 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/29/2014 3:21 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/29/2014 3:21 PM] - SUCCESS :Validating PayPal order 1
+[01/29/2014 3:21 PM] - SUCCESS :IPN successfully verified.
+[01/29/2014 3:21 PM] - SUCCESS :Creating product Information to send.
+[01/29/2014 3:21 PM] - SUCCESS :Generating keys
+[01/29/2014 3:21 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => DT5X-R4DJ-SV59-XKSU-YX89-2WXM-NITA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/29/2014 3:21 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/29/2014 3:23 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/29/2014 3:23 PM] - SUCCESS :Validating PayPal order 1
+[01/29/2014 3:23 PM] - SUCCESS :IPN successfully verified.
+[01/29/2014 3:23 PM] - SUCCESS :Creating product Information to send.
+[01/29/2014 3:23 PM] - SUCCESS :Generating keys
+[01/29/2014 3:23 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 4DB2-N7WA-AEN9-C94P-8N2E-M3CD-EITA
+
+    [pkey_emailed] => 1
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[01/29/2014 3:23 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[01/29/2014 6:51 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[01/29/2014 6:51 PM] - SUCCESS :Validating PayPal order 1
+[01/29/2014 6:51 PM] - SUCCESS :IPN successfully verified.
+[01/29/2014 6:51 PM] - SUCCESS :Creating product Information to send.
+[01/29/2014 6:51 PM] - SUCCESS :Generating keys
+[01/29/2014 6:51 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => DPJU-MQQS-89J9-KKS6-HXID-TSVU-HSTA
+
+    [pkey_emailed] => 1
+    [first_name] => Vincent
+    [last_name] => Payette
+    [email] => vpayette@hotmail.com
+)
+
+[01/29/2014 6:51 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[02/05/2014 4:08 PM] - SUCCESS :paychecker intiated by 173.0.81.1
+[02/05/2014 4:08 PM] - SUCCESS :Validating PayPal order 1
+[02/05/2014 4:08 PM] - SUCCESS :IPN successfully verified.
+[02/05/2014 4:08 PM] - SUCCESS :Creating product Information to send.
+[02/05/2014 4:08 PM] - SUCCESS :Generating keys
+[02/05/2014 4:08 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 87I8-6MI7-927I-NIGE-Z8KW-GMDU-BNTA
+
+    [pkey_emailed] => 1
+    [first_name] => 
+    [last_name] => 
+    [email] => iyariki.ya@gmail.com
+)
+
+[02/05/2014 4:08 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[02/06/2014 3:37 PM] - SUCCESS :paychecker intiated by 173.0.81.1
+[02/06/2014 3:37 PM] - SUCCESS :Validating PayPal order 1
+[02/06/2014 3:37 PM] - SUCCESS :IPN successfully verified.
+[02/06/2014 3:37 PM] - SUCCESS :Creating product Information to send.
+[02/06/2014 3:37 PM] - SUCCESS :Generating keys
+[02/06/2014 3:37 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 5GEM-JNMZ-G52Z-ZDME-6M82-2Y8Y-VSTA
+
+    [pkey_emailed] => 1
+    [first_name] => 
+    [last_name] => 
+    [email] => iyariki.ya@gmail.com
+)
+
+[02/06/2014 3:37 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[04/17/2014 10:26 PM] - SUCCESS :paychecker intiated by 174.36.225.162
+[04/17/2014 10:26 PM] - SUCCESS :Validating PayPal order 
+[04/17/2014 10:26 PM] - FAILURE :Invalid payment_status: 
+[04/25/2014 6:14 PM] - SUCCESS :Generating keys
+[04/25/2014 6:36 PM] - SUCCESS :Generating keys
+[05/01/2014 12:37 AM] - SUCCESS :paychecker intiated by 89.123.22.25
+[05/01/2014 12:37 AM] - SUCCESS :Validating PayPal order 
+[05/01/2014 12:37 AM] - FAILURE :Invalid payment_status: 
+[05/04/2014 2:51 PM] - SUCCESS :paychecker intiated by 173.0.81.1
+[05/04/2014 2:51 PM] - SUCCESS :Validating PayPal order 1
+[05/04/2014 2:51 PM] - SUCCESS :IPN successfully verified.
+[05/04/2014 2:51 PM] - SUCCESS :Creating product Information to send.
+[05/04/2014 2:51 PM] - SUCCESS :Generating keys
+[05/04/2014 2:51 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => 25R7-VGZM-T6HK-JIHS-DUMY-KDV5-2ITA
+
+    [pkey_emailed] => 1
+    [first_name] => Cheryl
+    [last_name] => Proulx
+    [email] => officeboy@officeboy.biz
+)
+
+[05/04/2014 2:51 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/07/2014 4:34 PM] - SUCCESS :paychecker intiated by 213.108.40.45
+[05/07/2014 4:34 PM] - SUCCESS :Validating PayPal order 
+[05/07/2014 4:34 PM] - FAILURE :Invalid payment_status: 
+[05/07/2014 4:36 PM] - SUCCESS :paychecker intiated by 213.108.40.45
+[05/07/2014 4:36 PM] - SUCCESS :Validating PayPal order 
+[05/07/2014 4:36 PM] - FAILURE :Invalid payment_status: 
+[05/07/2014 4:37 PM] - SUCCESS :paychecker intiated by 213.108.40.45
+[05/07/2014 4:37 PM] - SUCCESS :Validating PayPal order 
+[05/07/2014 4:37 PM] - FAILURE :Invalid payment_status: 
+[05/08/2014 5:22 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/08/2014 5:22 PM] - SUCCESS :Validating PayPal order 1
+[05/08/2014 5:22 PM] - FAILURE :Invalid Reciver E-Mail : 
+[05/08/2014 5:24 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/08/2014 5:24 PM] - SUCCESS :Validating PayPal order 1
+[05/08/2014 5:24 PM] - FAILURE :Invalid Reciver E-Mail : 
+[05/08/2014 5:35 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/08/2014 5:35 PM] - SUCCESS :Validating PayPal order 1
+[05/08/2014 5:35 PM] - FAILURE :PAYMENT_STATUS: Completed
+[05/08/2014 5:35 PM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/08/2014 5:35 PM] - FAILURE :Invalid Reciver E-Mail : 
+[05/08/2014 5:38 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/08/2014 5:38 PM] - SUCCESS :Validating PayPal order 1
+[05/08/2014 5:38 PM] - FAILURE :PAYMENT_STATUS: Completed
+[05/08/2014 5:38 PM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/08/2014 5:38 PM] - SUCCESS :IPN successfully verified.
+[05/08/2014 5:38 PM] - SUCCESS :Creating product Information to send.
+[05/08/2014 5:38 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/10/2014 10:16 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/10/2014 10:16 AM] - SUCCESS :Validating PayPal order 1
+[05/10/2014 10:16 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/10/2014 10:16 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/10/2014 10:16 AM] - SUCCESS :IPN successfully verified.
+[05/10/2014 10:16 AM] - SUCCESS :Creating product Information to send.
+[05/10/2014 10:16 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/10/2014 11:15 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/10/2014 11:15 AM] - SUCCESS :Validating PayPal order 1
+[05/10/2014 11:15 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/10/2014 11:15 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/10/2014 11:15 AM] - SUCCESS :IPN successfully verified.
+[05/10/2014 11:15 AM] - SUCCESS :Creating product Information to send.
+[05/10/2014 11:15 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/12/2014 2:31 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/12/2014 2:31 PM] - SUCCESS :Validating PayPal order 1
+[05/12/2014 2:31 PM] - FAILURE :PAYMENT_STATUS: Completed
+[05/12/2014 2:31 PM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/12/2014 2:31 PM] - SUCCESS :IPN successfully verified.
+[05/12/2014 2:31 PM] - SUCCESS :Creating product Information to send.
+[05/12/2014 2:31 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/15/2014 6:33 AM] - SUCCESS :paychecker intiated by 173.0.81.1
+[05/15/2014 6:33 AM] - SUCCESS :Validating PayPal order 1
+[05/15/2014 6:33 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/15/2014 6:33 AM] - FAILURE :RECEIVER EMAIL: info@outlookfinder.com
+[05/15/2014 6:33 AM] - SUCCESS :IPN successfully verified.
+[05/15/2014 6:33 AM] - SUCCESS :Creating product Information to send.
+[05/15/2014 6:33 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/15/2014 2:44 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/15/2014 2:44 PM] - SUCCESS :Validating PayPal order 1
+[05/15/2014 2:44 PM] - FAILURE :PAYMENT_STATUS: Completed
+[05/15/2014 2:44 PM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/15/2014 2:44 PM] - SUCCESS :IPN successfully verified.
+[05/15/2014 2:44 PM] - SUCCESS :Creating product Information to send.
+[05/15/2014 2:44 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/15/2014 2:56 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/15/2014 2:56 PM] - SUCCESS :Validating PayPal order 1
+[05/15/2014 2:56 PM] - FAILURE :PAYMENT_STATUS: Completed
+[05/15/2014 2:56 PM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/15/2014 2:56 PM] - SUCCESS :IPN successfully verified.
+[05/15/2014 2:56 PM] - SUCCESS :Creating product Information to send.
+[05/15/2014 2:56 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/15/2014 2:56 PM] - SUCCESS :Validating PayPal order 1
+[05/15/2014 2:56 PM] - FAILURE :PAYMENT_STATUS: Completed
+[05/15/2014 2:56 PM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/15/2014 2:56 PM] - SUCCESS :IPN successfully verified.
+[05/15/2014 2:56 PM] - SUCCESS :Creating product Information to send.
+[05/15/2014 2:58 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/15/2014 2:58 PM] - SUCCESS :Validating PayPal order 1
+[05/15/2014 2:58 PM] - FAILURE :PAYMENT_STATUS: Completed
+[05/15/2014 2:58 PM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/15/2014 2:58 PM] - SUCCESS :IPN successfully verified.
+[05/15/2014 2:58 PM] - SUCCESS :Creating product Information to send.
+[05/15/2014 2:59 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/15/2014 2:59 PM] - SUCCESS :Validating PayPal order 1
+[05/15/2014 2:59 PM] - FAILURE :PAYMENT_STATUS: Completed
+[05/15/2014 2:59 PM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/15/2014 2:59 PM] - SUCCESS :IPN successfully verified.
+[05/15/2014 2:59 PM] - SUCCESS :Creating product Information to send.
+[05/15/2014 3:02 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/15/2014 3:02 PM] - SUCCESS :Validating PayPal order 1
+[05/15/2014 3:02 PM] - FAILURE :PAYMENT_STATUS: Completed
+[05/15/2014 3:02 PM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/15/2014 3:02 PM] - SUCCESS :IPN successfully verified.
+[05/15/2014 3:02 PM] - SUCCESS :Creating product Information to send.
+[05/15/2014 3:02 PM] - SUCCESS :paychecker intiated by 213.108.40.45
+[05/15/2014 3:02 PM] - SUCCESS :Validating PayPal order 
+[05/15/2014 3:02 PM] - FAILURE :PAYMENT_STATUS: 
+[05/15/2014 3:02 PM] - FAILURE :Invalid payment_status: 
+[05/15/2014 3:02 PM] - SUCCESS :paychecker intiated by 213.108.40.45
+[05/15/2014 3:02 PM] - SUCCESS :Validating PayPal order 
+[05/15/2014 3:02 PM] - FAILURE :PAYMENT_STATUS: 
+[05/15/2014 3:02 PM] - FAILURE :Invalid payment_status: 
+[05/15/2014 3:07 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/15/2014 3:07 PM] - SUCCESS :Validating PayPal order 1
+[05/15/2014 3:07 PM] - FAILURE :PAYMENT_STATUS: Completed
+[05/15/2014 3:07 PM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/15/2014 3:07 PM] - SUCCESS :IPN successfully verified.
+[05/15/2014 3:07 PM] - SUCCESS :Creating product Information to send.
+[05/15/2014 3:18 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/15/2014 3:18 PM] - SUCCESS :Validating PayPal order 1
+[05/15/2014 3:18 PM] - FAILURE :PAYMENT_STATUS: Completed
+[05/15/2014 3:18 PM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/15/2014 3:18 PM] - SUCCESS :IPN successfully verified.
+[05/15/2014 3:18 PM] - SUCCESS :Creating product Information to send.
+[05/15/2014 3:20 PM] - SUCCESS :paychecker intiated by 213.108.40.45
+[05/15/2014 3:20 PM] - SUCCESS :Validating PayPal order 
+[05/15/2014 3:20 PM] - FAILURE :PAYMENT_STATUS: 
+[05/15/2014 3:20 PM] - FAILURE :Invalid payment_status: 
+[05/15/2014 3:39 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/15/2014 3:39 PM] - SUCCESS :Validating PayPal order 1
+[05/15/2014 3:39 PM] - FAILURE :PAYMENT_STATUS: Completed
+[05/15/2014 3:39 PM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/15/2014 3:39 PM] - SUCCESS :IPN successfully verified.
+[05/15/2014 3:39 PM] - SUCCESS :Creating product Information to send.
+[05/17/2014 8:35 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 8:35 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 8:35 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 8:35 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 8:35 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 8:35 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 8:37 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 8:37 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 8:37 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 8:37 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 8:37 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 8:37 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 8:39 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 8:39 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 8:39 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 8:39 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 8:39 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 8:39 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 8:42 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 8:42 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 8:42 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 8:42 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 8:42 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 8:42 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 8:47 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 8:47 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 8:47 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 8:47 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 8:47 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 8:47 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 12:57 PM] - SUCCESS :Generating keys
+[05/17/2014 8:58 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 8:58 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 8:58 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 8:58 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 8:58 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 8:58 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 8:58 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/17/2014 8:59 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 8:59 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 8:59 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 8:59 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 8:59 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 8:59 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 8:59 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/17/2014 1:03 PM] - SUCCESS :Generating keys
+[05/17/2014 9:05 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 9:05 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 9:05 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 9:05 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 9:05 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 9:05 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 9:05 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/17/2014 9:12 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 9:12 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 9:12 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 9:12 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 9:12 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 9:12 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 9:12 AM] - SUCCESS :IsEmailExist...
+[05/17/2014 9:12 AM] - SUCCESS :Updating keys...
+[05/17/2014 9:12 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/17/2014 9:16 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 9:16 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 9:16 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 9:16 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 9:16 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 9:16 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 9:16 AM] - SUCCESS :IsEmailExist...
+[05/17/2014 9:16 AM] - SUCCESS :Updating keys...
+[05/17/2014 9:16 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/17/2014 9:21 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 9:21 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 9:21 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 9:21 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 9:21 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 9:21 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 9:21 AM] - SUCCESS :IsEmailExist...
+[05/17/2014 9:21 AM] - SUCCESS :Updating keys...
+[05/17/2014 9:21 AM] - SUCCESS :
+[05/17/2014 9:21 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/17/2014 9:25 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 9:25 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 9:25 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 9:25 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 9:25 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 9:25 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 9:25 AM] - SUCCESS :IsEmailExist...
+[05/17/2014 9:25 AM] - SUCCESS :
+[05/17/2014 9:25 AM] - SUCCESS :Updating keys...
+[05/17/2014 9:25 AM] - SUCCESS :
+[05/17/2014 9:25 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/17/2014 9:29 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 9:29 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 9:29 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 9:29 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 9:29 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 9:29 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 9:29 AM] - SUCCESS :IsEmailExist...
+[05/17/2014 9:29 AM] - SUCCESS :Result 1
+[05/17/2014 9:29 AM] - SUCCESS :Updating keys...
+[05/17/2014 9:29 AM] - SUCCESS :
+[05/17/2014 9:29 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/17/2014 1:41 PM] - SUCCESS :Generating keys
+[05/17/2014 9:42 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 9:42 AM] - SUCCESS :Validating PayPal order 1
+[05/17/2014 9:42 AM] - FAILURE :PAYMENT_STATUS: Completed
+[05/17/2014 9:42 AM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/17/2014 9:42 AM] - SUCCESS :IPN successfully verified.
+[05/17/2014 9:42 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 9:42 AM] - SUCCESS :IsEmailExist...
+[05/17/2014 9:42 AM] - SUCCESS :Result 1
+[05/17/2014 9:42 AM] - SUCCESS :Updating keys...
+[05/17/2014 9:42 AM] - SUCCESS :
+[05/17/2014 9:42 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/17/2014 1:44 PM] - SUCCESS :Generating keys
+[05/17/2014 9:45 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 9:45 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 9:45 AM] - SUCCESS :IsEmailExist...
+[05/17/2014 9:45 AM] - SUCCESS :Result 1
+[05/17/2014 9:45 AM] - SUCCESS :Updating keys...
+[05/17/2014 9:45 AM] - SUCCESS :1
+[05/17/2014 9:45 AM] - SUCCESS :Found key...
+[05/17/2014 9:45 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/17/2014 9:46 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/17/2014 9:46 AM] - SUCCESS :Creating product Information to send.
+[05/17/2014 9:46 AM] - SUCCESS :IsEmailExist...
+[05/17/2014 9:46 AM] - SUCCESS :Result 
+[05/17/2014 9:46 AM] - SUCCESS :Generating keys...
+[05/17/2014 9:46 AM] - SUCCESS :Generating keys
+[05/17/2014 9:46 AM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => XWJE-HG6A-NIJU-BJWP-J8YU-SEI5-HETA
+
+    [pkey_emailed] => 1
+    [first_name] => 
+    [last_name] => 
+    [email] => 
+)
+
+[05/17/2014 9:46 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/18/2014 6:51 AM] - FAILURE :Failed to generate product keys, caught exception: String could not be parsed as XML
+[05/18/2014 7:06 AM] - SUCCESS :Generating keys
+[05/18/2014 7:06 AM] - FAILURE :Failed to generate product keys: () 
+[05/18/2014 7:09 AM] - FAILURE :Failed to generate product keys, caught exception: String could not be parsed as XML
+[05/18/2014 7:14 AM] - SUCCESS :Generating keys
+[05/18/2014 7:14 AM] - SUCCESS :Generating keys
+[05/18/2014 7:16 AM] - SUCCESS :Generating keys
+[05/18/2014 9:15 AM] - SUCCESS :Generating keys
+[05/18/2014 5:20 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/18/2014 5:20 AM] - SUCCESS :Creating product Information to send.
+[05/18/2014 5:20 AM] - SUCCESS :IsEmailExist...
+[05/18/2014 5:20 AM] - SUCCESS :Result 1
+[05/18/2014 5:20 AM] - SUCCESS :Updating keys...
+[05/18/2014 5:20 AM] - SUCCESS :1
+[05/18/2014 5:20 AM] - SUCCESS :Found key...
+[05/18/2014 5:20 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/18/2014 5:22 AM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/18/2014 5:22 AM] - SUCCESS :Creating product Information to send.
+[05/18/2014 5:22 AM] - SUCCESS :IsEmailExist...
+[05/18/2014 5:22 AM] - SUCCESS :Result 
+[05/18/2014 5:22 AM] - SUCCESS :Generating keys...
+[05/18/2014 5:22 AM] - SUCCESS :Generating keys
+[05/18/2014 5:22 AM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => VX2P-7SXK-CJPM-6YWC-FNHT-D5PK-J6TA
+
+    [pkey_emailed] => 1
+    [first_name] => 
+    [last_name] => 
+    [email] => 
+)
+
+[05/18/2014 5:22 AM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/19/2014 4:55 PM] - SUCCESS :Generating keys
+[05/19/2014 2:22 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/19/2014 2:22 PM] - SUCCESS :Creating product Information to send.
+[05/19/2014 2:22 PM] - SUCCESS :IsEmailExist...
+[05/19/2014 2:22 PM] - SUCCESS :Result 
+[05/19/2014 2:22 PM] - SUCCESS :Generating keys...
+[05/19/2014 2:22 PM] - SUCCESS :Generating keys
+[05/19/2014 2:22 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => GX62-3D8Q-4FXX-PEGY-PKS7-CD3F-ENTA
+
+    [pkey_emailed] => 1
+    [first_name] => 
+    [last_name] => 
+    [email] => 
+)
+
+[05/19/2014 2:22 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/19/2014 6:53 PM] - SUCCESS :Generating keys
+[05/19/2014 6:57 PM] - SUCCESS :Generating keys
+[05/19/2014 7:00 PM] - SUCCESS :Generating keys
+[05/20/2014 6:55 PM] - SUCCESS :Generating keys
+[05/20/2014 7:10 PM] - SUCCESS :Generating keys
+[05/20/2014 7:10 PM] - SUCCESS :Stat: ok
+[05/20/2014 7:26 PM] - SUCCESS :Generating keys
+[05/20/2014 7:26 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="852672" key="MTSM-F467-6X9H-DIU7-6NXY-IJ6W-Q2TA"/></pkeys></rsp>
+
+[05/20/2014 7:34 PM] - SUCCESS :  2014-06-03 19:34:17
+[05/20/2014 7:34 PM] - SUCCESS :  yariki-ya@yandex.ru
+[05/20/2014 7:34 PM] - SUCCESS :  1
+[05/20/2014 7:34 PM] - SUCCESS :  0
+[05/20/2014 7:34 PM] - SUCCESS :Generating keys
+[05/20/2014 7:34 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="852673" key="BUKX-4NAX-XMCD-I9KN-P7YY-4BQU-USTA"/></pkeys></rsp>
+
+[05/20/2014 7:40 PM] - SUCCESS :trial_expires  2014-06-03 19:40:19
+[05/20/2014 7:40 PM] - SUCCESS :user_email  yariki-ya@yandex.ru
+[05/20/2014 7:40 PM] - SUCCESS :is_trial_key  1
+[05/20/2014 7:40 PM] - SUCCESS :times_used  0
+[05/20/2014 7:40 PM] - SUCCESS :Generating keys
+[05/20/2014 7:40 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="852675" key="KI3I-ATAY-AQRN-ND8I-NX5F-EKTB-TWTA"/></pkeys></rsp>
+
+[05/20/2014 7:43 PM] - SUCCESS :trial_expires  2014-06-03 19:43:27
+[05/20/2014 7:43 PM] - SUCCESS :user_email  yariki@i.ua
+[05/20/2014 7:43 PM] - SUCCESS :is_trial_key  1
+[05/20/2014 7:43 PM] - SUCCESS :times_used  0
+[05/20/2014 7:43 PM] - SUCCESS :Generating keys
+[05/20/2014 7:43 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="852677" key="9HC7-FV4C-7CR7-HUEC-VKTI-TWD4-EETA"/></pkeys></rsp>
+
+[05/21/2014 4:57 AM] - SUCCESS :trial_expires  2014-06-04 04:57:06
+[05/21/2014 4:57 AM] - SUCCESS :user_email  tiim.ancona@ticomix.com
+[05/21/2014 4:57 AM] - SUCCESS :is_trial_key  1
+[05/21/2014 4:57 AM] - SUCCESS :times_used  0
+[05/21/2014 4:57 AM] - SUCCESS :Generating keys
+[05/21/2014 4:57 AM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="852720" key="8MXB-58NV-QA3H-ZS9C-5TYD-TWNX-FWTA"/></pkeys></rsp>
+
+[05/21/2014 2:41 PM] - SUCCESS :trial_expires  2014-06-04 14:41:55
+[05/21/2014 2:41 PM] - SUCCESS :user_email  mikeanoel@gmail.com
+[05/21/2014 2:41 PM] - SUCCESS :is_trial_key  1
+[05/21/2014 2:41 PM] - SUCCESS :times_used  0
+[05/21/2014 2:41 PM] - SUCCESS :Generating keys
+[05/21/2014 2:41 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="852876" key="WTUQ-8IUJ-RP6M-ESWU-7R8M-C8PG-ANTA"/></pkeys></rsp>
+
+[05/21/2014 7:37 PM] - SUCCESS :trial_expires  2014-06-04 19:37:48
+[05/21/2014 7:37 PM] - SUCCESS :user_email  yariki-ya@yandex.ru
+[05/21/2014 7:37 PM] - SUCCESS :is_trial_key  1
+[05/21/2014 7:37 PM] - SUCCESS :times_used  0
+[05/21/2014 7:37 PM] - SUCCESS :Generating keys
+[05/21/2014 7:37 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="852951" key="QBMW-58CP-97MB-HUW7-8MUX-PIKY-TWTA"/></pkeys></rsp>
+
+[05/21/2014 7:43 PM] - SUCCESS :trial_expires  2014-06-04 19:43:10
+[05/21/2014 7:43 PM] - SUCCESS :user_email  yariki-ya@yandex.ru
+[05/21/2014 7:43 PM] - SUCCESS :is_trial_key  1
+[05/21/2014 7:43 PM] - SUCCESS :times_used  0
+[05/21/2014 7:43 PM] - SUCCESS :Generating keys
+[05/21/2014 7:43 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="852953" key="6FJF-7MRK-8HR5-2Y5G-S3XY-E6WU-5NTA"/></pkeys></rsp>
+
+[05/21/2014 7:50 PM] - SUCCESS :trial_expires  2014-06-04 19:50:54
+[05/21/2014 7:50 PM] - SUCCESS :user_email  yariki-ya@yandex.ru
+[05/21/2014 7:50 PM] - SUCCESS :is_trial_key  1
+[05/21/2014 7:50 PM] - SUCCESS :times_used  0
+[05/21/2014 7:50 PM] - SUCCESS :Generating keys
+[05/21/2014 7:50 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="852955" key="FNI7-BUE8-8C5K-IVCA-YBYH-IFQW-CATA"/></pkeys></rsp>
+
+[05/21/2014 8:14 PM] - SUCCESS :trial_expires  2014-06-04 20:14:21
+[05/21/2014 8:14 PM] - SUCCESS :user_email  yariki-ya@yandex.ru
+[05/21/2014 8:14 PM] - SUCCESS :is_trial_key  1
+[05/21/2014 8:14 PM] - SUCCESS :times_used  0
+[05/21/2014 8:14 PM] - SUCCESS :Generating keys
+[05/21/2014 8:14 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="852960" key="34KN-TEW6-4QJC-MEQU-5SZZ-MB33-46TA"/></pkeys></rsp>
+
+[05/22/2014 9:00 AM] - SUCCESS :trial_expires  2014-06-05 09:00:50
+[05/22/2014 9:00 AM] - SUCCESS :user_email  irutson@600uk.com
+[05/22/2014 9:00 AM] - SUCCESS :is_trial_key  1
+[05/22/2014 9:00 AM] - SUCCESS :times_used  0
+[05/22/2014 9:00 AM] - SUCCESS :Generating keys
+[05/22/2014 9:00 AM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="853052" key="YH4N-N544-KP9V-ATSN-NNM6-FU5Y-KITA"/></pkeys></rsp>
+
+[05/22/2014 2:21 PM] - SUCCESS :trial_expires  2014-06-05 14:21:11
+[05/22/2014 2:21 PM] - SUCCESS :user_email  Jacob@systemed.co.uk
+[05/22/2014 2:21 PM] - SUCCESS :is_trial_key  1
+[05/22/2014 2:21 PM] - SUCCESS :times_used  0
+[05/22/2014 2:21 PM] - SUCCESS :Generating keys
+[05/22/2014 2:21 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="853099" key="UQ9F-FFAJ-MGXF-ST7H-N7PV-2G7Q-9ITA"/></pkeys></rsp>
+
+[05/22/2014 2:30 PM] - SUCCESS :paychecker intiated by 173.0.82.126
+[05/22/2014 2:30 PM] - SUCCESS :Validating PayPal order 1
+[05/22/2014 2:30 PM] - FAILURE :PAYMENT_STATUS: Completed
+[05/22/2014 2:30 PM] - FAILURE :RECEIVER EMAIL: yariki-ya@yandex.ru
+[05/22/2014 2:30 PM] - SUCCESS :IPN successfully verified.
+[05/22/2014 2:30 PM] - SUCCESS :Creating product Information to send.
+[05/22/2014 2:30 PM] - SUCCESS :IsEmailExist...
+[05/22/2014 2:30 PM] - SUCCESS :Result 
+[05/22/2014 2:30 PM] - SUCCESS :Generating keys...
+[05/22/2014 2:30 PM] - SUCCESS :Generating keys
+[05/22/2014 2:30 PM] - SUCCESS :TODO: Insert array into db: 
+
+Array
+(
+    [quantity_licenses] => 1
+    [pkey] => QBY7-CHNQ-3464-PXPF-PMZI-8KQA-JSTA
+
+    [pkey_emailed] => 0
+    [first_name] => Yaroslav
+    [last_name] => Lisovsky
+    [email] => iyariki.ya@hotmail.com
+)
+
+[05/22/2014 2:30 PM] - FAILURE :Error sending product Email to iyariki.ya@hotmail.com.
+[05/22/2014 2:30 PM] - SUCCESS :paychecker finished.
+
+------------------------------------------------------------------
+
+[05/22/2014 6:48 PM] - SUCCESS :trial_expires  2014-06-05 18:48:52
+[05/22/2014 6:48 PM] - SUCCESS :user_email  yariki-ya@yandex.ru
+[05/22/2014 6:48 PM] - SUCCESS :is_trial_key  1
+[05/22/2014 6:48 PM] - SUCCESS :times_used  0
+[05/22/2014 6:48 PM] - SUCCESS :Generating keys
+[05/22/2014 6:48 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="853136" key="72WD-TSWV-T7R6-QV9I-4VWM-UMGU-KATA"/></pkeys></rsp>
+
+[05/22/2014 7:08 PM] - SUCCESS :trial_expires  2014-06-05 19:08:48
+[05/22/2014 7:08 PM] - SUCCESS :user_email  yariki-ya@yandex.ru
+[05/22/2014 7:08 PM] - SUCCESS :is_trial_key  1
+[05/22/2014 7:08 PM] - SUCCESS :times_used  0
+[05/22/2014 7:08 PM] - SUCCESS :Generating keys
+[05/22/2014 7:08 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="853142" key="J8YG-NYC7-5MV5-2RBT-382K-93MW-NATA"/></pkeys></rsp>
+
+[05/22/2014 11:33 PM] - SUCCESS :trial_expires  2014-06-05 23:33:58
+[05/22/2014 11:33 PM] - SUCCESS :user_email  yariki-ya@yandex.ru
+[05/22/2014 11:33 PM] - SUCCESS :is_trial_key  1
+[05/22/2014 11:33 PM] - SUCCESS :times_used  0
+[05/22/2014 11:33 PM] - SUCCESS :Generating keys
+[05/22/2014 11:33 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="853175" key="75U3-VEBR-Y5JW-IW4Y-E4V9-FXAC-HNTA"/></pkeys></rsp>
+
+[05/23/2014 6:19 PM] - SUCCESS :trial_expires  2014-06-06 18:19:20
+[05/23/2014 6:19 PM] - SUCCESS :user_email  garion.hall@abbywinters.com
+[05/23/2014 6:19 PM] - SUCCESS :is_trial_key  1
+[05/23/2014 6:19 PM] - SUCCESS :times_used  0
+[05/23/2014 6:19 PM] - SUCCESS :Generating keys
+[05/23/2014 6:19 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="853397" key="HV8G-SSPN-IN96-NWQK-JJAS-73YB-9ITA"/></pkeys></rsp>
+
+[05/24/2014 4:03 PM] - SUCCESS :trial_expires  2014-06-07 16:03:56
+[05/24/2014 4:03 PM] - SUCCESS :user_email  rchana@mcmcg.com
+[05/24/2014 4:03 PM] - SUCCESS :is_trial_key  1
+[05/24/2014 4:03 PM] - SUCCESS :times_used  0
+[05/24/2014 4:03 PM] - SUCCESS :Generating keys
+[05/24/2014 4:03 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="854511" key="PKGE-7BEA-TMCD-5JP9-7Q3I-U569-7NTA"/></pkeys></rsp>
+
+[05/24/2014 8:52 PM] - SUCCESS :trial_expires  2014-06-07 20:52:54
+[05/24/2014 8:52 PM] - SUCCESS :user_email  rchana@mcmcg.com
+[05/24/2014 8:52 PM] - SUCCESS :is_trial_key  1
+[05/24/2014 8:52 PM] - SUCCESS :times_used  0
+[05/24/2014 8:52 PM] - SUCCESS :Generating keys
+[05/24/2014 8:52 PM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="854528" key="KUE6-FZ9E-X98P-T3PE-IFGM-DHQF-Z6TA"/></pkeys></rsp>
+
+[05/26/2014 4:37 AM] - SUCCESS :trial_expires  2014-06-09 04:37:33
+[05/26/2014 4:37 AM] - SUCCESS :user_email  amita.malhotra@microsoft.com
+[05/26/2014 4:37 AM] - SUCCESS :is_trial_key  1
+[05/26/2014 4:37 AM] - SUCCESS :times_used  0
+[05/26/2014 4:37 AM] - SUCCESS :Generating keys
+[05/26/2014 4:37 AM] - SUCCESS :Xml: <?xml version="1.0" encoding="utf-8"?>
+<rsp stat="ok"><pkeys total="1"><pkey id="854613" key="EAT9-42NH-CUNW-P37P-7B97-YVMB-2WTA"/></pkeys></rsp>
+
