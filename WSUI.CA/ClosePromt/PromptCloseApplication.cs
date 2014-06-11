@@ -1,23 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using WSUI.CA.Core;
+using WSUI.CA.Enums;
 
 namespace WSUI.CA.ClosePromt
 {
-    public class PromptCloseApplication :CoreSetupApplication
+    public class PromptCloseApplication : CoreSetupApplication
     {
-        
+
         private readonly string _processName;
         private readonly string _displayName;
         private System.Threading.Timer _timer;
         private Form _form;
+        private const string OutlookId = "Outlook.Application";
 
-        
+        private const string OutllokAppName = "outlook";
+
         public PromptCloseApplication(string productName, string processName, string displayName)
-            :base(productName)
+            : base(productName)
         {
             _processName = processName;
             _displayName = displayName;
@@ -27,31 +31,29 @@ namespace WSUI.CA.ClosePromt
         {
             if (IsRunning(_processName))
             {
-                _form = new ClosePromptForm(String.Format("Please close running instances of {0} before running {1} setup.", _displayName, ProductName));
-                _timer = new System.Threading.Timer(TimerElapsed, _form, 200, 200);
-                return ShowDialog();
+                _form = new ClosePromptForm(String.Format("Please close running instances of {0} before running {1} setup.", _displayName, ProductName));//OutlookFinder needs to close Outlook to proceed. Please save your work, close the program and click Close Outlook and Continue.
+                var res = ShowDialog();
+                switch (res)
+                {
+                    case eClosePrompt.Continue:
+                        CloseAllOutlookInstancesHard();
+                        return true;
+                    case eClosePrompt.Cancel:
+                        return false;
+                }
             }
             return true;
         }
 
-        bool ShowDialog()
+        eClosePrompt ShowDialog()
         {
-            if (_form.ShowDialog(new WindowWrapper(GetMainWindowHandle())) == DialogResult.OK)
-                return !IsRunning(_processName) || ShowDialog();
-            return false;
-        }
-
-        private void TimerElapsed(object sender)
-        {
-            if (_form == null || IsRunning(_processName) || !_form.Visible)
-                return;
-            _form.DialogResult = DialogResult.OK;
-            _form.Close();
+            var r = _form.ShowDialog(new WindowWrapper(GetMainWindowHandle()));
+            return (_form as IClosePromptForm).Result;
         }
 
         static bool IsRunning(string processName)
         {
-            return Process.GetProcesses().Any(p => p.ProcessName.ToUpper().StartsWith(processName.ToUpper()));
+            return Process.GetProcesses().Any(p => p.ProcessName.ToUpper() == processName.ToUpper());
         }
 
         public override void Dispose()
@@ -62,5 +64,30 @@ namespace WSUI.CA.ClosePromt
                 _form.Close();
             base.Dispose();
         }
+
+        private static IEnumerable<Process> GetAllOutlookInstances()
+        {
+            return Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith(OutllokAppName.ToUpper()));
+        }
+
+        private static void CloseAllOutlookInstancesHard()
+        {
+            foreach (Process allOutlookInstance in GetAllOutlookInstances())
+            {
+                CloseHardOutlook(allOutlookInstance);
+            }
+        }
+
+        private static void CloseHardOutlook(Process app)
+        {
+            try
+            {
+                app.Kill();
+            }
+            finally
+            {
+            }
+        }
+
     }
 }

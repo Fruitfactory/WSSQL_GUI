@@ -77,6 +77,7 @@
     <Compile Include="ClosePromt\ClosePromptForm.Designer.cs">
       <DependentUpon>ClosePromptForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ClosePromt\IClosePromptForm.cs" />
     <Compile Include="ClosePromt\PromptCloseApplication.cs" />
     <Compile Include="Core\WindowWrapper.cs" />
     <Compile Include="Core\CoreSetupApplication.cs" />
@@ -88,6 +89,7 @@
       <DependentUpon>EmailForm.cs</DependentUpon>
     </Compile>
     <Compile Include="EmailValidate\EmailValidateApplication.cs" />
+    <Compile Include="Enums\eClosePrompt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="CustomAction.config" />
   </ItemGroup>
@@ -99,6 +101,7 @@
       <DependentUpon>EmailForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(WixCATargetsPath)" />
 </Project>

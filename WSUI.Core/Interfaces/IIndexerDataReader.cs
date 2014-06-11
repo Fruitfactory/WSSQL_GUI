@@ -2,10 +2,13 @@
 
 namespace WSUI.Core.Interfaces
 {
-    internal interface IIndexerDataReader
+    public interface IIndexerDataReader
     {
         DataTable GetDataByAdapter(string query);
 
         DataTable GetDataByReader(string query);
+
+        IIndexerDataReader GetInstance();
+
     }
 }

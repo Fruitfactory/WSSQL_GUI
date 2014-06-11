@@ -1,12 +1,17 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Windows.Threading;
+using Microsoft.Office.Interop.Outlook;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Logger;
+using WSUI.Core.Utils;
 using WSUI.Infrastructure;
 using WSUI.Module.Interface;
 using WSUI.Module.View;
 using WSUI.Module.ViewModel;
+using Action = System.Action;
 
 namespace WSUI.Module
 {
@@ -38,6 +43,7 @@ namespace WSUI.Module
             region = _regionManager.Regions[RegionNames.PreviewRegion];
             region.Add(mmv.PreviewView);
             mmv.PreviewView.Init();
+            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => FieldCash.Instance.Initialize()));
             watch.Stop();
             WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "Initialize <PreviewView.Init()>", watch.ElapsedMilliseconds));
         }

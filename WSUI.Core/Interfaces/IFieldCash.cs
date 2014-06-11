@@ -16,5 +16,8 @@ namespace WSUI.Core.Interfaces
         /// <param name="type"></param>
         /// <param name="exludeIngnored"></param>
         IList<Tuple<string, string, int, bool>> GetFields(Type type, bool exludeIngnored);
+
+        void Initialize();
+
     } //end IFieldCash
 } //end namespace Interfaces

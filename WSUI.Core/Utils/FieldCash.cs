@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using WSUI.Core.Core.Attributes;
+using WSUI.Core.Data;
 using WSUI.Core.Interfaces;
 
 namespace WSUI.Core.Utils 
@@ -44,9 +45,13 @@ namespace WSUI.Core.Utils
 
 
         private void Init()
-	    {
-	        
-	    }
+        {
+            AddType(typeof(AttachmentSearchObject)); 
+            AddType(typeof(EmailSearchObject));
+            AddType(typeof(FileSearchObject));
+            AddType(typeof(ContactSearchObject));
+            AddType(typeof(EmailContactSearchObject));
+        }
 
 	    /// 
 	    /// <param name="type"></param>
@@ -61,12 +66,23 @@ namespace WSUI.Core.Utils
 	        return result;
         }
 
-        private IList<Tuple<string,string,int,bool>> CreateCashRecordForType(Type type, bool exludeIgnored)
+	    public void Initialize()
+	    {
+	        
+	    }
+
+	    private IList<Tuple<string,string,int,bool>> CreateCashRecordForType(Type type, bool exludeIgnored)
         {
-            var list = GetFields(type);
-            _internalCash.TryAdd(type,list);
+            var list = AddType(type);
             return list.ToList();
         }
+
+	    private IList<Tuple<string,string,int,bool>> AddType(Type type)
+	    {
+	        var list = GetFields(type);
+	        _internalCash.TryAdd(type, list);
+	        return list;
+	    }
 
 	    private IList<Tuple<string, string, int, bool>> GetFields(Type type)
 	    {

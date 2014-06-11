@@ -30,16 +30,16 @@
         {
             this.okButton = new System.Windows.Forms.Button();
             this.messageText = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // okButton
             // 
-            this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(200, 67);
+            this.okButton.Location = new System.Drawing.Point(161, 67);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 0;
-            this.okButton.Text = "OK";
+            this.okButton.Text = "Continue";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.OkButtonClick);
             // 
@@ -53,12 +53,23 @@
             this.messageText.Size = new System.Drawing.Size(0, 13);
             this.messageText.TabIndex = 1;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(244, 67);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "Cancel";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // ClosePromptForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(474, 102);
             this.Controls.Add(this.messageText);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.okButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -68,6 +79,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Application needs to be closed";
+            this.Load += new System.EventHandler(this.ClosePromptForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -77,5 +89,6 @@
 
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Label messageText;
+        private System.Windows.Forms.Button button1;
     }
 }

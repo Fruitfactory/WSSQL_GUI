@@ -74,6 +74,11 @@ namespace WSUI.Core.Core.Search
             return data;
         }
 
+        public IIndexerDataReader GetInstance()
+        {
+            return new IndexerDataReader();
+        }
+
         #region [private]
         private DataTable GetDataTableFromDataReader(IDataReader reader)
         {

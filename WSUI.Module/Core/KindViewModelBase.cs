@@ -223,6 +223,7 @@ namespace WSUI.Module.Core
 
             if (SearchSystem != null)
             {
+                SearchSystem.Init();
                 SearchSystem.SearchStarted += SearchSystemOnSearchStarted;
                 SearchSystem.SearchFinished += SearchSystemOnSearchFinished;
                 SearchSystem.SearchStoped += SearchSystemOnSearchStoped;

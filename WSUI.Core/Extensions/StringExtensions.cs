@@ -9,6 +9,7 @@ namespace WSUI.Core.Extensions
     public static class StringExtensions
     {
         private const string IsoEncodingName = "ISO-8859-1";
+        private static Encoding encoding = null;
 
         public static string ConvertToIso(this string str)
         {
@@ -22,9 +23,9 @@ namespace WSUI.Core.Extensions
         {
             if (string.IsNullOrEmpty(str))
                 return string.Empty;
-            Encoding enc = EncodingTools.GetMostEfficientEncoding(str);
-            var bytes = enc != null ? enc.GetBytes(str) : Encoding.Default.GetBytes(str);
-            var result = enc.GetString(bytes);//Encoding.UTF8.GetString(bytes);
+            encoding = encoding ?? EncodingTools.GetMostEfficientEncoding(str);
+            var bytes = encoding != null ? encoding.GetBytes(str) : Encoding.Default.GetBytes(str);
+            var result = encoding.GetString(bytes);//Encoding.UTF8.GetString(bytes);
             return result;
         }
 

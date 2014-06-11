@@ -49,7 +49,6 @@ namespace WSUI.Module.ViewModel
         protected override void OnInit()
         {
             base.OnInit();
-            SearchSystem.Init();
             ICommandStrategy fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
             CommandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
             CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);

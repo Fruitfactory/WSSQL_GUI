@@ -35,8 +35,9 @@ namespace WSUI.Unistall
             catch (System.Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                WSSqlLogger.Instance.LogError("Deactivating: {0}",ex.Message);
+                WSSqlLogger.Instance.LogError("Deactivating: {0}", ex.Message);
             }
+            
         }
     }
 }

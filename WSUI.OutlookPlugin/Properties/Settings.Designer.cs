@@ -25,15 +25,6 @@ namespace WSUIOutlookPlugin.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.outlookfinder.com/support ")]
-        public string HelpUrl {
-            get {
-                return ((string)(this["HelpUrl"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("All Rights Reserved.")]
         public string AllRights {
             get {
@@ -43,19 +34,28 @@ namespace WSUIOutlookPlugin.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.outlookfinder.com/")]
-        public string ProductUrl {
+        [global::System.Configuration.DefaultSettingValueAttribute("info@outlookfinder.com")]
+        public string Email {
             get {
-                return ((string)(this["ProductUrl"]));
+                return ((string)(this["Email"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("info@outlookfinder.com")]
-        public string Email {
+        [global::System.Configuration.DefaultSettingValueAttribute("https://www.outlookfinder.com/support ")]
+        public string HelpUrl {
             get {
-                return ((string)(this["Email"]));
+                return ((string)(this["HelpUrl"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://www.outlookfinder.com/")]
+        public string ProductUrl {
+            get {
+                return ((string)(this["ProductUrl"]));
             }
         }
     }

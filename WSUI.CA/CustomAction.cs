@@ -186,7 +186,7 @@ namespace WSUI.CA
                     session.Log("Prompting process {0} with name {1} to close.", processes[i], displayNames[i]);
                     using (var prompt = new PromptCloseApplication(productName, processes[i], displayNames[i]))
                         if (!prompt.Prompt())
-                            return ActionResult.Failure;
+                            return ActionResult.UserExit;
                 }
                 RegistryHelper.Instance.SetFlagClosedOutlookApplication();
             }
@@ -504,7 +504,9 @@ namespace WSUI.CA
                 var productName = session["ProductName"];
                 string email = session["EMAILVALUE"];
                 bool isValid = Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase);
+                session.Log("Check Lime...");
                 bool isPresent = LimeLMApi.IsEmailPresent(email);
+                session.Log("Finish Lime...");
                 bool res = isValid && isPresent;
 
                 session.Log("IsValid Email: " + isValid);
@@ -529,17 +531,26 @@ namespace WSUI.CA
                             session[EmailValidProperty] = result.ToString();
                             session.Log(session[EmailValidProperty]);
                             session["EMAILVALUE"] = string.Empty;
-                            session["WIXUI_EXITDIALOGOPTIONALTEXT"] = !isValid ? "Email is not valid."
-                                : !isPresent ? "Please, enter the same email you entered on the website to download the software next time."
-                                : string.Empty;
+                            session["WIXUI_EXITDIALOGOPTIONALTEXT"] = !isValid
+                                ? "Email is not valid."
+                                : !isPresent
+                                    ? "Please, enter the same email you entered on the website to download the software next time."
+                                    : string.Empty;
                             session["EMAILVALIDMESSAGE"] = session["WIXUI_EXITDIALOGOPTIONALTEXT"];
                         }
                     }
+                }
+                else
+                {
+                    session["EMAILVALUE"] = email;
+                    session[EmailValidProperty] = bool.TrueString;
+                    session.Log(session[EmailValidProperty]);
                 }
             }
             catch (Exception ex)
             {
                 session.Log(ex.Message);
+                return ActionResult.Failure;
             }
             return ActionResult.Success;
         }

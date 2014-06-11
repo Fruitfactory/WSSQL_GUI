@@ -40,7 +40,8 @@ namespace WSUI.Core.Core.Search
 		{
             _IsSearching = false;
             _listRules.ForEach(item => item.Init());
-		}
+		    
+        }
 
 		public virtual void Reset()
         {

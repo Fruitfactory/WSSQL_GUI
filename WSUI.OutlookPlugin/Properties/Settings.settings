@@ -2,17 +2,17 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WSUIOutlookPlugin.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="HelpUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://www.outlookfinder.com/support </Value>
-    </Setting>
     <Setting Name="AllRights" Type="System.String" Scope="Application">
       <Value Profile="(Default)">All Rights Reserved.</Value>
     </Setting>
-    <Setting Name="ProductUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://www.outlookfinder.com/</Value>
-    </Setting>
     <Setting Name="Email" Type="System.String" Scope="Application">
       <Value Profile="(Default)">info@outlookfinder.com</Value>
+    </Setting>
+    <Setting Name="HelpUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://www.outlookfinder.com/support </Value>
+    </Setting>
+    <Setting Name="ProductUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://www.outlookfinder.com/</Value>
     </Setting>
   </Settings>
 </SettingsFile>

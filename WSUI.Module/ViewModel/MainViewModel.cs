@@ -34,7 +34,7 @@ namespace WSUI.Module.ViewModel
     {
         #region [urls]
 
-        private const string BuyUrl = "http://outlookfinder.com/buy/";
+        private const string BuyUrl = "https://outlookfinder.com/buy/";
 
         #endregion [urls]
 
@@ -144,17 +144,13 @@ namespace WSUI.Module.ViewModel
 
         private void GetAllKinds()
         {
-            IEnumerable<Type> types =
-                AppDomain.CurrentDomain.GetAssemblies().SelectMany(
-                    a => a.GetTypes().Where(t => !t.IsAbstract && t.IsClass && t.GetInterface(Interface, true) != null));
-
+            IEnumerable<Type> types = this.GetType().Assembly.GetTypes().Where(t => !t.IsAbstract && t.IsClass && t.GetInterface(Interface, true) != null);
             foreach (Type type in types)
             {
                 var kind = new LazyKind(_container, type, this, null, OnPropertyChanged);
                 kind.Initialize();
                 _listItems.Add(kind);
             }
-
             _listItems.Sort((x, y) =>
             {
                 if (x.ID < y.ID)
