@@ -60,7 +60,7 @@ namespace WSUI.Core.Utils
         {
 	        if (_internalCash.ContainsKey(type))
 	        {
-	            return GetExistList(type);
+	            return GetExistList(type,exludeIgnored);
 	        }
 	        var result = CreateCashRecordForType(type, exludeIgnored);
 	        return result;
@@ -74,7 +74,7 @@ namespace WSUI.Core.Utils
 	    private IList<Tuple<string,string,int,bool>> CreateCashRecordForType(Type type, bool exludeIgnored)
         {
             var list = AddType(type);
-            return list.ToList();
+            return exludeIgnored ? list.Where(f => !f.Item4).ToList() : list.ToList();
         }
 
 	    private IList<Tuple<string,string,int,bool>> AddType(Type type)
@@ -148,9 +148,9 @@ namespace WSUI.Core.Utils
 	    }
 
 
-	    private IList<Tuple<string, string, int, bool>> GetExistList(Type type)
+	    private IList<Tuple<string, string, int, bool>> GetExistList(Type type,bool exludeIgnored)
 	    {
-	        var result = _internalCash[type].ToList();
+	        var result = exludeIgnored ? _internalCash[type].Where(f => !f.Item4).ToList() : _internalCash[type].ToList();
 	        return result;
 	    }
 

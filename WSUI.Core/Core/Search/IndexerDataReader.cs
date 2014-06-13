@@ -103,34 +103,32 @@ namespace WSUI.Core.Core.Search
             int row = 0;
             try
             {
-                while (true)
+                while (reader.Read())
                 {
                     row++;
-                    bool res = false;
-                    try
-                    {
-                        res = reader.Read();
-                        if (!res)
-                            break;
-                    }
-                    catch (InvalidCastException c)
-                    {
-                        continue;
-                    }
-                    catch
-                    {
-                        continue;
-                    }
+                    //bool res = false;
+                    //try
+                    //{
+                    //    res = reader.Read();
+                    //    if (!res)
+                    //        break;
+                    //}
+                    //catch (InvalidCastException c)
+                    //{
+                    //    continue;
+                    //}
+                    //catch
+                    //{
+                    //    continue;
+                    //}
                     
                     DataRow dataRow = resultTable.NewRow();
                    
                     for (int i = 0; i < resultTable.Columns.Count - 1; i++)
                     {
-                        if (resultTable.Columns[i].ColumnName.ToUpper() == "System.DateCreated".ToUpper())
-                            continue;
                         try
                         {
-                            object val = resultTable.Columns[i].DataType == typeof(DateTime) ? reader.GetFloat(i) : reader[i];
+                            object val = reader[i];
                             dataRow[i] = val;
                         }
                         catch (Exception ex)

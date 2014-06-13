@@ -27,12 +27,13 @@ namespace WSUI.Infrastructure.Implements.Rules
 
 
 		public BaseAttachmentSearchRule()
+            :base(null,true)
 		{
 		    
 		}
 
         public BaseAttachmentSearchRule(object lockOject)
-            :base(lockOject)
+            :base(lockOject,true)
         {
             
         }

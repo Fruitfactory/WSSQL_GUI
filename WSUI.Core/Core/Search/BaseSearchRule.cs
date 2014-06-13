@@ -33,6 +33,7 @@ namespace WSUI.Core.Core.Search
         private Thread _ruleThread;
         private IQueryReader _reader;
         private volatile bool _isSearching = false;
+        private bool _exludeIgnored = false;
         #endregion
 
         #region [needs protected]
@@ -65,15 +66,16 @@ namespace WSUI.Core.Core.Search
         #endregion
 
         protected BaseSearchRule()
-            : this(null)
+            : this(null,false)
         {
         }
 
-        protected BaseSearchRule(object lockObject)
+        protected BaseSearchRule(object lockObject,bool exludeIgnored)
         {
             Event = new AutoResetEvent(false);
             Result = new List<T>();
             Lock = lockObject ?? new object();
+            _exludeIgnored = exludeIgnored;
         }
 
         public ISearchResult GetResults()
@@ -112,7 +114,7 @@ namespace WSUI.Core.Core.Search
             try
             {
                 _isSearching = true;
-                string query = QueryGenerator.Instance.GenerateQuery(typeof(T), Query, TopQueryResult, this, false);
+                string query = QueryGenerator.Instance.GenerateQuery(typeof(T), Query, TopQueryResult, this, _exludeIgnored);
                 if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);

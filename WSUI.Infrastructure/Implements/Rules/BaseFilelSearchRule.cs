@@ -29,7 +29,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         }
 
         public BaseFilelSearchRule(object lockObject)
-            :base(lockObject)
+            :base(lockObject,false)
         {
 
         }

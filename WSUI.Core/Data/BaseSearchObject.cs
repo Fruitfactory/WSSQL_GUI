@@ -36,7 +36,7 @@ namespace WSUI.Core.Data
         [Field("System.Kind", 3, false)]
 		public string[] Kind{ get;  set;}
 
-        [Field("System.DateCreated", 4, false)]
+        [Field("System.DateCreated", 4, true)]
 		public DateTime DateCreated{ get;  set;}
 
         [Field("System.ItemNameDisplay", 5, false)]

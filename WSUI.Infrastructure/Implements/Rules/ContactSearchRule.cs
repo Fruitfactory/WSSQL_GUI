@@ -33,7 +33,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 		}
         
         public ContactSearchRule(object lockObject)
-        :base(lockObject)
+        :base(lockObject,false)
         {
             Priority = 1;
         }

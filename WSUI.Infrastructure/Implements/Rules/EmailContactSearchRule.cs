@@ -28,7 +28,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         }
 
         public EmailContactSearchRule(object lockObject)
-        :base(lockObject)
+        :base(lockObject,false)
         {
             Priority = 0;
         }

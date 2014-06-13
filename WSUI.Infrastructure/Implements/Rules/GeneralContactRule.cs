@@ -30,7 +30,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         }
 
         public GeneralContactRule(int firstTime, int secondTime,object lockExternal)
-            :base(lockExternal)
+            :base(lockExternal,false)
         {
             ConstructorInit();
             _first = firstTime;
@@ -38,7 +38,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         }
 
         public GeneralContactRule(object lockObject)
-            :base(lockObject)
+            :base(lockObject,false)
         {
             ConstructorInit();
         }
