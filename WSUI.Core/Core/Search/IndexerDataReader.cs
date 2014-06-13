@@ -128,15 +128,14 @@ namespace WSUI.Core.Core.Search
                     {
                         try
                         {
-                            object val = reader[i];
+                            object val = resultTable.Columns[i].DataType == typeof(DateTime) ? reader.GetDateTime(i) : reader[i];
                             dataRow[i] = val;
                         }
                         catch (Exception ex)
                         {
                             System.Diagnostics.Debug.WriteLine(ex.Message);
-                            break;
+                            continue;
                         }
-
                     }
                     resultTable.Rows.Add(dataRow);
                 }
@@ -145,7 +144,6 @@ namespace WSUI.Core.Core.Search
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
-
             return resultTable;
 
         }
