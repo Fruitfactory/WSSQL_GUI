@@ -126,9 +126,11 @@ namespace WSUI.Core.Core.Search
                    
                     for (int i = 0; i < resultTable.Columns.Count - 1; i++)
                     {
+                        if (resultTable.Columns[i].ColumnName.ToUpper() == "System.DateCreated".ToUpper())
+                            continue;
                         try
                         {
-                            object val = resultTable.Columns[i].DataType == typeof(DateTime) ? reader.GetDateTime(i) : reader[i];
+                            object val = resultTable.Columns[i].DataType == typeof(DateTime) ? reader.GetFloat(i) : reader[i];
                             dataRow[i] = val;
                         }
                         catch (Exception ex)
