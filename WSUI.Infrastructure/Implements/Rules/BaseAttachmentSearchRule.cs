@@ -50,6 +50,11 @@ namespace WSUI.Infrastructure.Implements.Rules
 	        return string.Format(WhereTemplate, dateString, addCriteria, tuple.Item1);
 	    }
 
+        protected override System.Data.DataTable GetDataTable(string query)
+        {
+            return IndexerDataReader.Instance.GetDataByReader(query);
+        }
+
 	    private string GetAdditionalCriteria(List<string> listWord)
 	    {
             if (listWord.Count == 0)

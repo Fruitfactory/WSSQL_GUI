@@ -5,7 +5,7 @@ using WSUI.Core.Interfaces;
 
 namespace WSUI.Core.Core.Search
 {
-    internal class IndexerDataReader : IIndexerDataReader
+    public class IndexerDataReader : IIndexerDataReader
     {
         #region [needs]
 
@@ -49,7 +49,7 @@ namespace WSUI.Core.Core.Search
                 {
                     _connection.Close();
                 }
-                
+
             }
             return data;
         }
@@ -61,13 +61,18 @@ namespace WSUI.Core.Core.Search
             lock (_lock)
                 try
                 {
-                    OleDbCommand cmd = new OleDbCommand(query,_connection);
+                    _connection.Open();
+                    OleDbCommand cmd = new OleDbCommand(query, _connection);
                     reader = cmd.ExecuteReader();
                     data = GetDataTableFast(reader);
                 }
+                catch (Exception ex)
+                {
+                    WSUI.Core.Logger.WSSqlLogger.Instance.LogError("GetDataByReader: {0}", ex.Message);
+                }
                 finally
                 {
-                    if(reader != null)
+                    if (reader != null)
                         reader.Close();
                     _connection.Close();
                 }
@@ -95,15 +100,50 @@ namespace WSUI.Core.Core.Search
 
                 resultTable.Columns.Add(dataColumn);
             }
-
-            while (reader.Read())
+            int row = 0;
+            try
             {
-                DataRow dataRow = resultTable.NewRow();
-                for (int i = 0; i < resultTable.Columns.Count - 1; i++)
+                while (true)
                 {
-                    dataRow[i] = reader[i];
+                    row++;
+                    bool res = false;
+                    try
+                    {
+                        res = reader.Read();
+                        if (!res)
+                            break;
+                    }
+                    catch (InvalidCastException c)
+                    {
+                        continue;
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                    
+                    DataRow dataRow = resultTable.NewRow();
+                   
+                    for (int i = 0; i < resultTable.Columns.Count - 1; i++)
+                    {
+                        try
+                        {
+                            object val = reader[i];
+                            dataRow[i] = val;
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine(ex.Message);
+                            break;
+                        }
+
+                    }
+                    resultTable.Rows.Add(dataRow);
                 }
-                resultTable.Rows.Add(dataRow);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
 
             return resultTable;

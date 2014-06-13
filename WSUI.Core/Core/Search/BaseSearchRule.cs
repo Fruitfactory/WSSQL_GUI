@@ -117,7 +117,7 @@ namespace WSUI.Core.Core.Search
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
                 //Stopwatch watch = null;
-                DataTable resultTable = IndexerDataReader.Instance.GetDataByAdapter(query);
+                DataTable resultTable = GetDataTable(query);// IndexerDataReader.Instance.GetDataByReader(query);
                 // additional process
                 if (!NeedStop && resultTable != null)
                 {
@@ -154,6 +154,11 @@ namespace WSUI.Core.Core.Search
                 IsInterupt = false;
                 Event.Set();
             }
+        }
+
+        protected virtual DataTable GetDataTable(string query)
+        {
+            return IndexerDataReader.Instance.GetDataByAdapter(query);
         }
 
         protected virtual void CreateDataObject(DataTable data)
