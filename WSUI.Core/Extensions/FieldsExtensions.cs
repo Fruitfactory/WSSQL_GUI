@@ -7,9 +7,9 @@ namespace WSUI.Core.Extensions
 {
     public static class FieldsExtensions
     {
-        public static IList<Tuple<string, int>> GetFieldList(this IFieldCash cach, Type type, bool exludeIgnored)
+        public static IList<Tuple<string, int>> GetFieldList(this IFieldCash cach, Type type)
         {
-            var listAll = cach.GetFields(type, exludeIgnored);
+            var listAll = cach.GetFields(type);
             if (listAll == null || listAll.Count == 0)
                 return null;
             var result = listAll

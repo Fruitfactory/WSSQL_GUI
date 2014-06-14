@@ -43,9 +43,9 @@ namespace WSUI.Core.Utils
 		/// <param name="type"></param>
 		/// <param name="searchCriteria"></param>
 		/// <param name="exludeIgnored"></param>
-		public string GenerateQuery(Type type, string searchCriteria,int topResult, IRuleQueryGenerator ruleQueryGenerator, bool exludeIgnored = false)
+		public string GenerateQuery(Type type, string searchCriteria,int topResult, IRuleQueryGenerator ruleQueryGenerator)
 		{
-		    var listFields = FieldCash.Instance.GetFieldList(type, exludeIgnored);
+		    var listFields = FieldCash.Instance.GetFieldList(type);
 		    if (listFields == null || listFields.Count == 0)
 		        return "";
 		    var selectPart = GenerateSelectPart(listFields, topResult);

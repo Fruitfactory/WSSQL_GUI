@@ -17,6 +17,6 @@ namespace WSUI.Core.Interfaces
         /// <param name="searchCriteria">search string</param>
         /// <param name="topResult"></param>
         /// <param name="exludeIgnored">should we ignore property</param>
-        string GenerateQuery(Type type, string searchCriteria, int topResult, IRuleQueryGenerator ruleQueryGenerator, bool exludeIgnored);
+        string GenerateQuery(Type type, string searchCriteria, int topResult, IRuleQueryGenerator ruleQueryGenerator);
     }//end IQueryGenerator
 }//end namespace Interfaces

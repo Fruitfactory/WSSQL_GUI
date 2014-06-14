@@ -16,6 +16,7 @@ using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Logger;
+using WSUI.Core.Utils;
 using WSUI.Infrastructure.Service.Helpers;
 
 namespace WSUI.Infrastructure.Implements.Rules 
@@ -53,7 +54,8 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         protected override System.Data.DataTable GetDataTable(string query)
         {
-            return IndexerDataReader.Instance.GetDataByReader(query);
+            var listIgnored = FieldCash.Instance.GetIgnoredFields(typeof (AttachmentSearchObject));
+            return IndexerDataReader.Instance.GetDataByReader(query,listIgnored);
         }
 
 	    private string GetAdditionalCriteria(List<string> listWord)

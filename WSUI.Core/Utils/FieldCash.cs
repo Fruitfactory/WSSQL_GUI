@@ -56,35 +56,42 @@ namespace WSUI.Core.Utils
 	    /// 
 	    /// <param name="type"></param>
 	    /// <param name="exludeIgnored"></param>
-	    public IList<Tuple<string,string,int,bool>> GetFields(Type type,bool exludeIgnored)
+	    public IList<Tuple<string,string,int,bool>> GetFields(Type type)
         {
 	        if (_internalCash.ContainsKey(type))
 	        {
-	            return GetExistList(type,exludeIgnored);
+	            return GetExistList(type);
 	        }
-	        var result = CreateCashRecordForType(type, exludeIgnored);
+	        var result = CreateCashRecordForType(type);
 	        return result;
         }
+
+	    public IEnumerable<string> GetIgnoredFields(Type type)
+	    {
+	        if(type == null || !_internalCash.ContainsKey(type))
+                return null;
+	        return _internalCash[type].Where(f => f.Item4).Select(f => f.Item2.ToUpper()).ToList();
+	    }
 
 	    public void Initialize()
 	    {
 	        
 	    }
 
-	    private IList<Tuple<string,string,int,bool>> CreateCashRecordForType(Type type, bool exludeIgnored)
+	    private IList<Tuple<string,string,int,bool>> CreateCashRecordForType(Type type)
         {
             var list = AddType(type);
-            return exludeIgnored ? list.Where(f => !f.Item4).ToList() : list.ToList();
+            return list.ToList();
         }
 
 	    private IList<Tuple<string,string,int,bool>> AddType(Type type)
 	    {
-	        var list = GetFields(type);
+	        var list = InternalGetFields(type);
 	        _internalCash.TryAdd(type, list);
 	        return list;
 	    }
 
-	    private IList<Tuple<string, string, int, bool>> GetFields(Type type)
+	    private IList<Tuple<string, string, int, bool>> InternalGetFields(Type type)
 	    {
 	        var listResult = new List<Tuple<string, string, int, bool>>();
 	        if (type.BaseType != null)
@@ -148,9 +155,9 @@ namespace WSUI.Core.Utils
 	    }
 
 
-	    private IList<Tuple<string, string, int, bool>> GetExistList(Type type,bool exludeIgnored)
+	    private IList<Tuple<string, string, int, bool>> GetExistList(Type type)
 	    {
-	        var result = exludeIgnored ? _internalCash[type].Where(f => !f.Item4).ToList() : _internalCash[type].ToList();
+	        var result =  _internalCash[type].ToList();
 	        return result;
 	    }
 

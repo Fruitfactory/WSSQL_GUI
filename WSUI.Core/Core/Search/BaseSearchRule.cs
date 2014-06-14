@@ -114,7 +114,7 @@ namespace WSUI.Core.Core.Search
             try
             {
                 _isSearching = true;
-                string query = QueryGenerator.Instance.GenerateQuery(typeof(T), Query, TopQueryResult, this, _exludeIgnored);
+                string query = QueryGenerator.Instance.GenerateQuery(typeof(T), Query, TopQueryResult, this);
                 if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
@@ -252,7 +252,7 @@ namespace WSUI.Core.Core.Search
 
         protected IQueryReader Reader
         {
-            get { return _reader ?? (_reader = QueryReader<T>.CreateNewReader<T>(FieldCash.Instance.GetFields(typeof(T), false))); }
+            get { return _reader ?? (_reader = QueryReader<T>.CreateNewReader<T>(FieldCash.Instance.GetFields(typeof(T)))); }
         }
 
         protected DateTime GetCurrentDateTime()

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Linq;
+using MahApps.Metro.Controls;
 using WSUI.Core.Interfaces;
 
 namespace WSUI.Core.Core.Search
@@ -54,7 +58,7 @@ namespace WSUI.Core.Core.Search
             return data;
         }
 
-        public DataTable GetDataByReader(string query)
+        public DataTable GetDataByReader(string query, IEnumerable<string> ingnoredFields)
         {
             DataTable data = null;
             IDataReader reader = null;
@@ -64,7 +68,7 @@ namespace WSUI.Core.Core.Search
                     _connection.Open();
                     OleDbCommand cmd = new OleDbCommand(query, _connection);
                     reader = cmd.ExecuteReader();
-                    data = GetDataTableFast(reader);
+                    data = GetDataTableFast(reader, ingnoredFields);
                 }
                 catch (Exception ex)
                 {
@@ -85,10 +89,12 @@ namespace WSUI.Core.Core.Search
         }
 
         #region [private]
-        private DataTable GetDataTableFromDataReader(IDataReader reader)
+        private DataTable GetDataTableFromDataReader(IDataReader reader,IEnumerable<string> ignoredFields )
         {
             DataTable table = reader.GetSchemaTable();
             DataTable resultTable = new DataTable();
+            List<int> listIndex = new List<int>();
+            int index = 0;
             foreach (DataRow dataRow in table.Rows)
             {
                 DataColumn dataColumn = new DataColumn();
@@ -97,35 +103,24 @@ namespace WSUI.Core.Core.Search
                 dataColumn.ReadOnly = (bool)dataRow["IsReadOnly"];
                 dataColumn.AutoIncrement = (bool)dataRow["IsAutoIncrement"];
                 dataColumn.Unique = (bool)dataRow["IsUnique"];
-
+                if(ignoredFields != null && ignoredFields.Any(s => s.Equals(dataColumn.ColumnName)))
+                    listIndex.Add(index);
                 resultTable.Columns.Add(dataColumn);
+                index++;
             }
+
             int row = 0;
             try
             {
                 while (reader.Read())
                 {
                     row++;
-                    //bool res = false;
-                    //try
-                    //{
-                    //    res = reader.Read();
-                    //    if (!res)
-                    //        break;
-                    //}
-                    //catch (InvalidCastException c)
-                    //{
-                    //    continue;
-                    //}
-                    //catch
-                    //{
-                    //    continue;
-                    //}
-                    
                     DataRow dataRow = resultTable.NewRow();
                    
                     for (int i = 0; i < resultTable.Columns.Count - 1; i++)
                     {
+                        if(listIndex.Contains(i))
+                            continue;
                         try
                         {
                             object val = reader[i];
@@ -155,9 +150,9 @@ namespace WSUI.Core.Core.Search
             return dt;
         }
 
-        private DataTable GetDataTableFast(IDataReader rdr)
+        private DataTable GetDataTableFast(IDataReader rdr,IEnumerable<string> ignoredFields)
         {
-            DataTable resultTable = GetDataTableFromDataReader(rdr);
+            DataTable resultTable = GetDataTableFromDataReader(rdr,ignoredFields);
             return resultTable;
         }
 

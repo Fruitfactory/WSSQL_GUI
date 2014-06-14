@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 
 namespace WSUI.Core.Interfaces
 {
@@ -6,7 +7,7 @@ namespace WSUI.Core.Interfaces
     {
         DataTable GetDataByAdapter(string query);
 
-        DataTable GetDataByReader(string query);
+        DataTable GetDataByReader(string query,IEnumerable<string> ingnoredFields);
 
         IIndexerDataReader GetInstance();
 
