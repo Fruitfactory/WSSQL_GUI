@@ -26,7 +26,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         private const string OutlookApplication = "Outlook.Application";
         private const string WordRegex = @"(?<word>\w+)";
         private const string ExtOfImage = "png";
-
+        private const string BodyTag = "<body>";
         private const string NAEmpty = "<n/a>";
 
         #region pattern for html
@@ -254,7 +254,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
             htmlDoc.LoadHtml(body);
             HightlightAllNodes(htmlDoc.DocumentNode);
-            return GetContentOfTag(htmlDoc.DocumentNode);
+            return htmlDoc.DocumentNode.InnerHtml.IndexOf(body) > -1 ? GetContentOfTag(htmlDoc.DocumentNode) : htmlDoc.DocumentNode.InnerHtml;
         }
 
         private string GetContentOfTag(HtmlNode node, string tagName = "body")
