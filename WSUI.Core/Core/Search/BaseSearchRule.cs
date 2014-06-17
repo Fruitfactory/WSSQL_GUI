@@ -100,7 +100,7 @@ namespace WSUI.Core.Core.Search
                 return;
             }
             InitBeforeSearching();
-            _ruleThread = new Thread(DoQuery) { Priority = ThreadPriority.Highest };
+            _ruleThread = new Thread(DoQuery) { Priority = ThreadPriority.Highest,Name= string.Format("{0}({1})",this.GetType().Name,typeof(T).Name)};
             _ruleThread.Start();
         }
 

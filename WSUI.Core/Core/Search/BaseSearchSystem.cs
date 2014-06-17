@@ -64,7 +64,7 @@ namespace WSUI.Core.Core.Search
             if (_IsSearching)
 		        return;
             InitBeforeSearch();
-            _mainSearchThread = new Thread(DoSearch){Priority = ThreadPriority.Highest};
+            _mainSearchThread = new Thread(DoSearch){Priority = ThreadPriority.Highest,Name = "MainSearchSystem"};
             _mainSearchThread.Start();
             RaiseSearchStarted();
 		}

@@ -91,7 +91,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
 	    protected override void ProcessResult()
 	    {
-            var groups = Result.OrderByDescending(i => i.DateCreated).GroupBy(i => new { Name = i.ItemName, Size = i.Size });
+            var groups = Result.OrderByDescending(i => i.DateReceived).GroupBy(i => new { Name = i.ItemName, Size = i.Size });
 	        var result = new List<AttachmentSearchObject>();
             WSSqlLogger.Instance.LogInfo(string.Format("Count attachments: {0}", groups.Count()));
             foreach (var group in groups)
@@ -112,7 +112,7 @@ namespace WSUI.Infrastructure.Implements.Rules
             {
                 WSSqlLogger.Instance.LogInfo("{0}: {1}",RuleName,result.Count);
                 Result = result;
-                LastDate = Result.Last().DateModified;
+                LastDate = Result.Last().DateReceived;
             }
             _listId.Clear();
 	    }

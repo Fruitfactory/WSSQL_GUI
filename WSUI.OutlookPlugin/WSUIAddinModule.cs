@@ -118,6 +118,7 @@ namespace WSUIOutlookPlugin
             {
                 adxMainPluginCommandBar.UseForRibbon = false;
             }
+            //CreateInboxSubFolder((Outlook.Application)OutlookApp);
         }
 
         private void WSUIAddinModule_OnSendMessage(object sender, ADXSendMessageEventArgs e)
@@ -529,6 +530,50 @@ namespace WSUIOutlookPlugin
                 _updatable = UpdateHelper.Instance;
                 _updatable.Module = this;
             }
+            
+        }
+
+        private void CreateInboxSubFolder(Outlook.Application outlookApp, bool shouldBeAdded = true)
+        {
+            if(outlookApp == null)
+                return;
+            Outlook.NameSpace nameSpace = outlookApp.GetNamespace("MAPI");
+            Outlook.MAPIFolder folderInbox = nameSpace.GetDefaultFolder(
+                  Outlook.OlDefaultFolders.olPublicFoldersAllPublicFolders);
+            Outlook.Folders inboxFolders = folderInbox.Folders;
+            Outlook.MAPIFolder subfolderInbox = null;
+            try
+            {
+                if (shouldBeAdded)
+                {
+                    subfolderInbox = inboxFolders.Add("OutlookFinder",
+                         Outlook.OlDefaultFolders.olFolderInbox);
+                    
+                }
+                else
+                {
+                    int index = 0;
+                    foreach (var inboxFolder in inboxFolders)
+                    {
+                        index++;
+                        if (((Outlook.MAPIFolder) inboxFolder).Name == "OutlookFinder")
+                        {
+                            inboxFolders.Remove(index);
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (COMException exception)
+            {
+                if (exception.ErrorCode == -2147352567)
+                    //  Cannot create the folder.
+                    System.Windows.Forms.MessageBox.Show(exception.Message);
+            }
+            if (subfolderInbox != null) Marshal.ReleaseComObject(subfolderInbox);
+            if (inboxFolders != null) Marshal.ReleaseComObject(inboxFolders);
+            if (folderInbox != null) Marshal.ReleaseComObject(folderInbox);
+            if (nameSpace != null) Marshal.ReleaseComObject(nameSpace);
         }
 
         #endregion my own initialization
@@ -1036,6 +1081,7 @@ namespace WSUIOutlookPlugin
             DoHideWebViewPane();
             _wsuiBootStraper.PassAction(new WSAction(WSActionType.Quit, null));
             SetOutlookFolderProperties(string.Empty, string.Empty);
+            //CreateInboxSubFolder((Outlook.Application)OutlookApp,false);
             WSSqlLogger.Instance.LogInfo("Shutdown...");
         }
 
