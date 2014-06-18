@@ -48,7 +48,8 @@ namespace WSUI.Infrastructure.Implements.Rules
         {
             if (string.IsNullOrEmpty(itemName) || words == null)
                 return int.MaxValue;
-            int min = words.Min(w => itemName.IndexOf(w,StringComparison.CurrentCulture));
+            int min = words.Min(w => itemName.IndexOf(w,StringComparison.InvariantCultureIgnoreCase));
+            System.Diagnostics.Debug.WriteLine(string.Format("Min: {0}",min));
             return min == -1 ? int.MaxValue : min;
         }
 

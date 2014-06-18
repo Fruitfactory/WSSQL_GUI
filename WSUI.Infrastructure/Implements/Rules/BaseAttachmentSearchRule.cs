@@ -84,14 +84,14 @@ namespace WSUI.Infrastructure.Implements.Rules
         protected override void ProcessCountAdded()
 	    {
             lock(InternalLock)
-                CountAdded = Result.GroupBy(i => new { Name = i.ItemName, Size = i.Size }).Count();
+                CountAdded = Result.GroupBy(i => new { Name = i.ItemNameDisplay, Size = i.Size }).Count();
             if (CountAdded == CountProcess)
                 IsInterupt = true;
 	    }
 
 	    protected override void ProcessResult()
 	    {
-            var groups = GetSortedAttachmentSearchObjects(Result).GroupBy(i => new { Name = i.ItemName, Size = i.Size });
+            var groups = GetSortedAttachmentSearchObjects(Result).GroupBy(i => new { Name = i.ItemNameDisplay, Size = i.Size });
 	        var result = new List<AttachmentSearchObject>();
             WSSqlLogger.Instance.LogInfo(string.Format("Count attachments: {0}", groups.Count()));
             foreach (var group in groups)
