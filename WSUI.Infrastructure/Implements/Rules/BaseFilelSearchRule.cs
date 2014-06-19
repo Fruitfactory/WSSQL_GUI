@@ -51,7 +51,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
 	    protected override void ProcessResult()
 	    {
-	        var groups = Result.OrderByDescending(i => i.DateCreated).GroupBy(i => i.ItemName);
+            var groups = GetSortedFileSearchObjects(Result).GroupBy(i => i.ItemNameDisplay);
 	        var result = new List<FileSearchObject>();
 	        foreach (var item in groups)
 	        {
@@ -72,6 +72,13 @@ namespace WSUI.Infrastructure.Implements.Rules
 	            LastDate = Result.Last().DateCreated;
 	        }
 	    }
+
+	    protected virtual IEnumerable<FileSearchObject> GetSortedFileSearchObjects(IEnumerable<FileSearchObject> list)
+	    {
+	        return list.OrderByDescending(d => d.DateCreated);
+	    }
+
+
     }//end BaseFilelSearchRule
 
 }//end namespace Implements

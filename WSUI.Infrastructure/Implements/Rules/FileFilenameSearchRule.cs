@@ -7,6 +7,11 @@
 ///////////////////////////////////////////////////////////
 
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using WSUI.Core.Data;
+
 namespace WSUI.Infrastructure.Implements.Rules 
 {
 	public class FileFilenameSearchRule : BaseFilelSearchRule
@@ -14,29 +19,43 @@ namespace WSUI.Infrastructure.Implements.Rules
 
 		public FileFilenameSearchRule()
 		{
-		    ConstructotrInit();
+		    ConstructorInit();
 		}
 
         public FileFilenameSearchRule(object lockObject)
             :base(lockObject)
         {
-            ConstructotrInit();
+            ConstructorInit();
         }
 
-	    private void ConstructotrInit()
+	    private void ConstructorInit()
 	    {
 	        Priority = 4;
 	        WhereTemplate =
                 " WHERE scope='file:' AND Contains(System.Kind,' NOT \"folder\"') AND Contains(System.ItemUrl,{0},1033) AND System.DateCreated < '{1}' ORDER BY System.DateCreated DESC";
 	    }
 
-//System.Kind <> 'email' AND System.Kind <> 'folder' AND System.Kind <> 'contact' AND
+
 
 	    public override void Init()
 	    {
 	        RuleName = "FileFilename";
 	        base.Init();
 	    }
+
+	    protected override IEnumerable<FileSearchObject> GetSortedFileSearchObjects(IEnumerable<FileSearchObject> list)
+	    {
+            var words = Query.Split(' ');
+            return list.OrderBy(d => GetMinContainsIndex(d.ItemNameDisplay, words));
+	    }
+
+        private int GetMinContainsIndex(string itemName, IEnumerable<string> words)
+        {
+            if (string.IsNullOrEmpty(itemName) || words == null)
+                return int.MaxValue;
+            int min = words.Min(w => itemName.IndexOf(w, StringComparison.InvariantCultureIgnoreCase));
+            return min == -1 ? int.MaxValue : min;
+        }
 	}//end FileFilenameSearchRule
 
 }//end namespace Implements
