@@ -164,6 +164,7 @@ namespace WSUI.Module.Core
                 WSSqlLogger.Instance.LogWarning("Please, activate the 'OutlookFinder'");
                 MessageBoxService.Instance.Show("Warning", "Please, activate the 'OutlookFinder'", MessageBoxButton.OK,
                     MessageBoxImage.Asterisk);
+                RunBuyProcess();
                 return;
             }
 
@@ -198,6 +199,14 @@ namespace WSUI.Module.Core
                     Size = new Size(mwi.MainWindowRect.Width, mwi.MainWindowRect.Height),
                     MainHandle = mwi.MainWindowHandle
                 });
+            }
+        }
+
+        private void RunBuyProcess()
+        {
+            if (ParentViewModel != null && ParentViewModel.BuyCommand != null)
+            {
+                ParentViewModel.BuyCommand.Execute(null);
             }
         }
 
