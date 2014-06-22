@@ -47,9 +47,6 @@
                  service:DoubleClickBehabior.DoubleClickHandler="{Binding DoubleClickCommand}"
                  HorizontalContentAlignment="Stretch"
                  >
-            <!--<i:Interaction.Behaviors>
-                <behaviors:MainListBoxBehavior></behaviors:MainListBoxBehavior>
-            </i:Interaction.Behaviors>-->
         </listBox:WSUIListBox>
     </DockPanel>
 </UserControl>

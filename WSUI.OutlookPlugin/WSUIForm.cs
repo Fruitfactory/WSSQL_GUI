@@ -64,7 +64,7 @@ namespace WSUIOutlookPlugin
             UIElement el = _wsuiBootStraper.View as UIElement;
             if (el != null)
             {
-                wpfHost.Child = _wsuiBootStraper.View as UIElement;
+                wpfHost.Child = el;
             }
         }
 

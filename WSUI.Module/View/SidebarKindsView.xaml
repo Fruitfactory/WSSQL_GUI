@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="WSUI.Module.View.SidebarKindsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Service/ResourceTemplate.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <ListBox Grid.Row="1" Style="{StaticResource MetroListBox}" ItemsSource="{Binding KindsCollection}" Height="Auto"
+                    SelectedItem="{Binding SelectedLazyKind,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    ItemContainerStyle="{StaticResource WSUIMetroListBoxItem}"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}">
+        </ListBox>
+
+        <!--<Border Grid.Row="2" Visibility="{Binding VisibleTrialLabel,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Margin="5">
+            <TextBlock Foreground="Red" TextWrapping="Wrap">
+                <Run>You have</Run>
+                <Run Text="{Binding DaysLeft,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></Run>
+                <Run>days left in your trial.</Run>
+                <LineBreak></LineBreak>
+                <Run>We hope you are enjoying OutlookFinder.</Run>
+                <LineBreak></LineBreak>
+                <Run>Click here to purchase a license.</Run>
+                <LineBreak></LineBreak>
+                <Hyperlink Command="{Binding BuyCommand}">Purchase</Hyperlink>
+            </TextBlock>
+        </Border>-->
+
+
+
+    </Grid>
+
+</UserControl>

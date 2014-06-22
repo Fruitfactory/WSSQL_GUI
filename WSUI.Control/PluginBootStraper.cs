@@ -16,6 +16,7 @@ namespace WSUI.Control
     public class PluginBootStraper : UnityBootstrapper, IPluginBootStraper
     {
         private IMainViewModel _mainViewModel;
+        private DependencyObject _sidebarShell;
         
         public PluginBootStraper()
         {
@@ -43,6 +44,11 @@ namespace WSUI.Control
                 RegionManager.UpdateRegions();
                 this.InitializeShell();
             }
+            if (_sidebarShell != null)
+            {
+                RegionManager.SetRegionManager(_sidebarShell,UnityContainerExtensions.Resolve<IRegionManager>(this.Container,new ResolverOverride[0]));
+                RegionManager.UpdateRegions();
+            }
             if (UnityContainerExtensions.IsRegistered<IModuleManager>(this.Container))
             {
                 this.InitializeModules();
@@ -64,6 +70,7 @@ namespace WSUI.Control
             //Stopwatch watch = new Stopwatch();
             //watch.Start();
             var shell = Container.Resolve<WSMainControl>();
+            _sidebarShell = Container.Resolve<WSSidebarControl>();
             //watch.Stop();
             //WSSqlLogger.Instance.LogInfo(string.Format("Create shell (plugin): {0}ms",watch.ElapsedMilliseconds));
             return shell;
@@ -98,6 +105,7 @@ namespace WSUI.Control
             module.Initialize();
             _mainViewModel = Container.Resolve<WSUI.Module.ViewModel.MainViewModel>();
             (this.View as IMainView).Model = _mainViewModel;
+            (_sidebarShell as ISidebarView).Model = _mainViewModel;
             //watch.Stop();
             //WSSqlLogger.Instance.LogInfo(string.Format("InitializeModules (plugin): {0}ms",watch.ElapsedMilliseconds));
         }
@@ -112,6 +120,11 @@ namespace WSUI.Control
         public DependencyObject View 
         {
             get { return this.Shell; }
+        }
+
+        public DependencyObject SidebarView
+        {
+            get { return _sidebarShell; }
         }
 
         public bool IsPluginBusy 

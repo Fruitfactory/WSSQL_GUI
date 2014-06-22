@@ -164,28 +164,40 @@ namespace WSUI.Module.ViewModel
         private void CurrentKindChanged(object kindItem)
         {
             IRegion regionSearch = _regionManager.Regions[RegionNames.SearchRegion];
-            if (regionSearch != null)
+            IRegion regionSidebarSearch = _regionManager.Regions[RegionNames.SidebarSearchRegion];
+            if (regionSearch != null && regionSidebarSearch != null)
             {
                 object view = GetView(kindItem, "SettingsView");
-                if (view != null && !regionSearch.Views.Contains(view))
+                if (view != null && !regionSearch.Views.Contains(view) && !regionSidebarSearch.Views.Contains(view))
                 {
                     regionSearch.Add(view);
                     regionSearch.Activate(view);
+                    regionSidebarSearch.Add(view);
+                    regionSidebarSearch.Activate(view);
                 }
                 else if (view != null)
+                {
                     regionSearch.Activate(view);
+                    regionSidebarSearch.Activate(view);
+                }
             }
             IRegion regionData = _regionManager.Regions[RegionNames.DataRegion];
-            if (regionData != null)
+            IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
+            if (regionData != null && regionSidebarData != null)
             {
                 object view = GetView(kindItem, "DataView");
-                if (view != null && !regionData.Views.Contains(view))
+                if (view != null && !regionData.Views.Contains(view)  && !regionSidebarData.Views.Contains(view))
                 {
                     regionData.Add(view);
                     regionData.Activate(view);
+                    regionSidebarData.Add(view);
+                    regionSidebarData.Activate(view);
                 }
                 else if (view != null)
+                {
                     regionData.Activate(view);
+                    regionSidebarData.Activate(view);
+                }
             }
 
             if (PreviewView != null)

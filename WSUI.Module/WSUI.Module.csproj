@@ -127,6 +127,7 @@
     <Compile Include="Interface\IScrollBehavior.cs" />
     <Compile Include="Interface\ISearchData.cs" />
     <Compile Include="Interface\ISettingsView.cs" />
+    <Compile Include="Interface\ISidebarView.cs" />
     <Compile Include="Interface\IUIView.cs" />
     <Compile Include="Interface\IWSCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

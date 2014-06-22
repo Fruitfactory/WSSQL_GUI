@@ -152,6 +152,7 @@
     <Compile Include="Hooks\MouseEventExtArgs.cs" />
     <Compile Include="Interfaces\ICommandManager.cs" />
     <Compile Include="Interfaces\IMainForm.cs" />
+    <Compile Include="Interfaces\ISidebarForm.cs" />
     <Compile Include="Interfaces\IUpdatable.cs" />
     <Compile Include="Interfaces\IWSUICommandManager.cs" />
     <Compile Include="Core\BaseCommandManager.cs" />
@@ -178,6 +179,12 @@
     <Compile Include="WSUIForm.Designer.cs">
       <DependentUpon>WSUIForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="WSUISidebar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WSUISidebar.Designer.cs">
+      <DependentUpon>WSUISidebar.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="About\WSUIAbout.resx">
@@ -192,6 +199,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WSUIForm.resx">
       <DependentUpon>WSUIForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WSUISidebar.resx">
+      <DependentUpon>WSUISidebar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

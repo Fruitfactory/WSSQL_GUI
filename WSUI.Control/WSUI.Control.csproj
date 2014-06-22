@@ -84,6 +84,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -104,6 +105,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WSMainControl.xaml.cs">
       <DependentUpon>WSMainControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WSSidebarControl.xaml.cs">
+      <DependentUpon>WSSidebarControl.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +130,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="WSMainControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WSSidebarControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

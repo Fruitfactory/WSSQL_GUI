@@ -39,9 +39,21 @@ namespace WSUI.Module
             watch = new Stopwatch();
             watch.Start();
             IRegion region = _regionManager.Regions[RegionNames.StrategyRegion];
+            IRegion sidebarRegion = _regionManager.Regions[RegionNames.SidebarStrategyRegion];
             region.Add(mmv.KindsView);
+            if (sidebarRegion != null)
+            {
+                sidebarRegion.Add(mmv.KindsView);
+                sidebarRegion = null;
+            }
             region = _regionManager.Regions[RegionNames.PreviewRegion];
+            sidebarRegion = _regionManager.Regions[RegionNames.SidebarPreviewRegion];
             region.Add(mmv.PreviewView);
+            if (sidebarRegion != null)
+            {
+                sidebarRegion.Add(mmv.PreviewView);
+                sidebarRegion = null;
+            }
             mmv.PreviewView.Init();
             Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => FieldCash.Instance.Initialize()));
             watch.Stop();

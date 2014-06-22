@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="WSUI.Control.WSSidebarControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:regions="http://www.codeplex.com/CompositeWPF"
+             xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
+             >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />-->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:ActivationStatusToGridVisibilityConverter x:Key="GridVisibility"></converters:ActivationStatusToGridVisibilityConverter>
+            <converters:ActivationStatusToButtonVisibilityConverter x:Key="ButtonVisibility"></converters:ActivationStatusToButtonVisibilityConverter>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BorderThickness="0">
+            <Grid x:Name="grid" Margin="7">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="0" Height="22">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="22"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0" RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/WSUI.Control;Component/Images/logo_64.png" Stretch="Uniform" StretchDirection="Both"></Image>
+                    <Image Grid.Column="1" RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/WSUI.Control;Component/Images/logo_txt.png" Stretch="Uniform" StretchDirection="Both"></Image>
+                </Grid>
+
+                <ContentControl Grid.Row="1" Margin="4" regions:RegionManager.RegionName="SidebarSearchRegion" />
+                <ContentControl Grid.Row="2" Margin="4 4 0 4" HorizontalAlignment="Stretch" regions:RegionManager.RegionName="SidebarStrategyRegion" />
+                <ContentControl Grid.Row="3" Margin="0 4 0 4" regions:RegionManager.RegionName="SidebarDataRegion" />
+                <ContentControl Grid.Row="3" Margin="0 4 4 4" regions:RegionManager.RegionName="SidebarPreviewRegion" Visibility="Collapsed"/>
+
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
