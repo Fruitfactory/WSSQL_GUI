@@ -191,6 +191,9 @@
     <Compile Include="View\PreviewView.xaml.cs">
       <DependentUpon>PreviewView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\SidebarKindsView.xaml.cs">
+      <DependentUpon>SidebarKindsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WSModule.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -267,6 +270,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\PreviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SidebarKindsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
