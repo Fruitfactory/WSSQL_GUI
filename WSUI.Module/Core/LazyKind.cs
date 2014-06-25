@@ -48,6 +48,7 @@ namespace WSUI.Module.Core
         }
         public string UIName { get; set; }
         public string Icon { get; private set; }
+        public string Data { get; private set; }
         public int ID { get; protected set; }
         private bool _toggle;
         public bool Toggle
@@ -76,6 +77,7 @@ namespace WSUI.Module.Core
             UIName = customAttr[0].Name;
             ID = customAttr[0].Id;
             Icon = customAttr[0].Icon;
+            Data = customAttr[0].Data;
             Toggle = false;
             switch (_parent.Host)
             {

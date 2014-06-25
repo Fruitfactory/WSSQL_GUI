@@ -7,6 +7,7 @@ namespace WSUI.Module.Interface
         IKindItem Kind { get; }
         string UIName { get; set; }
         string Icon{get;}
+        string Data { get;}
         int ID { get; }
         bool Toggle { get; set; }
         void Initialize();

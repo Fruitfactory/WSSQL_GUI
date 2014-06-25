@@ -87,7 +87,6 @@ namespace WSUIOutlookPlugin
         private ADXRibbonButton btnMainAbout;
         private ADXOutlookAppEvents OutlookFinderEvents;
         private AddinExpress.OL.ADXOlFormsCollectionItem formRightSidebar;
-        private ADXRibbonButton buttonShowHideSidebar;
 
         private const string DefaultNamespace = "MAPI";
 
@@ -137,7 +136,6 @@ namespace WSUIOutlookPlugin
         }
 
         private AddinExpress.OL.ADXOlFormsManager outlookFormManager;
-        private AddinExpress.OL.ADXOlFormsCollectionItem formWebPaneItem;
 
         #region Component Designer generated code
 
@@ -155,7 +153,6 @@ namespace WSUIOutlookPlugin
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WSUIAddinModule));
             this.outlookFormManager = new AddinExpress.OL.ADXOlFormsManager(this.components);
-            this.formWebPaneItem = new AddinExpress.OL.ADXOlFormsCollectionItem(this.components);
             this.formRightSidebar = new AddinExpress.OL.ADXOlFormsCollectionItem(this.components);
             this.wsuiTab = new AddinExpress.MSO.ADXRibbonTab(this.components);
             this.groupSearch = new AddinExpress.MSO.ADXRibbonGroup(this.components);
@@ -164,7 +161,6 @@ namespace WSUIOutlookPlugin
             this.adxRibbonButtonSearch = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.buttonShow = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.wsuiImageList = new System.Windows.Forms.ImageList(this.components);
-            this.buttonShowHideSidebar = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.btnSplit = new AddinExpress.MSO.ADXRibbonSplitButton(this.components);
             this.menuHelp = new AddinExpress.MSO.ADXRibbonMenu(this.components);
             this.btnHelp = new AddinExpress.MSO.ADXRibbonButton(this.components);
@@ -190,25 +186,14 @@ namespace WSUIOutlookPlugin
             // 
             // outlookFormManager
             // 
-            this.outlookFormManager.Items.Add(this.formWebPaneItem);
             this.outlookFormManager.Items.Add(this.formRightSidebar);
             this.outlookFormManager.OnInitialize += new AddinExpress.OL.ADXOlFormsManager.OnComponentInitialize_EventHandler(this.outlookFormManager_OnInitialize);
             this.outlookFormManager.SetOwner(this);
             // 
-            // formWebPaneItem
-            // 
-            this.formWebPaneItem.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
-            this.formWebPaneItem.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.WebViewPane;
-            this.formWebPaneItem.FormClassName = "WSUIOutlookPlugin.WSUIForm";
-            this.formWebPaneItem.IsMinimizedStateAllowed = false;
-            this.formWebPaneItem.RegionBorder = AddinExpress.OL.ADXRegionBorderStyle.None;
-            this.formWebPaneItem.UseOfficeThemeForBackground = true;
-            // 
             // formRightSidebar
             // 
-            this.formRightSidebar.AlwaysShowHeader = true;
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
-            this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Minimized;
+            this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
             this.formRightSidebar.ExplorerItemTypes = AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem;
             this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
             this.formRightSidebar.FormClassName = "WSUIOutlookPlugin.WSUISidebar";
@@ -227,7 +212,6 @@ namespace WSUIOutlookPlugin
             this.groupSearch.Caption = "Outlook Finder";
             this.groupSearch.Controls.Add(this.adxRibbonBoxSearch);
             this.groupSearch.Controls.Add(this.buttonShow);
-            this.groupSearch.Controls.Add(this.buttonShowHideSidebar);
             this.groupSearch.Controls.Add(this.btnSplit);
             this.groupSearch.Id = "adxRibbonGroup_c94173390d39441fa25cda51a851cd7a";
             this.groupSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
@@ -258,7 +242,7 @@ namespace WSUIOutlookPlugin
             // 
             // buttonShow
             // 
-            this.buttonShow.Caption = "Show/Hide";
+            this.buttonShow.Caption = "Show/Hide Sidebar";
             this.buttonShow.Id = "adxRibbonButton_dcb0aa6e6fd442c79ea44b4006d84643";
             this.buttonShow.Image = 1;
             this.buttonShow.ImageList = this.wsuiImageList;
@@ -273,14 +257,6 @@ namespace WSUIOutlookPlugin
             this.wsuiImageList.Images.SetKeyName(1, "logo_64.png");
             this.wsuiImageList.Images.SetKeyName(2, "gear.png");
             this.wsuiImageList.Images.SetKeyName(3, "question.png");
-            // 
-            // buttonShowHideSidebar
-            // 
-            this.buttonShowHideSidebar.Caption = "Show/Hide Sidebar";
-            this.buttonShowHideSidebar.Id = "adxRibbonButton_d7888126dbf94e13be340b2dc96cdeaa";
-            this.buttonShowHideSidebar.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.buttonShowHideSidebar.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            this.buttonShowHideSidebar.OnClick += new AddinExpress.MSO.ADXRibbonOnAction_EventHandler(this.buttonShowHideSidebar_OnClick);
             // 
             // btnSplit
             // 
@@ -412,7 +388,7 @@ namespace WSUIOutlookPlugin
             // 
             // wsuiButtonSwitch
             // 
-            this.wsuiButtonSwitch.Caption = "Show/Hide";
+            this.wsuiButtonSwitch.Caption = "Show/Hide Sidebar";
             this.wsuiButtonSwitch.Id = "adxRibbonButton_295c2b7151ed437382c104f4c3d542ce";
             this.wsuiButtonSwitch.Image = 1;
             this.wsuiButtonSwitch.ImageList = this.wsuiImageList;
@@ -635,6 +611,7 @@ namespace WSUIOutlookPlugin
             CreateCommandManager();
             SetEventAggregatorToManager();
             SubscribeToEvents();
+            
         }
 
         private void SubscribeToEvents()
@@ -648,12 +625,14 @@ namespace WSUIOutlookPlugin
 
         private void ShowUI(bool show)
         {
-            DoShowWebViewPane();
+            //DoShowWebViewPane();
+            formRightSidebar.ApplyTo((OutlookApp as Outlook.Application).ActiveExplorer());
+            _wsuiBootStraper.PassAction(new WSAction(WSActionType.Show, null));
         }
 
         private void HideUI(bool hide)
         {
-            DoHideWebViewPane();
+            //DoHideWebViewPane();
         }
 
         private void StartSearch(string criteria)
@@ -694,7 +673,7 @@ namespace WSUIOutlookPlugin
             WSSqlLogger.Instance.LogInfo("_refreshCurrentFolderExecuting:{1}, _lastMapiFolder_notnull:{1}, _lastMapiFolder_Folder:{2} ", _refreshCurrentFolderExecuting, _lastMapiFolder != null, _lastMapiFolder != null ? _lastMapiFolder.FullFolderPath : "");
             if (!_refreshCurrentFolderExecuting && _lastMapiFolder != null && ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath == _lastMapiFolder.FullFolderPath)//
             {
-                formWebPaneItem.FolderName = string.Empty;
+                //formWebPaneItem.FolderName = string.Empty;
                 ClearFolderWebViewProperties((Outlook.MAPIFolder)args.DstFolder);
                 WSSqlLogger.Instance.LogInfo("Switch2 folders, {0}, {1}", ((Outlook.MAPIFolder)args.DstFolder).FullFolderPath, ((Outlook.MAPIFolder)args.SrcFolder).FullFolderPath);
                 Task.Factory.StartNew(new Action(() => RefreshCurrentFolder(false, _lastMapiFolder)));//SwitchFolders(((Outlook.MAPIFolder)args.DstFolder))
@@ -706,14 +685,14 @@ namespace WSUIOutlookPlugin
                 {
                     string folderName = GetFullFolderName(args.SrcFolder);
 
-                    if (IsADXWebViewUrl((Outlook.MAPIFolder)args.SrcFolder)
-                        && (CultureInfo.InvariantCulture.CompareInfo.IndexOf(folderName,
-                            formWebPaneItem.FolderName,
-                            System.Globalization.CompareOptions.IgnoreCase) == 0))
-                    {
-                        formWebPaneItem.FolderName = string.Empty;
-                        ClearFolderWebViewProperties((Outlook.MAPIFolder)args.SrcFolder);
-                    }
+                    //if (IsADXWebViewUrl((Outlook.MAPIFolder)args.SrcFolder)
+                    //    && (CultureInfo.InvariantCulture.CompareInfo.IndexOf(folderName,
+                    //        formWebPaneItem.FolderName,
+                    //        System.Globalization.CompareOptions.IgnoreCase) == 0))
+                    //{
+                    //    formWebPaneItem.FolderName = string.Empty;
+                    //    ClearFolderWebViewProperties((Outlook.MAPIFolder)args.SrcFolder);
+                    //}
                 }
                 if (_commandManager != null)
                     _commandManager.SetShowHideButtonsEnabling(true, false);
@@ -722,32 +701,32 @@ namespace WSUIOutlookPlugin
 
         public void DoShowWebViewPane()
         {
-            var folderValue = GetFullPathOfDefaultFolder();
-            SetOutlookFolderProperties(folderValue.Item2.EntryID, folderValue.Item2.WebViewURL);
-            formWebPaneItem.FolderName = folderValue.Item1;
+            //var folderValue = GetFullPathOfDefaultFolder();
+            //SetOutlookFolderProperties(folderValue.Item2.EntryID, folderValue.Item2.WebViewURL);
+            //formWebPaneItem.FolderName = folderValue.Item1;
             //Apply the WebViewPane layout
-            RefreshCurrentFolder();
-            _wsuiBootStraper.PassAction(new WSAction(WSActionType.Show, null));
+            //RefreshCurrentFolder();
+            //_wsuiBootStraper.PassAction(new WSAction(WSActionType.Show, null));
         }
 
         public void DoHideWebViewPane(Outlook.MAPIFolder folder = null)
         {
-            if (!ExistsVisibleForm(formWebPaneItem))
-                return;
-            Outlook.MAPIFolder currentFolder = GetCurrentFolder();
-            if (currentFolder != null)
-                try
-                {
-                    formWebPaneItem.FolderName = string.Empty;
-                    ClearFolderWebViewProperties(currentFolder);
-                    //Restore Standard View
-                    RefreshCurrentFolder(false, folder);
-                }
-                finally
-                {
-                    Marshal.ReleaseComObject(currentFolder);
-                }
-            _wsuiBootStraper.PassAction(new WSAction(WSActionType.Hide, null));
+            //if (!ExistsVisibleForm(formWebPaneItem))
+            //    return;
+            //Outlook.MAPIFolder currentFolder = GetCurrentFolder();
+            //if (currentFolder != null)
+            //    try
+            //    {
+            //        formWebPaneItem.FolderName = string.Empty;
+            //        ClearFolderWebViewProperties(currentFolder);
+            //        //Restore Standard View
+            //        RefreshCurrentFolder(false, folder);
+            //    }
+            //    finally
+            //    {
+            //        Marshal.ReleaseComObject(currentFolder);
+            //    }
+            //_wsuiBootStraper.PassAction(new WSAction(WSActionType.Hide, null));
         }
 
         #region Outlook Object Model routines

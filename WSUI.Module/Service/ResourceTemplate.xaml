@@ -486,18 +486,35 @@
     <Style x:Key="WSUIMetroListBoxItem" TargetType="{x:Type ListBoxItem}">
         <Setter Property="MinHeight" Value="32" />
         <Setter Property="Margin" Value="0 2 0 0" />
-        <!--<Setter Property="IsSelected" Value="{Binding Toggle, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
 
                     <Grid x:Name="Border">
+                        <Grid.ToolTip>
+                            <ToolTip>
+                                <TextBlock Text="{Binding Path=UIName}" ></TextBlock>
+                            </ToolTip>
+                        </Grid.ToolTip>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <Image Height="32" Width="32" MaxHeight="32" MaxWidth="32" Source="{Binding Path=Icon}" />
-                        <TextBlock Style="{StaticResource ItemTextBlock}" x:Name="KindName" Grid.Column="1" Text="{Binding Path=UIName}" VerticalAlignment="Center"></TextBlock>
+                        <Viewbox>
+                            <Grid>
+                                <Grid Name="backgroundGrid" Width="32" Height="32" Visibility="Collapsed" />
+                                <Path Name="IconPath" Data="{Binding Path=Data}" Stretch="Uniform" Fill="{StaticResource AccentColorBrush}" Width="32" Height="32" Margin="2" RenderTransformOrigin="0.5,0.5">
+                                    <Path.RenderTransform>
+                                        <TransformGroup>
+                                            <TransformGroup.Children>
+                                                <RotateTransform Angle="0" />
+                                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                                            </TransformGroup.Children>
+                                        </TransformGroup>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Grid>
+                        </Viewbox>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="False">
@@ -510,6 +527,7 @@
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" TargetName="Border" Value="{StaticResource AccentColorBrush}" />
                             <Setter Property="Foreground" Value="{StaticResource AccentSelectedColorBrush}" />
+                            <Setter TargetName="IconPath" Property="Fill" Value="White"></Setter>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" TargetName="Border">
