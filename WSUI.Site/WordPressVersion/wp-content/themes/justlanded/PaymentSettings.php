@@ -96,10 +96,10 @@ $AuthNetTest = true;
 //==== PayPal Config ====
 
 // Use PayPal Sandbox (set to false on your live server)
-$PayPalSandbox = false;
+$PayPalSandbox = true;
 
 // Paypal Email
-$PayPalEmail = 'info@outlookfinder.com';//'yariki-ya@yandex.ru';
+$PayPalEmail = 'yariki-ya@yandex.ru';//'info@outlookfinder.com';//
 
 
 
@@ -147,7 +147,7 @@ function SendPKeys($quantity, $email, $first, $last, $userEmail)
 	//Note: we put LimeLM in this directory. Change it as needed.
 	require(dirname(__FILE__).'/LimeLM.php');
 
-	global $LimeLM_VersionID, $LimeLM_ApiKey,$CompanyName,$AppName, $InstallerPage, $LicenseYear;
+	global $LimeLM_VersionID, $LimeLM_ApiKey,$CompanyName,$AppName, $InstallerPage, $LicenseYear, $TrialField, $IsTrial, $UserEmail, $TimesUsed;
 
 	$errors = false;
 
@@ -157,7 +157,7 @@ function SendPKeys($quantity, $email, $first, $last, $userEmail)
 	try
 	{
 		// Generate the product key - set the number of activations using the quantity
-		$xml = new SimpleXMLElement(LimeLM::GeneratePKeys($LimeLM_VersionID, 1, $quantity, $email));
+		$xml = new SimpleXMLElement(LimeLM::GeneratePKeys($LimeLM_VersionID, 1, $quantity, $userEmail,array($UserEmail, $IsTrial, $TimesUsed), array( $userEmail, "0", "0")));
                 debug_log('Generating keys',true);        
 		if ($xml['stat'] == 'ok')
 		{
@@ -245,7 +245,7 @@ function UpdateLicensing($userEmail)
     //Note: we put LimeLM in this directory. Change it as needed.
     require(dirname(__FILE__).'/LimeLM.php');
 
-    global $LimeLM_VersionID, $LimeLM_ApiKey,$CompanyName,$AppName, $InstallerPage, $LicenseYear;
+    global $LimeLM_VersionID, $LimeLM_ApiKey,$CompanyName,$AppName, $InstallerPage, $LicenseYear, $TrialField, $IsTrial, $UserEmail, $TimesUsed;
 
     $errors = false;
 

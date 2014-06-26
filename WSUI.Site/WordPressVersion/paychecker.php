@@ -146,12 +146,14 @@ debug_log('Creating product Information to send.',true);
 
 // This calls the function in PaymentSettings.php that
 // creates the product keys and send them to the user
-if($userEmail)
-{
-    UpdateLicensing($userEmail);
+if($userEmail){
+//    UpdateLicensing($userEmail);
+//}
+//else {
+    SendPKeys($quantity, $custEmail, $firstName, $lastName,$userEmail);
 }
-else
-    SendPKeys($quantity, $custEmail, $firstName, $lastName);
+
+    
 
 debug_log('paychecker finished.',true,true);
 ?>
