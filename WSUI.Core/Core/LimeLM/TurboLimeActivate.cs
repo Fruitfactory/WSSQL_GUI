@@ -18,7 +18,7 @@ namespace WSUI.Core.Core.LimeLM
     public class TurboLimeActivate
     {
 
-#region [internal class for new licensing]
+        #region [internal class for new licensing]
 
         class CheckActivationResult
         {
@@ -34,7 +34,7 @@ namespace WSUI.Core.Core.LimeLM
             public bool CheckInOldWay { get; private set; }
         }
 
-#endregion
+        #endregion
 
         #region [fields const]
 
@@ -79,7 +79,7 @@ namespace WSUI.Core.Core.LimeLM
 
         public int DaysRemain
         {
-            get; private set;
+            get { return TurboActivate.TrialDaysRemaining(); }
         }
 
         public ActivationState State
@@ -92,9 +92,9 @@ namespace WSUI.Core.Core.LimeLM
                     WSSqlLogger.Instance.LogWarning("Check - Internet connection is available or Lime services (servers) are available.");
                     return ActivationState.Error;
                 }
-                if(IsActivated)
+                if (IsActivated)
                     return ActivationState.Activated;
-                if(!IsTrialPeriodEnded)
+                if (!IsTrialPeriodEnded)
                     return ActivationState.Trial;
                 if (IsTrialPeriodEnded && !IsActivated)
                     return ActivationState.NonActivated;
@@ -110,7 +110,7 @@ namespace WSUI.Core.Core.LimeLM
         public void Activate(Action callback)
         {
             _callback = callback;
-            //InternalActivate();
+            InternalActivate();
         }
 
         public bool Deactivate(bool deleteKey = false)
@@ -130,7 +130,7 @@ namespace WSUI.Core.Core.LimeLM
                 if (!string.IsNullOrEmpty(pkeyid))
                 {
                     var result = LimeLMApi.SetDetails(pkeyid, 0, null, new string[] { TimesUsed }, new string[] { c.ToString() });
-                    WSSqlLogger.Instance.LogInfo("Times used: {0}, Result: {1}",c,result);
+                    WSSqlLogger.Instance.LogInfo("Times used: {0}, Result: {1}", c, result);
                 }
             }
             catch (Exception ex)
@@ -184,7 +184,7 @@ namespace WSUI.Core.Core.LimeLM
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("Error occured during checking activation: [{0}]",ex.Message);
+                WSSqlLogger.Instance.LogError("Error occured during checking activation: [{0}]", ex.Message);
                 return false;
             }
         }
@@ -213,8 +213,8 @@ namespace WSUI.Core.Core.LimeLM
                     bool stillInTrial = TurboActivate.IsDateValid(trialExpires,
                         TurboActivate.TA_DateCheckFlags.TA_HAS_NOT_EXPIRED);
                     WSSqlLogger.Instance.LogInfo("Is Still in Trial: {0}", stillInTrial);
-                    DaysRemain = (DateTime.Parse(trialExpires).Date - DateTime.Now.Date).Days;
-                    DaysRemain = DaysRemain <= 0 ? 0 : DaysRemain;
+                    //DaysRemain = (DateTime.Parse(trialExpires).Date - DateTime.Now.Date).Days;
+                    //DaysRemain = DaysRemain <= 0 ? 0 : DaysRemain;
                     isActivated = stillInTrial;
                     checkInOldWay = false;
                 }
@@ -226,64 +226,50 @@ namespace WSUI.Core.Core.LimeLM
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("Error occured during checking new activation: [{0}]",ex.Message);
+                WSSqlLogger.Instance.LogError("Error occured during checking new activation: [{0}]", ex.Message);
             }
-            
-            return new CheckActivationResult(isActivated,isTrial,checkInOldWay);
+
+            return new CheckActivationResult(isActivated, isTrial, checkInOldWay);
         }
 
         private void CheckActivationAndTrial()
         {
             IsActivated = CheckActivation();
-            if (IsActivated)
+            if (!IsActivated)
             {
-                var checkResult = CheckActivationNew();
-                IsActivated = !checkResult.IsTrial && checkResult.IsActivated; // according "trial_expires" value
-                IsTrialPeriodEnded = checkResult.IsTrial && !checkResult.IsActivated;
+                IsTrialPeriodEnded = CheckTrialPeriod();
             }
-            else
-            {
-                IsTrialPeriodEnded = true;
-            }
+        }
+
+
+        private bool CheckTrialPeriod()
+        {
+            WSSqlLogger.Instance.LogInfo("UseTrial!!");
+            TurboActivate.UseTrial();
+            int days = DaysRemain;
+            WSSqlLogger.Instance.LogInfo("DaysRemain = {0}", days);
+            return days == 0;
         }
 
         private void InternalActivate()
         {
-            // TODO: ask for email. generate key, activate them. and then repeat checking.
-            if (IsTrialPeriodEnded)
+            string path = Path.Combine(Path.GetDirectoryName(typeof(TurboLimeActivate).Assembly.Location), ActivationAppName);
+            WSSqlLogger.Instance.LogInfo("Path Activate: {0}", path);
+            Process activationProcess = new Process()
             {
-                WSSqlLogger.Instance.LogInfo("Old way for licensing!!");
-                IWSUIEmailViewModel viewModel = new WSUIEmailViewModel(new WSUIEmailView());
-                var dlg = new WSUIDialogWindow(viewModel){Width = 400, Height = 250};
-                var result = dlg.ShowDialog();
-                if (result.HasValue && result.Value && !string.IsNullOrEmpty(viewModel.Email1))
+                StartInfo =
                 {
-                    try
-                    {
-                        var key = LimeLMApi.GenerateAndReturnKey(viewModel.Email1);
-                        if (key == null)
-                        {
-                            WSSqlLogger.Instance.LogWarning("The key hasn't been generated.");
-                        }
-                        else
-                        {
-                            RegistryHelper.Instance.SetPKetId(key.Item1.Trim());
-                            TurboActivate.CheckAndSavePKey(key.Item2.Trim(), TurboActivate.TA_Flags.TA_USER);
-                            TurboActivate.Activate();
-                            ActivationProcess();
-                            WSSqlLogger.Instance.LogInfo("Activated");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        WSSqlLogger.Instance.LogError(ex.Message);
-                    }
-                }
-            }
+                    FileName = path
+                },
+                EnableRaisingEvents = true
+            };
+            activationProcess.Exited += ActivationProcessOnExited;
+            activationProcess.Start();
         }
 
-        private void ActivationProcess()
+        private void ActivationProcessOnExited(object sender, EventArgs eventArgs)
         {
+            ((Process)sender).Exited -= ActivationProcessOnExited;
             CheckActivationAndTrial();
             if (_callback != null)
             {
@@ -302,7 +288,7 @@ namespace WSUI.Core.Core.LimeLM
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("{0}",ex.Message);
+                WSSqlLogger.Instance.LogError("{0}", ex.Message);
             }
             return false;
         }

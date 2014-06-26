@@ -20,6 +20,7 @@ namespace WSUI.Module.Interface
         void ForceClosePreview();
         ActivationState ActivateStatus { get; }
         ICommand BuyCommand { get; }
+        ICommand ActivateCommand { get; }
         bool IsBusy { get; }
         Visibility VisibleTrialLabel { get; }
     }
