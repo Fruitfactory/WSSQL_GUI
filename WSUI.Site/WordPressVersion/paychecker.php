@@ -113,7 +113,7 @@ function ValidatePP()
 
 // Begin checking :
 debug_log('paychecker intiated by '.$_SERVER['REMOTE_ADDR'], true);
-$userEmail = $_GET['userEmail'];
+$userEmail = '';//$_GET['userEmail'];
 
 if ($_GET['paypal'])
 {
@@ -146,12 +146,14 @@ debug_log('Creating product Information to send.',true);
 
 // This calls the function in PaymentSettings.php that
 // creates the product keys and send them to the user
-if($userEmail)
-{
-    UpdateLicensing($userEmail);
-}
-else
-    SendPKeys($quantity, $custEmail, $firstName, $lastName);
+//if($userEmail){
+//    UpdateLicensing($userEmail);
+//}
+//else {
+    SendPKeys($quantity, $custEmail, $firstName, $lastName,$userEmail);
+//}
+
+    
 
 debug_log('paychecker finished.',true,true);
 ?>
