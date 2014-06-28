@@ -22,37 +22,61 @@ require( dirname(__FILE__).'/PaymentSettings.php');
 $count = 0;
 $keys = array();
 
+foreach ($_POST as $key => $value) {
+    debug_log('POST: Key = '.$key.'; Value = '.$value, true);
+}
+debug_log('HEADER', true);
+$headers = parseRequestHeaders();
+
+foreach ($headers as $header => $value) {
+    debug_log('HEADER: Name = '.$header.'; Value = '.$value, true);
+}
+
 if(sizeof($_POST))
 {
-	
-	require(dirname(__FILE__).'/LimeLM.php');
-	
-	global $LimeLM_VersionID, $LimeLM_ApiKey;
-	
-	LimeLM::SetAPIKey($LimeLM_ApiKey);
-	if(!empty($_POST["payer_email"]))	
-	{
-		try
-		{
-			$xml = new SimpleXMLElement(LimeLM::FindPKey($LimeLM_VersionID,$_POST["payer_email"]));
-			if($xml["stat"] == "ok")
-			{
-				foreach($xml->pkeys->pkey as $pkey)
-				{
-					array_push($keys,$pkey["key"]);
-				}	
-				$count = $xml->pkeys["total"];			
-			}
-		}
-		catch (Exception $e)
-		{	
-		}
-	}
+
+    require(dirname(__FILE__).'/LimeLM.php');
+
+    global $LimeLM_VersionID, $LimeLM_ApiKey;
+
+    LimeLM::SetAPIKey($LimeLM_ApiKey);
+    if(!empty($_POST["payer_email"]))	
+    {
+            try
+            {
+                $xml = new SimpleXMLElement(LimeLM::FindPKey($LimeLM_VersionID,$_POST["payer_email"]));
+                debug_log('Find Status: '.$xml["stat"], true);
+                if($xml["stat"] == "ok")
+                {
+                        foreach($xml->pkeys->pkey as $pkey)
+                        {
+                                array_push($keys,$pkey["key"]);
+                                debug_log($pkey["key"], true);
+                        }	
+                        $count = $xml->pkeys["total"];			
+                }
+            }
+            catch (Exception $e)
+            {	
+            }
+    }
 	
 }	
 
 
 $path_down = getDownloadUrlForLastVersion();
+
+function parseRequestHeaders() {
+    $headers = array();
+    foreach($_SERVER as $key => $value) {
+        if (substr($key, 0, 5) <> 'HTTP_') {
+            continue;
+        }
+        $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
+        $headers[$header] = $value;
+    }
+    return $headers;
+}
 
 ?>
 
@@ -79,7 +103,7 @@ $path_down = getDownloadUrlForLastVersion();
         </table>		
         <?php }?>
                 <hr/>
-                <p>Your product key will be e-mailed to you shortly. <strong>If you don't receive your product key in the next 10 minutes check your spam folder.</strong></p>
+                <p>Also your product key will be e-mailed to you shortly. <strong>If you don't receive your product key in the next 10 minutes check your spam folder.</strong></p>
                 <p><a href="<?= $path_down ?>">Download</a> last version</p>
     </div>
 </article>
