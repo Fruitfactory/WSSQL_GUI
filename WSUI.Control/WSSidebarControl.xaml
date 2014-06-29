@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:regions="http://www.codeplex.com/CompositeWPF"
              xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
+             xmlns:service="clr-namespace:WSUI.Module.Service;assembly=WSUI.Module"
              >
     <UserControl.Resources>
         <ResourceDictionary>
@@ -21,20 +22,14 @@
             <converters:ActivationStatusToGridVisibilityConverter x:Key="GridVisibility"></converters:ActivationStatusToGridVisibilityConverter>
             <converters:ActivationStatusToButtonVisibilityConverter x:Key="ButtonVisibility"></converters:ActivationStatusToButtonVisibilityConverter>
 
-            <Storyboard x:Key="DataToPreview"
-                    TargetProperty="Left"
-                    AccelerationRatio="1"
-                    DecelerationRatio="1"><!--(UIElement.RenderTransform).(TranslateTransform.X)-->
-                <DoubleAnimation x:Name="Data" Storyboard.TargetName="DataControl" Duration="1" />
-                <DoubleAnimation x:Name="Preview" Storyboard.TargetName="PreviewControl" Duration="1" />
+            <Storyboard x:Key="DataToPreview" TargetProperty="Width">
+                <service:GridLengthAnimation Storyboard.TargetName="Data" From="*" To="0" Duration="0:0:0.4"></service:GridLengthAnimation>
+                <service:GridLengthAnimation Storyboard.TargetName="Preview" From="0" To="*" Duration="0:0:0.4"></service:GridLengthAnimation>
             </Storyboard>
-            
-            <Storyboard x:Key="PreviewToData"
-                    TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                    AccelerationRatio="1"
-                    DecelerationRatio="1">
-                <DoubleAnimation x:Name="Data" Storyboard.TargetName="DataControl" Duration="0:0:1" />
-                <DoubleAnimation x:Name="Preview" Storyboard.TargetName="PreviewControl" Duration="0:0:1" /> 
+
+            <Storyboard x:Key="PreviewToData" TargetProperty="Width">
+                <service:GridLengthAnimation Storyboard.TargetName="Data" From="0" To="*" Duration="0:0:0.4"></service:GridLengthAnimation>
+                <service:GridLengthAnimation Storyboard.TargetName="Preview" From="*" To="0" Duration="0:0:0.4"></service:GridLengthAnimation>
             </Storyboard>
             
         </ResourceDictionary>
@@ -69,8 +64,12 @@
                 <ContentControl Grid.Row="1" Margin="4" regions:RegionManager.RegionName="SidebarSearchRegion" />
                 <ContentControl Grid.Row="2" Margin="4 4 0 4" HorizontalAlignment="Stretch" regions:RegionManager.RegionName="SidebarStrategyRegion" />
                 <Grid Grid.Row="3" x:Name="DataGrid">
-                    <ContentControl  x:Name="DataControl"  regions:RegionManager.RegionName="SidebarDataRegion" Visibility="{Binding DataVisibility,UpdateSourceTrigger=PropertyChanged}"/> <!--Visibility="{Binding DataVisibility,UpdateSourceTrigger=PropertyChanged}"-->
-                    <ContentControl  x:Name="PreviewControl" regions:RegionManager.RegionName="SidebarPreviewRegion" Visibility="{Binding PreviewVisibility,UpdateSourceTrigger=PropertyChanged}"/> <!--Visibility="{Binding PreviewVisibility,UpdateSourceTrigger=PropertyChanged}"-->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" x:Name="Data"></ColumnDefinition>
+                        <ColumnDefinition Width="0" x:Name="Preview"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <ContentControl Grid.Column="0"  x:Name="DataControl"  regions:RegionManager.RegionName="SidebarDataRegion" /> 
+                    <ContentControl Grid.Column="1"  x:Name="PreviewControl" regions:RegionManager.RegionName="SidebarPreviewRegion" /> 
                 </Grid>
             </Grid>
         </Border>

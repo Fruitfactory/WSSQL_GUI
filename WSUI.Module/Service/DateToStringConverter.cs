@@ -137,13 +137,15 @@ namespace WSUI.Module.Service
             if (parameter == null)
             {
                 double val = (double) value;
-                return val - ScrollbarWidth;
+                val = val - ScrollbarWidth;
+                return val < 0 ? 0 : val;
             }
             if (parameter is Int32)
             {
                 int param = (int) parameter;
                 double val = (double) value;
-                return val - param;
+                val = val - param;
+                return val < 0 ? 0 : val;
             }
             return value;
         }

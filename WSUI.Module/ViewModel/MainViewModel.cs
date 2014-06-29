@@ -273,7 +273,7 @@ namespace WSUI.Module.ViewModel
                 Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
                 DataVisibility = Visibility.Collapsed;
                 PreviewVisibility = Visibility.Visible;
-                //OnSlide(UiSlideDirection.DataToPreview);
+                OnSlide(UiSlideDirection.DataToPreview);
             }
             catch (Exception ex)
             {
@@ -592,7 +592,7 @@ namespace WSUI.Module.ViewModel
                 case Visibility.Visible:
                     DataVisibility = Visibility.Visible;
                     PreviewVisibility = Visibility.Collapsed;
-                    //OnSlide(UiSlideDirection.PreviewToData);
+                    OnSlide(UiSlideDirection.PreviewToData);
                     break;
             }
         }

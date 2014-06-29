@@ -17,9 +17,6 @@ namespace WSUI.Control
         public WSSidebarControl()
         {
             InitializeComponent();
-            (this.Resources["DataToPreview"] as Storyboard).Completed += DataToPreviewCompleted;
-            (this.Resources["PreviewToData"] as Storyboard).Completed += PreviewToDataCompleted;
-
         }
 
         
@@ -36,7 +33,7 @@ namespace WSUI.Control
 
         private void ModelChanged()
         {
-            //Model.Slide += ModelOnSlide;
+            Model.Slide += ModelOnSlide;
         }
 
         private void ModelOnSlide(object sender, SlideDirectionEventArgs slideDirectionEventArgs)
@@ -59,17 +56,7 @@ namespace WSUI.Control
             var storyBoard = this.Resources["PreviewToData"] as Storyboard;
             if(storyBoard == null)
                 return;
-            var dataAnimation = storyBoard.Children.FirstOrDefault(c => c.Name == "Data") as DoubleAnimation;
-            var previewAnimation = storyBoard.Children.FirstOrDefault(c => c.Name == "Preview") as DoubleAnimation;
-            dataAnimation.From = 0;
-            dataAnimation.To = -DataGrid.ActualWidth;
-            previewAnimation.From = DataGrid.ActualWidth;
-            previewAnimation.To = 0;
 
-            DataControl.Width = DataGrid.ActualWidth;
-            PreviewControl.Width = DataGrid.ActualWidth;
-
-            PreviewControl.Visibility = Visibility.Visible;
             PreviewControl.BeginStoryboard(storyBoard);
 
         }
@@ -79,32 +66,9 @@ namespace WSUI.Control
             var storyBoard = this.Resources["DataToPreview"] as Storyboard;
             if (storyBoard == null)
                 return;
-
-            var dataAnimation = storyBoard.Children.FirstOrDefault(c => c.Name == "Data") as DoubleAnimation;
-            var previewAnimation = storyBoard.Children.FirstOrDefault(c => c.Name == "Preview") as DoubleAnimation;
-            dataAnimation.From = 0;
-            dataAnimation.To = -DataGrid.ActualWidth;
-            previewAnimation.From = DataGrid.ActualWidth;
-            previewAnimation.To = 0;
-
-            DataControl.Width = DataGrid.ActualWidth;
-            PreviewControl.Width = DataGrid.ActualWidth;
-
-            PreviewControl.Visibility = Visibility.Visible;
             PreviewControl.BeginStoryboard(storyBoard);
         }
 
-        private void DataToPreviewCompleted(object sender, EventArgs eventArgs)
-        {
-            DataControl.Visibility = Visibility.Collapsed;
-            PreviewControl.Width = double.NaN;
-        }
-
-        private void PreviewToDataCompleted(object sender, EventArgs eventArgs)
-        {
-            PreviewControl.Visibility = Visibility.Collapsed;
-            DataControl.Width = double.NaN;
-        }
 
 
     }
