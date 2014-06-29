@@ -12,6 +12,7 @@ namespace WSUIOutlookPlugin
         public WSUISidebar()
         {
             InitializeComponent();
+                 
         }
 
         protected override void OnLoad(EventArgs e)

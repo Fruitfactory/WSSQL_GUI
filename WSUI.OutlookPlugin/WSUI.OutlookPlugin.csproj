@@ -137,6 +137,7 @@
       <DependentUpon>WSUIAbout.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\DllPreloader.cs" />
+    <Compile Include="Core\Extensions.cs" />
     <Compile Include="Core\SearchCommandManager.cs" />
     <Compile Include="Core\UpdateHelper.cs" />
     <Compile Include="Events\WSUIHideWindow.cs" />

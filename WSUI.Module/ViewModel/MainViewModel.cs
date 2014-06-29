@@ -18,6 +18,7 @@ using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
+using WSUI.Core.Utils.Dialog;
 using WSUI.Core.Win32;
 using WSUI.Infrastructure;
 using WSUI.Infrastructure.Controls.ProgressManager;
@@ -47,6 +48,8 @@ namespace WSUI.Module.ViewModel
         private bool _enabled = true;
         private List<LazyKind> _listItems;
         private ILazyKind _selectedLazyKind;
+        private Visibility _dataVisibility;
+        private Visibility _previewVisibility;
 
         public MainViewModel(IUnityContainer container, IRegionManager region, IKindsView kindView,
             IPreviewView previewView)
@@ -59,6 +62,8 @@ namespace WSUI.Module.ViewModel
             previewView.Model = this;
             MainDataSource = new List<BaseSearchObject>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
+            DataVisibility = Visibility.Visible;
+            PreviewVisibility = Visibility.Collapsed;
         }
 
         public IKindsView KindsView { get; protected set; }
@@ -264,6 +269,8 @@ namespace WSUI.Module.ViewModel
                 }
                 Enabled = false;
                 Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
+                DataVisibility = Visibility.Collapsed;
+                PreviewVisibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
@@ -523,6 +530,7 @@ namespace WSUI.Module.ViewModel
         public ActivationState ActivateStatus { get; private set; }
 
         public ICommand BuyCommand { get; private set; }
+        public ICommand BackCommand { get; private set; }
 
         public bool IsBusy { get; private set; }
 
@@ -538,6 +546,26 @@ namespace WSUI.Module.ViewModel
             }
         }
 
+        public Visibility DataVisibility 
+        {
+            get { return _dataVisibility; }
+            private set
+            {
+                _dataVisibility = value;
+                OnPropertyChanged(() => DataVisibility);
+            }
+        }
+
+        public Visibility PreviewVisibility
+        {
+            get { return _previewVisibility; }
+            private set
+            {
+                _previewVisibility = value;
+                OnPropertyChanged(() => PreviewVisibility);
+            }
+        }
+
         #endregion Implementation of IMainViewModel
 
         public virtual void Init()
@@ -550,6 +578,24 @@ namespace WSUI.Module.ViewModel
         private void InitializeCommands()
         {
             BuyCommand = new DelegateCommand(InternalBuy);
+            BackCommand = new WSUIRelayCommand(InternalBack,CanInternalBack);
         }
+
+        private void InternalBack(object arg)
+        {
+            switch (PreviewVisibility)
+            {
+                case Visibility.Visible:
+                    DataVisibility = Visibility.Visible;
+                    PreviewVisibility = Visibility.Collapsed;
+                    break;
+            }
+        }
+
+        private bool CanInternalBack(object arg)
+        {
+            return PreviewVisibility == Visibility.Visible;
+        }
+
     }
 }

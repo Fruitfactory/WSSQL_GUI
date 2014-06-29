@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
@@ -14,6 +15,7 @@ using WSUI.Control;
 using WSUI.Control.Interfaces;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Core.Extensions;
 using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Controls.Application;
@@ -192,11 +194,15 @@ namespace WSUIOutlookPlugin
             // 
             // formRightSidebar
             // 
+            this.formRightSidebar.AlwaysShowHeader = true;
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
-            this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
+            this.formRightSidebar.CloseButton = true;
+            this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
             this.formRightSidebar.ExplorerItemTypes = AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem;
             this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
             this.formRightSidebar.FormClassName = "WSUIOutlookPlugin.WSUISidebar";
+            this.formRightSidebar.IsMinimizedStateAllowed = false;
+            this.formRightSidebar.RegionBorder = AddinExpress.OL.ADXRegionBorderStyle.None;
             this.formRightSidebar.UseOfficeThemeForBackground = true;
             // 
             // wsuiTab
@@ -532,7 +538,7 @@ namespace WSUIOutlookPlugin
                 _updatable = UpdateHelper.Instance;
                 _updatable.Module = this;
             }
-            
+            IsMainUIVisible = true;
         }
 
         private void CreateInboxSubFolder(Outlook.Application outlookApp, bool shouldBeAdded = true)
@@ -628,10 +634,13 @@ namespace WSUIOutlookPlugin
             //DoShowWebViewPane();
             formRightSidebar.ApplyTo((OutlookApp as Outlook.Application).ActiveExplorer());
             _wsuiBootStraper.PassAction(new WSAction(WSActionType.Show, null));
+            IsMainUIVisible = true;
         }
 
         private void HideUI(bool hide)
         {
+            outlookFormManager.HideForm();
+            IsMainUIVisible = false;
             //DoHideWebViewPane();
         }
 
