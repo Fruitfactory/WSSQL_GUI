@@ -115,6 +115,7 @@
     <Compile Include="Core\KindViewModelBase.cs" />
     <Compile Include="Core\LazyKind.cs" />
     <Compile Include="Core\ViewModelBase.cs" />
+    <Compile Include="Enums\Enums.cs" />
     <Compile Include="Interface\ICommandStrategy.cs" />
     <Compile Include="Interface\IDataView.cs" />
     <Compile Include="Interface\IKindItem.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Service\MainWindowInfo.cs" />
     <Compile Include="Service\NameToImageConvert.cs" />
     <Compile Include="Service\ScrollBehavior.cs" />
+    <Compile Include="Service\SlideDirectionEventArgs.cs" />
     <Compile Include="Strategy\CommadStrategyFactory.cs" />
     <Compile Include="Strategy\EmailCommandStrategy.cs" />
     <Compile Include="Strategy\FileCommandStrategy.cs" />

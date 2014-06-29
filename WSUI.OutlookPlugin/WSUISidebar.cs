@@ -12,8 +12,14 @@ namespace WSUIOutlookPlugin
         public WSUISidebar()
         {
             InitializeComponent();
-                 
+            ADXAfterFormHide += OnAdxAfterFormHide;
         }
+
+        private void OnAdxAfterFormHide(object sender, ADXAfterFormHideEventArgs e)
+        {
+            WSUIAddinModule.CurrentInstance.IsMainUIVisible = false;
+        }
+
 
         protected override void OnLoad(EventArgs e)
         {

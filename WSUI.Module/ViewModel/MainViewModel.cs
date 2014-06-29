@@ -25,7 +25,9 @@ using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
 using WSUI.Module.Core;
+using WSUI.Module.Enums;
 using WSUI.Module.Interface;
+using WSUI.Module.Service;
 using WSUI.Module.Service.Dialogs.Message;
 using Application = System.Windows.Application;
 
@@ -258,19 +260,20 @@ namespace WSUI.Module.ViewModel
                 //BusyPopupAdorner.Instance.IsBusy = true;
                 if (!ProgressManager.Instance.InProgress)
                 {
-                    ProgressManager.Instance.StartOperation(new ProgressOperation
-                    {
-                        Caption = "Loading...",
-                        DelayTime = 250,
-                        Canceled = false,
-                        Location = mwi.Item1,
-                        Size = mwi.Item2
-                    });
+                    //ProgressManager.Instance.StartOperation(new ProgressOperation
+                    //{
+                    //    Caption = "Loading...",
+                    //    DelayTime = 250,
+                    //    Canceled = false,
+                    //    Location = mwi.Item1,
+                    //    Size = mwi.Item2
+                    //});
                 }
                 Enabled = false;
                 Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
                 DataVisibility = Visibility.Collapsed;
                 PreviewVisibility = Visibility.Visible;
+                //OnSlide(UiSlideDirection.DataToPreview);
             }
             catch (Exception ex)
             {
@@ -462,6 +465,7 @@ namespace WSUI.Module.ViewModel
         public event EventHandler Start;
 
         public event EventHandler Complete;
+        public event EventHandler<SlideDirectionEventArgs> Slide;
 
         public List<BaseSearchObject> MainDataSource { get; protected set; }
 
@@ -588,6 +592,7 @@ namespace WSUI.Module.ViewModel
                 case Visibility.Visible:
                     DataVisibility = Visibility.Visible;
                     PreviewVisibility = Visibility.Collapsed;
+                    //OnSlide(UiSlideDirection.PreviewToData);
                     break;
             }
         }
@@ -595,6 +600,15 @@ namespace WSUI.Module.ViewModel
         private bool CanInternalBack(object arg)
         {
             return PreviewVisibility == Visibility.Visible;
+        }
+
+        private void OnSlide(UiSlideDirection dir)
+        {
+            var temp = Slide;
+            if (temp != null)
+            {
+                temp(this,new SlideDirectionEventArgs(dir));
+            }
         }
 
     }

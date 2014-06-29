@@ -5,6 +5,7 @@ using System.Windows.Input;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
+using WSUI.Module.Service;
 
 namespace WSUI.Module.Interface
 {
@@ -12,6 +13,8 @@ namespace WSUI.Module.Interface
     {
         event EventHandler Start;
         event EventHandler Complete;
+        event EventHandler<SlideDirectionEventArgs> Slide;
+
         List<BaseSearchObject> MainDataSource { get; }
         void Clear();
         void SelectKind(string name);

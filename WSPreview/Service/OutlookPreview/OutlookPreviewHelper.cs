@@ -300,13 +300,20 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         private dynamic GetMail(string filename)
         {
-            if (_outlook == null)
-                return null;
-            dynamic mail = _outlook.CreateItemFromTemplate(filename);
+            try
+            {
+                if (_outlook == null)
+                    return null;
+                dynamic mail = _outlook.CreateItemFromTemplate(filename);
 
-            if (mail == null)
+                if (mail == null)
+                    return null;
+                return mail;
+            }
+            catch (Exception)
+            { 
                 return null;
-            return mail;
+            }
         }
 
         private string GetAttachments(dynamic item, string filename)
