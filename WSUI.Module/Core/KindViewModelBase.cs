@@ -161,6 +161,7 @@ namespace WSUI.Module.Core
             _canSearch = false;
             if (!IsShouldSearch())
             {
+                _canSearch = true;
                 WSSqlLogger.Instance.LogWarning("Please, activate the 'OutlookFinder'");
                 MessageBoxService.Instance.Show("Warning", "Please, activate the 'OutlookFinder'", MessageBoxButton.OK,
                     MessageBoxImage.Asterisk);

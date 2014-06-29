@@ -119,7 +119,6 @@ namespace WSUI.Module.ViewModel
         {
             ActivateStatus = TurboLimeActivate.Instance.State;
 
-
             WSSqlLogger.Instance.LogInfo("Activated Status: {0}", ActivateStatus.ToString());
             OnPropertyChanged(() => ActivateStatus);
             OnPropertyChanged(() => VisibleTrialLabel);
@@ -136,10 +135,8 @@ namespace WSUI.Module.ViewModel
                 //case ActivationState.Trial:
 #endif
                 case ActivationState.TrialEnded:
-                    MessageBoxService.Instance.Show("Trial", "The trial period has been expired", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                    break;
                 case ActivationState.NonActivated:
-                    TurboLimeActivate.Instance.Activate(UpdatedActivatedStatus);
+                    RunInternalActivate();
                     break;
                 case ActivationState.Trial:
                 case ActivationState.Activated:
@@ -147,6 +144,11 @@ namespace WSUI.Module.ViewModel
                     break;
             }
             Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => TurboLimeActivate.Instance.IncreaseTimeUsedFlag()));
+        }
+
+        private void RunInternalActivate()
+        {
+            TurboLimeActivate.Instance.Activate(UpdatedActivatedStatus);
         }
 
         private void GetAllKinds()
@@ -534,6 +536,7 @@ namespace WSUI.Module.ViewModel
         public ActivationState ActivateStatus { get; private set; }
 
         public ICommand BuyCommand { get; private set; }
+        public ICommand ActivateCommand { get; private set; }
         public ICommand BackCommand { get; private set; }
 
         public bool IsBusy { get; private set; }
@@ -582,6 +585,7 @@ namespace WSUI.Module.ViewModel
         private void InitializeCommands()
         {
             BuyCommand = new DelegateCommand(InternalBuy);
+            ActivateCommand= new DelegateCommand(RunInternalActivate);
             BackCommand = new WSUIRelayCommand(InternalBack,CanInternalBack);
         }
 

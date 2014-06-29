@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Id="EA52F5FB-8C43-420D-A092-17E100E4F6C6" Name="OutlookFinder" Language="1033" Version="1.0.12" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="D8476BC6-9FB9-458A-B9A6-9C27E9AFA4E1" Name="OutlookFinder" Language="1033" Version="1.0.12" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <Media Id="1" Cabinet="OutlookFinder.cab" EmbedCab="yes" />
     <Condition Message="!(Setting the ALLUSERS property is not allowed.)">
-            NOT ALLUSERS
-        </Condition>
+      NOT ALLUSERS
+    </Condition>
     <Icon Id="MainIcon.exe" SourceFile="Image\logo_64.ico" />
     <Property Id="ARPPRODUCTICON" Value="MainIcon.exe" />
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
@@ -56,7 +56,7 @@
       <Custom Action="CancelMessage" OnExit="cancel">NOT Installed</Custom>
       <Custom Action="ErrorMessage" OnExit="error">NOT Installed</Custom>
       <?ifndef TRIAL ?>
-      <Custom Action="ActivatePlugin" After="SelfRegModules">NOT Installed</Custom>
+      <!--<Custom Action="ActivatePlugin" After="SelfRegModules">NOT Installed</Custom>-->
       <?endif?>
       <!--<Custom Action="ActivatePlugin" After="InstallInitialize">NOT Installed</Custom>-->
       <!--<Custom Action="OpenOutlook" After="InstallFinalize">NOT Installed OR Installed</Custom>-->
@@ -84,7 +84,9 @@
           <Publish Event="SpawnDialog" Value="WsUiErrorDlg"><![CDATA[EMAILVALID="False"]]></Publish>
           <Publish Event="NewDialog" Value="InstallDirDlg"><![CDATA[EMAILVALID="True"]]></Publish>
         </Control>
-        <Control Id="Back" Type="PushButton" Text="Back" X="180" Y="243" Width="56" Height="17" />
+        <Control Id="Back" Type="PushButton" Text="Back" X="180" Y="243" Width="56" Height="17">
+          <Publish Event="NewDialog" Value="LicenseAgreementDlg" />
+        </Control>
         <Control Id="Cancel" Type="PushButton" Cancel="yes" Text="Cancel" X="304" Y="243" Width="56" Height="17">
           <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
         </Control>
@@ -106,10 +108,10 @@
       <DialogRef Id="UserExit" />
       <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseAgreementDlg">NOT Installed</Publish>
       <Publish Dialog="LicenseAgreementDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
-      <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="EmailDialog">LicenseAccepted = "1"</Publish>
-      <Publish Dialog="EmailDialog" Control="Back" Event="NewDialog" Value="LicenseAgreementDlg" Order="1">1</Publish>
+      <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg">LicenseAccepted = "1"</Publish>
+      <!--<Publish Dialog="EmailDialog" Control="Back" Event="NewDialog" Value="LicenseAgreementDlg" Order="1">1</Publish>-->
       <!-- EmailDialog -> Next -> defined in dialog -->
-      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="EmailDialog">1</Publish>
+      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
       <Publish Dialog="InstallDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
       <Publish Dialog="InstallDirDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath" Order="2">1</Publish>
       <Publish Dialog="InstallDirDlg" Control="Next" Event="SpawnDialog" Value="InvalidDirDlg" Order="3"><![CDATA[NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>

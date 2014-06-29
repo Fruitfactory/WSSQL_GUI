@@ -1,1 +1,0 @@
-Put your .wyu updates in this folder. Delete this file.

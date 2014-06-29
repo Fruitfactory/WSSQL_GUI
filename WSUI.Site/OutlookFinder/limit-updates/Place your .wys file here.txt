@@ -1,1 +1,0 @@
-Place your .wys server file in this folder. Delete this file.

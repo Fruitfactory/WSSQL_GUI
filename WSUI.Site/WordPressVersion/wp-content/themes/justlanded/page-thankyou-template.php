@@ -21,10 +21,15 @@ require( dirname(__FILE__).'/PaymentSettings.php');
 
 $count = 0;
 $keys = array();
-debug_log('Find Status: thank you ', true);
-debug_log('Find Status: sizeof '.sizeof($_POST), true);
+
 foreach ($_POST as $key => $value) {
-    debug_log('Find Status: Key = '.$key.'; Value = '.$value, true);
+    debug_log('POST: Key = '.$key.'; Value = '.$value, true);
+}
+debug_log('HEADER', true);
+$headers = parseRequestHeaders();
+
+foreach ($headers as $header => $value) {
+    debug_log('HEADER: Name = '.$header.'; Value = '.$value, true);
 }
 
 if(sizeof($_POST))
@@ -60,6 +65,18 @@ if(sizeof($_POST))
 
 
 $path_down = getDownloadUrlForLastVersion();
+
+function parseRequestHeaders() {
+    $headers = array();
+    foreach($_SERVER as $key => $value) {
+        if (substr($key, 0, 5) <> 'HTTP_') {
+            continue;
+        }
+        $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
+        $headers[$header] = $value;
+    }
+    return $headers;
+}
 
 ?>
 

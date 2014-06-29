@@ -24,6 +24,7 @@ namespace WSUI.Module.Interface
         ActivationState ActivateStatus { get; }
         ICommand BuyCommand { get; }
         ICommand BackCommand { get; }
+        ICommand ActivateCommand { get; }
         bool IsBusy { get; }
         Visibility VisibleTrialLabel { get; }
 

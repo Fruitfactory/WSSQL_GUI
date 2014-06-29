@@ -59,13 +59,13 @@ $LimeLM_VersionID = '1432';
 // URL of the "paychecker.php" script.
 // This is where Moneybookers and PayPal orders are confirmed and processed.
 // If you're not using Moneybookers or PayPal then you don't have to set this.
-$CheckScript = 'http://outlookfinder.com/paychecker.php';//'http://www.outlookfinder.dev/paychecker.php';//
+$CheckScript = 'https://outlookfinder.com/paychecker.php';//'http://www.outlookfinder.dev/paychecker.php';//
 
 // Where the user can buy your products
-$BuyPage = 'http://outlookfinder.com/buy/';//'http://www.outlookfinder.dev/buy/'; //
+$BuyPage = 'https://outlookfinder.com/buy/';//'http://www.outlookfinder.dev/buy/'; //
 
 // Thank you page (once payment is made, user is sent to this page)
-$ThankYouPage =  'http://outlookfinder.com/thank-you/';//'http://www.outlookfinder.dev/thank-you/';//
+$ThankYouPage =  'https://outlookfinder.com/thank-you/';//'http://www.outlookfinder.dev/thank-you/';//
 
 // The logo to display on the PayPal / Moneybookers checkout
 // this site must be HTTPS or it won't display.
@@ -99,7 +99,7 @@ $AuthNetTest = true;
 $PayPalSandbox = true;
 
 // Paypal Email
-$PayPalEmail = 'yariki-ya@yandex.ru';//'info@outlookfinder.com';//
+$PayPalEmail = 'info@outlookfinder.com';//'yariki-ya@yandex.ru';//
 
 
 
