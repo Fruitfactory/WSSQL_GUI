@@ -100,13 +100,12 @@
                 <Run>We hope you are enjoying OutlookFinder.</Run>
                 <LineBreak></LineBreak>
                 <Run>Click here to purchase a license.</Run>
-                <!--<LineBreak></LineBreak>
-                <Hyperlink Command="{Binding BuyCommand}">Purchase</Hyperlink>-->
+                <LineBreak></LineBreak>
+                <Hyperlink Command="{Binding BuyCommand}">Purchase</Hyperlink>
                 <LineBreak></LineBreak>
                 <Hyperlink Command="{Binding ActivateCommand}">Activate</Hyperlink>
             </TextBlock>
         </Border>-->
-
 
 
     </Grid>
