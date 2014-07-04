@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AddinExpress.MSO;
+using AddinExpress.OL;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using WSPreview.PreviewHandler.Service.OutlookPreview;
@@ -17,6 +18,7 @@ using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Extensions;
 using WSUI.Core.Helpers;
+using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Controls.Application;
 using WSUIOutlookPlugin.Core;
@@ -43,6 +45,7 @@ namespace WSUIOutlookPlugin
         private Outlook.MAPIFolder _lastMapiFolder;
         private IWSUICommandManager _commandManager;
         private ICommandManager _aboutCommandManager;
+        private ISidebarForm _sidebarForm;
 
         #region [const]
 
@@ -197,6 +200,7 @@ namespace WSUIOutlookPlugin
             this.formRightSidebar.AlwaysShowHeader = true;
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formRightSidebar.CloseButton = true;
+            this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
             this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
             this.formRightSidebar.ExplorerItemTypes = AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem;
             this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
@@ -513,8 +517,7 @@ namespace WSUIOutlookPlugin
 
         public bool IsMainUIVisible
         {
-            get;
-            set;
+            get; set; 
         }
 
         #region my own initialization
@@ -538,7 +541,6 @@ namespace WSUIOutlookPlugin
                 _updatable = UpdateHelper.Instance;
                 _updatable.Module = this;
             }
-            IsMainUIVisible = true;
         }
 
         private void CreateInboxSubFolder(Outlook.Application outlookApp, bool shouldBeAdded = true)
@@ -617,36 +619,51 @@ namespace WSUIOutlookPlugin
             CreateCommandManager();
             SetEventAggregatorToManager();
             SubscribeToEvents();
-            
+
+            for (int i = 0; i < formRightSidebar.FormInstanceCount; i++)
+            {
+                _sidebarForm = formRightSidebar.GetForm((OutlookApp as Outlook.Application).ActiveExplorer()) as ISidebarForm;
+            }
         }
 
         private void SubscribeToEvents()
         {
             if (_eventAggregator == null)
                 return;
-            _eventAggregator.GetEvent<WSUIOpenWindow>().Subscribe(ShowUI);
-            _eventAggregator.GetEvent<WSUIHideWindow>().Subscribe(HideUI);
+            _eventAggregator.GetEvent<WSUIOpenWindow>().Subscribe(ShowUi);
+            _eventAggregator.GetEvent<WSUIHideWindow>().Subscribe(HideUi);
             _eventAggregator.GetEvent<WSUISearch>().Subscribe(StartSearch);
         }
 
-        private void ShowUI(bool show)
+        private void ShowUi(bool show)
         {
-            //DoShowWebViewPane();
-            formRightSidebar.ApplyTo((OutlookApp as Outlook.Application).ActiveExplorer());
-            _wsuiBootStraper.PassAction(new WSAction(WSActionType.Show, null));
-            IsMainUIVisible = true;
+            if (_sidebarForm != null)
+            {
+                _sidebarForm.Show();
+                _wsuiBootStraper.PassAction(new WSAction(WSActionType.Show, null));
+                IsMainUIVisible = true;
+                RegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
+            }
         }
 
-        private void HideUI(bool hide)
+        private void HideUi(bool hide)
         {
-            outlookFormManager.HideForm();
-            IsMainUIVisible = false;
-            //DoHideWebViewPane();
+            if (_sidebarForm != null)
+            {
+                _sidebarForm.Hide();
+                IsMainUIVisible = false;
+                RegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
+            }
         }
 
         private void StartSearch(string criteria)
         {
             PassSearchActionToSearchEngine(criteria);
+            if (!IsMainUIVisible)
+            {
+                _sidebarForm.Show();
+                ShowUi(true);
+            }
         }
 
         private void CreateCommandManager()
@@ -1033,8 +1050,6 @@ namespace WSUIOutlookPlugin
 
         private void CurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs firstChanceExceptionEventArgs)
         {
-            //if (firstChanceExceptionEventArgs.Exception != null && firstChanceExceptionEventArgs.Exception.TargetSite != null)
-            //    WSSqlLogger.Instance.LogError("First Chance Exception (plugin): {0} [{1}][{2}]{3}{4}", firstChanceExceptionEventArgs.Exception.Message, firstChanceExceptionEventArgs.Exception.Source, firstChanceExceptionEventArgs.Exception.TargetSite.Name, Environment.NewLine, firstChanceExceptionEventArgs.Exception.StackTrace);
             if (firstChanceExceptionEventArgs.Exception is ReflectionTypeLoadException)
             {
                 foreach (var item in (firstChanceExceptionEventArgs.Exception as ReflectionTypeLoadException).LoaderExceptions)
@@ -1042,6 +1057,7 @@ namespace WSUIOutlookPlugin
                     WSSqlLogger.Instance.LogError("Reflection Type Load: {0}", item.Message.ToString());
                 }
             }
+            WSSqlLogger.Instance.LogError("Exception: {0}\nStacktrace: {1}", firstChanceExceptionEventArgs.Exception.Message, firstChanceExceptionEventArgs.Exception.StackTrace);
         }
 
         #region [event handlers for ribbon]

@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using WSUI.Module.Enums;
 using WSUI.Module.Interface;
 using WSUI.Module.Service;
@@ -19,7 +21,6 @@ namespace WSUI.Control
             InitializeComponent();
         }
 
-        
         public IMainViewModel Model
         {
             get
@@ -56,9 +57,8 @@ namespace WSUI.Control
             var storyBoard = this.Resources["PreviewToData"] as Storyboard;
             if(storyBoard == null)
                 return;
-
-            PreviewControl.BeginStoryboard(storyBoard);
-
+            
+            DataGrid.BeginStoryboard(storyBoard);
         }
 
         private void DataToPreview()
@@ -66,10 +66,9 @@ namespace WSUI.Control
             var storyBoard = this.Resources["DataToPreview"] as Storyboard;
             if (storyBoard == null)
                 return;
-            PreviewControl.BeginStoryboard(storyBoard);
+
+            DataGrid.BeginStoryboard(storyBoard);
         }
-
-
 
     }
 }

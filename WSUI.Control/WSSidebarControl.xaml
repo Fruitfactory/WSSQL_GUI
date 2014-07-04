@@ -22,16 +22,16 @@
             <converters:ActivationStatusToGridVisibilityConverter x:Key="GridVisibility"></converters:ActivationStatusToGridVisibilityConverter>
             <converters:ActivationStatusToButtonVisibilityConverter x:Key="ButtonVisibility"></converters:ActivationStatusToButtonVisibilityConverter>
 
-            <Storyboard x:Key="DataToPreview" TargetProperty="Width">
-                <service:GridLengthAnimation Storyboard.TargetName="Data" From="*" To="0" Duration="0:0:0.4"></service:GridLengthAnimation>
+            <Storyboard x:Key="DataToPreview" TargetProperty="Width"  >
+                <service:GridLengthAnimation Storyboard.TargetName="Data" From="*" To="0" Duration="0:0:0.4" ></service:GridLengthAnimation>
                 <service:GridLengthAnimation Storyboard.TargetName="Preview" From="0" To="*" Duration="0:0:0.4"></service:GridLengthAnimation>
             </Storyboard>
 
-            <Storyboard x:Key="PreviewToData" TargetProperty="Width">
+            <Storyboard x:Key="PreviewToData" TargetProperty="Width"  >
                 <service:GridLengthAnimation Storyboard.TargetName="Data" From="0" To="*" Duration="0:0:0.4"></service:GridLengthAnimation>
                 <service:GridLengthAnimation Storyboard.TargetName="Preview" From="*" To="0" Duration="0:0:0.4"></service:GridLengthAnimation>
             </Storyboard>
-            
+
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -63,13 +63,15 @@
 
                 <ContentControl Grid.Row="1" Margin="4" regions:RegionManager.RegionName="SidebarSearchRegion" />
                 <ContentControl Grid.Row="2" Margin="4 4 0 4" HorizontalAlignment="Stretch" regions:RegionManager.RegionName="SidebarStrategyRegion" />
-                <Grid Grid.Row="3" x:Name="DataGrid">
+                <Grid Grid.Row="3" x:Name="DataGrid"  >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" x:Name="Data"></ColumnDefinition>
                         <ColumnDefinition Width="0" x:Name="Preview"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <ContentControl Grid.Column="0"  x:Name="DataControl"  regions:RegionManager.RegionName="SidebarDataRegion" /> 
-                    <ContentControl Grid.Column="1"  x:Name="PreviewControl" regions:RegionManager.RegionName="SidebarPreviewRegion" /> 
+
+                    <ContentControl Grid.Column="0" x:Name="DataControl"  regions:RegionManager.RegionName="SidebarDataRegion" />
+
+                    <ContentControl Grid.Column="1" x:Name="PreviewControl" regions:RegionManager.RegionName="SidebarPreviewRegion"  />
                 </Grid>
             </Grid>
         </Border>

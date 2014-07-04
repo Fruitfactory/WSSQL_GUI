@@ -38,17 +38,13 @@ namespace WSUI.Module
             WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "Initialize <mmv.Init()>", watch.ElapsedMilliseconds));
             watch = new Stopwatch();
             watch.Start();
-            IRegion region = _regionManager.Regions[RegionNames.StrategyRegion];
             IRegion sidebarRegion = _regionManager.Regions[RegionNames.SidebarStrategyRegion];
-            region.Add(mmv.KindsView);
             if (sidebarRegion != null)
             {
                 sidebarRegion.Add(mmv.KindsView);
                 sidebarRegion = null;
             }
-            region = _regionManager.Regions[RegionNames.PreviewRegion];
             sidebarRegion = _regionManager.Regions[RegionNames.SidebarPreviewRegion];
-            region.Add(mmv.PreviewView);
             if (sidebarRegion != null)
             {
                 sidebarRegion.Add(mmv.PreviewView);

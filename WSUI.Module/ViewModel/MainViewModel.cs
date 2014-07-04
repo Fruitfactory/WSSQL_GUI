@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Threading;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Regions;
@@ -52,6 +53,7 @@ namespace WSUI.Module.ViewModel
         private ILazyKind _selectedLazyKind;
         private Visibility _dataVisibility;
         private Visibility _previewVisibility;
+        private bool _isBusy;
 
         public MainViewModel(IUnityContainer container, IRegionManager region, IKindsView kindView,
             IPreviewView previewView)
@@ -172,40 +174,32 @@ namespace WSUI.Module.ViewModel
 
         private void CurrentKindChanged(object kindItem)
         {
-            IRegion regionSearch = _regionManager.Regions[RegionNames.SearchRegion];
             IRegion regionSidebarSearch = _regionManager.Regions[RegionNames.SidebarSearchRegion];
-            if (regionSearch != null && regionSidebarSearch != null)
+            if (regionSidebarSearch != null)
             {
-                object view = GetView(kindItem, "SettingsView");
-                if (view != null && !regionSearch.Views.Contains(view) && !regionSidebarSearch.Views.Contains(view))
+                object viewSettings = GetView(kindItem, "SettingsView");
+                if (viewSettings != null && !regionSidebarSearch.Views.Contains(viewSettings))
                 {
-                    regionSearch.Add(view);
-                    regionSearch.Activate(view);
-                    regionSidebarSearch.Add(view);
-                    regionSidebarSearch.Activate(view);
+                    regionSidebarSearch.Add(viewSettings);
+                    regionSidebarSearch.Activate(viewSettings);
                 }
-                else if (view != null)
+                else if (viewSettings != null)
                 {
-                    regionSearch.Activate(view);
-                    regionSidebarSearch.Activate(view);
+                    regionSidebarSearch.Activate(viewSettings);
                 }
             }
-            IRegion regionData = _regionManager.Regions[RegionNames.DataRegion];
             IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
-            if (regionData != null && regionSidebarData != null)
+            if (regionSidebarData != null)
             {
-                object view = GetView(kindItem, "DataView");
-                if (view != null && !regionData.Views.Contains(view)  && !regionSidebarData.Views.Contains(view))
+                object viewData = GetView(kindItem, "DataView");
+                if (viewData != null   && !regionSidebarData.Views.Contains(viewData))
                 {
-                    regionData.Add(view);
-                    regionData.Activate(view);
-                    regionSidebarData.Add(view);
-                    regionSidebarData.Activate(view);
+                    regionSidebarData.Add(viewData);
+                    regionSidebarData.Activate(viewData);
                 }
-                else if (view != null)
+                else if (viewData != null)
                 {
-                    regionData.Activate(view);
-                    regionSidebarData.Activate(view);
+                    regionSidebarData.Activate(viewData);
                 }
             }
 
@@ -250,16 +244,14 @@ namespace WSUI.Module.ViewModel
 
         private void OnCurrentItemChanged(object sender, EventArgs<BaseSearchObject> args)
         {
-            if (args.Value == null)
+            if (args.Value == null || args.Value.TypeItem == TypeSearchItem.Contact)
                 return;
 
             _currentData = args.Value;
-
+            
             try
             {
                 Tuple<Point, Size> mwi = GetMainWindowInfo();
-                //BusyPopupAdorner.Instance.Message = "Loading...";
-                //BusyPopupAdorner.Instance.IsBusy = true;
                 if (!ProgressManager.Instance.InProgress)
                 {
                     //ProgressManager.Instance.StartOperation(new ProgressOperation
@@ -273,9 +265,9 @@ namespace WSUI.Module.ViewModel
                 }
                 Enabled = false;
                 Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
+                IsBusy = true;
                 DataVisibility = Visibility.Collapsed;
                 PreviewVisibility = Visibility.Visible;
-                OnSlide(UiSlideDirection.DataToPreview);
             }
             catch (Exception ex)
             {
@@ -296,6 +288,7 @@ namespace WSUI.Module.ViewModel
                             ? _currentItem.SearchString
                             : string.Empty);
                         PreviewView.SetPreviewFile(filename);
+                        OnSlide(UiSlideDirection.DataToPreview);
                     }
                     else
                         PreviewView.ClearPreview();
@@ -313,6 +306,7 @@ namespace WSUI.Module.ViewModel
                     ProgressManager.Instance.StopOperation();
                 }
                 Enabled = true;
+                IsBusy = false;
             }
         }
 
@@ -539,7 +533,18 @@ namespace WSUI.Module.ViewModel
         public ICommand ActivateCommand { get; private set; }
         public ICommand BackCommand { get; private set; }
 
-        public bool IsBusy { get; private set; }
+        public bool IsBusy
+        {
+            get
+            {
+                return _isBusy;
+            }
+            private set
+            {
+                _isBusy = value;
+                OnPropertyChanged(() =>  IsBusy);
+            }
+        }
 
         public Visibility VisibleTrialLabel
         {

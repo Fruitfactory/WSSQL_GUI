@@ -21,6 +21,7 @@ namespace WSUI.Core.Helpers
         private const string OutlookFolderName = "OutlookFolderName";
         private const string OutlookFolderWebUrl = "OutlookFolderWebUrl";
         private const string PKeyId = "Id";
+        private const string IsPluginUiVisible = "IsPluginUiVisible";
 
 
         private RegistryKey _baseRegistry = Registry.CurrentUser;
@@ -133,6 +134,18 @@ namespace WSUI.Core.Helpers
         public string GetPKeyId()
         {
             return ReadKey(PKeyId);
+        }
+
+
+        public bool GetIsPluginUiVisible()
+        {
+            var res = ReadKey(IsPluginUiVisible);
+            return !string.IsNullOrEmpty(res) && bool.Parse(res);
+        }
+
+        public void SetIsPluginUiVisible(bool visible)
+        {
+            Write(IsPluginUiVisible,visible);
         }
 
         #region [restore outlook folders]

@@ -180,15 +180,11 @@ namespace WSUI.Module.Core
                 WSSqlLogger.Instance.LogWarning("Search criteria is empty");
                 return;
             }
-
-            OnStart();
             MainWindowInfo mwi = GetWindowInfo();
-
             SearchSystem.SetSearchCriteria(SearchString);
             SearchSystem.Search();
+            OnStart();
 
-            //BusyPopupAdorner.Instance.Message = "Searching...";
-            //BusyPopupAdorner.Instance.IsBusy = true;
             if (!ProgressManager.Instance.InProgress)
             {
                 ProgressManager.Instance.StartOperation(new ProgressOperation()

@@ -221,7 +221,8 @@
     </DataTemplate>
 
     <DataTemplate x:Key="EmailTemplate">
-        <Grid Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}" HorizontalAlignment="Left">
+        <Grid Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}" HorizontalAlignment="Left"
+              Margin="0 0 0 3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>

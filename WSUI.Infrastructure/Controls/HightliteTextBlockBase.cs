@@ -165,49 +165,49 @@ namespace WSUI.Infrastructure.Controls
 
     protected override void OnRender(DrawingContext drawingContext)
     {
-      if (string.IsNullOrEmpty(Hightlight) || string.IsNullOrEmpty(Text))
-      {
-        ClearInlines();
-        AddInline(GenerateRun(Text.ConvertToMostEfficientEncoding()));
-        base.OnRender(drawingContext);
-        return;
-      }
-      Text = Text.ConvertToMostEfficientEncoding();
-
-      var mCol = HelperFunctions.GetMatches(Text, Hightlight); //Regex.Matches(Text, string.Format(@"({0})", Regex.Escape(Hightlight)), RegexOptions.IgnoreCase);
-      if (mCol.Count == 0)
-      {
-        ClearInlines();
-        AddInline(GenerateRun(Text.ConvertToMostEfficientEncoding()));
-        base.OnRender(drawingContext);
-        return;
-      }
-
-      ClearInlines();
-      int last = 0;
-      for (int i = 0; i < mCol.Count; i++)
-      {
-        var m = mCol[i];
-        string sub;
-        if (m.Index - last < 0)
+        if (string.IsNullOrEmpty(Hightlight) || string.IsNullOrEmpty(Text))
         {
-          sub = Text.Substring(m.Index, m.Length);
-          AddInline(GenerateRun(sub));
+            ClearInlines();
+            AddInline(GenerateRun(Text.ConvertToMostEfficientEncoding()));
+            base.OnRender(drawingContext);
+            return;
         }
-        else
+        Text = Text.ConvertToMostEfficientEncoding();
+
+        var mCol = HelperFunctions.GetMatches(Text, Hightlight); //Regex.Matches(Text, string.Format(@"({0})", Regex.Escape(Hightlight)), RegexOptions.IgnoreCase);
+        if (mCol.Count == 0)
         {
-          sub = Text.Substring(last, m.Index - last);
-          AddInline(GenerateRun(sub));
+            ClearInlines();
+            AddInline(GenerateRun(Text.ConvertToMostEfficientEncoding()));
+            base.OnRender(drawingContext);
+            return;
         }
-        sub = Text.Substring(m.Index, m.Length);
-        AddInline(GenerateRun(sub, true));
-        last = (m.Index + m.Length);
-      }
-      if (last < Text.Length)
-      {
-        var temp = Text.Substring(last, Text.Length - last);
-        AddInline(GenerateRun(temp));
-      }
+
+        ClearInlines();
+        int last = 0;
+        for (int i = 0; i < mCol.Count; i++)
+        {
+            var m = mCol[i];
+            string sub;
+            if (m.Index - last < 0)
+            {
+                sub = Text.Substring(m.Index, m.Length);
+                AddInline(GenerateRun(sub));
+            }
+            else
+            {
+                sub = Text.Substring(last, m.Index - last);
+                AddInline(GenerateRun(sub));
+            }
+            sub = Text.Substring(m.Index, m.Length);
+            AddInline(GenerateRun(sub, true));
+            last = (m.Index + m.Length);
+        }
+        if (last < Text.Length)
+        {
+            var temp = Text.Substring(last, Text.Length - last);
+            AddInline(GenerateRun(temp));
+        }
 
       base.OnRender(drawingContext);
     }

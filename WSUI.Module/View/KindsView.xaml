@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:localService="clr-namespace:WSUI.Module.Service"
             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                               HorizontalContentAlignment="Stretch"
              >
@@ -26,7 +27,8 @@
             <SolidColorBrush x:Key="RedColorBrush" Color="Red"></SolidColorBrush>
             <SolidColorBrush x:Key="DarkRedColorBrush" Color="DarkRed"></SolidColorBrush>
             <SolidColorBrush x:Key="WhiteColorBrush" Color="White"></SolidColorBrush>
-
+            
+            <localService:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></localService:BoolToVisibilityConverter>
 
         </ResourceDictionary>
     </UserControl.Resources>
@@ -36,6 +38,7 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
@@ -91,7 +94,7 @@
                  >
         </ListBox>
 
-        <!--<Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Visibility="{Binding VisibleTrialLabel,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Margin="5">
+        <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Visibility="{Binding VisibleTrialLabel,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Margin="5">
             <TextBlock Foreground="Red" TextWrapping="Wrap">
                 <Run>You have</Run>
                 <Run Text="{Binding DaysLeft,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></Run>
@@ -101,11 +104,18 @@
                 <LineBreak></LineBreak>
                 <Run>Click here to purchase a license.</Run>
                 <LineBreak></LineBreak>
-                <Hyperlink Command="{Binding BuyCommand}">Purchase</Hyperlink>
-                <LineBreak></LineBreak>
                 <Hyperlink Command="{Binding ActivateCommand}">Activate</Hyperlink>
             </TextBlock>
-        </Border>-->
+        </Border>
+
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" x:Name="GridProgress" 
+              Visibility="{Binding IsBusy,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">
+            <Controls:ProgressIndicator HorizontalAlignment="Stretch" 
+                                        HorizontalContentAlignment="Stretch" 
+                                        Height="5" 
+                                        ProgressColour="DeepSkyBlue" 
+                                        Width="{Binding ElementName=GridProgress,Path=ActualWidth}"></Controls:ProgressIndicator>
+        </Grid>
 
 
     </Grid>
