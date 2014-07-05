@@ -1,19 +1,16 @@
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Regions;
+using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Threading;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Regions;
-using Microsoft.Practices.Unity;
 using WSPreview.PreviewHandler.Service.OutlookPreview;
 using WSUI.Core.Core.LimeLM;
 using WSUI.Core.Data;
@@ -24,7 +21,6 @@ using WSUI.Core.Logger;
 using WSUI.Core.Utils.Dialog;
 using WSUI.Core.Win32;
 using WSUI.Infrastructure;
-using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
 using WSUI.Module.Core;
@@ -142,9 +138,10 @@ namespace WSUI.Module.ViewModel
                 case ActivationState.NonActivated:
                     RunInternalActivate();
                     break;
+
                 case ActivationState.Trial:
                 case ActivationState.Activated:
-                    
+
                     break;
             }
             Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => TurboLimeActivate.Instance.IncreaseTimeUsedFlag()));
@@ -194,7 +191,7 @@ namespace WSUI.Module.ViewModel
             if (regionSidebarData != null)
             {
                 object viewData = GetView(kindItem, "DataView");
-                if (viewData != null   && !regionSidebarData.Views.Contains(viewData))
+                if (viewData != null && !regionSidebarData.Views.Contains(viewData))
                 {
                     regionSidebarData.Add(viewData);
                     regionSidebarData.Activate(viewData);
@@ -250,7 +247,7 @@ namespace WSUI.Module.ViewModel
                 return;
 
             _currentData = args.Value;
-            
+
             try
             {
                 Tuple<Point, Size> mwi = GetMainWindowInfo();
@@ -330,6 +327,8 @@ namespace WSUI.Module.ViewModel
                 searchString = _currentItem.SearchString;
             _currentItem = sendItem;
             Connect();
+            if(BackCommand.CanExecute(null))
+                BackCommand.Execute(null);
             CurrentKindChanged(_currentItem);
             if (!string.IsNullOrEmpty(searchString) && searchString != _currentItem.SearchString)
             {
@@ -448,6 +447,7 @@ namespace WSUI.Module.ViewModel
         public event EventHandler Start;
 
         public event EventHandler Complete;
+
         public event EventHandler<SlideDirectionEventArgs> Slide;
 
         public List<BaseSearchObject> MainDataSource { get; protected set; }
@@ -517,7 +517,9 @@ namespace WSUI.Module.ViewModel
         public ActivationState ActivateStatus { get; private set; }
 
         public ICommand BuyCommand { get; private set; }
+
         public ICommand ActivateCommand { get; private set; }
+
         public ICommand BackCommand { get; private set; }
 
         public bool IsBusy
@@ -529,7 +531,7 @@ namespace WSUI.Module.ViewModel
             private set
             {
                 _isBusy = value;
-                OnPropertyChanged(() =>  IsBusy);
+                OnPropertyChanged(() => IsBusy);
             }
         }
 
@@ -545,7 +547,7 @@ namespace WSUI.Module.ViewModel
             }
         }
 
-        public Visibility DataVisibility 
+        public Visibility DataVisibility
         {
             get { return _dataVisibility; }
             private set
@@ -577,8 +579,8 @@ namespace WSUI.Module.ViewModel
         private void InitializeCommands()
         {
             BuyCommand = new DelegateCommand(InternalBuy);
-            ActivateCommand= new DelegateCommand(RunInternalActivate);
-            BackCommand = new WSUIRelayCommand(InternalBack,CanInternalBack);
+            ActivateCommand = new DelegateCommand(RunInternalActivate);
+            BackCommand = new WSUIRelayCommand(InternalBack, CanInternalBack);
         }
 
         private void InternalBack(object arg)
@@ -603,9 +605,8 @@ namespace WSUI.Module.ViewModel
             var temp = Slide;
             if (temp != null)
             {
-                temp(this,new SlideDirectionEventArgs(dir));
+                temp(this, new SlideDirectionEventArgs(dir));
             }
         }
-
     }
 }

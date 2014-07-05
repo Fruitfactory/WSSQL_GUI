@@ -26,12 +26,12 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         private const string OutlookApplication = "Outlook.Application";
         private const string WordRegex = @"(?<word>\w+)";
         private const string ExtOfImage = "png";
-        private const string BodyTag = "<body>";
+        private const string BodyTag = "<body";
         private const string NAEmpty = "<n/a>";
 
         #region pattern for html
 
-        private const string PageBegin = @"<!DOCTYPE html><html lang='en'><head><title></title><meta charset='utf-8' http-equiv='Content-Type' content='text/html; charset=utf-8;'><style type='text/css'>.style1{width: 15%;color: gray;}.style2{width: 85%;}</style></head><body style='font-family: Arial, Helvetica, sans-serif'>";
+        private const string PageBegin = @"<!DOCTYPE html><html lang='en'><head><title></title><meta charset='utf-8' http-equiv='Content-Type' content='text/html; charset=utf-8;'><style type='text/css'>.style1{width: 15%;color: gray;}.style2{width: 85%;}</style></head><body style='font-family: Arial, Helvetica, sans-serif;word-break: break-all;white-space: nowrap;'>";
         private const string TableBegin = @"<table style='width: 100%; table-layout: auto;'>";
         private const string SubjectRow = @"<tr><td class='style1' style='color: #0c0202; font-size: large; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
         private const string SenderRow = @"<tr><td class='style1' style='color: #0c0202; font-size: medium; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
@@ -40,7 +40,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         private const string AttachmentsRow = @"<tr><td class='style1'>Attachments:</td><td class='style2'>{0}</td></tr>";
         private const string SendRow = @"<tr><td class='style1'>Send:</td><td class='style2'>{0}</td></tr>";
 
-        private const string EmailRow = @"<tr style='margin: 25px 10px 10px 10px'><td colspan='2' ><hr /><html><body>{0}</body></html></td></tr>";
+        private const string EmailRow = @"<tr style='margin: 25px 10px 10px 10px'><td colspan='2' ><hr /><html><body style='word-break: break-all;white-space: nowrap;' >{0}</body></html></td></tr>";
         private const string TableEnd = @"</table>";
         private const string PageEnd = @"</body></html>";
 
@@ -254,7 +254,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
             htmlDoc.LoadHtml(body);
             HightlightAllNodes(htmlDoc.DocumentNode);
-            return htmlDoc.DocumentNode.InnerHtml.IndexOf(body) > -1 ? GetContentOfTag(htmlDoc.DocumentNode) : htmlDoc.DocumentNode.InnerHtml;
+            return htmlDoc.DocumentNode.InnerHtml.IndexOf(BodyTag) > -1 ? GetContentOfTag(htmlDoc.DocumentNode) : htmlDoc.DocumentNode.InnerHtml;
         }
 
         private string GetContentOfTag(HtmlNode node, string tagName = "body")
@@ -262,7 +262,17 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             if (node == null)
                 return string.Empty;
             if (node.Name == tagName)
+            {
+                if (!node.Attributes.Any(a => a.Name.ToUpperInvariant() == "STYLE"))
+                {
+                    node.Attributes.Add("style", "word-break: break-all;white-space: nowrap;");
+                }
+                else
+                {
+                    node.Attributes["style"].Value = "word-break: break-all;white-space: nowrap;";
+                }
                 return node.InnerHtml;
+            }
             string path = string.Empty;
             foreach (var child in node.ChildNodes)
             {
