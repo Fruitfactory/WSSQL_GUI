@@ -99,10 +99,10 @@ namespace WSUI.Module.Core
             OnPropertyChanged(() => Enabled);
             FireComplete(res);
             //Application.Current.Dispatcher.BeginInvoke(new Action(() => BusyPopupAdorner.Instance.IsBusy = false), null);
-            if (ProgressManager.Instance.InProgress)
-            {
-                ProgressManager.Instance.StopOperation();
-            }
+            //if (ProgressManager.Instance.InProgress)
+            //{
+            //    ProgressManager.Instance.StopOperation();
+            //}
         }
 
         protected virtual void ProcessMainResult()
@@ -185,18 +185,18 @@ namespace WSUI.Module.Core
             SearchSystem.Search();
             OnStart();
 
-            if (!ProgressManager.Instance.InProgress)
-            {
-                ProgressManager.Instance.StartOperation(new ProgressOperation()
-                {
-                    Caption = "Searching...",
-                    DelayTime = 2500,
-                    Canceled = false,
-                    Location = new Point(mwi.MainWindowRect.Left, mwi.MainWindowRect.Top),
-                    Size = new Size(mwi.MainWindowRect.Width, mwi.MainWindowRect.Height),
-                    MainHandle = mwi.MainWindowHandle
-                });
-            }
+            //if (!ProgressManager.Instance.InProgress)
+            //{
+            //    ProgressManager.Instance.StartOperation(new ProgressOperation()
+            //    {
+            //        Caption = "Searching...",
+            //        DelayTime = 2500,
+            //        Canceled = false,
+            //        Location = new Point(mwi.MainWindowRect.Left, mwi.MainWindowRect.Top),
+            //        Size = new Size(mwi.MainWindowRect.Width, mwi.MainWindowRect.Height),
+            //        MainHandle = mwi.MainWindowHandle
+            //    });
+            //}
         }
 
         private void RunBuyProcess()

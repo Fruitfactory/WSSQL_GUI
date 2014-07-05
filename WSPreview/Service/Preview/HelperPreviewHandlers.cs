@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Threading;
+using Microsoft.Office.Interop.Word;
 using Threads = System.Threading;
+using Tasks = System.Threading.Tasks;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using System.Diagnostics;
 using System.IO;
@@ -80,7 +82,8 @@ namespace WSPreview.PreviewHandler.Service.Preview
 
         public void Inititialize()
         {
-            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(Init), null);
+            Init();
+            //Dispatcher.CurrentDispatcher.BeginInvoke(new Action(Init), null);
         }
 
         #region [private]

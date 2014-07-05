@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -252,19 +254,9 @@ namespace WSUI.Module.ViewModel
             try
             {
                 Tuple<Point, Size> mwi = GetMainWindowInfo();
-                if (!ProgressManager.Instance.InProgress)
-                {
-                    //ProgressManager.Instance.StartOperation(new ProgressOperation
-                    //{
-                    //    Caption = "Loading...",
-                    //    DelayTime = 250,
-                    //    Canceled = false,
-                    //    Location = mwi.Item1,
-                    //    Size = mwi.Item2
-                    //});
-                }
                 Enabled = false;
                 Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
+
                 IsBusy = true;
                 DataVisibility = Visibility.Collapsed;
                 PreviewVisibility = Visibility.Visible;
@@ -300,11 +292,6 @@ namespace WSUI.Module.ViewModel
             }
             finally
             {
-                //Application.Current.Dispatcher.BeginInvoke(new Action(() => BusyPopupAdorner.Instance.IsBusy = false), null);
-                if (ProgressManager.Instance.InProgress)
-                {
-                    ProgressManager.Instance.StopOperation();
-                }
                 Enabled = true;
                 IsBusy = false;
             }

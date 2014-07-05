@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Windows.Threading;
 using WSPreview.PreviewHandler.PInvoke;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using WSPreview.PreviewHandler.Service;
@@ -59,7 +60,6 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         public PreviewHandlerHostControl()
         {
             InitializeComponent();
-            HelperPreviewHandlers.Instance.Inititialize();
             _dataHandler = PreviewHandlerRegistryAccessor.LoadRegistrationInformation();
         }
 
@@ -67,6 +67,12 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         {
             get { return _searchCriteria; }
             set { _searchCriteria = value; }
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            this.BeginInvoke((Action)(() => HelperPreviewHandlers.Instance.Inititialize()));
         }
 
         /// <summary>
@@ -92,10 +98,20 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         {
             if (_comInstance != null)
             {
-                ((IPreviewHandler)_comInstance).Unload();
-                if(Marshal.IsComObject(_comInstance))
-                    Marshal.ReleaseComObject(_comInstance);
-                _comInstance = null;
+                try
+                {
+                    ((IPreviewHandler) _comInstance).Unload();
+                    if (Marshal.IsComObject(_comInstance))
+                        Marshal.ReleaseComObject(_comInstance);
+                }
+                catch (Exception ex)
+                {
+                    WSSqlLogger.Instance.LogError(ex.Message);
+                }
+                finally
+                {
+                    _comInstance = null;    
+                }
             }
             ClearAllStreams();
         }
@@ -305,14 +321,19 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
 
             if (_comInstance == null)
                 throw new NullReferenceException("Com type can't be founded");
-            RECT r;
-            r.top = 0;
-            r.bottom = this.Height;
-            r.left = 0;
-            r.right = this.Width;
-            int wndRes = ((IPreviewHandler)_comInstance).SetWindow(this.Handle, ref r);
-            WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(SetWindow)={0}", wndRes));
-            ((IPreviewHandler)_comInstance).DoPreview();
+
+            this.BeginInvoke(new MethodInvoker(() =>
+            {
+                RECT r;
+                r.top = 0;
+                r.bottom = this.Height;
+                r.left = 0;
+                r.right = this.Width;
+                int wndRes = ((IPreviewHandler) _comInstance).SetWindow(this.Handle, ref r);
+                WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(SetWindow)={0}", wndRes));
+                ((IPreviewHandler) _comInstance).DoPreview();
+
+            }));
         }
 
         private Type GetOwnPreviewHandlersType()
