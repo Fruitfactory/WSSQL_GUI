@@ -1,3 +1,4 @@
+using System;
 using WSUI.Core.Interfaces;
 using WSUI.Module.ViewModel;
 
@@ -15,6 +16,9 @@ namespace WSUI.Module.Interface
         void SetSearchPattern(string pattern);
         void ClearPreview();
         void PassActionForPreview(IWSAction action);
+
+        event EventHandler StartLoad;
+        event EventHandler StopLoad;
 
         void Init();
     }

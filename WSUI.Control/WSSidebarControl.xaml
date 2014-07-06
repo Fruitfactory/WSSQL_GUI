@@ -6,6 +6,7 @@
              xmlns:regions="http://www.codeplex.com/CompositeWPF"
              xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
              xmlns:service="clr-namespace:WSUI.Module.Service;assembly=WSUI.Module"
+             xmlns:transitionalsControls="clr-namespace:Transitionals.Controls;assembly=Transitionals"
              >
     <UserControl.Resources>
         <ResourceDictionary>
@@ -32,6 +33,11 @@
                 <service:GridLengthAnimation Storyboard.TargetName="Preview" From="*" To="0" Duration="0:0:0.4"></service:GridLengthAnimation>
             </Storyboard>
 
+
+            <SolidColorBrush x:Key="RedColorBrush" Color="Red"></SolidColorBrush>
+            <SolidColorBrush x:Key="DarkRedColorBrush" Color="DarkRed"></SolidColorBrush>
+            <SolidColorBrush x:Key="WhiteColorBrush" Color="White"></SolidColorBrush>
+
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -56,9 +62,45 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="22"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Image Grid.Column="0" RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/WSUI.Control;Component/Images/logo_64.png" Stretch="Uniform" StretchDirection="Both"></Image>
                     <Image Grid.Column="1" RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/WSUI.Control;Component/Images/logo_txt.png" Stretch="Uniform" StretchDirection="Both"></Image>
+
+                    <Button x:Name="CloseButton" Grid.Column="2" Height="22" Padding="1, 1, 1, 1" Width="26" BorderThickness="1, 1, 1, 1" Focusable="True" Click="CloseButton_OnClick" HorizontalAlignment="Right" HorizontalContentAlignment="Center" IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}" IsTabStop="False" MaxHeight="34" RenderSize="34, 30" ToolTip="Close" VerticalAlignment="Top" VerticalContentAlignment="Center">
+                        <Grid Background="Transparent" RenderSize="26, 22">
+                            <Path x:Name="PathCross" Height="16" Margin="0,0,0,0" Width="16" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" RenderSize="10, 8" RenderTransformOrigin="0.5,0.5" SnapsToDevicePixels="True" Stretch="Uniform">
+                                <Path.Data>
+                                    F1M54.0573,47.8776L38.1771,31.9974 54.0547,16.1198C55.7604,14.4141 55.7604,11.6511 54.0573,9.94531 52.3516,8.23962 49.5859,8.23962 47.8802,9.94531L32.0026,25.8229 16.1224,9.94531C14.4167,8.23962 11.6511,8.23962 9.94794,9.94531 8.24219,11.6511 8.24219,14.4141 9.94794,16.1198L25.8255,32 9.94794,47.8776C8.24219,49.5834 8.24219,52.3477 9.94794,54.0534 11.6511,55.7572 14.4167,55.7585 16.1224,54.0534L32.0026,38.1745 47.8802,54.0534C49.5859,55.7585 52.3516,55.7572 54.0573,54.0534 55.7604,52.3477 55.763,49.5834 54.0573,47.8776z
+                                </Path.Data>
+                                <Path.RenderTransform>
+                                    <TransformGroup>
+                                        <TransformGroup.Children>
+                                            <RotateTransform Angle="271" />
+                                            <ScaleTransform ScaleX="1" ScaleY="1" />
+                                        </TransformGroup.Children>
+                                    </TransformGroup>
+                                </Path.RenderTransform>
+                            </Path>
+                        </Grid>
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource ChromelessButtonStyle}" TargetType="Button">
+                                <Setter Property="Foreground" Value="#FFCCCCCC"></Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="Button.IsMouseOver" Value="True">
+                                        <Setter Property="Button.Background" Value="{StaticResource RedColorBrush}" />
+                                        <Setter Property="Button.Foreground" Value="{StaticResource WhiteColorBrush}" />
+                                    </Trigger>
+                                    <Trigger Property="Button.IsPressed" Value="True">
+                                        <Setter Property="Button.Background" Value="{StaticResource DarkRedColorBrush}" />
+                                        <Setter Property="Button.Foreground" Value="{StaticResource WhiteColorBrush}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+
                 </Grid>
 
                 <ContentControl Grid.Row="1" Margin="4" regions:RegionManager.RegionName="SidebarSearchRegion" />
@@ -69,9 +111,19 @@
                         <ColumnDefinition Width="0" x:Name="Preview"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <ContentControl Grid.Column="0" x:Name="DataControl"  regions:RegionManager.RegionName="SidebarDataRegion" />
+                    <!--<ContentControl Grid.Column="0" x:Name="DataControl" regions:RegionManager.RegionName="SidebarDataRegion" 
+                                    HorizontalContentAlignment="Stretch"/>-->
 
-                    <ContentControl Grid.Column="1" x:Name="PreviewControl" regions:RegionManager.RegionName="SidebarPreviewRegion"  />
+                    <transitionalsControls:TransitionElement 
+                        Grid.Column="0"
+                        x:Name="DataControl"
+                        regions:RegionManager.RegionName="SidebarDataRegion" 
+			            Transition="{Binding CurrenTransition}">
+                                </transitionalsControls:TransitionElement>
+
+
+                    <ContentControl Grid.Column="1" x:Name="PreviewControl" regions:RegionManager.RegionName="SidebarPreviewRegion"  
+                                    HorizontalContentAlignment="Stretch"/>
                 </Grid>
             </Grid>
         </Border>

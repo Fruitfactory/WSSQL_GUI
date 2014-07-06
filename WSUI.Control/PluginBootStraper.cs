@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
+using Transitionals.Controls;
 using WSPreview.PreviewHandler.Service;
 using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Modularity;
@@ -9,15 +10,16 @@ using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
+using WSUI.Infrastructure.Service.Dumper;
 using WSUI.Module.Interface;
+using WSUI.Module.Service;
 
 namespace WSUI.Control
 {
     public class PluginBootStraper : UnityBootstrapper, IPluginBootStraper
     {
         private IMainViewModel _mainViewModel;
-        private DependencyObject _sidebarShell;
-        
+
         public PluginBootStraper()
         {
         }
@@ -44,11 +46,6 @@ namespace WSUI.Control
                 RegionManager.UpdateRegions();
                 this.InitializeShell();
             }
-            if (_sidebarShell != null)
-            {
-                RegionManager.SetRegionManager(_sidebarShell,UnityContainerExtensions.Resolve<IRegionManager>(this.Container,new ResolverOverride[0]));
-                RegionManager.UpdateRegions();
-            }
             if (UnityContainerExtensions.IsRegistered<IModuleManager>(this.Container))
             {
                 this.InitializeModules();
@@ -69,8 +66,7 @@ namespace WSUI.Control
            
             //Stopwatch watch = new Stopwatch();
             //watch.Start();
-            var shell = Container.Resolve<WSMainControl>();
-            _sidebarShell = Container.Resolve<WSSidebarControl>();
+            var shell = Container.Resolve<WSSidebarControl>();
             //watch.Stop();
             //WSSqlLogger.Instance.LogInfo(string.Format("Create shell (plugin): {0}ms",watch.ElapsedMilliseconds));
             return shell;
@@ -104,10 +100,17 @@ namespace WSUI.Control
             IModule module = Container.Resolve<WSUI.Module.WSModule>();
             module.Initialize();
             _mainViewModel = Container.Resolve<WSUI.Module.ViewModel.MainViewModel>();
-            (this.View as IMainView).Model = _mainViewModel;
-            (_sidebarShell as ISidebarView).Model = _mainViewModel;
+            (this.View as ISidebarView).Model = _mainViewModel;
             //watch.Stop();
             //WSSqlLogger.Instance.LogInfo(string.Format("InitializeModules (plugin): {0}ms",watch.ElapsedMilliseconds));
+        }
+
+        protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
+        {
+            RegionAdapterMappings mappings =  base.ConfigureRegionAdapterMappings();
+            mappings.RegisterMapping(typeof(TransitionElement),
+                Container.Resolve<TransitionElementAdaptor>());
+            return mappings;
         }
 
         public void PassAction(IWSAction action)
@@ -120,11 +123,6 @@ namespace WSUI.Control
         public DependencyObject View 
         {
             get { return this.Shell; }
-        }
-
-        public DependencyObject SidebarView
-        {
-            get { return _sidebarShell; }
         }
 
         public bool IsPluginBusy 

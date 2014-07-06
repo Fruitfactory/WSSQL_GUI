@@ -111,6 +111,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Transitionals">
+      <HintPath>..\Toolkits\Transitions\Transitionals.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
@@ -169,6 +172,7 @@
     <Compile Include="Service\NameToImageConvert.cs" />
     <Compile Include="Service\ScrollBehavior.cs" />
     <Compile Include="Service\SlideDirectionEventArgs.cs" />
+    <Compile Include="Service\TransitionElementAdaptor.cs" />
     <Compile Include="Strategy\CommadStrategyFactory.cs" />
     <Compile Include="Strategy\EmailCommandStrategy.cs" />
     <Compile Include="Strategy\FileCommandStrategy.cs" />

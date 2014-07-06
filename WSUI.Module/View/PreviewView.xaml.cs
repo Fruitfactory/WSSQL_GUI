@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Interop;
 using WSPreview.PreviewHandler.PreviewHandlerHost;
 using WSUI.Core.Interfaces;
@@ -16,7 +17,26 @@ namespace WSUI.Module.View
         public PreviewView()
         {
             InitializeComponent();
-            
+            _previewControl.StartLoad += PreviewControlOnStartLoad;
+            _previewControl.StopLoad += PreviewControlOnStopLoad;
+        }
+
+        private void PreviewControlOnStopLoad(object sender, EventArgs eventArgs)
+        {
+            var temp = StopLoad;
+            if (temp != null)
+            {
+                temp(this, EventArgs.Empty);
+            }
+        }
+
+        private void PreviewControlOnStartLoad(object sender, EventArgs eventArgs)
+        {
+            var temp = StartLoad;
+            if (temp != null)
+            {
+                temp(this, EventArgs.Empty);
+            }
         }
 
         #region Implementation of IPreviewView
@@ -49,6 +69,9 @@ namespace WSUI.Module.View
         {
             _previewControl.PassAction(action);
         }
+
+        public event EventHandler StartLoad;
+        public event EventHandler StopLoad;
 
         #endregion
 

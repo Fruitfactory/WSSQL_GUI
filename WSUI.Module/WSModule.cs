@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Threading;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Practices.Prism.Modularity;
@@ -44,14 +45,15 @@ namespace WSUI.Module
                 sidebarRegion.Add(mmv.KindsView);
                 sidebarRegion = null;
             }
-            sidebarRegion = _regionManager.Regions[RegionNames.SidebarPreviewRegion];
-            if (sidebarRegion != null)
-            {
-                sidebarRegion.Add(mmv.PreviewView);
-                sidebarRegion = null;
-            }
+            //sidebarRegion = _regionManager.Regions[RegionNames.SidebarPreviewRegion];
+            //if (sidebarRegion != null)
+            //{
+            //    sidebarRegion.Add(mmv.PreviewView);
+            //    sidebarRegion = null;
+            //}
             mmv.PreviewView.Init();
-            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => FieldCash.Instance.Initialize()));
+            Task.Factory.StartNew(new Action(() => FieldCash.Instance.Initialize()));
+            //Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => FieldCash.Instance.Initialize()));
             watch.Stop();
             WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "Initialize <PreviewView.Init()>", watch.ElapsedMilliseconds));
         }

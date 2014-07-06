@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
+using Transitionals;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
@@ -30,6 +31,8 @@ namespace WSUI.Module.Interface
 
         Visibility DataVisibility { get; }
         Visibility PreviewVisibility { get; }
+
+        Transition CurrenTransition { get; }
 
     }
 }

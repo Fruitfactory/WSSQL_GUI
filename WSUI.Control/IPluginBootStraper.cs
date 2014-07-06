@@ -9,7 +9,6 @@ namespace WSUI.Control
         void Run();
         void PassAction(IWSAction action);
         DependencyObject View { get; }
-        DependencyObject SidebarView { get; }
         IUnityContainer Container { get; }
         bool IsPluginBusy { get; }
     }

@@ -197,9 +197,7 @@ namespace WSUIOutlookPlugin
             // 
             // formRightSidebar
             // 
-            this.formRightSidebar.AlwaysShowHeader = true;
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
-            this.formRightSidebar.CloseButton = true;
             this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
             this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
             this.formRightSidebar.ExplorerItemTypes = AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem;
@@ -611,7 +609,7 @@ namespace WSUIOutlookPlugin
             {
                 (_wsuiBootStraper.View as IWSMainControl).Close += (o, e) =>
                 {
-                    DoHideWebViewPane();
+                    HideUi(false);
                     if (_commandManager != null)
                         _commandManager.SetShowHideButtonsEnabling(true, false);
                 };

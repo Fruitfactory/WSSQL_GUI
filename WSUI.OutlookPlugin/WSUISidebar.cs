@@ -47,7 +47,7 @@ namespace WSUIOutlookPlugin
         public void SetBootStraper(IPluginBootStraper bootStraper)
         {
             _wsuiBootStraper = bootStraper;
-            UIElement el = _wsuiBootStraper.SidebarView as UIElement;
+            UIElement el = _wsuiBootStraper.View as UIElement;
             if (el != null)
             {
                 wpfSidebarHost.Child = el;

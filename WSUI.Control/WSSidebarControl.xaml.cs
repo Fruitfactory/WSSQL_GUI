@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
+using WSUI.Control.Interfaces;
 using WSUI.Module.Enums;
 using WSUI.Module.Interface;
 using WSUI.Module.Service;
@@ -14,7 +12,7 @@ namespace WSUI.Control
     /// <summary>
     /// Interaction logic for WSSidebarControl.xaml
     /// </summary>
-    public partial class WSSidebarControl : UserControl, ISidebarView
+    public partial class WSSidebarControl : UserControl, ISidebarView,IWSMainControl
     {
         public WSSidebarControl()
         {
@@ -46,6 +44,7 @@ namespace WSUI.Control
                 case UiSlideDirection.DataToPreview:
                     DataToPreview();
                     break;
+
                 case UiSlideDirection.PreviewToData:
                     PreviewToData();
                     break;
@@ -55,9 +54,9 @@ namespace WSUI.Control
         private void PreviewToData()
         {
             var storyBoard = this.Resources["PreviewToData"] as Storyboard;
-            if(storyBoard == null)
+            if (storyBoard == null)
                 return;
-            
+
             DataGrid.BeginStoryboard(storyBoard);
         }
 
@@ -70,5 +69,15 @@ namespace WSUI.Control
             DataGrid.BeginStoryboard(storyBoard);
         }
 
+        private void CloseButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var temp = Close;
+            if (temp != null)
+            {
+                temp(this, EventArgs.Empty);
+            }
+        }
+
+        public event EventHandler Close;
     }
 }

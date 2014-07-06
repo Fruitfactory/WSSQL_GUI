@@ -11,6 +11,8 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Transitionals;
+using Transitionals.Transitions;
 using WSPreview.PreviewHandler.Service.OutlookPreview;
 using WSUI.Core.Core.LimeLM;
 using WSUI.Core.Data;
@@ -42,6 +44,9 @@ namespace WSUI.Module.ViewModel
 
         private const string Interface = "WSUI.Module.Interface.IKindItem";
 
+        private const string InternalDataView = "DataView";
+        private const string InternalPreviewView = "PreviewView";
+
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;
         private BaseSearchObject _currentData;
@@ -52,6 +57,9 @@ namespace WSUI.Module.ViewModel
         private Visibility _dataVisibility;
         private Visibility _previewVisibility;
         private bool _isBusy;
+        private object _oldView = null;
+        private Transition _previewToDataTransition = null;
+        private Transition _dataToPreviewTransition = null;
 
         public MainViewModel(IUnityContainer container, IRegionManager region, IKindsView kindView,
             IPreviewView previewView)
@@ -61,11 +69,15 @@ namespace WSUI.Module.ViewModel
             KindsView = kindView;
             kindView.Model = this;
             PreviewView = previewView;
+            PreviewView.StopLoad += PreviewViewOnStopLoad;
             previewView.Model = this;
             MainDataSource = new List<BaseSearchObject>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
             DataVisibility = Visibility.Visible;
             PreviewVisibility = Visibility.Collapsed;
+            _previewToDataTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.2)) };
+            _dataToPreviewTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.2)), StartPoint = new Point(1.0, 0.0) };
+
         }
 
         public IKindsView KindsView { get; protected set; }
@@ -187,19 +199,17 @@ namespace WSUI.Module.ViewModel
                     regionSidebarSearch.Activate(viewSettings);
                 }
             }
+            SetTransition(null);
             IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
             if (regionSidebarData != null)
             {
-                object viewData = GetView(kindItem, "DataView");
-                if (viewData != null && !regionSidebarData.Views.Contains(viewData))
+                object viewData = GetView(kindItem, InternalDataView);
+                var oldView = regionSidebarData.GetView(InternalDataView);
+                if (oldView != null)
                 {
-                    regionSidebarData.Add(viewData);
-                    regionSidebarData.Activate(viewData);
+                    regionSidebarData.Remove(oldView);
                 }
-                else if (viewData != null)
-                {
-                    regionSidebarData.Activate(viewData);
-                }
+                regionSidebarData.Add(viewData, InternalDataView);
             }
 
             if (PreviewView != null)
@@ -277,7 +287,7 @@ namespace WSUI.Module.ViewModel
                             ? _currentItem.SearchString
                             : string.Empty);
                         PreviewView.SetPreviewFile(filename);
-                        OnSlide(UiSlideDirection.DataToPreview);
+                        //OnSlide(UiSlideDirection.DataToPreview);
                     }
                     else
                         PreviewView.ClearPreview();
@@ -567,6 +577,8 @@ namespace WSUI.Module.ViewModel
             }
         }
 
+        public Transition CurrenTransition { get; private set; }
+
         #endregion Implementation of IMainViewModel
 
         public virtual void Init()
@@ -590,7 +602,8 @@ namespace WSUI.Module.ViewModel
                 case Visibility.Visible:
                     DataVisibility = Visibility.Visible;
                     PreviewVisibility = Visibility.Collapsed;
-                    OnSlide(UiSlideDirection.PreviewToData);
+                    //OnSlide(UiSlideDirection.PreviewToData);
+                    ChangePreviewToData();
                     break;
             }
         }
@@ -608,5 +621,49 @@ namespace WSUI.Module.ViewModel
                 temp(this, new SlideDirectionEventArgs(dir));
             }
         }
+
+        private void ChangeDataToPreview()
+        {
+            SetTransition(_dataToPreviewTransition);
+            IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
+            if (regionSidebarData != null)
+            {
+                _oldView = regionSidebarData.GetView(InternalDataView);
+                if (_oldView != null)
+                {
+                    regionSidebarData.Remove(_oldView);
+                }
+                regionSidebarData.Add(PreviewView, InternalPreviewView);
+                regionSidebarData.Activate(PreviewView);
+            }
+        }
+
+        private void ChangePreviewToData()
+        {
+            SetTransition(_previewToDataTransition);
+            IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
+            if (regionSidebarData != null)
+            {
+                var oldView = regionSidebarData.GetView(InternalPreviewView);
+                if (oldView != null)
+                {
+                    regionSidebarData.Remove(oldView);
+                }
+                regionSidebarData.Add(_oldView, InternalDataView);
+                regionSidebarData.Activate(_oldView);
+            }
+        }
+
+        private void SetTransition( Transition transition)
+        {
+            CurrenTransition = transition;
+            OnPropertyChanged(() => CurrenTransition);
+        }
+
+        private void PreviewViewOnStopLoad(object sender, EventArgs eventArgs)
+        {
+            ChangeDataToPreview();
+        }
+
     }
 }
