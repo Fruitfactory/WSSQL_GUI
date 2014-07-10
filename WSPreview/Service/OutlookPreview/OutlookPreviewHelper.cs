@@ -31,16 +31,16 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         #region pattern for html
 
-        private const string PageBegin = @"<!DOCTYPE html><html lang='en'><head><title></title><meta charset='utf-8' http-equiv='Content-Type' content='text/html; charset=utf-8;'><style type='text/css'>.style1{width: 15%;color: gray;}.style2{width: 85%;}</style></head><body style='font-family: Arial, Helvetica, sans-serif;word-break: break-all;white-space: nowrap;'>";
+        private const string PageBegin = @"<!DOCTYPE html><html lang='en'><head><title></title><meta charset='utf-8' http-equiv='Content-Type' content='text/html; charset=utf-8;'><style type='text/css'>.style1{width: 15%;color: gray;}.style2{width: 85%;}</style></head><body style='font-family: Arial, Helvetica, sans-serif;font-size: x-small;word-break: break-all;white-space: nowrap;'>";
         private const string TableBegin = @"<table style='width: 100%; table-layout: auto;'>";
-        private const string SubjectRow = @"<tr><td class='style1' style='color: #0c0202; font-size: large; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
-        private const string SenderRow = @"<tr><td class='style1' style='color: #0c0202; font-size: medium; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
+        private const string SubjectRow = @"<tr><td class='style1' style='color: #0c0202; font-size: small; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
+        private const string SenderRow = @"<tr><td class='style1' style='color: #0c0202; font-size: small; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
         private const string ToRow = @"<tr><td class='style1'>To:</td><td class='style2'>{0}</td></tr>";
         private const string CCRow = @"<tr><td class='style1'>CC:</td><td class='style2'>{0}</td></tr>";
         private const string AttachmentsRow = @"<tr><td class='style1'>Attachments:</td><td class='style2'>{0}</td></tr>";
         private const string SendRow = @"<tr><td class='style1'>Send:</td><td class='style2'>{0}</td></tr>";
 
-        private const string EmailRow = @"<tr style='margin: 25px 10px 10px 10px'><td colspan='2' ><hr /><html><body style='word-break: break-all;white-space: nowrap;' >{0}</body></html></td></tr>";
+        private const string EmailRow = @"<tr style='margin: 25px 10px 10px 10px'><td colspan='2' ><hr /><html><body style='word-break: break-all;white-space: nowrap;font-size:x-small' >{0}</body></html></td></tr>";
         private const string TableEnd = @"</table>";
         private const string PageEnd = @"</body></html>";
 

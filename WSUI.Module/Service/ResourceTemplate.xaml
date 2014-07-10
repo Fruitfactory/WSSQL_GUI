@@ -491,13 +491,13 @@
 
     <Style x:Key="ItemTextBlock" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource DefaultFont}"></Setter>
-        <Setter Property="FontSize" Value="{StaticResource NormalFontSize}"></Setter>
-        <Setter Property="Margin" Value="14 0 7 0"></Setter>
+        <Setter Property="FontSize" Value="12"></Setter>
+        <Setter Property="Margin" Value="2 0 2 0"></Setter>
     </Style>
 
     <Style x:Key="WSUIMetroListBoxItem" TargetType="{x:Type ListBoxItem}">
         <Setter Property="MinHeight" Value="32" />
-        <Setter Property="Margin" Value="0 2 0 0" />
+        <Setter Property="Margin" Value="0 2 5 0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
@@ -595,4 +595,42 @@
     <SolidColorBrush x:Key="HoverForegroundColorBrush" Color="{StaticResource HoverForegroundColor}"></SolidColorBrush>
     <SolidColorBrush x:Key="AccentColorBrush" Color="{StaticResource AccentColor}" />
     <SolidColorBrush x:Key="AccentDarkColorBrush" Color="{StaticResource AccentDarkColor}" />
+
+    <Style x:Key="WSUIButtonStyle" TargetType="Button">
+        <Setter Property="Padding" Value="2 2 2 2"></Setter>
+        <Setter Property="BorderThickness" Value="0"></Setter>
+        <Setter Property="BorderBrush" Value="Transparent"></Setter>
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <SolidColorBrush Color="{StaticResource NormalForegroundColor}"></SolidColorBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+        <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" >
+                        <Border.ToolTip>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{TemplateBinding Content}" />
+                            </StackPanel>
+                        </Border.ToolTip>
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}"></Setter>
+        <Style.Triggers>
+            <Trigger Property="Button.IsMouseOver" Value="True">
+                <Setter Property="Button.Background" Value="{StaticResource HighLightColorItemBrush}" />
+            </Trigger>
+            <Trigger Property="Button.IsPressed" Value="True">
+                <Setter Property="Button.Background" Value="{StaticResource AccentColor2Brush}" />
+                <Setter Property="Button.Foreground" Value="{StaticResource HoverForegroundColorBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
 </ResourceDictionary>

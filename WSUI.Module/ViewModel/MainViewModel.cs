@@ -311,6 +311,8 @@ namespace WSUI.Module.ViewModel
                 temp(this, null);
             Enabled = _currentItem.Enabled;
             IsBusy = true;
+            if (BackCommand.CanExecute(null))
+                BackCommand.Execute(null);
         }
 
         private void OnComplete(object sender, EventArgs<bool> e)

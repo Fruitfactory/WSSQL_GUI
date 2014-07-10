@@ -35,7 +35,6 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         private System.Windows.Forms.WebBrowser webMessage = new System.Windows.Forms.WebBrowser();
 
         private string _filePath;
-        private string _searchCriteria;
         private object _comInstance = null;
         private bool _registreHandler = true;
         private readonly List<Stream> _listOpenStream = new List<Stream>();
@@ -61,18 +60,16 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         {
             InitializeComponent();
             _dataHandler = PreviewHandlerRegistryAccessor.LoadRegistrationInformation();
+            HelperPreviewHandlers.Instance.Inititialize();
         }
 
-        public string SearchCriteria
-        {
-            get { return _searchCriteria; }
-            set { _searchCriteria = value; }
-        }
+        public string SearchCriteria { get; set; }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            this.BeginInvoke((Action)(() => HelperPreviewHandlers.Instance.Inititialize()));
+            //this.BeginInvoke((Action)(() => HelperPreviewHandlers.Instance.Inititialize()));
+            //HelperPreviewHandlers.Instance.Inititialize();
         }
 
         /// <summary>

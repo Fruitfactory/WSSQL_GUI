@@ -27,9 +27,14 @@
             <SolidColorBrush x:Key="RedColorBrush" Color="Red"></SolidColorBrush>
             <SolidColorBrush x:Key="DarkRedColorBrush" Color="DarkRed"></SolidColorBrush>
             <SolidColorBrush x:Key="WhiteColorBrush" Color="White"></SolidColorBrush>
-            
-            <localService:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></localService:BoolToVisibilityConverter>
 
+            <localService:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></localService:BoolToVisibilityConverter>
+            
+            <Style x:Key="ActivatingButtonStyle" TargetType="Button" BasedOn="{StaticResource WSUIButtonStyle}">
+                <Setter Property="Width" Value="75"> </Setter>
+                <Setter Property="Height" Value="22"></Setter>
+            </Style>
+            
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -69,7 +74,7 @@
             </Grid>
             <Button.Style>
                 <Style BasedOn="{StaticResource ChromelessButtonStyle}" TargetType="Button">
-                    <Setter Property="Foreground" Value="#FFCCCCCC"></Setter>
+                    <Setter Property="Foreground" Value="#FF9C9A9A"></Setter>
                     <Style.Triggers>
                         <Trigger Property="Button.IsMouseOver" Value="True">
                             <Setter Property="Button.Background" Value="{StaticResource RedColorBrush}" />
@@ -89,23 +94,37 @@
                     ItemContainerStyle="{StaticResource WSUIMetroListBoxItem}"
                     ScrollViewer.VerticalScrollBarVisibility="Auto" 
                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 VerticalContentAlignment="Center"
                  IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
                  HorizontalAlignment="Right"
                  >
         </ListBox>
 
         <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Visibility="{Binding VisibleTrialLabel,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Margin="5">
-            <TextBlock Foreground="Red" TextWrapping="Wrap">
-                <Run>You have</Run>
-                <Run Text="{Binding DaysLeft,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></Run>
-                <Run>days left in your trial.</Run>
-                <LineBreak></LineBreak>
-                <Run>We hope you are enjoying OutlookFinder.</Run>
-                <LineBreak></LineBreak>
-                <Run>Click here to purchase a license.</Run>
-                <LineBreak></LineBreak>
-                <Hyperlink Command="{Binding ActivateCommand}">Activate</Hyperlink>
-            </TextBlock>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                
+                <Button Style="{StaticResource ActivatingButtonStyle}" Command="{Binding BuyCommand}" >Buy</Button>
+                <Button Style="{StaticResource ActivatingButtonStyle}" Command="{Binding ActivateCommand}" Grid.Column="1" Grid.Row="0" >Activate</Button>
+                
+                <TextBlock Foreground="Red" TextWrapping="Wrap" Margin="0 5 0 5"
+                           Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1">
+                    <Run>You have</Run>
+                    <Run Text="{Binding DaysLeft,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></Run>
+                    <Run>days left in your trial.</Run>
+                </TextBlock>
+            </Grid>
+
+
+
         </Border>
 
         <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" x:Name="GridProgress" 
