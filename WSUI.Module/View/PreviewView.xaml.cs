@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 using WSPreview.PreviewHandler.PreviewHandlerHost;
 using WSUI.Core.Interfaces;
@@ -19,6 +21,7 @@ namespace WSUI.Module.View
             InitializeComponent();
             _previewControl.StartLoad += PreviewControlOnStartLoad;
             _previewControl.StopLoad += PreviewControlOnStopLoad;
+
         }
 
         private void PreviewControlOnStopLoad(object sender, EventArgs eventArgs)
@@ -99,8 +102,5 @@ namespace WSUI.Module.View
             resetPopup();
         }
 
-
-
-        
     }
 }

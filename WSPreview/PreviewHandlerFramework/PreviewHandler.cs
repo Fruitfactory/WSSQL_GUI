@@ -165,6 +165,18 @@ namespace WSPreview.PreviewHandler.PreviewHandlerFramework
             ppvSite = _unkSite;
         }
 
+        protected virtual void ProcessWinMessage(MSG msg)
+        {
+            const int WM_KEYDOWN = 0x100;
+            const int WM_KEYUP = 0x101;
+            switch (msg.message)
+            {
+                case WM_KEYDOWN:
+                    Debug.WriteLine("KeyDown");
+                    break;
+            }
+        }
+
         [ComRegisterFunction]
         public static void Register(Type t)
         {

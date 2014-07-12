@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Animation;
 using WSUI.Control.Interfaces;
 using WSUI.Module.Enums;
@@ -18,6 +20,18 @@ namespace WSUI.Control
         {
             InitializeComponent();
         }
+
+        //protected override void OnMouseEnter(MouseEventArgs e)
+        //{
+        //    base.OnMouseEnter(e);
+        //    Debug.WriteLine("Enter");
+        //}
+
+        //protected override void OnMouseLeave(MouseEventArgs e)
+        //{
+        //    base.OnMouseLeave(e);
+        //    Debug.WriteLine("Leave");
+        //}
 
         public IMainViewModel Model
         {

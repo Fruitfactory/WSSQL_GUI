@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.ComponentModel;
 using System.Drawing;
@@ -59,18 +60,11 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         public PreviewHandlerHostControl()
         {
             InitializeComponent();
-            _dataHandler = PreviewHandlerRegistryAccessor.LoadRegistrationInformation();
             HelperPreviewHandlers.Instance.Inititialize();
+            _dataHandler = PreviewHandlerRegistryAccessor.LoadRegistrationInformation();
         }
 
         public string SearchCriteria { get; set; }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            //this.BeginInvoke((Action)(() => HelperPreviewHandlers.Instance.Inititialize()));
-            //HelperPreviewHandlers.Instance.Inititialize();
-        }
 
         /// <summary>
         /// Full path to file to be previewed
@@ -80,7 +74,8 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         public string FilePath
         {
             get { return _filePath; }
-            set { 
+            set
+            {
                 _filePath = value;
                 if (value != null && !IsDesignTime())
                 {
@@ -97,7 +92,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             {
                 try
                 {
-                    ((IPreviewHandler) _comInstance).Unload();
+                    ((IPreviewHandler)_comInstance).Unload();
                     if (Marshal.IsComObject(_comInstance))
                         Marshal.ReleaseComObject(_comInstance);
                 }
@@ -107,7 +102,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                 }
                 finally
                 {
-                    _comInstance = null;    
+                    _comInstance = null;
                 }
             }
             ClearAllStreams();
@@ -148,8 +143,8 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                 _comInstance = null;
             }
             _registreHandler = true;
-            
-            
+
+
             //check registry
             PreviewHandlerInfo handler = null;
             Type comType = null;
@@ -178,8 +173,8 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                         return;
                     }
                 }
-                _registreHandler = false;    
-            } 
+                _registreHandler = false;
+            }
             else
                 comType = Type.GetTypeFromCLSID(new Guid(handler.ID));
 
@@ -205,7 +200,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
 
         private void Control_Resize(object sender, EventArgs e)
         {
-            if(_comInstance != null)
+            if (_comInstance != null)
             {
                 RECT r;
                 r.top = 0;
@@ -229,7 +224,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                     }
                     break;
                 case WindowAPI.WM_SIZE:
-                    if(_registreHandler)
+                    if (_registreHandler)
                         WindowAPI.EnumChildWindows(this.Handle, SendSizeMessage, m.LParam);
                     break;
             }
@@ -277,7 +272,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             // Create an instance of the preview handler
             if (_comInstance == null)
                 _comInstance = Activator.CreateInstance(type);
-            GeneratePreviewByInstance();            
+            GeneratePreviewByInstance();
         }
 
         private void GeneratePreviewByInstance()
@@ -319,18 +314,14 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             if (_comInstance == null)
                 throw new NullReferenceException("Com type can't be founded");
 
-            this.BeginInvoke(new MethodInvoker(() =>
-            {
-                RECT r;
-                r.top = 0;
-                r.bottom = this.Height;
-                r.left = 0;
-                r.right = this.Width;
-                int wndRes = ((IPreviewHandler) _comInstance).SetWindow(this.Handle, ref r);
-                WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(SetWindow)={0}", wndRes));
-                ((IPreviewHandler) _comInstance).DoPreview();
-
-            }));
+            RECT r;
+            r.top = 0;
+            r.bottom = this.Height;
+            r.left = 0;
+            r.right = this.Width;
+            int wndRes = ((IPreviewHandler)_comInstance).SetWindow(this.Handle, ref r);
+            WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(SetWindow)={0}", wndRes));
+            ((IPreviewHandler)_comInstance).DoPreview();
         }
 
         private Type GetOwnPreviewHandlersType()
@@ -359,6 +350,5 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             _listOpenStream.ForEach(s => s.Close());
             _listOpenStream.Clear();
         }
-
     }
 }

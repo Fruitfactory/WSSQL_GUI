@@ -95,6 +95,9 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         public void CopySelectedText()
         {
+            if(!Focused)
+                return;
+            
             IHTMLDocument2 htmlDocument = Document.DomDocument as IHTMLDocument2;
             IHTMLSelectionObject currentSelection = htmlDocument.selection;
             if (currentSelection != null)

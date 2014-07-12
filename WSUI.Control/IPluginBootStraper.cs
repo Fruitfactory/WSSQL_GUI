@@ -11,5 +11,6 @@ namespace WSUI.Control
         DependencyObject View { get; }
         IUnityContainer Container { get; }
         bool IsPluginBusy { get; }
+        bool IsMainUiActive { get; }
     }
 }

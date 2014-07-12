@@ -547,6 +547,8 @@ namespace WSUI.Module.ViewModel
             }
         }
 
+        public bool IsMainUiActive { get; private set; }
+
         public Visibility VisibleTrialLabel
         {
             get

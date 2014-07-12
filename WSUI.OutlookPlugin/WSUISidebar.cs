@@ -1,8 +1,14 @@
 using System;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Forms;
 using AddinExpress.OL;
 using WSUI.Control;
+using WSUI.Core.Data;
+using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
+using WSUI.Core.Logger;
+using WSUIOutlookPlugin.Hooks;
 using WSUIOutlookPlugin.Interfaces;
 
 namespace WSUIOutlookPlugin
@@ -10,6 +16,7 @@ namespace WSUIOutlookPlugin
     public partial class WSUISidebar : AddinExpress.OL.ADXOlForm, ISidebarForm
     {
         private IPluginBootStraper _wsuiBootStraper = null;
+        private bool _isDebugMode = false;
 
         public WSUISidebar()
         {
@@ -36,6 +43,7 @@ namespace WSUIOutlookPlugin
             }
         }
 
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -60,6 +68,11 @@ namespace WSUIOutlookPlugin
             throw new NotImplementedException();
         }
 
+        public void SendAction(WSActionType actionType)
+        {
+            _wsuiBootStraper.PassAction(new WSAction(actionType, null));
+        }
+
         private void RaiseOnLoaded()
         {
             var temp = OnLoaded;
@@ -67,6 +80,12 @@ namespace WSUIOutlookPlugin
             {
                 temp(this, EventArgs.Empty);
             }
+        }
+
+        private void WSUISidebar_ADXKeyFilter(object sender, ADXOlKeyFilterEventArgs e)
+        {
+            Debug.WriteLine("Focused "  + _wsuiBootStraper.IsMainUiActive);
+            e.Action = _wsuiBootStraper.IsMainUiActive ? ADXOlKeyFilterAction.SendToForm : ADXOlKeyFilterAction.SendToHostApplication;
         }
     }
 }

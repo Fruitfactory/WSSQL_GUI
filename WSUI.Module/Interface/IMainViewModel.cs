@@ -27,6 +27,7 @@ namespace WSUI.Module.Interface
         ICommand BackCommand { get; }
         ICommand ActivateCommand { get; }
         bool IsBusy { get; }
+        bool IsMainUiActive { get; }
         Visibility VisibleTrialLabel { get; }
 
         Visibility DataVisibility { get; }

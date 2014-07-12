@@ -50,6 +50,7 @@ namespace WSUIOutlookPlugin
             this.Location = new System.Drawing.Point(0, 0);
             this.Name = "WSUISidebar";
             this.Text = "WSUISidebar";
+            this.ADXKeyFilter += new AddinExpress.OL.ADXOlKeyFilterEventHandler(this.WSUISidebar_ADXKeyFilter);
             this.ResumeLayout(false);
 
         }

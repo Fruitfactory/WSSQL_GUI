@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 using Transitionals.Controls;
 using WSPreview.PreviewHandler.Service;
 using Microsoft.Practices.Prism.Logging;
@@ -129,5 +130,7 @@ namespace WSUI.Control
         {
             get { return _mainViewModel.IsBusy; }
         }
+
+        public bool IsMainUiActive { get { return (this.Shell as UserControl).IsFocused; } }
     }
 }

@@ -75,7 +75,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <WindowsFormsHost Grid.Row="1">
+        <WindowsFormsHost Grid.Row="1" x:Name="Host">
             <preview:PreviewHandlerHostControl x:Name="_previewControl" Visible="True">
             </preview:PreviewHandlerHostControl>
         </WindowsFormsHost>

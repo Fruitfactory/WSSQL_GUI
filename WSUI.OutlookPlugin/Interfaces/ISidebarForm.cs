@@ -1,5 +1,6 @@
 ﻿using System;
 using AddinExpress.OL;
+using WSUI.Core.Enums;
 
 namespace WSUIOutlookPlugin.Interfaces
 {
@@ -9,5 +10,6 @@ namespace WSUIOutlookPlugin.Interfaces
         void Hide();
         void Show();
         void Minimize();
+        void SendAction(WSActionType actionType);
     }
 }
