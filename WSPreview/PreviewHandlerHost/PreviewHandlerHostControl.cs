@@ -12,6 +12,7 @@ using System.Windows.Threading;
 using WSPreview.PreviewHandler.PInvoke;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using WSPreview.PreviewHandler.Service;
+using WSUI.Core.EventArguments;
 using WSUI.Core.Logger;
 using WSPreview.PreviewHandler.Service.Preview;
 using WSUI.Core.Interfaces;
@@ -41,7 +42,10 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         private readonly List<Stream> _listOpenStream = new List<Stream>();
         private readonly RegistrationData _dataHandler;
 
+        public event EventHandler<WSUIPreviewCommandArgs> CommandExecuted;
+
         public event EventHandler StartLoad;
+
 
         private void OnStartLoad(EventArgs e)
         {
@@ -115,6 +119,8 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                 ((ITranslateMessage)_comInstance).PassMessage(action);
             }
         }
+
+        public string FullFolderPath { get; set; }
 
         private bool IsDesignTime()
         {
@@ -282,6 +288,15 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             {
                 if (_comInstance is ISearchWordHighlight)
                     ((ISearchWordHighlight)_comInstance).HitString = SearchCriteria;
+                if (_comInstance is IOutlookFolder)
+                    ((IOutlookFolder) _comInstance).FolderPath = FullFolderPath;
+
+                var previewControlCommands = _comInstance as ICommandPreviewControl;
+                if (previewControlCommands != null)
+                {
+                    previewControlCommands.PreviewCommandExecuted -= PreviewControlCommandsOnPreviewCommandExecuted;
+                    previewControlCommands.PreviewCommandExecuted += PreviewControlCommandsOnPreviewCommandExecuted;
+                }
                 int res = ((IInitializeWithFile)_comInstance).Initialize(_filePath, 0);
                 WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(Initialize)={0}", res));
             }
@@ -322,6 +337,15 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             int wndRes = ((IPreviewHandler)_comInstance).SetWindow(this.Handle, ref r);
             WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(SetWindow)={0}", wndRes));
             ((IPreviewHandler)_comInstance).DoPreview();
+        }
+
+        private void PreviewControlCommandsOnPreviewCommandExecuted(object sender, WSUIPreviewCommandArgs wsuiPreviewCommandArgs)
+        {
+            var temp = CommandExecuted;
+            if (temp != null)
+            {
+                temp(this, wsuiPreviewCommandArgs);
+            }
         }
 
         private Type GetOwnPreviewHandlersType()

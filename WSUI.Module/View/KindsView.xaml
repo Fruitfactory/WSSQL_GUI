@@ -29,12 +29,12 @@
             <SolidColorBrush x:Key="WhiteColorBrush" Color="White"></SolidColorBrush>
 
             <localService:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></localService:BoolToVisibilityConverter>
-            
+
             <Style x:Key="ActivatingButtonStyle" TargetType="Button" BasedOn="{StaticResource WSUIButtonStyle}">
-                <Setter Property="Width" Value="75"> </Setter>
+                <Setter Property="Width" Value="75"></Setter>
                 <Setter Property="Height" Value="22"></Setter>
             </Style>
-            
+
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -49,7 +49,7 @@
         </Grid.RowDefinitions>
 
 
-        <Button x:Name="BackButton" Grid.Column="0" Grid.Row="0" Height="32" Padding="2" Width="32" BorderThickness="0" Focusable="True" 
+        <Button x:Name="BackButton" Grid.Column="0" Grid.Row="0" Height="24" Padding="2" Width="24" BorderThickness="0" Focusable="True" 
                 HorizontalAlignment="Center" 
                 HorizontalContentAlignment="Center" 
                 VerticalAlignment="Center" 
@@ -57,9 +57,10 @@
                 IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}" 
                 IsTabStop="False" 
                 ToolTip="Back" 
-                Command="{Binding BackCommand}">
+                Command="{Binding BackCommand}" 
+                Visibility="{Binding PreviewVisibility,UpdateSourceTrigger=PropertyChanged}">
             <Grid Background="Transparent" >
-                <Path x:Name="PathCross" Height="32" Width="32" Margin="0,0,0,0" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" RenderTransformOrigin="0.5,0.5" SnapsToDevicePixels="True" Stretch="Uniform">
+                <Path x:Name="PathCross" Height="24" Width="24" Margin="0,0,0,0" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" RenderTransformOrigin="0.5,0.5" SnapsToDevicePixels="True" Stretch="Uniform">
                     <Path.Data>
                         F1M-800.86,-1379.55L-781.99,-1360.68 -782.125,-1360.54 -792.356,-1360.54 -809.825,-1378.01 -815.075,-1383.26 -792.494,-1405.84 -781.99,-1405.84 -800.86,-1386.97 -751.074,-1386.97 -751.074,-1379.55 -800.86,-1379.55z
                     </Path.Data>
@@ -111,10 +112,10 @@
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                
+
                 <Button Style="{StaticResource ActivatingButtonStyle}" Command="{Binding BuyCommand}" >Buy</Button>
                 <Button Style="{StaticResource ActivatingButtonStyle}" Command="{Binding ActivateCommand}" Grid.Column="1" Grid.Row="0" >Activate</Button>
-                
+
                 <TextBlock Foreground="Red" TextWrapping="Wrap" Margin="0 5 0 5"
                            Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1">
                     <Run>You have</Run>

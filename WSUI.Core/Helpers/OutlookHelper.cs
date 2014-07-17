@@ -214,6 +214,19 @@ namespace WSUI.Core.Helpers
             return mailItem;
         }
 
+        public string GetFullFolderPath(BaseSearchObject data)
+        {
+            if (data == null) 
+                return string.Empty;
+            Outlook.MailItem item = GetEmailItem(data);
+            if (item == null)
+                return string.Empty;
+
+            var folder = item.Parent as Outlook.Folder;
+            if (folder == null)
+                return string.Empty;
+            return folder.FullFolderPath;
+        }
 
         public List<string> GetFolderList()
         {
@@ -538,6 +551,8 @@ namespace WSUI.Core.Helpers
                 WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetOutlookFolders", e.Message));
             }
         }
+
+
 
 
         private Outlook.ContactItem GetContact(ContactSearchObject data)

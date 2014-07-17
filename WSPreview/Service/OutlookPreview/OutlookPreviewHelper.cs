@@ -31,14 +31,15 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         #region pattern for html
 
-        private const string PageBegin = @"<!DOCTYPE html><html lang='en'><head><title></title><meta charset='utf-8' http-equiv='Content-Type' content='text/html; charset=utf-8;'><style type='text/css'>.style1{width: 15%;color: gray;}.style2{width: 85%;}</style></head><body style='font-family: Arial, Helvetica, sans-serif;font-size: x-small;word-break: break-all;white-space: nowrap;'>";
+        private const string PageBegin = @"<!DOCTYPE html><html lang='en'><head><title></title><meta charset='utf-8' http-equiv='Content-Type' content='text/html; charset=utf-8;'><style type='text/css'>.style1{color: gray;word-break: normal}.style2{width:100%;}</style></head><body style='font-family: Arial, Helvetica, sans-serif;font-size: x-small;word-break: break-all;white-space: nowrap;'>";
         private const string TableBegin = @"<table style='width: 100%; table-layout: auto;'>";
-        private const string SubjectRow = @"<tr><td class='style1' style='color: #0c0202; font-size: small; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
-        private const string SenderRow = @"<tr><td class='style1' style='color: #0c0202; font-size: small; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
+        private const string SubjectRow = @"<tr><td  style='color: #0c0202; font-size: small; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
+        private const string SenderRow = @"<tr><td  style='color: #0c0202; font-size: small; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
         private const string ToRow = @"<tr><td class='style1'>To:</td><td class='style2'>{0}</td></tr>";
         private const string CCRow = @"<tr><td class='style1'>CC:</td><td class='style2'>{0}</td></tr>";
-        private const string AttachmentsRow = @"<tr><td class='style1'>Attachments:</td><td class='style2'>{0}</td></tr>";
-        private const string SendRow = @"<tr><td class='style1'>Send:</td><td class='style2'>{0}</td></tr>";
+        private const string InRow = @"<tr><td class='style1'>In:</td><td ><a href='uuid:{0}'>{1}</a></td></tr>";
+        private const string AttachmentsRow = @"<tr><td class='style1'>Attachments:</td><td >{0}</td></tr>";
+        private const string SendRow = @"<tr><td class='style1'>Send:</td><td >{0}</td></tr>";
 
         private const string EmailRow = @"<tr style='margin: 25px 10px 10px 10px'><td colspan='2' ><hr /><html><body style='word-break: break-all;white-space: nowrap;font-size:x-small' >{0}</body></html></td></tr>";
         private const string TableEnd = @"</table>";
@@ -118,6 +119,14 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         }
 
         #endregion [hit string]
+
+        #region [full folder path]
+
+        public string FullFolderPath { get; set; }
+
+
+        #endregion
+
 
         #region [host type]
 
@@ -429,6 +438,11 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             if (!string.IsNullOrEmpty(mail.CC))
                 page += string.Format(CCRow, HighlightSearchString(GetConvertetString(mail.CC)));
             page += string.Format(ToRow, HighlightSearchString(GetConvertetString(mail.To)));
+            var folder = GetEmailFolder();
+            if (folder != null && !string.IsNullOrEmpty(folder.Item1) && !string.IsNullOrEmpty(folder.Item2))
+            {
+                page += string.Format(InRow, folder.Item1,folder.Item2);
+            }
             page += string.Format(SendRow, mail.ReceivedTime.ToString());
             page += GetAttachments(mail, filename);
             string temp = GetHtmlBodyHightlight(mail.HTMLBody);
@@ -546,6 +560,14 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             }
 
             return res;
+        }
+
+        private Tuple<string, string> GetEmailFolder()
+        {
+            if(string.IsNullOrEmpty(FullFolderPath))
+                return default(Tuple<string, string>);
+            var name = FullFolderPath.Substring(FullFolderPath.LastIndexOf('\\') + 1);
+            return new Tuple<string, string>(FullFolderPath, name);
         }
 
         #endregion [generate privew]

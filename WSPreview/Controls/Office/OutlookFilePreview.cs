@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using WSPreview.PreviewHandler.Controls.Office.WebUtils;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using WSUI.Core.Enums;
+using WSUI.Core.EventArguments;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
@@ -16,7 +18,7 @@ using WSPreview.PreviewHandler.Service.OutlookPreview;
 namespace WSPreview.PreviewHandler.Controls.Office
 {
     [KeyControl(ControlsKey.Outlook)]
-    public partial class OutlookFilePreview : ExtWebBrowser,IPreviewControl
+    public partial class OutlookFilePreview : ExtWebBrowser,IPreviewControl,ICommandPreviewControl
     {
 
         private string _hitString;
@@ -45,6 +47,11 @@ namespace WSPreview.PreviewHandler.Controls.Office
                 _hitString = value;
                 OutlookPreviewHelper.Instance.HitString = value;
             }
+        }
+
+        public string FullFolderPath
+        {
+            set { OutlookPreviewHelper.Instance.FullFolderPath = value; }
         }
 
         public void LoadFile(string filename)
@@ -129,6 +136,9 @@ namespace WSPreview.PreviewHandler.Controls.Office
                 case "re":
                     path = OutlookPreviewHelper.Instance.GetPathForEmail(args.Url, _fileName);
                     break;
+                case "uuid":
+                    RaisePreviewCommandExecuted(WSPreviewCommand.ShowFolder,args.Url.LocalPath);
+                    break;
             }
 
             if (!string.IsNullOrEmpty(path))
@@ -179,6 +189,16 @@ namespace WSPreview.PreviewHandler.Controls.Office
             return defaultBrowserPath;
         }
 
+        public event EventHandler<WSUIPreviewCommandArgs> PreviewCommandExecuted;
+
+        private void RaisePreviewCommandExecuted(WSPreviewCommand cmd, object tag)
+        {
+            var temp = PreviewCommandExecuted;
+            if (temp != null)
+            {
+                temp(this,new WSUIPreviewCommandArgs(cmd,tag));
+            }
+        }
     }
 
 }

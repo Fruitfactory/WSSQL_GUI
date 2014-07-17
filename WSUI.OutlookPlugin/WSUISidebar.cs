@@ -58,6 +58,7 @@ namespace WSUIOutlookPlugin
             UIElement el = _wsuiBootStraper.View as UIElement;
             if (el != null)
             {
+                wpfSidebarHost.Child = null;
                 wpfSidebarHost.Child = el;
             }
         }

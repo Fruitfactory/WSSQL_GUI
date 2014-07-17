@@ -1,4 +1,6 @@
+using System.Windows.Forms.VisualStyles;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using System;
@@ -17,6 +19,8 @@ using WSPreview.PreviewHandler.Service.OutlookPreview;
 using WSUI.Core.Core.LimeLM;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Core.EventArguments;
+using WSUI.Core.Events;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
@@ -49,6 +53,8 @@ namespace WSUI.Module.ViewModel
 
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;
+        private readonly IEventAggregator _eventAggregator;
+
         private BaseSearchObject _currentData;
         private IKindItem _currentItem;
         private bool _enabled = true;
@@ -62,10 +68,11 @@ namespace WSUI.Module.ViewModel
         private Transition _dataToPreviewTransition = null;
 
         public MainViewModel(IUnityContainer container, IRegionManager region, IKindsView kindView,
-            IPreviewView previewView)
+            IPreviewView previewView,IEventAggregator eventAggregator)
         {
             _container = container;
             _regionManager = region;
+            _eventAggregator = eventAggregator;
             KindsView = kindView;
             kindView.Model = this;
             PreviewView = previewView;
@@ -77,7 +84,6 @@ namespace WSUI.Module.ViewModel
             PreviewVisibility = Visibility.Collapsed;
             _previewToDataTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.2)) };
             _dataToPreviewTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.2)), StartPoint = new Point(1.0, 0.0) };
-
         }
 
         public IKindsView KindsView { get; protected set; }
@@ -253,7 +259,7 @@ namespace WSUI.Module.ViewModel
 
         private void OnCurrentItemChanged(object sender, EventArgs<BaseSearchObject> args)
         {
-            if (args.Value == null || args.Value.TypeItem == TypeSearchItem.Contact)
+            if (args.Value == null || args.Value.TypeItem == TypeSearchItem.Contact || args.Value.TypeItem == TypeSearchItem.None)
                 return;
 
             _currentData = args.Value;
@@ -283,6 +289,10 @@ namespace WSUI.Module.ViewModel
                 {
                     if (!string.IsNullOrEmpty(filename))
                     {
+                        if (_currentData.TypeItem == TypeSearchItem.Email)
+                        {
+                            PreviewView.SetFullFolderPath(SearchItemHelper.GetFullFolderPath(_currentData));
+                        }
                         PreviewView.SetSearchPattern(_currentItem != null
                             ? _currentItem.SearchString
                             : string.Empty);
@@ -582,6 +592,13 @@ namespace WSUI.Module.ViewModel
         }
 
         public Transition CurrenTransition { get; private set; }
+
+        public void ShowOutlookFolder(string folder)
+        {
+            if (_eventAggregator == null)
+                return;
+            _eventAggregator.GetEvent<WSUIShowFolder>().Publish(folder);
+        }
 
         #endregion Implementation of IMainViewModel
 

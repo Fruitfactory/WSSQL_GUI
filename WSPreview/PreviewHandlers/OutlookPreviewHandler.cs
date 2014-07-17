@@ -1,8 +1,10 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using WSPreview.PreviewHandler.Controls.Office;
 using WSUI.Core.Enums;
+using WSUI.Core.EventArguments;
 using WSUI.Core.Interfaces;
 
 namespace WSPreview.PreviewHandler.PreviewHandlers
@@ -12,7 +14,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
     [Guid("326A2452-981E-403B-9921-911011E677E6")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
-    public sealed class OutlookPreviewHandler : FileBasedPreviewHandler, ISearchWordHighlight, ITranslateMessage
+    public sealed class OutlookPreviewHandler : FileBasedPreviewHandler, ISearchWordHighlight, ITranslateMessage,IOutlookFolder,ICommandPreviewControl
     {
 
         protected override PreviewHandlerControl CreatePreviewHandlerControl()
@@ -66,8 +68,17 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
                 if (_preview != null)
                 {
                     _preview.HitString = _parent.HitString;
+                    _preview.FullFolderPath = _parent.FolderPath;
+                    (_preview as ICommandPreviewControl).PreviewCommandExecuted -= OnPreviewCommandExecuted;
+                    (_preview as ICommandPreviewControl).PreviewCommandExecuted += OnPreviewCommandExecuted;
                 }
+            }
 
+            private void OnPreviewCommandExecuted(object sender, WSUIPreviewCommandArgs wsuiPreviewCommandArgs)
+            {
+               if(_parent == null)
+                   return;
+                _parent.RaisePreviewCommandExecuted(wsuiPreviewCommandArgs);
             }
         }
 
@@ -83,5 +94,18 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
                 return;
             ((OutlookPreviewHandlerControl)_previewControl).PassMessage(action);
         }
+
+        private void RaisePreviewCommandExecuted( WSUIPreviewCommandArgs args)
+        {
+            var temp = PreviewCommandExecuted;
+            if (temp != null)
+            {
+                temp(this, args);
+            }
+        }
+
+        public string FolderPath { get; set; }
+
+        public event EventHandler<WSUIPreviewCommandArgs> PreviewCommandExecuted;
     }
 }

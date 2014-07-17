@@ -4,6 +4,8 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using WSPreview.PreviewHandler.PreviewHandlerHost;
+using WSUI.Core.Enums;
+using WSUI.Core.EventArguments;
 using WSUI.Core.Interfaces;
 using WSUI.Module.Interface;
 using WSUI.Module.ViewModel;
@@ -21,7 +23,18 @@ namespace WSUI.Module.View
             InitializeComponent();
             _previewControl.StartLoad += PreviewControlOnStartLoad;
             _previewControl.StopLoad += PreviewControlOnStopLoad;
+            _previewControl.CommandExecuted += PreviewControlOnCommandExecuted;
 
+        }
+
+        private void PreviewControlOnCommandExecuted(object sender, WSUIPreviewCommandArgs wsuiPreviewCommandArgs)
+        {
+            switch (wsuiPreviewCommandArgs.PreviewCommand)
+            {
+                case WSPreviewCommand.ShowFolder:
+                    Model.ShowOutlookFolder(wsuiPreviewCommandArgs.Tag as string);
+                    break;
+            }
         }
 
         private void PreviewControlOnStopLoad(object sender, EventArgs eventArgs)
@@ -63,6 +76,11 @@ namespace WSUI.Module.View
                 _previewControl.SearchCriteria = pattern;
         }
 
+        public void SetFullFolderPath(string path)
+        {
+            _previewControl.FullFolderPath = path;
+        }
+
         public void ClearPreview()
         {
             _previewControl.UnloadPreview();
@@ -81,7 +99,7 @@ namespace WSUI.Module.View
 
         public void Init()
         {
-           
+
         }
 
         private void resetPopup()

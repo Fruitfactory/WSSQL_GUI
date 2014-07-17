@@ -14,7 +14,7 @@ namespace WSUI.Core.Data
 	public class EmailSearchObject : BaseEmailSearchObject 
     {
         [Field("System.Subject", 15, false)]    
-		public string Subject{ get;  set;} 
+		public string Subject{ get;  set;}
 
 		public EmailSearchObject()
         {

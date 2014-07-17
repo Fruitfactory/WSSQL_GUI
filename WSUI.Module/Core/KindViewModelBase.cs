@@ -115,7 +115,7 @@ namespace WSUI.Module.Core
                     DataSource.Clear();
                     var message = new FileSearchObject()
                     {
-                        ItemName = string.Format("Search for '{0}' returned no matches. Try different keywords.", SearchString),
+                        ItemName = SearchString,
                         TypeItem = TypeSearchItem.None
                     };
                     DataSource.Add(message);

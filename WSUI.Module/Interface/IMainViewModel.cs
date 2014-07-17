@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Transitionals;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Core.EventArguments;
 using WSUI.Core.Interfaces;
 using WSUI.Module.Service;
 
@@ -34,6 +35,8 @@ namespace WSUI.Module.Interface
         Visibility PreviewVisibility { get; }
 
         Transition CurrenTransition { get; }
+
+        void ShowOutlookFolder(string folder);
 
     }
 }

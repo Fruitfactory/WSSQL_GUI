@@ -70,6 +70,11 @@ namespace WSUI.Infrastructure.Service.Helpers
             }
         }
 
+        public static string GetFullFolderPath(BaseSearchObject item)
+        {
+            return OutlookHelper.Instance.GetFullFolderPath(item);
+        }
+
         #endregion
 
         #region private static

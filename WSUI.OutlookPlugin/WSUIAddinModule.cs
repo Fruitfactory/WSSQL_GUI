@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
@@ -14,6 +15,7 @@ using WSUI.Control;
 using WSUI.Control.Interfaces;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Core.Events;
 using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Controls.Application;
@@ -541,7 +543,7 @@ namespace WSUIOutlookPlugin
 
         private void OutlookFormManagerOnAdxFolderSwitchEx(object sender, FolderSwitchExEventArgs args)
         {
-            if(IsLoading)
+            if (IsLoading)
                 return;
 
             for (int i = 0; i < formRightSidebar.FormInstanceCount; i++)
@@ -645,6 +647,30 @@ namespace WSUIOutlookPlugin
             _eventAggregator.GetEvent<WSUIOpenWindow>().Subscribe(ShowUi);
             _eventAggregator.GetEvent<WSUIHideWindow>().Subscribe(HideUi);
             _eventAggregator.GetEvent<WSUISearch>().Subscribe(StartSearch);
+            _eventAggregator.GetEvent<WSUIShowFolder>().Subscribe(ShowOutlookFolder);
+        }
+
+        private void ShowOutlookFolder(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+                return;
+            var folder = GetFolderByFullPath(s);
+            if (folder != null)
+            {
+                Outlook.Explorer activeExplorer = null;
+                try
+                {
+                    activeExplorer = (OutlookApp as Outlook._Application).ActiveExplorer();
+                    SetExplorerFolder(activeExplorer, folder);
+                }
+                finally
+                {
+                    if (activeExplorer != null)
+                        Marshal.ReleaseComObject(activeExplorer);
+                    if (folder != null)
+                        Marshal.ReleaseComObject(folder);
+                }
+            }
         }
 
         private void ShowUi(bool show)
@@ -1025,7 +1051,7 @@ namespace WSUIOutlookPlugin
 
         private void ShowMainUiAfterSearchAction()
         {
-            
+
             if (!adxMainPluginCommandBar.UseForRibbon && this.HostMajorVersion > 12)
             {
                 buttonShow2007.Enabled = false;
@@ -1104,6 +1130,41 @@ namespace WSUIOutlookPlugin
                 _sidebarForm.SendAction(WSActionType.Copy);
             }
         }
+
+        private Outlook.MAPIFolder GetFolderByFullPath(string folderPath)
+        {
+            Outlook.NameSpace ns = this.OutlookApp.GetNamespace("MAPI");
+            Outlook.MAPIFolder fld = null;
+            foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
+            {
+                fld = GetOutlookFolders(folder, folderPath);
+                if(fld  != null)
+                    break;
+            }
+            return fld;
+        }
+
+        private Outlook.MAPIFolder GetOutlookFolders(Outlook.MAPIFolder folder, string fullpath)
+        {
+            if (folder.FullFolderPath == fullpath)
+                return folder;
+            Outlook.MAPIFolder mapiFolder = null;
+            foreach (var subfolder in folder.Folders.OfType<Outlook.MAPIFolder>())
+            {
+                try
+                {
+                    mapiFolder = GetOutlookFolders(subfolder, fullpath);
+                    if(mapiFolder != null)
+                        break;
+                }
+                catch (Exception e)
+                {
+                    WSSqlLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
+                }
+            }
+            return mapiFolder;
+        }
+
 
     }
 }

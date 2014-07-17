@@ -83,6 +83,9 @@
     <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\Toolkits\Prism\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.Prism.Interactivity">
+      <HintPath>..\Toolkits\Prism\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -133,6 +136,10 @@
     <Compile Include="Enums\TypeResult.cs" />
     <Compile Include="Enums\TypeSearchItem.cs" />
     <Compile Include="Enums\WSActionType.cs" />
+    <Compile Include="Enums\WSPreviewCommand.cs" />
+    <Compile Include="EventArguments\WSUIPreviewCommandArgs.cs" />
+    <Compile Include="EventArguments\WSUIShowFolderArgs.cs" />
+    <Compile Include="Events\WSUIShowFolder.cs" />
     <Compile Include="Extensions\CommonExtensions.cs" />
     <Compile Include="Extensions\FieldsExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -181,9 +188,11 @@
     <Compile Include="Helpers\OutlookHelper.cs" />
     <Compile Include="Helpers\RegistryHelper.cs" />
     <Compile Include="Helpers\TempFileManager.cs" />
+    <Compile Include="Interfaces\ICommandPreviewControl.cs" />
     <Compile Include="Interfaces\IEmailSearchRule.cs" />
     <Compile Include="Interfaces\IFieldCash.cs" />
     <Compile Include="Interfaces\IIndexerDataReader.cs" />
+    <Compile Include="Interfaces\IOutlookFolder.cs" />
     <Compile Include="Interfaces\IOutlookHelper.cs" />
     <Compile Include="Interfaces\IQueryGenerator.cs" />
     <Compile Include="Interfaces\IQueryReader.cs" />
