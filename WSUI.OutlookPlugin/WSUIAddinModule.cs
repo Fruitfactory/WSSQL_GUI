@@ -1012,7 +1012,7 @@ namespace WSUIOutlookPlugin
         private void WSUIAddinModule_AddinStartupComplete(object sender, EventArgs e)
         {
             RestoreOutlookFolder();
-            CheckUpdate();
+            //CheckUpdate(); // TODO: just for testing
             this.SendMessage(WM_LOADED, IntPtr.Zero, IntPtr.Zero);
             OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
             OutlookHelper.Instance.OutlookApp = OutlookApp;
@@ -1033,7 +1033,7 @@ namespace WSUIOutlookPlugin
                     WSSqlLogger.Instance.LogError("Reflection Type Load: {0}", item.Message.ToString());
                 }
             }
-            WSSqlLogger.Instance.LogError("Exception: {0}\nStacktrace: {1}", firstChanceExceptionEventArgs.Exception.Message, firstChanceExceptionEventArgs.Exception.StackTrace);
+            //WSSqlLogger.Instance.LogError("Exception: {0}\nStacktrace: {1}", firstChanceExceptionEventArgs.Exception.Message, firstChanceExceptionEventArgs.Exception.StackTrace);
         }
 
         #region [event handlers for ribbon]
@@ -1121,6 +1121,7 @@ namespace WSUIOutlookPlugin
             Marshal.ReleaseComObject(outlookNamespace);
         }
 
+        // TODO: uncomment
         private void WSUIAddinModule_OnKeyDown(object sender, ADXKeyDownEventArgs e)
         {
             if (_sidebarForm == null)

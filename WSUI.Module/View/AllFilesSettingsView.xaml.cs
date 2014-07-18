@@ -1,4 +1,5 @@
-﻿using WSUI.Module.Interface;
+﻿using System.Windows.Input;
+using WSUI.Module.Interface;
 using WSUI.Module.ViewModel;
 
 namespace WSUI.Module.View
@@ -22,5 +23,6 @@ namespace WSUI.Module.View
         }
 
         #endregion
+
     }
 }

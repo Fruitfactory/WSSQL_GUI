@@ -83,10 +83,10 @@ namespace WSUIOutlookPlugin
             }
         }
 
-        private void WSUISidebar_ADXKeyFilter(object sender, ADXOlKeyFilterEventArgs e)
-        {
-            Debug.WriteLine("Focused "  + _wsuiBootStraper.IsMainUiActive);
-            e.Action = _wsuiBootStraper.IsMainUiActive ? ADXOlKeyFilterAction.SendToForm : ADXOlKeyFilterAction.SendToHostApplication;
-        }
+        //private void WSUISidebar_ADXKeyFilter(object sender, ADXOlKeyFilterEventArgs e)
+        //{
+        //    Debug.WriteLine("Focused "  + _wsuiBootStraper.IsMainUiActive);
+        //    e.Action = _wsuiBootStraper.IsMainUiActive ? ADXOlKeyFilterAction.SendToForm : ADXOlKeyFilterAction.SendToHostApplication;
+        //}
     }
 }

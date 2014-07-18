@@ -31,11 +31,15 @@
                 VerticalContentAlignment="Center"
                 
                     Grid.Column="0" MinHeight="32" />
+
             <!---->
             <Button Command="{Binding Path=SearchCommand}"
                     Style="{StaticResource SearchButton}"
                 Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" MinHeight="32"
                     IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
+            
+            
+            
         </Grid>
     </Grid>
 </UserControl>

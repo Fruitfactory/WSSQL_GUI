@@ -111,8 +111,6 @@
                         <ColumnDefinition Width="0" x:Name="Preview"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <!--<ContentControl Grid.Column="0" x:Name="DataControl" regions:RegionManager.RegionName="SidebarDataRegion" 
-                                    HorizontalContentAlignment="Stretch"/>-->
 
                     <transitionalsControls:TransitionElement 
                         Grid.Column="0"
@@ -120,10 +118,6 @@
                         regions:RegionManager.RegionName="SidebarDataRegion" 
 			            Transition="{Binding CurrenTransition}">
                                 </transitionalsControls:TransitionElement>
-
-
-                    <ContentControl Grid.Column="1" x:Name="PreviewControl" regions:RegionManager.RegionName="SidebarPreviewRegion"  
-                                    HorizontalContentAlignment="Stretch"/>
                 </Grid>
             </Grid>
         </Border>

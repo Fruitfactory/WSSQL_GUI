@@ -21,18 +21,6 @@ namespace WSUI.Control
             InitializeComponent();
         }
 
-        //protected override void OnMouseEnter(MouseEventArgs e)
-        //{
-        //    base.OnMouseEnter(e);
-        //    Debug.WriteLine("Enter");
-        //}
-
-        //protected override void OnMouseLeave(MouseEventArgs e)
-        //{
-        //    base.OnMouseLeave(e);
-        //    Debug.WriteLine("Leave");
-        //}
-
         public IMainViewModel Model
         {
             get
@@ -40,48 +28,48 @@ namespace WSUI.Control
             set
             {
                 DataContext = value;
-                ModelChanged();
+                //ModelChanged();
             }
         }
 
         private void ModelChanged()
         {
-            Model.Slide += ModelOnSlide;
+            //Model.Slide += ModelOnSlide;
         }
 
         private void ModelOnSlide(object sender, SlideDirectionEventArgs slideDirectionEventArgs)
         {
-            if (slideDirectionEventArgs == null)
-                return;
-            switch (slideDirectionEventArgs.Direction)
-            {
-                case UiSlideDirection.DataToPreview:
-                    DataToPreview();
-                    break;
+            //if (slideDirectionEventArgs == null)
+            //    return;
+            //switch (slideDirectionEventArgs.Direction)
+            //{
+            //    case UiSlideDirection.DataToPreview:
+            //        DataToPreview();
+            //        break;
 
-                case UiSlideDirection.PreviewToData:
-                    PreviewToData();
-                    break;
-            }
+            //    case UiSlideDirection.PreviewToData:
+            //        PreviewToData();
+            //        break;
+            //}
         }
 
-        private void PreviewToData()
-        {
-            var storyBoard = this.Resources["PreviewToData"] as Storyboard;
-            if (storyBoard == null)
-                return;
+        //private void PreviewToData()
+        //{
+        //    var storyBoard = this.Resources["PreviewToData"] as Storyboard;
+        //    if (storyBoard == null)
+        //        return;
 
-            DataGrid.BeginStoryboard(storyBoard);
-        }
+        //    DataGrid.BeginStoryboard(storyBoard);
+        //}
 
-        private void DataToPreview()
-        {
-            var storyBoard = this.Resources["DataToPreview"] as Storyboard;
-            if (storyBoard == null)
-                return;
+        //private void DataToPreview()
+        //{
+        //    var storyBoard = this.Resources["DataToPreview"] as Storyboard;
+        //    if (storyBoard == null)
+        //        return;
 
-            DataGrid.BeginStoryboard(storyBoard);
-        }
+        //    DataGrid.BeginStoryboard(storyBoard);
+        //}
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
         {

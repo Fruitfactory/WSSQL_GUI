@@ -58,16 +58,6 @@ namespace WSUI.Control
             }));
         }
 
-        protected override void OnPreviewKeyDown(KeyEventArgs e)
-        {
-            base.OnPreviewKeyDown(e);
-        }
-
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            base.OnKeyDown(e);
-        }
-
         public event EventHandler Close;
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)

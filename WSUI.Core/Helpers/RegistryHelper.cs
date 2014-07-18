@@ -136,11 +136,10 @@ namespace WSUI.Core.Helpers
             return ReadKey(PKeyId);
         }
 
-
         public bool GetIsPluginUiVisible()
         {
             var res = ReadKey(IsPluginUiVisible);
-            return !string.IsNullOrEmpty(res) && bool.Parse(res);
+            return string.IsNullOrEmpty(res) || bool.Parse(res);
         }
 
         public void SetIsPluginUiVisible(bool visible)
