@@ -714,6 +714,10 @@ namespace WSUIOutlookPlugin
             {
                 _aboutCommandManager = new WSUIAboutCommandManager(btnHelp, btnAbout, btnMainHelp, btnMainAbout);
             }
+            else if(RegistryHelper.Instance.GetIsPluginUiVisible())
+            {
+                _commandManager.SetShowHideButtonsEnabling(false,true);
+            }
         }
 
         private void SetEventAggregatorToManager()

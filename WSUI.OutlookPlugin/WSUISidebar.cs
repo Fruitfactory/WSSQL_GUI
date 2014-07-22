@@ -32,6 +32,7 @@ namespace WSUIOutlookPlugin
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
+            SetBootStraper(WSUIAddinModule.CurrentInstance.BootStraper);
             if (!RegistryHelper.Instance.GetIsPluginUiVisible())
             {
                 Hide();
@@ -47,8 +48,6 @@ namespace WSUIOutlookPlugin
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            SetBootStraper(WSUIAddinModule.CurrentInstance.BootStraper);
-            RaiseOnLoaded();
             DoubleBuffered = true;
         }
 
@@ -63,7 +62,6 @@ namespace WSUIOutlookPlugin
             }
         }
 
-        public event EventHandler OnLoaded;
         public void Minimize()
         {
             throw new NotImplementedException();
@@ -73,20 +71,5 @@ namespace WSUIOutlookPlugin
         {
             _wsuiBootStraper.PassAction(new WSAction(actionType, null));
         }
-
-        private void RaiseOnLoaded()
-        {
-            var temp = OnLoaded;
-            if (temp != null)
-            {
-                temp(this, EventArgs.Empty);
-            }
-        }
-
-        //private void WSUISidebar_ADXKeyFilter(object sender, ADXOlKeyFilterEventArgs e)
-        //{
-        //    Debug.WriteLine("Focused "  + _wsuiBootStraper.IsMainUiActive);
-        //    e.Action = _wsuiBootStraper.IsMainUiActive ? ADXOlKeyFilterAction.SendToForm : ADXOlKeyFilterAction.SendToHostApplication;
-        //}
     }
 }
