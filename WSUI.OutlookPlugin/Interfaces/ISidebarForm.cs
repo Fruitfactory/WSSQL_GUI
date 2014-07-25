@@ -10,5 +10,6 @@ namespace WSUIOutlookPlugin.Interfaces
         void Show();
         void Minimize();
         void SendAction(WSActionType actionType);
+        bool IsDisposed { get;}
     }
 }

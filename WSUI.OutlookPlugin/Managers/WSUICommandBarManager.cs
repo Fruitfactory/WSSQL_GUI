@@ -1,5 +1,6 @@
 ﻿using System;
 using AddinExpress.MSO;
+using WSUI.Core.Logger;
 using WSUIOutlookPlugin.Core;
 
 namespace WSUIOutlookPlugin.Managers

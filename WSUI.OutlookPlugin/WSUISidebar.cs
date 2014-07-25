@@ -17,7 +17,7 @@ namespace WSUIOutlookPlugin
     {
         private IPluginBootStraper _wsuiBootStraper = null;
         private bool _isDebugMode = false;
-
+        
         public WSUISidebar()
         {
             InitializeComponent();
@@ -44,6 +44,10 @@ namespace WSUIOutlookPlugin
             }
         }
 
+        bool ISidebarForm.IsDisposed
+        {
+            get { return this.IsDisposed; }
+        }
 
         protected override void OnLoad(EventArgs e)
         {

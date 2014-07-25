@@ -1,4 +1,5 @@
 ﻿using Microsoft.Practices.Prism.Events;
+using WSUI.Core.Logger;
 using WSUIOutlookPlugin.Events;
 using WSUIOutlookPlugin.Interfaces;
 
@@ -33,6 +34,7 @@ namespace WSUIOutlookPlugin.Core
             var aggregator = GetAggregator();
             if (aggregator == null)
                 return;
+            WSSqlLogger.Instance.LogInfo("Edit Criteria (toolbox):{0}", searchString);
             aggregator.GetEvent<WSUISearch>().Publish(searchString);
         }
     }

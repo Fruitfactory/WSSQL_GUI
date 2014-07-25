@@ -1,4 +1,5 @@
 ﻿using AddinExpress.MSO;
+using WSUI.Core.Logger;
 using WSUIOutlookPlugin.Core;
 
 namespace WSUIOutlookPlugin.Managers
@@ -50,6 +51,7 @@ namespace WSUIOutlookPlugin.Managers
 
         private void ButtonMainSearchOnOnClick(object sender, IRibbonControl control, bool pressed)
         {
+            
             InternalSearchPublich(_homeEditCriteria.Text);
             System.Diagnostics.Debug.WriteLine("Home button search click....");
         }

@@ -33,7 +33,16 @@ namespace WSUI.Module.Service
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int count = (int) value;
+
+            int count = 0;
+            if (value is int)
+            {
+                count = (int) value;
+            }
+            else if(value is string)
+            {
+                int.TryParse(value.ToString(), out count);
+            }
             return count > 0 ? Visibility.Visible : Visibility.Collapsed ;
         }
 
@@ -72,10 +81,9 @@ namespace WSUI.Module.Service
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int size = (int) value;
-            string result = string.Format("Size: {0} bytes", size);
+            int size = (int) value / 1024;
+            string result = string.Format("Size: {0} kb", size > 0 ? size : 1);
             return result;
-
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -169,6 +177,5 @@ namespace WSUI.Module.Service
             throw new NotImplementedException();
         }
     }
-
 
 }

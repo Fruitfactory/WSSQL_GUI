@@ -186,9 +186,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="WSUIAddinModule.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="WSUIAddinModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WSUISidebar.cs">
       <SubType>Form</SubType>
