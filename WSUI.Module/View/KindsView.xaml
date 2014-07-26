@@ -49,7 +49,7 @@
         </Grid.RowDefinitions>
 
 
-        <Button x:Name="BackButton" Grid.Column="0" Grid.Row="0" Height="24" Padding="2" Width="24" BorderThickness="0" Focusable="True" 
+        <Button x:Name="BackButton" Grid.Column="0" Grid.Row="0" Height="24" Padding="2" BorderThickness="0" Focusable="True" 
                 HorizontalAlignment="Center" 
                 HorizontalContentAlignment="Center" 
                 VerticalAlignment="Center" 
@@ -60,7 +60,11 @@
                 Command="{Binding BackCommand}" 
                 Visibility="{Binding PreviewVisibility,UpdateSourceTrigger=PropertyChanged}">
             <Grid Background="Transparent" >
-                <Path x:Name="PathCross" Height="24" Width="24" Margin="0,0,0,0" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" RenderTransformOrigin="0.5,0.5" SnapsToDevicePixels="True" Stretch="Uniform">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Path x:Name="PathCross" Grid.Column="0" Height="24" Width="24" Margin="0,0,0,0" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" RenderTransformOrigin="0.5,0.5" SnapsToDevicePixels="True" Stretch="Uniform">
                     <Path.Data>
                         F1M-800.86,-1379.55L-781.99,-1360.68 -782.125,-1360.54 -792.356,-1360.54 -809.825,-1378.01 -815.075,-1383.26 -792.494,-1405.84 -781.99,-1405.84 -800.86,-1386.97 -751.074,-1386.97 -751.074,-1379.55 -800.86,-1379.55z
                     </Path.Data>
@@ -72,18 +76,24 @@
                         </TransformGroup>
                     </Path.RenderTransform>
                 </Path>
+                <TextBlock Grid.Column="1" Margin="5 0 0 0" VerticalAlignment="Center"
+                           Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}">BACK</TextBlock>
             </Grid>
             <Button.Style>
-                <Style BasedOn="{StaticResource ChromelessButtonStyle}" TargetType="Button">
-                    <Setter Property="Foreground" Value="#FF9C9A9A"></Setter>
+                <Style BasedOn="{StaticResource WSUIChromelessButtonStyle}" TargetType="Button">
+                    <Setter Property="Foreground" Value="{StaticResource AccentColorBrush}"></Setter>
                     <Style.Triggers>
                         <Trigger Property="Button.IsMouseOver" Value="True">
-                            <Setter Property="Button.Background" Value="{StaticResource RedColorBrush}" />
-                            <Setter Property="Button.Foreground" Value="{StaticResource WhiteColorBrush}" />
+                            <Setter Property="Button.Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{StaticResource HighLightColorItem}" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Button.Foreground" Value="{StaticResource AccentColorBrush}" />
                         </Trigger>
                         <Trigger Property="Button.IsPressed" Value="True">
-                            <Setter Property="Button.Background" Value="{StaticResource DarkRedColorBrush}" />
-                            <Setter Property="Button.Foreground" Value="{StaticResource WhiteColorBrush}" />
+                            <Setter Property="Button.Background" Value="{StaticResource AccentColorBrush}" />
+                            <Setter Property="Button.Foreground" Value="{StaticResource AccentSelectedColorBrush}" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>
