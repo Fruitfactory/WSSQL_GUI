@@ -6,8 +6,10 @@ using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Windows.Media.Animation;
 using AddinExpress.MSO;
 using AddinExpress.OL;
+using Microsoft.Office.Core;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using WSPreview.PreviewHandler.Service.OutlookPreview;
@@ -19,6 +21,7 @@ using WSUI.Core.Events;
 using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Controls.Application;
+using WSUI.Infrastructure.Service.Dumper;
 using WSUIOutlookPlugin.Core;
 using WSUIOutlookPlugin.Events;
 using WSUIOutlookPlugin.Interfaces;
@@ -45,6 +48,7 @@ namespace WSUIOutlookPlugin
         private ICommandManager _aboutCommandManager;
         private ISidebarForm _sidebarForm;
         private bool IsLoading = true;
+        private int _initHashCode;
 
         #region [const]
 
@@ -111,7 +115,7 @@ namespace WSUIOutlookPlugin
             //watch.Stop();
             this.OnSendMessage += WSUIAddinModule_OnSendMessage;
             this.AddinInitialize += OnAddinInitialize;
-            
+
             //WSSqlLogger.Instance.LogInfo(string.Format("WSUIAddinModule [ctor]: {0}ms", watch.ElapsedMilliseconds));
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
@@ -217,13 +221,8 @@ namespace WSUIOutlookPlugin
             this.wsuiTab.Caption = "Outlook Finder";
             this.wsuiTab.Controls.Add(this.groupSearch);
             this.wsuiTab.Id = "adxRibbonTab_500b5beadf3a45d9b11245e305940d6c";
-            this.wsuiTab.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.wsuiTab.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            this.wsuiTab.PropertyChanging += new AddinExpress.MSO.ADXRibbonPropertyChanging_EventHandler(this.wsuiTab_PropertyChanging);
             // 
             // groupSearch
             // 
@@ -234,40 +233,23 @@ namespace WSUIOutlookPlugin
             this.groupSearch.Controls.Add(this.btnSplit);
             this.groupSearch.Id = "adxRibbonGroup_c94173390d39441fa25cda51a851cd7a";
             this.groupSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.groupSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.groupSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // adxRibbonBoxSearch
             // 
             this.adxRibbonBoxSearch.Controls.Add(this.adxRibbonEditBoxSearch);
             this.adxRibbonBoxSearch.Controls.Add(this.adxRibbonButtonSearch);
             this.adxRibbonBoxSearch.Id = "adxRibbonBox_dc294efeac8340e788f9e0ebd39ab866";
-            this.adxRibbonBoxSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.adxRibbonBoxSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // adxRibbonEditBoxSearch
             // 
             this.adxRibbonEditBoxSearch.Id = "adxRibbonEditBox_decd82b7448b4bbe9853a4a4dee51263";
             this.adxRibbonEditBoxSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.adxRibbonEditBoxSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.adxRibbonEditBoxSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             this.adxRibbonEditBoxSearch.ShowCaption = false;
             this.adxRibbonEditBoxSearch.SizeString = "This is the width";
+            this.adxRibbonEditBoxSearch.Tag = 200121;
             // 
             // adxRibbonButtonSearch
             // 
@@ -275,13 +257,7 @@ namespace WSUIOutlookPlugin
             this.adxRibbonButtonSearch.Id = "adxRibbonButton_f0ca75ee177a4886a26d3c9246518516";
             this.adxRibbonButtonSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.adxRibbonButtonSearch.ParseMsoXmlTypeAs = AddinExpress.MSO.ADXParseMsoXmlTypeAs.pxtControl;
-            this.adxRibbonButtonSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.adxRibbonButtonSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // buttonShow
             // 
@@ -290,13 +266,7 @@ namespace WSUIOutlookPlugin
             this.buttonShow.Image = 1;
             this.buttonShow.ImageList = this.wsuiImageList;
             this.buttonShow.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.buttonShow.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.buttonShow.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // wsuiImageList
             // 
@@ -315,13 +285,7 @@ namespace WSUIOutlookPlugin
             this.btnSplit.Image = 2;
             this.btnSplit.ImageList = this.wsuiImageList;
             this.btnSplit.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnSplit.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.btnSplit.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // menuHelp
             // 
@@ -330,13 +294,7 @@ namespace WSUIOutlookPlugin
             this.menuHelp.Controls.Add(this.btnAbout);
             this.menuHelp.Id = "adxRibbonMenu_0e49baf968b443deaa578f34388228fc";
             this.menuHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.menuHelp.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.menuHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             this.menuHelp.ShowCaption = false;
             // 
             // btnHelp
@@ -346,37 +304,19 @@ namespace WSUIOutlookPlugin
             this.btnHelp.Image = 3;
             this.btnHelp.ImageList = this.wsuiImageList;
             this.btnHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnHelp.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.btnHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // adxRibbonMenuSeparator1
             // 
             this.adxRibbonMenuSeparator1.Id = "adxRibbonMenuSeparator_0f5aee07dd7b4c2689f6d1e780c9f15a";
-            this.adxRibbonMenuSeparator1.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.adxRibbonMenuSeparator1.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // btnAbout
             // 
             this.btnAbout.Caption = "About";
             this.btnAbout.Id = "adxRibbonButton_ca1899db162c46dca40d0d2791d231c7";
             this.btnAbout.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnAbout.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.btnAbout.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // adxMainPluginCommandBar
             // 
@@ -429,13 +369,7 @@ namespace WSUIOutlookPlugin
             this.wsuiMainTab.Controls.Add(this.wsuiMainGroup);
             this.wsuiMainTab.Id = "adxRibbonTab_9bda0e619ca1438d9effcf3f083e92e8";
             this.wsuiMainTab.IdMso = "TabMail";
-            this.wsuiMainTab.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.wsuiMainTab.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // wsuiMainGroup
             // 
@@ -445,38 +379,21 @@ namespace WSUIOutlookPlugin
             this.wsuiMainGroup.Controls.Add(this.btnMainSplit);
             this.wsuiMainGroup.Id = "adxRibbonGroup_f065ec953c074c6a9e1ba8cae6b9b786";
             this.wsuiMainGroup.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.wsuiMainGroup.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.wsuiMainGroup.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            this.wsuiMainGroup.PropertyChanging += new AddinExpress.MSO.ADXRibbonPropertyChanging_EventHandler(this.wsuiMainGroup_PropertyChanging);
             // 
             // adxMainBox
             // 
             this.adxMainBox.Controls.Add(this.wsuiHomeSearch);
             this.adxMainBox.Controls.Add(this.wsuiButtonSearch);
             this.adxMainBox.Id = "adxRibbonBox_650813691cb74c5db775e919c877f3ff";
-            this.adxMainBox.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.adxMainBox.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // wsuiHomeSearch
             // 
             this.wsuiHomeSearch.Id = "adxRibbonEditBox_8043c3682f36418996476af3affdd7e5";
             this.wsuiHomeSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.wsuiHomeSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.wsuiHomeSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             this.wsuiHomeSearch.ScreenTip = "Search";
             this.wsuiHomeSearch.ShowCaption = false;
             this.wsuiHomeSearch.SizeString = "This is the width";
@@ -487,13 +404,7 @@ namespace WSUIOutlookPlugin
             this.wsuiButtonSearch.Caption = "Search";
             this.wsuiButtonSearch.Id = "adxRibbonButton_c993f00bdccb44988791d19e0e30e00a";
             this.wsuiButtonSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.wsuiButtonSearch.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.wsuiButtonSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // wsuiButtonSwitch
             // 
@@ -502,13 +413,7 @@ namespace WSUIOutlookPlugin
             this.wsuiButtonSwitch.Image = 1;
             this.wsuiButtonSwitch.ImageList = this.wsuiImageList;
             this.wsuiButtonSwitch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.wsuiButtonSwitch.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.wsuiButtonSwitch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // btnMainSplit
             // 
@@ -518,13 +423,7 @@ namespace WSUIOutlookPlugin
             this.btnMainSplit.Image = 2;
             this.btnMainSplit.ImageList = this.wsuiImageList;
             this.btnMainSplit.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnMainSplit.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.btnMainSplit.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // mnuMain
             // 
@@ -533,13 +432,7 @@ namespace WSUIOutlookPlugin
             this.mnuMain.Controls.Add(this.btnMainAbout);
             this.mnuMain.Id = "adxRibbonMenu_eef51eb086df4c2886195868fb76cef8";
             this.mnuMain.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.mnuMain.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.mnuMain.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // btnMainHelp
             // 
@@ -548,41 +441,24 @@ namespace WSUIOutlookPlugin
             this.btnMainHelp.Image = 3;
             this.btnMainHelp.ImageList = this.wsuiImageList;
             this.btnMainHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnMainHelp.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.btnMainHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // btnMainMenuSeparatotr
             // 
             this.btnMainMenuSeparatotr.Id = "adxRibbonMenuSeparator_1001098bd1ed42f7837be7469856176d";
-            this.btnMainMenuSeparatotr.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.btnMainMenuSeparatotr.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // btnMainAbout
             // 
             this.btnMainAbout.Caption = "About";
             this.btnMainAbout.Id = "adxRibbonButton_610ffe76131f40c3b097201812603434";
             this.btnMainAbout.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnMainAbout.Ribbons = ((AddinExpress.MSO.ADXRibbons)((((((((AddinExpress.MSO.ADXRibbons.msrOutlookAppointment | AddinExpress.MSO.ADXRibbons.msrOutlookContact)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookJournal)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookTask)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookDistributionList)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookReport)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookRSS)
-                        | AddinExpress.MSO.ADXRibbons.msrOutlookExplorer)));
+            this.btnMainAbout.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // OutlookFinderEvents
             // 
             this.OutlookFinderEvents.Quit += new System.EventHandler(this.OutlookFinderEvents_Quit);
+            this.OutlookFinderEvents.NewExplorer += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_NewExplorer);
             // 
             // WSUIAddinModule
             // 
@@ -651,10 +527,10 @@ namespace WSUIOutlookPlugin
             }
         }
 
+        
         public bool IsMainUIVisible
         {
-            get;
-            set;
+            get; set;
         }
 
         #region my own initialization
@@ -685,10 +561,7 @@ namespace WSUIOutlookPlugin
             if (IsLoading)
                 return;
 
-            for (int i = 0; i < formRightSidebar.FormInstanceCount; i++)
-            {
-                _sidebarForm = formRightSidebar.GetForm((OutlookApp as Outlook.Application).ActiveExplorer()) as ISidebarForm;
-            }
+            _sidebarForm = GetSidebarForm();
 
             if (!IsMainUIVisible)
             {
@@ -772,11 +645,17 @@ namespace WSUIOutlookPlugin
             SetEventAggregatorToManager();
             SubscribeToEvents();
 
+            IsLoading = false;
+        }
+
+        private ISidebarForm GetSidebarForm()
+        {
+            ISidebarForm form = null;
             for (int i = 0; i < formRightSidebar.FormInstanceCount; i++)
             {
-                _sidebarForm = formRightSidebar.GetForm((OutlookApp as Outlook.Application).ActiveExplorer()) as ISidebarForm;
+                form = formRightSidebar.GetForm((OutlookApp as Outlook.Application).ActiveExplorer()) as ISidebarForm;
             }
-            IsLoading = false;
+            return form;
         }
 
         private void SubscribeToEvents()
@@ -814,7 +693,8 @@ namespace WSUIOutlookPlugin
 
         private void ShowUi(bool show)
         {
-            WSSqlLogger.Instance.LogInfo("IsDisposed SideBar: {0}",_sidebarForm.IsDisposed);
+            _sidebarForm = GetSidebarForm();
+            WSSqlLogger.Instance.LogInfo("IsDisposed SideBar: {0}", _sidebarForm.IsDisposed);
             if (_sidebarForm != null && !_sidebarForm.IsDisposed)
             {
                 _sidebarForm.Show();
@@ -826,6 +706,7 @@ namespace WSUIOutlookPlugin
 
         private void HideUi(bool hide)
         {
+            _sidebarForm = GetSidebarForm();
             WSSqlLogger.Instance.LogInfo("IsDisposed SideBar: {0}", _sidebarForm.IsDisposed);
             if (_sidebarForm != null && !_sidebarForm.IsDisposed)
             {
@@ -837,10 +718,12 @@ namespace WSUIOutlookPlugin
 
         private void StartSearch(string criteria)
         {
+            _sidebarForm = GetSidebarForm();
             PassSearchActionToSearchEngine(criteria);
             if (!IsMainUIVisible)
             {
-                _sidebarForm.Show();
+                if (!_sidebarForm.IsDisposed)
+                    _sidebarForm.Show();
                 ShowUi(true);
             }
         }
@@ -855,9 +738,9 @@ namespace WSUIOutlookPlugin
             {
                 _aboutCommandManager = new WSUIAboutCommandManager(btnHelp, btnAbout, btnMainHelp, btnMainAbout);
             }
-            else if(RegistryHelper.Instance.GetIsPluginUiVisible())
+            else if (RegistryHelper.Instance.GetIsPluginUiVisible())
             {
-                _commandManager.SetShowHideButtonsEnabling(false,true);
+                _commandManager.SetShowHideButtonsEnabling(false, true);
             }
         }
 
@@ -1269,6 +1152,7 @@ namespace WSUIOutlookPlugin
         // TODO: uncomment
         private void WSUIAddinModule_OnKeyDown(object sender, ADXKeyDownEventArgs e)
         {
+            _sidebarForm = GetSidebarForm();
             if (_sidebarForm == null)
                 return;
             if (e.Ctrl && e.VirtualKey == (int)Keys.C)
@@ -1284,7 +1168,7 @@ namespace WSUIOutlookPlugin
             foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
             {
                 fld = GetOutlookFolders(folder, folderPath);
-                if(fld  != null)
+                if (fld != null)
                     break;
             }
             return fld;
@@ -1300,7 +1184,7 @@ namespace WSUIOutlookPlugin
                 try
                 {
                     mapiFolder = GetOutlookFolders(subfolder, fullpath);
-                    if(mapiFolder != null)
+                    if (mapiFolder != null)
                         break;
                 }
                 catch (Exception e)
@@ -1311,6 +1195,29 @@ namespace WSUIOutlookPlugin
             return mapiFolder;
         }
 
+        private void OutlookFinderEvents_NewExplorer(object sender, object explorer)
+        {
+            var exp = explorer as Outlook._Explorer;
+            if (IsLoading && exp != null)
+            {
+                _initHashCode = exp.GetHashCode();
+            }
+        }
 
+        private void wsuiTab_PropertyChanging(object sender, ADXRibbonPropertyChangingEventArgs e)
+        {
+            if (e.PropertyType == ADXRibbonControlPropertyType.Visible && e.Context.GetHashCode() != _initHashCode)
+            {
+                e.Value = false;
+            }
+        }
+
+        private void wsuiMainGroup_PropertyChanging(object sender, ADXRibbonPropertyChangingEventArgs e)
+        {
+            if (e.PropertyType == ADXRibbonControlPropertyType.Visible && e.Context.GetHashCode() != _initHashCode)
+            {
+                e.Value = false;
+            }
+        }
     }
 }

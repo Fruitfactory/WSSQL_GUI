@@ -24,10 +24,6 @@
                 </Setter>
             </Style>
 
-            <SolidColorBrush x:Key="RedColorBrush" Color="Red"></SolidColorBrush>
-            <SolidColorBrush x:Key="DarkRedColorBrush" Color="DarkRed"></SolidColorBrush>
-            <SolidColorBrush x:Key="WhiteColorBrush" Color="White"></SolidColorBrush>
-
             <localService:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></localService:BoolToVisibilityConverter>
 
             <Style x:Key="ActivatingButtonStyle" TargetType="Button" BasedOn="{StaticResource WSUIButtonStyle}">

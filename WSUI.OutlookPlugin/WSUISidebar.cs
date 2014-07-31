@@ -8,6 +8,7 @@ using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
+using WSUI.Infrastructure.Helpers.Extensions;
 using WSUIOutlookPlugin.Hooks;
 using WSUIOutlookPlugin.Interfaces;
 
@@ -17,6 +18,7 @@ namespace WSUIOutlookPlugin
     {
         private IPluginBootStraper _wsuiBootStraper = null;
         private bool _isDebugMode = false;
+        private bool _isSecondInstance = false;
         
         public WSUISidebar()
         {
@@ -26,23 +28,17 @@ namespace WSUIOutlookPlugin
 
         private void OnAdxAfterFormHide(object sender, ADXAfterFormHideEventArgs e)
         {
-            WSUIAddinModule.CurrentInstance.IsMainUIVisible = false;
+            if(!_isSecondInstance)
+                WSUIAddinModule.CurrentInstance.IsMainUIVisible = false;
+            _isSecondInstance = false;
         }
 
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
+
             SetBootStraper(WSUIAddinModule.CurrentInstance.BootStraper);
-            if (!RegistryHelper.Instance.GetIsPluginUiVisible())
-            {
-                Hide();
-                WSUIAddinModule.CurrentInstance.IsMainUIVisible = false;
             }
-            else
-            {
-                WSUIAddinModule.CurrentInstance.IsMainUIVisible = true;
-            }
-        }
 
         bool ISidebarForm.IsDisposed
         {
@@ -59,10 +55,25 @@ namespace WSUIOutlookPlugin
         {
             _wsuiBootStraper = bootStraper;
             UIElement el = _wsuiBootStraper.View as UIElement;
-            if (el != null)
+            var parent = el.GetParentProperty();
+            if (el != null && parent == null)
             {
                 wpfSidebarHost.Child = null;
                 wpfSidebarHost.Child = el;
+                if (!RegistryHelper.Instance.GetIsPluginUiVisible())
+                {
+                    Hide();
+                    WSUIAddinModule.CurrentInstance.IsMainUIVisible = false;
+                }
+                else
+                {
+                    WSUIAddinModule.CurrentInstance.IsMainUIVisible = true;
+                }
+            }
+            else
+            {
+                _isSecondInstance = true;
+                Hide();                
             }
         }
 
@@ -75,5 +86,8 @@ namespace WSUIOutlookPlugin
         {
             _wsuiBootStraper.PassAction(new WSAction(actionType, null));
         }
+
+       
+
     }
 }

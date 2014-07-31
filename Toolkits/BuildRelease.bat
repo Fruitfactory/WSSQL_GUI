@@ -1,3 +1,3 @@
 call deploy.bat
-call deployTrial.bat
+rem call deployTrial.bat
 uploader.exe

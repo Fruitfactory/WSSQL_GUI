@@ -225,5 +225,14 @@ namespace WSUI.Infrastructure.Helpers.Extensions
             }
         }
 
+        public static UIElement GetParentProperty(this UIElement uiElement)
+        {
+            var property = uiElement.GetType().GetProperty("Parent");
+            if (property != null)
+                return (UIElement)property.GetValue(uiElement, null);
+
+            return null;
+        }
+
     }
 }
