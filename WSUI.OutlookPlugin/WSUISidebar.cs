@@ -1,15 +1,10 @@
 using System;
-using System.Diagnostics;
 using System.Windows;
-using System.Windows.Forms;
-using AddinExpress.OL;
 using WSUI.Control;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
-using WSUI.Core.Logger;
 using WSUI.Infrastructure.Helpers.Extensions;
-using WSUIOutlookPlugin.Hooks;
 using WSUIOutlookPlugin.Interfaces;
 
 namespace WSUIOutlookPlugin
@@ -19,7 +14,7 @@ namespace WSUIOutlookPlugin
         private IPluginBootStraper _wsuiBootStraper = null;
         private bool _isDebugMode = false;
         private bool _isSecondInstance = false;
-        
+
         public WSUISidebar()
         {
             InitializeComponent();
@@ -28,7 +23,7 @@ namespace WSUIOutlookPlugin
 
         private void OnAdxAfterFormHide(object sender, ADXAfterFormHideEventArgs e)
         {
-            if(!_isSecondInstance)
+            if (!_isSecondInstance)
                 WSUIAddinModule.CurrentInstance.IsMainUIVisible = false;
             _isSecondInstance = false;
         }
@@ -38,7 +33,7 @@ namespace WSUIOutlookPlugin
             base.OnShown(e);
 
             SetBootStraper(WSUIAddinModule.CurrentInstance.BootStraper);
-            }
+        }
 
         bool ISidebarForm.IsDisposed
         {
@@ -73,7 +68,7 @@ namespace WSUIOutlookPlugin
             else
             {
                 _isSecondInstance = true;
-                Hide();                
+                Hide();
             }
         }
 
@@ -86,8 +81,6 @@ namespace WSUIOutlookPlugin
         {
             _wsuiBootStraper.PassAction(new WSAction(actionType, null));
         }
-
-       
 
     }
 }

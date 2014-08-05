@@ -68,7 +68,7 @@ namespace WSUI.Module.ViewModel
         private Transition _dataToPreviewTransition = null;
 
         public MainViewModel(IUnityContainer container, IRegionManager region, IKindsView kindView,
-            IPreviewView previewView,IEventAggregator eventAggregator)
+            IPreviewView previewView, IEventAggregator eventAggregator)
         {
             _container = container;
             _regionManager = region;
@@ -216,6 +216,7 @@ namespace WSUI.Module.ViewModel
                     regionSidebarData.Remove(oldView);
                 }
                 regionSidebarData.Add(viewData, InternalDataView);
+                OldView = viewData;
             }
 
             if (PreviewView != null)
@@ -349,7 +350,7 @@ namespace WSUI.Module.ViewModel
                 searchString = _currentItem.SearchString;
             _currentItem = sendItem;
             Connect();
-            if(BackCommand.CanExecute(null))
+            if (BackCommand.CanExecute(null))
                 BackCommand.Execute(null);
             CurrentKindChanged(_currentItem);
             if (!string.IsNullOrEmpty(searchString) && searchString != _currentItem.SearchString)
@@ -649,12 +650,13 @@ namespace WSUI.Module.ViewModel
             IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
             if (regionSidebarData != null)
             {
-                _oldView = regionSidebarData.GetView(InternalDataView);
-                if (_oldView != null)
+                var oldView = regionSidebarData.GetView(InternalDataView);
+                if (oldView != null)
                 {
-                    regionSidebarData.Remove(_oldView);
+                    regionSidebarData.Remove(oldView);
                 }
-                regionSidebarData.Add(PreviewView, InternalPreviewView);
+                if (!regionSidebarData.Views.Contains(PreviewView))
+                    regionSidebarData.Add(PreviewView, InternalPreviewView);
                 regionSidebarData.Activate(PreviewView);
             }
         }
@@ -670,12 +672,20 @@ namespace WSUI.Module.ViewModel
                 {
                     regionSidebarData.Remove(oldView);
                 }
-                regionSidebarData.Add(_oldView, InternalDataView);
-                regionSidebarData.Activate(_oldView);
+                if (!regionSidebarData.Views.Contains(OldView))
+                    regionSidebarData.Add(OldView, InternalDataView);
+                if(OldView != null)
+                    regionSidebarData.Activate(OldView);
             }
         }
 
-        private void SetTransition( Transition transition)
+        public object OldView 
+        {
+            get { return _oldView; }
+            set { _oldView = value; }
+        }
+
+        private void SetTransition(Transition transition)
         {
             CurrenTransition = transition;
             OnPropertyChanged(() => CurrenTransition);

@@ -41,7 +41,7 @@ namespace WSUI.Module.ViewModel
 
             Folder = OutlookHelper.AllFolders;
 
-            EmailClickCommand = new DelegateCommand<object>(o => EmailClick(o), o => true);
+            EmailClickCommand = new DelegateCommand<object>(EmailClick, o => true);
             _contactSuggesting = new ContactSuggestingService();
             _contactSuggesting.Suggest += (o, e) =>
             {
