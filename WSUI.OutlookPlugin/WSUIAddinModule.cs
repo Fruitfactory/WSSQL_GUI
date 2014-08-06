@@ -694,7 +694,6 @@ namespace WSUIOutlookPlugin
         private void ShowUi(bool show)
         {
             _sidebarForm = GetSidebarForm();
-            WSSqlLogger.Instance.LogInfo("IsDisposed SideBar: {0}", _sidebarForm.IsDisposed);
             if (_sidebarForm != null && !_sidebarForm.IsDisposed)
             {
                 _sidebarForm.Show();
@@ -707,7 +706,6 @@ namespace WSUIOutlookPlugin
         private void HideUi(bool hide)
         {
             _sidebarForm = GetSidebarForm();
-            WSSqlLogger.Instance.LogInfo("IsDisposed SideBar: {0}", _sidebarForm.IsDisposed);
             if (_sidebarForm != null && !_sidebarForm.IsDisposed)
             {
                 _sidebarForm.Hide();

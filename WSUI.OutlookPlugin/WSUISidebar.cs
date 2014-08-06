@@ -4,6 +4,7 @@ using WSUI.Control;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
+using WSUI.Core.Logger;
 using WSUI.Infrastructure.Helpers.Extensions;
 using WSUIOutlookPlugin.Interfaces;
 
@@ -19,6 +20,7 @@ namespace WSUIOutlookPlugin
         {
             InitializeComponent();
             ADXAfterFormHide += OnAdxAfterFormHide;
+            WSSqlLogger.Instance.LogInfo("Create WSUISidebar");
         }
 
         private void OnAdxAfterFormHide(object sender, ADXAfterFormHideEventArgs e)

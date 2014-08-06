@@ -222,7 +222,7 @@ namespace WSUI.Core.Helpers
             if (item == null)
                 return string.Empty;
 
-            var folder = item.Parent as Outlook.Folder;
+            var folder = item.Parent as Outlook.MAPIFolder;
             if (folder == null)
                 return string.Empty;
             return folder.FullFolderPath;
@@ -325,11 +325,11 @@ namespace WSUI.Core.Helpers
                 string[] split = fullname.Split(' ');
                 if (split.Length <= 1)
                     return null;
-                foreach (var item in ns.Folders.OfType<Outlook.Folder>())
+                foreach (var item in ns.Folders.OfType<Outlook.MAPIFolder>())
                 {
                     try
                     {
-                        foreach (var fol in item.Folders.OfType<Outlook.Folder>())
+                        foreach (var fol in item.Folders.OfType<Outlook.MAPIFolder>())
                         {
                             if (string.IsNullOrEmpty(fol.AddressBookName))
                                 continue;
