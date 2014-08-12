@@ -1438,15 +1438,18 @@ function insert_payment_table(){
 }
 add_shortcode('insert_payment_table', 'insert_payment_table');
 
-
+include(dirname(__FILE__).'/PaymentSettings.php');
 function insert_gumroad($attr){
+
+    global $AppPriceAll,$CurrencySign;
+    
     extract(shortcode_atts(array(
         'title' => '',
         'price' => '',
         'url' => '',
         'button_caption'=> ''
     ),$attr));
-    $html = '<div id="pricing-panel"><div id="the-price"> <span class="currency">$</span><span class="price-number">'.$price.'</span><span class="price-text">'.$title.'</span></div><a class="button_gum" href="'.$url.'">'.$button_caption.'</a></div>';
+    $html = '<div id="pricing-panel"><div id="the-price"> <span class="currency">'.$CurrencySign.'</span><span class="price-number">'.$AppPriceAll.'</span>/yr<span class="price-text">'.$title.'</span></div><a class="button_gum" href="'.$url.'">'.$button_caption.'</a></div>';
     return $html;
 }
 add_shortcode('insert_gumroad', 'insert_gumroad');

@@ -33,6 +33,7 @@ $UsePayPal = true;
 
 // dollars, cents
 $AppPrice = array(39, 95);
+$AppPriceAll = 39.95;
 $Currency = 'USD';
 
 // The currency symbol that the end-user will see.
@@ -142,10 +143,10 @@ if (!function_exists('debug_log')) {
 
 
 
-function SendPKeys($quantity, $email, $first, $last, $userEmail)
+function SendPKeys($quantity, $email, $first, $last, $userEmail, $gumroad = false)
 {
 	//Note: we put LimeLM in this directory. Change it as needed.
-	require(dirname(__FILE__).'/LimeLM.php');
+	require_once(dirname(__FILE__).'/LimeLM.php');
 
 	global $LimeLM_VersionID, $LimeLM_ApiKey,$CompanyName,$AppName, $InstallerPage, $LicenseYear, $TrialField, $IsTrial, $UserEmail, $TimesUsed;
 
@@ -191,7 +192,7 @@ function SendPKeys($quantity, $email, $first, $last, $userEmail)
 	// form the customer name
 	$customerName = $first;
 
-	if (!empty($last))
+	if (!$gumroad && !empty($last))
 		// append the last name
 		$customerName .= ' '.$last;
 
@@ -243,7 +244,7 @@ The '.$AppName.' team';
 function UpdateLicensing($userEmail)
 {
     //Note: we put LimeLM in this directory. Change it as needed.
-    require(dirname(__FILE__).'/LimeLM.php');
+    require_once(dirname(__FILE__).'/LimeLM.php');
 
     global $LimeLM_VersionID, $LimeLM_ApiKey,$CompanyName,$AppName, $InstallerPage, $LicenseYear, $TrialField, $IsTrial, $UserEmail, $TimesUsed;
 
@@ -284,6 +285,30 @@ function UpdateLicensing($userEmail)
     LimeLM::CleanUp();
 }
 
+
+function IsEmailExist($userEmail) {
+    //Note: we put LimeLM in this directory. Change it as needed.
+    require_once(dirname(__FILE__) . '/LimeLM.php');
+    debug_log('IsEmailExist...', true);
+    global $LimeLM_VersionID, $LimeLM_ApiKey, $CompanyName, $AppName, $InstallerPage, $LicenseYear;
+
+    LimeLM::SetAPIKey($LimeLM_ApiKey);
+
+    $result = false;
+
+    try {
+        // Find product keys using the email
+        $xml = new SimpleXMLElement(LimeLM::FindPKey($LimeLM_VersionID, $userEmail));
+        $result = $xml['stat'] == 'ok';
+        debug_log('Result '.$result, true);
+    } catch (Exception $e) {
+        $success = false;
+        debug_log($e->getMessage(), $success);
+    }
+    LimeLM::CleanUp();
+
+    return $result;
+}
 
 
 ?>

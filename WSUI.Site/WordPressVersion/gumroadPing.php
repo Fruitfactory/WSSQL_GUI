@@ -6,11 +6,11 @@
  * and open the template in the editor.
  */
 //
-include_once (getcwd().'/wp-content/themes/justlanded/PaymentSettingsTEST.php');
+include_once (getcwd().'/wp-content/themes/justlanded/PaymentSettings.php');
 
-$customerEmail = "";
+$customerEmail = null;
 $defaultCount = 1;
-$fullName = "";
+$fullName = null;
 
 if($_POST["email"]){
     debug_log($_POST["email"], true);
@@ -27,14 +27,18 @@ debug_log('Creating product Information to send.',true);
 
 // This calls the function in PaymentSettings.php that
 // creates the product keys and send them to the user
-if(IsEmailExistTEST($customerEmail))
-{
-    UpdateLicensingTEST($defaultCount, $customerEmail, $fullName, $fullName,$customerEmail);
-}
-else
-    SendPKeysTEST($defaultCount, $customerEmail, $fullName, $fullName,$customerEmail);
+//if(IsEmailExistTEST($customerEmail))
+//{
+//    UpdateLicensingTEST($defaultCount, $customerEmail, $fullName, $fullName,$customerEmail);
+//}
+//else
 
-debug_log('paychecker finished.',true,true);
+if(!empty($customerEmail) && !IsEmailExist($customerEmail) ){
+    
+    SendPKeys($defaultCount, $customerEmail, $fullName, $fullName,$customerEmail,true);
+    debug_log('paychecker finished.',true,true);
+    
+}
 
 header("HTTP/1.1 200 OK");
 exit;

@@ -201,13 +201,6 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
             $("#signup_form").submit();
             
             
-            
-            var valNotify = $("#notify_url").val();
-            valNotify = valNotify + "&userEmail="+emailVal;
-            $("#notify_url").val(valNotify);
-            $("#signup_form").submit();
-            
-            
             //method=limelm.pkey.find&version_id=1432&email=yariki4@gmail.com&api_key=1m115715277fb67cc5a51.73953699
             //{method:methodApi,version_id:version,email:emailVal,api_key:apiKey,format:'json'},
             //'?method=limelm.pkey.find&version_id=1432&email='+emailVal+'&api_key=1m115715277fb67cc5a51.73953699&format=json' ,

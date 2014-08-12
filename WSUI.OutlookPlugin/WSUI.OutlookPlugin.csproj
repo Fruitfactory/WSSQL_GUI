@@ -124,7 +124,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Loader\adxloader.dll.manifest">
       <SubType>Designer</SubType>
     </None>
