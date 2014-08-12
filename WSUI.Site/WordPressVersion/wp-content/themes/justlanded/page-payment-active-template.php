@@ -104,6 +104,7 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
 <!-- script begin -->
 <script type="text/javascript" src="//wordpress.org/wp-includes/js/jquery/jquery.js"></script>
 <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
 <script type="text/javascript"><!--
     function calcTot(dollars, cents, quantity)
     {
@@ -366,6 +367,7 @@ $single_price = sprintf('%u.%02u',$AppPrice[0],$AppPrice[1]);
         margin: 20px auto;
         float: none;
         clear: both;
+        visibility: collapse;
     }
     table.price-table tr th {
         background: none repeat scroll 0% 0% rgb(161, 191, 206);
