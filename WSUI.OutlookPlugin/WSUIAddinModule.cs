@@ -261,7 +261,7 @@ namespace WSUIOutlookPlugin
             // 
             // buttonShow
             // 
-            this.buttonShow.Caption = "Show/Hide Sidebar";
+            this.buttonShow.Caption = "Show/Hide OutlookFinder";
             this.buttonShow.Id = "adxRibbonButton_dcb0aa6e6fd442c79ea44b4006d84643";
             this.buttonShow.Image = 1;
             this.buttonShow.ImageList = this.wsuiImageList;
@@ -331,19 +331,19 @@ namespace WSUIOutlookPlugin
             // 
             // buttonShow2007
             // 
-            this.buttonShow2007.Caption = "Show Windows Search";
+            this.buttonShow2007.Caption = "Show OutlookFinder";
             this.buttonShow2007.ControlTag = "e314f48a-f1c6-4e22-9e96-2f526c649798";
             this.buttonShow2007.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.buttonShow2007.Temporary = true;
-            this.buttonShow2007.UpdateCounter = 6;
+            this.buttonShow2007.UpdateCounter = 7;
             // 
             // buttonHide2007
             // 
-            this.buttonHide2007.Caption = "Close Windows Search";
+            this.buttonHide2007.Caption = "Close OutlookFinder";
             this.buttonHide2007.ControlTag = "2a1559ac-9958-47f2-bae7-141679f598e8";
             this.buttonHide2007.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.buttonHide2007.Temporary = true;
-            this.buttonHide2007.UpdateCounter = 4;
+            this.buttonHide2007.UpdateCounter = 5;
             // 
             // adxCommandBarEditSearchText
             // 
@@ -408,7 +408,7 @@ namespace WSUIOutlookPlugin
             // 
             // wsuiButtonSwitch
             // 
-            this.wsuiButtonSwitch.Caption = "Show/Hide Sidebar";
+            this.wsuiButtonSwitch.Caption = "Show/Hide OutlookFinder";
             this.wsuiButtonSwitch.Id = "adxRibbonButton_295c2b7151ed437382c104f4c3d542ce";
             this.wsuiButtonSwitch.Image = 1;
             this.wsuiButtonSwitch.ImageList = this.wsuiImageList;
