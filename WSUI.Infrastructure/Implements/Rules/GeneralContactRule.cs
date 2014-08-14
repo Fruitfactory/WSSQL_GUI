@@ -18,6 +18,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         #region [needs]
 
         private int _first, _second;
+        private List<string> _listExistingEmails; 
 
         private readonly IList<ISearch> _listContactsRules = new List<ISearch>();
 
@@ -48,6 +49,7 @@ namespace WSUI.Infrastructure.Implements.Rules
             Priority = 0;
             _listContactsRules.Add(new ContactSearchRule(Lock));
             _listContactsRules.Add(new EmailContactSearchRule(Lock));
+            _listExistingEmails = new List<string>();
         }
 
         public override void SetSearchCriteria(string criteria)
@@ -86,49 +88,63 @@ namespace WSUI.Infrastructure.Implements.Rules
         protected override void ProcessResult()
         {
             var resultEmailContact = (_listContactsRules[1] as ISearchRule).GetResults().OperationResult.OfType<EmailContactSearchObject>();
-            var listExistEmails = new List<string>();
             if (resultEmailContact != null && resultEmailContact.Any())
             {
                 foreach (var emailContact in resultEmailContact)
                 {
-                    if(listExistEmails.Contains(emailContact.EMail.ToLowerInvariant()))
+                    if(_listExistingEmails.Contains(emailContact.EMail.ToLowerInvariant()))
                         continue;
                     Result.Add(emailContact);
-                    listExistEmails.Add(emailContact.EMail.ToLowerInvariant());
+                    _listExistingEmails.Add(emailContact.EMail.ToLowerInvariant());
                 }    
             }
+            var arrQuery = InitQueryWords(Query);
             var resultContacts =
                 (_listContactsRules[0] as ISearchRule).GetResults().OperationResult.OfType<ContactSearchObject>();
+
             if (resultContacts != null && resultContacts.Any())
             {
                 foreach (var contactSearchObject in resultContacts)
                 {
-                    if (IsEmail(contactSearchObject.EmailAddress) &&
-                        !listExistEmails.Contains(contactSearchObject.EmailAddress.ToLowerInvariant()))
+                    if (IsEmail(contactSearchObject.EmailAddress) && IsContainsSearchCriterias(contactSearchObject.EmailAddress, arrQuery) &&
+                        !_listExistingEmails.Contains(contactSearchObject.EmailAddress.ToLowerInvariant()))
                     {
                         Result.Add(contactSearchObject);
-                        listExistEmails.Add(contactSearchObject.EmailAddress.ToLowerInvariant());
+                        _listExistingEmails.Add(contactSearchObject.EmailAddress.ToLowerInvariant());
                     }
-                    else if (IsEmail(contactSearchObject.EmailAddress2) &&
-                             !listExistEmails.Contains(contactSearchObject.EmailAddress2.ToLowerInvariant()))
+                    else if (IsEmail(contactSearchObject.EmailAddress2) && IsContainsSearchCriterias(contactSearchObject.EmailAddress2, arrQuery) &&
+                             !_listExistingEmails.Contains(contactSearchObject.EmailAddress2.ToLowerInvariant()))
                     {
+                        contactSearchObject.EmailAddress = contactSearchObject.EmailAddress2;
                         Result.Add(contactSearchObject);
-                        listExistEmails.Add(contactSearchObject.EmailAddress2.ToLowerInvariant());
+                        _listExistingEmails.Add(contactSearchObject.EmailAddress2.ToLowerInvariant());
                     }
-                    else if (IsEmail(contactSearchObject.EmailAddress3) &&
-                             !listExistEmails.Contains(contactSearchObject.EmailAddress3.ToLowerInvariant()))
+                    else if (IsEmail(contactSearchObject.EmailAddress3) && IsContainsSearchCriterias(contactSearchObject.EmailAddress3, arrQuery) &&
+                             !_listExistingEmails.Contains(contactSearchObject.EmailAddress3.ToLowerInvariant()))
                     {
+                        contactSearchObject.EmailAddress = contactSearchObject.EmailAddress3;
                         Result.Add(contactSearchObject);
-                        listExistEmails.Add(contactSearchObject.EmailAddress3.ToLowerInvariant());
+                        _listExistingEmails.Add(contactSearchObject.EmailAddress3.ToLowerInvariant());
                     }
                 }
             }
+        }
+
+        private bool IsContainsSearchCriterias(string emailAddress, string[] arrQuery)
+        {
+            return arrQuery != null && arrQuery.Length > 0 && arrQuery.Any(emailAddress.Contains);
+        }
+
+        private string[] InitQueryWords(string query)
+        {
+            return Query.Split(' ');
         }
 
         public override void Reset()
         {
             base.Reset();
             _listContactsRules.ForEach(r => r.Reset());
+            ClearLisOfExistingEmails();
         }
 
         public override void Init()
@@ -145,6 +161,13 @@ namespace WSUI.Infrastructure.Implements.Rules
         private bool IsEmail(string email)
         {
             return !string.IsNullOrEmpty(email) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase) ;
+        }
+
+        private void ClearLisOfExistingEmails()
+        {
+            if (_listExistingEmails == null)
+                return;
+            _listExistingEmails.Clear();
         }
 
     }
