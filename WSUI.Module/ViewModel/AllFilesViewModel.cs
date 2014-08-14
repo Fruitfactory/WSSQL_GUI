@@ -101,8 +101,8 @@ namespace WSUI.Module.ViewModel
                 }
                 else
                 {
-                    var watch = new Stopwatch();
-                    watch.Start();
+                    //var watch = new Stopwatch();
+                    //watch.Start();
                     if (_isFirstTime)
                     {
                         ContactForFirstTime(result.Where(i => i.Priority <= FirstPriority).OrderBy(i => i.Priority));
@@ -113,8 +113,8 @@ namespace WSUI.Module.ViewModel
                     {
                         CollectionExtensions.AddRange(DataSource, col.Result);
                     }
-                    watch.Stop();
-                    WSSqlLogger.Instance.LogInfo("ProcessMainResult (AllViewModel): {0}", watch.ElapsedMilliseconds);
+                    //watch.Stop();
+                    //WSSqlLogger.Instance.LogInfo("ProcessMainResult (AllViewModel): {0}", watch.ElapsedMilliseconds);
                 }
                 _isFirstTime = false;
             }), null);
