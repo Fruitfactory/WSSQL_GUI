@@ -116,6 +116,7 @@ namespace WSUI.Module.ViewModel
                     //watch.Stop();
                     //WSSqlLogger.Instance.LogInfo("ProcessMainResult (AllViewModel): {0}", watch.ElapsedMilliseconds);
                 }
+                ShowMessageNoMatches = true;
                 _isFirstTime = false;
             }), null);
         }

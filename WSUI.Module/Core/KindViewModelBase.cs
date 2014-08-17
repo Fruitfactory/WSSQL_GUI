@@ -119,6 +119,7 @@ namespace WSUI.Module.Core
                         TypeItem = TypeSearchItem.None
                     };
                     DataSource.Add(message);
+                    
                 }
                 else
                 {
@@ -130,6 +131,7 @@ namespace WSUI.Module.Core
                         }
                     });
                 }
+                ShowMessageNoMatches = true;
             }), null);
         }
 

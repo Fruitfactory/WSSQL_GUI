@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSPreview", "WSPreview\WSPr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSUI", "WSUI\WSUI.csproj", "{FC523AB4-1B6D-4F63-B758-AB8E73908605}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSUI.Infrastructure", "WSUI.Infrastructure\WSUI.Infrastructure.csproj", "{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSUI.Module", "WSUI.Module\WSUI.Module.csproj", "{EDCE3394-18B5-40A8-AE43-E6A8E23C9A7F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSUI.Control", "WSUI.Control\WSUI.Control.csproj", "{FC28437E-0008-4A62-B444-37EB9E6B5AE6}"
@@ -37,6 +35,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSUI.Unistall", "WSUI.Unistall\WSUI.Unistall.csproj", "{F956C79C-37E0-49C1-B243-9543DC0FF34D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSUploader", "WSUploader\WSUploader.csproj", "{B19B600E-5C92-413D-8D35-E86CC43AC2B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{11BE038C-3D0A-424D-8984-84F7479EF0EB}"
+	ProjectSection(SolutionItems) = preProject
+		Version.cs = Version.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,27 +102,6 @@ Global
 		{FC523AB4-1B6D-4F63-B758-AB8E73908605}.Trial|Win32.ActiveCfg = Trial|Any CPU
 		{FC523AB4-1B6D-4F63-B758-AB8E73908605}.Trial|x64.ActiveCfg = Trial|Any CPU
 		{FC523AB4-1B6D-4F63-B758-AB8E73908605}.Trial|x86.ActiveCfg = Trial|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Release|Win32.ActiveCfg = Release|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Release|x64.ActiveCfg = Release|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Release|x86.ActiveCfg = Release|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Trial|Any CPU.ActiveCfg = Trial|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Trial|Any CPU.Build.0 = Trial|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Trial|Mixed Platforms.ActiveCfg = Trial|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Trial|Mixed Platforms.Build.0 = Trial|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Trial|Win32.ActiveCfg = Trial|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Trial|x64.ActiveCfg = Trial|Any CPU
-		{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}.Trial|x86.ActiveCfg = Trial|Any CPU
 		{EDCE3394-18B5-40A8-AE43-E6A8E23C9A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EDCE3394-18B5-40A8-AE43-E6A8E23C9A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDCE3394-18B5-40A8-AE43-E6A8E23C9A7F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
