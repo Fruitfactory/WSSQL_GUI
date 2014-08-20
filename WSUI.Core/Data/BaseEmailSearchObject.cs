@@ -65,7 +65,7 @@ namespace WSUI.Core.Data
 	        return _internalHasAttachment.Value;
 	    }
 
-	    public string Recepient
+	    public string From
 	    {
 	        get
 	        {

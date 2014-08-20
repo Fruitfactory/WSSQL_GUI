@@ -232,7 +232,7 @@
                                     <Image Style="{StaticResource ImageStyleEmail}" Grid.Column="0" Grid.Row="0" />
 
                                     <TextBlock Grid.Column="1" Grid.Row="0" Margin="0 2 0 1" FontWeight="Bold" Foreground="Red" Text="{Binding Count,Converter={StaticResource countConverter}}"></TextBlock>
-                                    <ctrl:HightliteTextBlock Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Margin="2 2 2 1" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}" Text="{Binding Path=Recepient}"></ctrl:HightliteTextBlock>
+                                    <ctrl:HightliteTextBlock Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Margin="2 2 2 1" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}" Text="{Binding Path=From}"></ctrl:HightliteTextBlock>
                                     <TextBlock Grid.Column="4" Grid.Row="0" Margin="1 2 1 1" Foreground="Black" Text="{Binding Path=DateReceived,Converter={StaticResource dateConverter}}" />
 
                                     <ctrl:HightliteTextBlock Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Margin="0 1 0 2" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}" Text="{Binding Path=ItemName,Converter={StaticResource ResourceKey=StringConverter}}"></ctrl:HightliteTextBlock>
@@ -303,7 +303,7 @@
                 <Image Style="{StaticResource ImageStyleEmail}" Grid.Column="0" Grid.Row="0" />
 
                 <TextBlock Grid.Column="1" Grid.Row="0" Margin="0 2 0 2" FontWeight="Bold" Foreground="Red" Text="{Binding Count,Converter={StaticResource countConverter}}"></TextBlock>
-                <ctrl:HightliteTextBlock Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Margin="2" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}" Text="{Binding Path=Recepient}"></ctrl:HightliteTextBlock>
+                <ctrl:HightliteTextBlock Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Margin="2" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}" Text="{Binding Path=From}"></ctrl:HightliteTextBlock>
                 <TextBlock Grid.Column="4" Grid.Row="0" Margin="2 2 1 2" Foreground="Black" Text="{Binding Path=DateReceived,Converter={StaticResource dateConverter}}" />
 
                 <ctrl:HightliteTextBlock Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Margin="0 1 0 2" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}" Text="{Binding Path=ItemName,Converter={StaticResource ResourceKey=StringConverter}}"></ctrl:HightliteTextBlock>

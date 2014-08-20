@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Id="C74BA46D-2C46-42E2-BB5E-7FBA30112D92" Name="OutlookFinder" Language="1033" Version="1.0.1" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.1" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFacory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
-    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />-->
+    <Upgrade Id="6169fa5d-89fa-44d3-9801-cefe8fc8755e">
+      <UpgradeVersion Minimum="0.0.0.0" IncludeMinimum="yes" OnlyDetect="no" Maximum="10.0.0.0" IncludeMaximum="yes" Property="PREVIOUSFOUND" />
+    </Upgrade>
     <Media Id="1" Cabinet="OutlookFinder.cab" EmbedCab="yes" />
     <Condition Message="!(Setting the ALLUSERS property is not allowed.)">
       NOT ALLUSERS
@@ -46,7 +49,7 @@
     <CustomAction Id="ActivatePlugin" BinaryKey="managedAction" DllEntry="ActivatePlugin" Execute="immediate" Return="check" />
     <?endif?>
     <InstallExecuteSequence>
-      <!--<RemoveExistingProducts After="InstallFinalize" />-->
+      <RemoveExistingProducts After="InstallValidate" />
       <Custom Action="RegisterDll" After="SelfRegModules">NOT Installed</Custom>
       <Custom Action="UnregisterDll" After="SelfUnregModules">Installed</Custom>
       <Custom Action="Deactivate" After="UnregisterDll">Installed</Custom>

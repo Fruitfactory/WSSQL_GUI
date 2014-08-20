@@ -1449,7 +1449,7 @@ function insert_gumroad($attr){
         'url' => '',
         'button_caption'=> ''
     ),$attr));
-    $html = '<div id="pricing-panel"><div id="the-price"> <span class="currency">'.$CurrencySign.'</span><span class="price-number">'.$AppPriceAll.'</span>/yr<span class="price-text">'.$title.'</span></div><a class="button_gum" href="'.$url.'">'.$button_caption.'</a></div>';
+    $html = '<div id="pricing-panel"><div id="the-price"> <span class="currency">'.$CurrencySign.'</span><span class="price-number">'.$AppPriceAll.'</span><span class="price-text">'.$title.'</span></div><a class="button_gum" href="'.$url.'">'.$button_caption.'</a></div>';
     return $html;
 }
 add_shortcode('insert_gumroad', 'insert_gumroad');

@@ -204,7 +204,7 @@ function SendPKeys($quantity, $email, $first, $last, $userEmail, $gumroad = fals
 
 '.$product_keys.'
 
-This product key is licensed for '.$quantity.( $quantity > 1 ? ' users' : ' user' ).' of '.$AppName.' for '.$LicenseYear.' year.
+This product key is licensed for '.$quantity.( $quantity > 1 ? ' users' : ' user' ).' of '.$AppName.'.
 Here is the url for downloading the latest version:
 '.$InstallerPage.'
     

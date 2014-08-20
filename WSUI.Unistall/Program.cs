@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using WSUI.Core.Core.LimeLM;
 using WSUI.Core.Enums;
-using WSUI.Core.Logger;
 
 namespace WSUI.Unistall
 {
@@ -28,14 +27,11 @@ namespace WSUI.Unistall
                     return;
                 if (TurboLimeActivate.Instance.State == ActivationState.Activated)
                 {
-                    var result = TurboLimeActivate.Instance.Deactivate(true);
-                    WSSqlLogger.Instance.LogError("Deactivating result : {0}", result);
+                    TurboLimeActivate.Instance.Deactivate(true);
                 }
             }
-            catch (System.Exception ex)
+            catch
             {
-                Console.WriteLine(ex.Message);
-                WSSqlLogger.Instance.LogError("Deactivating: {0}", ex.Message);
             }
             
         }

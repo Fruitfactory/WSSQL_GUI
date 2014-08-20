@@ -27,50 +27,24 @@ namespace WSGen
             string source = args[0];
             string buildNumber = Properties.Settings.Default.BuildNumber;
             string setupProject = string.Format("{0}{1}", source, Properties.Settings.Default.SetupProjectFile);
-            GenerateVersionFile(source,buildNumber);
-            UpdateSetupProject(setupProject,buildNumber);
+            GenerateVersionFile(source, buildNumber);
+            UpdateSetupProject(setupProject, buildNumber);
         }
 
-        static void GenerateVersionFile(string sourceDir,string buildNumber)
+        static void GenerateVersionFile(string sourceDir, string buildNumber)
         {
-            string filename = string.Format("{0}\\{1}",sourceDir,Properties.Settings.Default.VersionFilename);
-            using (StreamWriter writer = new StreamWriter(filename,false,Encoding.UTF8))
+            string filename = string.Format("{0}\\{1}", sourceDir, Properties.Settings.Default.VersionFilename);
+            using (StreamWriter writer = new StreamWriter(filename, false, Encoding.UTF8))
             {
                 writer.WriteLine(UsingPart);
-                writer.WriteLine(AssemblyVersion,buildNumber);
+                writer.WriteLine(AssemblyVersion, buildNumber);
                 writer.WriteLine(AssemblyFileVersion, buildNumber);
             }
         }
-        
+
         static void UpdateSetupProject(string setupProject, string buildNumber)
         {
-            #region [for visuall setup project]
-
-            //string content = string.Empty;
-            //using (StreamReader reader = new StreamReader(setupProject))
-            //{
-            //    content = reader.ReadToEnd();
-            //}
-            //if (string.IsNullOrEmpty(content))
-            //{
-            //    Console.WriteLine("Content of setup project is empty.");
-            //    return;
-            //}
-            //content = Regex.Replace(content, Properties.Settings.Default.ProductVersion,
-            //                        string.Format(Properties.Settings.Default.ProductVersionTemplate, buildNumber),
-            //                        RegexOptions.IgnoreCase);
-            //string guid = "{" + Guid.NewGuid().ToString().ToUpperInvariant() + "}";
-            //content = Regex.Replace(content, Properties.Settings.Default.ProductCode,
-            //                        string.Format(Properties.Settings.Default.ProductCodeTemplate, guid),
-            //                        RegexOptions.IgnoreCase);
-            //using (StreamWriter writer = new StreamWriter(setupProject, false, Encoding.UTF8))
-            //{
-            //    writer.Write(content);
-            //}
-
-            #endregion
-
-            if(!File.Exists(setupProject))
+            if (!File.Exists(setupProject))
                 return;
 
 
@@ -79,9 +53,9 @@ namespace WSGen
             XElement program = doc.Root.FirstNode as XElement;
             if (program != null)
             {
-                XAttribute attr = program.Attribute("Id");
-                attr.Value = Guid.NewGuid().ToString().ToUpperInvariant();
-                attr = program.Attribute("Version");
+                //XAttribute attr = program.Attribute("Id");
+                //attr.Value = Guid.NewGuid().ToString().ToUpperInvariant();
+                XAttribute attr = program.Attribute("Version");
                 attr.Value = buildNumber;
             }
 
