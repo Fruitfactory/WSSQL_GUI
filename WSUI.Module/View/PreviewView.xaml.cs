@@ -81,6 +81,11 @@ namespace WSUI.Module.View
             _previewControl.FullFolderPath = path;
         }
 
+        public void SetPreviewObject(object previewData)
+        {
+            _previewControl.SetPreviewObject(previewData);
+        }
+
         public void ClearPreview()
         {
             _previewControl.UnloadPreview();
@@ -102,23 +107,6 @@ namespace WSUI.Module.View
 
         }
 
-        private void resetPopup()
-        {
-            //var offset = popup.HorizontalOffset;
-            //popup.HorizontalOffset = offset + 1;
-            //popup.HorizontalOffset = offset;
-
-            //// Resizing
-            //popup.Width = grid.ActualWidth;
-            //popup.Height = grid.ActualHeight;
-            ////popup.PlacementRectangle = new Rect(0, 0, grid.Width, grid.Height);
-            //popup.Placement = PlacementMode.Center;
-        }
-
-        private void MetroContentControl_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            resetPopup();
-        }
 
     }
 }

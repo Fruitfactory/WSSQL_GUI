@@ -269,7 +269,16 @@ namespace WSUI.Module.ViewModel
             {
                 Tuple<Point, Size> mwi = GetMainWindowInfo();
                 Enabled = false;
-                Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
+
+                switch (args.Value.TypeItem)
+                {
+                    case TypeSearchItem.Contact:
+                        Application.Current.Dispatcher.BeginInvoke(new Action<object>(ShowPreviewForPreviewObject),args.Value);
+                        break;
+                    default:
+                        Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
+                        break;
+                }
 
                 IsBusy = true;
                 DataVisibility = Visibility.Collapsed;
@@ -314,6 +323,26 @@ namespace WSUI.Module.ViewModel
                 IsBusy = false;
             }
         }
+
+        private void ShowPreviewForPreviewObject(object previewData)
+        {
+            if (PreviewView == null)
+                return;
+            try
+            {
+                PreviewView.SetPreviewObject(previewData);
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "ShowPreviewForPreviewObject", ex.Message));
+            }
+            finally
+            {
+                Enabled = true;
+                IsBusy = false;
+            }
+        }
+
 
         private void OnStart(object sender, EventArgs e)
         {
@@ -674,12 +703,12 @@ namespace WSUI.Module.ViewModel
                 }
                 if (!regionSidebarData.Views.Contains(OldView))
                     regionSidebarData.Add(OldView, InternalDataView);
-                if(OldView != null)
+                if (OldView != null)
                     regionSidebarData.Activate(OldView);
             }
         }
 
-        public object OldView 
+        public object OldView
         {
             get { return _oldView; }
             set { _oldView = value; }

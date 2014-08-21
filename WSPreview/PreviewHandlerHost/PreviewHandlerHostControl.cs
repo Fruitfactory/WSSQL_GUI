@@ -122,6 +122,18 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
 
         public string FullFolderPath { get; set; }
 
+        public void SetPreviewObject(object previewData)
+        {
+            if (previewData == null)
+            {
+                UnloadPreview();
+                return;
+            }
+            OnStartLoad(null);
+            //TODO: generating preview for  Object
+            OnStopLoad(null);
+        }
+
         private bool IsDesignTime()
         {
             return (this.Site != null && this.Site.DesignMode);

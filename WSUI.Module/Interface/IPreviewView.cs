@@ -15,6 +15,7 @@ namespace WSUI.Module.Interface
         bool SetPreviewFile(string filename);
         void SetSearchPattern(string pattern);
         void SetFullFolderPath(string path);
+        void SetPreviewObject(object previewData);
         void ClearPreview();
         void PassActionForPreview(IWSAction action);
 
