@@ -7,7 +7,6 @@
 ///////////////////////////////////////////////////////////
 
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +18,7 @@ using WSUI.Core.Logger;
 using WSUI.Core.Utils;
 using WSUI.Infrastructure.Service.Helpers;
 
-namespace WSUI.Infrastructure.Implements.Rules 
+namespace WSUI.Infrastructure.Implements.Rules.BaseRules 
 {
 	public class BaseAttachmentSearchRule : BaseSearchRule<AttachmentSearchObject>
 	{

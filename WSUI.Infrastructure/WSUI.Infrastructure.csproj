@@ -147,13 +147,14 @@
     <Compile Include="Helpers\Extensions\UIExtensions.cs" />
     <Compile Include="Implements\Rules\AttachmentContentSearchRule.cs" />
     <Compile Include="Implements\Rules\AttachmentFilenameSearchRule.cs" />
+    <Compile Include="Implements\Rules\ContactAttachmentSearchRule.cs" />
     <Compile Include="Implements\Rules\EmailContactSearchRule.cs" />
     <Compile Include="Implements\Rules\GeneralContactRule.cs" />
     <Compile Include="Implements\Systems\AllSearchSystem.cs" />
-    <Compile Include="Implements\Rules\BaseAttachmentSearchRule.cs" />
+    <Compile Include="Implements\Rules\BaseRules\BaseAttachmentSearchRule.cs" />
     <Compile Include="Implements\Systems\AttachmentSearchSystem.cs" />
-    <Compile Include="Implements\Rules\BaseEmailSearchRule.cs" />
-    <Compile Include="Implements\Rules\BaseFilelSearchRule.cs" />
+    <Compile Include="Implements\Rules\BaseRules\BaseEmailSearchRule.cs" />
+    <Compile Include="Implements\Rules\BaseRules\BaseFilelSearchRule.cs" />
     <Compile Include="Implements\Rules\ContactSearchRule.cs" />
     <Compile Include="Implements\Systems\ContactSearchSystem.cs" />
     <Compile Include="Implements\Rules\EmailContentSearchRule.cs" />

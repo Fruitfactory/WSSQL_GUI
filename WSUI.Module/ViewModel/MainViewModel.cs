@@ -329,21 +329,7 @@ namespace WSUI.Module.ViewModel
 
         private void ShowPreviewForPreviewObject(object previewData)
         {
-            if (PreviewView == null)
-                return;
-            try
-            {
-                PreviewView.SetPreviewObject(previewData);
-            }
-            catch (Exception ex)
-            {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "ShowPreviewForPreviewObject", ex.Message));
-            }
-            finally
-            {
-                Enabled = true;
-                IsBusy = false;
-            }
+            
         }
 
 

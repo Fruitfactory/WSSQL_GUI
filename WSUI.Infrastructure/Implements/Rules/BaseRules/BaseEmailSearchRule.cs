@@ -15,7 +15,7 @@ using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 
-namespace WSUI.Infrastructure.Implements.Rules 
+namespace WSUI.Infrastructure.Implements.Rules.BaseRules 
 {
 	public class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject> , IEmailSearchRule
     {

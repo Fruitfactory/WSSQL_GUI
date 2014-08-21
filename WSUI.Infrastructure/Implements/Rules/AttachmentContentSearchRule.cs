@@ -1,4 +1,6 @@
-﻿namespace WSUI.Infrastructure.Implements.Rules
+﻿using WSUI.Infrastructure.Implements.Rules.BaseRules;
+
+namespace WSUI.Infrastructure.Implements.Rules
 {
     public class AttachmentContentSearchRule : BaseAttachmentSearchRule
     {

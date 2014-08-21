@@ -82,11 +82,6 @@ namespace WSUI.Module.View
             _previewControl.FullFolderPath = path;
         }
 
-        public void SetPreviewObject(object previewData)
-        {
-            _previewControl.SetPreviewObject(previewData);
-        }
-
         public void ClearPreview()
         {
             _previewControl.UnloadPreview();

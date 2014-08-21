@@ -7,17 +7,16 @@
 ///////////////////////////////////////////////////////////
 
 
+using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Documents;
 using WSUI.Core.Core.Rules;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
-using System.Collections.Generic;
 using WSUI.Core.Enums;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Service.Helpers;
 
-namespace WSUI.Infrastructure.Implements.Rules 
+namespace WSUI.Infrastructure.Implements.Rules.BaseRules 
 {
 	public class BaseFilelSearchRule : BaseSearchRule<FileSearchObject> 
     {

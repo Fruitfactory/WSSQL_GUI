@@ -181,6 +181,7 @@
     <Compile Include="Strategy\FileCommandStrategy.cs" />
     <Compile Include="ViewModel\AllFilesViewModel.cs" />
     <Compile Include="ViewModel\AttachmentViewModel.cs" />
+    <Compile Include="ViewModel\ContactDetailsViewModel.cs" />
     <Compile Include="ViewModel\ContactViewModel.cs" />
     <Compile Include="ViewModel\EmailViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -198,6 +199,9 @@
     </Compile>
     <Compile Include="View\ContactDataView.xaml.cs">
       <DependentUpon>ContactDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ContactDetailsView.xaml.cs">
+      <DependentUpon>ContactDetailsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ContactSettingsView.xaml.cs">
       <DependentUpon>ContactSettingsView.xaml</DependentUpon>
@@ -272,6 +276,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ContactDataView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ContactDetailsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
