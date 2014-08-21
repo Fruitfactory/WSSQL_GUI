@@ -2,6 +2,7 @@ using WSUI.Core.Enums;
 using WSUI.Module.Commands;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.ViewModel;
 
 namespace WSUI.Module.Strategy
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using WSUI.Infrastructure.Service;
 
-namespace WSUI.Module.Interface
+namespace WSUI.Module.Interface.Service
 {
     public interface IScrollBehavior
     {

@@ -1,4 +1,4 @@
-﻿namespace WSUI.Module.Interface
+﻿namespace WSUI.Module.Interface.View
 {
     interface IUView<T>
     {

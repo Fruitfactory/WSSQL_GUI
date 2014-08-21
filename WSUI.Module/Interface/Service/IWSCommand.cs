@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace WSUI.Module.Interface
+namespace WSUI.Module.Interface.Service
 {
     public interface IWSCommand : ICommand
     {

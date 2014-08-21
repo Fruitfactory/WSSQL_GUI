@@ -22,6 +22,8 @@ using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Service.Rules;
 using WSUI.Infrastructure.Services;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.Service;
+using WSUI.Module.Interface.ViewModel;
 using WSUI.Module.Service;
 using WSUI.Module.Service.Dialogs.Message;
 using Application = System.Windows.Application;

@@ -4,6 +4,7 @@ using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.ViewModel;
 using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands

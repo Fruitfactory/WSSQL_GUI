@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using WSUI.Infrastructure.Attributes;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.Service;
 
 namespace WSUI.Module.Service
 {

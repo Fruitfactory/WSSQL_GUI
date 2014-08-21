@@ -5,8 +5,9 @@ using System.Windows.Input;
 using WSUI.Core.Data;
 using WSUI.Core.Interfaces;
 using WSUI.Infrastructure.Services;
+using WSUI.Module.Interface.Service;
 
-namespace WSUI.Module.Interface
+namespace WSUI.Module.Interface.ViewModel
 {
     public interface IKindItem
     {

@@ -185,10 +185,6 @@
     <Compile Include="Service\ScrollData.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WSPreview\WSPreview.csproj">
-      <Project>{3e9f9f18-b9ad-4dde-a5d6-f71b75c737d2}</Project>
-      <Name>WSPreview</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WSUI.Core\WSUI.Core.csproj">
       <Project>{D650F4E9-99FE-46EC-A59D-BF3A99652255}</Project>
       <Name>WSUI.Core</Name>

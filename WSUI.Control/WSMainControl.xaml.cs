@@ -13,6 +13,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WSUI.Control.Interfaces;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.View;
+using WSUI.Module.Interface.ViewModel;
 
 namespace WSUI.Control
 {

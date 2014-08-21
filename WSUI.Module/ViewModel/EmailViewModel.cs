@@ -7,6 +7,7 @@ using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Service;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.View;
 using WSUI.Module.Service;
 using WSUI.Module.Strategy;
 

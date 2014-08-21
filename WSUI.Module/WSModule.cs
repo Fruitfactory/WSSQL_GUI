@@ -10,6 +10,7 @@ using WSUI.Core.Logger;
 using WSUI.Core.Utils;
 using WSUI.Infrastructure;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.View;
 using WSUI.Module.View;
 using WSUI.Module.ViewModel;
 using Action = System.Action;

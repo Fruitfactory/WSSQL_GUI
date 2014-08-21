@@ -13,6 +13,8 @@ using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Service.Dumper;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.View;
+using WSUI.Module.Interface.ViewModel;
 using WSUI.Module.Service;
 
 namespace WSUI.Control

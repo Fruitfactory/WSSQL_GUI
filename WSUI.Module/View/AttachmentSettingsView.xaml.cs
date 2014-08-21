@@ -1,4 +1,5 @@
 ﻿using WSUI.Module.Interface;
+using WSUI.Module.Interface.View;
 using WSUI.Module.ViewModel;
 
 namespace WSUI.Module.View

@@ -1,7 +1,7 @@
 
-namespace WSUI.Module.Interface
+namespace WSUI.Module.Interface.View
 {
-    public interface IDataView<T>
+    public interface ISettingsView<T>
     {
         T Model
         {

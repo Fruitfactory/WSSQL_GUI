@@ -7,6 +7,7 @@ using Microsoft.Practices.Unity;
 using WSUI.Core.Enums;
 using WSUI.Core.Logger;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.ViewModel;
 
 namespace WSUI.Module.Core
 {

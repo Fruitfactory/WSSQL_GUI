@@ -1,6 +1,7 @@
 ﻿using System;
 using WSUI.Infrastructure.Service;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.Service;
 
 namespace WSUI.Module.Service
 {

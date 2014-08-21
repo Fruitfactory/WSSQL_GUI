@@ -1,6 +1,7 @@
 using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
+using WSUI.Module.Interface.ViewModel;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;

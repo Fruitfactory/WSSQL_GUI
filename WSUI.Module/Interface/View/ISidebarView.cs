@@ -1,4 +1,6 @@
-﻿namespace WSUI.Module.Interface
+﻿using WSUI.Module.Interface.ViewModel;
+
+namespace WSUI.Module.Interface.View
 {
     public interface ISidebarView
     {

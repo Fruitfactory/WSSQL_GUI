@@ -7,6 +7,8 @@ using System.Windows.Media.Animation;
 using WSUI.Control.Interfaces;
 using WSUI.Module.Enums;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.View;
+using WSUI.Module.Interface.ViewModel;
 using WSUI.Module.Service;
 
 namespace WSUI.Control

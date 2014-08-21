@@ -6,7 +6,7 @@
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:preview="clr-namespace:WSPreview.PreviewHandler.PreviewHandlerHost;assembly=WSPreview"
              mc:Ignorable="d"
-             SizeChanged="MetroContentControl_SizeChanged">
+             >
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

@@ -12,6 +12,7 @@ using WSUI.Infrastructure.Models;
 using WSUI.Infrastructure.Service;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.View;
 using WSUI.Module.Service;
 using WSUI.Module.Strategy;
 using Action = System.Action;

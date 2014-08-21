@@ -5,11 +5,10 @@ using System.Windows.Input;
 using Transitionals;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
-using WSUI.Core.EventArguments;
 using WSUI.Core.Interfaces;
 using WSUI.Module.Service;
 
-namespace WSUI.Module.Interface
+namespace WSUI.Module.Interface.ViewModel
 {
     public interface IMainViewModel
     {

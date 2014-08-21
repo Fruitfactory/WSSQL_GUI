@@ -444,6 +444,10 @@
       <Project>{d650f4e9-99fe-46ec-a59d-bf3a99652255}</Project>
       <Name>WSUI.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WSUI.Infrastructure\WSUI.Infrastructure.csproj">
+      <Project>{0c9d56f2-fc4f-4677-a33e-e3e9e09c30c0}</Project>
+      <Name>WSUI.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

@@ -8,6 +8,7 @@ using WSUI.Core.Enums;
 using WSUI.Core.EventArguments;
 using WSUI.Core.Interfaces;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.View;
 using WSUI.Module.ViewModel;
 using WSUI.Core.Win32;
 

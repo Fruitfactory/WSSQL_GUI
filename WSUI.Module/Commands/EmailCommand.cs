@@ -6,14 +6,15 @@ using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
-using WSUI.Module.Interface;
+using WSUI.Module.Interface.ViewModel;
 using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands
 {
     public class EmailCommand : BasePreviewCommand
     {
-        public EmailCommand(IKindItem kindItem) : base(kindItem)
+        public EmailCommand(IKindItem kindItem)
+            : base(kindItem)
         {
         }
 
@@ -38,6 +39,7 @@ namespace WSUI.Module.Commands
 
                         filename = SearchItemHelper.GetFileName(KindItem.Current);
                         break;
+
                     case TypeSearchItem.Attachment:
                         filename = TempFileManager.Instance.GenerateTempFileName(KindItem.Current) ?? OutlookHelper.Instance.GetAttachmentTempFileName(KindItem.Current);
                         break;
@@ -59,14 +61,13 @@ namespace WSUI.Module.Commands
                 MessageBoxService.Instance.Show("Error",
                                                 string.Format(
                                                     "File '{0}' is locked by another process.\nClose all programs and try again.",
-                                                    Path.GetFileName(filename)),MessageBoxButton.OK,MessageBoxImage.Error);
+                                                    Path.GetFileName(filename)), MessageBoxButton.OK, MessageBoxImage.Error);
                 WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "Error", "Create Email - File Load", ex.Message));
             }
             catch (Exception ex)
             {
                 WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "Error", "Create Email", ex.Message));
             }
-
         }
 
         protected override string GetCaption()
@@ -83,6 +84,5 @@ namespace WSUI.Module.Commands
         {
             return "Send email";
         }
-
     }
 }
