@@ -22,7 +22,7 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 {
 	public class BaseAttachmentSearchRule : BaseSearchRule<AttachmentSearchObject>
 	{
-        private const string WhereTemplate = "WHERE Contains(System.ItemUrl,'at=') AND System.DateModified < '{0}'  AND ( {1} ) ORDER BY System.DateModified DESC";
+        protected const string WhereTemplate = "WHERE Contains(System.ItemUrl,'at=') AND System.DateModified < '{0}'  AND ( {1} ) ORDER BY System.DateModified DESC";
         private readonly List<string> _listId = new List<string>(); 
 
 
@@ -48,7 +48,7 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 	        var dateString = FormatDate(ref LastDate);
 	        var tuple = GetProcessingSearchCriteria(listCriterisRules);
 	        string addCriteria = GetAdditionalCriteria(tuple.Item2);
-	        return string.Format(WhereTemplate, dateString, addCriteria, tuple.Item1);
+	        return string.Format(WhereTemplate, dateString, addCriteria);
 	    }
 
         protected override System.Data.DataTable GetDataTable(string query)
