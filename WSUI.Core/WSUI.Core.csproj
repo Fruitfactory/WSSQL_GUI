@@ -104,10 +104,11 @@
     </Compile>
     <Compile Include="Core\Attributes\BaseWSUIAttribute.cs" />
     <Compile Include="Core\Attributes\FieldAttribute.cs" />
-    <Compile Include="Core\BaseSearchData.cs" />
+    <Compile Include="Core\Event\BasePayloadEvent.cs" />
     <Compile Include="Core\LimeLM\LimeLM.cs" />
     <Compile Include="Core\LimeLM\TurboActivate.cs" />
     <Compile Include="Core\LimeLM\TurboLimeActivate.cs" />
+    <Compile Include="Core\Payload\BasePayload.cs" />
     <Compile Include="Core\Rules\BaseRule.cs" />
     <Compile Include="Core\Rules\IRule.cs" />
     <Compile Include="Core\Rules\QuoteRule.cs" />

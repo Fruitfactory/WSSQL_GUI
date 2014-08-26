@@ -57,6 +57,18 @@ namespace WSUI.Core.Data
                     break;
 	        }
 	    }
+
+	    public string GetEmail()
+	    {
+	        return !string.IsNullOrEmpty(EmailAddress)
+	            ? EmailAddress
+	            : !string.IsNullOrEmpty(EmailAddress2)
+	                ? EmailAddress2
+	                : !string.IsNullOrEmpty(EmailAddress3)
+	                    ? EmailAddress3
+	                    : string.Empty;
+
+	    }
     }//end ContactSearchObject
 
 }//end namespace Data

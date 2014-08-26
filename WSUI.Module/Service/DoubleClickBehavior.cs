@@ -4,15 +4,15 @@ using System.Windows.Input;
 
 namespace WSUI.Module.Service
 {
-    public static class DoubleClickBehabior
+    public static class DoubleClickBehavior
     {
          
         public static readonly DependencyProperty DoubleClickHandlerProperty =
-            DependencyProperty.RegisterAttached("DoubleClickHandler", typeof (ICommand), typeof (DoubleClickBehabior), new UIPropertyMetadata(DoubleClickBehabior.DoubleClickHandle));
+            DependencyProperty.RegisterAttached("DoubleClickHandler", typeof (ICommand), typeof (DoubleClickBehavior), new UIPropertyMetadata(DoubleClickBehavior.DoubleClickHandle));
 
         public static void SetDoubleClickHandler(DependencyObject target, ICommand value)
         {
-            target.SetValue(DoubleClickBehabior.DoubleClickHandlerProperty,value);
+            target.SetValue(DoubleClickBehavior.DoubleClickHandlerProperty,value);
         }
 
         private static void DoubleClickHandle(DependencyObject target, DependencyPropertyChangedEventArgs args)
@@ -34,7 +34,7 @@ namespace WSUI.Module.Service
         private static void FeOnMouseDoubleClick(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             FrameworkElement element = sender as FrameworkElement;
-            ICommand command = (ICommand) element.GetValue(DoubleClickBehabior.DoubleClickHandlerProperty);
+            ICommand command = (ICommand) element.GetValue(DoubleClickBehavior.DoubleClickHandlerProperty);
             if (command == null)
                 return;
             command.Execute(mouseButtonEventArgs);

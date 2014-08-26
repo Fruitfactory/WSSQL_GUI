@@ -7,8 +7,7 @@ namespace WSUI.Infrastructure.Implements.Systems
     public class ContactAttachmentSearchSystem : BaseSearchSystem
     {
         public ContactAttachmentSearchSystem()
-        {
-            
+        {   
         }
 
         public override void Init()

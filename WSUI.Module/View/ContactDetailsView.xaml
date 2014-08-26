@@ -3,7 +3,57 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              
              >
+    <UserControl.Resources>
+
+    </UserControl.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"></ColumnDefinition>
+                <ColumnDefinition Width="0.5*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0" FontWeight="Bold">
+                <Run Text="{Binding FirstName,UpdateSourceTrigger=PropertyChanged}"></Run>
+                <Run> </Run>
+                <Run Text="{Binding LastName,UpdateSourceTrigger=PropertyChanged}"></Run>
+            </TextBlock>
+
+            <Label Grid.Column="0" Grid.Row="1">Emails:</Label>
+
+            <ItemsControl Grid.Column="0" Grid.Row="2" Height="100" 
+                          ItemsSource="{Binding ItemsSource,UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                            <Hyperlink Command="{Binding Path=DataContext.CreateEmailCommand,ElementName=this}" CommandParameter="{Binding}">
+                                <TextBlock TextWrapping="Wrap" Text="{Binding}"></TextBlock>
+                            </Hyperlink>
+                        </TextBlock>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
             
+            <Image Source="{Binding FotoFilepath,UpdateSourceTrigger=PropertyChanged}"
+                   Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
+                   ></Image>
+
+        </Grid>
+
+        <Grid Grid.Row="1">
+            
+
+        </Grid>
+
     </Grid>
 </UserControl>

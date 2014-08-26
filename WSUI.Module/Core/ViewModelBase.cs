@@ -5,9 +5,10 @@ using WSUI.Core.Enums;
 
 namespace WSUI.Module.Core
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    public class ViewModelBase : INotifyPropertyChanged, IDisposable
     {
-        
+        protected bool Disposed = false;
+
         public ViewModelBase()
         {
             Host = HostType.Unknown;
@@ -40,5 +41,17 @@ namespace WSUI.Module.Core
         public event PropertyChangedEventHandler PropertyChanged;
 
         public HostType Host { get; protected set; }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);            
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            Disposed = true;
+        }
+
     }
 }

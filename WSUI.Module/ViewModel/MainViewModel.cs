@@ -661,7 +661,7 @@ namespace WSUI.Module.ViewModel
                 temp(this, new SlideDirectionEventArgs(dir));
             }
         }
-
+        // move to left <------
         private void ChangeDataToPreview()
         {
             SetTransition(_dataToPreviewTransition);
@@ -678,7 +678,7 @@ namespace WSUI.Module.ViewModel
                 regionSidebarData.Activate(PreviewView);
             }
         }
-
+        // move to right ------>
         private void ChangePreviewToData()
         {
             SetTransition(_previewToDataTransition);

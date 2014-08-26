@@ -76,7 +76,7 @@
                  SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
                  ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
-                 service:DoubleClickBehabior.DoubleClickHandler="{Binding DoubleClickCommand}"
+                 service:DoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
                  HorizontalContentAlignment="Stretch"
                  >
 

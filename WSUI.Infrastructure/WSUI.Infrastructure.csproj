@@ -142,6 +142,7 @@
     <Compile Include="Converters\ActivationStatusToButtonVisibilityConverter.cs" />
     <Compile Include="Converters\ActivationStatusToGridVisibilityConverter.cs" />
     <Compile Include="Converters\StringToStringConverter.cs" />
+    <Compile Include="Events\SelectedChangedPayloadEvent.cs" />
     <Compile Include="Helpers\AttachedProperty\ListBoxSelectedObjectAttachedProperty.cs" />
     <Compile Include="Helpers\AttachedProperty\ListBoxShouldSetSelectAttachedProperty.cs" />
     <Compile Include="Helpers\Extensions\UIExtensions.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Implements\Rules\BaseRules\BaseEmailSearchRule.cs" />
     <Compile Include="Implements\Rules\BaseRules\BaseFilelSearchRule.cs" />
     <Compile Include="Implements\Rules\ContactSearchRule.cs" />
+    <Compile Include="Implements\Systems\ContactAttachmentSearchSystem.cs" />
     <Compile Include="Implements\Systems\ContactSearchSystem.cs" />
     <Compile Include="Implements\Rules\EmailContentSearchRule.cs" />
     <Compile Include="Implements\Systems\Core\BaseAllEmailSearchSystem.cs" />
@@ -163,11 +165,7 @@
     <Compile Include="Implements\Rules\EmailSubjectSearchRule.cs" />
     <Compile Include="Implements\Rules\FileContentSearchRule.cs" />
     <Compile Include="Implements\Rules\FileFilenameSearchRule.cs" />
-    <Compile Include="Models\CommandSearchData.cs" />
-    <Compile Include="Models\ContactSearchData.cs" />
-    <Compile Include="Models\EmailSearchData.cs" />
-    <Compile Include="Models\SearchData.cs" />
-    <Compile Include="Models\SearchItem.cs" />
+    <Compile Include="Payloads\SearchObjectPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Service\Dumper\MiniDumper.cs" />
@@ -175,7 +173,6 @@
     <Compile Include="Service\ExtensionMethods.cs" />
     <Compile Include="Service\FileService.cs" />
     <Compile Include="Service\HelperConst.cs" />
-    <Compile Include="Service\Helpers\EmailGroupReaderHelpers.cs" />
     <Compile Include="Service\Helpers\HelperFunctions.cs" />
     <Compile Include="Service\Helpers\SearchItemHelper.cs" />
     <Compile Include="Service\Helpers\TaskFinderHelper.cs" />
