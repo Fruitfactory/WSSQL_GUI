@@ -27,6 +27,8 @@ using WSUI.Core.Logger;
 using WSUI.Core.Utils.Dialog;
 using WSUI.Core.Win32;
 using WSUI.Infrastructure;
+using WSUI.Infrastructure.Events;
+using WSUI.Infrastructure.Payloads;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
 using WSUI.Module.Core;
@@ -49,13 +51,10 @@ namespace WSUI.Module.ViewModel
 
         #endregion [urls]
 
-        private const string Interface = "WSUI.Module.Interface.IKindItem";
+        private const string Interface = "WSUI.Module.Interface.ViewModel.IKindItem";
 
-        private const string InternalDataView = "DataView";
-        private const string InternalPreviewView = "PreviewView";
 
         private readonly IUnityContainer _container;
-        private readonly IRegionManager _regionManager;
         private readonly IEventAggregator _eventAggregator;
 
         private BaseSearchObject _currentData;
@@ -67,14 +66,13 @@ namespace WSUI.Module.ViewModel
         private Visibility _previewVisibility;
         private bool _isBusy;
         private object _oldView = null;
-        private Transition _previewToDataTransition = null;
-        private Transition _dataToPreviewTransition = null;
+        private INavigationService _navigationService;
+        private SubscriptionToken _token;
 
-        public MainViewModel(IUnityContainer container, IRegionManager region, IKindsView kindView,
+        public MainViewModel(IUnityContainer container, IKindsView kindView,
             IPreviewView previewView, IEventAggregator eventAggregator)
         {
             _container = container;
-            _regionManager = region;
             _eventAggregator = eventAggregator;
             KindsView = kindView;
             kindView.Model = this;
@@ -85,9 +83,15 @@ namespace WSUI.Module.ViewModel
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
             DataVisibility = Visibility.Visible;
             PreviewVisibility = Visibility.Collapsed;
-            _previewToDataTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.2)) };
-            _dataToPreviewTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.2)), StartPoint = new Point(1.0, 0.0) };
+            _navigationService = _container.Resolve<INavigationService>();
+            if (_navigationService != null)
+            {
+                _navigationService.SetMainViewModel(this);
+            }
+            _token = _eventAggregator.GetEvent<SelectedChangedPayloadEvent>().Subscribe(OnSelectedItemChanged);
         }
+
+        
 
         public IKindsView KindsView { get; protected set; }
 
@@ -194,49 +198,14 @@ namespace WSUI.Module.ViewModel
 
         private void CurrentKindChanged(object kindItem)
         {
-            IRegion regionSidebarSearch = _regionManager.Regions[RegionNames.SidebarSearchRegion];
-            if (regionSidebarSearch != null)
+            if (_navigationService != null)
             {
-                object viewSettings = GetView(kindItem, "SettingsView");
-                if (viewSettings != null && !regionSidebarSearch.Views.Contains(viewSettings))
-                {
-                    regionSidebarSearch.Add(viewSettings);
-                    regionSidebarSearch.Activate(viewSettings);
-                }
-                else if (viewSettings != null)
-                {
-                    regionSidebarSearch.Activate(viewSettings);
-                }
-            }
-            SetTransition(null);
-            IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
-            if (regionSidebarData != null)
-            {
-                object viewData = GetView(kindItem, InternalDataView);
-                var oldView = regionSidebarData.GetView(InternalDataView);
-                if (oldView != null)
-                {
-                    regionSidebarData.Remove(oldView);
-                }
-                regionSidebarData.Add(viewData, InternalDataView);
-                OldView = viewData;
+                _navigationService.ShowSelectedKind(kindItem);
             }
 
             if (PreviewView != null)
                 PreviewView.ClearPreview();
             OnPropertyChanged(() => Commands);
-        }
-
-        private object GetView(object viewModel, string propertyName)
-        {
-            PropertyInfo prop = viewModel.GetType().GetProperty(propertyName,
-                BindingFlags.Public | BindingFlags.NonPublic |
-                BindingFlags.Instance);
-            if (prop != null)
-            {
-                return prop.GetValue(viewModel, null);
-            }
-            return null;
         }
 
         private void Disconnect()
@@ -247,7 +216,6 @@ namespace WSUI.Module.ViewModel
             _currentItem.Start -= OnStart;
             _currentItem.Complete -= OnComplete;
             _currentItem.Error -= OnError;
-            _currentItem.CurrentItemChanged -= OnCurrentItemChanged;
         }
 
         private void Connect()
@@ -258,25 +226,21 @@ namespace WSUI.Module.ViewModel
             _currentItem.Start += OnStart;
             _currentItem.Complete += OnComplete;
             _currentItem.Error += OnError;
-            _currentItem.CurrentItemChanged += OnCurrentItemChanged;
         }
 
-        private void OnCurrentItemChanged(object sender, EventArgs<BaseSearchObject> args)
+        private void OnSelectedItemChanged(SearchObjectPayload searchObjectPayload)
         {
-            if (args.Value == null || args.Value.TypeItem == TypeSearchItem.Contact || args.Value.TypeItem == TypeSearchItem.None)
+            _currentData = searchObjectPayload.Data as BaseSearchObject;
+            if(_currentData == null || _currentData.TypeItem == TypeSearchItem.Contact || _currentData.TypeItem == TypeSearchItem.None)
                 return;
-
-            _currentData = args.Value;
-
             try
             {
-                Tuple<Point, Size> mwi = GetMainWindowInfo();
                 Enabled = false;
 
-                switch (args.Value.TypeItem)
+                switch (_currentData.TypeItem)
                 {
                     case TypeSearchItem.Contact:
-                        Application.Current.Dispatcher.BeginInvoke(new Action<object>(ShowPreviewForPreviewObject),args.Value);
+                        Application.Current.Dispatcher.BeginInvoke(new Action<object>(ShowPreviewForPreviewObject), _currentData);
                         break;
                     default:
                         Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
@@ -376,57 +340,6 @@ namespace WSUI.Module.ViewModel
                 _currentItem.SearchString = searchString;
                 _currentItem.FilterData();
             }
-        }
-
-        private Tuple<Point, Size> GetMainWindowInfo()
-        {
-            var pt = new Point();
-            var sz = new Size();
-            switch (Host)
-            {
-                case HostType.Application:
-                    pt = Application.Current.MainWindow.PointToScreen(new Point(0, 0));
-                    sz = new Size(Application.Current.MainWindow.ActualWidth,
-                        Application.Current.MainWindow.ActualHeight);
-
-                    break;
-
-                case HostType.Plugin:
-                    FormCollection formsCollection = System.Windows.Forms.Application.OpenForms;
-                    if (formsCollection.Count > 0)
-                    {
-                        pt = new Point(formsCollection[0].DesktopLocation.X, formsCollection[0].DesktopLocation.Y);
-                        sz = new Size(formsCollection[0].DesktopBounds.Width, formsCollection[0].DesktopBounds.Height);
-                    }
-                    else
-                    {
-                        return GetForegroundWindowInfo();
-                    }
-                    break;
-
-                default:
-                    return GetForegroundWindowInfo();
-            }
-
-            return new Tuple<Point, Size>(pt, sz);
-        }
-
-        private Tuple<Point, Size> GetForegroundWindowInfo()
-        {
-            try
-            {
-                IntPtr hwnd = WindowsFunction.GetForegroundWindow();
-                WindowsFunction.RECT rect;
-                WindowsFunction.GetWindowRect(hwnd, out rect);
-                var pt = new Point(rect.Left, rect.Top);
-                var sz = new Size(rect.Right - rect.Left, rect.Bottom - rect.Top);
-                return new Tuple<Point, Size>(pt, sz);
-            }
-            catch (Exception ex)
-            {
-                WSSqlLogger.Instance.LogError(ex.Message);
-            }
-            return null;
         }
 
         private void InternalBuy()
@@ -610,7 +523,16 @@ namespace WSUI.Module.ViewModel
             }
         }
 
-        public Transition CurrenTransition { get; private set; }
+        private Transition _currentTransition;
+        public Transition CurrenTransition 
+        {
+            get { return _currentTransition; }
+            set
+            {
+                _currentTransition = value; 
+                OnPropertyChanged(() => CurrenTransition);
+            } 
+        }
 
         public void ShowOutlookFolder(string folder)
         {
@@ -642,8 +564,7 @@ namespace WSUI.Module.ViewModel
                 case Visibility.Visible:
                     DataVisibility = Visibility.Visible;
                     PreviewVisibility = Visibility.Collapsed;
-                    //OnSlide(UiSlideDirection.PreviewToData);
-                    ChangePreviewToData();
+                    MoveToRight();
                     break;
             }
         }
@@ -653,48 +574,19 @@ namespace WSUI.Module.ViewModel
             return PreviewVisibility == Visibility.Visible;
         }
 
-        private void OnSlide(UiSlideDirection dir)
+
+        private void MoveToLeft()
         {
-            var temp = Slide;
-            if (temp != null)
-            {
-                temp(this, new SlideDirectionEventArgs(dir));
-            }
+            if (_navigationService == null)
+                return;
+            _navigationService.MoveToLeft(PreviewView as INavigationView);
         }
-        // move to left <------
-        private void ChangeDataToPreview()
+
+        private void MoveToRight()
         {
-            SetTransition(_dataToPreviewTransition);
-            IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
-            if (regionSidebarData != null)
-            {
-                var oldView = regionSidebarData.GetView(InternalDataView);
-                if (oldView != null)
-                {
-                    regionSidebarData.Remove(oldView);
-                }
-                if (!regionSidebarData.Views.Contains(PreviewView))
-                    regionSidebarData.Add(PreviewView, InternalPreviewView);
-                regionSidebarData.Activate(PreviewView);
-            }
-        }
-        // move to right ------>
-        private void ChangePreviewToData()
-        {
-            SetTransition(_previewToDataTransition);
-            IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
-            if (regionSidebarData != null)
-            {
-                var oldView = regionSidebarData.GetView(InternalPreviewView);
-                if (oldView != null)
-                {
-                    regionSidebarData.Remove(oldView);
-                }
-                if (!regionSidebarData.Views.Contains(OldView))
-                    regionSidebarData.Add(OldView, InternalDataView);
-                if (OldView != null)
-                    regionSidebarData.Activate(OldView);
-            }
+            if (_navigationService == null)
+                return;
+            _navigationService.MoveToRight();
         }
 
         public object OldView
@@ -703,15 +595,9 @@ namespace WSUI.Module.ViewModel
             set { _oldView = value; }
         }
 
-        private void SetTransition(Transition transition)
-        {
-            CurrenTransition = transition;
-            OnPropertyChanged(() => CurrenTransition);
-        }
-
         private void PreviewViewOnStopLoad(object sender, EventArgs eventArgs)
         {
-            ChangeDataToPreview();
+            MoveToLeft();            
         }
 
     }

@@ -23,7 +23,6 @@ namespace WSUI.Module.ViewModel
 {
     public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel
     {
-        private IRegionManager _regionManager;
         private IEventAggregator _eventAggregator;
         private ISearchSystem _searchSystem;
         private ISearchObject _selectedAttachment;
@@ -31,7 +30,6 @@ namespace WSUI.Module.ViewModel
 
         public ContactDetailsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IContactDetailsView contactDetailsView)
         {
-            _regionManager = regionManager;
             _eventAggregator = eventAggregator;
             View = contactDetailsView;
             contactDetailsView.Model = this;

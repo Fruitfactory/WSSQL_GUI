@@ -33,7 +33,7 @@ namespace WSUI.Module.Interface.ViewModel
         Visibility DataVisibility { get; }
         Visibility PreviewVisibility { get; }
 
-        Transition CurrenTransition { get; }
+        Transition CurrenTransition { get; set; }
 
         void ShowOutlookFolder(string folder);
 

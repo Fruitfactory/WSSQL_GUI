@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Media;
+using WSUI.Core.Interfaces;
 using WSUI.Infrastructure.Service;
 using WSUI.Module.Interface;
 using WSUI.Module.Interface.View;
@@ -10,7 +11,7 @@ namespace WSUI.Module.View
     /// <summary>
     /// Interaction logic for AttachmentDataView.xaml
     /// </summary>
-    public partial class AttachmentDataView : IDataView<AttachmentViewModel>
+    public partial class AttachmentDataView : IDataView<AttachmentViewModel>, INavigationView
     {
         public AttachmentDataView()
         {

@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Media;
+using WSUI.Core.Interfaces;
 using WSUI.Infrastructure.Helpers.Extensions;
 using WSUI.Module.Interface;
 using WSUI.Module.Interface.View;
@@ -11,7 +12,7 @@ namespace WSUI.Module.View
     /// <summary>
     /// Interaction logic for EmailDataView.xaml
     /// </summary>
-    public partial class EmailDataView : IDataView<EmailViewModel>
+    public partial class EmailDataView : IDataView<EmailViewModel>, INavigationView
     {
         private int _oldIndex = -1;
 

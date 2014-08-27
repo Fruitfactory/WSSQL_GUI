@@ -4,13 +4,14 @@ using WSUI.Infrastructure.Service;
 using WSUI.Module.Interface;
 using WSUI.Module.Interface.View;
 using WSUI.Module.ViewModel;
+using WSUI.Core.Interfaces;
 
 namespace WSUI.Module.View
 {
     /// <summary>
     /// Interaction logic for AllFilesDataView.xaml
     /// </summary>
-    public partial class AllFilesDataView : IDataView<AllFilesViewModel>
+    public partial class AllFilesDataView : IDataView<AllFilesViewModel>,INavigationView
     {
         public AllFilesDataView()
         {

@@ -193,6 +193,7 @@
     <Compile Include="Interfaces\IEmailSearchRule.cs" />
     <Compile Include="Interfaces\IFieldCash.cs" />
     <Compile Include="Interfaces\IIndexerDataReader.cs" />
+    <Compile Include="Interfaces\INavigationView.cs" />
     <Compile Include="Interfaces\IOutlookFolder.cs" />
     <Compile Include="Interfaces\IOutlookHelper.cs" />
     <Compile Include="Interfaces\IQueryGenerator.cs" />

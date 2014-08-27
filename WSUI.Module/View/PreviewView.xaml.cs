@@ -17,7 +17,7 @@ namespace WSUI.Module.View
     /// <summary>
     /// Interaction logic for PreviewView.xaml
     /// </summary>
-    public partial class PreviewView : IPreviewView
+    public partial class PreviewView : IPreviewView, INavigationView
     {
         public PreviewView()
         {

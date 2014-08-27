@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Practices.Prism.Modularity;
@@ -10,6 +11,7 @@ using WSUI.Core.Logger;
 using WSUI.Core.Utils;
 using WSUI.Infrastructure;
 using WSUI.Module.Interface;
+using WSUI.Module.Interface.Service;
 using WSUI.Module.Interface.View;
 using WSUI.Module.View;
 using WSUI.Module.ViewModel;
@@ -73,6 +75,9 @@ namespace WSUI.Module
             //attachment
             _unityContainer.RegisterType<ISettingsView<AttachmentViewModel>, AttachmentSettingsView>();
             _unityContainer.RegisterType<IDataView<AttachmentViewModel>, AttachmentDataView>();
+
+            _unityContainer.RegisterType<INavigationService, WSUI.Module.Service.NavigationService>();
+
             watch.Stop();
             WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));
         }

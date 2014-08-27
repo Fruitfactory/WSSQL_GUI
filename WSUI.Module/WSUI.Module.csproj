@@ -137,6 +137,7 @@
     <Compile Include="Core\ViewModelBase.cs" />
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Interface\Service\ICommandStrategy.cs" />
+    <Compile Include="Interface\Service\INavigationService.cs" />
     <Compile Include="Interface\ViewModel\IContactDetailsViewModel.cs" />
     <Compile Include="Interface\View\IContactDetailsView.cs" />
     <Compile Include="Interface\View\IDataView.cs" />
@@ -173,6 +174,7 @@
     <Compile Include="Service\KeyDownBehavior.cs" />
     <Compile Include="Service\MainWindowInfo.cs" />
     <Compile Include="Service\NameToImageConvert.cs" />
+    <Compile Include="Service\NavigationService.cs" />
     <Compile Include="Service\ScrollBehavior.cs" />
     <Compile Include="Service\SlideDirectionEventArgs.cs" />
     <Compile Include="Service\TransitionElementAdaptor.cs" />

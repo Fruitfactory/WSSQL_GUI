@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
@@ -32,9 +33,9 @@ namespace WSUI.Module.ViewModel
         private const int CountForSkip = 5;
         private volatile bool _isFirstTime = true;
 
-        public AllFilesViewModel(IUnityContainer container, ISettingsView<AllFilesViewModel> settingsView,
+        public AllFilesViewModel(IUnityContainer container, IEventAggregator eventAggregator, ISettingsView<AllFilesViewModel> settingsView,
             IDataView<AllFilesViewModel> dataView)
-            : base(container)
+            : base(container,eventAggregator)
         {
             SettingsView = settingsView;
             SettingsView.Model = this;

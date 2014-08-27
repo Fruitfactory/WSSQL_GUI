@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
@@ -18,6 +19,8 @@ using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Core.Win32;
 using WSUI.Infrastructure.Controls.ProgressManager;
+using WSUI.Infrastructure.Events;
+using WSUI.Infrastructure.Payloads;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Service.Rules;
 using WSUI.Infrastructure.Services;
@@ -46,6 +49,7 @@ namespace WSUI.Module.Core
         
         protected volatile bool ShowMessageNoMatches = true;
         protected readonly IUnityContainer Container;
+        protected readonly IEventAggregator EventAggregator;
         
         protected readonly object Lock = new object();
         
@@ -64,9 +68,10 @@ namespace WSUI.Module.Core
         // new
         protected ISearchSystem SearchSystem { get; set; }
 
-        protected KindViewModelBase(IUnityContainer container)
+        protected KindViewModelBase(IUnityContainer container, IEventAggregator eventAggregator)
         {
             Container = container;
+            EventAggregator = eventAggregator;
             ChooseCommand = new DelegateCommand<object>(o => OnChoose(), o => true);
             SearchCommand = new DelegateCommand<object>(o => Search(), o => CanSearch());
             OpenCommand = new DelegateCommand<object>(o => OpenFile(), o => CanOpenFile());
@@ -151,6 +156,9 @@ namespace WSUI.Module.Core
             {
                 temp(this, new EventArgs<BaseSearchObject>(data));
             }
+            if (EventAggregator == null)
+                return;
+            EventAggregator.GetEvent<SelectedChangedPayloadEvent>().Publish(new SearchObjectPayload(Current));
         }
 
         protected virtual void OnChoose()

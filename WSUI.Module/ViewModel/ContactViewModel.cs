@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
@@ -24,9 +25,9 @@ namespace WSUI.Module.ViewModel
     {
         private ContactSuggestingService _contactSuggesting;
 
-        public ContactViewModel(IUnityContainer container, ISettingsView<ContactViewModel> settingsView,
+        public ContactViewModel(IUnityContainer container, IEventAggregator eventAggregator, ISettingsView<ContactViewModel> settingsView,
             IDataView<ContactViewModel> dataView)
-            : base(container)
+            : base(container,eventAggregator)
         {
             SettingsView = settingsView;
             SettingsView.Model = this;

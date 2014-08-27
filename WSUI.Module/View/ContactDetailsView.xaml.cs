@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WSUI.Core.Interfaces;
 using WSUI.Module.Interface.View;
 using WSUI.Module.Interface.ViewModel;
 
@@ -19,7 +20,7 @@ namespace WSUI.Module.View
     /// <summary>
     /// Interaction logic for ContactDetailsView.xaml
     /// </summary>
-    public partial class ContactDetailsView : IContactDetailsView
+    public partial class ContactDetailsView : IContactDetailsView, INavigationView
     {
         public ContactDetailsView()
         {
