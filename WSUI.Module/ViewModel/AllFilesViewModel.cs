@@ -152,8 +152,6 @@ namespace WSUI.Module.ViewModel
         {
             if (CommandElementClick(obj))
                 return;
-            if (EmailElementClick(obj))
-                return;
         }
 
         private bool EmailElementClick(object obj)

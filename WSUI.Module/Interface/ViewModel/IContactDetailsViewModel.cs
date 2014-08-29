@@ -11,9 +11,11 @@ namespace WSUI.Module.Interface.ViewModel
 
         ObservableCollection<AttachmentSearchObject> ItemsSource { get; }
 
+        ObservableCollection<EmailSearchObject> EmailsSource { get; } 
+
         void SetDataObject(ISearchObject dataSearchObject);
 
-        ISearchObject SelectedAttachement { get; set; }
+        ISearchObject SelectedElement { get; set; }
 
     }
 }

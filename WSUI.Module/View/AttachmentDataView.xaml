@@ -1,13 +1,12 @@
 ﻿<UserControl  x:Class="WSUI.Module.View.AttachmentDataView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
               xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:service="clr-namespace:WSUI.Module.Service"
-                               x:Name="this"
-             >
+                               x:Name="this">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -15,16 +14,14 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-            <Grid>
+    <Grid>
         <ListBox x:Name="listBox" ItemsSource="{Binding Path=DataSource,UpdateSourceTrigger=PropertyChanged}"
                  ItemTemplateSelector="{StaticResource templateSelector}"
                  SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  ContextMenu="{StaticResource ResourceKey=contextMenu}"
                  ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
                  service:DoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
-                 HorizontalContentAlignment="Stretch"
-                 >
-
+                 HorizontalContentAlignment="Stretch">
         </ListBox>
     </Grid>
 </UserControl >

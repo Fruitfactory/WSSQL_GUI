@@ -11,6 +11,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using MahApps.Metro.Controls;
 using WSUI.Core.Utils.Dialog.Interfaces;
 
 namespace WSUI.Core.Utils.Dialog
@@ -18,7 +20,7 @@ namespace WSUI.Core.Utils.Dialog
     /// <summary>
     /// Interaction logic for WSUIDialogWindow.xaml
     /// </summary>
-    public partial class WSUIDialogWindow
+    public partial class WSUIDialogWindow : MahApps.Metro.Controls.MetroWindow
     {
         private IWSUIViewModel _viewModel = null;
 

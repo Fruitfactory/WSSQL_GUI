@@ -19,6 +19,8 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 {
 	public class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject> , IEmailSearchRule
     {
+        
+
         #region [needs]
 
         private readonly List<string> _listID = new List<string>();

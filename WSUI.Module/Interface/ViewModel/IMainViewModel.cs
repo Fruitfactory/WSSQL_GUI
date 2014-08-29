@@ -31,7 +31,7 @@ namespace WSUI.Module.Interface.ViewModel
         Visibility VisibleTrialLabel { get; }
 
         Visibility DataVisibility { get; }
-        Visibility PreviewVisibility { get; }
+        Visibility BackButtonVisibility { get; }
 
         Transition CurrenTransition { get; set; }
 

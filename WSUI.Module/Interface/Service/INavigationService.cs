@@ -10,5 +10,6 @@ namespace WSUI.Module.Interface.Service
         void ShowSelectedKind(object kindItem);
         void MoveToLeft(INavigationView newView);
         void MoveToRight();
+        bool IsBackButtonVisible { get; }
     }
 }

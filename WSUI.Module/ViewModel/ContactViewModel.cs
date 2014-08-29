@@ -80,6 +80,7 @@ namespace WSUI.Module.ViewModel
 
         private void EmailClick(object address)
         {
+            return;
             string adr = string.Empty;
             if (address is string)
                 adr = (string) address;

@@ -9,6 +9,7 @@ using Transitionals.Transitions;
 using WSUI.Core.Interfaces;
 using WSUI.Infrastructure;
 using WSUI.Module.Interface.Service;
+using WSUI.Module.Interface.View;
 using WSUI.Module.Interface.ViewModel;
 
 namespace WSUI.Module.Service
@@ -20,9 +21,8 @@ namespace WSUI.Module.Service
         private const string InternalDataView = "DataView";
         private const string InternalPreviewView = "PreviewView";
         private const string InternalSettingsView = "SettingsView";
- 
 
-        #endregion
+        #endregion [const]
 
         #region [needs]
 
@@ -32,13 +32,14 @@ namespace WSUI.Module.Service
 
         private Transition _moveToLeftTransition = null;
         private Transition _moveToRightTransition = null;
-        #endregion
+
+        #endregion [needs]
 
         public NavigationService(IRegionManager regionManager)
         {
             _regionManager = regionManager;
-            _moveToLeftTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.2)), StartPoint = new Point(1.0, 0.0) }; 
-            _moveToRightTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.2)) };
+            _moveToLeftTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.22)), StartPoint = new Point(1.0, 0.0) };
+            _moveToRightTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.22)) };
             _stackViews = new Stack<INavigationView>();
         }
 
@@ -79,7 +80,6 @@ namespace WSUI.Module.Service
                 }
                 regionSidebarData.Add(viewData, viewData.GetType().FullName);
                 CurrentView = viewData as INavigationView;
-                //OldView = viewData;
             }
             _stackViews.Clear();
         }
@@ -111,14 +111,20 @@ namespace WSUI.Module.Service
                 if (oldView != null)
                 {
                     regionSidebarData.Remove(oldView);
+                    ReleaseContactDetailsViewModel(oldView as INavigationView);
                 }
-                 var newView = _stackViews.Pop();
+                var newView = _stackViews.Pop();
                 regionSidebarData.Add(newView, newView.GetType().FullName);
                 CurrentView = newView;
             }
         }
-        
-        #endregion
+
+        public bool IsBackButtonVisible 
+        {
+            get { return _stackViews != null && _stackViews.Count > 0; }
+        }
+
+        #endregion [public]
 
         #region [private helpers]
 
@@ -139,7 +145,22 @@ namespace WSUI.Module.Service
             _mainViewModel.CurrenTransition = transition;
         }
 
-        #endregion
+        private void ReleaseContactDetailsViewModel(INavigationView view)
+        {
+            if (view == null)
+                return;
 
+            var contactDetailsView = view as IContactDetailsView;
+            if (contactDetailsView == null)
+                return;
+
+            var disposable = contactDetailsView.Model as IDisposable;
+            if (disposable == null)
+                return;
+
+            disposable.Dispose();
+        }
+
+        #endregion [private helpers]
     }
 }

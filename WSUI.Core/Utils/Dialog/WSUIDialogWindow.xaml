@@ -4,14 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-                      WindowStyle="ToolWindow" WindowState="Normal" ResizeMode="NoResize"
+             WindowStyle="ToolWindow" WindowState="Normal" ResizeMode="NoResize"
                       MinWidth="400" MinHeight="100" 
                       Title="{Binding Title}" 
                       WindowStartupLocation="CenterScreen" WindowTransitionsEnabled="False" >
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
@@ -28,7 +28,6 @@
         </Grid.RowDefinitions>
             
         <ContentPresenter Grid.Row="0" Content="{Binding View}"></ContentPresenter>
-        
         
         <StackPanel    Grid.Row="1"  Margin="10" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Margin="3"  x:Name="btnOk" Width="75" Command="{Binding OKCommand}" Click="BtnOk_OnClick" Content="OK"/>

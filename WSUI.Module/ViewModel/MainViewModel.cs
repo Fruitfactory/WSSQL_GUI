@@ -1,39 +1,29 @@
-using System.Windows.Forms.VisualStyles;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Events;
-using Microsoft.Practices.Prism.Regions;
-using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Events;
+using Microsoft.Practices.Unity;
 using Transitionals;
-using Transitionals.Transitions;
 using WSPreview.PreviewHandler.Service.OutlookPreview;
 using WSUI.Core.Core.LimeLM;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
-using WSUI.Core.EventArguments;
 using WSUI.Core.Events;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Core.Utils.Dialog;
-using WSUI.Core.Win32;
-using WSUI.Infrastructure;
 using WSUI.Infrastructure.Events;
 using WSUI.Infrastructure.Payloads;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Infrastructure.Services;
 using WSUI.Module.Core;
-using WSUI.Module.Enums;
-using WSUI.Module.Interface;
 using WSUI.Module.Interface.Service;
 using WSUI.Module.Interface.View;
 using WSUI.Module.Interface.ViewModel;
@@ -53,7 +43,6 @@ namespace WSUI.Module.ViewModel
 
         private const string Interface = "WSUI.Module.Interface.ViewModel.IKindItem";
 
-
         private readonly IUnityContainer _container;
         private readonly IEventAggregator _eventAggregator;
 
@@ -63,7 +52,7 @@ namespace WSUI.Module.ViewModel
         private List<LazyKind> _listItems;
         private ILazyKind _selectedLazyKind;
         private Visibility _dataVisibility;
-        private Visibility _previewVisibility;
+        private Visibility _backButtonVisibility;
         private bool _isBusy;
         private object _oldView = null;
         private INavigationService _navigationService;
@@ -82,7 +71,6 @@ namespace WSUI.Module.ViewModel
             MainDataSource = new List<BaseSearchObject>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
             DataVisibility = Visibility.Visible;
-            PreviewVisibility = Visibility.Collapsed;
             _navigationService = _container.Resolve<INavigationService>();
             if (_navigationService != null)
             {
@@ -90,8 +78,6 @@ namespace WSUI.Module.ViewModel
             }
             _token = _eventAggregator.GetEvent<SelectedChangedPayloadEvent>().Subscribe(OnSelectedItemChanged);
         }
-
-        
 
         public IKindsView KindsView { get; protected set; }
 
@@ -231,7 +217,7 @@ namespace WSUI.Module.ViewModel
         private void OnSelectedItemChanged(SearchObjectPayload searchObjectPayload)
         {
             _currentData = searchObjectPayload.Data as BaseSearchObject;
-            if(_currentData == null || _currentData.TypeItem == TypeSearchItem.Contact || _currentData.TypeItem == TypeSearchItem.None)
+            if (_currentData == null || _currentData.TypeItem == TypeSearchItem.None)
                 return;
             try
             {
@@ -240,8 +226,9 @@ namespace WSUI.Module.ViewModel
                 switch (_currentData.TypeItem)
                 {
                     case TypeSearchItem.Contact:
-                        Application.Current.Dispatcher.BeginInvoke(new Action<object>(ShowPreviewForPreviewObject), _currentData);
+                        Application.Current.Dispatcher.BeginInvoke(new Action<BaseSearchObject>(ShowPreviewForPreviewObject), _currentData);
                         break;
+
                     default:
                         Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
                         break;
@@ -249,7 +236,7 @@ namespace WSUI.Module.ViewModel
 
                 IsBusy = true;
                 DataVisibility = Visibility.Collapsed;
-                PreviewVisibility = Visibility.Visible;
+                
             }
             catch (Exception ex)
             {
@@ -274,7 +261,7 @@ namespace WSUI.Module.ViewModel
                             ? _currentItem.SearchString
                             : string.Empty);
                         PreviewView.SetPreviewFile(filename);
-                        //OnSlide(UiSlideDirection.DataToPreview);
+                        MoveToLeft(PreviewView);
                     }
                     else
                         PreviewView.ClearPreview();
@@ -288,14 +275,31 @@ namespace WSUI.Module.ViewModel
             {
                 Enabled = true;
                 IsBusy = false;
+                OnPropertyChanged(() => BackButtonVisibility);
             }
         }
 
-        private void ShowPreviewForPreviewObject(object previewData)
+        private void ShowPreviewForPreviewObject(BaseSearchObject previewData)
         {
-            
+            if (previewData == null)
+                return;
+            try
+            {
+                var contactDetails = _container.Resolve<IContactDetailsViewModel>();
+                contactDetails.SetDataObject(previewData);
+                MoveToLeft(contactDetails.View);
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "ShowPreviewForPreviewObject", ex.Message));
+            }
+            finally
+            {
+                Enabled = true;
+                IsBusy = false;
+                OnPropertyChanged(() => BackButtonVisibility);
+            }
         }
-
 
         private void OnStart(object sender, EventArgs e)
         {
@@ -513,25 +517,26 @@ namespace WSUI.Module.ViewModel
             }
         }
 
-        public Visibility PreviewVisibility
+        public Visibility BackButtonVisibility
         {
-            get { return _previewVisibility; }
-            private set
+            get
             {
-                _previewVisibility = value;
-                OnPropertyChanged(() => PreviewVisibility);
+                var visibility = _navigationService != null && _navigationService.IsBackButtonVisible ? Visibility.Visible : Visibility.Collapsed;
+                Debug.WriteLine(visibility);
+                return visibility;
             }
         }
 
         private Transition _currentTransition;
-        public Transition CurrenTransition 
+
+        public Transition CurrenTransition
         {
             get { return _currentTransition; }
             set
             {
-                _currentTransition = value; 
+                _currentTransition = value;
                 OnPropertyChanged(() => CurrenTransition);
-            } 
+            }
         }
 
         public void ShowOutlookFolder(string folder)
@@ -559,27 +564,20 @@ namespace WSUI.Module.ViewModel
 
         private void InternalBack(object arg)
         {
-            switch (PreviewVisibility)
-            {
-                case Visibility.Visible:
-                    DataVisibility = Visibility.Visible;
-                    PreviewVisibility = Visibility.Collapsed;
-                    MoveToRight();
-                    break;
-            }
+            MoveToRight();
+            OnPropertyChanged(() => BackButtonVisibility);
         }
 
         private bool CanInternalBack(object arg)
         {
-            return PreviewVisibility == Visibility.Visible;
+            return BackButtonVisibility == Visibility.Visible;
         }
 
-
-        private void MoveToLeft()
+        private void MoveToLeft(object view)
         {
             if (_navigationService == null)
                 return;
-            _navigationService.MoveToLeft(PreviewView as INavigationView);
+            _navigationService.MoveToLeft(view as INavigationView);
         }
 
         private void MoveToRight()
@@ -589,16 +587,8 @@ namespace WSUI.Module.ViewModel
             _navigationService.MoveToRight();
         }
 
-        public object OldView
-        {
-            get { return _oldView; }
-            set { _oldView = value; }
-        }
-
         private void PreviewViewOnStopLoad(object sender, EventArgs eventArgs)
         {
-            MoveToLeft();            
         }
-
     }
 }
