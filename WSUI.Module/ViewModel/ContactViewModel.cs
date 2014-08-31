@@ -41,7 +41,7 @@ namespace WSUI.Module.ViewModel
 
             Folder = OutlookHelper.AllFolders;
 
-            EmailClickCommand = new DelegateCommand<object>(EmailClick, o => true);
+            EmailClickCommand = new DelegateCommand<object>(o => { }, o => true);
             _contactSuggesting = new ContactSuggestingService();
             _contactSuggesting.Suggest += (o, e) =>
             {
@@ -78,36 +78,7 @@ namespace WSUI.Module.ViewModel
             TopQueryResult = ScrollBehavior.CountFirstProcess;
         }
 
-        private void EmailClick(object address)
-        {
-            return;
-            string adr = string.Empty;
-            if (address is string)
-                adr = (string) address;
-            else if (address is EmailContactSearchObject)
-            {
-                adr = (address as EmailContactSearchObject).EMail;
-            }
-            else if (address is ContactSearchObject)
-            {
-                var contact = (ContactSearchObject) address;
-                adr = !string.IsNullOrEmpty(contact.EmailAddress)
-                    ? contact.EmailAddress
-                    : !string.IsNullOrEmpty(contact.EmailAddress2)
-                        ? contact.EmailAddress2
-                        : !string.IsNullOrEmpty(contact.EmailAddress3)
-                            ? contact.EmailAddress3
-                            : string.Empty;
-            }
-
-            if (string.IsNullOrEmpty(adr))
-                return;
-            MailItem email = OutlookHelper.Instance.CreateNewEmail();
-            email.To = adr;
-            email.BodyFormat = OlBodyFormat.olFormatHTML;
-            email.Display(false);
-        }
-
+        
         protected override void OnInit()
         {
             base.OnInit();

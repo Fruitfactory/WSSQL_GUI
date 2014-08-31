@@ -62,9 +62,10 @@ namespace WSUI.Module.ViewModel
                 ApplyContactInfo(temp);
                 to = temp.GetEmail();
             }
-            
+            SearchString = to;
             RunAttachmentSearching(from, to);
             RunEmailSearching(from, to);
+            OnPropertyChanged(() =>  SearchString);
         }
 
         public ISearchObject SelectedElement
@@ -98,6 +99,8 @@ namespace WSUI.Module.ViewModel
         public string LastName { get; private set; }
 
         public string FotoFilepath { get; private set; }
+
+        public string SearchString { get; private set; }
 
         #endregion [property]
 

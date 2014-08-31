@@ -226,11 +226,11 @@ namespace WSUI.Module.ViewModel
                 switch (_currentData.TypeItem)
                 {
                     case TypeSearchItem.Contact:
-                        Application.Current.Dispatcher.BeginInvoke(new Action<BaseSearchObject>(ShowPreviewForPreviewObject), _currentData);
+                        Dispatcher.CurrentDispatcher.BeginInvoke( (Action)(() => ShowPreviewForPreviewObject(_currentData)) ,null);
                         break;
 
                     default:
-                        Application.Current.Dispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
+                        Dispatcher.CurrentDispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
                         break;
                 }
 

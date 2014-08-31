@@ -1,28 +1,24 @@
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows.Input;
-using Microsoft.Office.Interop.Outlook;
 using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
-using WSUI.Core.Extensions;
-using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Service;
 using WSUI.Module.Core;
-using WSUI.Module.Interface;
 using WSUI.Module.Interface.Service;
 using WSUI.Module.Interface.View;
 using WSUI.Module.Service;
 using WSUI.Module.Strategy;
 using Action = System.Action;
 using Application = System.Windows.Application;
+using Exception = System.Exception;
 
 namespace WSUI.Module.ViewModel
 {
@@ -35,7 +31,7 @@ namespace WSUI.Module.ViewModel
 
         public AllFilesViewModel(IUnityContainer container, IEventAggregator eventAggregator, ISettingsView<AllFilesViewModel> settingsView,
             IDataView<AllFilesViewModel> dataView)
-            : base(container,eventAggregator)
+            : base(container, eventAggregator)
         {
             SettingsView = settingsView;
             SettingsView.Model = this;
@@ -150,38 +146,14 @@ namespace WSUI.Module.ViewModel
 
         private void EmailClick(object obj)
         {
-            if (CommandElementClick(obj))
-                return;
-        }
-
-        private bool EmailElementClick(object obj)
-        {
-            string adr = string.Empty;
-            if (obj is string)
-                adr = (string) obj;
-            else if (obj is EmailContactSearchObject)
+            try
             {
-                adr = (obj as EmailContactSearchObject).EMail;
+                CommandElementClick(obj);
             }
-            else if (obj is ContactSearchObject)
+            catch (Exception ex)
             {
-                var contact = (ContactSearchObject) obj;
-                adr = !string.IsNullOrEmpty(contact.EmailAddress)
-                    ? contact.EmailAddress
-                    : !string.IsNullOrEmpty(contact.EmailAddress2)
-                        ? contact.EmailAddress2
-                        : !string.IsNullOrEmpty(contact.EmailAddress3)
-                            ? contact.EmailAddress3
-                            : string.Empty;
+                WSSqlLogger.Instance.LogError(ex.Message);
             }
-            if (string.IsNullOrEmpty(adr))
-                return false;
-            MailItem email = OutlookHelper.Instance.CreateNewEmail();
-            email.To = adr;
-            email.BodyFormat = OlBodyFormat.olFormatHTML;
-            email.Display(false);
-
-            return true;
         }
 
         private bool CommandElementClick(object obj)
@@ -201,7 +173,7 @@ namespace WSUI.Module.ViewModel
             CommandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
             CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
-            ScrollBehavior = new ScrollBehavior {CountFirstProcess = 300, CountSecondProcess = 100, LimitReaction = 99};
+            ScrollBehavior = new ScrollBehavior { CountFirstProcess = 300, CountSecondProcess = 100, LimitReaction = 99 };
             ScrollBehavior.SearchGo += OnScrollNeedSearch;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
         }

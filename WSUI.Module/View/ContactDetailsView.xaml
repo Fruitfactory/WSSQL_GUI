@@ -108,17 +108,17 @@
                             <Style.Triggers>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding FirstName}" Value="{x:Null}"></Condition>
-                                        <Condition Binding="{Binding LastName}" Value="{x:Null}"></Condition>
+                                        <Condition Binding="{Binding FirstName,Mode=OneWay}" Value="{x:Null}"></Condition>
+                                        <Condition Binding="{Binding LastName,Mode=OneWay}" Value="{x:Null}"></Condition>
                                     </MultiDataTrigger.Conditions>
                                     <Setter Property="Visibility" Value="Collapsed"></Setter>
                                 </MultiDataTrigger>
                             </Style.Triggers>
                         </Style>
                     </TextBlock.Style>
-                <Run Text="{Binding FirstName,UpdateSourceTrigger=PropertyChanged}"></Run>
+                <Run Text="{Binding FirstName,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></Run>
                 <Run> </Run>
-                <Run Text="{Binding LastName,UpdateSourceTrigger=PropertyChanged}"></Run>
+                <Run Text="{Binding LastName,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></Run>
                 </TextBlock>
             </Grid>
 

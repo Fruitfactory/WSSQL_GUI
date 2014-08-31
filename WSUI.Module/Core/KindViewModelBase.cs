@@ -151,11 +151,6 @@ namespace WSUI.Module.Core
 
         protected virtual void OnCurrentItemChanged(BaseSearchObject data)
         {
-            EventHandler<EventArgs<BaseSearchObject>> temp = CurrentItemChanged;
-            if (temp != null)
-            {
-                temp(this, new EventArgs<BaseSearchObject>(data));
-            }
             if (EventAggregator == null)
                 return;
             EventAggregator.GetEvent<SelectedChangedPayloadEvent>().Publish(new SearchObjectPayload(Current));

@@ -1059,7 +1059,7 @@ namespace WSUIOutlookPlugin
                     WSSqlLogger.Instance.LogError("Reflection Type Load: {0}", item.Message.ToString());
                 }
             }
-            //WSSqlLogger.Instance.LogError("Exception: {0}\nStacktrace: {1}", firstChanceExceptionEventArgs.Exception.Message, firstChanceExceptionEventArgs.Exception.StackTrace);
+            WSSqlLogger.Instance.LogError("Exception: {0}\nStacktrace: {1}", firstChanceExceptionEventArgs.Exception.Message, firstChanceExceptionEventArgs.Exception.StackTrace);
         }
 
         #region [event handlers for ribbon]

@@ -81,6 +81,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\Toolkits\Prism\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
@@ -93,6 +98,16 @@
     <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\Toolkits\Prism\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Vbe.Interop, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Office\Microsoft.Vbe.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Office\Office.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -104,18 +119,6 @@
     <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="AddinExpress.MSO.2005">
       <HintPath>C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\Bin\AddinExpress.MSO.2005.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Vbe.Interop.dll">
-      <HintPath>Interops\Microsoft.Vbe.Interop.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Office.dll">
-      <HintPath>Interops\Office.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Office.Interop.Outlook.dll">
-      <HintPath>Interops\Microsoft.Office.Interop.Outlook.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -269,6 +272,7 @@ xcopy $(SolutionDir)Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dl
 xcopy $(SolutionDir)Toolkits\Interop\Excel\Microsoft.Office.Interop.Excel.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\Interop\Word\Microsoft.Office.Interop.Word.dll $(TargetDir) /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\Interop\Office\Office.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\Interop\Office\Microsoft.Vbe.Interop.dll $(TargetDir) /F /R /Y /I
 
 xcopy $(SolutionDir)Toolkits\GflSdk\lib\GflWrapper.dll $(TargetDir)lib\ /F /R /Y /I
 xcopy $(SolutionDir)Toolkits\GflSdk\lib\libgfl340.dll $(TargetDir)lib\ /F /R /Y /I

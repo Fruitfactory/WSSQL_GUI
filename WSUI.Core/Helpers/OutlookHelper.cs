@@ -431,8 +431,6 @@ namespace WSUI.Core.Helpers
                 if (!IsOutlookAlive() && IsHostIsApplication())
                     ReopenOutlook(ref _app);
                 Outlook.NameSpace ns = this.OutlookApp.GetNamespace("MAPI");
-                
-           
                 mi = ns.GetItemFromID(entryID, Type.Missing);
             }
             catch (Exception ex)
