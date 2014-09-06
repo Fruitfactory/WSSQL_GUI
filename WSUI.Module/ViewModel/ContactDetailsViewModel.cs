@@ -181,6 +181,13 @@ namespace WSUI.Module.ViewModel
         private void ApplyEmailContactInfo(EmailContactSearchObject dataObject)
         {
             Emails = new List<string>() { dataObject.EMail };
+            if (dataObject.FromName != null && dataObject.FromName.Length > 0)
+            {
+                FirstName = dataObject.FromName[0];
+            }
+            else
+                FirstName = dataObject.EMail;
+
             RaiseNotification();
         }
 

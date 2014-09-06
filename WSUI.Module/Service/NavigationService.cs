@@ -68,7 +68,7 @@ namespace WSUI.Module.Service
                     regionSidebarSearch.Activate(viewSettings);
                 }
             }
-            SetTransition(null);
+            SetTransition(_moveToLeftTransition);
             IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
             if (regionSidebarData != null)
             {

@@ -149,8 +149,8 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         public override void Init()
         {
-            base.Init();
             ObjectType = RuleObjectType.Contact;
+            base.Init();
             _listContactsRules.ForEach(r =>
             {
                 r.Init();

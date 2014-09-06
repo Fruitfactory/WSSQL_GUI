@@ -16,6 +16,7 @@
     <service:ActualWidthToWidthConverter x:Key="ActualWidthConverter" />
     <converters:StringToStringConverter x:Key="StringConverter" />
     <service:IntToVisibilityConverter x:Key="IntToVisibilityConverter"></service:IntToVisibilityConverter>
+    <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></service:BoolToVisibilityConverter>
 
     <Style TargetType="ToolTip">
         <Setter Property="Template">

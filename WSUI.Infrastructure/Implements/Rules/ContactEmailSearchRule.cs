@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using WSUI.Core.Core.Rules;
+using WSUI.Core.Enums;
 using WSUI.Infrastructure.Implements.Rules.BaseRules;
 
 namespace WSUI.Infrastructure.Implements.Rules

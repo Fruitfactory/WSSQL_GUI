@@ -12,9 +12,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using Microsoft.Office.Interop.Outlook;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Extensions;
 using WSUI.Core.Logger;
+using Exception = System.Exception;
 
 namespace WSUI.Core.Core.Search 
 {
@@ -152,7 +154,7 @@ namespace WSUI.Core.Core.Search
 		            var result = (item as ISearchRule).GetResults();
 		            if (result == null)
 		                continue;
-		            var itemResult = new SystemSearchResult(item.Priority, result.OperationResult);
+		            var itemResult = new SystemSearchResult(item.Priority, result.OperationResult,item.ObjectType);
 		            InternalResult.Add(itemResult);
 		        }
                 watch.Stop();

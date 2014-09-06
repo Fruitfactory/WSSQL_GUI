@@ -1,22 +1,23 @@
 ﻿<UserControl x:Class="WSUI.Module.View.AllFilesDataView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             
+
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:service="clr-namespace:WSUI.Module.Service"
              xmlns:listBox="clr-namespace:WSUI.Infrastructure.Controls.ListBox;assembly=WSUI.Infrastructure"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:attch="clr-namespace:WSUI.Infrastructure.Helpers.AttachedProperty;assembly=WSUI.Infrastructure"
-             x:Name="this"
-             >
+             xmlns:core="clr-namespace:WSUI.Module.Core"
+             xmlns:headerControl="clr-namespace:WSUI.Infrastructure.Controls.HeaderControl;assembly=WSUI.Infrastructure"
+             xmlns:behaviors="clr-namespace:WSUI.Module.Service.Behaviors"
+             x:Name="this">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Service\ResourceTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
 
             <Style x:Key="HyperlinkStyle" TargetType="{x:Type Hyperlink}">
                 <Setter Property="Foreground" Value="Blue" />
@@ -26,27 +27,129 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-
-            <service:IntToVisibilityConverter x:Key="inttovis" />
+            
+            <Style x:Key="HeaderStyle" TargetType="headerControl:WSUIHeaderControl" BasedOn="{StaticResource {x:Type headerControl:WSUIHeaderControl}}">
+                <Setter Property="HeaderFontWeight" Value="Normal"></Setter>
+                <Setter Property="Foreground" Value="{StaticResource LabelTextBrush}"></Setter>
+                <Setter Property="BorderThickness" Value="0 1 0 0"></Setter>
+            </Style>
+            
             
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel LastChildFill="True" >
+    <Grid behaviors:WSUIActualHeightBehavior.IsObserve="True" behaviors:WSUIActualHeightBehavior.ActualHeight="{Binding ActualHeight,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <listBox:WSUIListBox x:Name="listBox" Style="{StaticResource SimpleListBoxStyle}"
-                             ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
-                BorderBrush="Transparent"
-                Background="Transparent"                             
-                 ItemsSource="{Binding Path=DataSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                 attch:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                 attch:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
-                 ItemTemplateSelector="{StaticResource templateSelector}"
-                 ContextMenu="{StaticResource ResourceKey=contextMenu}"
-                 IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
-                 ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
-                 service:DoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
-                 HorizontalContentAlignment="Stretch"
-                 >
-        </listBox:WSUIListBox>
-    </DockPanel>
+        <headerControl:WSUIHeaderControl Style="{StaticResource HeaderStyle}" Grid.Row="0" Header="People"
+                                         AdditionalHeader="{Binding ContactHeader,UpdateSourceTrigger=PropertyChanged}"
+                                         Visibility="{Binding IsContactVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
+                                         BorderBrush="{StaticResource ControlBorderBrush}"
+                                         >
+            <Grid Height="{Binding ContactHeight,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ListBox ItemsSource="{Binding Path=ContactSource,UpdateSourceTrigger=PropertyChanged}"
+                         ItemTemplateSelector="{StaticResource templateSelector}"
+                         behaviors:WSUIListboxSelectOnClickBehavior.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                         
+                         HorizontalContentAlignment="Stretch" 
+                          ScrollViewer.CanContentScroll="False"
+                        ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+                        ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                         
+                         >
+                    <i:Interaction.Behaviors>
+                        <behaviors:WSUIListboxSelectOnClickBehavior></behaviors:WSUIListboxSelectOnClickBehavior>
+                    </i:Interaction.Behaviors>
+                </ListBox>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                            Grid.Row="1"
+                            Visibility="{Binding IsContactMoreVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock>
+                        <Hyperlink Command="{Binding MoreCommand}"
+                                   CommandParameter="{x:Static core:KindsConstName.People}">
+                            more >>
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </headerControl:WSUIHeaderControl>
+
+        <headerControl:WSUIHeaderControl Style="{StaticResource HeaderStyle}" Grid.Row="1" Header="Emails"
+                                         AdditionalHeader="{Binding EmailHeader,UpdateSourceTrigger=PropertyChanged}"
+                                         Visibility="{Binding IsEmailVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
+                                         BorderBrush="{StaticResource ControlBorderBrush}">
+            <Grid Height="{Binding EmailHeight,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <listBox:WSUIListBox x:Name="listBox" Style="{StaticResource SimpleListBoxStyle}"
+                                     ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
+                                     BorderBrush="Transparent"
+                                     Background="Transparent"
+                                     ItemsSource="{Binding Path=DataSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                     attch:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                     attch:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
+                                     ItemTemplateSelector="{StaticResource templateSelector}"
+                                     ContextMenu="{StaticResource ResourceKey=contextMenu}"
+                                     IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
+                                     HorizontalContentAlignment="Stretch" />
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                            Grid.Row="1"
+                            Visibility="{Binding IsEmailMoreVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock>
+                        <Hyperlink Command="{Binding MoreCommand}"
+                                   CommandParameter="{x:Static core:KindsConstName.Email}">
+                            more >>
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </headerControl:WSUIHeaderControl>
+
+        <headerControl:WSUIHeaderControl Style="{StaticResource HeaderStyle}" Grid.Row="2" Header="Files"
+                                         AdditionalHeader="{Binding FileHeader,UpdateSourceTrigger=PropertyChanged}"
+                                         Visibility="{Binding IsFileVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
+                                         BorderBrush="{StaticResource ControlBorderBrush}">
+            <Grid Height="{Binding FileHeight,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ListBox ItemsSource="{Binding Path=FileSource,UpdateSourceTrigger=PropertyChanged}"
+                         ItemTemplateSelector="{StaticResource templateSelector}"
+                         behaviors:WSUIListboxSelectOnClickBehavior.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                         HorizontalContentAlignment="Stretch" 
+                        ScrollViewer.CanContentScroll="False"
+                        ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+                        ScrollViewer.VerticalScrollBarVisibility="Hidden"
+
+                         >
+                    <i:Interaction.Behaviors>
+                        <behaviors:WSUIListboxSelectOnClickBehavior></behaviors:WSUIListboxSelectOnClickBehavior>
+                    </i:Interaction.Behaviors>
+                </ListBox>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                            Grid.Row="1"
+                            Visibility="{Binding IsFileMoreVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock>
+                        <Hyperlink Command="{Binding MoreCommand}"
+                                   CommandParameter="{x:Static core:KindsConstName.Attachments}">
+                            more >>
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </headerControl:WSUIHeaderControl>
+    </Grid>
 </UserControl>

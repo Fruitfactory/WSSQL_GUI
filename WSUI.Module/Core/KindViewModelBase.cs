@@ -187,7 +187,6 @@ namespace WSUI.Module.Core
                 WSSqlLogger.Instance.LogWarning("Search criteria is empty");
                 return;
             }
-            MainWindowInfo mwi = GetWindowInfo();
             SearchSystem.SetSearchCriteria(SearchString);
             SearchSystem.Search();
             OnStart();
@@ -266,7 +265,7 @@ namespace WSUI.Module.Core
             Search();
         }
 
-        protected void ClearDataSource()
+        protected virtual void ClearDataSource()
         {
             DataSource.Clear();
             OnPropertyChanged(() => DataSource);

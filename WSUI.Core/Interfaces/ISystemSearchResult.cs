@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using WSUI.Core.Enums;
 
 namespace WSUI.Core.Interfaces
 {
@@ -15,5 +16,7 @@ namespace WSUI.Core.Interfaces
         int Priority { get; }
 
         IList<ISearchObject> Result { get; }
+
+        RuleObjectType ObjectType { get; }
     }//end ISystemSearchResult
 }//end namespace Interfaces

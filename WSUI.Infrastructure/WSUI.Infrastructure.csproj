@@ -124,6 +124,7 @@
     <Compile Include="Controls\BusyControl\BusyPopupAdorner.cs" />
     <Compile Include="Controls\BusyControl\IBusyPopupAdorner.cs" />
     <Compile Include="Controls\Core\BasePopupAdorner.cs" />
+    <Compile Include="Controls\HeaderControl\WSUIHeaderControl.cs" />
     <Compile Include="Controls\HightliteHyperlink.xaml.cs">
       <DependentUpon>HightliteHyperlink.xaml</DependentUpon>
     </Compile>
@@ -210,6 +211,10 @@
     <Page Include="Controls\ProgressManager\ProgressWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

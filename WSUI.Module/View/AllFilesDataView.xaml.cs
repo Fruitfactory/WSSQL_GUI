@@ -16,7 +16,7 @@ namespace WSUI.Module.View
         public AllFilesDataView()
         {
             InitializeComponent();
-            listBox.SelectionChanged += ListBoxOnSelectionChanged;
+            //listBox.SelectionChanged += ListBoxOnSelectionChanged;
         }
 
         private void ListBoxOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
@@ -36,15 +36,15 @@ namespace WSUI.Module.View
 
         private void ListBox_ScrollChanged_1(object sender, ScrollChangedEventArgs e)
         {
-            if (DataContext == null ||
-                !(DataContext is IScrollableView))
-                return;
-            int count = VisualTreeHelper.GetChildrenCount(listBox);
-            var scrollViewer = VisualTreeHelper.GetChild(listBox, 0) as ScrollViewer;
-            if (scrollViewer == null) return;
+            //if (DataContext == null ||
+            //    !(DataContext is IScrollableView))
+            //    return;
+            //int count = VisualTreeHelper.GetChildrenCount(listBox);
+            //var scrollViewer = VisualTreeHelper.GetChild(listBox, 0) as ScrollViewer;
+            //if (scrollViewer == null) return;
 
-            var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
-            (DataContext as IScrollableView).ScrollChangeCommand.Execute(scrollChanged);
+            //var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
+            //(DataContext as IScrollableView).ScrollChangeCommand.Execute(scrollChanged);
         }
     }
 }

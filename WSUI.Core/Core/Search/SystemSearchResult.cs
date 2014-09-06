@@ -7,18 +7,19 @@
 ///////////////////////////////////////////////////////////
 
 
-
-
+using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
 namespace WSUI.Core.Core.Search 
 {
 	public class SystemSearchResult : ISystemSearchResult 
     {
 
-        public SystemSearchResult(int priority, System.Collections.Generic.IList<ISearchObject> result)
+        public SystemSearchResult(int priority, System.Collections.Generic.IList<ISearchObject> result,
+            RuleObjectType objectType)
 		{
 		    Priority = priority;
             Result = result;
+            ObjectType = objectType;
 		}
 
         public int Priority
@@ -32,6 +33,8 @@ namespace WSUI.Core.Core.Search
             get;
             private set;
         }
+
+	    public RuleObjectType ObjectType { get; private set; }
     }//end SystemSearchResult
 
 }//end namespace Search

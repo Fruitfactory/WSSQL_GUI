@@ -92,6 +92,7 @@ namespace WSUI.Module.ViewModel
             {
                 _selectedLazyKind = value;
                 OnChoose(value.Kind);
+                OnPropertyChanged(() =>  SelectedLazyKind);
             }
         }
 
@@ -424,7 +425,6 @@ namespace WSUI.Module.ViewModel
             if (lazyKind != null)
             {
                 SelectedLazyKind = lazyKind;
-                OnPropertyChanged(() => SelectedLazyKind);
             }
         }
 

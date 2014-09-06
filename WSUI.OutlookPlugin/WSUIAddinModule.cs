@@ -261,7 +261,7 @@ namespace WSUIOutlookPlugin
             // 
             // buttonShow
             // 
-            this.buttonShow.Caption = "Show/Hide OutlookFinder";
+            this.buttonShow.Caption = "Show/Hide";
             this.buttonShow.Id = "adxRibbonButton_dcb0aa6e6fd442c79ea44b4006d84643";
             this.buttonShow.Image = 1;
             this.buttonShow.ImageList = this.wsuiImageList;
@@ -408,7 +408,7 @@ namespace WSUIOutlookPlugin
             // 
             // wsuiButtonSwitch
             // 
-            this.wsuiButtonSwitch.Caption = "Show/Hide OutlookFinder";
+            this.wsuiButtonSwitch.Caption = "Show/Hide";
             this.wsuiButtonSwitch.Id = "adxRibbonButton_295c2b7151ed437382c104f4c3d542ce";
             this.wsuiButtonSwitch.Image = 1;
             this.wsuiButtonSwitch.ImageList = this.wsuiImageList;

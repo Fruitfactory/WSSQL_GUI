@@ -13,7 +13,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></service:BoolToVisibilityConverter>
-            
+
             <Style TargetType="Label">
                 <Setter Property="Margin" Value="1 1 1 0"></Setter>
             </Style>
@@ -32,16 +32,16 @@
 
 
             <DataTemplate x:Key="AttacmentIconTemplate">
-                <Viewbox>
+                <Viewbox >
                     <Grid>
-                        <Grid Name="backgroundGrid" Width="32" Height="32" Visibility="Collapsed" />
+                        <Grid Name="backgroundGrid" Width="32" Height="32" Visibility="Visible" Background="Transparent" />
                         <Path x:Name="AttachmentIcon" Data="F1M-1800.12,3181.48C-1800.12,3181.48 -1803.22,3172.42 -1813.67,3175.58 -1813.67,3175.58 -1822.52,3177.87 -1820.93,3188.08L-1807.87,3226.17 -1804.99,3225.18 -1817.71,3188.05C-1817.71,3188.05 -1820.44,3181.75 -1812.98,3178.38 -1812.98,3178.38 -1805.77,3175.6 -1802.56,3183.22L-1786.65,3229.63C-1786.65,3229.63 -1786.14,3234.44 -1790.63,3235.46 -1790.63,3235.46 -1792.78,3236.54 -1796.5,3233.79L-1803.82,3212.42 -1809.85,3194.84C-1809.85,3194.84 -1809.94,3192.33 -1808.27,3191.61 -1807.43,3191.25 -1805.9,3191.14 -1805.05,3193.37L-1794.19,3225.06 -1791.09,3224 -1802.17,3191.67C-1802.17,3191.67 -1803.96,3187.16 -1809.04,3188.84 -1810.81,3189.42 -1813.38,3190.48 -1812.95,3195.18L-1799.38,3234.78C-1799.38,3234.78 -1796.27,3240.08 -1789.53,3238.67 -1789.53,3238.67 -1783.39,3237.06 -1783.69,3229.41L-1800.12,3181.48z" 
-                      Stretch="Uniform" Fill="{StaticResource AccentColorBrush}" Width="22" Height="22" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                              Stretch="Uniform" Fill="{StaticResource AccentColorBrush}" Width="29" Height="29" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
                             <Path.RenderTransform>
                                 <TransformGroup>
                                     <TransformGroup.Children>
                                         <RotateTransform Angle="0" />
-                                        <ScaleTransform ScaleX="-1" ScaleY="1" />
+                                        <ScaleTransform ScaleX="-1" ScaleY="-1" />
                                     </TransformGroup.Children>
                                 </TransformGroup>
                             </Path.RenderTransform>
@@ -49,8 +49,13 @@
                     </Grid>
                 </Viewbox>
                 <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabItem}},Path=IsMouseOver}" Value="True">
+                        <Setter TargetName="backgroundGrid" Property="Background" Value="{StaticResource AccentColorBrush4}">
+                        </Setter>
+                    </DataTrigger>
                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabItem}},Path=IsSelected}" Value="True">
-                        <Setter TargetName="AttachmentIcon" Property="Fill" Value="{StaticResource AccentDarkColorBrush}"/>
+                        <Setter TargetName="AttachmentIcon" Property="Fill" Value="{StaticResource WhiteBrush}"/>
+                        <Setter TargetName="backgroundGrid" Property="Background" Value="{StaticResource AccentColorBrush}"></Setter>
                     </DataTrigger>
                 </DataTemplate.Triggers>
             </DataTemplate>
@@ -58,23 +63,30 @@
             <DataTemplate x:Key="EmailIconTemplate">
                 <Viewbox >
                     <Grid>
-                        <Grid Name="backgroundGrid" Width="32" Height="32" Visibility="Collapsed" />
-                        <Path x:Name="EmailIcon" Data="M0,1.4200591L0.040033408,1.4200591 12.618441,13.742285 26.626588,27.494828 40.634736,13.742285 53.213021,1.4200591 53.333001,1.4200591 53.333001,39.08706 0,39.08706z M3.1698927,0L26.665893,0 50.161893,0 38.413892,9.8814956 26.665893,19.76299 14.917893,9.8814956z" 
-                      Stretch="Uniform" Fill="{StaticResource AccentColorBrush}" Width="22" Height="22" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                        <Grid Name="backgroundGrid" Width="32" Height="32" Visibility="Visible" Background="Transparent"/>
+
+                        <Path  x:Name="EmailIcon"  Data="M0,4.0800388L0.030031017,4.0800388 12.610706,16.409995 26.621516,30.149985 40.642334,16.409995 53.223011,4.0800388 53.333001,4.0800388 53.333001,39.080039 0,39.080039z M3.1698808,0L26.660885,0 50.161892,0 38.411389,11.791528 26.660885,23.573054 14.920383,11.791528z" 
+                               Stretch="Uniform" Fill="{StaticResource AccentColorBrush}" Width="29" Height="29" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
                             <Path.RenderTransform>
                                 <TransformGroup>
                                     <TransformGroup.Children>
                                         <RotateTransform Angle="0" />
-                                        <ScaleTransform ScaleX="-1" ScaleY="1" />
+                                        <ScaleTransform ScaleX="1" ScaleY="1" />
                                     </TransformGroup.Children>
                                 </TransformGroup>
                             </Path.RenderTransform>
                         </Path>
+
                     </Grid>
                 </Viewbox>
                 <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabItem}},Path=IsMouseOver}" Value="True">
+                        <Setter TargetName="backgroundGrid" Property="Background" Value="{StaticResource AccentColorBrush4}">
+                        </Setter>
+                    </DataTrigger>
                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabItem}},Path=IsSelected}" Value="True">
-                        <Setter TargetName="EmailIcon" Property="Fill" Value="{StaticResource AccentDarkColorBrush}"/>
+                        <Setter TargetName="EmailIcon" Property="Fill" Value="{StaticResource WhiteBrush}"/>
+                        <Setter TargetName="backgroundGrid" Property="Background" Value="{StaticResource AccentColorBrush}"></Setter>
                     </DataTrigger>
                 </DataTemplate.Triggers>
             </DataTemplate>
@@ -144,12 +156,7 @@
 
         <Grid Grid.Row="1" Margin="0 5 0 0">
             <Controls:MetroAnimatedSingleRowTabControl>
-                <TabItem ToolTip="Emails" HeaderTemplate="{StaticResource EmailIconTemplate}">
-                    <!--<ListBox ItemsSource="{Binding Path=EmailsSource,UpdateSourceTrigger=PropertyChanged}"
-                         ItemTemplateSelector="{StaticResource templateSelector}"
-                         SelectedItem="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                         HorizontalContentAlignment="Stretch">
-                    </ListBox>-->
+                <TabItem ToolTip="Conversations" HeaderTemplate="{StaticResource EmailIconTemplate}">
                     <listBox:WSUIListBox x:Name="listBox" Style="{StaticResource SimpleListBoxStyle}"
                              ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
                             BorderBrush="Transparent"
