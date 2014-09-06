@@ -132,7 +132,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         private bool IsContainsSearchCriterias(string emailAddress, string[] arrQuery)
         {
-            return arrQuery != null && arrQuery.Length > 0 && arrQuery.Any(emailAddress.Contains);
+            return arrQuery != null && arrQuery.Length > 0 && arrQuery.Any(s => emailAddress.IndexOf(s,StringComparison.InvariantCultureIgnoreCase) > -1);
         }
 
         private string[] InitQueryWords(string query)

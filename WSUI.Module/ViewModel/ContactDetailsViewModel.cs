@@ -65,7 +65,7 @@ namespace WSUI.Module.ViewModel
             SearchString = to;
             RunAttachmentSearching(from, to);
             RunEmailSearching(from, to);
-            OnPropertyChanged(() =>  SearchString);
+            OnPropertyChanged(() => SearchString);
         }
 
         public ISearchObject SelectedElement
@@ -88,7 +88,7 @@ namespace WSUI.Module.ViewModel
 
         #region [property]
 
-        public bool IsBusy 
+        public bool IsBusy
         {
             get { return _isAttachmentBusy || _isEmailBusy; }
         }
@@ -181,13 +181,7 @@ namespace WSUI.Module.ViewModel
         private void ApplyEmailContactInfo(EmailContactSearchObject dataObject)
         {
             Emails = new List<string>() { dataObject.EMail };
-            if (dataObject.FromName != null && dataObject.FromName.Length > 0)
-            {
-                FirstName = dataObject.FromName[0];
-            }
-            else
-                FirstName = dataObject.EMail;
-
+            FirstName = dataObject.EMail;
             RaiseNotification();
         }
 

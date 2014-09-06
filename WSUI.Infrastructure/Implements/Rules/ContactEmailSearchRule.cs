@@ -50,7 +50,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         {
             return
                 string.Format(
-                    "Contains(System.Message.FromAddress,'\"{0}\"') AND Contains(System.Message.ToAddress,'\"{1}\"') ",
+                    "Contains(System.Message.FromAddress,'\"{0}\"') AND Contains(*,'\"{1}\"') ",
                     _from, _to);
 
         }

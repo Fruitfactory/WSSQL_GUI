@@ -48,7 +48,8 @@ namespace WSUI.Infrastructure.Implements.Rules
 	        }
 	        else
 	        {
-	            result = WhereTemplate + string.Format(NamesTemplate, Query);
+	            var template = string.Format(CollapseTemplate, NamesTemplate);
+                result = WhereTemplate + string.Format(template, Query);
 	        }
 	        return result;
 	    }
