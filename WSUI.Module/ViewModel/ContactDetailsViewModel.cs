@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using Microsoft.Practices.Prism;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using WSUI.Core.Data;
 using WSUI.Core.Helpers;
@@ -21,6 +22,13 @@ namespace WSUI.Module.ViewModel
 {
     public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel
     {
+
+        private const double AvaregeTwoRowItemHeight = 40;
+        private const double AvaregeOneRowItemHeight = 25;
+        private const double FileValue = 0.2;
+        private const double EmailValue = 0.6;
+
+
         private IEventAggregator _eventAggregator;
         private ISearchSystem _attachmentSearchSystem;
         private ISearchSystem _emailSearchSystem;
@@ -35,7 +43,10 @@ namespace WSUI.Module.ViewModel
             View = contactDetailsView;
             contactDetailsView.Model = this;
             CreateEmailCommand = new WSUIRelayCommand(CreateEmailExecute);
+            MoreCommand = new DelegateCommand<object>(MoreCommandExecute, o => true);
             InitializeSearchSystem();
+            MainEmailSource = new ObservableCollection<EmailSearchObject>();
+            MainFileSource = new ObservableCollection<AttachmentSearchObject>();
         }
 
         #region [interface]
@@ -45,6 +56,10 @@ namespace WSUI.Module.ViewModel
         public ObservableCollection<AttachmentSearchObject> ItemsSource { get; private set; }
 
         public ObservableCollection<EmailSearchObject> EmailsSource { get; private set; }
+
+        public ObservableCollection<AttachmentSearchObject> MainFileSource { get; private set; }
+
+        public ObservableCollection<EmailSearchObject> MainEmailSource { get; private set; }
 
         public void SetDataObject(ISearchObject dataSearchObject)
         {
@@ -84,6 +99,8 @@ namespace WSUI.Module.ViewModel
 
         public ICommand CreateEmailCommand { get; private set; }
 
+        public ICommand MoreCommand { get; private set; }
+
         #endregion [commands]
 
         #region [property]
@@ -101,6 +118,32 @@ namespace WSUI.Module.ViewModel
         public string FotoFilepath { get; private set; }
 
         public string SearchString { get; private set; }
+
+        public bool IsEmailVisible
+        {
+            get { return MainEmailSource.Count > 0; }
+        }
+
+        public bool IsFileVisible
+        {
+            get { return MainFileSource.Count > 0; }
+        }
+
+        public double ActualHeight { get; set; }
+
+        public bool IsEmailMoreVisible { get; private set; }
+
+        public bool IsFileMoreVisible { get; private set; }
+
+        public double EmailHeight { get; private set; }
+
+        public double FileHeight { get; private set; }
+
+        public string FileHeader { get; private set; }
+
+        public string EmailHeader { get; private set; }
+
+        public int SelectedIndex { get; private set; }
 
         #endregion [property]
 
@@ -147,10 +190,20 @@ namespace WSUI.Module.ViewModel
             {
                 CollectionExtensions.AddRange(listResult, systemSearchResult.Result.OfType<AttachmentSearchObject>());
             }
+            if (listResult.Any())
+            {
+                var avaibleHeight = GetAvaibleHeightAndCount(FileValue, AvaregeOneRowItemHeight);
+                IsFileMoreVisible = listResult.Count > avaibleHeight.Item2 - 1;
+                FileHeader = IsFileMoreVisible ? string.Format("({0})", listResult.Count) : string.Empty;
+                CollectionExtensions.AddRange(MainFileSource, listResult.Take(avaibleHeight.Item2 - 1));
+                FileHeight = avaibleHeight.Item1;
+            }
             ItemsSource = listResult;
             _isAttachmentBusy = false;
             OnPropertyChanged(() => ItemsSource);
             OnPropertyChanged(() => IsBusy);
+            NotifyFilesPartChanged();
+            
         }
 
         private void ProcessEmailResult()
@@ -163,10 +216,20 @@ namespace WSUI.Module.ViewModel
             {
                 CollectionExtensions.AddRange(listResult, systemSearchResult.Result.OfType<EmailSearchObject>());
             }
+            if (listResult.Any())
+            {
+                var avaibleHeight = GetAvaibleHeightAndCount(EmailValue, AvaregeTwoRowItemHeight);
+                IsEmailMoreVisible = listResult.Count > avaibleHeight.Item2 - 2;
+                EmailHeader = IsEmailMoreVisible ? string.Format("({0})", listResult.Count) : string.Empty;
+                CollectionExtensions.AddRange(MainEmailSource, listResult.Take(avaibleHeight.Item2 - 2));
+                EmailHeight = avaibleHeight.Item1;
+            }
+
             EmailsSource = listResult;
             _isEmailBusy = false;
             OnPropertyChanged(() => EmailsSource);
             OnPropertyChanged(() => IsBusy);
+            NotifyEmailPartChanged();
         }
 
         private void ApplyContactInfo(ContactSearchObject dataObject)
@@ -228,6 +291,39 @@ namespace WSUI.Module.ViewModel
             email.To = adr;
             email.BodyFormat = Outlook.OlBodyFormat.olFormatHTML;
             email.Display(false);
+        }
+
+        private Tuple<double, int> GetAvaibleHeightAndCount(double a, double avaregeHeight)
+        {
+            var avaibleHeight = ActualHeight * a;
+            var count = avaibleHeight / avaregeHeight;
+            return new Tuple<double, int>(avaibleHeight, (int)count);
+        }
+
+        private void NotifyFilesPartChanged()
+        {
+            OnPropertyChanged(() => IsFileVisible);
+            OnPropertyChanged(() => IsFileMoreVisible);
+            OnPropertyChanged(() => FileHeight);
+            OnPropertyChanged(() => FileHeader);
+            OnPropertyChanged(() => MainFileSource);
+        }
+
+        private void NotifyEmailPartChanged()
+        {
+            OnPropertyChanged(() => IsEmailVisible);
+            OnPropertyChanged(() => IsEmailMoreVisible);
+            OnPropertyChanged(() => EmailHeight);
+            OnPropertyChanged(() => EmailHeader);
+            OnPropertyChanged(() => MainEmailSource);
+        }
+
+        private void MoreCommandExecute(object arg)
+        {
+            if (arg == null)
+                return;
+            SelectedIndex = int.Parse(arg.ToString());
+            OnPropertyChanged(() => SelectedIndex);
         }
 
         #endregion [private]
