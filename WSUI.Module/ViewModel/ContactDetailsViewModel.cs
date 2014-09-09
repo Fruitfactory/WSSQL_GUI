@@ -63,18 +63,20 @@ namespace WSUI.Module.ViewModel
 
         public void SetDataObject(ISearchObject dataSearchObject)
         {
-            var from = OutlookHelper.Instance.GetCurrentyUserEmail().ToLowerInvariant();
+            var from = string.Empty;// OutlookHelper.Instance.GetCurrentyUserEmail().ToLowerInvariant();
             var to = string.Empty;
             if (dataSearchObject is EmailContactSearchObject)
             {
                 var temp = dataSearchObject as EmailContactSearchObject;
                 ApplyEmailContactInfo(temp);
+                from = temp.EMail.ToLowerInvariant();
                 to = temp.EMail.ToLowerInvariant();
             }
             else if (dataSearchObject is ContactSearchObject)
             {
                 var temp = dataSearchObject as ContactSearchObject;
                 ApplyContactInfo(temp);
+                from = string.Format("{0} {1}", temp.FirstName, temp.LastName);
                 to = temp.GetEmail();
             }
             SearchString = to;

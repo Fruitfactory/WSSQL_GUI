@@ -208,7 +208,6 @@
                         <headerControl:WSUIHeaderControl Grid.Row="0"
                                                          Header="Conversations"
                                                          Style="{StaticResource HeaderStyle}"
-                                                         AdditionalHeader="{Binding EmailHeader,UpdateSourceTrigger=PropertyChanged}"
                                                          Visibility="{Binding IsEmailVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
                                                          BorderBrush="{StaticResource ControlBorderBrush}">
                             <Grid Height="{Binding EmailHeight,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
@@ -244,7 +243,6 @@
                         <headerControl:WSUIHeaderControl Grid.Row="1"
                                                          Header="Files"
                                                          Style="{StaticResource HeaderStyle}" 
-                                                         AdditionalHeader="{Binding FileHeader,UpdateSourceTrigger=PropertyChanged}"
                                                          Visibility="{Binding IsFileVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
                                                          BorderBrush="{StaticResource ControlBorderBrush}">
 

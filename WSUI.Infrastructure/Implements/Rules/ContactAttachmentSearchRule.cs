@@ -10,7 +10,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         private const char Separator = ';';
 
-        private string _from;
+        private string _name;
         private string _to;
 
 
@@ -37,7 +37,7 @@ namespace WSUI.Infrastructure.Implements.Rules
             if (string.IsNullOrEmpty(criteria) || criteria.IndexOf(Separator) == -1)
                 return;
             var arrStr = criteria.Split(new[] { Separator });
-            _from = arrStr.Length > 0 ? arrStr[0] : string.Empty;
+            _name = arrStr.Length > 0 ? arrStr[0] : string.Empty;
             _to = arrStr.Length > 1 ? arrStr[1] : string.Empty;
         }
 
@@ -53,8 +53,8 @@ namespace WSUI.Infrastructure.Implements.Rules
         {
             return
                 string.Format(
-                    "Contains(System.Message.FromAddress,'\"{0}\"') AND Contains(System.Message.ToAddress,'\"{1}\"') ",
-                    _from, _to);
+                    "Contains(*,'\"{0}\"') AND Contains(*,'\"{1}\"') ",
+                    _name, _to);
 
         }
     }

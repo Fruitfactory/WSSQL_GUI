@@ -178,7 +178,7 @@ namespace WSUI.Core.Helpers
                 return false;
             string mapiUrl = item.ItemUrl;
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
-            var mi = (Outlook.MailItem)GetMailItem(entryID);
+            var mi = GetMailItem(entryID) as Outlook.MailItem;
             if (mi == null)
                 return false;
             return mi.Attachments.Count > 0;
