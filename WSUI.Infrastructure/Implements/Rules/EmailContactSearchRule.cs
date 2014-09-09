@@ -114,7 +114,7 @@ namespace WSUI.Infrastructure.Implements.Rules
             {
                 foreach (var email in from)
                 {
-                    if (arr.All(str => email.IndexOf(str) > -1) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase))
+                    if (arr.All(str => email.IndexOf(str, StringComparison.InvariantCultureIgnoreCase) > -1) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
                     {
                         fromAddress = email;
                         break;
