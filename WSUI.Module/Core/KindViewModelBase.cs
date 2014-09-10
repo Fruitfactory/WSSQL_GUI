@@ -44,7 +44,6 @@ namespace WSUI.Module.Core
         protected string _prefix = string.Empty;
         protected bool _toggle = false;
         protected readonly List<BaseSearchObject> ListData = new List<BaseSearchObject>();
-        protected Dictionary<TypeSearchItem, ICommandStrategy> CommandStrategies;
         protected IMainViewModel ParentViewModel;
         
         protected volatile bool ShowMessageNoMatches = true;
@@ -52,7 +51,6 @@ namespace WSUI.Module.Core
         protected readonly IEventAggregator EventAggregator;
         
         protected readonly object Lock = new object();
-        
         
         protected IScrollBehavior ScrollBehavior = null;
         protected int TopQueryResult = 100;
@@ -62,7 +60,6 @@ namespace WSUI.Module.Core
         
         private BaseSearchObject _current = null;
         private string _searchString = string.Empty;
-        private ICommandStrategy _currentStrategy;
         private bool _canSearch = true;
 
         // new
@@ -224,15 +221,11 @@ namespace WSUI.Module.Core
             ClearDataSource();
             if (Parent != null)
                 Parent.ForceClosePreview();
-            if (IsSearchCriteriaEmpty)
-                OnPropertyChanged(() => Commands);
             _canSearch = true;
         }
 
         protected virtual void OnInit()
         {
-            CommandStrategies = new Dictionary<TypeSearchItem, ICommandStrategy>();
-
             if (SearchSystem != null)
             {
                 SearchSystem.Init();
@@ -371,7 +364,6 @@ namespace WSUI.Module.Core
             {
                 _current = value;
                 OnCurrentItemChanged(_current);
-                ChooseStrategy();
             }
         }
 
@@ -383,14 +375,6 @@ namespace WSUI.Module.Core
         public void FilterData()
         {
             OnFilterData();
-        }
-
-        public ObservableCollection<IWSCommand> Commands
-        {
-            get
-            {
-                return IsSearchCriteriaEmpty || _currentStrategy == null ? null : _currentStrategy.Commands;
-            }
         }
 
         #endregion IKindItem
@@ -466,20 +450,6 @@ namespace WSUI.Module.Core
                 return;
 
             OpenItemFile(fileName);
-        }
-
-        private void ChooseStrategy()
-        {
-            if (Current == null)
-                return;
-            if (!CommandStrategies.ContainsKey(Current.TypeItem))
-            {
-                _currentStrategy = null;
-            }
-            else
-                _currentStrategy = CommandStrategies[Current.TypeItem];
-
-            OnPropertyChanged(() => Commands);
         }
 
         protected virtual void KeyDown(object args)

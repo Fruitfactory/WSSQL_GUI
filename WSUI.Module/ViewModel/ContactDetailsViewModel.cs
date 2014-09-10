@@ -198,7 +198,7 @@ namespace WSUI.Module.ViewModel
                 IsFileMoreVisible = listResult.Count > avaibleHeight.Item2 - 1;
                 FileHeader = IsFileMoreVisible ? string.Format("({0})", listResult.Count) : string.Empty;
                 CollectionExtensions.AddRange(MainFileSource, listResult.Take(avaibleHeight.Item2 - 1));
-                FileHeight = avaibleHeight.Item1;
+                FileHeight = IsFileMoreVisible ? avaibleHeight.Item1 : listResult.Count * AvaregeOneRowItemHeight;
             }
             ItemsSource = listResult;
             _isAttachmentBusy = false;
@@ -224,7 +224,7 @@ namespace WSUI.Module.ViewModel
                 IsEmailMoreVisible = listResult.Count > avaibleHeight.Item2 - 2;
                 EmailHeader = IsEmailMoreVisible ? string.Format("({0})", listResult.Count) : string.Empty;
                 CollectionExtensions.AddRange(MainEmailSource, listResult.Take(avaibleHeight.Item2 - 2));
-                EmailHeight = avaibleHeight.Item1;
+                EmailHeight = IsEmailMoreVisible ?  avaibleHeight.Item1 : listResult.Count * AvaregeTwoRowItemHeight;
             }
 
             EmailsSource = listResult;

@@ -13,15 +13,15 @@ namespace WSUI.Module.Commands
 {
     public class EmailCommand : BasePreviewCommand
     {
-        public EmailCommand(IKindItem kindItem)
-            : base(kindItem)
+        public EmailCommand(IMainViewModel mainViewModel)
+            : base(mainViewModel)
         {
         }
 
         protected override bool OnCanExecute()
         {
-            if (KindItem != null && KindItem.Current != null &&
-                ((KindItem.Current.TypeItem & TypeSearchItem.FileAll) == KindItem.Current.TypeItem))
+            if (MainViewModel != null && MainViewModel.Current != null &&
+                ((MainViewModel.Current.TypeItem & TypeSearchItem.FileAll) == MainViewModel.Current.TypeItem))
                 return true;
             return false;
         }
@@ -31,17 +31,17 @@ namespace WSUI.Module.Commands
             string filename = string.Empty;
             try
             {
-                switch (KindItem.Current.TypeItem)
+                switch (MainViewModel.Current.TypeItem)
                 {
                     case TypeSearchItem.File:
                     case TypeSearchItem.Picture:
                     case TypeSearchItem.FileAll:
 
-                        filename = SearchItemHelper.GetFileName(KindItem.Current);
+                        filename = SearchItemHelper.GetFileName(MainViewModel.Current);
                         break;
 
                     case TypeSearchItem.Attachment:
-                        filename = TempFileManager.Instance.GenerateTempFileName(KindItem.Current) ?? OutlookHelper.Instance.GetAttachmentTempFileName(KindItem.Current);
+                        filename = TempFileManager.Instance.GenerateTempFileName(MainViewModel.Current) ?? OutlookHelper.Instance.GetAttachmentTempFileName(MainViewModel.Current);
                         break;
                 }
 
@@ -49,7 +49,7 @@ namespace WSUI.Module.Commands
                     return;
                 //if (FileExestensionsHelper.Instance.IsExternsionRequiredClosePreview(Path.GetExtension(filename)))
                 //{
-                //    KindItem.Parent.ForceClosePreview();
+                //    MainViewModel.Parent.ForceClosePreview();
                 //}
                 var mail = OutlookHelper.Instance.CreateNewEmail();
                 mail.Attachments.Add(filename);

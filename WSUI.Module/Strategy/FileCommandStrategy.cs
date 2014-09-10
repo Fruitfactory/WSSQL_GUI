@@ -8,8 +8,8 @@ namespace WSUI.Module.Strategy
 {
     public class FileCommandStrategy : BaseCommandStrategy
     {
-        public FileCommandStrategy(IKindItem kindItem)
-            :base(kindItem)
+        public FileCommandStrategy(IMainViewModel mainViewModel)
+            :base(mainViewModel)
         {
             Type = TypeSearchItem.File | TypeSearchItem.Attachment;
         }
@@ -17,8 +17,8 @@ namespace WSUI.Module.Strategy
         protected override void OnInit()
         {
             base.OnInit();
-            _listCommand.Add(new OpenPreviewCommad(_kindItem));
-            _listCommand.Add(new EmailCommand(_kindItem));
+            _listCommand.Add(new OpenPreviewCommad(_MainViewModel));
+            _listCommand.Add(new EmailCommand(_MainViewModel));
         }
     }
 }

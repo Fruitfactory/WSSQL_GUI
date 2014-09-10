@@ -82,8 +82,6 @@ namespace WSUI.Module.ViewModel
         protected override void OnInit()
         {
             base.OnInit();
-
-            CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
             ScrollBehavior = new ScrollBehavior {CountFirstProcess = 400, CountSecondProcess = 100, LimitReaction = 99};
             ScrollBehavior.SearchGo += OnScrollNeedSearch;
         }

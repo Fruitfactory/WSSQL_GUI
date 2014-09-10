@@ -51,11 +51,6 @@ namespace WSUI.Module.ViewModel
         protected override void OnInit()
         {
             base.OnInit();
-            ICommandStrategy fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
-            CommandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
-            CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
-            CommandStrategies.Add(TypeSearchItem.File, fileAttach);
-            CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             ScrollBehavior = new ScrollBehavior {CountFirstProcess = 100, CountSecondProcess = 50, LimitReaction = 75};
             ScrollBehavior.SearchGo += OnScrollNeedSearch;
         }

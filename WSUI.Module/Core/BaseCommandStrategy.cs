@@ -8,7 +8,7 @@ namespace WSUI.Module.Core
 {
     public abstract class BaseCommandStrategy : ICommandStrategy
     {
-        protected IKindItem _kindItem;
+        protected IMainViewModel _MainViewModel;
         protected ObservableCollection<IWSCommand> _listCommand;
 
         protected BaseCommandStrategy()
@@ -16,10 +16,10 @@ namespace WSUI.Module.Core
             _listCommand = new ObservableCollection<IWSCommand>();
         }
 
-        protected BaseCommandStrategy(IKindItem kindItem)
+        protected BaseCommandStrategy(IMainViewModel mainViewModel)
             :this()
         {
-            _kindItem = kindItem;
+            _MainViewModel = mainViewModel;
         }
 
         protected virtual void OnInit()

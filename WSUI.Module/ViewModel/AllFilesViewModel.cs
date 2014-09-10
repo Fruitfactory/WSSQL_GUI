@@ -1,3 +1,4 @@
+using System.IO.IsolatedStorage;
 using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
@@ -162,7 +163,7 @@ namespace WSUI.Module.ViewModel
                 IsFileMoreVisible = fileAll.Count() > avaibleHeightAndCount.Item2 - 1;
                 FileHeader = IsFileMoreVisible ? string.Format("({0})", fileAll.Count()) : string.Empty;
                 CollectionExtensions.AddRange(FileSource, fileAll.Take(avaibleHeightAndCount.Item2 - 1));
-                FileHeight = avaibleHeightAndCount.Item1;
+                FileHeight = IsFileMoreVisible ?  avaibleHeightAndCount.Item1 : fileAll.Count() * AvaregeOneRowItemHeight;
             }
         }
 
@@ -176,7 +177,7 @@ namespace WSUI.Module.ViewModel
                 IsEmailMoreVisible = emailAll.Count() > avaibleHeightAndCount.Item2;
                 EmailHeader = IsEmailMoreVisible ? string.Format("({0})", emailAll.Count()) : string.Empty;
                 CollectionExtensions.AddRange(DataSource, emailAll.Take(avaibleHeightAndCount.Item2));
-                EmailHeight = avaibleHeightAndCount.Item1;
+                EmailHeight = IsEmailMoreVisible ? avaibleHeightAndCount.Item1 : emailAll.Count() * AvaregeTwoRowItemHeight;
             }
         }
 
@@ -186,11 +187,11 @@ namespace WSUI.Module.ViewModel
             if (contacts.Any())
             {
                 var contactAll = contacts.SelectMany(c => c.Result);
-                var avaibleHeightAndCount = GetAvaibleHeightAndCount(ContactValue, AvaregeOneRowItemHeight);
+                var avaibleHeightAndCount = GetAvaibleHeightAndCount(ContactValue, AvaregeTwoRowItemHeight);
                 IsContactMoreVisible = contactAll.Count() > avaibleHeightAndCount.Item2 - 1;
                 ContactHeader = IsContactMoreVisible ? string.Format("({0})", contactAll.Count()) : string.Empty;
                 CollectionExtensions.AddRange(ContactSource, contactAll.Take(avaibleHeightAndCount.Item2 - 1));
-                ContactHeight = IsContactMoreVisible ? avaibleHeightAndCount.Item1 : contactAll.Count() * AvaregeOneRowItemHeight;
+                ContactHeight = IsContactMoreVisible ? avaibleHeightAndCount.Item1 : contactAll.Count() * AvaregeTwoRowItemHeight;
             }
         }
 
@@ -247,12 +248,6 @@ namespace WSUI.Module.ViewModel
         protected override void OnInit()
         {
             base.OnInit();
-            CommandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
-            ICommandStrategy fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
-            CommandStrategies.Add(TypeSearchItem.File, fileAttach);
-            CommandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
-            CommandStrategies.Add(TypeSearchItem.Picture, fileAttach);
-            CommandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
             ScrollBehavior = new ScrollBehavior { CountFirstProcess = 300, CountSecondProcess = 100, LimitReaction = 99 };
             ScrollBehavior.SearchGo += OnScrollNeedSearch;
             TopQueryResult = ScrollBehavior.CountFirstProcess;

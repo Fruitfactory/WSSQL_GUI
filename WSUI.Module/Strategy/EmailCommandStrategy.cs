@@ -8,8 +8,8 @@ namespace WSUI.Module.Strategy
 {
     public class EmailCommandStrategy : BaseCommandStrategy
     {
-        public EmailCommandStrategy(IKindItem kindItem)
-            :base(kindItem)
+        public EmailCommandStrategy(IMainViewModel mainViewModel)
+            :base(mainViewModel)
         {
             Type = TypeSearchItem.Email;
         }
@@ -17,10 +17,10 @@ namespace WSUI.Module.Strategy
         protected override void OnInit()
         {
             base.OnInit();
-            _listCommand.Add(new OpenEmailCommand(_kindItem));
-            _listCommand.Add(new ReplyCommand(_kindItem));
-            _listCommand.Add(new ReplyAllCommand(_kindItem));
-            _listCommand.Add(new ForwardCommand(_kindItem));
+            _listCommand.Add(new OpenEmailCommand(_MainViewModel));
+            _listCommand.Add(new ReplyCommand(_MainViewModel));
+            _listCommand.Add(new ReplyAllCommand(_MainViewModel));
+            _listCommand.Add(new ForwardCommand(_MainViewModel));
         }
 
     }

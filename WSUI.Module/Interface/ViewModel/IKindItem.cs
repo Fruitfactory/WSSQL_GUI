@@ -59,7 +59,6 @@ namespace WSUI.Module.Interface.ViewModel
         List<string> FolderList { get; set; }
         string Folder { get; set; }
         bool Enabled { get; set; }
-        ObservableCollection<IWSCommand> Commands { get; }
         
         ICommand SearchCommand { get; }
         ICommand OpenCommand { get; }

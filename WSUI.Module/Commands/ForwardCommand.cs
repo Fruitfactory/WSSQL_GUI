@@ -11,21 +11,21 @@ namespace WSUI.Module.Commands
 {
     public class ForwardCommand : BasePreviewCommand
     {
-        public ForwardCommand(IKindItem kindItem) : base(kindItem)
+        public ForwardCommand(IMainViewModel mainViewModel) : base(mainViewModel)
         {
         }
 
         protected override bool OnCanExecute()
         {
-            if (KindItem != null && KindItem.Current != null &&
-                KindItem.Current.TypeItem == TypeSearchItem.Email)
+            if (MainViewModel != null && MainViewModel.Current != null &&
+                MainViewModel.Current.TypeItem == TypeSearchItem.Email)
                 return true;
             return false;
         }
 
         protected override void OnExecute()
         {
-            var searchItem = KindItem.Current;
+            var searchItem = MainViewModel.Current;
             var mail = OutlookHelper.Instance.GetEmailItem(searchItem);
             if (mail != null)
             {

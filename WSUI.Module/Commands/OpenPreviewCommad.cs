@@ -15,15 +15,15 @@ namespace WSUI.Module.Commands
 {
     public class OpenPreviewCommad : BasePreviewCommand
     {
-        public OpenPreviewCommad(IKindItem kindItem) : base(kindItem)
+        public OpenPreviewCommad(IMainViewModel mainViewModel) : base(mainViewModel)
         {
         }
 
         protected override bool OnCanExecute()
         {
 
-            if (KindItem != null && KindItem.Current != null &&
-                ((KindItem.Current.TypeItem & TypeSearchItem.FileAll) == KindItem.Current.TypeItem))
+            if (MainViewModel != null && MainViewModel.Current != null &&
+                ((MainViewModel.Current.TypeItem & TypeSearchItem.FileAll) == MainViewModel.Current.TypeItem))
                 return true;
             return false;
         }
@@ -31,18 +31,18 @@ namespace WSUI.Module.Commands
         protected override void OnExecute()
         {
             string fileName = string.Empty;
-            switch (KindItem.Current.TypeItem)
+            switch (MainViewModel.Current.TypeItem)
             {
                 case TypeSearchItem.File:
                 case TypeSearchItem.Picture:
                 case TypeSearchItem.FileAll:
-                    fileName = SearchItemHelper.GetFileName(KindItem.Current,false);
+                    fileName = SearchItemHelper.GetFileName(MainViewModel.Current,false);
                     break;
                 case TypeSearchItem.Attachment:
-                    fileName = TempFileManager.Instance.GenerateTempFileName(KindItem.Current) ?? OutlookHelper.Instance.GetAttachmentTempFileName(KindItem.Current);
+                    fileName = TempFileManager.Instance.GenerateTempFileName(MainViewModel.Current) ?? OutlookHelper.Instance.GetAttachmentTempFileName(MainViewModel.Current);
                     break;
                 case TypeSearchItem.Email:
-                    fileName = TempFileManager.Instance.GenerateTempFileName(KindItem.Current);
+                    fileName = TempFileManager.Instance.GenerateTempFileName(MainViewModel.Current);
                     break;
 
             }
@@ -53,7 +53,7 @@ namespace WSUI.Module.Commands
             {
                 //if (FileExestensionsHelper.Instance.IsExternsionRequiredClosePreview(Path.GetExtension(fileName)))
                 //{
-                //    KindItem.Parent.ForceClosePreview();
+                //    MainViewModel.Parent.ForceClosePreview();
                 //}
                 Process.Start(fileName);
             }

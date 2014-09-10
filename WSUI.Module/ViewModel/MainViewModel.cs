@@ -29,6 +29,7 @@ using WSUI.Module.Interface.View;
 using WSUI.Module.Interface.ViewModel;
 using WSUI.Module.Service;
 using WSUI.Module.Service.Dialogs.Message;
+using WSUI.Module.Strategy;
 using Application = System.Windows.Application;
 
 namespace WSUI.Module.ViewModel
@@ -57,6 +58,9 @@ namespace WSUI.Module.ViewModel
         private object _oldView = null;
         private INavigationService _navigationService;
         private SubscriptionToken _token;
+        
+        private Dictionary<TypeSearchItem, ICommandStrategy> _commandStrategies;
+        private ICommandStrategy _currentStrategy;
 
         public MainViewModel(IUnityContainer container, IKindsView kindView,
             IPreviewView previewView, IEventAggregator eventAggregator)
@@ -98,7 +102,7 @@ namespace WSUI.Module.ViewModel
 
         public ObservableCollection<IWSCommand> Commands
         {
-            get { return _currentItem != null ? _currentItem.Commands : null; }
+            get { return _currentStrategy != null ? _currentStrategy.Commands : null; }
         }
 
         public bool Enabled
@@ -125,6 +129,19 @@ namespace WSUI.Module.ViewModel
             }
             OnPropertyChanged(() => KindsCollection);
             UpdatedActivatedStatus();
+            InitCommandStrategies();
+
+        }
+
+        private void InitCommandStrategies()
+        {
+            _commandStrategies = new Dictionary<TypeSearchItem, ICommandStrategy>();
+            _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
+            ICommandStrategy fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
+            _commandStrategies.Add(TypeSearchItem.File, fileAttach);
+            _commandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
+            _commandStrategies.Add(TypeSearchItem.Picture, fileAttach);
+            _commandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
         }
 
         private void UpdatedActivatedStatus()
@@ -220,6 +237,7 @@ namespace WSUI.Module.ViewModel
             _currentData = searchObjectPayload.Data as BaseSearchObject;
             if (_currentData == null || _currentData.TypeItem == TypeSearchItem.None)
                 return;
+            ChooseStrategy(Current);
             try
             {
                 Enabled = false;
@@ -546,6 +564,11 @@ namespace WSUI.Module.ViewModel
             _eventAggregator.GetEvent<WSUIShowFolder>().Publish(folder);
         }
 
+        public BaseSearchObject Current 
+        {
+            get { return _currentData; }
+        }
+
         #endregion Implementation of IMainViewModel
 
         public virtual void Init()
@@ -589,6 +612,20 @@ namespace WSUI.Module.ViewModel
 
         private void PreviewViewOnStopLoad(object sender, EventArgs eventArgs)
         {
+        }
+
+        private void ChooseStrategy(BaseSearchObject current)
+        {
+            if (current == null)
+                return;
+            if (!_commandStrategies.ContainsKey(current.TypeItem))
+            {
+                _currentStrategy = null;
+            }
+            else
+                _currentStrategy = _commandStrategies[current.TypeItem];
+
+            OnPropertyChanged(() => Commands);
         }
     }
 }

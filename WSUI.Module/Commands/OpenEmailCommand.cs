@@ -13,14 +13,14 @@ namespace WSUI.Module.Commands
 {
     public class OpenEmailCommand :  BasePreviewCommand
     {
-        public OpenEmailCommand(IKindItem kindItem) : base(kindItem)
+        public OpenEmailCommand(IMainViewModel mainViewModel) : base(mainViewModel)
         {
         }
 
         protected override bool OnCanExecute()
         {
-            if (KindItem != null && KindItem.Current != null &&
-                (KindItem.Current.TypeItem & TypeSearchItem.Email) == KindItem.Current.TypeItem)
+            if (MainViewModel != null && MainViewModel.Current != null &&
+                (MainViewModel.Current.TypeItem & TypeSearchItem.Email) == MainViewModel.Current.TypeItem)
                 return true;
             return false;
         }
@@ -29,10 +29,10 @@ namespace WSUI.Module.Commands
             string filename = string.Empty;
             try
             {
-                switch (KindItem.Current.TypeItem)
+                switch (MainViewModel.Current.TypeItem)
                 {
                     case TypeSearchItem.Email:
-                        filename = TempFileManager.Instance.GenerateTempFileName(KindItem.Current);
+                        filename = TempFileManager.Instance.GenerateTempFileName(MainViewModel.Current);
                         break;
                 }
                 if(string.IsNullOrEmpty(filename))

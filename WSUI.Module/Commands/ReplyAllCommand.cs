@@ -11,22 +11,22 @@ namespace WSUI.Module.Commands
 {
     public class ReplyAllCommand : BasePreviewCommand
     {
-        public ReplyAllCommand(IKindItem kindItem) : base(kindItem)
+        public ReplyAllCommand(IMainViewModel mainViewModel) : base(mainViewModel)
         {
         }
 
 
         protected override bool OnCanExecute()
         {
-            if (KindItem != null && KindItem.Current != null &&
-                KindItem.Current.TypeItem == TypeSearchItem.Email)
+            if (MainViewModel != null && MainViewModel.Current != null &&
+                MainViewModel.Current.TypeItem == TypeSearchItem.Email)
                 return true;
             return false;
         }
 
         protected override void OnExecute()
         {
-            var itemSearch = KindItem.Current;
+            var itemSearch = MainViewModel.Current;
             var mail = OutlookHelper.Instance.GetEmailItem(itemSearch);
             if (mail != null)
             {
