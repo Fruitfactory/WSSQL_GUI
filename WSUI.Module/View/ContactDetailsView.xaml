@@ -195,7 +195,7 @@
 
         <Grid Grid.Row="1" Margin="0 5 0 0">
             <Controls:MetroAnimatedSingleRowTabControl 
-                SelectedIndex="{Binding SelectedIndex,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
+                SelectedIndex="{Binding SelectedIndex,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}">
 
                 <TabItem x:Name="MainTab" HeaderTemplate="{StaticResource MainTabIconTemplate}" ToolTip="Everething">
                     <Grid behaviors:WSUIActualHeightBehavior.IsObserve="True" behaviors:WSUIActualHeightBehavior.ActualHeight="{Binding ActualHeight,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
@@ -287,6 +287,7 @@
                              attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                              attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
                              ItemTemplateSelector="{StaticResource templateSelector}"
+                             ScrollViewer.ScrollChanged="ListBox_OnScrollChanged"
                              HorizontalContentAlignment="Stretch">
                     </listBox:WSUIListBox>
                 </TabItem>

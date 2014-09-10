@@ -52,14 +52,14 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 
 	    protected override void ProcessResult()
         {
-	        var groped = Result.OrderByDescending(i => i.DateCreated).GroupBy(e => e.ConversationId);
+            var groped = Result.OrderByDescending(i => i.DateReceived).GroupBy(e => e.ConversationId);
 	        var result = new List<EmailSearchObject>();
             foreach (var group in groped)
 	        {
                 var convIndex = group.GroupBy(i => i.ConversationIndex);
                 if(!convIndex.Any())
                     continue;
-	            var data = convIndex.FirstOrDefault().First(); // FirstOrDefault = group, First = email
+	            var data = convIndex.FirstOrDefault().First(); 
                 if(data == null || string.IsNullOrEmpty(data.ConversationId) || _listID.Contains(data.ConversationId))
                     continue;
 	            _listID.Add(data.ConversationId);

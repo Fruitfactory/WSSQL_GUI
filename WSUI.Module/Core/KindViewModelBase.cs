@@ -37,8 +37,6 @@ namespace WSUI.Module.Core
     public abstract class KindViewModelBase : ViewModelBase, IKindItem
     {
 
-        
-        
         protected string _name = string.Empty;
         
         protected string _prefix = string.Empty;

@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WSUI.Core.Interfaces;
+using WSUI.Infrastructure.Service;
 using WSUI.Module.Interface.View;
 using WSUI.Module.Interface.ViewModel;
 
@@ -31,6 +32,17 @@ namespace WSUI.Module.View
         {
             get { return DataContext as IContactDetailsViewModel; }
             set { DataContext = value; }
+        }
+
+        private void ListBox_OnScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (DataContext == null ||
+                !(DataContext is IScrollableView))
+                return;
+            var scrollViewer = VisualTreeHelper.GetChild(listBox, 0) as ScrollViewer;
+            if (scrollViewer == null) return;
+            var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
+            (DataContext as IScrollableView).ScrollChangeCommand.Execute(scrollChanged);
         }
     }
 }

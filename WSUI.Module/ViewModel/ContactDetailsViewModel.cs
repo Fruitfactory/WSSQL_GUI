@@ -13,14 +13,17 @@ using WSUI.Core.Utils.Dialog;
 using WSUI.Infrastructure.Events;
 using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Payloads;
+using WSUI.Infrastructure.Service;
 using WSUI.Module.Core;
+using WSUI.Module.Interface.Service;
 using WSUI.Module.Interface.View;
 using WSUI.Module.Interface.ViewModel;
+using WSUI.Module.Service;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace WSUI.Module.ViewModel
 {
-    public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel
+    public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel, IScrollableView
     {
 
         private const double AvaregeTwoRowItemHeight = 40;
@@ -33,6 +36,12 @@ namespace WSUI.Module.ViewModel
         private ISearchSystem _attachmentSearchSystem;
         private ISearchSystem _emailSearchSystem;
         private ISearchObject _selectedAttachment;
+        private bool _isEmailsInitialized = false;
+        private IScrollBehavior _scrollBehavior;
+
+        private string _from = string.Empty;
+        private string _to = string.Empty;
+
 
         private bool _isAttachmentBusy = true;
         private bool _isEmailBusy = true;
@@ -47,6 +56,15 @@ namespace WSUI.Module.ViewModel
             InitializeSearchSystem();
             MainEmailSource = new ObservableCollection<EmailSearchObject>();
             MainFileSource = new ObservableCollection<AttachmentSearchObject>();
+            ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
+            _scrollBehavior = new ScrollBehavior {LimitReaction = 85};
+            _scrollBehavior.SearchGo += ScrollBehaviorOnSearchGo;
+            EmailsSource = new ObservableCollection<EmailSearchObject>();
+        }
+
+        private void ScrollBehaviorOnSearchGo()
+        {
+            RunEmailSearching(_from,_to);                    
         }
 
         #region [interface]
@@ -63,25 +81,25 @@ namespace WSUI.Module.ViewModel
 
         public void SetDataObject(ISearchObject dataSearchObject)
         {
-            var from = string.Empty;// OutlookHelper.Instance.GetCurrentyUserEmail().ToLowerInvariant();
-            var to = string.Empty;
+            _from = string.Empty;// OutlookHelper.Instance.GetCurrentyUserEmail().ToLowerInvariant();
+            _to = string.Empty;
             if (dataSearchObject is EmailContactSearchObject)
             {
                 var temp = dataSearchObject as EmailContactSearchObject;
                 ApplyEmailContactInfo(temp);
-                from = temp.EMail.ToLowerInvariant();
-                to = temp.EMail.ToLowerInvariant();
+                _from = temp.EMail.ToLowerInvariant();
+                _to = temp.EMail.ToLowerInvariant();
             }
             else if (dataSearchObject is ContactSearchObject)
             {
                 var temp = dataSearchObject as ContactSearchObject;
                 ApplyContactInfo(temp);
-                from = string.Format("{0} {1}", temp.FirstName, temp.LastName);
-                to = temp.GetEmail();
+                _from = string.Format("{0} {1}", temp.FirstName, temp.LastName);
+                _to = temp.GetEmail();
             }
-            SearchString = to;
-            RunAttachmentSearching(from, to);
-            RunEmailSearching(from, to);
+            SearchString = _to;
+            RunAttachmentSearching(_from, _to);
+            RunEmailSearching(_from, _to);
             OnPropertyChanged(() => SearchString);
         }
 
@@ -213,21 +231,19 @@ namespace WSUI.Module.ViewModel
             IList<ISystemSearchResult> result = _emailSearchSystem.GetResult();
             if (result == null || !result.Any())
                 return;
-            var listResult = new ObservableCollection<EmailSearchObject>();
             foreach (var systemSearchResult in result)
             {
-                CollectionExtensions.AddRange(listResult, systemSearchResult.Result.OfType<EmailSearchObject>());
+                CollectionExtensions.AddRange(EmailsSource, systemSearchResult.Result.OfType<EmailSearchObject>());
             }
-            if (listResult.Any())
+            if (EmailsSource.Any() && !_isEmailsInitialized)
             {
                 var avaibleHeight = GetAvaibleHeightAndCount(EmailValue, AvaregeTwoRowItemHeight);
-                IsEmailMoreVisible = listResult.Count > avaibleHeight.Item2 - 2;
-                EmailHeader = IsEmailMoreVisible ? string.Format("({0})", listResult.Count) : string.Empty;
-                CollectionExtensions.AddRange(MainEmailSource, listResult.Take(avaibleHeight.Item2 - 2));
-                EmailHeight = IsEmailMoreVisible ?  avaibleHeight.Item1 : listResult.Count * AvaregeTwoRowItemHeight;
+                IsEmailMoreVisible = EmailsSource.Count > avaibleHeight.Item2 - 2;
+                EmailHeader = IsEmailMoreVisible ? string.Format("({0})", EmailsSource.Count) : string.Empty;
+                CollectionExtensions.AddRange(MainEmailSource, EmailsSource.Take(avaibleHeight.Item2 - 2));
+                EmailHeight = IsEmailMoreVisible ? avaibleHeight.Item1 : EmailsSource.Count * AvaregeTwoRowItemHeight;
+                _isEmailsInitialized = true;
             }
-
-            EmailsSource = listResult;
             _isEmailBusy = false;
             OnPropertyChanged(() => EmailsSource);
             OnPropertyChanged(() => IsBusy);
@@ -353,5 +369,17 @@ namespace WSUI.Module.ViewModel
         }
 
         #endregion [override]
+
+        public ICommand ScrollChangeCommand { get; private set; }
+
+        private void OnScroll(object args)
+        {
+            var scrollArgs = args as ScrollData;
+            if (scrollArgs != null && _scrollBehavior != null)
+            {
+                _scrollBehavior.NeedSearch(scrollArgs);
+            }
+        }
+
     }
 }
