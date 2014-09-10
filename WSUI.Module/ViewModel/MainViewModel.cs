@@ -115,6 +115,11 @@ namespace WSUI.Module.ViewModel
             }
         }
 
+        public bool IsKindsVisible 
+        {
+            get { return _navigationService != null && !(_navigationService.CurrentView is IContactDetailsView); }
+        }
+
         #region private
 
         private void InitializeInThread()
@@ -601,6 +606,7 @@ namespace WSUI.Module.ViewModel
             if (_navigationService == null)
                 return;
             _navigationService.MoveToLeft(view as INavigationView);
+            OnPropertyChanged(() => IsKindsVisible);
         }
 
         private void MoveToRight()
@@ -608,6 +614,7 @@ namespace WSUI.Module.ViewModel
             if (_navigationService == null)
                 return;
             _navigationService.MoveToRight();
+            OnPropertyChanged(() => IsKindsVisible);
         }
 
         private void PreviewViewOnStopLoad(object sender, EventArgs eventArgs)
