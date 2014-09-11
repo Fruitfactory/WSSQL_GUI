@@ -50,7 +50,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         {
             return
                 string.Format(
-                    " Contains(*,'\"{0}\"') OR Contains(*,'\"{1}\"') ",
+                    " Contains(*,'\"{0}*\"') OR Contains(*,'\"{1}*\"') ",
                     _name,
                     _to); //Contains(System.Message.FromAddress,'\"{0}\"') AND 
 
