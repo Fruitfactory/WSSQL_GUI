@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using WSUI.Core.Core.Rules;
 using WSUI.Core.Enums;
 using WSUI.Infrastructure.Implements.Rules.BaseRules;
@@ -7,6 +10,10 @@ namespace WSUI.Infrastructure.Implements.Rules
 {
     public class ContactEmailSearchRule : BaseEmailSearchRule
     {
+
+        private static readonly char[] separators = new char[] {' ', '.', ','};
+        private readonly static char Apersand = '@';
+
         private string WhereTemplate =
             "WHERE CONTAINS(System.Kind,'email') AND System.Message.DateReceived < '{0}' AND {1} ORDER BY System.Message.DateReceived DESC";//System.Search.Contents
 
@@ -48,13 +55,44 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         private string GetEmailsCriteria()
         {
+
+            var emailPart = GeneratePartsFromEmail(_to);
             return
                 string.Format(
-                    " Contains(*,'\"{0}*\"') OR Contains(*,'\"{1}*\"') ",
+                    "( Contains(*,'\"{0}*\"') OR ( {1} ) )",
                     _name,
-                    _to); //Contains(System.Message.FromAddress,'\"{0}\"') AND 
+                    emailPart);
+        }
+
+        private string GeneratePartsFromEmail(string email)
+        {
+            var parts = GetEmailParts(email);
+            if (parts == null)
+                return string.Empty;
+            var builder = new StringBuilder();
+            if (parts.Item1.Length > 0)
+            {
+                builder.AppendFormat(" Contains(*, '\"{0}*\"') ", parts.Item1[0]);
+                foreach (var item in parts.Item1.Skip(1))
+                {
+                    builder.AppendFormat(" AND Contains(*, '\"{0}*\"')", item);
+                }
+            }
+            return string.Format(" {0} AND Contains(*, '\"{1}*\"')", builder.ToString(), parts.Item2);
 
         }
+
+        private Tuple<string[], string> GetEmailParts(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return default(Tuple<string[], string>);
+            var part1 = email.Substring(0, email.IndexOf(Apersand));
+            var part2 = email.Substring(email.IndexOf(Apersand) + 1);
+            var split1 = part1.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            return new Tuple<string[], string>(split1,part2);
+        }
+
+
 
     }
 }
