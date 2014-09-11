@@ -151,7 +151,7 @@
 
             <Grid Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <TextBlock  FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Stretch"
-                       FontSize="20">
+                       FontSize="20" TextTrimming="CharacterEllipsis">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Margin" Value="1 5 1 0"></Setter>
