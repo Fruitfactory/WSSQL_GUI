@@ -187,20 +187,20 @@ namespace WSUI.Core.Helpers
         public string GetContactFotoTempFileName(ContactSearchObject data)
         {
             if (data == null)
-                return string.Empty;
+                return null;
             string mapiUrl = data.ItemUrl;
             Outlook.ContactItem ci = GetContact(data);
             if (ci == null)
-                return string.Empty;
+                return null;
             Outlook.Attachment att  = GetFotoAttachment(ci);
             if (att == null)
-                return string.Empty;
+                return null;
             data.ItemUrl = att.DisplayName;
 
             string tempFilename = TempFileManager.Instance.GenerateTempFileName(data);
             
             if (string.IsNullOrEmpty(tempFilename))
-                return string.Empty;
+                return null;
             att.SaveAsFile(tempFilename);
 
             return tempFilename;
