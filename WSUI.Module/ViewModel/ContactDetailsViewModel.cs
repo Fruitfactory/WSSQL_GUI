@@ -26,10 +26,10 @@ namespace WSUI.Module.ViewModel
     public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel, IScrollableView
     {
 
-        private const double AvaregeTwoRowItemHeight = 40;
+        private const double AvaregeTwoRowItemHeight = 42;
         private const double AvaregeOneRowItemHeight = 25;
         private const double FileValue = 0.2;
-        private const double EmailValue = 0.6;
+        private const double EmailValue = 0.7;
 
 
         private IEventAggregator _eventAggregator;
@@ -185,8 +185,6 @@ namespace WSUI.Module.ViewModel
         {
             _attachmentSearchSystem = new ContactAttachmentSearchSystem();
             _attachmentSearchSystem.Init();
-            _attachmentSearchSystem.SearchStarted += AttachmentSearchStarted;
-            _attachmentSearchSystem.SearchStoped += AttachmentSearchStoped;
             _attachmentSearchSystem.SearchFinished += AttachmentSearchFinished;
 
             _emailSearchSystem = new ContactEmailSearchSystem();
@@ -197,14 +195,6 @@ namespace WSUI.Module.ViewModel
         private void EmailSearchFinished(object o)
         {
             System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)ProcessEmailResult);
-        }
-
-        private void AttachmentSearchStoped(object o)
-        {
-        }
-
-        private void AttachmentSearchStarted(object o)
-        {
         }
 
         private void AttachmentSearchFinished(object o)
@@ -226,7 +216,6 @@ namespace WSUI.Module.ViewModel
             {
                 var avaibleHeight = GetAvaibleHeightAndCount(FileValue, AvaregeOneRowItemHeight);
                 IsFileMoreVisible = listResult.Count > avaibleHeight.Item2 - 1;
-                FileHeader = IsFileMoreVisible ? string.Format("({0})", listResult.Count) : string.Empty;
                 CollectionExtensions.AddRange(MainFileSource, listResult.Take(avaibleHeight.Item2 - 1));
                 FileHeight = IsFileMoreVisible ? avaibleHeight.Item1 : listResult.Count * AvaregeOneRowItemHeight;
             }
@@ -250,9 +239,8 @@ namespace WSUI.Module.ViewModel
             if (EmailsSource.Any() && !_isEmailsInitialized)
             {
                 var avaibleHeight = GetAvaibleHeightAndCount(EmailValue, AvaregeTwoRowItemHeight);
-                IsEmailMoreVisible = EmailsSource.Count > avaibleHeight.Item2 - 2;
-                EmailHeader = IsEmailMoreVisible ? string.Format("({0})", EmailsSource.Count) : string.Empty;
-                CollectionExtensions.AddRange(MainEmailSource, EmailsSource.Take(avaibleHeight.Item2 - 2));
+                IsEmailMoreVisible = EmailsSource.Count > avaibleHeight.Item2 - 1;
+                CollectionExtensions.AddRange(MainEmailSource, EmailsSource.Take(avaibleHeight.Item2 - 1));
                 EmailHeight = IsEmailMoreVisible ? avaibleHeight.Item1 : EmailsSource.Count * AvaregeTwoRowItemHeight;
                 _isEmailsInitialized = true;
             }
@@ -373,8 +361,6 @@ namespace WSUI.Module.ViewModel
             {
                 if (_attachmentSearchSystem != null)
                 {
-                    _attachmentSearchSystem.SearchFinished -= AttachmentSearchFinished;
-                    _attachmentSearchSystem.SearchStarted -= AttachmentSearchStarted;
                     _attachmentSearchSystem.SearchFinished -= AttachmentSearchFinished;
                     _attachmentSearchSystem = null;
                 }

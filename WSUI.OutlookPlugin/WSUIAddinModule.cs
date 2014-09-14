@@ -1174,23 +1174,31 @@ namespace WSUIOutlookPlugin
 
         private Outlook.MAPIFolder GetOutlookFolders(Outlook.MAPIFolder folder, string fullpath)
         {
-            if (folder.FullFolderPath == fullpath)
-                return folder;
-            Outlook.MAPIFolder mapiFolder = null;
-            foreach (var subfolder in folder.Folders.OfType<Outlook.MAPIFolder>())
+            try
             {
-                try
+                if (folder.FullFolderPath == fullpath)
+                    return folder;
+                Outlook.MAPIFolder mapiFolder = null;
+                foreach (var subfolder in folder.Folders.OfType<Outlook.MAPIFolder>())
                 {
-                    mapiFolder = GetOutlookFolders(subfolder, fullpath);
-                    if (mapiFolder != null)
-                        break;
+                    try
+                    {
+                        mapiFolder = GetOutlookFolders(subfolder, fullpath);
+                        if (mapiFolder != null)
+                            break;
+                    }
+                    catch (Exception e)
+                    {
+                        WSSqlLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
+                    }
                 }
-                catch (Exception e)
-                {
-                    WSSqlLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
-                }
+                return mapiFolder;
             }
-            return mapiFolder;
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+            return null;
         }
 
         private void OutlookFinderEvents_NewExplorer(object sender, object explorer)
