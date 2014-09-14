@@ -6,7 +6,6 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,15 +15,15 @@ using WSUI.Core.Core.Attributes;
 using WSUI.Core.Data;
 using WSUI.Core.Interfaces;
 
-namespace WSUI.Core.Utils 
+namespace WSUI.Core.Utils
 {
-	public class FieldCash : IFieldCash
-	{
-        private ConcurrentDictionary<Type, IList<Tuple<string, string, int, bool>>> _internalCash = new ConcurrentDictionary<Type, IList<Tuple<string, string, int, bool>>>(); 
+    public class FieldCash : IFieldCash
+    {
+        private ConcurrentDictionary<Type, IList<Tuple<string, string, int, bool>>> _internalCash = new ConcurrentDictionary<Type, IList<Tuple<string, string, int, bool>>>();
 
-		protected FieldCash(){
-
-		}
+        protected FieldCash()
+        {
+        }
 
         #region [instance]
 
@@ -35,134 +34,127 @@ namespace WSUI.Core.Utils
             return inst;
         });
 
+        public static IFieldCash Instance
+        {
+            get { return _instance.Value; }
+        }
 
-	    public static IFieldCash Instance
-	    {
-	        get { return _instance.Value; }
-	    }
-
-        #endregion
-
+        #endregion [instance]
 
         private void Init()
         {
-            AddType(typeof(AttachmentSearchObject)); 
+            AddType(typeof(AttachmentSearchObject));
             AddType(typeof(EmailSearchObject));
             AddType(typeof(FileSearchObject));
             AddType(typeof(ContactSearchObject));
             AddType(typeof(EmailContactSearchObject));
         }
 
-	    /// 
-	    /// <param name="type"></param>
-	    /// <param name="exludeIgnored"></param>
-	    public IList<Tuple<string,string,int,bool>> GetFields(Type type)
+        ///
+        /// <param name="type"></param>
+        /// <param name="exludeIgnored"></param>
+        public IList<Tuple<string, string, int, bool>> GetFields(Type type)
         {
-	        if (_internalCash.ContainsKey(type))
-	        {
-	            return GetExistList(type);
-	        }
-	        var result = CreateCashRecordForType(type);
-	        return result;
+            if (_internalCash.ContainsKey(type))
+            {
+                return GetExistList(type);
+            }
+            var result = CreateCashRecordForType(type);
+            return result;
         }
 
-	    public IEnumerable<string> GetIgnoredFields(Type type)
-	    {
-	        if(type == null || !_internalCash.ContainsKey(type))
+        public IEnumerable<string> GetIgnoredFields(Type type)
+        {
+            if (type == null || !_internalCash.ContainsKey(type))
                 return null;
-	        return _internalCash[type].Where(f => f.Item4).Select(f => f.Item2.ToUpper()).ToList();
-	    }
+            return _internalCash[type].Where(f => f.Item4).Select(f => f.Item2.ToUpper()).ToList();
+        }
 
-	    public void Initialize()
-	    {
-	        
-	    }
+        public void Initialize()
+        {
+        }
 
-	    private IList<Tuple<string,string,int,bool>> CreateCashRecordForType(Type type)
+        private IList<Tuple<string, string, int, bool>> CreateCashRecordForType(Type type)
         {
             var list = AddType(type);
             return list.ToList();
         }
 
-	    private IList<Tuple<string,string,int,bool>> AddType(Type type)
-	    {
-	        var list = InternalGetFields(type);
-	        _internalCash.TryAdd(type, list);
-	        return list;
-	    }
+        private IList<Tuple<string, string, int, bool>> AddType(Type type)
+        {
+            var list = InternalGetFields(type);
+            _internalCash.TryAdd(type, list);
+            return list;
+        }
 
-	    private IList<Tuple<string, string, int, bool>> InternalGetFields(Type type)
-	    {
-	        var listResult = new List<Tuple<string, string, int, bool>>();
-	        if (type.BaseType != null)
-	        {
-	            GetBaseFields(listResult, type.BaseType);
-	        }
-            GetListValue(listResult,type);
-	        return listResult;
-	    }
+        private IList<Tuple<string, string, int, bool>> InternalGetFields(Type type)
+        {
+            var listResult = new List<Tuple<string, string, int, bool>>();
+            if (type.BaseType != null)
+            {
+                GetBaseFields(listResult, type.BaseType);
+            }
+            GetListValue(listResult, type);
+            return listResult;
+        }
 
-	    private void GetBaseFields(IList<Tuple<string, string, int, bool>> list, Type baseType)
-	    {
-	        if (baseType.BaseType == null)
-	        {
-	            GetListValue(list, baseType);
-	        }
-	        else
-	        {
-                GetBaseFields(list,baseType.BaseType);
-	            GetListValue(list,baseType);
-	        }
-	    }
+        private void GetBaseFields(IList<Tuple<string, string, int, bool>> list, Type baseType)
+        {
+            if (baseType.BaseType == null)
+            {
+                GetListValue(list, baseType);
+            }
+            else
+            {
+                GetBaseFields(list, baseType.BaseType);
+                GetListValue(list, baseType);
+            }
+        }
 
-	    private void GetListValue(IList<Tuple<string, string, int, bool>> list, Type baseType)
-	    {
-	        var l = GetFieldsList(baseType);
-	        foreach (var tuple in l)
-	        {
-	            list.Add(tuple);
-	        }
-	    }
+        private void GetListValue(IList<Tuple<string, string, int, bool>> list, Type baseType)
+        {
+            var l = GetFieldsList(baseType);
+            foreach (var tuple in l)
+            {
+                list.Add(tuple);
+            }
+        }
 
-	    private IList<Tuple<string, string, int, bool>> GetFieldsList(Type type)
-	    {
-	        var list = new List<Tuple<string, string, int, bool>>();
-	        var props = GetPropertyInfos(type);
-	        foreach (var propertyInfo in props)
-	        {
-	            var attr = GetAttribute(propertyInfo);
-	            if (attr != null)
-	            {
-	                var tuple = new Tuple<string, string, int, bool>(propertyInfo.Name, attr.FieldName, attr.Index,
-	                    attr.CanBeIgnored);
+        private IList<Tuple<string, string, int, bool>> GetFieldsList(Type type)
+        {
+            var list = new List<Tuple<string, string, int, bool>>();
+            var props = GetPropertyInfos(type);
+            foreach (var propertyInfo in props)
+            {
+                var attr = GetAttribute(propertyInfo);
+                if (attr != null)
+                {
+                    var tuple = new Tuple<string, string, int, bool>(propertyInfo.Name, attr.FieldName, attr.Index,
+                        attr.CanBeIgnored);
                     list.Add(tuple);
-	            }
-	        }
-	        return list;
-	    }
+                }
+            }
+            return list;
+        }
 
-	    private IList<PropertyInfo> GetPropertyInfos(Type type)
-	    {
-	        return
-	            type.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance |
-	                               System.Reflection.BindingFlags.DeclaredOnly).ToList();
-	    }
+        private IList<PropertyInfo> GetPropertyInfos(Type type)
+        {
+            return
+                type.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance |
+                                   System.Reflection.BindingFlags.DeclaredOnly).ToList();
+        }
 
-	    private FieldAttribute GetAttribute(PropertyInfo pi)
-	    {
-	        var propertyInfos = pi.GetCustomAttributes(typeof (FieldAttribute), false);
-	        return (FieldAttribute) (propertyInfos.Length > 0 ? propertyInfos[0] : null);
-	    }
+        private FieldAttribute GetAttribute(PropertyInfo pi)
+        {
+            var propertyInfos = pi.GetCustomAttributes(typeof(FieldAttribute), false);
+            return (FieldAttribute)(propertyInfos.Length > 0 ? propertyInfos[0] : null);
+        }
 
+        private IList<Tuple<string, string, int, bool>> GetExistList(Type type)
+        {
+            var result = _internalCash[type].ToList();
+            return result;
+        }
 
-	    private IList<Tuple<string, string, int, bool>> GetExistList(Type type)
-	    {
-	        var result =  _internalCash[type].ToList();
-	        return result;
-	    }
-
-
-
-	}//end FieldCash
-
+    }//end FieldCash
 }//end namespace Utils

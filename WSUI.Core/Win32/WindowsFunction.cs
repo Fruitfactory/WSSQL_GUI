@@ -21,15 +21,13 @@ namespace WSUI.Core.Win32
         }
 
         [StructLayout(LayoutKind.Sequential)]
-
         public class POINT
         {
             public int x = 0;
             public int y = 0;
         }
 
-
-        #endregion
+        #endregion [struct]
 
         #region [function]
 
@@ -55,7 +53,7 @@ namespace WSUI.Core.Win32
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
-        #endregion
+        #endregion [function]
 
         public static Point TransformToScreen(Point point, Visual relativeTo)
         {
@@ -86,8 +84,6 @@ namespace WSUI.Core.Win32
             ClientToScreen(hwndSource.Handle, pointScreenPixels);
             return new Point(pointScreenPixels.x, pointScreenPixels.y);
         }
-
-
 
     }
 }

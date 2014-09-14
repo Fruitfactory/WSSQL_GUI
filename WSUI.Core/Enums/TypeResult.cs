@@ -6,16 +6,12 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
-
-
-namespace WSUI.Core.Enums {
-	public enum TypeResult : int {
-
-		None,
-		Ok,
-		Error
-
-	}//end TypeResult
-
+namespace WSUI.Core.Enums
+{
+    public enum TypeResult : int
+    {
+        None,
+        Ok,
+        Error
+    }//end TypeResult
 }//end namespace Enums

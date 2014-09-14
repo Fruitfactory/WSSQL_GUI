@@ -9,28 +9,27 @@
 using WSUI.Core.Core.Attributes;
 using WSUI.Core.Enums;
 
-namespace WSUI.Core.Data 
+namespace WSUI.Core.Data
 {
-	public class EmailSearchObject : BaseEmailSearchObject 
+    public class EmailSearchObject : BaseEmailSearchObject
     {
-        [Field("System.Subject", 15, false)]    
-		public string Subject{ get;  set;}
+        [Field("System.Subject", 15, false)]
+        public string Subject { get; set; }
 
-		public EmailSearchObject()
+        public EmailSearchObject()
         {
             TypeItem = TypeSearchItem.Email;
-		}
+        }
 
-	    public override void SetValue(int index, object value)
-	    {
-	        base.SetValue(index, value);
-	        switch (index)
-	        {
-	            case 15:
+        public override void SetValue(int index, object value)
+        {
+            base.SetValue(index, value);
+            switch (index)
+            {
+                case 15:
                     Subject = value as string;
                     break;
-	        }
-	    }
+            }
+        }
     }//end EmailSearchObject
-
 }//end namespace Data

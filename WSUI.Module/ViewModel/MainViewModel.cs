@@ -408,6 +408,7 @@ namespace WSUI.Module.ViewModel
                 if (k.Kind != null)
                     k.Kind.SearchString = string.Empty;
             });
+            SelectKind(KindsConstName.Everything);
         }
 
         #endregion private

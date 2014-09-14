@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WSUI.Core.Enums
+﻿namespace WSUI.Core.Enums
 {
     public enum ActivationState
     {

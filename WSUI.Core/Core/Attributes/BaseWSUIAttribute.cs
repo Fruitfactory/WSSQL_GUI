@@ -6,24 +6,23 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using System;
 using WSUI.Core.Interfaces;
-namespace WSUI.Core.Core.Attributes {
-	public class BaseWSUIAttribute : Attribute, IWSUIAttribute {
 
-		public BaseWSUIAttribute(){
+namespace WSUI.Core.Core.Attributes
+{
+    public class BaseWSUIAttribute : Attribute, IWSUIAttribute
+    {
+        public BaseWSUIAttribute()
+        {
+        }
 
-		}
+        ~BaseWSUIAttribute()
+        {
+        }
 
-		~BaseWSUIAttribute(){
-
-		}
-
-		public virtual void Dispose(){
-
-		}
-
-	}//end BaseWSUIAttribute
-
+        public virtual void Dispose()
+        {
+        }
+    }//end BaseWSUIAttribute
 }//end namespace Attributes

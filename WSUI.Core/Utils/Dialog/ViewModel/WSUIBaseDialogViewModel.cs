@@ -1,10 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
-using System.Runtime.Remoting.Messaging;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Microsoft.Practices.Prism.Commands;
 using WSUI.Core.Utils.Dialog.Interfaces;
 using Action = System.Action;
 
@@ -15,7 +13,7 @@ namespace WSUI.Core.Utils.Dialog.ViewModel
         protected WSUIBaseDialogViewModel(IWSUIView view)
         {
             View = view;
-            OKCommand = new WSUIRelayCommand(OkExecute,CanOkExecute);
+            OKCommand = new WSUIRelayCommand(OkExecute, CanOkExecute);
             CancelCommand = new WSUIRelayCommand(CancelExecute, CanCancelExcute);
             Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => this.View.DataContext = this));
         }
@@ -31,12 +29,16 @@ namespace WSUI.Core.Utils.Dialog.ViewModel
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public string Title 
+
+        public string Title
         {
             get { return FormatTitle(); }
         }
+
         public IWSUIView View { get; private set; }
+
         public ICommand OKCommand { get; private set; }
+
         public ICommand CancelCommand { get; private set; }
 
         protected abstract string Validate(string columnName);
@@ -48,7 +50,6 @@ namespace WSUI.Core.Utils.Dialog.ViewModel
 
         protected virtual void OkExecute(object arg)
         {
-
         }
 
         protected virtual bool CanOkExecute(object arg)
@@ -58,7 +59,6 @@ namespace WSUI.Core.Utils.Dialog.ViewModel
 
         protected virtual void CancelExecute(object arg)
         {
-            
         }
 
         protected virtual bool CanCancelExcute(object arg)
@@ -99,6 +99,5 @@ namespace WSUI.Core.Utils.Dialog.ViewModel
                 return string.Empty;
             return memExpression.Member.Name;
         }
-
     }
 }

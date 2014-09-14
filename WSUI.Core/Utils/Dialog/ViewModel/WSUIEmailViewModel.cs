@@ -1,15 +1,11 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using System.Windows.Input;
+﻿using System.Text.RegularExpressions;
 using System.Windows.Media;
-using System.Windows.Threading;
 using WSUI.Core.Utils.Dialog.Interfaces;
 
 namespace WSUI.Core.Utils.Dialog.ViewModel
 {
-    public class WSUIEmailViewModel : WSUIBaseDialogViewModel,IWSUIEmailViewModel
+    public class WSUIEmailViewModel : WSUIBaseDialogViewModel, IWSUIEmailViewModel
     {
-
         #region [needs]
 
         private string _email1 = string.Empty;
@@ -21,12 +17,12 @@ namespace WSUI.Core.Utils.Dialog.ViewModel
         private bool _isValid = false;
         private bool _isEqual = false;
 
-        SolidColorBrush _validBrush = new SolidColorBrush(Colors.SpringGreen);
-        SolidColorBrush _errorBrush = new SolidColorBrush(Colors.OrangeRed);
+        private SolidColorBrush _validBrush = new SolidColorBrush(Colors.SpringGreen);
+        private SolidColorBrush _errorBrush = new SolidColorBrush(Colors.OrangeRed);
 
-        #endregion
+        #endregion [needs]
 
-        public WSUIEmailViewModel(IWSUIView view) 
+        public WSUIEmailViewModel(IWSUIView view)
             : base(view)
         {
         }
@@ -34,7 +30,7 @@ namespace WSUI.Core.Utils.Dialog.ViewModel
         protected override string Validate(string columnName)
         {
             string result = string.Empty;
-            
+
             switch (columnName)
             {
                 case "Email1":
@@ -43,6 +39,7 @@ namespace WSUI.Core.Utils.Dialog.ViewModel
                     if (!IsEmail(Email1))
                         result = PleaseEnterAValidEmailAddress;
                     break;
+
                 case "Email2":
                     if (string.IsNullOrEmpty(Email2))
                         result = TheEmailShouldnTBeEmpty;
@@ -57,17 +54,16 @@ namespace WSUI.Core.Utils.Dialog.ViewModel
         public string Email1
         {
             get { return _email1; }
-            set { _email1 = value; CheckIfEmailsEqual();}
+            set { _email1 = value; CheckIfEmailsEqual(); }
         }
-    
-        public string Email2 
+
+        public string Email2
         {
             get { return _email2; }
-            set { _email2 = value; CheckIfEmailsEqual();}
+            set { _email2 = value; CheckIfEmailsEqual(); }
         }
 
         public SolidColorBrush ValidBrush { get; private set; }
-
 
         protected override bool CanOkExecute(object arg)
         {
@@ -93,8 +89,6 @@ namespace WSUI.Core.Utils.Dialog.ViewModel
             return !string.IsNullOrEmpty(email) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase);
         }
 
-
-
-        #endregion
+        #endregion [private]
     }
 }

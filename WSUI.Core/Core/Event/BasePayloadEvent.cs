@@ -2,7 +2,7 @@
 
 namespace WSUI.Core.Core.Event
 {
-    public class BasePayloadEvent<T> : CompositePresentationEvent<T> 
-    {    
+    public class BasePayloadEvent<T> : CompositePresentationEvent<T>
+    {
     }
 }

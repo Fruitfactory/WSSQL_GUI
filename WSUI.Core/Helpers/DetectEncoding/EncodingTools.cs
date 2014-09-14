@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 using WSUI.Core.Helpers.DetectEncoding.Multilang;
 
 namespace WSUI.Core.Helpers.DetectEncoding
@@ -12,21 +12,18 @@ namespace WSUI.Core.Helpers.DetectEncoding
         // this only contains ascii, default windows code page and unicode
         public static int[] PreferedEncodingsForStream;
 
-        // this contains all codepages, sorted by preference and byte usage 
+        // this contains all codepages, sorted by preference and byte usage
         public static int[] PreferedEncodings;
 
-        // this contains all codepages, sorted by preference and byte usage 
+        // this contains all codepages, sorted by preference and byte usage
         public static int[] AllEncodings;
 
-        
-        
         /// <summary>
         /// Static constructor that fills the default preferred codepages
         /// </summary>
         static EncodingTools()
         {
-
-            List<int> streamEcodings= new List<int>();
+            List<int> streamEcodings = new List<int>();
             List<int> allEncodings = new List<int>();
             List<int> mimeEcodings = new List<int>();
 
@@ -35,7 +32,6 @@ namespace WSUI.Core.Helpers.DetectEncoding
             mimeEcodings.Add(Encoding.ASCII.CodePage);
             allEncodings.Add(Encoding.ASCII.CodePage);
 
-            
             // add default 2nd for all encodings
             allEncodings.Add(Encoding.Default.CodePage);
             // default is single byte?
@@ -46,13 +42,10 @@ namespace WSUI.Core.Helpers.DetectEncoding
                 mimeEcodings.Add(Encoding.Default.CodePage);
             }
 
-          
-
             // prefer JIS over JIS-SHIFT (JIS is detected better than JIS-SHIFT)
             // this one does include cyrilic (strange but true)
             allEncodings.Add(50220);
             mimeEcodings.Add(50220);
-
 
             // always allow unicode flavours for streams (they all have a preamble)
             streamEcodings.Add(Encoding.Unicode.CodePage);
@@ -66,23 +59,19 @@ namespace WSUI.Core.Helpers.DetectEncoding
                 }
             }
 
-
             // stream is done here
             PreferedEncodingsForStream = streamEcodings.ToArray();
-           
 
             // all singlebyte encodings
             foreach (EncodingInfo enc in Encoding.GetEncodings())
             {
-                
-
                 if (!enc.GetEncoding().IsSingleByte)
                     continue;
 
                 if (!allEncodings.Contains(enc.CodePage))
                     allEncodings.Add(enc.CodePage);
 
-                // only add iso and IBM encodings to mime encodings 
+                // only add iso and IBM encodings to mime encodings
                 if (enc.CodePage <= 1258)
                 {
                     mimeEcodings.Add(enc.CodePage);
@@ -97,7 +86,7 @@ namespace WSUI.Core.Helpers.DetectEncoding
                     if (!allEncodings.Contains(enc.CodePage))
                         allEncodings.Add(enc.CodePage);
 
-                    // only add iso and IBM encodings to mime encodings 
+                    // only add iso and IBM encodings to mime encodings
                     if (enc.CodePage <= 1258)
                     {
                         mimeEcodings.Add(enc.CodePage);
@@ -108,11 +97,9 @@ namespace WSUI.Core.Helpers.DetectEncoding
             // add unicodes
             mimeEcodings.Add(Encoding.Unicode.CodePage);
 
-
             PreferedEncodings = mimeEcodings.ToArray();
             AllEncodings = allEncodings.ToArray();
         }
-
 
         /// <summary>
         /// Checks if specified string data is acii data.
@@ -163,7 +150,7 @@ namespace WSUI.Core.Helpers.DetectEncoding
         /// <returns>the suggested encoding</returns>
         public static Encoding GetMostEfficientEncoding(string input, int[] preferedEncodings)
         {
-            Encoding enc = DetectOutgoingEncoding(input,preferedEncodings,true);
+            Encoding enc = DetectOutgoingEncoding(input, preferedEncodings, true);
             // unicode.. hmmm... check for smallest encoding
             if (enc.CodePage == Encoding.Unicode.CodePage)
             {
@@ -189,7 +176,6 @@ namespace WSUI.Core.Helpers.DetectEncoding
             }
             else
             {
-
             }
             return enc;
         }
@@ -216,7 +202,6 @@ namespace WSUI.Core.Helpers.DetectEncoding
 
         private static Encoding DetectOutgoingEncoding(string input, int[] preferedEncodings, bool preserveOrder)
         {
-
             if (input == null)
                 throw new ArgumentNullException("input");
 
@@ -236,7 +221,6 @@ namespace WSUI.Core.Helpers.DetectEncoding
                 uint detectedCodepages = (uint)resultCodePages.Length;
                 ushort specialChar = (ushort)'?';
 
-
                 // get unmanaged arrays
                 IntPtr pPrefEncs = preferedEncodings == null ? IntPtr.Zero : Marshal.AllocCoTaskMem(sizeof(uint) * preferedEncodings.Length);
                 IntPtr pDetectedEncs = Marshal.AllocCoTaskMem(sizeof(uint) * resultCodePages.Length);
@@ -255,11 +239,11 @@ namespace WSUI.Core.Helpers.DetectEncoding
                     if (preferedEncodings != null)
                         options |= MLCPF.MLDETECTF_PREFERRED_ONLY;
 
-                    multilang3.DetectOutboundCodePage(options,  
+                    multilang3.DetectOutboundCodePage(options,
                         input, (uint)input.Length,
-                        pPrefEncs, (uint) (preferedEncodings==null ? 0 : preferedEncodings.Length),
+                        pPrefEncs, (uint)(preferedEncodings == null ? 0 : preferedEncodings.Length),
 
-                        pDetectedEncs, ref detectedCodepages, 
+                        pDetectedEncs, ref detectedCodepages,
                         ref specialChar);
 
                     // get result
@@ -269,7 +253,6 @@ namespace WSUI.Core.Helpers.DetectEncoding
                         Marshal.Copy(pDetectedEncs, theResult, 0, theResult.Length);
                         result = Encoding.GetEncoding(theResult[0]);
                     }
-
                 }
                 finally
                 {
@@ -287,7 +270,6 @@ namespace WSUI.Core.Helpers.DetectEncoding
 
         public static Encoding[] DetectOutgoingEncodings(string input, int[] preferedEncodings, bool preserveOrder)
         {
-
             if (input == null)
                 throw new ArgumentNullException("input");
 
@@ -307,10 +289,9 @@ namespace WSUI.Core.Helpers.DetectEncoding
                 uint detectedCodepages = (uint)resultCodePages.Length;
                 ushort specialChar = (ushort)'?';
 
-
                 // get unmanaged arrays
                 IntPtr pPrefEncs = Marshal.AllocCoTaskMem(sizeof(uint) * preferedEncodings.Length);
-                IntPtr pDetectedEncs =  preferedEncodings == null ? IntPtr.Zero : Marshal.AllocCoTaskMem(sizeof(uint) * resultCodePages.Length);
+                IntPtr pDetectedEncs = preferedEncodings == null ? IntPtr.Zero : Marshal.AllocCoTaskMem(sizeof(uint) * resultCodePages.Length);
 
                 try
                 {
@@ -329,7 +310,7 @@ namespace WSUI.Core.Helpers.DetectEncoding
                     // finally... call to DetectOutboundCodePage
                     multilang3.DetectOutboundCodePage(options,
                         input, (uint)input.Length,
-                        pPrefEncs, (uint) (preferedEncodings==null ? 0 : preferedEncodings.Length),
+                        pPrefEncs, (uint)(preferedEncodings == null ? 0 : preferedEncodings.Length),
                         pDetectedEncs, ref detectedCodepages,
                         ref specialChar);
 
@@ -339,13 +320,10 @@ namespace WSUI.Core.Helpers.DetectEncoding
                         int[] theResult = new int[detectedCodepages];
                         Marshal.Copy(pDetectedEncs, theResult, 0, theResult.Length);
 
-
                         // get the encodings for the codepages
                         for (int i = 0; i < detectedCodepages; i++)
                             result.Add(Encoding.GetEncoding(theResult[i]));
-                        
                     }
-
                 }
                 finally
                 {
@@ -362,7 +340,6 @@ namespace WSUI.Core.Helpers.DetectEncoding
             return result.ToArray();
         }
 
-
         /// <summary>
         /// Detect the most probable codepage from an byte array
         /// </summary>
@@ -377,7 +354,7 @@ namespace WSUI.Core.Helpers.DetectEncoding
                     return detected[0];
                 return Encoding.Default;
             }
-            catch(COMException)
+            catch (COMException)
             {
                 // return default codepage on error
                 return Encoding.Default;
@@ -392,7 +369,6 @@ namespace WSUI.Core.Helpers.DetectEncoding
         /// <returns>an array of Encoding with assumed encodings</returns>
         public static Encoding[] DetectInputCodepages(byte[] input, int maxEncodings)
         {
-
             if (maxEncodings < 1)
                 throw new ArgumentOutOfRangeException("at least one encoding must be returend", "maxEncodings");
 
@@ -429,14 +405,14 @@ namespace WSUI.Core.Helpers.DetectEncoding
 
                 int scores = detectedEncdings.Length;
                 int srcLen = input.Length;
-               
-                // setup options (none)   
+
+                // setup options (none)
                 MLDETECTCP options = MLDETECTCP.MLDETECTCP_NONE;
 
                 // finally... call to DetectInputCodepage
-                multilang2.DetectInputCodepage(options,0,
+                multilang2.DetectInputCodepage(options, 0,
                     ref input[0], ref srcLen, ref detectedEncdings[0], ref scores);
-                
+
                 // get result
                 if (scores > 0)
                 {
@@ -455,9 +431,8 @@ namespace WSUI.Core.Helpers.DetectEncoding
             return result.ToArray();
         }
 
-
         /// <summary>
-        /// Opens a text file and returns the content 
+        /// Opens a text file and returns the content
         /// encoded in the most probable encoding
         /// </summary>
         /// <param name="path">path to the souce file</param>
@@ -500,8 +475,8 @@ namespace WSUI.Core.Helpers.DetectEncoding
             if (stream == null)
                 throw new ArgumentNullException("stream");
             if (!stream.CanSeek)
-                throw new ArgumentException("the stream must support seek operations","stream");
-            
+                throw new ArgumentException("the stream must support seek operations", "stream");
+
             // assume default encoding at first place
             Encoding detectedEncoding = Encoding.Default;
 
@@ -516,12 +491,7 @@ namespace WSUI.Core.Helpers.DetectEncoding
             // seek back to stream start
             stream.Seek(0, SeekOrigin.Begin);
 
-
-            return new StreamReader(stream,detectedEncoding);
-
+            return new StreamReader(stream, detectedEncoding);
         }
-
     }
-
-  
 }

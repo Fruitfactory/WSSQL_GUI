@@ -6,69 +6,70 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using WSUI.Core.Core.Attributes;
 using WSUI.Core.Enums;
 
-namespace WSUI.Core.Data 
+namespace WSUI.Core.Data
 {
-	public class ContactSearchObject : BaseSearchObject 
+    public class ContactSearchObject : BaseSearchObject
     {
         [Field("System.Contact.FirstName", 7, false)]
-		public string FirstName{ get;  set;}
+        public string FirstName { get; set; }
 
         [Field("System.Contact.LastName", 8, false)]
-		public string LastName{ get;  set;}
+        public string LastName { get; set; }
 
         [Field("System.Contact.EmailAddress", 9, false)]
-		public string EmailAddress{ get;  set;}
+        public string EmailAddress { get; set; }
 
         [Field("System.Contact.EmailAddress2", 10, false)]
-		public string EmailAddress2{ get;  set;}
+        public string EmailAddress2 { get; set; }
 
         [Field("System.Contact.EmailAddress3", 11, false)]
-		public string EmailAddress3{ get;  set;} 
+        public string EmailAddress3 { get; set; }
 
-		public ContactSearchObject()
+        public ContactSearchObject()
         {
             TypeItem = TypeSearchItem.Contact;
-		    Tag = "Click to email recipient";
+            Tag = "Click to email recipient";
         }
 
-	    public override void SetValue(int index, object value)
-	    {
-	        base.SetValue(index, value);
-	        switch (index)
-	        {
-	            case 7:
-	                FirstName = value as string;
-	                break;
+        public override void SetValue(int index, object value)
+        {
+            base.SetValue(index, value);
+            switch (index)
+            {
+                case 7:
+                    FirstName = value as string;
+                    break;
+
                 case 8:
                     LastName = value as string;
                     break;
+
                 case 9:
                     EmailAddress = value as string;
                     break;
+
                 case 10:
                     EmailAddress2 = value as string;
                     break;
+
                 case 11:
                     EmailAddress3 = value as string;
                     break;
-	        }
-	    }
+            }
+        }
 
-	    public string GetEmail()
-	    {
-	        return !string.IsNullOrEmpty(EmailAddress)
-	            ? EmailAddress
-	            : !string.IsNullOrEmpty(EmailAddress2)
-	                ? EmailAddress2
-	                : !string.IsNullOrEmpty(EmailAddress3)
-	                    ? EmailAddress3
-	                    : string.Empty;
-
-	    }
+        public string GetEmail()
+        {
+            return !string.IsNullOrEmpty(EmailAddress)
+                ? EmailAddress
+                : !string.IsNullOrEmpty(EmailAddress2)
+                    ? EmailAddress2
+                    : !string.IsNullOrEmpty(EmailAddress3)
+                        ? EmailAddress3
+                        : string.Empty;
+        }
     }//end ContactSearchObject
-
 }//end namespace Data

@@ -114,10 +114,14 @@ namespace WSUI.Module.Core
             _kindItem.Init();
             _kindItem.Parent = _parent;
             if (_kindItem is INotifyPropertyChanged)
-                (_kindItem as INotifyPropertyChanged).PropertyChanged += (o, e) => _propertychanged(e.PropertyName);
+                (_kindItem as INotifyPropertyChanged).PropertyChanged += OnPropertyChanged;
             watch.Stop();
             WSSqlLogger.Instance.LogInfo(String.Format("Resolve '{0}' takes {1}ms",_typeKind.FullName,watch.ElapsedMilliseconds));
         }
 
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            _propertychanged(propertyChangedEventArgs.PropertyName);
+        }
     }
 }

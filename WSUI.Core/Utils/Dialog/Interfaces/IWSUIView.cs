@@ -2,6 +2,6 @@
 {
     public interface IWSUIView
     {
-        object DataContext { get; set; } 
+        object DataContext { get; set; }
     }
 }

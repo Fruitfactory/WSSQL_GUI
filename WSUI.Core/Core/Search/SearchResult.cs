@@ -6,29 +6,25 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using System.Collections.Generic;
-using System.Linq;
-using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
-namespace WSUI.Core.Core.Search 
-{
-	public class SearchResult : ISearchResult
-    {
 
+namespace WSUI.Core.Core.Search
+{
+    public class SearchResult : ISearchResult
+    {
         public SearchResult(TypeResult type, IList<IResultMessage> messages, IEnumerable<ISearchObject> result)
         {
-			Type  = type;
-			Messages = messages;
+            Type = type;
+            Messages = messages;
             OperationResult = new List<ISearchObject>(result); ;
-		}
+        }
 
+        public TypeResult Type { get; private set; }
 
-	    public TypeResult Type{get; private set;}
-		public IList<IResultMessage> Messages{get; private set;}
-		public IList<ISearchObject> OperationResult{get; private set;}
+        public IList<IResultMessage> Messages { get; private set; }
 
-	}//end SearchResult
-
+        public IList<ISearchObject> OperationResult { get; private set; }
+    }//end SearchResult
 }//end namespace Search

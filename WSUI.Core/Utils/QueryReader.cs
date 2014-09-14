@@ -6,18 +6,15 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 
-namespace WSUI.Core.Utils 
+namespace WSUI.Core.Utils
 {
     // this approach really create objets must faster then Activator.CreateInstance
     // for example 10 000 000 objects:
@@ -25,38 +22,38 @@ namespace WSUI.Core.Utils
     // New<T> - 1425 ms
     internal static class New<T> where T : new()
     {
-        public static readonly Func<T> Instance = Expression.Lambda<Func<T>>(Expression.New(typeof (T))).Compile();
+        public static readonly Func<T> Instance = Expression.Lambda<Func<T>>(Expression.New(typeof(T))).Compile();
     }
 
-	public class QueryReader<T> : IQueryReader where T : new()
+    public class QueryReader<T> : IQueryReader where T : new()
     {
         #region [needs]
 
-	    private IList<Tuple<string, string, int, bool>> _intermalList;
+        private IList<Tuple<string, string, int, bool>> _intermalList;
         private Func<T> _create;
-	    private object _lock = new object();
+        private object _lock = new object();
 
-        #endregion
+        #endregion [needs]
 
-        private QueryReader(IList<Tuple<string, string, int, bool>> fields )
+        private QueryReader(IList<Tuple<string, string, int, bool>> fields)
         {
             _intermalList = fields;
             _create = New<T>.Instance;
         }
 
         public static QueryReader<T1> CreateNewReader<T1>(IList<Tuple<string, string, int, bool>> listFields) where T1 : new()
-	    {
-            return new QueryReader<T1>(listFields); 
-	    }
+        {
+            return new QueryReader<T1>(listFields);
+        }
 
-		/// 
-		/// <param name="reader"></param>
-		/// <param name="type"></param>
-		public object ReadResult(IDataReader reader)
-		{
+        ///
+        /// <param name="reader"></param>
+        /// <param name="type"></param>
+        public object ReadResult(IDataReader reader)
+        {
             var result = _create.Invoke() as ISearchObject;
-		    if (result == null)
-		        return null;
+            if (result == null)
+                return null;
             Parallel.ForEach(_intermalList, tuple =>
             {
                 try
@@ -75,16 +72,16 @@ namespace WSUI.Core.Utils
                 {
                     WSSqlLogger.Instance.LogError("Readresult: {0}", ex.Message);
                 }
-            });  
-			return result;
-		}
+            });
+            return result;
+        }
 
-	    public object ReadResult(DataRow row)
-	    {
+        public object ReadResult(DataRow row)
+        {
             var result = _create.Invoke() as ISearchObject;
             if (result == null)
                 return null;
-	        var count = row.Table.Columns.Count;
+            var count = row.Table.Columns.Count;
             Parallel.ForEach(_intermalList, tuple =>
             {
                 try
@@ -105,7 +102,6 @@ namespace WSUI.Core.Utils
                 }
             });
             return result;
-	    }
+        }
     }//end QueryReader
-
 }//end namespace Utils

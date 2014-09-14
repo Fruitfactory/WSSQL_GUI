@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace WSUI.Core.Core.Rules
+﻿namespace WSUI.Core.Core.Rules
 {
     public class WordRule : BaseRule
     {
-        public WordRule(){}
-
+        public WordRule()
+        {
+        }
 
         public override void InitRule()
         {

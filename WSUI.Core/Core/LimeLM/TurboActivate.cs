@@ -4,7 +4,6 @@ using System.Text;
 
 namespace WSUI.Core.Core.LimeLM
 {
-
     public static class TurboActivate
     {
         [Flags]
@@ -14,7 +13,7 @@ namespace WSUI.Core.Core.LimeLM
             TA_USER = 2,
 
             /// <summary>
-            /// Use the TA_DISALLOW_VM in UseTrial() to disallow trials in virtual machines. 
+            /// Use the TA_DISALLOW_VM in UseTrial() to disallow trials in virtual machines.
             /// If you use this flag in UseTrial() and the customer's machine is a Virtual
             /// Machine, then UseTrial() will throw VirtualMachineException.
             /// </summary>
@@ -34,7 +33,8 @@ namespace WSUI.Core.Core.LimeLM
             {
                 public UInt32 nLength;
 
-                [MarshalAs(UnmanagedType.LPWStr)] public string sExtraData;
+                [MarshalAs(UnmanagedType.LPWStr)]
+                public string sExtraData;
             }
 
             [Flags]
@@ -140,87 +140,90 @@ namespace WSUI.Core.Core.LimeLM
     */
 
 #if TA_BOTH_DLL
-    static class Native64
-    {
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int Activate();
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ActivateEx(ref Native.ACTIVATE_OPTIONS options);
+        private static class Native64
+        {
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int Activate();
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ActivationRequestToFile(string filename);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int ActivateEx(ref Native.ACTIVATE_OPTIONS options);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ActivationRequestToFileEx(string filename, ref Native.ACTIVATE_OPTIONS options);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int ActivationRequestToFile(string filename);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ActivateFromFile(string filename);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int ActivationRequestToFileEx(string filename, ref Native.ACTIVATE_OPTIONS options);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BlackListKeys([In] string[] keys, uint numKeys);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int ActivateFromFile(string filename);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int CheckAndSavePKey(string productKey, TA_Flags flags);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int BlackListKeys([In] string[] keys, uint numKeys);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int Deactivate(byte erasePkey);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int CheckAndSavePKey(string productKey, TA_Flags flags);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int DeactivationRequestToFile(string filename, byte erasePkey);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int Deactivate(byte erasePkey);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int GetExtraData(StringBuilder lpValueStr, int cchValue);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int DeactivationRequestToFile(string filename, byte erasePkey);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int GetFeatureValue(string featureName, StringBuilder lpValueStr, int cchValue);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int GetExtraData(StringBuilder lpValueStr, int cchValue);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int GetPKey(StringBuilder lpPKeyStr, int cchPKey);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int GetFeatureValue(string featureName, StringBuilder lpValueStr, int cchValue);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IsActivated(string versionGUID);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int GetPKey(StringBuilder lpPKeyStr, int cchPKey);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IsDateValid(string date_time, TA_DateCheckFlags flags);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int IsActivated(string versionGUID);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IsGenuine(string versionGUID);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int IsDateValid(string date_time, TA_DateCheckFlags flags);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IsGenuineEx(string versionGUID, ref Native.GENUINE_OPTIONS options);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int IsGenuine(string versionGUID);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int IsProductKeyValid(string versionGUID);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int IsGenuineEx(string versionGUID, ref Native.GENUINE_OPTIONS options);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int SetCustomProxy(string proxy);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int IsProductKeyValid(string versionGUID);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int TrialDaysRemaining(string versionGUID, ref uint DaysRemaining);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int SetCustomProxy(string proxy);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int UseTrial(TA_Flags flags);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int TrialDaysRemaining(string versionGUID, ref uint DaysRemaining);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ExtendTrial(string trialExtension);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int UseTrial(TA_Flags flags);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int PDetsFromPath(string filename);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int ExtendTrial(string trialExtension);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int SetCurrentProduct(string versionGUID);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int PDetsFromPath(string filename);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int GetCurrentProduct(StringBuilder lpValueStr, int cchValue);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int SetCurrentProduct(string versionGUID);
 
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int SetCustomActDataPath(string directory);
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int GetCurrentProduct(StringBuilder lpValueStr, int cchValue);
 
-        /* Obsolete functions: These will be removed in an upcoming version. */
-        [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int GracePeriodDaysRemaining(string versionGUID, ref uint DaysRemaining);
-    }
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int SetCustomActDataPath(string directory);
+
+            /* Obsolete functions: These will be removed in an upcoming version. */
+
+            [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int GracePeriodDaysRemaining(string versionGUID, ref uint DaysRemaining);
+        }
+
 #endif
 
         /// <summary>The GUID for this product version. This is found on the LimeLM site on the version overview.</summary>
@@ -240,7 +243,7 @@ namespace WSUI.Core.Core.LimeLM
         public static void Activate()
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.Activate() : Native.Activate())
+            switch (IntPtr.Size == 8 ? Native64.Activate() : Native.Activate())
 #else
             switch (Native.Activate())
 #endif
@@ -265,6 +268,7 @@ namespace WSUI.Core.Core.LimeLM
                     throw new TurboFloatKeyException();
                 case 0: // successful
                     return;
+
                 default:
                     throw new TurboActivateException("Failed to activate.");
             }
@@ -286,11 +290,11 @@ namespace WSUI.Core.Core.LimeLM
         /// <exception cref="TurboFloatKeyException">The product key used is for TurboFloat, not TurboActivate.</exception>
         public static void Activate(string extraData)
         {
-            Native.ACTIVATE_OPTIONS opts = new Native.ACTIVATE_OPTIONS {sExtraData = extraData};
-            opts.nLength = (uint) Marshal.SizeOf(opts);
+            Native.ACTIVATE_OPTIONS opts = new Native.ACTIVATE_OPTIONS { sExtraData = extraData };
+            opts.nLength = (uint)Marshal.SizeOf(opts);
 
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.ActivateEx(ref opts) : Native.ActivateEx(ref opts))
+            switch (IntPtr.Size == 8 ? Native64.ActivateEx(ref opts) : Native.ActivateEx(ref opts))
 #else
             switch (Native.ActivateEx(ref opts))
 #endif
@@ -319,6 +323,7 @@ namespace WSUI.Core.Core.LimeLM
                     throw new TurboFloatKeyException();
                 case 0: // successful
                     return;
+
                 default:
                     throw new TurboActivateException("Failed to activate.");
             }
@@ -333,7 +338,7 @@ namespace WSUI.Core.Core.LimeLM
         public static void ActivationRequestToFile(string filename)
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.ActivationRequestToFile(filename) : Native.ActivationRequestToFile(filename))
+            switch (IntPtr.Size == 8 ? Native64.ActivationRequestToFile(filename) : Native.ActivationRequestToFile(filename))
 #else
             switch (Native.ActivationRequestToFile(filename))
 #endif
@@ -346,6 +351,7 @@ namespace WSUI.Core.Core.LimeLM
                     throw new COMException();
                 case 0: // successful
                     return;
+
                 default:
                     throw new TurboActivateException("Failed to save the activation request file.");
             }
@@ -362,11 +368,11 @@ namespace WSUI.Core.Core.LimeLM
         /// <exception cref="TurboActivateException">Failed to activate.</exception>
         public static void ActivationRequestToFile(string filename, string extraData)
         {
-            Native.ACTIVATE_OPTIONS opts = new Native.ACTIVATE_OPTIONS {sExtraData = extraData};
-            opts.nLength = (uint) Marshal.SizeOf(opts);
+            Native.ACTIVATE_OPTIONS opts = new Native.ACTIVATE_OPTIONS { sExtraData = extraData };
+            opts.nLength = (uint)Marshal.SizeOf(opts);
 
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.ActivationRequestToFileEx(filename, ref opts) : Native.ActivationRequestToFileEx(filename, ref opts))
+            switch (IntPtr.Size == 8 ? Native64.ActivationRequestToFileEx(filename, ref opts) : Native.ActivationRequestToFileEx(filename, ref opts))
 #else
             switch (Native.ActivationRequestToFileEx(filename, ref opts))
 #endif
@@ -383,6 +389,7 @@ namespace WSUI.Core.Core.LimeLM
                     throw new InvalidArgsException();
                 case 0: // successful
                     return;
+
                 default:
                     throw new TurboActivateException("Failed to save the activation request file.");
             }
@@ -399,7 +406,7 @@ namespace WSUI.Core.Core.LimeLM
         public static void ActivateFromFile(string filename)
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.ActivateFromFile(filename) : Native.ActivateFromFile(filename))
+            switch (IntPtr.Size == 8 ? Native64.ActivateFromFile(filename) : Native.ActivateFromFile(filename))
 #else
             switch (Native.ActivateFromFile(filename))
 #endif
@@ -416,6 +423,7 @@ namespace WSUI.Core.Core.LimeLM
                     throw new VirtualMachineException();
                 case 0: // successful
                     return;
+
                 default:
                     throw new TurboActivateException("Failed to activate.");
             }
@@ -427,7 +435,7 @@ namespace WSUI.Core.Core.LimeLM
         public static void BlackListKeys(string[] keys)
         {
 #if TA_BOTH_DLL
-        if ((IntPtr.Size == 8 ? Native64.BlackListKeys(keys, (uint)keys.Length) : Native.BlackListKeys(keys, (uint)keys.Length)) != 0)
+            if ((IntPtr.Size == 8 ? Native64.BlackListKeys(keys, (uint)keys.Length) : Native.BlackListKeys(keys, (uint)keys.Length)) != 0)
 #else
             if (Native.BlackListKeys(keys, (uint) keys.Length) != 0)
 #endif
@@ -445,7 +453,7 @@ namespace WSUI.Core.Core.LimeLM
         public static bool CheckAndSavePKey(string productKey, TA_Flags flags = TA_Flags.TA_USER)
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.CheckAndSavePKey(productKey, flags) : Native.CheckAndSavePKey(productKey, flags))
+            switch (IntPtr.Size == 8 ? Native64.CheckAndSavePKey(productKey, flags) : Native.CheckAndSavePKey(productKey, flags))
 #else
             switch (Native.CheckAndSavePKey(productKey, flags))
 #endif
@@ -474,7 +482,7 @@ namespace WSUI.Core.Core.LimeLM
         public static void Deactivate(bool eraseProductKey = false)
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.Deactivate((byte)(eraseProductKey ? 1 : 0)) : Native.Deactivate((byte)(eraseProductKey ? 1 : 0)))
+            switch (IntPtr.Size == 8 ? Native64.Deactivate((byte)(eraseProductKey ? 1 : 0)) : Native.Deactivate((byte)(eraseProductKey ? 1 : 0)))
 #else
             switch (Native.Deactivate((byte) (eraseProductKey ? 1 : 0)))
 #endif
@@ -491,6 +499,7 @@ namespace WSUI.Core.Core.LimeLM
                     throw new COMException();
                 case 0: // successful
                     return;
+
                 default:
                     throw new TurboActivateException("Failed to deactivate.");
             }
@@ -507,7 +516,7 @@ namespace WSUI.Core.Core.LimeLM
         public static void DeactivationRequestToFile(string filename, bool eraseProductKey)
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.DeactivationRequestToFile(filename, (byte)(eraseProductKey ? 1 : 0)) : Native.DeactivationRequestToFile(filename, (byte)(eraseProductKey ? 1 : 0)))
+            switch (IntPtr.Size == 8 ? Native64.DeactivationRequestToFile(filename, (byte)(eraseProductKey ? 1 : 0)) : Native.DeactivationRequestToFile(filename, (byte)(eraseProductKey ? 1 : 0)))
 #else
             switch (Native.DeactivationRequestToFile(filename, (byte) (eraseProductKey ? 1 : 0)))
 #endif
@@ -522,6 +531,7 @@ namespace WSUI.Core.Core.LimeLM
                     throw new COMException();
                 case 0: // successful
                     return;
+
                 default:
                     throw new TurboActivateException("Failed to deactivate.");
             }
@@ -533,7 +543,7 @@ namespace WSUI.Core.Core.LimeLM
         public static string GetExtraData()
         {
 #if TA_BOTH_DLL
-        int length = IntPtr.Size == 8 ? Native64.GetExtraData(null, 0) : Native.GetExtraData(null, 0);
+            int length = IntPtr.Size == 8 ? Native64.GetExtraData(null, 0) : Native.GetExtraData(null, 0);
 #else
             int length = Native.GetExtraData(null, 0);
 #endif
@@ -541,7 +551,7 @@ namespace WSUI.Core.Core.LimeLM
             StringBuilder sb = new StringBuilder(length);
 
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.GetExtraData(sb, length) : Native.GetExtraData(sb, length))
+            switch (IntPtr.Size == 8 ? Native64.GetExtraData(sb, length) : Native.GetExtraData(sb, length))
 #else
             switch (Native.GetExtraData(sb, length))
 #endif
@@ -578,7 +588,7 @@ namespace WSUI.Core.Core.LimeLM
         public static string GetFeatureValue(string featureName, string defaultValue)
         {
 #if TA_BOTH_DLL
-        int length = IntPtr.Size == 8 ? Native64.GetFeatureValue(featureName, null, 0) : Native.GetFeatureValue(featureName, null, 0);
+            int length = IntPtr.Size == 8 ? Native64.GetFeatureValue(featureName, null, 0) : Native.GetFeatureValue(featureName, null, 0);
 #else
             int length = Native.GetFeatureValue(featureName, null, 0);
 #endif
@@ -586,7 +596,7 @@ namespace WSUI.Core.Core.LimeLM
             StringBuilder sb = new StringBuilder(length);
 
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.GetFeatureValue(featureName, sb, length) : Native.GetFeatureValue(featureName, sb, length))
+            switch (IntPtr.Size == 8 ? Native64.GetFeatureValue(featureName, sb, length) : Native.GetFeatureValue(featureName, sb, length))
 #else
             switch (Native.GetFeatureValue(featureName, sb, length))
 #endif
@@ -612,7 +622,7 @@ namespace WSUI.Core.Core.LimeLM
             StringBuilder sb = new StringBuilder(35);
 
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.GetPKey(sb, 35) : Native.GetPKey(sb, 35))
+            switch (IntPtr.Size == 8 ? Native64.GetPKey(sb, 35) : Native.GetPKey(sb, 35))
 #else
             switch (Native.GetPKey(sb, 35))
 #endif
@@ -641,7 +651,7 @@ namespace WSUI.Core.Core.LimeLM
             uint daysRemain = 0;
 
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.GracePeriodDaysRemaining(VersionGUID, ref daysRemain) : Native.GracePeriodDaysRemaining(VersionGUID, ref daysRemain))
+            switch (IntPtr.Size == 8 ? Native64.GracePeriodDaysRemaining(VersionGUID, ref daysRemain) : Native.GracePeriodDaysRemaining(VersionGUID, ref daysRemain))
 #else
             switch (Native.GracePeriodDaysRemaining(VersionGUID, ref daysRemain))
 #endif
@@ -652,11 +662,12 @@ namespace WSUI.Core.Core.LimeLM
                     throw new ProductDetailsException();
                 case 0: // successful
                     break;
+
                 default:
                     throw new TurboActivateException("Failed to get the activation grace period days remaining.");
             }
 
-            return (int) daysRemain;
+            return (int)daysRemain;
         }
 
         /// <summary>Checks whether the computer has been activated.</summary>
@@ -668,7 +679,7 @@ namespace WSUI.Core.Core.LimeLM
         public static bool IsActivated()
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.IsActivated(VersionGUID) : Native.IsActivated(VersionGUID))
+            switch (IntPtr.Size == 8 ? Native64.IsActivated(VersionGUID) : Native.IsActivated(VersionGUID))
 #else
             switch (Native.IsActivated(VersionGUID))
 #endif
@@ -697,7 +708,7 @@ namespace WSUI.Core.Core.LimeLM
         public static bool IsDateValid(string date_time, TA_DateCheckFlags flags)
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.IsDateValid(date_time, flags) : Native.IsDateValid(date_time, flags))
+            switch (IntPtr.Size == 8 ? Native64.IsDateValid(date_time, flags) : Native.IsDateValid(date_time, flags))
 #else
             switch (Native.IsDateValid(date_time, flags))
 #endif
@@ -729,7 +740,7 @@ namespace WSUI.Core.Core.LimeLM
         public static bool IsGenuine(ref bool needsReactivate)
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.IsGenuine(VersionGUID) : Native.IsGenuine(VersionGUID))
+            switch (IntPtr.Size == 8 ? Native64.IsGenuine(VersionGUID) : Native.IsGenuine(VersionGUID))
 #else
             switch (Native.IsGenuine(VersionGUID))
 #endif
@@ -767,7 +778,7 @@ namespace WSUI.Core.Core.LimeLM
         public static IsGenuineResult IsGenuine()
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.IsGenuine(VersionGUID) : Native.IsGenuine(VersionGUID))
+            switch (IntPtr.Size == 8 ? Native64.IsGenuine(VersionGUID) : Native.IsGenuine(VersionGUID))
 #else
             switch (Native.IsGenuine(VersionGUID))
 #endif
@@ -797,15 +808,15 @@ namespace WSUI.Core.Core.LimeLM
         /// <summary>Checks whether the computer is activated, and every "daysBetweenChecks" days it check if the customer is genuinely activated by verifying with the LimeLM servers.</summary>
         /// <param name="daysBetweenChecks">How often to contact the LimeLM servers for validation. 90 days recommended.</param>
         /// <param name="graceDaysOnInetErr">If the call fails because of an internet error, how long, in days, should the grace period last (before returning deactivating and returning TA_FAIL).
-        /// 
+        ///
         /// 14 days is recommended.</param>
-        /// <param name="skipOffline">If the user activated using offline activation 
+        /// <param name="skipOffline">If the user activated using offline activation
         /// (ActivateRequestToFile(), ActivateFromFile() ), then with this
         /// option IsGenuineEx() will still try to validate with the LimeLM
         /// servers, however instead of returning <see cref="IsGenuineResult.InternetError"/> (when within the
         /// grace period) or <see cref="IsGenuineResult.NotGenuine"/> (when past the grace period) it will
         /// instead only return <see cref="IsGenuineResult.Genuine"/> (if IsActivated()).
-        /// 
+        ///
         /// If the user activated using online activation then this option
         /// is ignored.</param>
         /// <param name="offlineShowInetErr">If the user activated using offline activation, and you're
@@ -828,7 +839,7 @@ namespace WSUI.Core.Core.LimeLM
                 nGraceDaysOnInetErr = graceDaysOnInetErr,
                 flags = 0
             };
-            opts.nLength = (uint) Marshal.SizeOf(opts);
+            opts.nLength = (uint)Marshal.SizeOf(opts);
 
             if (skipOffline)
             {
@@ -839,7 +850,7 @@ namespace WSUI.Core.Core.LimeLM
             }
 
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.IsGenuineEx(VersionGUID, ref opts) : Native.IsGenuineEx(VersionGUID, ref opts))
+            switch (IntPtr.Size == 8 ? Native64.IsGenuineEx(VersionGUID, ref opts) : Native.IsGenuineEx(VersionGUID, ref opts))
 #else
             switch (Native.IsGenuineEx(VersionGUID, ref opts))
 #endif
@@ -876,7 +887,7 @@ namespace WSUI.Core.Core.LimeLM
         public static bool IsProductKeyValid()
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.IsProductKeyValid(VersionGUID) : Native.IsProductKeyValid(VersionGUID))
+            switch (IntPtr.Size == 8 ? Native64.IsProductKeyValid(VersionGUID) : Native.IsProductKeyValid(VersionGUID))
 #else
             switch (Native.IsProductKeyValid(VersionGUID))
 #endif
@@ -899,7 +910,7 @@ namespace WSUI.Core.Core.LimeLM
         public static void SetCustomProxy(string proxy)
         {
 #if TA_BOTH_DLL
-        if ((IntPtr.Size == 8 ? Native64.SetCustomProxy(proxy) : Native.SetCustomProxy(proxy)) != 0)
+            if ((IntPtr.Size == 8 ? Native64.SetCustomProxy(proxy) : Native.SetCustomProxy(proxy)) != 0)
 #else
             if (Native.SetCustomProxy(proxy) != 0)
 #endif
@@ -916,7 +927,7 @@ namespace WSUI.Core.Core.LimeLM
             uint daysRemain = 0;
 
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.TrialDaysRemaining(VersionGUID, ref daysRemain) : Native.TrialDaysRemaining(VersionGUID, ref daysRemain))
+            switch (IntPtr.Size == 8 ? Native64.TrialDaysRemaining(VersionGUID, ref daysRemain) : Native.TrialDaysRemaining(VersionGUID, ref daysRemain))
 #else
             switch (Native.TrialDaysRemaining(VersionGUID, ref daysRemain))
 #endif
@@ -927,11 +938,12 @@ namespace WSUI.Core.Core.LimeLM
                     throw new ProductDetailsException();
                 case 0: // successful
                     break;
+
                 default:
                     throw new TurboActivateException("Failed to get the trial data.");
             }
 
-            return (int) daysRemain;
+            return (int)daysRemain;
         }
 
         /// <summary>Begins the trial the first time it's called. Calling it again will validate the trial data hasn't been tampered with.</summary>
@@ -944,7 +956,7 @@ namespace WSUI.Core.Core.LimeLM
         public static void UseTrial(TA_Flags flags = TA_Flags.TA_USER)
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.UseTrial(flags) : Native.UseTrial(flags))
+            switch (IntPtr.Size == 8 ? Native64.UseTrial(flags) : Native.UseTrial(flags))
 #else
             switch (Native.UseTrial(flags))
 #endif
@@ -953,6 +965,7 @@ namespace WSUI.Core.Core.LimeLM
                     throw new ProductDetailsException();
                 case 0: // successful
                     return;
+
                 case 15: // TA_E_PERMISSION
                     throw new PermissionException();
                 case 16: // TA_E_INVALID_FLAGS
@@ -974,7 +987,7 @@ namespace WSUI.Core.Core.LimeLM
         public static void ExtendTrial(string trialExtension)
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.ExtendTrial(trialExtension) : Native.ExtendTrial(trialExtension))
+            switch (IntPtr.Size == 8 ? Native64.ExtendTrial(trialExtension) : Native.ExtendTrial(trialExtension))
 #else
             switch (Native.ExtendTrial(trialExtension))
 #endif
@@ -989,6 +1002,7 @@ namespace WSUI.Core.Core.LimeLM
                     throw new TrialExtExpiredException();
                 case 0: // successful
                     return;
+
                 default:
                     throw new TurboActivateException("Failed to extend trial.");
             }
@@ -1001,13 +1015,14 @@ namespace WSUI.Core.Core.LimeLM
         public static void PDetsFromPath(string filename)
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.PDetsFromPath(filename) : Native.PDetsFromPath(filename))
+            switch (IntPtr.Size == 8 ? Native64.PDetsFromPath(filename) : Native.PDetsFromPath(filename))
 #else
             switch (Native.PDetsFromPath(filename))
 #endif
             {
                 case 0: // successful
                     return;
+
                 case 8: // TA_E_PDETS
                     throw new ProductDetailsException();
                 default:
@@ -1022,7 +1037,7 @@ namespace WSUI.Core.Core.LimeLM
         public static string GetCurrentProduct()
         {
 #if TA_BOTH_DLL
-        int length = IntPtr.Size == 8 ? Native64.GetCurrentProduct(null, 0) : Native.GetCurrentProduct(null, 0);
+            int length = IntPtr.Size == 8 ? Native64.GetCurrentProduct(null, 0) : Native.GetCurrentProduct(null, 0);
 #else
             int length = Native.GetCurrentProduct(null, 0);
 #endif
@@ -1030,7 +1045,7 @@ namespace WSUI.Core.Core.LimeLM
             StringBuilder sb = new StringBuilder(length);
 
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.GetCurrentProduct(sb, length) : Native.GetCurrentProduct(sb, length))
+            switch (IntPtr.Size == 8 ? Native64.GetCurrentProduct(sb, length) : Native.GetCurrentProduct(sb, length))
 #else
             switch (Native.GetCurrentProduct(sb, length))
 #endif
@@ -1049,7 +1064,7 @@ namespace WSUI.Core.Core.LimeLM
         public static void SetCurrentProduct(string vGuid)
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.SetCurrentProduct(vGuid) : Native.SetCurrentProduct(vGuid))
+            switch (IntPtr.Size == 8 ? Native64.SetCurrentProduct(vGuid) : Native.SetCurrentProduct(vGuid))
 #else
             switch (Native.SetCurrentProduct(vGuid))
 #endif
@@ -1057,6 +1072,7 @@ namespace WSUI.Core.Core.LimeLM
                 case 0: // successful
                     VersionGUID = vGuid;
                     return;
+
                 default:
                     throw new TurboActivateException(
                         "Failed to set the current product. Make sure you've loaded the product details file using PDetsFromPath().");
@@ -1083,13 +1099,14 @@ namespace WSUI.Core.Core.LimeLM
         public static void SetCustomActDataPath(string directory)
         {
 #if TA_BOTH_DLL
-        switch (IntPtr.Size == 8 ? Native64.SetCustomActDataPath(directory) : Native.SetCustomActDataPath(directory))
+            switch (IntPtr.Size == 8 ? Native64.SetCustomActDataPath(directory) : Native.SetCustomActDataPath(directory))
 #else
             switch (Native.SetCustomActDataPath(directory))
 #endif
             {
                 case 0: // successful
                     return;
+
                 case 8: // TA_E_PDETS
                     throw new ProductDetailsException();
                 default:
@@ -1254,7 +1271,8 @@ namespace WSUI.Core.Core.LimeLM
 
     public class TurboActivateException : Exception
     {
-        public TurboActivateException(string message) : base(message)
+        public TurboActivateException(string message)
+            : base(message)
         {
         }
     }
@@ -1276,5 +1294,4 @@ namespace WSUI.Core.Core.LimeLM
         /// <summary>Treat this error as a warning. That is, tell the user that the activation couldn't be validated with the servers and that they can manually recheck with the servers immediately.</summary>
         InternetError = 4
     }
-}    
-
+}

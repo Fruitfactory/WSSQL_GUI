@@ -1,10 +1,8 @@
 namespace WSUI.Core.Helpers.DetectEncoding.Multilang
 {
-    using System;
     using System.Runtime.InteropServices;
-    using System.Security;
 
-    [StructLayout(LayoutKind.Sequential, Pack=4)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct _RemotableHandle
     {
         public int fContext;

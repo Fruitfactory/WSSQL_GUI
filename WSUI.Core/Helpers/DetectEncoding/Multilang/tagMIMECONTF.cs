@@ -1,8 +1,5 @@
 namespace WSUI.Core.Helpers.DetectEncoding.Multilang
 {
-    using System;
-    using System.Security;
-
     public enum tagMIMECONTF
     {
         MIMECONTF_BROWSER = 2,

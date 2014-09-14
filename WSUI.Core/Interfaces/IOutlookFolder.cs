@@ -2,6 +2,6 @@
 {
     public interface IOutlookFolder
     {
-        string FolderPath { get; set; } 
+        string FolderPath { get; set; }
     }
 }

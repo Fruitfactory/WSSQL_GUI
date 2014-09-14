@@ -7,9 +7,8 @@ namespace WSUI.Core.Interfaces
     {
         DataTable GetDataByAdapter(string query);
 
-        DataTable GetDataByReader(string query,IEnumerable<string> ingnoredFields);
+        DataTable GetDataByReader(string query, IEnumerable<string> ingnoredFields);
 
         IIndexerDataReader GetInstance();
-
     }
 }

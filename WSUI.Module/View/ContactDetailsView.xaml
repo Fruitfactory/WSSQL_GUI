@@ -320,6 +320,21 @@
                                 </StackPanel>
                             </Grid>
                         </headerControl:WSUIHeaderControl>
+                        
+                        <TextBlock TextTrimming="CharacterEllipsis">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsDataExist,UpdateSourceTrigger=PropertyChanged}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                            No data exists for current contact.
+                        </TextBlock>
+                        
                     </Grid>
                 </TabItem>
 

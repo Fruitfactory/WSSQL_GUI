@@ -1,10 +1,8 @@
 namespace WSUI.Core.Helpers.DetectEncoding.Multilang
 {
-    using System;
     using System.Runtime.InteropServices;
-    using System.Security;
 
-    [StructLayout(LayoutKind.Sequential, Pack=2)]
+    [StructLayout(LayoutKind.Sequential, Pack = 2)]
     public struct tagUNICODERANGE
     {
         public ushort wcFrom;

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
 using System.Linq;
-using MahApps.Metro.Controls;
 using WSUI.Core.Interfaces;
 
 namespace WSUI.Core.Core.Search
@@ -18,8 +16,7 @@ namespace WSUI.Core.Core.Search
         private volatile object _lock = new object();
         private OleDbConnection _connection = null;
 
-
-        #endregion
+        #endregion [needs]
 
         #region [ctor]
 
@@ -27,7 +24,8 @@ namespace WSUI.Core.Core.Search
         {
             _connection = new OleDbConnection(ConnectionString);
         }
-        #endregion
+
+        #endregion [ctor]
 
         #region [static]
 
@@ -38,7 +36,7 @@ namespace WSUI.Core.Core.Search
             get { return _instance.Value; }
         }
 
-        #endregion
+        #endregion [static]
 
         public DataTable GetDataByAdapter(string query)
         {
@@ -53,7 +51,6 @@ namespace WSUI.Core.Core.Search
                 {
                     _connection.Close();
                 }
-
             }
             return data;
         }
@@ -89,7 +86,8 @@ namespace WSUI.Core.Core.Search
         }
 
         #region [private]
-        private DataTable GetDataTableFromDataReader(IDataReader reader,IEnumerable<string> ignoredFields )
+
+        private DataTable GetDataTableFromDataReader(IDataReader reader, IEnumerable<string> ignoredFields)
         {
             DataTable table = reader.GetSchemaTable();
             DataTable resultTable = new DataTable();
@@ -103,7 +101,7 @@ namespace WSUI.Core.Core.Search
                 dataColumn.ReadOnly = (bool)dataRow["IsReadOnly"];
                 dataColumn.AutoIncrement = (bool)dataRow["IsAutoIncrement"];
                 dataColumn.Unique = (bool)dataRow["IsUnique"];
-                if(ignoredFields != null && ignoredFields.Any(s => s.Equals(dataColumn.ColumnName)))
+                if (ignoredFields != null && ignoredFields.Any(s => s.Equals(dataColumn.ColumnName)))
                     listIndex.Add(index);
                 resultTable.Columns.Add(dataColumn);
                 index++;
@@ -116,10 +114,10 @@ namespace WSUI.Core.Core.Search
                 {
                     row++;
                     DataRow dataRow = resultTable.NewRow();
-                   
+
                     for (int i = 0; i < resultTable.Columns.Count - 1; i++)
                     {
-                        if(listIndex.Contains(i))
+                        if (listIndex.Contains(i))
                             continue;
                         try
                         {
@@ -140,7 +138,6 @@ namespace WSUI.Core.Core.Search
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
             return resultTable;
-
         }
 
         private DataTable GetDataTableByAdapter(string query, OleDbConnection connection)
@@ -150,13 +147,12 @@ namespace WSUI.Core.Core.Search
             return dt;
         }
 
-        private DataTable GetDataTableFast(IDataReader rdr,IEnumerable<string> ignoredFields)
+        private DataTable GetDataTableFast(IDataReader rdr, IEnumerable<string> ignoredFields)
         {
-            DataTable resultTable = GetDataTableFromDataReader(rdr,ignoredFields);
+            DataTable resultTable = GetDataTableFromDataReader(rdr, ignoredFields);
             return resultTable;
         }
 
-        #endregion
-
+        #endregion [private]
     }
 }

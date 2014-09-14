@@ -6,18 +6,16 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
-
-
 using WSUI.Core.Interfaces;
-namespace WSUI.Core.Core.Search {
-	public class ResultMessage : IResultMessage {
 
-		public ResultMessage(){
+namespace WSUI.Core.Core.Search
+{
+    public class ResultMessage : IResultMessage
+    {
+        public ResultMessage()
+        {
+        }
 
-		}
-
-	    public string Message { get; set; }
-	}//end ResultMessage
-
+        public string Message { get; set; }
+    }//end ResultMessage
 }//end namespace Search

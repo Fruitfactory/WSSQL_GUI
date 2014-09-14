@@ -14,7 +14,6 @@ namespace WSUI.Module.Core
             Host = HostType.Unknown;
         }
 
-
         protected virtual void OnPropertyChanged(string property)
         {
             PropertyChangedEventHandler handler = this.PropertyChanged;

@@ -6,80 +6,75 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
+using WSUI.Core.Core.Rules;
 using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
-using WSUI.Core.Core.Rules;
 
-namespace WSUI.Core.Utils 
+namespace WSUI.Core.Utils
 {
-	public class QueryGenerator : IQueryGenerator
-	{
-	    private const string QueryTemplate = "{0} {1} {2}";
-	    private const string SelectTopTemplate = "SELECT TOP {0} ";
-	    private const string FieldsSeparator = ",";
+    public class QueryGenerator : IQueryGenerator
+    {
+        private const string QueryTemplate = "{0} {1} {2}";
+        private const string SelectTopTemplate = "SELECT TOP {0} ";
+        private const string FieldsSeparator = ",";
 
+        protected QueryGenerator()
+        {
+        }
 
-		protected QueryGenerator()
-		{
-		}
+        private static Lazy<IQueryGenerator> _instance = new Lazy<IQueryGenerator>(() =>
+        {
+            var inst = new QueryGenerator();
+            inst.Init();
+            return inst;
+        });
 
-		private static Lazy<IQueryGenerator> _instance = new Lazy<IQueryGenerator>(() => {
-																							var inst = new QueryGenerator();
-																							inst.Init();
-																							return inst;
-																							});
-		
-		public static IQueryGenerator Instance 
-		{
-			get{return _instance.Value;}
-		}
-		
-		/// 
-		/// <param name="type"></param>
-		/// <param name="searchCriteria"></param>
-		/// <param name="exludeIgnored"></param>
-		public string GenerateQuery(Type type, string searchCriteria,int topResult, IRuleQueryGenerator ruleQueryGenerator)
-		{
-		    var listFields = FieldCash.Instance.GetFieldList(type);
-		    if (listFields == null || listFields.Count == 0)
-		        return "";
-		    var selectPart = GenerateSelectPart(listFields, topResult);
-		    var fromPart = GenerateFromPart();
-		    var wherePart = GenerateWherePart(ruleQueryGenerator);
-		    var query = string.Format(QueryTemplate, selectPart, fromPart, wherePart);
-			return query;
-		}
+        public static IQueryGenerator Instance
+        {
+            get { return _instance.Value; }
+        }
 
-		private void Init()
-		{}
+        ///
+        /// <param name="type"></param>
+        /// <param name="searchCriteria"></param>
+        /// <param name="exludeIgnored"></param>
+        public string GenerateQuery(Type type, string searchCriteria, int topResult, IRuleQueryGenerator ruleQueryGenerator)
+        {
+            var listFields = FieldCash.Instance.GetFieldList(type);
+            if (listFields == null || listFields.Count == 0)
+                return "";
+            var selectPart = GenerateSelectPart(listFields, topResult);
+            var fromPart = GenerateFromPart();
+            var wherePart = GenerateWherePart(ruleQueryGenerator);
+            var query = string.Format(QueryTemplate, selectPart, fromPart, wherePart);
+            return query;
+        }
 
-	    private string GenerateSelectPart(IList<Tuple<string, int>> list, int top)
-	    {
-	        var selectPart = string.Format(SelectTopTemplate, top);
+        private void Init()
+        { }
+
+        private string GenerateSelectPart(IList<Tuple<string, int>> list, int top)
+        {
+            var selectPart = string.Format(SelectTopTemplate, top);
             var fields = string.Join(FieldsSeparator, list.Select(item => item.Item1).ToArray());
-	        selectPart += fields;
-	        return selectPart;
-	    }
+            selectPart += fields;
+            return selectPart;
+        }
 
-	    private string GenerateFromPart()
-	    {
-	        return "FROM SystemIndex";
-	    }
+        private string GenerateFromPart()
+        {
+            return "FROM SystemIndex";
+        }
 
-	    private string GenerateWherePart(IRuleQueryGenerator ruleQueryGenerator)
-	    {
-	        if (ruleQueryGenerator == null)
-	            return "";
-	        string where = ruleQueryGenerator.GenerateWherePart(RuleFactory.Instance.GetAllRules());
-	        return where;
-	    }
-		
-		
-	}//end QueryGenerator
-
+        private string GenerateWherePart(IRuleQueryGenerator ruleQueryGenerator)
+        {
+            if (ruleQueryGenerator == null)
+                return "";
+            string where = ruleQueryGenerator.GenerateWherePart(RuleFactory.Instance.GetAllRules());
+            return where;
+        }
+    }//end QueryGenerator
 }//end namespace Utils

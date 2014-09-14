@@ -1,5 +1,3 @@
-
-
 namespace WSUI.Core.Helpers.DetectEncoding.Multilang
 {
     using System.Runtime.InteropServices;

@@ -1,6 +1,6 @@
 ﻿namespace WSUI.Core.EventArguments
 {
-    public class WSUIShowFolderArgs :  System.EventArgs
+    public class WSUIShowFolderArgs : System.EventArgs
     {
         public WSUIShowFolderArgs(string folder)
         {

@@ -6,20 +6,16 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.OleDb;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WSUI.Core.Enums;
-using WSUI.Core.Extensions;
-using WSUI.Core.Interfaces;
 using WSUI.Core.Core.Rules;
+using WSUI.Core.Enums;
+using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Core.Utils;
 
@@ -34,7 +30,8 @@ namespace WSUI.Core.Core.Search
         private IQueryReader _reader;
         private volatile bool _isSearching = false;
         private bool _exludeIgnored = false;
-        #endregion
+
+        #endregion [needs private]
 
         #region [needs protected]
 
@@ -56,21 +53,21 @@ namespace WSUI.Core.Core.Search
 
         // results
         private TypeResult _typeResult;
+
         private IList<IResultMessage> _listMessage;
 
         protected string QueryAnd = " AND \"{0}\"";
 
-
         protected string RuleName;
 
-        #endregion
+        #endregion [needs protected]
 
         protected BaseSearchRule()
-            : this(null,false)
+            : this(null, false)
         {
         }
 
-        protected BaseSearchRule(object lockObject,bool exludeIgnored)
+        protected BaseSearchRule(object lockObject, bool exludeIgnored)
         {
             Event = new AutoResetEvent(false);
             Result = new List<T>();
@@ -100,7 +97,7 @@ namespace WSUI.Core.Core.Search
                 return;
             }
             InitBeforeSearching();
-            _ruleThread = new Thread(DoQuery) { Priority = ThreadPriority.Highest,Name= string.Format("{0}({1})",this.GetType().Name,typeof(T).Name)};
+            _ruleThread = new Thread(DoQuery) { Priority = ThreadPriority.Highest, Name = string.Format("{0}({1})", this.GetType().Name, typeof(T).Name) };
             _ruleThread.Start();
         }
 
@@ -139,7 +136,6 @@ namespace WSUI.Core.Core.Search
                     _typeResult = TypeResult.Error;
                     _listMessage.Add(new ResultMessage() { Message = "Rule was stoped" });
                 }
-
             }
             catch (Exception ex)
             {
@@ -165,12 +161,12 @@ namespace WSUI.Core.Core.Search
 
         protected virtual void CreateDataObject(DataTable data)
         {
-            if(data.Rows.Count == 0)
+            if (data.Rows.Count == 0)
                 return;
             Parallel.ForEach(data.AsEnumerable(), ReadData);
         }
 
-        /// 
+        ///
         /// <param name="reader"></param>
         private void ReadData(IDataReader reader)
         {
@@ -186,7 +182,7 @@ namespace WSUI.Core.Core.Search
             var result = Reader.ReadResult(row) as T;
             if (result == null)
                 return;
-            lock(InternalLock)
+            lock (InternalLock)
                 Result.Add(result);
             ProcessCountAdded();
         }
@@ -217,12 +213,13 @@ namespace WSUI.Core.Core.Search
         }
 
         public bool IsSearching { get { return _isSearching; } }
+
         public int Priority { get; protected set; }
+
         public RuleObjectType ObjectType { get; protected set; }
 
         protected virtual void ProcessResult()
         {
-
         }
 
         public virtual void Init()
@@ -301,8 +298,5 @@ namespace WSUI.Core.Core.Search
             Result.Clear();
         }
 
-        
-
     }//end BaseSearchRule
-
 }//end namespace Search

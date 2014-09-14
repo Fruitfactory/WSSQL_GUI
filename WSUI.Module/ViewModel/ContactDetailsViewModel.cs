@@ -60,6 +60,7 @@ namespace WSUI.Module.ViewModel
             _scrollBehavior = new ScrollBehavior {LimitReaction = 85};
             _scrollBehavior.SearchGo += ScrollBehaviorOnSearchGo;
             EmailsSource = new ObservableCollection<EmailSearchObject>();
+            IsDataExist = true;
         }
 
         private void ScrollBehaviorOnSearchGo()
@@ -127,8 +128,19 @@ namespace WSUI.Module.ViewModel
 
         public bool IsBusy
         {
-            get { return _isAttachmentBusy || _isEmailBusy; }
+            get 
+            {
+                var result = _isAttachmentBusy || _isEmailBusy;
+                if (!result)
+                {
+                    CheckExistingData();
+                }
+                return result;
+            }
         }
+
+        public bool IsDataExist { get; private set; }
+
         public IEnumerable<string> Emails { get; private set; }
 
         public string FirstName { get; private set; }
@@ -342,6 +354,13 @@ namespace WSUI.Module.ViewModel
                 return;
             SelectedIndex = int.Parse(arg.ToString());
             OnPropertyChanged(() => SelectedIndex);
+        }
+
+
+        private void CheckExistingData()
+        {
+            IsDataExist = IsEmailVisible || IsFileVisible;
+            OnPropertyChanged(() => IsDataExist);
         }
 
         #endregion [private]

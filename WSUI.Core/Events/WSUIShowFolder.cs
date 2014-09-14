@@ -2,7 +2,7 @@
 
 namespace WSUI.Core.Events
 {
-    public class WSUIShowFolder :  CompositePresentationEvent<string>
-    {    
+    public class WSUIShowFolder : CompositePresentationEvent<string>
+    {
     }
 }

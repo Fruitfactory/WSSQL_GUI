@@ -34,7 +34,5 @@ namespace WSUI.Core.Interfaces
         IList<ISystemSearchResult> GetResult();
 
         bool IsSearching { get; }
-
-        
     }//end ISearchSystem
 }//end namespace Interfaces

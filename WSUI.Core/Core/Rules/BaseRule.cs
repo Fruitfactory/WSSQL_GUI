@@ -1,32 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace WSUI.Core.Core.Rules
 {
     public abstract class BaseRule : IRule
     {
-
         #region Implementation of IRule
 
         public string Rule { get; protected set; }
+
         public int Priority { get; protected set; }
-        
+
         public virtual void InitRule()
-        {}
+        { }
 
         public string[] ApplyRule(string criteria)
         {
             MatchCollection col = Regex.Matches(criteria, Rule);
             if (col.Count == 0)
-                return new string[] {};
+                return new string[] { };
             var list = new List<string>();
-            for (int i = 0; i < col.Count;i++)
+            for (int i = 0; i < col.Count; i++)
             {
                 var item = col[i];
-                if(string.IsNullOrEmpty(item.Groups[1].Value))
+                if (string.IsNullOrEmpty(item.Groups[1].Value))
                     continue;
                 list.Add(item.Groups[1].Value);
             }
@@ -42,6 +39,6 @@ namespace WSUI.Core.Core.Rules
             return result;
         }
 
-        #endregion
+        #endregion Implementation of IRule
     }
 }

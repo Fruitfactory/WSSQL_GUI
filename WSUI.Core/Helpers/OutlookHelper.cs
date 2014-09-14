@@ -1,39 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
-using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-
 
 namespace WSUI.Core.Helpers
 {
     public class OutlookHelper : IOutlookHelper, IDisposable
     {
-#region static
+        #region static
+
         private static string OutlookProcessName = "OUTLOOK";
         private static string OutlookApplication = "Outlook.Application";
+
         //private static OutlookHelper _instance= null;
         private static readonly object _lockObject = new object();
-#endregion
+
+        #endregion static
 
         private const string ATSUFFIX = "/at=";
         private const int IDLENGHT = 24;
 
         public const string AllFolders = "All folders";
 
-#region fields
-        
+        #region fields
+
         private bool _disposed;
         private Outlook._Application _app;
-#endregion
+
+        #endregion fields
 
         private static readonly Lazy<OutlookHelper> _instance = new Lazy<OutlookHelper>(() =>
                                                                                    {
@@ -47,7 +49,7 @@ namespace WSUI.Core.Helpers
             InternalHostType = HostType.Unknown;
         }
 
-        public static  OutlookHelper Instance
+        public static OutlookHelper Instance
         {
             get
             {
@@ -55,15 +57,13 @@ namespace WSUI.Core.Helpers
             }
         }
 
-        
-
         #region [Outllok application]
 
         internal HostType InternalHostType
         {
-            get; set;
+            get;
+            set;
         }
-
 
         public Outlook._Application OutlookApp
         {
@@ -82,18 +82,16 @@ namespace WSUI.Core.Helpers
             }
         }
 
-
-        #endregion
-
+        #endregion [Outllok application]
 
         #region public
 
         public string GetCurrentyUserEmail()
         {
-            if(OutlookApp == null)
+            if (OutlookApp == null)
                 return null;
             var activeExp = OutlookApp.ActiveExplorer();
-            if(activeExp == null)
+            if (activeExp == null)
                 return null;
             return activeExp.Session.CurrentUser.AddressEntry.Address;
         }
@@ -168,13 +166,13 @@ namespace WSUI.Core.Helpers
             {
                 list.Add(att.DisplayName);
             }
-            
+
             return list;
         }
 
         public bool HasAttachment(BaseSearchObject item)
         {
-            if(item == null)
+            if (item == null)
                 return false;
             string mapiUrl = item.ItemUrl;
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
@@ -192,13 +190,13 @@ namespace WSUI.Core.Helpers
             Outlook.ContactItem ci = GetContact(data);
             if (ci == null)
                 return null;
-            Outlook.Attachment att  = GetFotoAttachment(ci);
+            Outlook.Attachment att = GetFotoAttachment(ci);
             if (att == null)
                 return null;
             data.ItemUrl = att.DisplayName;
 
             string tempFilename = TempFileManager.Instance.GenerateTempFileName(data);
-            
+
             if (string.IsNullOrEmpty(tempFilename))
                 return null;
             att.SaveAsFile(tempFilename);
@@ -226,7 +224,7 @@ namespace WSUI.Core.Helpers
 
         public string GetFullFolderPath(BaseSearchObject data)
         {
-            if (data == null) 
+            if (data == null)
                 return string.Empty;
             Outlook.MailItem item = GetEmailItem(data);
             if (item == null)
@@ -256,7 +254,7 @@ namespace WSUI.Core.Helpers
                 WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolderList", ex.Message));
                 return res;
             }
-            res.Insert(0,OutlookHelper.AllFolders);
+            res.Insert(0, OutlookHelper.AllFolders);
             return res;
         }
 
@@ -271,7 +269,7 @@ namespace WSUI.Core.Helpers
             }
             catch (Exception e)
             {
-                WSSqlLogger.Instance.LogError(string.Format("LOGOFF: {0}",e.Message));
+                WSSqlLogger.Instance.LogError(string.Format("LOGOFF: {0}", e.Message));
             }
         }
 
@@ -296,14 +294,14 @@ namespace WSUI.Core.Helpers
 
         public string GetCalendarTempFileName(BaseSearchObject itemSearch)
         {
-            if(itemSearch == null)
+            if (itemSearch == null)
                 return string.Empty;
             string mapiUrl = itemSearch.ItemUrl;
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
             dynamic appointmentItem = GetAppointment(entryID);
             if (appointmentItem == null)
             {
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}","Appointment not found",itemSearch.ItemUrl));
+                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Appointment not found", itemSearch.ItemUrl));
                 return null;
             }
             string tempFile = TempFileManager.Instance.GenerateTempFileName(itemSearch);
@@ -311,7 +309,7 @@ namespace WSUI.Core.Helpers
                 return null;
             if (!File.Exists(tempFile))
             {
-                appointmentItem.SaveAs(tempFile,Outlook.OlSaveAsType.olHTML);
+                appointmentItem.SaveAs(tempFile, Outlook.OlSaveAsType.olHTML);
             }
             return tempFile;
         }
@@ -349,7 +347,7 @@ namespace WSUI.Core.Helpers
                                 {
                                     ci = contact;
                                     return ci;
-                                } 
+                                }
                             }
                         }
                     }
@@ -360,14 +358,12 @@ namespace WSUI.Core.Helpers
             {
                 WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.Message));
             }
-            return ci;            
+            return ci;
         }
-    
 
-        #endregion
+        #endregion public
 
         #region private
-        
 
         private Outlook._Application GetApplication()
         {
@@ -402,11 +398,10 @@ namespace WSUI.Core.Helpers
 
         private Outlook._Application CreateOutlookApplication()
         {
-
             Outlook._Application ret = null;
             try
             {
-                ret = new Outlook.Application() as Outlook._Application;  
+                ret = new Outlook.Application() as Outlook._Application;
                 if (ret == null)
                     return ret;
                 Outlook.NameSpace ns = ret.GetNamespace("MAPI");
@@ -440,7 +435,7 @@ namespace WSUI.Core.Helpers
             return mi;
         }
 
-        private Outlook.Attachment GetAttacment(dynamic mail,string filename)
+        private Outlook.Attachment GetAttacment(dynamic mail, string filename)
         {
             Outlook.Attachment att = null;
             if (mail == null)
@@ -472,12 +467,11 @@ namespace WSUI.Core.Helpers
             dynamic appointItem = null;
             try
             {
-                if(!IsOutlookAlive() && IsHostIsApplication())
+                if (!IsOutlookAlive() && IsHostIsApplication())
                     ReopenOutlook(ref _app);
                 Outlook.NameSpace ns = this.OutlookApp.GetNamespace("MAPI");
 
                 appointItem = ns.GetItemFromID(id, Type.Missing);
-
             }
             catch (Exception ex)
             {
@@ -485,8 +479,6 @@ namespace WSUI.Core.Helpers
             }
             return appointItem;
         }
-
-
 
         /// <summary>
         /// after preview Outlook can close, that why I check Outlook process. If it closed, I create new instance
@@ -533,7 +525,6 @@ namespace WSUI.Core.Helpers
             }
         }
 
-
         private void GetOutlookFolders(Outlook.MAPIFolder folder, List<string> res)
         {
             try
@@ -544,13 +535,12 @@ namespace WSUI.Core.Helpers
                 {
                     try
                     {
-
                         res.Add(subfolder.Name);
                         GetOutlookFolders(subfolder, res);
                     }
                     catch (Exception e)
                     {
-                        WSSqlLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders",subfolder.Name, e.Message));
+                        WSSqlLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
                     }
                 }
             }
@@ -559,9 +549,6 @@ namespace WSUI.Core.Helpers
                 WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetOutlookFolders", e.Message));
             }
         }
-
-
-
 
         private Outlook.ContactItem GetContact(ContactSearchObject data)
         {
@@ -582,7 +569,6 @@ namespace WSUI.Core.Helpers
                 ci =
                     contacts.Items.OfType<Outlook.ContactItem>().ToList().Find(
                         c => c.FirstName == data.FirstName && c.LastName == data.LastName);
-
             }
             catch (Exception ex)
             {
@@ -595,11 +581,10 @@ namespace WSUI.Core.Helpers
         {
             var att =
                 ci.Attachments.OfType<Outlook.Attachment>().ToList().Where(a => IsPicture(a.DisplayName));
-            return att.Count() > 0 ? att.ElementAt(0): null ;
+            return att.Count() > 0 ? att.ElementAt(0) : null;
         }
 
-
-        private  bool IsPicture(string filename)
+        private bool IsPicture(string filename)
         {
             string ext = Path.GetExtension(filename);
             if (string.IsNullOrEmpty(ext))
@@ -621,7 +606,6 @@ namespace WSUI.Core.Helpers
             return InternalHostType == HostType.Application;
         }
 
-        #endregion
-
+        #endregion private
     }
 }

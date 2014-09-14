@@ -30,7 +30,6 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         #endregion
 
-
         public override void SetSearchCriteria(string criteria)
         {
             base.SetSearchCriteria(criteria);
@@ -53,9 +52,8 @@ namespace WSUI.Infrastructure.Implements.Rules
         {
             return
                 string.Format(
-                    "Contains(*,'\"{0}\"') AND Contains(*,'\"{1}\"') ",
-                    _name, _to);
-
+                    " Contains(System.Message.ToAddress,'\"{0}*\"') OR Contains(System.Message.FromAddress,'\"{0}*\"') OR Contains(System.Message.CcAddress,'\"{0}*\"') OR Contains(System.Message.BccAddress,'\"{0}*\"') ",
+                    _to);
         }
     }
 }

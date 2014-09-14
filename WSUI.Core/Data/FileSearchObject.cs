@@ -6,18 +6,12 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
-
-
-using WSUI.Core.Data;
-namespace WSUI.Core.Data 
+namespace WSUI.Core.Data
 {
-	public class FileSearchObject : BaseSearchObject 
+    public class FileSearchObject : BaseSearchObject
     {
-		public FileSearchObject()
+        public FileSearchObject()
         {
-
-		}
-	}//end FileSearchObject
-
+        }
+    }//end FileSearchObject
 }//end namespace Data

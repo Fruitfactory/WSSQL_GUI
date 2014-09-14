@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using Microsoft.Practices.Prism.Logging;
+﻿using System.IO;
+using System.Reflection;
 using log4net;
 using log4net.Config;
-using System.Reflection;
-using System.IO;
-
+using Microsoft.Practices.Prism.Logging;
 
 namespace WSUI.Core.Logger
 {
     public class WSSqlLogger : ILoggerFacade
     {
-
         private const string Filename = "log4net.config";
 
         #region fields
+
         private ILog _log;
-        #endregion
+
+        #endregion fields
 
         private enum LevelLogging
         {
@@ -28,13 +23,12 @@ namespace WSUI.Core.Logger
             Error
         }
 
-
-        #region fields static 
+        #region fields static
 
         private static WSSqlLogger _instance = null;
         private static object _lock = new object();
 
-        #endregion
+        #endregion fields static
 
         private WSSqlLogger()
         {
@@ -64,7 +58,6 @@ namespace WSUI.Core.Logger
                 }
             }
         }
-
 
         #region public
 
@@ -100,35 +93,38 @@ namespace WSUI.Core.Logger
             var message = string.Format(format, args);
             LogWarning(message);
         }
-        #endregion
+
+        #endregion public
 
         #region private
 
         private void WriteLog(LevelLogging level, string message)
         {
-            if(_log == null)
+            if (_log == null)
                 return;
-            switch(level)
+            switch (level)
             {
                 case LevelLogging.Info:
                     _log.Info(message);
                     break;
+
                 case LevelLogging.Warning:
                     _log.Warn(message);
                     break;
+
                 case LevelLogging.Error:
                     _log.Error(message);
                     break;
+
                 default:
                     break;
             }
         }
 
-        #endregion
+        #endregion private
 
         public void Log(string message, Category category, Priority priority)
         {
-
             //if (_watch != null && _watch.IsRunning)
             //{
             //    _watch.Stop();
@@ -140,12 +136,15 @@ namespace WSUI.Core.Logger
                 case Category.Warn:
                     WriteLog(LevelLogging.Warning, message);
                     break;
+
                 case Category.Debug:
                     WriteLog(LevelLogging.Info, message);
                     break;
+
                 case Category.Info:
                     WriteLog(LevelLogging.Info, message);
                     break;
+
                 case Category.Exception:
                     WriteLog(LevelLogging.Error, message);
                     break;

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace WSUI.Core.Extensions
 {
     public static class CommonExtensions
     {
-
         public static void ForEach<T>(this IList<T> list, Action<T> action)
         {
             foreach (var item in list)
@@ -30,6 +28,5 @@ namespace WSUI.Core.Extensions
             foreach (var item in items)
                 col.Add(item);
         }
-
     }
 }

@@ -6,34 +6,31 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using WSUI.Core.Core.Attributes;
 using WSUI.Core.Helpers;
 
-namespace WSUI.Core.Data 
+namespace WSUI.Core.Data
 {
-	public class BaseEmailSearchObject : BaseSearchObject
+    public class BaseEmailSearchObject : BaseSearchObject
     {
-
         #region [needs]
 
-	    private string _fromEmailName = string.Empty;
+        private string _fromEmailName = string.Empty;
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
 
-        #endregion
-
+        #endregion [needs]
 
         [Field("System.Message.ConversationID", 7, false)]
-		public string ConversationId{ get;  set;}
+        public string ConversationId { get; set; }
 
         [Field("System.Message.ToAddress", 8, false)]
-		public string[] ToAddress{ get;  set;}
+        public string[] ToAddress { get; set; }
 
         [Field("System.Message.DateReceived", 9, false)]
-		public DateTime DateReceived{ get;  set;}
+        public DateTime DateReceived { get; set; }
 
         [Field("System.Message.ConversationIndex", 10, false)]
         public string ConversationIndex { get; set; }
@@ -42,7 +39,7 @@ namespace WSUI.Core.Data
         public string[] FromAddress { get; set; }
 
         [Field("System.Message.FromName", 12, false)]
-	    public string[] FromName { get; set; }
+        public string[] FromName { get; set; }
 
         [Field("System.Message.SenderAddress", 13, false)]
         public string[] SenderAddress { get; set; }
@@ -51,76 +48,82 @@ namespace WSUI.Core.Data
         public string[] SenderName { get; set; }
 
         //[Field("System.Message.HasAttachments", 15, false)]
-	    private bool? _internalHasAttachment = null;
-        public bool HasAttachments 
+        private bool? _internalHasAttachment = null;
+
+        public bool HasAttachments
         {
             get { return InternalCheckAttachment(); }
         }
 
-	    private bool InternalCheckAttachment()
-	    {
-	        if (_internalHasAttachment.HasValue)
-	            return _internalHasAttachment.Value;
-	        _internalHasAttachment = OutlookHelper.Instance.HasAttachment(this);
-	        return _internalHasAttachment.Value;
-	    }
+        private bool InternalCheckAttachment()
+        {
+            if (_internalHasAttachment.HasValue)
+                return _internalHasAttachment.Value;
+            _internalHasAttachment = OutlookHelper.Instance.HasAttachment(this);
+            return _internalHasAttachment.Value;
+        }
 
-	    public string From
-	    {
-	        get
-	        {
-	            if (string.IsNullOrEmpty(_fromEmailName))
-	            {
-	                _fromEmailName = GetEmailOrName(FromAddress,FromName);
-	                if (string.IsNullOrEmpty(_fromEmailName))
-	                    _fromEmailName = GetEmailOrName(SenderAddress,SenderName);
-	            }
-	            return _fromEmailName;
-	        }
-	    }
-        
+        public string From
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_fromEmailName))
+                {
+                    _fromEmailName = GetEmailOrName(FromAddress, FromName);
+                    if (string.IsNullOrEmpty(_fromEmailName))
+                        _fromEmailName = GetEmailOrName(SenderAddress, SenderName);
+                }
+                return _fromEmailName;
+            }
+        }
+
         public BaseEmailSearchObject()
         {
+        }
 
-		}
+        public override void SetValue(int index, object value)
+        {
+            base.SetValue(index, value);
+            switch (index)
+            {
+                case 7:
+                    ConversationId = value as string;
+                    break;
 
-	    public override void SetValue(int index, object value)
-	    {
-	        base.SetValue(index, value);
-	        switch (index)
-	        {
-	            case 7:
-	                ConversationId = value as string;
-	                break;
                 case 8:
-	                ToAddress = value as string[];
-	                break;
+                    ToAddress = value as string[];
+                    break;
+
                 case 9:
-	                DateReceived = (DateTime) Convert.ChangeType(value, typeof (DateTime), CultureInfo.InvariantCulture);
-	                break;
+                    DateReceived = (DateTime)Convert.ChangeType(value, typeof(DateTime), CultureInfo.InvariantCulture);
+                    break;
+
                 case 10:
-	                ConversationIndex = value as string;
-	                break;
+                    ConversationIndex = value as string;
+                    break;
+
                 case 11:
-	                FromAddress = value as string[];
-	                break;
+                    FromAddress = value as string[];
+                    break;
+
                 case 12:
-	                FromName = value as string[];
-	                break;
+                    FromName = value as string[];
+                    break;
+
                 case 13:
-	                SenderAddress = CheckValidType(value);
-	                break;
+                    SenderAddress = CheckValidType(value);
+                    break;
+
                 case 14:
                     SenderName = CheckValidType(value);
-	                break;
+                    break;
                 //case 15:
                 //    HasAttachments = (bool) value;
-                    //break;
-	        }
-	    }
+                //break;
+            }
+        }
 
-
-        private string GetEmailOrName(string[] address,string[] name)
+        private string GetEmailOrName(string[] address, string[] name)
         {
             if (address == null || address.Length == 0)
             {
@@ -137,11 +140,10 @@ namespace WSUI.Core.Data
             return string.IsNullOrEmpty(_fromEmailName) ? (_fromEmailName = GetFieldValue(FromName)) : _fromEmailName;
         }
 
-	    private string GetFieldValue(string[] val)
-	    {
-	        return val != null && val.Length > 0 ? val[0]: string.Empty;
-	    }
-
+        private string GetFieldValue(string[] val)
+        {
+            return val != null && val.Length > 0 ? val[0] : string.Empty;
+        }
 
         private bool IsEmail(string email)
         {
@@ -156,7 +158,5 @@ namespace WSUI.Core.Data
             }
             return new string[] { val as string };
         }
- 
     }//end BaseEmailSearchObject
-
 }//end namespace Data

@@ -1,38 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using WSUI.Core.Data;
-using WSUI.Core.Logger;
 using WSUI.Core.Enums;
-using WSUI.Core.Core;
-
+using WSUI.Core.Logger;
 
 namespace WSUI.Core.Helpers
 {
     public class TempFileManager
     {
+        #region static
 
-        #region static 
         private static TempFileManager _instance = null;
         private static string TempFileName = "{0}\\{1}";
         private static string TempFolder = "{0}OutlookFinder";
         private static string TempFolderFile = "{0}OutlookFinder\\{1}";
         private static readonly object _lockObject = new object();
 
-        #endregion
+        #endregion static
 
         #region fields
-        
+
         private Dictionary<Guid, string> _tempFileList;
 
-        
-
-        #endregion
+        #endregion fields
 
         private TempFileManager()
         {
-            _tempFileList = new Dictionary<Guid,string>();
+            _tempFileList = new Dictionary<Guid, string>();
             string temp = string.Format(TempFolder, Path.GetTempPath());
             if (!File.Exists(temp))
             {
@@ -54,8 +50,7 @@ namespace WSUI.Core.Helpers
             }
         }
 
-        #region public 
-
+        #region public
 
         public string GenerateTempFileName(BaseSearchObject searchitem)
         {
@@ -96,7 +91,7 @@ namespace WSUI.Core.Helpers
             {
                 if (!File.Exists(filename))
                     throw new FileNotFoundException("File doesn't exist", filename);
-                CopyFile(filename,tempFilename);    
+                CopyFile(filename, tempFilename);
             }
             catch (Exception ex)
             {
@@ -110,7 +105,7 @@ namespace WSUI.Core.Helpers
         {
             string temp = string.Format(TempFolder, Path.GetTempPath());
             DirectoryInfo di = new DirectoryInfo(temp);
-            if (di.Exists && di.GetDirectories().Count() > 0 )
+            if (di.Exists && di.GetDirectories().Count() > 0)
             {
                 var dirCollection = di.GetDirectories();
                 foreach (var dir in dirCollection)
@@ -127,10 +122,9 @@ namespace WSUI.Core.Helpers
             }
         }
 
-        #endregion
+        #endregion public
 
-
-        #region private 
+        #region private
 
         private string CheckAndGetExistTempFilepath(Guid id)
         {
@@ -148,7 +142,7 @@ namespace WSUI.Core.Helpers
 
         private string CreateAndGetTempFolder(Guid id)
         {
-            string tempFolder = string.Format(TempFolderFile, Path.GetTempPath(),id.ToString());
+            string tempFolder = string.Format(TempFolderFile, Path.GetTempPath(), id.ToString());
             DirectoryInfo di = new DirectoryInfo(tempFolder);
             if (!di.Exists)
             {
@@ -158,7 +152,7 @@ namespace WSUI.Core.Helpers
             return tempFolder;
         }
 
-        private string GetTempFilename(string folder, string filename,Guid id)
+        private string GetTempFilename(string folder, string filename, Guid id)
         {
             string tempFilename = string.Format(TempFileName, folder, filename);
             if (string.IsNullOrEmpty(tempFilename))
@@ -182,7 +176,6 @@ namespace WSUI.Core.Helpers
                 {
                     fileDestination.Write(buffer, 0, numBytes);
                 }
-
             }
             catch (Exception ex)
             {
@@ -190,7 +183,7 @@ namespace WSUI.Core.Helpers
             }
             finally
             {
-                if(fileSource !=  null)
+                if (fileSource != null)
                     fileSource.Close();
                 if (fileDestination != null)
                 {
@@ -208,13 +201,16 @@ namespace WSUI.Core.Helpers
                 case Enums.TypeSearchItem.Email:
                     ext = ".msg";
                     break;
+
                 case Enums.TypeSearchItem.Attachment:
                     string filename = searchItem.ItemUrl.Substring(searchItem.ItemUrl.LastIndexOf(':') + 1);
                     ext = Path.GetExtension(filename);
                     break;
+
                 case Enums.TypeSearchItem.Contact:
                     ext = Path.GetExtension(searchItem.ItemUrl);
                     break;
+
                 case Enums.TypeSearchItem.Calendar:
                     ext = ".html";
                     break;
@@ -237,15 +233,14 @@ namespace WSUI.Core.Helpers
                         filename = Path.GetFileNameWithoutExtension(Path.GetTempFileName());
                     }
                     break;
+
                 default:
                     filename = Path.GetFileNameWithoutExtension(Path.GetTempFileName());
                     break;
-
             }
             return filename;
         }
 
-        #endregion
-
+        #endregion private
     }
 }

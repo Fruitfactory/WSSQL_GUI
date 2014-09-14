@@ -5,7 +5,6 @@ namespace WSUI.Core.Data
 {
     public class WSAction : IWSAction
     {
-
         public WSAction(WSActionType type, object data)
         {
             Action = type;
@@ -13,6 +12,7 @@ namespace WSUI.Core.Data
         }
 
         public WSActionType Action { get; private set; }
+
         public object Data { get; private set; }
     }
 }

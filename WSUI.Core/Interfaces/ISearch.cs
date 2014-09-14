@@ -42,6 +42,5 @@ namespace WSUI.Core.Interfaces
         void Init();
 
         void SetProcessingRecordCount(int first, int second);
-        
     }//end ISearch
 }//end namespace Interfaces

@@ -23,12 +23,11 @@ namespace WSUI.Core.Helpers
         private const string PKeyId = "Id";
         private const string IsPluginUiVisible = "IsPluginUiVisible";
 
-
         private RegistryKey _baseRegistry = Registry.CurrentUser;
 
         private const string DefaultNamespace = "MAPI";
-        #endregion
 
+        #endregion [needs]
 
         #region [instance]
 
@@ -37,7 +36,6 @@ namespace WSUI.Core.Helpers
 
         protected void Init()
         {
-
         }
 
         private static Lazy<RegistryHelper> _instance = new Lazy<RegistryHelper>(() =>
@@ -47,12 +45,13 @@ namespace WSUI.Core.Helpers
                                                                                          helper.Init();
                                                                                          return helper;
                                                                                      });
+
         public static RegistryHelper Instance
         {
             get { return _instance.Value; }
         }
 
-        #endregion
+        #endregion [instance]
 
         public bool IsSilendUpdate()
         {
@@ -128,7 +127,7 @@ namespace WSUI.Core.Helpers
 
         public void SetPKetId(string id)
         {
-            Write(PKeyId,id);
+            Write(PKeyId, id);
         }
 
         public string GetPKeyId()
@@ -144,7 +143,7 @@ namespace WSUI.Core.Helpers
 
         public void SetIsPluginUiVisible(bool visible)
         {
-            Write(IsPluginUiVisible,visible);
+            Write(IsPluginUiVisible, visible);
         }
 
         #region [restore outlook folders]
@@ -154,8 +153,7 @@ namespace WSUI.Core.Helpers
             return !string.IsNullOrEmpty(ReadKey(OutlookFolderName));
         }
 
-        #endregion
-
+        #endregion [restore outlook folders]
 
         private string ReadKey(string key)
         {
@@ -193,8 +191,6 @@ namespace WSUI.Core.Helpers
                 return;
             }
         }
-
-
 
     }
 }

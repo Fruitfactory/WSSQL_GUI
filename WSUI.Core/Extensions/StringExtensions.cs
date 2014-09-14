@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using WSUI.Core.Helpers.DetectEncoding;
 
 namespace WSUI.Core.Extensions
@@ -28,6 +25,5 @@ namespace WSUI.Core.Extensions
             var result = encoding.GetString(bytes);//Encoding.UTF8.GetString(bytes);
             return result;
         }
-
     }
 }

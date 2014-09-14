@@ -6,20 +6,21 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-namespace WSUI.Core.Core.Attributes {
-	public class FieldAttribute : BaseWSUIAttribute {
+namespace WSUI.Core.Core.Attributes
+{
+    public class FieldAttribute : BaseWSUIAttribute
+    {
+        public string FieldName { get; private set; }
 
-		public string FieldName{ get;  private set;} 
-		public int Index{ get;  private set;}
-	    public bool CanBeIgnored { get; private set; }
+        public int Index { get; private set; }
 
-	    public FieldAttribute(string fieldName,int index, bool canBeIngnored)
-		{
-		    FieldName = fieldName;
-		    Index = index;
-	        CanBeIgnored = canBeIngnored;
-		}
+        public bool CanBeIgnored { get; private set; }
 
-	}//end FieldAttribute
-
+        public FieldAttribute(string fieldName, int index, bool canBeIngnored)
+        {
+            FieldName = fieldName;
+            Index = index;
+            CanBeIgnored = canBeIngnored;
+        }
+    }//end FieldAttribute
 }//end namespace Attributes

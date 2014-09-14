@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
-using Microsoft.Office.Interop.Outlook;
 using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
-using WSUI.Core.Utils.Dialog;
-using WSUI.Core.Utils.Dialog.Interfaces;
-using WSUI.Core.Utils.Dialog.View;
-using WSUI.Core.Utils.Dialog.ViewModel;
 using Action = System.Action;
 using Exception = System.Exception;
 
@@ -17,10 +11,9 @@ namespace WSUI.Core.Core.LimeLM
 {
     public class TurboLimeActivate
     {
-
         #region [internal class for new licensing]
 
-        class CheckActivationResult
+        private class CheckActivationResult
         {
             public CheckActivationResult(bool isActivated, bool isTrial, bool checkInOldWay)
             {
@@ -30,11 +23,13 @@ namespace WSUI.Core.Core.LimeLM
             }
 
             public bool IsActivated { get; private set; }
+
             public bool IsTrial { get; private set; }
+
             public bool CheckInOldWay { get; private set; }
         }
 
-        #endregion
+        #endregion [internal class for new licensing]
 
         #region [fields const]
 
@@ -45,13 +40,10 @@ namespace WSUI.Core.Core.LimeLM
 
         private const int TimeUsedId = 2568; // can get from https://wyday.com/limelm/version/2568/edit-feature/
 
-
-        #endregion
-
+        #endregion [fields const]
 
         // O_o
         private const int DaysBetweenCheck = 0; // we should use 0. In this case TurboActive verify activation with the server every time when we call IsGenuine()
-
 
         private const int GraceOfInerErr = 14;
         private const string VersionId = "4d6ed75a527c1957550015.01792667";
@@ -73,7 +65,7 @@ namespace WSUI.Core.Core.LimeLM
             get { return _Instance.Value; }
         }
 
-        #endregion
+        #endregion [static]
 
         #region [public]
 
@@ -139,7 +131,7 @@ namespace WSUI.Core.Core.LimeLM
             }
         }
 
-        #endregion
+        #endregion [public]
 
         #region [private property]
 
@@ -161,8 +153,7 @@ namespace WSUI.Core.Core.LimeLM
             set;
         }
 
-
-        #endregion
+        #endregion [private property]
 
         #region [private]
 
@@ -241,7 +232,6 @@ namespace WSUI.Core.Core.LimeLM
             }
         }
 
-
         private bool CheckTrialPeriod()
         {
             WSSqlLogger.Instance.LogInfo("UseTrial!!");
@@ -293,8 +283,6 @@ namespace WSUI.Core.Core.LimeLM
             return false;
         }
 
-
-        #endregion
-
+        #endregion [private]
     }
 }

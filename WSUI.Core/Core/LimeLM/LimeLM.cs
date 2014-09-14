@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
-using System.Web;
 using System.Xml;
 
 namespace WSUI.Core.Core.LimeLM
@@ -23,7 +22,6 @@ namespace WSUI.Core.Core.LimeLM
         public const int Quantity = 1;
         public const int DefaultTrialPeriod = 14;
 
-
         public const string TrialExpires = "trial_expires";
         public const string TimesUsed = "times_used";
         public const string UserEmail = "user_email";
@@ -33,7 +31,7 @@ namespace WSUI.Core.Core.LimeLM
         //      LimeLM running on your own servers), then replace the URL with your own.
 
         // Almost all users should leave this line unchanged.
-        const string post_url = "https://wyday.com/limelm/api/rest/";
+        private const string post_url = "https://wyday.com/limelm/api/rest/";
 
         /// <summary>
         /// Add a new license feature for a particular version. Note that if you want to set the feature values for existing product keys, use the SetDetails() function.
@@ -281,7 +279,6 @@ namespace WSUI.Core.Core.LimeLM
             return PostRequest(postData);
         }
 
-
         public static bool IsEmailPresent(string email)
         {
             string resp = LimeLMApi.FindPKey(LimeLMApi.VersionId, email);
@@ -332,7 +329,7 @@ namespace WSUI.Core.Core.LimeLM
             }
         }
 
-        static void GetPKeys(XmlReader reader, List<string> pkeys)
+        private static void GetPKeys(XmlReader reader, List<string> pkeys)
         {
             while (reader.Read())
             {
@@ -345,7 +342,7 @@ namespace WSUI.Core.Core.LimeLM
             }
         }
 
-        static void GetIdAndPKeys(XmlReader reader, List<Tuple<string, string>> pkeys)
+        private static void GetIdAndPKeys(XmlReader reader, List<Tuple<string, string>> pkeys)
         {
             while (reader.Read())
             {
@@ -358,7 +355,7 @@ namespace WSUI.Core.Core.LimeLM
             }
         }
 
-        static string PostRequest(List<KeyValuePair<string, object>> postData)
+        private static string PostRequest(List<KeyValuePair<string, object>> postData)
         {
             if (APIKey == null)
                 throw new Exception("You must specify your LimeLM API key.");
