@@ -7,6 +7,7 @@ using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using WSUI.Core.Data;
+using WSUI.Core.Extensions;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Utils.Dialog;
@@ -26,7 +27,7 @@ namespace WSUI.Module.ViewModel
     public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel, IScrollableView
     {
 
-        private const double AvaregeTwoRowItemHeight = 42;
+        private const double AvaregeTwoRowItemHeight = 45;
         private const double AvaregeOneRowItemHeight = 25;
         private const double FileValue = 0.2;
         private const double EmailValue = 0.7;
@@ -262,8 +263,20 @@ namespace WSUI.Module.ViewModel
         private void ApplyEmailContactInfo(EmailContactSearchObject dataObject)
         {
             Emails = new List<string>() { dataObject.EMail };
-            FirstName = dataObject.EMail;
+            string name = string.Empty;
+            FirstName = IsAbleGetNameFromContact(dataObject.EMail, ref name) ? name : dataObject.EMail;
             RaiseNotification();
+        }
+
+        private bool IsAbleGetNameFromContact(string email, ref string name)
+        {
+            var contact = OutlookHelper.Instance.GetContact(email);
+            if (contact == null)
+            {
+                return false;
+            }
+            name = string.Format("{0} {1}", contact.FirstName, contact.LastName);
+            return true;
         }
 
         private void RunEmailSearching(string from, string to)

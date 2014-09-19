@@ -28,11 +28,12 @@ namespace WSUI.Module.ViewModel
     public class AllFilesViewModel : KindViewModelBase, IUView<AllFilesViewModel>
     {
         private const double AvaregeTwoRowItemHeight = 40;
+        private const double AvaregeContacItemHeight = 30;
         private const double AvaregeOneRowItemHeight = 25;
-        private const double ContactValue = 0.2;
         private const double FileValue = 0.15;
         private const double EmailValue = 0.5;
 
+        private const int ContactMaxCount = 5;
 
         public AllFilesViewModel(IUnityContainer container, 
             IEventAggregator eventAggregator, 
@@ -187,11 +188,10 @@ namespace WSUI.Module.ViewModel
             if (contacts.Any())
             {
                 var contactAll = contacts.SelectMany(c => c.Result);
-                var avaibleHeightAndCount = GetAvaibleHeightAndCount(ContactValue, AvaregeTwoRowItemHeight);
-                IsContactMoreVisible = contactAll.Count() > avaibleHeightAndCount.Item2 - 1;
+                IsContactMoreVisible = contactAll.Count() > ContactMaxCount;
                 ContactHeader = IsContactMoreVisible ? string.Format("({0})", contactAll.Count()) : string.Empty;
-                CollectionExtensions.AddRange(ContactSource, contactAll.Take(avaibleHeightAndCount.Item2 - 1));
-                ContactHeight = IsContactMoreVisible ? avaibleHeightAndCount.Item1 : contactAll.Count() * AvaregeTwoRowItemHeight;
+                CollectionExtensions.AddRange(ContactSource, contactAll.Take(ContactMaxCount));
+                ContactHeight = IsContactMoreVisible ? ContactMaxCount * AvaregeContacItemHeight : contactAll.Count() * AvaregeContacItemHeight;
             }
         }
 

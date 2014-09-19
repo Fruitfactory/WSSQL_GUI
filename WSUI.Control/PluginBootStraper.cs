@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using Transitionals.Controls;
-using WSPreview.PreviewHandler.Service;
 using Microsoft.Practices.Prism.Logging;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.Unity;
+using Transitionals.Controls;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
-using WSUI.Infrastructure.Service.Dumper;
-using WSUI.Module.Interface;
 using WSUI.Module.Interface.View;
 using WSUI.Module.Interface.ViewModel;
 using WSUI.Module.Service;
@@ -26,16 +22,17 @@ namespace WSUI.Control
         public PluginBootStraper()
         {
         }
+
         public override void Run(bool runWithDefaultConfiguration)
         {
             //var watch = new Stopwatch();
             this.Logger = this.CreateLogger();
             this.ModuleCatalog = this.CreateModuleCatalog();
-            if(this.ModuleCatalog == null)
+            if (this.ModuleCatalog == null)
                 throw new NullReferenceException("ModuleCatalog");
             this.ConfigureModuleCatalog();
             this.Container = this.CreateContainer();
-            if(Container == null)
+            if (Container == null)
                 throw new NullReferenceException("Container");
             this.ConfigureContainer();
             this.ConfigureServiceLocator();
@@ -57,16 +54,13 @@ namespace WSUI.Control
             //WSSqlLogger.Instance.LogInfo(string.Format("Run (plugin): {0}ms", watch.ElapsedMilliseconds));
         }
 
-
-
         protected override Microsoft.Practices.Prism.Logging.ILoggerFacade CreateLogger()
         {
-            return (ILoggerFacade) WSSqlLogger.Instance;
+            return (ILoggerFacade)WSSqlLogger.Instance;
         }
 
         protected override DependencyObject CreateShell()
         {
-           
             //Stopwatch watch = new Stopwatch();
             //watch.Start();
             var shell = Container.Resolve<WSSidebarControl>();
@@ -110,7 +104,7 @@ namespace WSUI.Control
 
         protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
         {
-            RegionAdapterMappings mappings =  base.ConfigureRegionAdapterMappings();
+            RegionAdapterMappings mappings = base.ConfigureRegionAdapterMappings();
             mappings.RegisterMapping(typeof(TransitionElement),
                 Container.Resolve<TransitionElementAdaptor>());
             return mappings;
@@ -118,17 +112,17 @@ namespace WSUI.Control
 
         public void PassAction(IWSAction action)
         {
-            if(ReferenceEquals(_mainViewModel,null))
+            if (ReferenceEquals(_mainViewModel, null))
                 return;
             _mainViewModel.PassAction(action);
         }
 
-        public DependencyObject View 
+        public DependencyObject View
         {
             get { return this.Shell; }
         }
 
-        public bool IsPluginBusy 
+        public bool IsPluginBusy
         {
             get { return _mainViewModel.IsBusy; }
         }

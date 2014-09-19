@@ -314,7 +314,7 @@ namespace WSUI.Core.Helpers
             return tempFile;
         }
 
-        public Outlook.ContactItem GetContact(string fullname)
+        public Outlook.ContactItem GetContact(string email)
         {
             if (this.OutlookApp == null)
                 return null;
@@ -330,9 +330,6 @@ namespace WSUI.Core.Helpers
                 if (contacts == null)
                     return null;
 
-                string[] split = fullname.Split(' ');
-                if (split.Length <= 1)
-                    return null;
                 foreach (var item in ns.Folders.OfType<Outlook.MAPIFolder>())
                 {
                     try
@@ -341,14 +338,14 @@ namespace WSUI.Core.Helpers
                         {
                             if (string.IsNullOrEmpty(fol.AddressBookName))
                                 continue;
-                            foreach (var contact in fol.Items.OfType<Outlook.ContactItem>())
-                            {
-                                if (contact != null && (contact.FirstName == split[0].Trim() && contact.LastName == split[1].Trim()) || (contact.FirstName == split[1].Trim() && contact.LastName == split[0].Trim()))
-                                {
-                                    ci = contact;
-                                    return ci;
-                                }
-                            }
+                            ci =
+                                fol.Items.OfType<Outlook.ContactItem>().FirstOrDefault(c =>
+                                        ( !string.IsNullOrEmpty(c.Email1Address) && c.Email1Address.IndexOf(email, StringComparison.InvariantCultureIgnoreCase) > -1) ||
+                                        ( !string.IsNullOrEmpty(c.Email2Address) && c.Email2Address.IndexOf(email, StringComparison.InvariantCultureIgnoreCase) > -1) ||
+                                        ( !string.IsNullOrEmpty(c.Email3Address) && c.Email3Address.IndexOf(email, StringComparison.InvariantCultureIgnoreCase) > -1)
+                                        );
+                            if (ci != null)
+                                return ci;
                         }
                     }
                     catch (Exception) { }
@@ -360,6 +357,7 @@ namespace WSUI.Core.Helpers
             }
             return ci;
         }
+
 
         #endregion public
 

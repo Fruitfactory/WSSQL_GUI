@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using WSUI.Core.Helpers.DetectEncoding;
 
 namespace WSUI.Core.Extensions
@@ -7,6 +8,10 @@ namespace WSUI.Core.Extensions
     {
         private const string IsoEncodingName = "ISO-8859-1";
         private static Encoding encoding = null;
+
+        private static readonly char[] separators = new char[] { ' ', '.', ',' };
+        private readonly static char Apersand = '@';
+
 
         public static string ConvertToIso(this string str)
         {
@@ -25,5 +30,17 @@ namespace WSUI.Core.Extensions
             var result = encoding.GetString(bytes);//Encoding.UTF8.GetString(bytes);
             return result;
         }
+
+        public static Tuple<string[],string> SplitEmail(this string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return default(Tuple<string[], string>);
+            var part1 = email.Substring(0, email.IndexOf(Apersand));
+            var part2 = email.Substring(email.IndexOf(Apersand) + 1);
+            var split1 = part1.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            return new Tuple<string[], string>(split1, part2);
+        }
+
+
     }
 }

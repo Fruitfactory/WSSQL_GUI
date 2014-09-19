@@ -4,15 +4,13 @@ using System.Linq;
 using System.Text;
 using WSUI.Core.Core.Rules;
 using WSUI.Core.Enums;
+using WSUI.Core.Extensions;
 using WSUI.Infrastructure.Implements.Rules.BaseRules;
 
 namespace WSUI.Infrastructure.Implements.Rules
 {
     public class ContactEmailSearchRule : BaseEmailSearchRule
     {
-
-        private static readonly char[] separators = new char[] {' ', '.', ','};
-        private readonly static char Apersand = '@';
 
         private string WhereTemplate =
             "WHERE CONTAINS(System.Kind,'email') AND System.Message.DateReceived < '{0}' AND {1} ORDER BY System.Message.DateReceived DESC";//System.Search.Contents
@@ -84,12 +82,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         private Tuple<string[], string> GetEmailParts(string email)
         {
-            if (string.IsNullOrEmpty(email))
-                return default(Tuple<string[], string>);
-            var part1 = email.Substring(0, email.IndexOf(Apersand));
-            var part2 = email.Substring(email.IndexOf(Apersand) + 1);
-            var split1 = part1.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            return new Tuple<string[], string>(split1,part2);
+            return email.SplitEmail();
         }
 
 

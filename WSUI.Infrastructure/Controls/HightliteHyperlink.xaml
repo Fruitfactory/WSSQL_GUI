@@ -7,8 +7,7 @@
   <Grid>
     <TextBlock>
       <Hyperlink Command="{Binding Path=DataContext.EmailClickCommand,ElementName=this}" CommandParameter="{Binding}">
-        <TextBlock TextWrapping="Wrap" x:Name="textBlock"
-
+        <TextBlock x:Name="textBlock" TextTrimming="CharacterEllipsis"
                    FontSize="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontSizeLabel}"
                    FontStyle="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontStyleLabel}"
                    FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:HightliteTextBlockBase}},Path=FontWeightLabel}"
