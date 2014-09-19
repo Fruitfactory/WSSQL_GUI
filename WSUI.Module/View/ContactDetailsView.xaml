@@ -191,36 +191,6 @@
             
             
             <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="3">
-                <!--<Viewbox x:Name="ViewboxFake" >
-                    <Viewbox.Style>
-                        <Style TargetType="Viewbox">
-                            <Setter Property="Visibility" Value="Collapsed"></Setter>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding FotoFilepath,UpdateSourceTrigger=PropertyChanged}" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Visible"></Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Viewbox.Style>
-                    <Grid>
-                        <Path Data="M42.123207,35.952998C42.123207,35.952998,59.814095,40.166618,61.498001,57.012999L0,57.012999C-3.5527137E-15,57.012999,5.055995,38.480312,20.221399,36.794204L24.326918,54.381586 27.344988,54.356802 30.777908,45.354411 27.573,39.798999 33.978001,39.798999 30.907883,45.495424 34.821835,54.295404 37.174583,54.276085z M30.32205,0C39.69651,0 47.298,7.5988789 47.298,16.975199 47.298,26.351399 39.69651,33.953 30.32205,33.953 20.946487,33.953 13.347,26.351399 13.347,16.975199 13.347,7.5988789 20.946487,0 30.32205,0z" 
-                              Stretch="Uniform" 
-                              Fill="{StaticResource GrayBrush8}" 
-                              Width="138" 
-                              Height="138" 
-                              Margin="0,0,0,0" 
-                              RenderTransformOrigin="0.5,0.5">
-                            <Path.RenderTransform>
-                                <TransformGroup>
-                                    <TransformGroup.Children>
-                                        <RotateTransform Angle="0" />
-                                        <ScaleTransform ScaleX="1" ScaleY="1" />
-                                    </TransformGroup.Children>
-                                </TransformGroup>
-                            </Path.RenderTransform>
-                        </Path>
-                    </Grid>
-                </Viewbox>-->
                 <Image x:Name="FotoImage" Source="{Binding FotoFilepath,UpdateSourceTrigger=PropertyChanged}">
                     <Image.Style>
                         <Style TargetType="Image">

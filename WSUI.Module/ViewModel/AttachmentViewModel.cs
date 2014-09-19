@@ -51,7 +51,7 @@ namespace WSUI.Module.ViewModel
         protected override void OnInit()
         {
             base.OnInit();
-            ScrollBehavior = new ScrollBehavior {CountFirstProcess = 100, CountSecondProcess = 50, LimitReaction = 75};
+            ScrollBehavior = new ScrollBehavior {CountFirstProcess = 150, CountSecondProcess = 75, LimitReaction = 85};
             ScrollBehavior.SearchGo += OnScrollNeedSearch;
         }
 
