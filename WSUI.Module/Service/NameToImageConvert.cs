@@ -50,6 +50,11 @@ namespace WSUI.Module.Service
             _imageSettings.Add(".html",@"pack://application:,,,/WSUI.Module;component/Images/html.png");
             _imageSettings.Add(".xml", @"pack://application:,,,/WSUI.Module;component/Images/xml.png");
             _imageSettings.Add(".txt", @"pack://application:,,,/WSUI.Module;component/Images/txt.png");
+            _imageSettings.Add(".jpg", @"pack://application:,,,/WSUI.Module;component/Images/picture.png");
+            _imageSettings.Add(".png", @"pack://application:,,,/WSUI.Module;component/Images/picture.png");
+            _imageSettings.Add(".jpeg", @"pack://application:,,,/WSUI.Module;component/Images/picture.png");
+            _imageSettings.Add(".gif", @"pack://application:,,,/WSUI.Module;component/Images/picture.png");
+
             _bitmaps = new Dictionary<string, BitmapImage>();
             _bitmaps.Add(DefaultKey, new BitmapImage(new Uri(@"pack://application:,,,/WSUI.Module;component/Images/document.png")));
         }

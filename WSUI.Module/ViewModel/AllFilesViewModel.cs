@@ -62,6 +62,7 @@ namespace WSUI.Module.ViewModel
             SearchSystem = new AllSearchSystem();
             ContactSource = new ObservableCollection<ISearchObject>();
             FileSource = new ObservableCollection<ISearchObject>();
+            IsDataExist = true;
         }
 
         public bool IsOpen { get; set; }
@@ -111,10 +112,14 @@ namespace WSUI.Module.ViewModel
 
         public string EmailHeader { get; private set; }
 
+        public bool IsDataExist { get; private set; }
+
         protected override void OnSearchStringChanged()
         {
             ClearMainDataSource();
             base.OnSearchStringChanged();
+            IsDataExist = true;
+            OnPropertyChanged(() => IsDataExist);
         }
 
         protected override void ClearDataSource()
@@ -132,24 +137,18 @@ namespace WSUI.Module.ViewModel
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 IList<ISystemSearchResult> result = SearchSystem.GetResult();
-                if (result.All(i => i.Result.Count == 0) && ShowMessageNoMatches)
+                if (result.All(i => !i.Result.Any()))
                 {
                     DataSource.Clear();
-                    var message = new FileSearchObject
-                    {
-                        ItemName =
-                            string.Format("Search for '{0}' returned no matches. Try different keywords.", SearchString),
-                        TypeItem = TypeSearchItem.None
-                    };
-                    DataSource.Add(message);
+                    IsDataExist = false;
                 }
                 else
                 {
+                    IsDataExist = true;
                     ProcessContacts(result);
                     ProcessEmails(result);
                     ProcessFiles(result);
                 }
-                ShowMessageNoMatches = true;
                 NotifyItemsVisibilityChanged();
             }), null);
         }
@@ -243,6 +242,7 @@ namespace WSUI.Module.ViewModel
             OnPropertyChanged(() => ContactHeader);
             OnPropertyChanged(() => EmailHeader);
             OnPropertyChanged(() => FileHeader);
+            OnPropertyChanged(() => IsDataExist);
         }
 
         protected override void OnInit()

@@ -27,14 +27,14 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-            
+
             <Style x:Key="HeaderStyle" TargetType="headerControl:WSUIHeaderControl" BasedOn="{StaticResource {x:Type headerControl:WSUIHeaderControl}}">
                 <Setter Property="HeaderFontWeight" Value="Normal"></Setter>
                 <Setter Property="Foreground" Value="{StaticResource LabelTextBrush}"></Setter>
                 <Setter Property="BorderThickness" Value="0 1 0 0"></Setter>
             </Style>
-            
-            
+
+
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid behaviors:WSUIActualHeightBehavior.IsObserve="True" behaviors:WSUIActualHeightBehavior.ActualHeight="{Binding ActualHeight,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
@@ -148,5 +148,23 @@
                 </StackPanel>
             </Grid>
         </headerControl:WSUIHeaderControl>
+
+        <TextBlock TextTrimming="CharacterEllipsis">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsDataExist,UpdateSourceTrigger=PropertyChanged}" Value="False">
+                            <Setter Property="Visibility" Value="Visible"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+            <Run>No data exists for current criteria - </Run>
+            <Run>"</Run>
+            <Run FontWeight="Bold" Text="{Binding SearchString}"></Run>
+            <Run>"</Run>
+        </TextBlock>
+
     </Grid>
 </UserControl>

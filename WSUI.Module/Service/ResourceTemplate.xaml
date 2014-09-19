@@ -488,7 +488,7 @@
                         </StackPanel>
                     </StackPanel>
                 </Grid.ToolTip>
-                <Image Style="{StaticResource ImageStyle}" Grid.Column="1" Source="..\Images\pictures.png" />
+                <Image Style="{StaticResource ImageStyle}" Grid.Column="1" Source="..\Images\picture.png" />
                 <TextBlock Grid.Column="2" Margin="2 5 2 5" FontWeight="Bold" Foreground="Red" Text="{Binding Count,Converter={StaticResource countConverter}}"></TextBlock>
                 <ctrl:HightliteTextBlock Grid.Column="3" Margin="5" Hightlight="{Binding Path=DataContext.SearchString,Mode=OneTime,ElementName=this}" Text="{Binding Path=ItemName}" />
                 <TextBlock Grid.Column="4" Margin="5" Foreground="Black" Text="{Binding Path=DateCreated,Converter={StaticResource dateConverter}}" />
