@@ -580,7 +580,7 @@ namespace WSUI.Module.ViewModel
         public virtual void Init()
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
-            OutlookPreviewHelper.Instance.PreviewHostType = HostType.Application;
+            OutlookPreviewHelper.Instance.PreviewHostType = HostType.Plugin;
             InitializeCommands();
         }
 

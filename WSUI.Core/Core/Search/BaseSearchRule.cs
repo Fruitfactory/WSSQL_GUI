@@ -270,7 +270,7 @@ namespace WSUI.Core.Core.Search
 
             foreach (var rule in listRuleCriteriasRules.OrderBy(i => i.Priority))
             {
-                listW.AddRange(rule.ApplyRule(Query));
+                listW.AddRange(rule.ApplyRule(tempCriteria));
                 tempCriteria = rule.ClearCriteriaAccordingRule(tempCriteria);
             }
 
