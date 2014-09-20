@@ -212,8 +212,10 @@
             <Controls:MetroAnimatedSingleRowTabControl 
                 SelectedIndex="{Binding SelectedIndex,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}">
 
-                <TabItem x:Name="MainTab" HeaderTemplate="{StaticResource MainTabIconTemplate}" ToolTip="Everething">
+                <TabItem x:Name="MainTab" HeaderTemplate="{StaticResource MainTabIconTemplate}" ToolTip="Everething" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"> 
                     <Grid behaviors:WSUIActualHeightBehavior.IsObserve="True" behaviors:WSUIActualHeightBehavior.ActualHeight="{Binding ActualHeight,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
                           Margin="0 10 0 0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"></RowDefinition>
