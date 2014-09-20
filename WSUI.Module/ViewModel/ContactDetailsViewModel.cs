@@ -27,10 +27,11 @@ namespace WSUI.Module.ViewModel
     public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel, IScrollableView
     {
 
-        private const double AvaregeTwoRowItemHeight = 45;
+        private const double AvaregeTwoRowItemHeight = 47;
         private const double AvaregeOneRowItemHeight = 25;
         private const double FileValue = 0.2;
         private const double EmailValue = 0.7;
+        private const double DefaultHeight = 600;//px
 
 
         private IEventAggregator _eventAggregator;
@@ -328,7 +329,8 @@ namespace WSUI.Module.ViewModel
 
         private Tuple<double, int> GetAvaibleHeightAndCount(double a, double avaregeHeight)
         {
-            var avaibleHeight = ContactDetailsView.ActualHeight * a;
+            var height = !double.Equals(ContactDetailsView.ActualHeight, 0.0) ? ContactDetailsView.ActualHeight : DefaultHeight;
+            var avaibleHeight = height * a;
             var count = avaibleHeight / avaregeHeight;
             return new Tuple<double, int>(avaibleHeight, (int)count);
         }
