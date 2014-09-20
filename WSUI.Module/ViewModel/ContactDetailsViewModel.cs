@@ -182,6 +182,8 @@ namespace WSUI.Module.ViewModel
 
         #region [private]
 
+        private IContactDetailsView ContactDetailsView { get { return View as IContactDetailsView; } }
+
         private void InitializeSearchSystem()
         {
             _attachmentSearchSystem = new ContactAttachmentSearchSystem();
@@ -326,7 +328,7 @@ namespace WSUI.Module.ViewModel
 
         private Tuple<double, int> GetAvaibleHeightAndCount(double a, double avaregeHeight)
         {
-            var avaibleHeight = ActualHeight * a;
+            var avaibleHeight = ContactDetailsView.ActualHeight * a;
             var count = avaibleHeight / avaregeHeight;
             return new Tuple<double, int>(avaibleHeight, (int)count);
         }

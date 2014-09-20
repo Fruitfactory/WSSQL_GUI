@@ -5,5 +5,7 @@ namespace WSUI.Module.Interface.View
     public interface IContactDetailsView
     {
         IContactDetailsViewModel Model { get; set; }
+
+        double ActualHeight { get; }
     }
 }

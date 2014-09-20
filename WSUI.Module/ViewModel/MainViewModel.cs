@@ -310,8 +310,8 @@ namespace WSUI.Module.ViewModel
             try
             {
                 var contactDetails = _container.Resolve<IContactDetailsViewModel>();
-                contactDetails.SetDataObject(previewData);
                 MoveToLeft(contactDetails.View);
+                contactDetails.SetDataObject(previewData);
             }
             catch (Exception ex)
             {

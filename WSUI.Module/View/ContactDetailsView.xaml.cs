@@ -34,6 +34,11 @@ namespace WSUI.Module.View
             set { DataContext = value; }
         }
 
+        double IContactDetailsView.ActualHeight
+        {
+            get { return MainTabGrid.ActualHeight; }
+        }
+
         private void ListBox_OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             if (DataContext == null ||

@@ -16,12 +16,22 @@ namespace WSUI.Module.Service.Behaviors
                 return;
             if ((bool) dependencyPropertyChangedEventArgs.NewValue)
             {
+                element.Initialized += ElementLoaded;
                 element.SizeChanged += ElementOnSizeChanged;
             }
             else
             {
+                element.Initialized -= ElementLoaded;
                 element.SizeChanged -= ElementOnSizeChanged;
             }
+        }
+
+        private static void ElementLoaded(object sender,EventArgs args)
+        {
+            var frameworkElement = sender as FrameworkElement;
+            if (frameworkElement == null)
+                return;
+            frameworkElement.SetValue(WSUIActualHeightBehavior.ActualHeightProperty, frameworkElement.ActualHeight);
         }
 
         private static void ElementOnSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
@@ -55,6 +65,7 @@ namespace WSUI.Module.Service.Behaviors
         public static double GetActualHeight(DependencyObject element)
         {
             return (double) element.GetValue(ActualHeightProperty);
-        } 
+        }
+        
     }
 }
