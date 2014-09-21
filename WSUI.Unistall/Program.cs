@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using WSUI.Core.Core.LimeLM;
 using WSUI.Core.Enums;
 
 namespace WSUI.Unistall
 {
-    class Program
+    internal class Program
     {
         private const string ParamName = "unistall";
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.SetOut(TextWriter.Null);
             Console.SetError(TextWriter.Null);
@@ -33,7 +31,6 @@ namespace WSUI.Unistall
             catch
             {
             }
-            
         }
     }
 }

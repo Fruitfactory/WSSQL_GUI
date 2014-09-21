@@ -626,12 +626,7 @@ namespace WSUI.Module.ViewModel
         {
             if (current == null)
                 return;
-            if (!_commandStrategies.ContainsKey(current.TypeItem))
-            {
-                _currentStrategy = null;
-            }
-            else
-                _currentStrategy = _commandStrategies[current.TypeItem];
+            _currentStrategy = _commandStrategies.ContainsKey(current.TypeItem) ?  _commandStrategies[current.TypeItem] : null;
 
             OnPropertyChanged(() => Commands);
         }
