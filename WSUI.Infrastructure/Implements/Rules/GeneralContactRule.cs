@@ -87,21 +87,8 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         protected override void ProcessResult()
         {
-            var resultEmailContact = (_listContactsRules[1] as ISearchRule).GetResults().OperationResult.OfType<EmailContactSearchObject>();
-            if (resultEmailContact != null && resultEmailContact.Any())
-            {
-                foreach (var emailContact in resultEmailContact)
-                {
-                    if(_listExistingEmails.Contains(emailContact.EMail.ToLowerInvariant()))
-                        continue;
-                    Result.Add(emailContact);
-                    _listExistingEmails.Add(emailContact.EMail.ToLowerInvariant());
-                }    
-            }
             var arrQuery = InitQueryWords(Query);
-            var resultContacts =
-                (_listContactsRules[0] as ISearchRule).GetResults().OperationResult.OfType<ContactSearchObject>();
-
+            var resultContacts = (_listContactsRules[0] as ISearchRule).GetResults().OperationResult.OfType<ContactSearchObject>();
             if (resultContacts != null && resultContacts.Any())
             {
                 foreach (var contactSearchObject in resultContacts)
@@ -127,6 +114,18 @@ namespace WSUI.Infrastructure.Implements.Rules
                         _listExistingEmails.Add(contactSearchObject.EmailAddress3.ToLowerInvariant());
                     }
                 }
+            }
+
+            var resultEmailContact = (_listContactsRules[1] as ISearchRule).GetResults().OperationResult.OfType<EmailContactSearchObject>();
+            if (resultEmailContact != null && resultEmailContact.Any())
+            {
+                foreach (var emailContact in resultEmailContact)
+                {
+                    if(_listExistingEmails.Contains(emailContact.EMail.ToLowerInvariant()))
+                        continue;
+                    Result.Add(emailContact);
+                    _listExistingEmails.Add(emailContact.EMail.ToLowerInvariant());
+                }    
             }
         }
 

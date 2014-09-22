@@ -173,9 +173,7 @@
                 </TextBlock>
             </Grid>
 
-            <Label Grid.Column="0" Grid.Row="1">Emails:</Label>
-
-            <ItemsControl Grid.Column="0" Grid.Row="2"
+            <ItemsControl Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"
                           ItemsSource="{Binding Emails,UpdateSourceTrigger=PropertyChanged}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

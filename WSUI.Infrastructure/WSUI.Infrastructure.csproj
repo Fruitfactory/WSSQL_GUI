@@ -157,7 +157,7 @@
     <Compile Include="Implements\Rules\BaseRules\BaseAttachmentSearchRule.cs" />
     <Compile Include="Implements\Systems\AttachmentSearchSystem.cs" />
     <Compile Include="Implements\Rules\BaseRules\BaseEmailSearchRule.cs" />
-    <Compile Include="Implements\Rules\BaseRules\BaseFilelSearchRule.cs" />
+    <Compile Include="Implements\Rules\BaseRules\BaseFileSearchRule.cs" />
     <Compile Include="Implements\Rules\ContactSearchRule.cs" />
     <Compile Include="Implements\Systems\ContactAttachmentSearchSystem.cs" />
     <Compile Include="Implements\Systems\ContactEmailSearchSystem.cs" />

@@ -11,7 +11,7 @@ using WSUI.Infrastructure.Implements.Rules.BaseRules;
 
 namespace WSUI.Infrastructure.Implements.Rules 
 {
-	public class FileContentSearchRule : BaseFilelSearchRule 
+	public class FileContentSearchRule : BaseFileSearchRule 
     {
 
 		public FileContentSearchRule()

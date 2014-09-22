@@ -25,7 +25,6 @@ namespace WSUI.Core.Core.Search
     {
         #region [needs private]
 
-        private const string ConnectionString = "Provider=Search.CollatorDSO;Extended Properties=\"Application=Windows\"";
         private Thread _ruleThread;
         private IQueryReader _reader;
         private volatile bool _isSearching = false;
@@ -121,9 +120,9 @@ namespace WSUI.Core.Core.Search
                 if (!NeedStop && resultTable != null)
                 {
                     //(watch = new Stopwatch()).Start();
-                    CreateDataObject(resultTable);
+                    ReadDataFromTable(resultTable);
                     //watch.Stop();
-                    //WSSqlLogger.Instance.LogInfo("CreateDataObject<{0}>: {1}",typeof(T).Name,watch.ElapsedMilliseconds);
+                    //WSSqlLogger.Instance.LogInfo("ReadDataFromTable<{0}>: {1}",typeof(T).Name,watch.ElapsedMilliseconds);
 
                     //(watch = new Stopwatch()).Start();
                     ProcessResult();
@@ -159,7 +158,7 @@ namespace WSUI.Core.Core.Search
             return IndexerDataReader.Instance.GetDataByAdapter(query);
         }
 
-        protected virtual void CreateDataObject(DataTable data)
+        protected virtual void ReadDataFromTable(DataTable data)
         {
             if (data.Rows.Count == 0)
                 return;

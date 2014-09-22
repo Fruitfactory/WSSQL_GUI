@@ -52,29 +52,48 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         private string GetContactCriteria()
         {
-            var criteriaForField = GetFieldCriteria(_to);
+            var criteriaForField = GetFieldCriteriaForEmail(_to);
+            var criteriaForName = GetFieldCriteriaForName(_name,_to);
             return
                 string.Format(
-                    "  Contains(*,'{0}') OR Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') ",
-                    criteriaForField);
+                    "Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') " +
+                    " OR " +
+                    "Contains(System.Message.ToAddress,'{1}') OR Contains(System.Message.FromAddress,'{1}') OR Contains(System.Message.CcAddress,'{1}') OR Contains(System.Message.BccAddress,'{1}') ",
+                    criteriaForField,criteriaForName);
         }
 
-        private string GetFieldCriteria(string email)
+        private string GetFieldCriteriaForEmail(string email)
         {
             var parts = email.SplitEmail();
+            var criteria = BuildCriteriaFromParts(parts.Item1);
+
+            return string.Format(" {0} AND \"{1}*\" ", criteria, parts.Item2);
+        }
+
+        private string GetFieldCriteriaForName(string name, string email)
+        {
+            var emailsParts = email.SplitEmail();
+            var parts = name.SplitString();
+            var criteria = BuildCriteriaFromParts(parts);
+            return  string.Format(" {0} AND \"{1}*\" ", criteria, emailsParts.Item2);
+        }
+
+        private string BuildCriteriaFromParts(string[] parts)
+        {
             if (parts == null)
                 return string.Empty;
             var builder = new StringBuilder();
-            if (parts.Item1.Length > 0)
+            if (parts.Length > 0)
             {
-                builder.AppendFormat(" \"{0}*\" ", parts.Item1[0]);
-                foreach (var item in parts.Item1.Skip(1))
+                builder.AppendFormat(" \"{0}*\" ", parts[0]);
+                foreach (var item in parts.Skip(1))
                 {
                     builder.AppendFormat(" AND \"{0}*\" ", item);
                 }
             }
-            return string.Format(" {0} AND \"{1}*\" ", builder.ToString(), parts.Item2);
+            return builder.ToString();
         }
+
 
     }
 }

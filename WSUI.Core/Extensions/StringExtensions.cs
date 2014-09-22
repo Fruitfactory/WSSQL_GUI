@@ -31,6 +31,13 @@ namespace WSUI.Core.Extensions
             return result;
         }
 
+        public static string[] SplitString(this string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return default(string[]);
+            return str.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+        }
+
         public static Tuple<string[],string> SplitEmail(this string email)
         {
             if (string.IsNullOrEmpty(email))
