@@ -6,6 +6,7 @@ using WSUI.Core.Core.Rules;
 using WSUI.Core.Enums;
 using WSUI.Core.Extensions;
 using WSUI.Infrastructure.Implements.Rules.BaseRules;
+using WSUI.Infrastructure.Implements.Rules.Helpers;
 
 namespace WSUI.Infrastructure.Implements.Rules
 {
@@ -54,38 +55,16 @@ namespace WSUI.Infrastructure.Implements.Rules
         private string GetEmailsCriteria()
         {
 
-            var emailPart = GeneratePartsFromEmail(_to);
+            var emailPart = CriteriaHelpers.Instance.GetFieldCriteriaForEmail(_to);
+            var namePart = CriteriaHelpers.Instance.GetFieldCriteriaForName(_name, _to);
             return
                 string.Format(
-                    "( Contains(*,'\"{0}*\"') OR ( {1} ) )",
-                    _name,
+                   "Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') " +
+                    " OR " +
+                    "Contains(System.Message.ToAddress,'{1}') OR Contains(System.Message.FromAddress,'{1}') OR Contains(System.Message.CcAddress,'{1}') OR Contains(System.Message.BccAddress,'{1}') ",
+                    namePart,
                     emailPart);
         }
-
-        private string GeneratePartsFromEmail(string email)
-        {
-            var parts = GetEmailParts(email);
-            if (parts == null)
-                return string.Empty;
-            var builder = new StringBuilder();
-            if (parts.Item1.Length > 0)
-            {
-                builder.AppendFormat(" Contains(*, '\"{0}*\"') ", parts.Item1[0]);
-                foreach (var item in parts.Item1.Skip(1))
-                {
-                    builder.AppendFormat(" AND Contains(*, '\"{0}*\"')", item);
-                }
-            }
-            return string.Format(" {0} AND Contains(*, '\"{1}*\"')", builder.ToString(), parts.Item2);
-
-        }
-
-        private Tuple<string[], string> GetEmailParts(string email)
-        {
-            return email.SplitEmail();
-        }
-
-
 
     }
 }

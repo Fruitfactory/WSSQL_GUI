@@ -129,7 +129,7 @@ namespace WSUI.Core.Data
             {
                 return GetFieldValue(FromName);
             }
-            foreach (string email in FromAddress)
+            foreach (string email in address)
             {
                 if (IsEmail(email))
                 {
@@ -137,7 +137,7 @@ namespace WSUI.Core.Data
                     break;
                 }
             }
-            return string.IsNullOrEmpty(_fromEmailName) ? (_fromEmailName = GetFieldValue(FromName)) : _fromEmailName;
+            return string.IsNullOrEmpty(_fromEmailName) ? (_fromEmailName = GetFieldValue(name)) : _fromEmailName;
         }
 
         private string GetFieldValue(string[] val)
