@@ -208,9 +208,11 @@
 
         <Grid Grid.Row="1" Margin="0 5 0 0">
             <Controls:MetroAnimatedSingleRowTabControl 
-                SelectedIndex="{Binding SelectedIndex,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}">
+                SelectedIndex="{Binding SelectedIndex,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
+                >
 
-                <TabItem x:Name="MainTab" HeaderTemplate="{StaticResource MainTabIconTemplate}" ToolTip="Everething" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"> 
+                <TabItem x:Name="MainTab" HeaderTemplate="{x:Null}" ToolTip="Everething" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                         Visibility="Collapsed">
                     <Grid  x:Name="MainTabGrid"
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Stretch"
@@ -308,7 +310,8 @@
                     </Grid>
                 </TabItem>
 
-                <TabItem ToolTip="Conversations" HeaderTemplate="{StaticResource EmailIconTemplate}">
+                <TabItem ToolTip="Conversations" HeaderTemplate="{x:Null}"
+                         Visibility="Collapsed">
                     <listBox:WSUIListBox x:Name="listBox" Style="{StaticResource SimpleListBoxStyle}"
                              ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
                             BorderBrush="Transparent"
@@ -322,7 +325,8 @@
                     </listBox:WSUIListBox>
                 </TabItem>
 
-                <TabItem  HeaderTemplate="{StaticResource AttacmentIconTemplate}" ToolTip="File Exchanged">
+                <TabItem  HeaderTemplate="{x:Null}" ToolTip="File Exchanged"
+                         Visibility="Collapsed">
                     <ListBox ItemsSource="{Binding Path=ItemsSource,UpdateSourceTrigger=PropertyChanged}"
                          ItemTemplateSelector="{StaticResource templateSelector}"
                          SelectedItem="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"

@@ -129,6 +129,7 @@
     <Compile Include="Data\EmailContactSearchObject.cs" />
     <Compile Include="Data\EmailSearchObject.cs" />
     <Compile Include="Data\FileSearchObject.cs" />
+    <Compile Include="Data\UI\UIItem.cs" />
     <Compile Include="Data\WSAction.cs" />
     <Compile Include="Enums\ActivationButtons.cs" />
     <Compile Include="Enums\ActivationState.cs" />

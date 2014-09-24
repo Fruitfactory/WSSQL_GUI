@@ -103,6 +103,19 @@
                  Visibility="{Binding IsKindsVisible,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
         </ListBox>
 
+        <ListBox Grid.Column="1" Grid.Row="0" Style="{StaticResource HorizotalMetroListBox}" ItemsSource="{Binding ContactUIItems}" Height="Auto"
+                 SelectedIndex="{Binding SelectedUIItemIndex,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    ItemContainerStyle="{StaticResource WSUIMetroListBoxItem}"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 VerticalContentAlignment="Center"
+                 IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
+                 HorizontalAlignment="Right"
+                 Visibility="{Binding IsKindsVisible,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource InvertBoolToVisibilityConverter}}">
+        </ListBox>
+
+
+
         <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Visibility="{Binding VisibleTrialLabel,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Margin="5">
             <Grid>
                 <Grid.RowDefinitions>

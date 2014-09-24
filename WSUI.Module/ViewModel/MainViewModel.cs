@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -13,6 +14,7 @@ using Transitionals;
 using WSPreview.PreviewHandler.Service.OutlookPreview;
 using WSUI.Core.Core.LimeLM;
 using WSUI.Core.Data;
+using WSUI.Core.Data.UI;
 using WSUI.Core.Enums;
 using WSUI.Core.Events;
 using WSUI.Core.Helpers;
@@ -58,9 +60,11 @@ namespace WSUI.Module.ViewModel
         private object _oldView = null;
         private INavigationService _navigationService;
         private SubscriptionToken _token;
-        
+
         private Dictionary<TypeSearchItem, ICommandStrategy> _commandStrategies;
         private ICommandStrategy _currentStrategy;
+        private int _selectedUIItemIndex;
+        private IContactDetailsViewModel _contactDetails;
 
         public MainViewModel(IUnityContainer container, IKindsView kindView,
             IPreviewView previewView, IEventAggregator eventAggregator)
@@ -89,6 +93,21 @@ namespace WSUI.Module.ViewModel
 
         public ObservableCollection<LazyKind> KindsCollection { get; protected set; }
 
+        public ObservableCollection<UIItem> ContactUIItems { get; private set; }
+
+        public int SelectedUIItemIndex
+        {
+            get { return _selectedUIItemIndex; }
+            set
+            {
+                _selectedUIItemIndex = value;
+                if (_contactDetails != null)
+                {
+                    _contactDetails.ApplyIndexForShowing(value);
+                }
+            }
+        }
+
         public ILazyKind SelectedLazyKind
         {
             get { return _selectedLazyKind; }
@@ -96,7 +115,7 @@ namespace WSUI.Module.ViewModel
             {
                 _selectedLazyKind = value;
                 OnChoose(value.Kind);
-                OnPropertyChanged(() =>  SelectedLazyKind);
+                OnPropertyChanged(() => SelectedLazyKind);
             }
         }
 
@@ -115,7 +134,7 @@ namespace WSUI.Module.ViewModel
             }
         }
 
-        public bool IsKindsVisible 
+        public bool IsKindsVisible
         {
             get { return _navigationService != null && !(_navigationService.CurrentView is IContactDetailsView); }
         }
@@ -209,12 +228,15 @@ namespace WSUI.Module.ViewModel
         {
             if (_navigationService != null)
             {
+                ResetContactDetails();
                 _navigationService.ShowSelectedKind(kindItem);
             }
 
             if (PreviewView != null)
                 PreviewView.ClearPreview();
             OnPropertyChanged(() => Commands);
+            OnPropertyChanged(() => BackButtonVisibility);
+            OnPropertyChanged(() => IsKindsVisible);
         }
 
         private void Disconnect()
@@ -250,7 +272,7 @@ namespace WSUI.Module.ViewModel
                 switch (_currentData.TypeItem)
                 {
                     case TypeSearchItem.Contact:
-                        Dispatcher.CurrentDispatcher.BeginInvoke( (Action)(() => ShowPreviewForPreviewObject(_currentData)) ,null);
+                        Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => ShowPreviewForPreviewObject(_currentData)), null);
                         break;
 
                     default:
@@ -260,7 +282,7 @@ namespace WSUI.Module.ViewModel
 
                 IsBusy = true;
                 DataVisibility = Visibility.Collapsed;
-                
+
             }
             catch (Exception ex)
             {
@@ -309,9 +331,9 @@ namespace WSUI.Module.ViewModel
                 return;
             try
             {
-                var contactDetails = _container.Resolve<IContactDetailsViewModel>();
-                MoveToLeft(contactDetails.View);
-                contactDetails.SetDataObject(previewData);
+                _contactDetails = _container.Resolve<IContactDetailsViewModel>();
+                _contactDetails.SetDataObject(previewData);
+                MoveToLeft(_contactDetails.View);
             }
             catch (Exception ex)
             {
@@ -570,7 +592,7 @@ namespace WSUI.Module.ViewModel
             _eventAggregator.GetEvent<WSUIShowFolder>().Publish(folder);
         }
 
-        public BaseSearchObject Current 
+        public BaseSearchObject Current
         {
             get { return _currentData; }
         }
@@ -606,16 +628,62 @@ namespace WSUI.Module.ViewModel
         {
             if (_navigationService == null)
                 return;
+            BeforeMoveToLeft(view);
             _navigationService.MoveToLeft(view as INavigationView);
             OnPropertyChanged(() => IsKindsVisible);
+        }
+
+        private void BeforeMoveToLeft(object view)
+        {
+            if (view is IContactDetailsView)
+            {
+                ContactUIItems = new ObservableCollection<UIItem>(_contactDetails.ContactUIItemCollection);
+                _contactDetails.PropertyChanged += OnContactDetailsPropertyChanged;
+                SelectedUIItemIndex = 0;
+                OnPropertyChanged(() => ContactUIItems);
+                OnPropertyChanged(() => SelectedUIItemIndex);
+            }
         }
 
         private void MoveToRight()
         {
             if (_navigationService == null)
                 return;
+            BeforeMoveToRight();
             _navigationService.MoveToRight();
             OnPropertyChanged(() => IsKindsVisible);
+        }
+
+        private void BeforeMoveToRight()
+        {
+            if (_navigationService.CurrentView is IContactDetailsView)
+            {
+                ResetContactDetails();
+            }
+        }
+
+        private void ResetContactDetails()
+        {
+            if (_contactDetails == null)
+                return;
+            _contactDetails.PropertyChanged -= OnContactDetailsPropertyChanged;
+            _contactDetails = null;
+            ContactUIItems = null;
+            OnPropertyChanged(() => ContactUIItems);
+        }
+
+        private void OnContactDetailsPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            switch (propertyChangedEventArgs.PropertyName)
+            {
+                case "SelectedIndex":
+                    if (_contactDetails != null)
+                    {
+                        _selectedUIItemIndex = _contactDetails.SelectedIndex;
+                        OnPropertyChanged(() => SelectedUIItemIndex);
+                    }
+                    break;
+            }
         }
 
         private void PreviewViewOnStopLoad(object sender, EventArgs eventArgs)
@@ -626,7 +694,7 @@ namespace WSUI.Module.ViewModel
         {
             if (current == null)
                 return;
-            _currentStrategy = _commandStrategies.ContainsKey(current.TypeItem) ?  _commandStrategies[current.TypeItem] : null;
+            _currentStrategy = _commandStrategies.ContainsKey(current.TypeItem) ? _commandStrategies[current.TypeItem] : null;
 
             OnPropertyChanged(() => Commands);
         }

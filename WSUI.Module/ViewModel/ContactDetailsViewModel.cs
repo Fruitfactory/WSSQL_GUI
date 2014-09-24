@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Input;
 using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using WSUI.Core.Data;
+using WSUI.Core.Data.UI;
 using WSUI.Core.Extensions;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
@@ -63,7 +65,10 @@ namespace WSUI.Module.ViewModel
             _scrollBehavior.SearchGo += ScrollBehaviorOnSearchGo;
             EmailsSource = new ObservableCollection<EmailSearchObject>();
             IsDataExist = true;
+            InitContactCommands();
         }
+
+        
 
         private void ScrollBehaviorOnSearchGo()
         {
@@ -115,6 +120,14 @@ namespace WSUI.Module.ViewModel
                 RaiseSelectedChanged();
             }
         }
+
+        public void ApplyIndexForShowing(int index)
+        {
+            SelectedIndex = index;
+            OnPropertyChanged(() => SelectedIndex);
+        }
+
+        public IEnumerable<UIItem> ContactUIItemCollection { get; private set; }
 
         #endregion [interface]
 
@@ -243,8 +256,8 @@ namespace WSUI.Module.ViewModel
             if (EmailsSource.Any() && !_isEmailsInitialized)
             {
                 var avaibleHeight = GetAvaibleHeightAndCount(EmailValue, AvaregeTwoRowItemHeight);
-                IsEmailMoreVisible = EmailsSource.Count > avaibleHeight.Item2 - 1;
-                CollectionExtensions.AddRange(MainEmailSource, EmailsSource.Take(avaibleHeight.Item2 - 1));
+                IsEmailMoreVisible = EmailsSource.Count > avaibleHeight.Item2;
+                CollectionExtensions.AddRange(MainEmailSource, EmailsSource.Take(avaibleHeight.Item2));
                 EmailHeight = IsEmailMoreVisible ? avaibleHeight.Item1 : EmailsSource.Count * AvaregeTwoRowItemHeight;
                 _isEmailsInitialized = true;
             }
@@ -368,6 +381,17 @@ namespace WSUI.Module.ViewModel
             OnPropertyChanged(() => IsDataExist);
         }
 
+        private void InitContactCommands()
+        {
+            ContactUIItemCollection = new List<UIItem>()
+            {
+                new UIItem(){UIName =  "Everething", Data = "M33.597977,10.759002C37.946865,10.759002 41.485962,14.285001 41.485962,18.649 41.485962,23 37.946865,26.535 33.597977,26.535 29.23909,26.535 25.709992,23 25.709992,18.649 25.709992,17.784 25.849955,16.953001 26.109888,16.174002 26.779719,16.881001 27.70948,17.327002 28.759213,17.327002 30.778696,17.327002 32.418278,15.691001 32.418278,13.668001 32.418278,12.663001 32.008381,11.748001 31.348551,11.087002 32.058369,10.876001 32.818176,10.759002 33.597977,10.759002z M33.606682,4.3679962C25.92741,4.3679957 19.698065,10.594956 19.698065,18.27293 19.698065,25.953894 25.92741,32.177862 33.606682,32.177862 41.295838,32.177862 47.515175,25.953894 47.515175,18.27293 47.515175,10.594956 41.295838,4.3679957 33.606682,4.3679962z M34.867642,1.546141E-09C36.890393,2.6508449E-05 58.705193,0.41938579 68.893006,18.299923 68.893006,18.299923 57.1442,36.139837 34.44656,34.768854 34.44656,34.768854 14.428583,36.59984 0,18.299923 0,18.299923 9.0791523,0.4590019 34.716553,0.0010111886 34.716553,0.0010114873 34.768162,-1.4442128E-06 34.867642,1.546141E-09z"},
+                new UIItem(){UIName =  "Conversations", Data = "M0,4.0800388L0.030031017,4.0800388 12.610706,16.409995 26.621516,30.149985 40.642334,16.409995 53.223011,4.0800388 53.333001,4.0800388 53.333001,39.080039 0,39.080039z M3.1698808,0L26.660885,0 50.161892,0 38.411389,11.791528 26.660885,23.573054 14.920383,11.791528z"},
+                new UIItem(){UIName =  "File Exchanged", Data = "F1M-1800.12,3181.48C-1800.12,3181.48 -1803.22,3172.42 -1813.67,3175.58 -1813.67,3175.58 -1822.52,3177.87 -1820.93,3188.08L-1807.87,3226.17 -1804.99,3225.18 -1817.71,3188.05C-1817.71,3188.05 -1820.44,3181.75 -1812.98,3178.38 -1812.98,3178.38 -1805.77,3175.6 -1802.56,3183.22L-1786.65,3229.63C-1786.65,3229.63 -1786.14,3234.44 -1790.63,3235.46 -1790.63,3235.46 -1792.78,3236.54 -1796.5,3233.79L-1803.82,3212.42 -1809.85,3194.84C-1809.85,3194.84 -1809.94,3192.33 -1808.27,3191.61 -1807.43,3191.25 -1805.9,3191.14 -1805.05,3193.37L-1794.19,3225.06 -1791.09,3224 -1802.17,3191.67C-1802.17,3191.67 -1803.96,3187.16 -1809.04,3188.84 -1810.81,3189.42 -1813.38,3190.48 -1812.95,3195.18L-1799.38,3234.78C-1799.38,3234.78 -1796.27,3240.08 -1789.53,3238.67 -1789.53,3238.67 -1783.39,3237.06 -1783.69,3229.41L-1800.12,3181.48z"}
+            };
+
+        }
+
         #endregion [private]
 
         #region [override]
@@ -402,6 +426,6 @@ namespace WSUI.Module.ViewModel
                 _scrollBehavior.NeedSearch(scrollArgs);
             }
         }
-
+        
     }
 }
