@@ -330,7 +330,8 @@
                     <ListBox ItemsSource="{Binding Path=ItemsSource,UpdateSourceTrigger=PropertyChanged}"
                          ItemTemplateSelector="{StaticResource templateSelector}"
                          SelectedItem="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                         HorizontalContentAlignment="Stretch">
+                         HorizontalContentAlignment="Stretch"
+                             ScrollViewer.ScrollChanged="ListBox_ScrollChanged">
                     </ListBox>
                 </TabItem>
             </Controls:MetroAnimatedSingleRowTabControl>

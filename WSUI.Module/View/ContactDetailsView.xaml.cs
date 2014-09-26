@@ -49,5 +49,16 @@ namespace WSUI.Module.View
             var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
             (DataContext as IScrollableView).ScrollChangeCommand.Execute(scrollChanged);
         }
+
+        private void ListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (DataContext == null ||
+                !(DataContext is IScrollableViewExtended))
+                return;
+            var scrollViewer = VisualTreeHelper.GetChild(listBox, 0) as ScrollViewer;
+            if (scrollViewer == null) return;
+            var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
+            (DataContext as IScrollableViewExtended).ScrollChangedCommand2.Execute(scrollChanged);
+        }
     }
 }

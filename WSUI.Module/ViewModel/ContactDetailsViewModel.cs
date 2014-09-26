@@ -26,7 +26,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace WSUI.Module.ViewModel
 {
-    public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel, IScrollableView
+    public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel, IScrollableViewExtended
     {
 
         private const double AvaregeTwoRowItemHeight = 47;
@@ -42,6 +42,7 @@ namespace WSUI.Module.ViewModel
         private ISearchObject _selectedAttachment;
         private bool _isEmailsInitialized = false;
         private IScrollBehavior _scrollBehavior;
+        private IScrollBehavior _scrollBehavior2;
 
         private string _from = string.Empty;
         private string _to = string.Empty;
@@ -61,19 +62,28 @@ namespace WSUI.Module.ViewModel
             MainEmailSource = new ObservableCollection<EmailSearchObject>();
             MainFileSource = new ObservableCollection<AttachmentSearchObject>();
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
-            _scrollBehavior = new ScrollBehavior {LimitReaction = 85};
+            ScrollChangedCommand2 = new DelegateCommand<object>(OnScroll2, o => true);
+            _scrollBehavior = new ScrollBehavior { LimitReaction = 85 };
             _scrollBehavior.SearchGo += ScrollBehaviorOnSearchGo;
+            _scrollBehavior2 = new ScrollBehavior { LimitReaction = 85 };
+            _scrollBehavior2.SearchGo += ScrollBehaviorOnSearchGo2;
             EmailsSource = new ObservableCollection<EmailSearchObject>();
             IsDataExist = true;
             InitContactCommands();
         }
 
-        
+
 
         private void ScrollBehaviorOnSearchGo()
         {
-            RunEmailSearching(_from,_to);                    
+            RunEmailSearching(_from, _to);
         }
+
+        private void ScrollBehaviorOnSearchGo2()
+        {
+            RunAttachmentSearching(_from, _to);
+        }
+
 
         #region [interface]
 
@@ -143,7 +153,7 @@ namespace WSUI.Module.ViewModel
 
         public bool IsBusy
         {
-            get 
+            get
             {
                 var result = _isAttachmentBusy || _isEmailBusy;
                 if (!result)
@@ -241,7 +251,7 @@ namespace WSUI.Module.ViewModel
             OnPropertyChanged(() => ItemsSource);
             OnPropertyChanged(() => IsBusy);
             NotifyFilesPartChanged();
-            
+
         }
 
         private void ProcessEmailResult()
@@ -420,12 +430,27 @@ namespace WSUI.Module.ViewModel
 
         private void OnScroll(object args)
         {
-            var scrollArgs = args as ScrollData;
-            if (scrollArgs != null && _scrollBehavior != null)
-            {
-                _scrollBehavior.NeedSearch(scrollArgs);
-            }
+            InternalOnScroll(args as ScrollData, _scrollBehavior);
         }
-        
+
+        public ICommand ScrollChangedCommand2
+        {
+            get;
+            private set;
+        }
+
+
+        private void OnScroll2(object args)
+        {
+            InternalOnScroll(args as ScrollData, _scrollBehavior2);
+        }
+
+        private void InternalOnScroll(ScrollData args, IScrollBehavior behavior)
+        {
+            if (args == null || behavior == null)
+                return;
+            _scrollBehavior.NeedSearch(args);
+        }
+
     }
 }

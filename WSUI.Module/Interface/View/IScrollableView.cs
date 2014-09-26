@@ -6,4 +6,10 @@ namespace WSUI.Module.Interface.View
     {
         ICommand ScrollChangeCommand { get; }
     }
+
+    public interface IScrollableViewExtended : IScrollableView
+    {
+        ICommand ScrollChangedCommand2 { get; }
+    }
+
 }

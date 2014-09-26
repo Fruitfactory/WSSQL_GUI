@@ -74,11 +74,16 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 
 	    public override void Init()
 	    {
-	        CountFirstProcess = 50;
-	        CountSecondProcess = 20;
+            InitCounts();
             ObjectType = RuleObjectType.File;
 	        base.Init();
 	    }
+
+        protected virtual void InitCounts()
+        {
+            CountFirstProcess = 50;
+            CountSecondProcess = 20;
+        }
 
         protected override void ProcessCountAdded()
 	    {

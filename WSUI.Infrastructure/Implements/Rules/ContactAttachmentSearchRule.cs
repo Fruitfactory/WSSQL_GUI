@@ -33,6 +33,12 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         #endregion
 
+        protected override void InitCounts()
+        {
+            CountFirstProcess = 150;
+            CountSecondProcess = 100;
+        }
+
         public override void SetSearchCriteria(string criteria)
         {
             base.SetSearchCriteria(criteria);
