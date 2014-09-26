@@ -86,14 +86,14 @@ namespace WSUI.Core.Helpers
 
         #region public
 
-        public string GetCurrentyUserEmail()
+        public Tuple<string,string> GetCurrentyUserEmail()
         {
             if (OutlookApp == null)
                 return null;
             var activeExp = OutlookApp.ActiveExplorer();
             if (activeExp == null)
                 return null;
-            return activeExp.Session.CurrentUser.AddressEntry.Address;
+            return new Tuple<string, string>(activeExp.Session.CurrentUser.Name, activeExp.Session.CurrentUser.AddressEntry.Address);
         }
 
         public string GetEMailTempFileName(BaseSearchObject itemsearch)

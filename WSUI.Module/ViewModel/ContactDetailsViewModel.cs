@@ -41,6 +41,7 @@ namespace WSUI.Module.ViewModel
         private ISearchSystem _emailSearchSystem;
         private ISearchObject _selectedAttachment;
         private bool _isEmailsInitialized = false;
+        private bool _isFilesInitialized = false;
         private IScrollBehavior _scrollBehavior;
         private IScrollBehavior _scrollBehavior2;
 
@@ -68,6 +69,7 @@ namespace WSUI.Module.ViewModel
             _scrollBehavior2 = new ScrollBehavior { LimitReaction = 85 };
             _scrollBehavior2.SearchGo += ScrollBehaviorOnSearchGo2;
             EmailsSource = new ObservableCollection<EmailSearchObject>();
+            ItemsSource = new ObservableCollection<AttachmentSearchObject>();
             IsDataExist = true;
             InitContactCommands();
         }
@@ -234,19 +236,17 @@ namespace WSUI.Module.ViewModel
             IList<ISystemSearchResult> result = _attachmentSearchSystem.GetResult();
             if (result == null || !result.Any())
                 return;
-            var listResult = new ObservableCollection<AttachmentSearchObject>();
             foreach (var systemSearchResult in result)
             {
-                CollectionExtensions.AddRange(listResult, systemSearchResult.Result.OfType<AttachmentSearchObject>());
+                CollectionExtensions.AddRange(ItemsSource, systemSearchResult.Result.OfType<AttachmentSearchObject>());
             }
-            if (listResult.Any())
+            if (!_isFilesInitialized && ItemsSource.Any())
             {
                 var avaibleHeight = GetAvaibleHeightAndCount(FileValue, AvaregeOneRowItemHeight);
-                IsFileMoreVisible = listResult.Count > avaibleHeight.Item2 - 1;
-                CollectionExtensions.AddRange(MainFileSource, listResult.Take(avaibleHeight.Item2 - 1));
-                FileHeight = IsFileMoreVisible ? avaibleHeight.Item1 : listResult.Count * AvaregeOneRowItemHeight;
+                IsFileMoreVisible = ItemsSource.Count > avaibleHeight.Item2 - 1;
+                CollectionExtensions.AddRange(MainFileSource, ItemsSource.Take(avaibleHeight.Item2 - 1));
+                FileHeight = IsFileMoreVisible ? avaibleHeight.Item1 : ItemsSource.Count * AvaregeOneRowItemHeight;
             }
-            ItemsSource = listResult;
             _isAttachmentBusy = false;
             OnPropertyChanged(() => ItemsSource);
             OnPropertyChanged(() => IsBusy);
@@ -263,7 +263,7 @@ namespace WSUI.Module.ViewModel
             {
                 CollectionExtensions.AddRange(EmailsSource, systemSearchResult.Result.OfType<EmailSearchObject>());
             }
-            if (EmailsSource.Any() && !_isEmailsInitialized)
+            if (!_isEmailsInitialized && EmailsSource.Any())
             {
                 var avaibleHeight = GetAvaibleHeightAndCount(EmailValue, AvaregeTwoRowItemHeight);
                 IsEmailMoreVisible = EmailsSource.Count > avaibleHeight.Item2;
@@ -449,7 +449,7 @@ namespace WSUI.Module.ViewModel
         {
             if (args == null || behavior == null)
                 return;
-            _scrollBehavior.NeedSearch(args);
+            _scrollBehavior2.NeedSearch(args);
         }
 
     }

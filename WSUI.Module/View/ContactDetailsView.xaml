@@ -327,12 +327,25 @@
 
                 <TabItem  HeaderTemplate="{x:Null}" ToolTip="File Exchanged"
                          Visibility="Collapsed">
-                    <ListBox ItemsSource="{Binding Path=ItemsSource,UpdateSourceTrigger=PropertyChanged}"
+                    <!--<ListBox x:Name="FileListBox" ItemsSource="{Binding Path=ItemsSource,UpdateSourceTrigger=PropertyChanged}"
                          ItemTemplateSelector="{StaticResource templateSelector}"
                          SelectedItem="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                          HorizontalContentAlignment="Stretch"
                              ScrollViewer.ScrollChanged="ListBox_ScrollChanged">
-                    </ListBox>
+                    </ListBox>-->
+
+                    <listBox:WSUIListBox x:Name="FileListBox" Style="{StaticResource SimpleListBoxStyle}"
+                             ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
+                            BorderBrush="Transparent"
+                            Background="Transparent"
+                             ItemsSource="{Binding Path=ItemsSource,UpdateSourceTrigger=PropertyChanged}"
+                             attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                             attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
+                             ItemTemplateSelector="{StaticResource templateSelector}"
+                             ScrollViewer.ScrollChanged="ListBox_ScrollChanged"
+                             HorizontalContentAlignment="Stretch">
+                    </listBox:WSUIListBox>
+
                 </TabItem>
             </Controls:MetroAnimatedSingleRowTabControl>
 
