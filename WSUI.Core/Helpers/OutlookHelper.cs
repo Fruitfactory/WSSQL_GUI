@@ -86,7 +86,7 @@ namespace WSUI.Core.Helpers
 
         #region public
 
-        public Tuple<string,string> GetCurrentyUserEmail()
+        public Tuple<string,string> GetCurrentyUserInfo()
         {
             if (OutlookApp == null)
                 return null;

@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using WSUI.Core.Core.Attributes;
 using WSUI.Core.Helpers;
+using WSUI.Core.Extensions;
 
 namespace WSUI.Core.Data
 {
@@ -19,7 +20,7 @@ namespace WSUI.Core.Data
         #region [needs]
 
         private string _fromEmailName = string.Empty;
-        private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
+        
 
         #endregion [needs]
 
@@ -147,7 +148,7 @@ namespace WSUI.Core.Data
 
         private bool IsEmail(string email)
         {
-            return !string.IsNullOrEmpty(email) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase);
+            return email.IsEmail();
         }
 
         private string[] CheckValidType(object val)

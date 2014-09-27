@@ -22,9 +22,7 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 {
 	public class BaseAttachmentSearchRule : BaseSearchRule<AttachmentSearchObject>
 	{
-        protected const string WhereTemplate = "WHERE Contains(System.ItemUrl,'at=') AND System.DateModified < '{0}'  AND ( {1} ) ORDER BY System.DateModified DESC";
-        private readonly List<string> _listId = new List<string>(); 
-
+        protected const string WhereTemplate = "WHERE Contains(System.ItemUrl,'\"at=*\"') AND System.DateModified < '{0}'  AND ( {1} ) ORDER BY System.DateModified DESC";
 
 		public BaseAttachmentSearchRule()
             :base(null,true)
@@ -101,14 +99,11 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
             foreach (var group in groups)
             {
                 var item = group.FirstOrDefault();
-                if (_listId.Any(i => i == item.ConversationId))
-                    continue;
                 TypeSearchItem type = SearchItemHelper.GetTypeItem(item.ItemUrl, item.Kind != null && item.Kind.Length > 0 ? item.Kind[0].ToString() : string.Empty);
                 foreach (var attachmentSearchObject in group.Skip(1))
                 {
                     item.AddItem(attachmentSearchObject);
                 }
-                _listId.Add(item.ConversationId);
                 result.Add(item);
             }
             Result.Clear();
@@ -118,7 +113,6 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
                 Result = result;
                 LastDate = Result.Min(d => d.DateReceived);
             }
-            _listId.Clear();
 	    }
 
 	    protected virtual IEnumerable<AttachmentSearchObject> GetSortedAttachmentSearchObjects(IEnumerable<AttachmentSearchObject> list)

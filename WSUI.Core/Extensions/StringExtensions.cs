@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using WSUI.Core.Helpers.DetectEncoding;
+using System.Text.RegularExpressions;
 
 namespace WSUI.Core.Extensions
 {
@@ -11,6 +12,8 @@ namespace WSUI.Core.Extensions
 
         private static readonly char[] separators = new char[] { ' ', '.', ',' };
         private readonly static char Apersand = '@';
+
+        private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
 
 
         public static string ConvertToIso(this string str)
@@ -40,12 +43,17 @@ namespace WSUI.Core.Extensions
 
         public static Tuple<string[],string> SplitEmail(this string email)
         {
-            if (string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(email) || !email.IsEmail())
                 return default(Tuple<string[], string>);
             var part1 = email.Substring(0, email.IndexOf(Apersand));
             var part2 = email.Substring(email.IndexOf(Apersand) + 1);
             var split1 = part1.Split(separators, StringSplitOptions.RemoveEmptyEntries);
             return new Tuple<string[], string>(split1, part2);
+        }
+
+        public static bool IsEmail(this string email)
+        {
+            return !string.IsNullOrEmpty(email) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase);
         }
 
 

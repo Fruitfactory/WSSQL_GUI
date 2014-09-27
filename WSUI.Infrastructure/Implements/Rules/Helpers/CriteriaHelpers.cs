@@ -24,18 +24,19 @@ namespace WSUI.Infrastructure.Implements.Rules.Helpers
 
         public string GetFieldCriteriaForEmail(string email)
         {
+            if (!email.IsEmail())
+                return string.Empty;
             var parts = email.SplitEmail();
             var criteria = BuildCriteriaFromParts(parts.Item1);
-
             return string.Format(" {0} AND \"{1}*\" ", criteria, parts.Item2);
         }
 
         public string GetFieldCriteriaForName(string name, string email)
         {
-            var emailsParts = email.SplitEmail();
+            Tuple<string[],string> emailsParts = email.SplitEmail();
             var parts = name.SplitString();
             var criteria = BuildCriteriaFromParts(parts);
-            return string.Format(" {0} AND \"{1}*\" ", criteria, emailsParts.Item2);
+            return emailsParts != null ? string.Format(" {0} AND \"{1}*\" ", criteria, emailsParts.Item2) : criteria;
         }
 
         private string BuildCriteriaFromParts(string[] parts)

@@ -449,7 +449,7 @@ namespace WSUI.Module.ViewModel
         {
             if (args == null || behavior == null)
                 return;
-            _scrollBehavior2.NeedSearch(args);
+            behavior.NeedSearch(args);
         }
 
     }

@@ -60,7 +60,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         private string GetContactCriteria()
         {
-            var CurrentUserInfo = OutlookHelper.Instance.GetCurrentyUserEmail();
+            var CurrentUserInfo = OutlookHelper.Instance.GetCurrentyUserInfo();
 
 
             var criteriaCurrentUserName = CriteriaHelpers.Instance.GetFieldCriteriaForName(CurrentUserInfo.Item1,CurrentUserInfo.Item2);
@@ -68,19 +68,34 @@ namespace WSUI.Infrastructure.Implements.Rules
             
             var criteriaForField = CriteriaHelpers.Instance.GetFieldCriteriaForEmail(_to);
             var criteriaForName = CriteriaHelpers.Instance.GetFieldCriteriaForName(_name, _to);
-            return
-                string.Format(
-                "( (Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') " +
-                    " OR " +
-                    "Contains(System.Message.ToAddress,'{1}') OR Contains(System.Message.FromAddress,'{1}') OR Contains(System.Message.CcAddress,'{1}') OR Contains(System.Message.BccAddress,'{1}') )" +
 
-                    " AND (" +
-
-                    "Contains(System.Message.ToAddress,'{2}') OR Contains(System.Message.FromAddress,'{2}') OR Contains(System.Message.CcAddress,'{2}') OR Contains(System.Message.BccAddress,'{2}') " +
+            var searchedContactCtiteria = string.Format(
+                    " ( Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') " +
                     " OR " +
-                    "Contains(System.Message.ToAddress,'{3}') OR Contains(System.Message.FromAddress,'{3}') OR Contains(System.Message.CcAddress,'{3}') OR Contains(System.Message.BccAddress,'{3}') ))",
-                    criteriaCurrentUserName,criteriaCurrentUserEmail,
-                    criteriaForField,criteriaForName);
+                    "Contains(System.Message.ToAddress,'{1}') OR Contains(System.Message.FromAddress,'{1}') OR Contains(System.Message.CcAddress,'{1}') OR Contains(System.Message.BccAddress,'{1}') )",
+                    criteriaForField, criteriaForName);
+
+            const string templateTwo = "(( {0} OR {1} ) AND {2} )";
+            const string templateOne = "(( {0}) AND {1} )";
+
+
+            //if (!string.IsNullOrEmpty(criteriaCurrentUserName) && !string.IsNullOrEmpty(criteriaCurrentUserEmail))
+            //{
+            //    return string.Format(templateTwo, criteriaCurrentUserEmail, criteriaCurrentUserName, searchedContactCtiteria);
+            //}
+            //if (!string.IsNullOrEmpty(criteriaCurrentUserName))
+            //{
+            //    var temp = string.Format("Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}')",
+            //        criteriaCurrentUserName);
+            //    return string.Format(templateOne, temp, searchedContactCtiteria);
+            //}
+            //if (!string.IsNullOrEmpty(criteriaCurrentUserEmail))
+            //{
+            //    var temp = string.Format("Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}')",
+            //        criteriaCurrentUserEmail);
+            //    return string.Format(templateOne, temp, searchedContactCtiteria);
+            //}
+            return searchedContactCtiteria;
         }
 
     }
