@@ -99,11 +99,11 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
             foreach (var group in groups)
             {
                 var item = group.FirstOrDefault();
-                TypeSearchItem type = SearchItemHelper.GetTypeItem(item.ItemUrl, item.Kind != null && item.Kind.Length > 0 ? item.Kind[0].ToString() : string.Empty);
-                foreach (var attachmentSearchObject in group.Skip(1))
-                {
-                    item.AddItem(attachmentSearchObject);
-                }
+                //TypeSearchItem type = SearchItemHelper.GetTypeItem(item.ItemUrl, item.Kind != null && item.Kind.Length > 0 ? item.Kind[0].ToString() : string.Empty);
+                //foreach (var attachmentSearchObject in group.Skip(1))
+                //{
+                //    item.AddItem(attachmentSearchObject);
+                //}
                 result.Add(item);
             }
             Result.Clear();

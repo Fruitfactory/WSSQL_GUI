@@ -55,10 +55,10 @@ namespace WSUI.Module.View
             if (DataContext == null ||
                 !(DataContext is IScrollableViewExtended))
                 return;
-            var scrollViewer = VisualTreeHelper.GetChild(FileListBox, 0) as ScrollViewer;
-            if (scrollViewer == null) return;
-            var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
-            (DataContext as IScrollableViewExtended).ScrollChangedCommand2.Execute(scrollChanged);
+            //var scrollViewer = VisualTreeHelper.GetChild(FileListBox, 0) as ScrollViewer;
+            //if (scrollViewer == null) return;
+            //var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
+            //(DataContext as IScrollableViewExtended).ScrollChangedCommand2.Execute(scrollChanged);
         }
     }
 }

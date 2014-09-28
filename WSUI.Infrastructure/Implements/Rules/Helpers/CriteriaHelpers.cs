@@ -34,10 +34,17 @@ namespace WSUI.Infrastructure.Implements.Rules.Helpers
         public string GetFieldCriteriaForName(string name, string email)
         {
             Tuple<string[],string> emailsParts = email.SplitEmail();
-            var parts = name.SplitString();
-            var criteria = BuildCriteriaFromParts(parts);
+            var criteria = GetFieldCriteriaForName(name);
             return emailsParts != null ? string.Format(" {0} AND \"{1}*\" ", criteria, emailsParts.Item2) : criteria;
         }
+
+        public string GetFieldCriteriaForName(string name)
+        {
+            var parts = name.SplitString();
+            var criteria = BuildCriteriaFromParts(parts);
+            return criteria;
+        }
+
 
         private string BuildCriteriaFromParts(string[] parts)
         {
