@@ -33,6 +33,8 @@ namespace WSUI.Infrastructure.Implements.Rules.Helpers
 
         public string GetFieldCriteriaForName(string name, string email)
         {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+                return string.Empty;
             Tuple<string[],string> emailsParts = email.SplitEmail();
             var criteria = GetFieldCriteriaForName(name);
             return emailsParts != null ? string.Format(" {0} AND \"{1}*\" ", criteria, emailsParts.Item2) : criteria;

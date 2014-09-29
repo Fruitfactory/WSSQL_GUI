@@ -54,16 +54,20 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         private string GetEmailsCriteria()
         {
-
             var emailPart = CriteriaHelpers.Instance.GetFieldCriteriaForEmail(_to);
             var namePart = CriteriaHelpers.Instance.GetFieldCriteriaForName(_name, _to);
-            return
-                string.Format(
-                   "Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') " +
-                    " OR " +
-                    "Contains(System.Message.ToAddress,'{1}') OR Contains(System.Message.FromAddress,'{1}') OR Contains(System.Message.CcAddress,'{1}') OR Contains(System.Message.BccAddress,'{1}') ",
-                    namePart,
-                    emailPart);
+
+            var searchedCriteria = string.Format("Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') OR CONTAINS(*,'{0}',1033) ",
+                emailPart);
+
+            if (!string.IsNullOrEmpty(namePart))
+            {
+                const string template = "( {0} OR {1} )";
+                var nameCriteriaPart = string.Format("Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') ",
+                    namePart);
+                return string.Format(template, nameCriteriaPart, searchedCriteria);
+            }
+            return string.Format("( {0} )", searchedCriteria);
         }
 
     }
