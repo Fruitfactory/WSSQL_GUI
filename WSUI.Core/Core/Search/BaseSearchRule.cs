@@ -85,7 +85,7 @@ namespace WSUI.Core.Core.Search
         /// <param name="criteria"></param>
         public virtual void SetSearchCriteria(string criteria)
         {
-            Query = criteria;
+            Query = criteria.Trim();
         }
 
         public void Search()
