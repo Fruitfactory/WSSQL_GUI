@@ -332,8 +332,9 @@ namespace WSUI.Module.ViewModel
             try
             {
                 _contactDetails = _container.Resolve<IContactDetailsViewModel>();
-                _contactDetails.SetDataObject(previewData);
                 MoveToLeft(_contactDetails.View);
+                Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => _contactDetails.SetDataObject(previewData)));
+
             }
             catch (Exception ex)
             {
