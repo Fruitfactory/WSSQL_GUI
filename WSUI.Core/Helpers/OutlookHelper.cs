@@ -330,19 +330,22 @@ namespace WSUI.Core.Helpers
                 if (contacts == null)
                     return null;
 
-                foreach (var item in ns.Folders.OfType<Outlook.MAPIFolder>())
+                foreach (var item in ns.Folders.OfType<Outlook.MAPIFolder>().ToList())
                 {
                     try
                     {
-                        foreach (var fol in item.Folders.OfType<Outlook.MAPIFolder>())
+                        foreach (var fol in item.Folders.OfType<Outlook.MAPIFolder>().ToList())
                         {
                             if (string.IsNullOrEmpty(fol.AddressBookName))
                                 continue;
+
+                            
+
                             ci =
                                 fol.Items.OfType<Outlook.ContactItem>().FirstOrDefault(c =>
-                                        ( !string.IsNullOrEmpty(c.Email1Address) && c.Email1Address.IndexOf(email, StringComparison.InvariantCultureIgnoreCase) > -1) ||
-                                        ( !string.IsNullOrEmpty(c.Email2Address) && c.Email2Address.IndexOf(email, StringComparison.InvariantCultureIgnoreCase) > -1) ||
-                                        ( !string.IsNullOrEmpty(c.Email3Address) && c.Email3Address.IndexOf(email, StringComparison.InvariantCultureIgnoreCase) > -1)
+                                        (!string.IsNullOrEmpty(c.Email1Address) && c.Email1Address.ToLower().Contains(email)) ||
+                                        (!string.IsNullOrEmpty(c.Email2Address) && c.Email2Address.ToLower().Contains(email)) ||
+                                        (!string.IsNullOrEmpty(c.Email3Address) && c.Email3Address.ToLower().Contains(email))
                                         );
                             if (ci != null)
                                 return ci;
