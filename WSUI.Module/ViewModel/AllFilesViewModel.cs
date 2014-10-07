@@ -1,23 +1,20 @@
-using System.IO.IsolatedStorage;
-using Microsoft.Practices.Prism;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Events;
-using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using Microsoft.Practices.Prism;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Events;
+using Microsoft.Practices.Unity;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Module.Core;
-using WSUI.Module.Interface.Service;
 using WSUI.Module.Interface.View;
 using WSUI.Module.Service;
-using WSUI.Module.Strategy;
 using Action = System.Action;
 using Application = System.Windows.Application;
 using Exception = System.Exception;
@@ -35,8 +32,8 @@ namespace WSUI.Module.ViewModel
 
         private const int ContactMaxCount = 5;
 
-        public AllFilesViewModel(IUnityContainer container, 
-            IEventAggregator eventAggregator, 
+        public AllFilesViewModel(IUnityContainer container,
+            IEventAggregator eventAggregator,
             ISettingsView<AllFilesViewModel> settingsView,
             IDataView<AllFilesViewModel> dataView)
             : base(container, eventAggregator)
@@ -163,7 +160,7 @@ namespace WSUI.Module.ViewModel
                 IsFileMoreVisible = fileAll.Count() > avaibleHeightAndCount.Item2 - 1;
                 FileHeader = IsFileMoreVisible ? string.Format("({0})", fileAll.Count()) : string.Empty;
                 CollectionExtensions.AddRange(FileSource, fileAll.Take(avaibleHeightAndCount.Item2 - 1));
-                FileHeight = IsFileMoreVisible ?  avaibleHeightAndCount.Item1 : fileAll.Count() * AvaregeOneRowItemHeight;
+                FileHeight = IsFileMoreVisible ? avaibleHeightAndCount.Item1 : fileAll.Count() * AvaregeOneRowItemHeight;
             }
         }
 

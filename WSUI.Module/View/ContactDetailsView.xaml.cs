@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
 using WSUI.Infrastructure.Service;
 using WSUI.Module.Interface.View;
@@ -41,8 +42,7 @@ namespace WSUI.Module.View
 
         private void ListBox_OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (DataContext == null ||
-                !(DataContext is IScrollableView))
+            if (!(DataContext is IScrollableView))
                 return;
             var scrollViewer = VisualTreeHelper.GetChild(listBox, 0) as ScrollViewer;
             if (scrollViewer == null) return;
@@ -52,13 +52,12 @@ namespace WSUI.Module.View
 
         private void ListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (DataContext == null ||
-                !(DataContext is IScrollableViewExtended))
+            if (!(DataContext is IScrollableViewExtended))
                 return;
-            //var scrollViewer = VisualTreeHelper.GetChild(FileListBox, 0) as ScrollViewer;
-            //if (scrollViewer == null) return;
-            //var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
-            //(DataContext as IScrollableViewExtended).ScrollChangedCommand2.Execute(scrollChanged);
+            var scrollViewer = FileListBox.GetListBoxScrollViewer();
+            if (scrollViewer == null) return;
+            var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
+            (DataContext as IScrollableViewExtended).ScrollChangedCommand2.Execute(scrollChanged);
         }
     }
 }

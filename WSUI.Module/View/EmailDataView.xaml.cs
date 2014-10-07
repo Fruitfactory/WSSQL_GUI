@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Media;
 using WSUI.Core.Interfaces;
-using WSUI.Infrastructure.Helpers.Extensions;
+using WSUI.Core.Extensions;
 using WSUI.Module.Interface;
 using WSUI.Module.Interface.View;
 using WSUI.Module.ViewModel;

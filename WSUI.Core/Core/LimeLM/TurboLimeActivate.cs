@@ -82,7 +82,7 @@ namespace WSUI.Core.Core.LimeLM
                 if (IsInternetError)
                 {
                     WSSqlLogger.Instance.LogWarning("Check - Internet connection is available or Lime services (servers) are available.");
-                    return ActivationState.Error;
+                    return ActivationState.Error; // TODO: what I should return Error means that OF won't work, Trial - OF wil'l work but in this case we will show "Buy"/"Activate" buttons.
                 }
                 if (IsActivated)
                     return ActivationState.Activated;

@@ -43,7 +43,7 @@
     <CustomAction Id="SuccesMessage" BinaryKey="managedAction" DllEntry="SuccesMessage" Execute="immediate" Return="check" />
     <CustomAction Id="CancelMessage" BinaryKey="managedAction" DllEntry="CancelMessage" Execute="immediate" Return="check" />
     <CustomAction Id="ErrorMessage" BinaryKey="managedAction" DllEntry="ErrorMessage" Execute="immediate" Return="check" />
-    <CustomAction Id="EmailValidation" BinaryKey="managedAction" DllEntry="EmailValidation" Execute="immediate" Return="check" />
+    <!--<CustomAction Id="EmailValidation" BinaryKey="managedAction" DllEntry="EmailValidation" Execute="immediate" Return="check" />-->
     <CustomAction Id="ClosePrompt" BinaryKey="managedAction" DllEntry="ClosePrompt" Execute="immediate" Return="check" />
     <?ifndef TRIAL ?>
     <CustomAction Id="ActivatePlugin" BinaryKey="managedAction" DllEntry="ActivatePlugin" Execute="immediate" Return="check" />
@@ -84,7 +84,7 @@
         <Control Id="Next" Type="PushButton" Default="yes" Text="Next" X="236" Y="243" Width="56" Height="17">
           <!--<Condition Action="disable">EMAILVALUE = ""</Condition>
           <Condition Action="enable"><![CDATA[EMAILVALUE <> ""]]></Condition>-->
-          <Publish Event="DoAction" Value="EmailValidation">1</Publish>
+          <!--<Publish Event="DoAction" Value="EmailValidation">1</Publish>-->
           <Publish Event="SpawnDialog" Value="WsUiErrorDlg"><![CDATA[EMAILVALID="False"]]></Publish>
           <Publish Event="NewDialog" Value="InstallDirDlg"><![CDATA[EMAILVALID="True"]]></Publish>
         </Control>

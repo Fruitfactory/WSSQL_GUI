@@ -145,6 +145,7 @@
     <Compile Include="Extensions\CommonExtensions.cs" />
     <Compile Include="Extensions\FieldsExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\UiExtensions.cs" />
     <Compile Include="Helpers\DetectEncoding\EncodingTools.cs" />
     <Compile Include="Helpers\DetectEncoding\Multilang\CMLangConvertCharset.cs" />
     <Compile Include="Helpers\DetectEncoding\Multilang\CMLangConvertCharsetClass.cs" />

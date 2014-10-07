@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interactivity;
-using WSUI.Infrastructure.Helpers.Extensions;
+using WSUI.Core.Extensions;
 
 namespace WSUI.Infrastructure.Behaviors
 {

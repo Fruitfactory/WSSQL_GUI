@@ -5,7 +5,7 @@ using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
-using WSUI.Infrastructure.Helpers.Extensions;
+using WSUI.Core.Extensions;
 using WSUIOutlookPlugin.Interfaces;
 
 namespace WSUIOutlookPlugin

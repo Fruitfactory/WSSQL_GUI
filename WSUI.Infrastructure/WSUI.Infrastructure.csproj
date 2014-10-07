@@ -146,7 +146,6 @@
     <Compile Include="Events\SelectedChangedPayloadEvent.cs" />
     <Compile Include="Helpers\AttachedProperty\ListBoxSelectedObjectAttachedProperty.cs" />
     <Compile Include="Helpers\AttachedProperty\ListBoxShouldSetSelectAttachedProperty.cs" />
-    <Compile Include="Helpers\Extensions\UIExtensions.cs" />
     <Compile Include="Implements\Rules\AttachmentContentSearchRule.cs" />
     <Compile Include="Implements\Rules\AttachmentFilenameSearchRule.cs" />
     <Compile Include="Implements\Rules\ContactAttachmentSearchRule.cs" />

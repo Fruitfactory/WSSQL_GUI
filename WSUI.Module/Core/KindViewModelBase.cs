@@ -133,7 +133,7 @@ namespace WSUI.Module.Core
                         }
                     });
                 }
-                ShowMessageNoMatches = true;
+                ShowMessageNoMatches = false;
             }), null);
         }
 
@@ -185,19 +185,6 @@ namespace WSUI.Module.Core
             SearchSystem.SetSearchCriteria(SearchString);
             SearchSystem.Search();
             OnStart();
-
-            //if (!ProgressManager.Instance.InProgress)
-            //{
-            //    ProgressManager.Instance.StartOperation(new ProgressOperation()
-            //    {
-            //        Caption = "Searching...",
-            //        DelayTime = 2500,
-            //        Canceled = false,
-            //        Location = new Point(mwi.MainWindowRect.Left, mwi.MainWindowRect.Top),
-            //        Size = new Size(mwi.MainWindowRect.Width, mwi.MainWindowRect.Height),
-            //        MainHandle = mwi.MainWindowHandle
-            //    });
-            //}
         }
 
         private void RunBuyProcess()
@@ -220,6 +207,7 @@ namespace WSUI.Module.Core
             if (Parent != null)
                 Parent.ForceClosePreview();
             _canSearch = true;
+            ShowMessageNoMatches = false;
         }
 
         protected virtual void OnInit()

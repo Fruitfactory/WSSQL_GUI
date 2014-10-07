@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using WSUI.Infrastructure.Helpers.AttachedProperty;
-using WSUI.Infrastructure.Helpers.Extensions;
+using WSUI.Core.Extensions;
 
 namespace WSUI.Infrastructure.Controls.ListBox
 {

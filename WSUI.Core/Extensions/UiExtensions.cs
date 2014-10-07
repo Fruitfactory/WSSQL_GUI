@@ -11,9 +11,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using WSUI.Core.Logger;
 
-namespace WSUI.Infrastructure.Helpers.Extensions
+namespace WSUI.Core.Extensions
 {
-    public static class UIExtensions
+    public static class UiExtensions
     {
 
         private const string ParentCoreFieldName = "_parent";
@@ -232,6 +232,14 @@ namespace WSUI.Infrastructure.Helpers.Extensions
                 return (UIElement)property.GetValue(uiElement, null);
 
             return null;
+        }
+
+        public static ScrollViewer GetListBoxScrollViewer(this ListBox listBox)
+        {
+            if (listBox == null)
+                return null;
+            var border = VisualTreeHelper.GetChild(listBox, 0);
+            return VisualTreeHelper.GetChild(border, 0) as ScrollViewer;
         }
 
     }

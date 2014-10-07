@@ -339,8 +339,6 @@ namespace WSUI.Core.Helpers
                             if (string.IsNullOrEmpty(fol.AddressBookName))
                                 continue;
 
-                            
-
                             ci =
                                 fol.Items.OfType<Outlook.ContactItem>().FirstOrDefault(c =>
                                         (!string.IsNullOrEmpty(c.Email1Address) && c.Email1Address.ToLower().Contains(email)) ||

@@ -2,15 +2,11 @@
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
-using WSUI.Core.Enums;
 using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Service;
 using WSUI.Module.Core;
-using WSUI.Module.Interface;
-using WSUI.Module.Interface.Service;
 using WSUI.Module.Interface.View;
 using WSUI.Module.Service;
-using WSUI.Module.Strategy;
 
 namespace WSUI.Module.ViewModel
 {
@@ -19,7 +15,7 @@ namespace WSUI.Module.ViewModel
     {
         public AttachmentViewModel(IUnityContainer container, IEventAggregator eventAggregator, ISettingsView<AttachmentViewModel> settingsView,
             IDataView<AttachmentViewModel> dataView)
-            : base(container,eventAggregator)
+            : base(container, eventAggregator)
         {
             SettingsView = settingsView;
             SettingsView.Model = this;
@@ -51,7 +47,7 @@ namespace WSUI.Module.ViewModel
         protected override void OnInit()
         {
             base.OnInit();
-            ScrollBehavior = new ScrollBehavior {CountFirstProcess = 150, CountSecondProcess = 75, LimitReaction = 85};
+            ScrollBehavior = new ScrollBehavior { CountFirstProcess = 150, CountSecondProcess = 75, LimitReaction = 85 };
             ScrollBehavior.SearchGo += OnScrollNeedSearch;
         }
 
