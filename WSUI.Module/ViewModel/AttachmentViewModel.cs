@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.Generic;
+using System.Windows.Controls;
+using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
@@ -29,6 +31,9 @@ namespace WSUI.Module.ViewModel
 
             SearchSystem = new AttachmentSearchSystem();
         }
+
+        public IEnumerable<MenuItem> FileMenuItems { get { return Parent.FileMenuItems; } }
+
 
         #region IUView<AttachmentViewModel> Members
 

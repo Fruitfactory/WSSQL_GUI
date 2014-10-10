@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
@@ -73,6 +74,16 @@ namespace WSUI.Module.ViewModel
         public ObservableCollection<ISearchObject> ContactSource { get; private set; }
 
         public ObservableCollection<ISearchObject> FileSource { get; private set; }
+
+        public IEnumerable<MenuItem> EmailMenuItems 
+        {
+            get { return Parent.EmailsMenuItems; }
+        }
+
+        public IEnumerable<MenuItem> FileMenuItems
+        {
+            get { return Parent.FileMenuItems; }
+        }
 
         public bool IsContactVisible
         {

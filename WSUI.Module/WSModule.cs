@@ -55,7 +55,7 @@ namespace WSUI.Module
             Stopwatch watch = new Stopwatch();
             watch.Start();
             //TODO add interfaces and classes
-            _unityContainer.RegisterType<MainViewModel>(new ContainerControlledLifetimeManager());
+            _unityContainer.RegisterType<IMainViewModel, MainViewModel>(new ContainerControlledLifetimeManager());
 
             _unityContainer.RegisterType<IKindsView, KindsView>();
             _unityContainer.RegisterType<IPreviewView, PreviewView>();

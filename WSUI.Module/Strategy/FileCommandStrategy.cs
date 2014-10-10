@@ -19,6 +19,7 @@ namespace WSUI.Module.Strategy
             base.OnInit();
             _listCommand.Add(new OpenPreviewCommad(_MainViewModel));
             _listCommand.Add(new EmailCommand(_MainViewModel));
+            _listCommand.Add(new OpenFolderCommand(_MainViewModel));
         }
     }
 }

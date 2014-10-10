@@ -126,6 +126,7 @@
     <Compile Include="Commands\EmailCommand.cs" />
     <Compile Include="Commands\ForwardCommand.cs" />
     <Compile Include="Commands\OpenEmailCommand.cs" />
+    <Compile Include="Commands\OpenFolderCommand.cs" />
     <Compile Include="Commands\OpenPreviewCommad.cs" />
     <Compile Include="Commands\ReplyAllCommand.cs" />
     <Compile Include="Commands\ReplyCommand.cs" />
@@ -410,6 +411,7 @@
   <ItemGroup>
     <Content Include="Images\application-plus-red.png" />
     <Content Include="Images\cross-button.png" />
+    <Resource Include="Images\openfolder.png" />
     <Resource Include="Images\picture.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

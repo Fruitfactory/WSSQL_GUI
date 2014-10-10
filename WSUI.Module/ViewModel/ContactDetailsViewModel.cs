@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
@@ -35,7 +36,7 @@ namespace WSUI.Module.ViewModel
         private const double EmailValue = 0.7;
         private const double DefaultHeight = 600;//px
 
-
+        private IMainViewModel _mainViewModel;
         private IEventAggregator _eventAggregator;
         private ISearchSystem _attachmentSearchSystem;
         private ISearchSystem _emailSearchSystem;
@@ -52,9 +53,10 @@ namespace WSUI.Module.ViewModel
         private bool _isAttachmentBusy = true;
         private bool _isEmailBusy = true;
 
-        public ContactDetailsViewModel(IEventAggregator eventAggregator, IContactDetailsView contactDetailsView)
+        public ContactDetailsViewModel(IEventAggregator eventAggregator, IContactDetailsView contactDetailsView, IMainViewModel mainViewModel)
         {
             _eventAggregator = eventAggregator;
+            _mainViewModel = mainViewModel;
             View = contactDetailsView;
             contactDetailsView.Model = this;
             CreateEmailCommand = new WSUIRelayCommand(CreateEmailExecute);
@@ -137,6 +139,7 @@ namespace WSUI.Module.ViewModel
         {
             SelectedIndex = index;
             OnPropertyChanged(() => SelectedIndex);
+            ResetSelectedChanged();
         }
 
         public IEnumerable<UIItem> ContactUIItemCollection { get; private set; }
@@ -203,6 +206,11 @@ namespace WSUI.Module.ViewModel
         public string EmailHeader { get; private set; }
 
         public int SelectedIndex { get; private set; }
+
+
+        public IEnumerable<MenuItem> EmailMenuItems { get { return _mainViewModel.EmailsMenuItems; } }
+
+        public IEnumerable<MenuItem> FileMenuItems { get { return _mainViewModel.FileMenuItems; }}
 
         #endregion [property]
 
@@ -333,9 +341,16 @@ namespace WSUI.Module.ViewModel
 
         private void RaiseSelectedChanged()
         {
-            if (_eventAggregator == null)
+            if (_eventAggregator == null || SelectedElement == null)
                 return;
             _eventAggregator.GetEvent<SelectedChangedPayloadEvent>().Publish(new SearchObjectPayload(SelectedElement));
+        }
+
+        private void ResetSelectedChanged()
+        {
+            if (_eventAggregator == null)
+                return;
+            _eventAggregator.GetEvent<SelectedChangedPayloadEvent>().Publish(new SearchObjectPayload(null));
         }
 
         private void CreateEmailExecute(object o)
@@ -382,6 +397,7 @@ namespace WSUI.Module.ViewModel
                 return;
             SelectedIndex = int.Parse(arg.ToString());
             OnPropertyChanged(() => SelectedIndex);
+            ResetSelectedChanged();
         }
 
 

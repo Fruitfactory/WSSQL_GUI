@@ -43,5 +43,11 @@ namespace WSUI.Infrastructure.Controls.ListBox
             if (temp != null)
                 temp(this, EventArgs.Empty);
         }
+
+        protected override void OnPreviewMouseRightButtonDown(MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+            base.OnPreviewMouseRightButtonDown(e);
+        }
     }
 }

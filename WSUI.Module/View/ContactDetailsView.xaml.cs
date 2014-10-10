@@ -27,6 +27,18 @@ namespace WSUI.Module.View
         public ContactDetailsView()
         {
             InitializeComponent();
+            WsuiListBox.SelectionChanged += WsuiListBoxOnSelectionChanged;
+            ListBox.SelectionChanged += ListBoxOnSelectionChanged;
+        }
+
+        private void ListBoxOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
+        {
+            WsuiListBox.SelectedIndex = -1;
+        }
+
+        private void WsuiListBoxOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
+        {
+            ListBox.SelectedIndex = -1;
         }
 
         public IContactDetailsViewModel Model

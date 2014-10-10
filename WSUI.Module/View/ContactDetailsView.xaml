@@ -9,6 +9,7 @@
              xmlns:behaviors="clr-namespace:WSUI.Module.Service.Behaviors"
              xmlns:core="clr-namespace:WSUI.Module.Core"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors1="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure"
              x:Name="this">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -29,99 +30,6 @@
             <Style TargetType="ItemsControl">
                 <Setter Property="Margin" Value="5 5 5 0"></Setter>
             </Style>
-
-            <Style TargetType="Image">
-                <Setter Property="Margin" Value="5 5 5 0"></Setter>
-            </Style>
-
-            <DataTemplate x:Key="AttacmentIconTemplate">
-                <Viewbox>
-                    <Grid>
-                        <Grid Name="backgroundGrid" Width="32" Height="32" Visibility="Visible" Background="Transparent" />
-                        <Path x:Name="AttachmentIcon" Data="F1M-1800.12,3181.48C-1800.12,3181.48 -1803.22,3172.42 -1813.67,3175.58 -1813.67,3175.58 -1822.52,3177.87 -1820.93,3188.08L-1807.87,3226.17 -1804.99,3225.18 -1817.71,3188.05C-1817.71,3188.05 -1820.44,3181.75 -1812.98,3178.38 -1812.98,3178.38 -1805.77,3175.6 -1802.56,3183.22L-1786.65,3229.63C-1786.65,3229.63 -1786.14,3234.44 -1790.63,3235.46 -1790.63,3235.46 -1792.78,3236.54 -1796.5,3233.79L-1803.82,3212.42 -1809.85,3194.84C-1809.85,3194.84 -1809.94,3192.33 -1808.27,3191.61 -1807.43,3191.25 -1805.9,3191.14 -1805.05,3193.37L-1794.19,3225.06 -1791.09,3224 -1802.17,3191.67C-1802.17,3191.67 -1803.96,3187.16 -1809.04,3188.84 -1810.81,3189.42 -1813.38,3190.48 -1812.95,3195.18L-1799.38,3234.78C-1799.38,3234.78 -1796.27,3240.08 -1789.53,3238.67 -1789.53,3238.67 -1783.39,3237.06 -1783.69,3229.41L-1800.12,3181.48z"
-                              Stretch="Uniform" Fill="{StaticResource AccentColorBrush}" Width="29" Height="29" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                            <Path.RenderTransform>
-                                <TransformGroup>
-                                    <TransformGroup.Children>
-                                        <RotateTransform Angle="0" />
-                                        <ScaleTransform ScaleX="-1" ScaleY="-1" />
-                                    </TransformGroup.Children>
-                                </TransformGroup>
-                            </Path.RenderTransform>
-                        </Path>
-                    </Grid>
-                </Viewbox>
-                <DataTemplate.Triggers>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabItem}},Path=IsMouseOver}" Value="True">
-                        <Setter TargetName="backgroundGrid" Property="Background" Value="{StaticResource AccentColorBrush4}">
-                        </Setter>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabItem}},Path=IsSelected}" Value="True">
-                        <Setter TargetName="AttachmentIcon" Property="Fill" Value="{StaticResource WhiteBrush}" />
-                        <Setter TargetName="backgroundGrid" Property="Background" Value="{StaticResource AccentColorBrush}"></Setter>
-                    </DataTrigger>
-                </DataTemplate.Triggers>
-            </DataTemplate>
-
-            <DataTemplate x:Key="EmailIconTemplate">
-                <Viewbox>
-                    <Grid>
-                        <Grid Name="backgroundGrid" Width="32" Height="32" Visibility="Visible" Background="Transparent" />
-
-                        <Path  x:Name="EmailIcon"  Data="M0,4.0800388L0.030031017,4.0800388 12.610706,16.409995 26.621516,30.149985 40.642334,16.409995 53.223011,4.0800388 53.333001,4.0800388 53.333001,39.080039 0,39.080039z M3.1698808,0L26.660885,0 50.161892,0 38.411389,11.791528 26.660885,23.573054 14.920383,11.791528z"
-                               Stretch="Uniform" Fill="{StaticResource AccentColorBrush}" Width="29" Height="29" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                            <Path.RenderTransform>
-                                <TransformGroup>
-                                    <TransformGroup.Children>
-                                        <RotateTransform Angle="0" />
-                                        <ScaleTransform ScaleX="1" ScaleY="1" />
-                                    </TransformGroup.Children>
-                                </TransformGroup>
-                            </Path.RenderTransform>
-                        </Path>
-                    </Grid>
-                </Viewbox>
-                <DataTemplate.Triggers>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabItem}},Path=IsMouseOver}" Value="True">
-                        <Setter TargetName="backgroundGrid" Property="Background" Value="{StaticResource AccentColorBrush4}">
-                        </Setter>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabItem}},Path=IsSelected}" Value="True">
-                        <Setter TargetName="EmailIcon" Property="Fill" Value="{StaticResource WhiteBrush}" />
-                        <Setter TargetName="backgroundGrid" Property="Background" Value="{StaticResource AccentColorBrush}"></Setter>
-                    </DataTrigger>
-                </DataTemplate.Triggers>
-            </DataTemplate>
-
-            <DataTemplate x:Key="MainTabIconTemplate">
-                <Viewbox>
-                    <Grid>
-                        <Grid Name="backgroundGrid" Width="32" Height="32" Visibility="Visible" Background="Transparent" />
-
-                        <Path  x:Name="MainIcon"  Data="M33.597977,10.759002C37.946865,10.759002 41.485962,14.285001 41.485962,18.649 41.485962,23 37.946865,26.535 33.597977,26.535 29.23909,26.535 25.709992,23 25.709992,18.649 25.709992,17.784 25.849955,16.953001 26.109888,16.174002 26.779719,16.881001 27.70948,17.327002 28.759213,17.327002 30.778696,17.327002 32.418278,15.691001 32.418278,13.668001 32.418278,12.663001 32.008381,11.748001 31.348551,11.087002 32.058369,10.876001 32.818176,10.759002 33.597977,10.759002z M33.606682,4.3679962C25.92741,4.3679957 19.698065,10.594956 19.698065,18.27293 19.698065,25.953894 25.92741,32.177862 33.606682,32.177862 41.295838,32.177862 47.515175,25.953894 47.515175,18.27293 47.515175,10.594956 41.295838,4.3679957 33.606682,4.3679962z M34.867642,1.546141E-09C36.890393,2.6508449E-05 58.705193,0.41938579 68.893006,18.299923 68.893006,18.299923 57.1442,36.139837 34.44656,34.768854 34.44656,34.768854 14.428583,36.59984 0,18.299923 0,18.299923 9.0791523,0.4590019 34.716553,0.0010111886 34.716553,0.0010114873 34.768162,-1.4442128E-06 34.867642,1.546141E-09z"
-                               Stretch="Uniform" Fill="{StaticResource AccentColorBrush}" Width="29" Height="29" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-                            <Path.RenderTransform>
-                                <TransformGroup>
-                                    <TransformGroup.Children>
-                                        <RotateTransform Angle="0" />
-                                        <ScaleTransform ScaleX="1" ScaleY="1" />
-                                    </TransformGroup.Children>
-                                </TransformGroup>
-                            </Path.RenderTransform>
-                        </Path>
-                    </Grid>
-                </Viewbox>
-                <DataTemplate.Triggers>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabItem}},Path=IsMouseOver}" Value="True">
-                        <Setter TargetName="backgroundGrid" Property="Background" Value="{StaticResource AccentColorBrush4}">
-                        </Setter>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabItem}},Path=IsSelected}" Value="True">
-                        <Setter TargetName="MainIcon" Property="Fill" Value="{StaticResource WhiteBrush}" />
-                        <Setter TargetName="backgroundGrid" Property="Background" Value="{StaticResource AccentColorBrush}"></Setter>
-                    </DataTrigger>
-                </DataTemplate.Triggers>
-            </DataTemplate>
 
 
             <Style x:Key="HeaderStyle" TargetType="headerControl:WSUIHeaderControl" BasedOn="{StaticResource {x:Type headerControl:WSUIHeaderControl}}">
@@ -186,8 +94,8 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            
-            
+
+
             <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="3">
                 <Image x:Name="FotoImage" Source="{Binding FotoFilepath,UpdateSourceTrigger=PropertyChanged}">
                     <Image.Style>
@@ -201,9 +109,9 @@
                         </Style>
                     </Image.Style>
                 </Image>
-                
+
             </Grid>
-            
+
         </Grid>
 
         <Grid Grid.Row="1" Margin="0 5 0 0">
@@ -232,7 +140,9 @@
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <listBox:WSUIListBox Style="{StaticResource SimpleListBoxStyle}"
+                                <listBox:WSUIListBox 
+                                    x:Name="WsuiListBox"
+                                    Style="{StaticResource SimpleListBoxStyle}"
                                      ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
                                      BorderBrush="Transparent"
                                      Background="Transparent"
@@ -240,9 +150,12 @@
                                      attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                      attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
                                      ItemTemplateSelector="{StaticResource templateSelector}"
-                                     ContextMenu="{StaticResource ResourceKey=contextMenu}"
                                      IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
-                                     HorizontalContentAlignment="Stretch" />
+                                     HorizontalContentAlignment="Stretch" >
+                                    <listBox:WSUIListBox.ContextMenu>
+                                        <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+                                    </listBox:WSUIListBox.ContextMenu>
+                                </listBox:WSUIListBox>
 
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
                                     Grid.Row="1"
@@ -268,7 +181,9 @@
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <ListBox ItemsSource="{Binding Path=MainFileSource,UpdateSourceTrigger=PropertyChanged}"
+                                <ListBox 
+                                    x:Name="ListBox"
+                                    ItemsSource="{Binding Path=MainFileSource,UpdateSourceTrigger=PropertyChanged}"
                                      ItemTemplateSelector="{StaticResource templateSelector}"
                                      behaviors:WSUIListboxSelectOnClickBehavior.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                      HorizontalContentAlignment="Stretch"
@@ -277,7 +192,11 @@
                                     ScrollViewer.VerticalScrollBarVisibility="Hidden">
                                     <i:Interaction.Behaviors>
                                         <behaviors:WSUIListboxSelectOnClickBehavior></behaviors:WSUIListboxSelectOnClickBehavior>
+                                        <behaviors1:ListBoxBehavior></behaviors1:ListBoxBehavior>
                                     </i:Interaction.Behaviors>
+                                    <ListBox.ContextMenu>
+                                        <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+                                    </ListBox.ContextMenu>
                                 </ListBox>
 
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
@@ -292,7 +211,7 @@
                                 </StackPanel>
                             </Grid>
                         </headerControl:WSUIHeaderControl>
-                        
+
                         <TextBlock TextTrimming="CharacterEllipsis">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
@@ -306,7 +225,7 @@
                             </TextBlock.Style>
                             No data exists for current contact.
                         </TextBlock>
-                        
+
                     </Grid>
                 </TabItem>
 
@@ -322,6 +241,9 @@
                              ItemTemplateSelector="{StaticResource templateSelector}"
                              ScrollViewer.ScrollChanged="ListBox_OnScrollChanged"
                              HorizontalContentAlignment="Stretch">
+                        <listBox:WSUIListBox.ContextMenu>
+                            <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+                        </listBox:WSUIListBox.ContextMenu>
                     </listBox:WSUIListBox>
                 </TabItem>
 
@@ -332,19 +254,13 @@
                          SelectedItem="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                          HorizontalContentAlignment="Stretch"
                              ScrollViewer.ScrollChanged="ListBox_ScrollChanged">
+                        <i:Interaction.Behaviors>
+                            <behaviors1:ListBoxBehavior></behaviors1:ListBoxBehavior>
+                        </i:Interaction.Behaviors>
+                        <ListBox.ContextMenu>
+                            <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+                        </ListBox.ContextMenu>
                     </ListBox>
-
-                    <!--<listBox:WSUIListBox x:Name="FileListBox" Style="{StaticResource SimpleListBoxStyle}"
-                             ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
-                            BorderBrush="Transparent"
-                            Background="Transparent"
-                             ItemsSource="{Binding Path=ItemsSource,UpdateSourceTrigger=PropertyChanged}"
-                             attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                             attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
-                             ItemTemplateSelector="{StaticResource templateSelector}"
-                             ScrollViewer.ScrollChanged="ListBox_ScrollChanged"
-                             HorizontalContentAlignment="Stretch">
-                    </listBox:WSUIListBox>-->
 
                 </TabItem>
             </Controls:MetroAnimatedSingleRowTabControl>

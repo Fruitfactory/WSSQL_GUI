@@ -61,7 +61,6 @@ namespace WSUI.Module.Interface.ViewModel
         bool Enabled { get; set; }
         
         ICommand SearchCommand { get; }
-        ICommand OpenCommand { get; }
         ICommand KeyDownCommand { get; }
         ICommand ClearCriteriaCommand { get; }
 

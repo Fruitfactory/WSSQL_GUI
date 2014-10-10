@@ -43,7 +43,7 @@ namespace WSUI.Core.Core.LimeLM
         #endregion [fields const]
 
         // O_o
-        private const int DaysBetweenCheck = 0; // we should use 0. In this case TurboActive verify activation with the server every time when we call IsGenuine()
+        private const int DaysBetweenCheck = 90; // we should use 0. In this case TurboActive verify activation with the server every time when we call IsGenuine()
 
         private const int GraceOfInerErr = 14;
         private const string VersionId = "4d6ed75a527c1957550015.01792667";
@@ -82,7 +82,7 @@ namespace WSUI.Core.Core.LimeLM
                 if (IsInternetError)
                 {
                     WSSqlLogger.Instance.LogWarning("Check - Internet connection is available or Lime services (servers) are available.");
-                    return ActivationState.Error; // TODO: what I should return Error means that OF won't work, Trial - OF wil'l work but in this case we will show "Buy"/"Activate" buttons.
+                    return ActivationState.Error; 
                 }
                 if (IsActivated)
                     return ActivationState.Activated;

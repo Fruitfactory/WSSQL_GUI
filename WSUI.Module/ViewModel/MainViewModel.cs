@@ -5,7 +5,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
@@ -17,6 +19,7 @@ using WSUI.Core.Data;
 using WSUI.Core.Data.UI;
 using WSUI.Core.Enums;
 using WSUI.Core.Events;
+using WSUI.Core.Extensions;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
@@ -62,6 +65,7 @@ namespace WSUI.Module.ViewModel
         private SubscriptionToken _token;
 
         private Dictionary<TypeSearchItem, ICommandStrategy> _commandStrategies;
+        private Dictionary<TypeSearchItem, IEnumerable<MenuItem>> _menuItems;
         private ICommandStrategy _currentStrategy;
         private int _selectedUIItemIndex;
         private IContactDetailsViewModel _contactDetails;
@@ -166,6 +170,40 @@ namespace WSUI.Module.ViewModel
             _commandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
             _commandStrategies.Add(TypeSearchItem.Picture, fileAttach);
             _commandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
+
+            InitMenuItems(_commandStrategies);
+
+        }
+
+        private void InitMenuItems(Dictionary<TypeSearchItem, ICommandStrategy> commandStrategies)
+        {
+            if (commandStrategies == null || !commandStrategies.Any())
+                return;
+            _menuItems = new Dictionary<TypeSearchItem, IEnumerable<MenuItem>>();
+            if (commandStrategies.ContainsKey(TypeSearchItem.Email))
+            {
+                var list = commandStrategies[TypeSearchItem.Email].Commands.Select(wsCommand => new MenuItem()
+                {
+                    Command = wsCommand,
+                    Header = wsCommand.Caption,
+                    Icon = new Image() { Source = new BitmapImage(new Uri(wsCommand.Icon)) }
+                }).ToList();
+                _menuItems.Add(TypeSearchItem.Email, list);
+            }
+            if (commandStrategies.ContainsKey(TypeSearchItem.File))
+            {
+                var list = commandStrategies[TypeSearchItem.File].Commands.Select(wsCommand => new MenuItem()
+                {
+                    Command = wsCommand,
+                    Header = wsCommand.Caption,
+                    Icon = new Image() { Source = new BitmapImage(new Uri(wsCommand.Icon)) }
+                }).ToList();
+                _menuItems.Add(TypeSearchItem.File, list);
+                _menuItems.Add(TypeSearchItem.Attachment, list);
+                _menuItems.Add(TypeSearchItem.Picture, list);
+                _menuItems.Add(TypeSearchItem.FileAll, list);
+
+            }
         }
 
         private void UpdatedActivatedStatus()
@@ -596,6 +634,16 @@ namespace WSUI.Module.ViewModel
         public BaseSearchObject Current
         {
             get { return _currentData; }
+        }
+
+        public IEnumerable<MenuItem> EmailsMenuItems 
+        {
+            get { return _menuItems[TypeSearchItem.Email]; }
+        }
+
+        public IEnumerable<MenuItem> FileMenuItems
+        {
+            get { return _menuItems[TypeSearchItem.File]; }
         }
 
         #endregion Implementation of IMainViewModel

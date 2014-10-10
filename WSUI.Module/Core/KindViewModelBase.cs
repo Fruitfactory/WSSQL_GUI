@@ -5,9 +5,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Forms;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
@@ -38,24 +40,24 @@ namespace WSUI.Module.Core
     {
 
         protected string _name = string.Empty;
-        
+
         protected string _prefix = string.Empty;
         protected bool _toggle = false;
         protected readonly List<BaseSearchObject> ListData = new List<BaseSearchObject>();
         protected IMainViewModel ParentViewModel;
-        
+
         protected volatile bool ShowMessageNoMatches = true;
         protected readonly IUnityContainer Container;
         protected readonly IEventAggregator EventAggregator;
-        
+
         protected readonly object Lock = new object();
-        
+
         protected IScrollBehavior ScrollBehavior = null;
         protected int TopQueryResult = 100;
-        
+
 
         private volatile bool _isQueryRun = false;
-        
+
         private BaseSearchObject _current = null;
         private string _searchString = string.Empty;
         private bool _canSearch = true;
@@ -69,9 +71,6 @@ namespace WSUI.Module.Core
             EventAggregator = eventAggregator;
             ChooseCommand = new DelegateCommand<object>(o => OnChoose(), o => true);
             SearchCommand = new DelegateCommand<object>(o => Search(), o => CanSearch());
-            OpenCommand = new DelegateCommand<object>(o => OpenFile(), o => CanOpenFile());
-            OpenFolderCommand = new DelegateCommand<object>(o => OpenFolder(), o => CanOpenFile());
-            ShowPathCommand = new DelegateCommand(ShowPath, CanOpenFile);
             KeyDownCommand = new DelegateCommand<KeyEventArgs>(KeyDown, o => true);
             DoubleClickCommand = new DelegateCommand<MouseButtonEventArgs>(DoubleClick, o => true);
             ClearCriteriaCommand = new DelegateCommand<object>(ClearCriteriaClicked, o => true);
@@ -121,7 +120,7 @@ namespace WSUI.Module.Core
                         TypeItem = TypeSearchItem.None
                     };
                     DataSource.Add(message);
-                    
+
                 }
                 else
                 {
@@ -146,7 +145,7 @@ namespace WSUI.Module.Core
 
         protected virtual void OnCurrentItemChanged(BaseSearchObject data)
         {
-            if (EventAggregator == null)
+            if (EventAggregator == null || data == null)
                 return;
             EventAggregator.GetEvent<SelectedChangedPayloadEvent>().Publish(new SearchObjectPayload(Current));
         }
@@ -391,12 +390,6 @@ namespace WSUI.Module.Core
             set;
         }
 
-        public ICommand OpenCommand { get; protected set; }
-
-        public ICommand OpenFolderCommand { get; protected set; }
-
-        public ICommand ShowPathCommand { get; protected set; }
-
         private void ShowPath()
         {
             var filename = SearchItemHelper.GetFileName(Current);
@@ -415,11 +408,6 @@ namespace WSUI.Module.Core
             {
                 WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "OpenItemFile", fileName, ex.Message));
             }
-        }
-
-        private bool CanOpenFile()
-        {
-            return Current != null;
         }
 
         private void OpenFolder()
@@ -450,68 +438,6 @@ namespace WSUI.Module.Core
                         SearchCommand.Execute(null);
                     break;
             }
-        }
-
-        private MainWindowInfo GetWindowInfo()
-        {
-            MainWindowInfo mwi = new MainWindowInfo();
-            Rect rect = new Rect();
-            switch (Host)
-            {
-                case HostType.Application:
-                    rect.Location = Application.Current.MainWindow.PointToScreen(new Point(0, 0));
-                    rect.Size = new Size(Application.Current.MainWindow.ActualWidth, Application.Current.MainWindow.ActualHeight);
-                    mwi.MainWindowRect = rect;
-                    mwi.MainWindowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
-                    break;
-
-                case HostType.Plugin:
-                    FormCollection formsCollection = System.Windows.Forms.Application.OpenForms;
-                    if (formsCollection.Count > 0)
-                    {
-                        mwi.MainWindowRect = new Rect(formsCollection[0].DesktopLocation.X, formsCollection[0].DesktopLocation.Y,
-                            formsCollection[0].DesktopBounds.Size.Width, formsCollection[0].DesktopBounds.Size.Height);
-                        mwi.MainWindowHandle = formsCollection[0].Handle;
-                    }
-                    else
-                    {
-                        ApplyMainWindowInfo(mwi);
-                    }
-                    break;
-
-                default:
-                    ApplyMainWindowInfo(mwi);
-                    break;
-            }
-
-            return mwi;
-        }
-
-        private Tuple<IntPtr, Rect> GetForegroundWindowInfo()
-        {
-            try
-            {
-                var hwnd = WindowsFunction.GetForegroundWindow();
-                WindowsFunction.RECT rect;
-                WindowsFunction.GetWindowRect(hwnd, out rect);
-                Point pt = new Point(rect.Left, rect.Top);
-                Size sz = new Size(rect.Right - rect.Left, rect.Bottom - rect.Top);
-                return new Tuple<IntPtr, Rect>(hwnd, new Rect(pt, sz));
-            }
-            catch (Exception ex)
-            {
-                WSSqlLogger.Instance.LogError(ex.Message);
-            }
-            return null;
-        }
-
-        private void ApplyMainWindowInfo(MainWindowInfo info)
-        {
-            var result = GetForegroundWindowInfo();
-            if (result == null)
-                return;
-            info.MainWindowHandle = result.Item1;
-            info.MainWindowRect = result.Item2;
         }
 
         private void DoubleClick(MouseButtonEventArgs obj)

@@ -23,13 +23,15 @@ namespace WSUI.Unistall
                 string param = args[0];
                 if (param != ParamName)
                     return;
-                if (TurboLimeActivate.Instance.State == ActivationState.Activated)
-                {
+                //if (TurboLimeActivate.Instance.State == ActivationState.Activated)
+                //{
                     TurboLimeActivate.Instance.Deactivate(true);
-                }
+                //}
+                Console.Out.WriteLine("Done...");
             }
-            catch
+            catch (Exception ex)
             {
+                Console.Out.WriteLine(ex.Message);
             }
         }
     }

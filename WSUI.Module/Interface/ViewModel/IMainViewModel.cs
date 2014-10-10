@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Transitionals;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
+using WSUI.Module.Interface.Service;
 using WSUI.Module.Service;
 
 namespace WSUI.Module.Interface.ViewModel
@@ -38,6 +40,11 @@ namespace WSUI.Module.Interface.ViewModel
         void ShowOutlookFolder(string folder);
 
         BaseSearchObject Current { get; }
+
+        IEnumerable<MenuItem> EmailsMenuItems { get; }
+
+        IEnumerable<MenuItem> FileMenuItems { get; } 
+
 
     }
 }

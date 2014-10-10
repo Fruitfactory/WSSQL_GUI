@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
@@ -34,6 +36,8 @@ namespace WSUI.Module.ViewModel
             SearchSystem = new EmailSearchSystem();
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
         }
+
+        public IEnumerable<MenuItem> EmailMenuItems { get { return Parent.EmailsMenuItems; } }
 
         #region IScrollableView Members
 

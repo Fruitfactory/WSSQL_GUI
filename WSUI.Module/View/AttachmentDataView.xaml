@@ -3,10 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d"
               xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:service="clr-namespace:WSUI.Module.Service"
-                               x:Name="this">
+             xmlns:behaviors="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure"
+             x:Name="this">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -18,10 +20,15 @@
         <ListBox x:Name="listBox" ItemsSource="{Binding Path=DataSource,UpdateSourceTrigger=PropertyChanged}"
                  ItemTemplateSelector="{StaticResource templateSelector}"
                  SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                 ContextMenu="{StaticResource ResourceKey=contextMenu}"
                  ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
                  service:DoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
                  HorizontalContentAlignment="Stretch">
+            <i:Interaction.Behaviors>
+                <behaviors:ListBoxBehavior></behaviors:ListBoxBehavior>
+            </i:Interaction.Behaviors>
+            <ListBox.ContextMenu>
+                <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+            </ListBox.ContextMenu>
         </ListBox>
     </Grid>
 </UserControl >

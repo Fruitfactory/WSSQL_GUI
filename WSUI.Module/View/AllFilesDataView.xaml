@@ -12,6 +12,7 @@
              xmlns:core="clr-namespace:WSUI.Module.Core"
              xmlns:headerControl="clr-namespace:WSUI.Infrastructure.Controls.HeaderControl;assembly=WSUI.Infrastructure"
              xmlns:behaviors="clr-namespace:WSUI.Module.Service.Behaviors"
+             xmlns:behaviorsInfra="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure"
              x:Name="this">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -53,7 +54,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <ListBox ItemsSource="{Binding Path=ContactSource,UpdateSourceTrigger=PropertyChanged}"
+                <ListBox x:Name="ContactListBox" ItemsSource="{Binding Path=ContactSource,UpdateSourceTrigger=PropertyChanged}"
                          ItemTemplateSelector="{StaticResource templateSelector}"
                          behaviors:WSUIListboxSelectOnClickBehavior.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                          
@@ -65,6 +66,7 @@
                          >
                     <i:Interaction.Behaviors>
                         <behaviors:WSUIListboxSelectOnClickBehavior></behaviors:WSUIListboxSelectOnClickBehavior>
+                        <behaviorsInfra:ListBoxBehavior></behaviorsInfra:ListBoxBehavior>
                     </i:Interaction.Behaviors>
                 </ListBox>
 
@@ -97,9 +99,12 @@
                                      attch:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                      attch:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
                                      ItemTemplateSelector="{StaticResource templateSelector}"
-                                     ContextMenu="{StaticResource ResourceKey=contextMenu}"
                                      IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
-                                     HorizontalContentAlignment="Stretch" />
+                                     HorizontalContentAlignment="Stretch" >
+                    <listBox:WSUIListBox.ContextMenu>
+                        <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+                    </listBox:WSUIListBox.ContextMenu>
+                </listBox:WSUIListBox>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
                             Grid.Row="1"
@@ -122,7 +127,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <ListBox ItemsSource="{Binding Path=FileSource,UpdateSourceTrigger=PropertyChanged}"
+                <ListBox x:Name="FileListBox" ItemsSource="{Binding Path=FileSource,UpdateSourceTrigger=PropertyChanged}"
                          ItemTemplateSelector="{StaticResource templateSelector}"
                          behaviors:WSUIListboxSelectOnClickBehavior.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                          HorizontalContentAlignment="Stretch" 
@@ -133,7 +138,11 @@
                          >
                     <i:Interaction.Behaviors>
                         <behaviors:WSUIListboxSelectOnClickBehavior></behaviors:WSUIListboxSelectOnClickBehavior>
+                        <behaviorsInfra:ListBoxBehavior></behaviorsInfra:ListBoxBehavior>
                     </i:Interaction.Behaviors>
+                    <ListBox.ContextMenu>
+                        <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+                    </ListBox.ContextMenu>
                 </ListBox>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
