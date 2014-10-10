@@ -111,7 +111,10 @@ namespace WSPreview.PreviewHandler.Service.Preview
                         _handlersDictionary.Add(ext, type);
                 }
                 var handler = Activator.CreateInstance(type) as PreviewHandlerFramework.PreviewHandler;
-                _poolPreviewHandlers.Add(type.FullName, handler);
+                if (!_poolPreviewHandlers.ContainsKey(type.FullName))
+                {
+                    _poolPreviewHandlers.Add(type.FullName, handler);
+                }
             } 
         }
 
@@ -123,7 +126,7 @@ namespace WSPreview.PreviewHandler.Service.Preview
             foreach (var listType in listTypes)
             {
                 var key = GetControlKey(listType);
-                if(key == ControlsKey.None)
+                if(key == ControlsKey.None || _poolPreviewControls.ContainsKey(key))
                     continue;
                 var ctrl = Activator.CreateInstance(listType) as IPreviewControl;
                 _poolPreviewControls.Add(key,ctrl);
