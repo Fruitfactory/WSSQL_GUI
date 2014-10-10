@@ -142,6 +142,7 @@
     <Compile Include="Interface\Service\INavigationService.cs" />
     <Compile Include="Interface\ViewModel\IContactDetailsViewModel.cs" />
     <Compile Include="Interface\View\IContactDetailsView.cs" />
+    <Compile Include="Interface\View\IDataKindView.cs" />
     <Compile Include="Interface\View\IDataView.cs" />
     <Compile Include="Interface\ViewModel\IKindItem.cs" />
     <Compile Include="Interface\View\IKindsView.cs" />

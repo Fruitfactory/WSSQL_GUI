@@ -393,8 +393,16 @@ namespace WSUI.Module.ViewModel
                 temp(this, null);
             Enabled = _currentItem.Enabled;
             IsBusy = true;
-            if (BackCommand.CanExecute(null))
-                BackCommand.Execute(null);
+            if (_navigationService != null && _navigationService.IsBackButtonVisible)
+            {
+                ResetNavigation();
+            }
+            OnPropertyChanged(() => BackButtonVisibility);
+        }
+
+        private void ResetNavigation()
+        {
+            _navigationService.MoveToFirstDataView();
         }
 
         private void OnComplete(object sender, EventArgs<bool> e)

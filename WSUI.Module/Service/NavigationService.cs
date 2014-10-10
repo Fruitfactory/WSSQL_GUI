@@ -124,6 +124,36 @@ namespace WSUI.Module.Service
             get { return _stackViews != null && _stackViews.Count > 0; }
         }
 
+        public void MoveToFirstDataView()
+        {
+            SetTransition(_moveToRightTransition);
+            IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
+            if (regionSidebarData != null)
+            {
+                var oldView = regionSidebarData.GetView(CurrentView.GetType().FullName);
+                if (oldView != null)
+                {
+                    regionSidebarData.Remove(oldView);
+                    ReleaseContactDetailsViewModel(oldView as INavigationView);
+                }
+
+                while (_stackViews.Count > 0) 
+                {
+                    var navigationView = _stackViews.Pop();
+                    if (!(navigationView is IDataKindView))
+                    {
+                        ReleaseContactDetailsViewModel(navigationView);
+                    }
+                    else
+                    {
+                        regionSidebarData.Add(navigationView, navigationView.GetType().FullName);
+                        CurrentView = navigationView;
+                        break;
+                    }
+                }
+            }
+        }
+
         #endregion [public]
 
         #region [private helpers]
