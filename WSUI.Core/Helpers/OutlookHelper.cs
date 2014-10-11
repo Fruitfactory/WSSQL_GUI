@@ -339,17 +339,21 @@ namespace WSUI.Core.Helpers
                             if (string.IsNullOrEmpty(fol.AddressBookName))
                                 continue;
 
+                            var filter =
+                                string.Format(
+                                    "[Email1Address] = {0} or [Email2Address] = {0} or [Email3Address] = {0}", email);
                             ci =
-                                fol.Items.OfType<Outlook.ContactItem>().FirstOrDefault(c =>
-                                        (!string.IsNullOrEmpty(c.Email1Address) && c.Email1Address.ToLower().Contains(email)) ||
-                                        (!string.IsNullOrEmpty(c.Email2Address) && c.Email2Address.ToLower().Contains(email)) ||
-                                        (!string.IsNullOrEmpty(c.Email3Address) && c.Email3Address.ToLower().Contains(email))
-                                        );
+                                (Outlook.ContactItem)
+                                    fol.Items.Find(filter);
+
                             if (ci != null)
                                 return ci;
                         }
                     }
-                    catch (Exception) { }
+                    catch (Exception ex)
+                    {
+                        WSSqlLogger.Instance.LogError("GetContact: {0}",ex.Message);
+                    }
                 }
             }
             catch (Exception ex)

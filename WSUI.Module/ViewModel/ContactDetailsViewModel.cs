@@ -289,6 +289,7 @@ namespace WSUI.Module.ViewModel
         {
             FirstName = dataObject.FirstName;
             LastName = dataObject.LastName;
+            string name = "";
             Emails = new List<string> { dataObject.EmailAddress, dataObject.EmailAddress2, dataObject.EmailAddress3 };
             FotoFilepath = OutlookHelper.Instance.GetContactFotoTempFileName(dataObject);
             RaiseNotification();
