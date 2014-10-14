@@ -1,5 +1,7 @@
 using System;
 using System.Windows.Input;
+using WSUI.Core.Data;
+using WSUI.Core.Enums;
 using WSUI.Module.Interface;
 using WSUI.Module.Interface.Service;
 using WSUI.Module.Interface.ViewModel;
@@ -38,6 +40,16 @@ namespace WSUI.Module.Core
         protected virtual string GetTooltip()
         {
             return string.Empty;
+        }
+
+        protected BaseSearchObject GetCurrentSearchObject()
+        {
+            return MainViewModel.IsPreviewVisible ? MainViewModel.Current : MainViewModel.CurrentTracked;
+        }
+
+        protected TypeSearchItem GetTypeOfCurrentItem()
+        {
+            return MainViewModel.IsPreviewVisible ? MainViewModel.Current.TypeItem : MainViewModel.CurrentTracked.TypeItem;
         }
 
         #region Implementation of ICommand

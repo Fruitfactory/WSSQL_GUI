@@ -4,6 +4,7 @@ using System.Windows;
 using WSUI.Core.Enums;
 using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
+using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Module.Interface.ViewModel;
@@ -11,28 +12,25 @@ using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands
 {
-    public class OpenEmailCommand :  BasePreviewCommand
+    public class OpenEmailCommand :  BaseEmailPreviewCommand
     {
         public OpenEmailCommand(IMainViewModel mainViewModel) : base(mainViewModel)
         {
         }
-
-        protected override bool OnCanExecute()
-        {
-            if (MainViewModel != null && MainViewModel.Current != null &&
-                (MainViewModel.Current.TypeItem & TypeSearchItem.Email) == MainViewModel.Current.TypeItem)
-                return true;
-            return false;
-        }
         protected override void OnExecute()
         {
+            var type = GetTypeOfCurrentItem();
+            var currentItem = GetCurrentSearchObject();
+
             string filename = string.Empty;
             try
             {
-                switch (MainViewModel.Current.TypeItem)
+                switch (type)
                 {
                     case TypeSearchItem.Email:
-                        filename = TempFileManager.Instance.GenerateTempFileName(MainViewModel.Current);
+                        filename = MainViewModel.IsPreviewVisible ? 
+                            TempFileManager.Instance.GenerateTempFileName(currentItem) :
+                            SearchItemHelper.GetFileName(currentItem);
                         break;
                 }
                 if(string.IsNullOrEmpty(filename))

@@ -11,19 +11,11 @@ using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands
 {
-    public class EmailCommand : BasePreviewCommand
+    public class EmailCommand : BaseFilePreviewCommand
     {
         public EmailCommand(IMainViewModel mainViewModel)
             : base(mainViewModel)
         {
-        }
-
-        protected override bool OnCanExecute()
-        {
-            if (MainViewModel != null && MainViewModel.Current != null &&
-                ((MainViewModel.Current.TypeItem & TypeSearchItem.FileAll) == MainViewModel.Current.TypeItem))
-                return true;
-            return false;
         }
 
         protected override void OnExecute()
@@ -31,26 +23,25 @@ namespace WSUI.Module.Commands
             string filename = string.Empty;
             try
             {
-                switch (MainViewModel.Current.TypeItem)
+                var currentItem = GetCurrentSearchObject();
+                var type = GetTypeOfCurrentItem();
+                switch (type)
                 {
                     case TypeSearchItem.File:
                     case TypeSearchItem.Picture:
                     case TypeSearchItem.FileAll:
 
-                        filename = SearchItemHelper.GetFileName(MainViewModel.Current);
+                        filename = SearchItemHelper.GetFileName(currentItem);
                         break;
 
                     case TypeSearchItem.Attachment:
-                        filename = TempFileManager.Instance.GenerateTempFileName(MainViewModel.Current) ?? OutlookHelper.Instance.GetAttachmentTempFileName(MainViewModel.Current);
+                        filename = MainViewModel.IsPreviewVisible ? TempFileManager.Instance.GenerateTempFileName(currentItem) ?? OutlookHelper.Instance.GetAttachmentTempFileName(currentItem)
+                            : SearchItemHelper.GetFileName(currentItem);
                         break;
                 }
 
                 if (string.IsNullOrEmpty(filename))
                     return;
-                //if (FileExestensionsHelper.Instance.IsExternsionRequiredClosePreview(Path.GetExtension(filename)))
-                //{
-                //    MainViewModel.Parent.ForceClosePreview();
-                //}
                 var mail = OutlookHelper.Instance.CreateNewEmail();
                 mail.Attachments.Add(filename);
                 mail.BodyFormat = Microsoft.Office.Interop.Outlook.OlBodyFormat.olFormatHTML;

@@ -9,24 +9,15 @@ using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands
 {
-    public class ReplyAllCommand : BasePreviewCommand
+    public class ReplyAllCommand : BaseEmailPreviewCommand
     {
         public ReplyAllCommand(IMainViewModel mainViewModel) : base(mainViewModel)
         {
         }
 
-
-        protected override bool OnCanExecute()
-        {
-            if (MainViewModel != null && MainViewModel.Current != null &&
-                MainViewModel.Current.TypeItem == TypeSearchItem.Email)
-                return true;
-            return false;
-        }
-
         protected override void OnExecute()
         {
-            var itemSearch = MainViewModel.Current;
+            var itemSearch = GetCurrentSearchObject();
             var mail = OutlookHelper.Instance.GetEmailItem(itemSearch);
             if (mail != null)
             {

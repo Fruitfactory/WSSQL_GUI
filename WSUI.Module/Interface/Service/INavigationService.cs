@@ -11,7 +11,7 @@ namespace WSUI.Module.Interface.Service
         void MoveToLeft(INavigationView newView);
         void MoveToRight();
         bool IsBackButtonVisible { get; }
-
+        bool IsPreviewVisible { get; }
         void MoveToFirstDataView();
 
     }

@@ -8,18 +8,10 @@ using WSUI.Module.Interface.ViewModel;
 
 namespace WSUI.Module.Commands
 {
-    public class OpenFolderCommand : BasePreviewCommand
+    public class OpenFolderCommand : BaseFilePreviewCommand
     {
         public OpenFolderCommand(IMainViewModel mainViewModel) : base(mainViewModel)
         {
-        }
-
-        protected override bool OnCanExecute()
-        {
-            if (MainViewModel != null && MainViewModel.Current != null &&
-              ((MainViewModel.Current.TypeItem & TypeSearchItem.FileAll) == MainViewModel.Current.TypeItem))
-                return true;
-            return false;
         }
 
         protected override void OnExecute()
@@ -58,7 +50,7 @@ namespace WSUI.Module.Commands
 
         private void OpenFolder()
         {
-            var filename = SearchItemHelper.GetFileName(MainViewModel.Current);
+            var filename = SearchItemHelper.GetFileName(GetCurrentSearchObject());
             filename = Path.GetDirectoryName(filename);
             OpenItemFile(filename);
         }

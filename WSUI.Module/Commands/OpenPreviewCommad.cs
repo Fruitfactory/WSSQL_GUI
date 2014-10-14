@@ -13,36 +13,31 @@ using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands
 {
-    public class OpenPreviewCommad : BasePreviewCommand
+    public class OpenPreviewCommad : BaseFilePreviewCommand
     {
         public OpenPreviewCommad(IMainViewModel mainViewModel) : base(mainViewModel)
         {
         }
 
-        protected override bool OnCanExecute()
-        {
-
-            if (MainViewModel != null && MainViewModel.Current != null &&
-                ((MainViewModel.Current.TypeItem & TypeSearchItem.FileAll) == MainViewModel.Current.TypeItem))
-                return true;
-            return false;
-        }
-
         protected override void OnExecute()
         {
             string fileName = string.Empty;
-            switch (MainViewModel.Current.TypeItem)
+            var type = GetTypeOfCurrentItem();
+            var currentItem = GetCurrentSearchObject();
+            switch (type)
             {
                 case TypeSearchItem.File:
                 case TypeSearchItem.Picture:
                 case TypeSearchItem.FileAll:
-                    fileName = SearchItemHelper.GetFileName(MainViewModel.Current,false);
+                    fileName = SearchItemHelper.GetFileName(currentItem,false);
                     break;
                 case TypeSearchItem.Attachment:
-                    fileName = TempFileManager.Instance.GenerateTempFileName(MainViewModel.Current) ?? OutlookHelper.Instance.GetAttachmentTempFileName(MainViewModel.Current);
+                    fileName = MainViewModel.IsPreviewVisible ? TempFileManager.Instance.GenerateTempFileName(currentItem) ?? OutlookHelper.Instance.GetAttachmentTempFileName(currentItem) 
+                        : SearchItemHelper.GetFileName(currentItem) ;
                     break;
                 case TypeSearchItem.Email:
-                    fileName = TempFileManager.Instance.GenerateTempFileName(MainViewModel.Current);
+                    fileName = MainViewModel.IsPreviewVisible ? TempFileManager.Instance.GenerateTempFileName(currentItem)
+                        : SearchItemHelper.GetFileName(currentItem);
                     break;
 
             }
@@ -51,10 +46,6 @@ namespace WSUI.Module.Commands
                 return;
             try
             {
-                //if (FileExestensionsHelper.Instance.IsExternsionRequiredClosePreview(Path.GetExtension(fileName)))
-                //{
-                //    MainViewModel.Parent.ForceClosePreview();
-                //}
                 Process.Start(fileName);
             }
             catch (FileLoadException ex)

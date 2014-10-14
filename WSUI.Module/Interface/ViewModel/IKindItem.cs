@@ -49,6 +49,8 @@ namespace WSUI.Module.Interface.ViewModel
 
         BaseSearchObject Current { get; set; }
 
+        BaseSearchObject CurrentTrackedObject { get; set; }
+
         ObservableCollection<ISearchObject> DataSource
         {
             get;

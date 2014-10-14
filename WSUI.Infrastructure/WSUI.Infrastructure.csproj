@@ -114,6 +114,7 @@
     <Compile Include="Behaviors\GridListItemBehavior.cs" />
     <Compile Include="Behaviors\ListBoxBehavior.cs" />
     <Compile Include="Behaviors\MainListBoxBehavior.cs" />
+    <Compile Include="Behaviors\SelectedItemTrackingBehavior.cs" />
     <Compile Include="Controls\Application\AppEmpty.cs" />
     <Compile Include="Controls\BlockControl\BlockControl.xaml.cs">
       <DependentUpon>BlockControl.xaml</DependentUpon>

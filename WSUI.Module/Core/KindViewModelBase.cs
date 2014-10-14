@@ -320,6 +320,7 @@ namespace WSUI.Module.Core
 
         public bool Toggle { get { return _toggle; } set { _toggle = value; OnPropertyChanged(() => Toggle); } }
 
+        public BaseSearchObject CurrentTrackedObject { get; set; }
         public ObservableCollection<ISearchObject> DataSource { get; protected set; }
 
         public ICommand ChooseCommand { get; protected set; }

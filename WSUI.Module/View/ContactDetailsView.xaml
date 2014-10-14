@@ -155,6 +155,9 @@
                                     <listBox:WSUIListBox.ContextMenu>
                                         <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
                                     </listBox:WSUIListBox.ContextMenu>
+                                    <i:Interaction.Behaviors>
+                                        <behaviors1:SelectedItemTrackingBehavior TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors1:SelectedItemTrackingBehavior>
+                                    </i:Interaction.Behaviors>
                                 </listBox:WSUIListBox>
 
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
@@ -193,6 +196,7 @@
                                     <i:Interaction.Behaviors>
                                         <behaviors:WSUIListboxSelectOnClickBehavior></behaviors:WSUIListboxSelectOnClickBehavior>
                                         <behaviors1:ListBoxBehavior></behaviors1:ListBoxBehavior>
+                                        <behaviors1:SelectedItemTrackingBehavior TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors1:SelectedItemTrackingBehavior>
                                     </i:Interaction.Behaviors>
                                     <ListBox.ContextMenu>
                                         <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
@@ -244,6 +248,9 @@
                         <listBox:WSUIListBox.ContextMenu>
                             <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
                         </listBox:WSUIListBox.ContextMenu>
+                        <i:Interaction.Behaviors>
+                            <behaviors1:SelectedItemTrackingBehavior TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors1:SelectedItemTrackingBehavior>
+                        </i:Interaction.Behaviors>
                     </listBox:WSUIListBox>
                 </TabItem>
 
@@ -256,6 +263,7 @@
                              ScrollViewer.ScrollChanged="ListBox_ScrollChanged">
                         <i:Interaction.Behaviors>
                             <behaviors1:ListBoxBehavior></behaviors1:ListBoxBehavior>
+                            <behaviors1:SelectedItemTrackingBehavior TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors1:SelectedItemTrackingBehavior>
                         </i:Interaction.Behaviors>
                         <ListBox.ContextMenu>
                             <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>

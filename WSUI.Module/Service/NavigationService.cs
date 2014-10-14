@@ -124,6 +124,8 @@ namespace WSUI.Module.Service
             get { return _stackViews != null && _stackViews.Count > 0; }
         }
 
+        public bool IsPreviewVisible { get { return CurrentView is IPreviewView; } }
+
         public void MoveToFirstDataView()
         {
             SetTransition(_moveToRightTransition);

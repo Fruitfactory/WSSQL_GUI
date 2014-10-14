@@ -25,6 +25,7 @@
                  HorizontalContentAlignment="Stretch">
             <i:Interaction.Behaviors>
                 <behaviors:ListBoxBehavior></behaviors:ListBoxBehavior>
+                <behaviors:SelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors:SelectedItemTrackingBehavior>
             </i:Interaction.Behaviors>
             <ListBox.ContextMenu>
                 <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>

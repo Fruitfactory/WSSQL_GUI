@@ -9,7 +9,9 @@
              x:Name="this"
              xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
              xmlns:listBox="clr-namespace:WSUI.Infrastructure.Controls.ListBox;assembly=WSUI.Infrastructure"
-             xmlns:attachedProperty="clr-namespace:WSUI.Infrastructure.Helpers.AttachedProperty;assembly=WSUI.Infrastructure">
+             xmlns:attachedProperty="clr-namespace:WSUI.Infrastructure.Helpers.AttachedProperty;assembly=WSUI.Infrastructure"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -60,6 +62,9 @@
             <listBox:WSUIListBox.ContextMenu>
                 <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
             </listBox:WSUIListBox.ContextMenu>
+            <i:Interaction.Behaviors>
+                <behaviors:SelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors:SelectedItemTrackingBehavior>
+            </i:Interaction.Behaviors>
         </listBox:WSUIListBox>
     </Grid>
 </UserControl>

@@ -9,23 +9,15 @@ using WSUI.Module.Service.Dialogs.Message;
 
 namespace WSUI.Module.Commands
 {
-    public class ForwardCommand : BasePreviewCommand
+    public class ForwardCommand : BaseEmailPreviewCommand
     {
         public ForwardCommand(IMainViewModel mainViewModel) : base(mainViewModel)
         {
         }
 
-        protected override bool OnCanExecute()
-        {
-            if (MainViewModel != null && MainViewModel.Current != null &&
-                MainViewModel.Current.TypeItem == TypeSearchItem.Email)
-                return true;
-            return false;
-        }
-
         protected override void OnExecute()
         {
-            var searchItem = MainViewModel.Current;
+            var searchItem = GetCurrentSearchObject();
             var mail = OutlookHelper.Instance.GetEmailItem(searchItem);
             if (mail != null)
             {

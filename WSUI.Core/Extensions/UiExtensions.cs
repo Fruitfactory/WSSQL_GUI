@@ -242,5 +242,33 @@ namespace WSUI.Core.Extensions
             return VisualTreeHelper.GetChild(border, 0) as ScrollViewer;
         }
 
+        public static T GetControlAtPoint<T>(this Visual obj, Point pt) where T : Visual
+        {
+            if (obj == null)
+            {
+                return default(T);
+            }
+            var hitResult = VisualTreeHelper.HitTest(obj, pt);
+            if (hitResult == null)
+            {
+                return default(T);
+            }
+            var item = FindParent<ListBoxItem>(hitResult.VisualHit);
+            return item as T;
+        }
+
+        public static T FindParent<T>(DependencyObject from) where T : class
+        {
+            T result = null;
+            DependencyObject parent = VisualTreeHelper.GetParent(from);
+
+            if (parent is T)
+                result = parent as T;
+            else if (parent != null)
+                result = FindParent<T>(parent);
+
+            return result;
+        }
+
     }
 }

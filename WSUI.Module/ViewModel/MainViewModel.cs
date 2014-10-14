@@ -644,6 +644,11 @@ namespace WSUI.Module.ViewModel
             get { return _currentData; }
         }
 
+        public BaseSearchObject CurrentTracked 
+        {
+            get { return GetContactDetailsTrackedObject() ?? GetKindItemTrackedObject(); }
+        }
+
         public IEnumerable<MenuItem> EmailsMenuItems 
         {
             get { return _menuItems[TypeSearchItem.Email]; }
@@ -652,6 +657,11 @@ namespace WSUI.Module.ViewModel
         public IEnumerable<MenuItem> FileMenuItems
         {
             get { return _menuItems[TypeSearchItem.File]; }
+        }
+
+        public bool IsPreviewVisible 
+        {
+            get { return _navigationService != null && _navigationService.IsPreviewVisible; }
         }
 
         #endregion Implementation of IMainViewModel
@@ -755,5 +765,16 @@ namespace WSUI.Module.ViewModel
 
             OnPropertyChanged(() => Commands);
         }
+
+        private BaseSearchObject GetContactDetailsTrackedObject()
+        {
+            return _contactDetails != null ?  _contactDetails.TrackedElement as BaseSearchObject :  null;
+        }
+
+        private BaseSearchObject GetKindItemTrackedObject()
+        {
+            return _currentItem != null ? _currentItem.CurrentTrackedObject : null;
+        }
+
     }
 }

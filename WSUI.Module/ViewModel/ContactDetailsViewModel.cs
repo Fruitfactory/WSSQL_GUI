@@ -135,6 +135,8 @@ namespace WSUI.Module.ViewModel
             }
         }
 
+        public ISearchObject TrackedElement { get; set; }
+
         public void ApplyIndexForShowing(int index)
         {
             SelectedIndex = index;

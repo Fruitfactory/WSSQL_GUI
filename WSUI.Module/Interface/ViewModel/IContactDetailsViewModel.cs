@@ -20,6 +20,8 @@ namespace WSUI.Module.Interface.ViewModel
 
         ISearchObject SelectedElement { get; set; }
 
+        ISearchObject TrackedElement { get; set; }
+
         void ApplyIndexForShowing(int index);
 
         IEnumerable<UIItem> ContactUIItemCollection { get; }

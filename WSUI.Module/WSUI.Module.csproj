@@ -131,6 +131,8 @@
     <Compile Include="Commands\ReplyAllCommand.cs" />
     <Compile Include="Commands\ReplyCommand.cs" />
     <Compile Include="Core\BaseCommandStrategy.cs" />
+    <Compile Include="Core\BaseEmailPreviewCommand.cs" />
+    <Compile Include="Core\BaseFilePreviewCommand.cs" />
     <Compile Include="Core\BasePreviewCommand.cs" />
     <Compile Include="Core\KindNameAttribute.cs" />
     <Compile Include="Core\KindsConstName.cs" />

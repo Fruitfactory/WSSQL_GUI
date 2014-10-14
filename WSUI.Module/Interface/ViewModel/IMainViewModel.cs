@@ -41,9 +41,13 @@ namespace WSUI.Module.Interface.ViewModel
 
         BaseSearchObject Current { get; }
 
+        BaseSearchObject CurrentTracked { get; }
+
         IEnumerable<MenuItem> EmailsMenuItems { get; }
 
-        IEnumerable<MenuItem> FileMenuItems { get; } 
+        IEnumerable<MenuItem> FileMenuItems { get; }
+
+        bool IsPreviewVisible { get; }
 
 
     }
