@@ -99,11 +99,6 @@ namespace WSUI.Module.Core
             OnPropertyChanged(() => DataSource);
             OnPropertyChanged(() => Enabled);
             FireComplete(res);
-            //Application.Current.Dispatcher.BeginInvoke(new Action(() => BusyPopupAdorner.Instance.IsBusy = false), null);
-            //if (ProgressManager.Instance.InProgress)
-            //{
-            //    ProgressManager.Instance.StopOperation();
-            //}
         }
 
         protected virtual void ProcessMainResult()
@@ -206,7 +201,7 @@ namespace WSUI.Module.Core
             if (Parent != null)
                 Parent.ForceClosePreview();
             _canSearch = true;
-            ShowMessageNoMatches = false;
+            ShowMessageNoMatches = true;
         }
 
         protected virtual void OnInit()

@@ -39,7 +39,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         private const string CCRow = @"<tr><td class='style1'>CC:</td><td class='style2'>{0}</td></tr>";
         private const string InRow = @"<tr><td class='style1'>In:</td><td ><a href='uuid:{0}'>{1}</a></td></tr>";
         private const string AttachmentsRow = @"<tr><td class='style1'>Attachments:</td><td >{0}</td></tr>";
-        private const string SendRow = @"<tr><td class='style1'>Send:</td><td >{0}</td></tr>";
+        private const string SendRow = @"<tr><td class='style1'>Sent:</td><td >{0}</td></tr>";
 
         private const string EmailRow = @"<tr style='margin: 25px 10px 10px 10px'><td colspan='2' ><hr /><html><body style='word-wrap: break-word;white-space: nowrap;font-size:x-small' >{0}</body></html></td></tr>";
         private const string TableEnd = @"</table>";
