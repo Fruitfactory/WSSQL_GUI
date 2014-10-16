@@ -653,7 +653,11 @@ namespace WSUIOutlookPlugin
             ISidebarForm form = null;
             for (int i = 0; i < formRightSidebar.FormInstanceCount; i++)
             {
-                form = formRightSidebar.GetForm((OutlookApp as Outlook.Application).ActiveExplorer()) as ISidebarForm;
+                form = formRightSidebar.FormInstances(i) as ISidebarForm;
+                if (form != null)
+                {
+                    break;
+                }
             }
             return form;
         }

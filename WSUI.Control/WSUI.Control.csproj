@@ -122,9 +122,6 @@
     <Compile Include="IPluginBootStraper.cs" />
     <Compile Include="PluginBootStraper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WSMainControl.xaml.cs">
-      <DependentUpon>WSMainControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="WSSidebarControl.xaml.cs">
       <DependentUpon>WSSidebarControl.xaml</DependentUpon>
     </Compile>
@@ -148,10 +145,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="WSMainControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="WSSidebarControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

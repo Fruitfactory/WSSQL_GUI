@@ -14,7 +14,6 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />-->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
 
@@ -22,17 +21,6 @@
 
             <converters:ActivationStatusToGridVisibilityConverter x:Key="GridVisibility"></converters:ActivationStatusToGridVisibilityConverter>
             <converters:ActivationStatusToButtonVisibilityConverter x:Key="ButtonVisibility"></converters:ActivationStatusToButtonVisibilityConverter>
-
-            <!--<Storyboard x:Key="DataToPreview" TargetProperty="Width"  >
-                <service:GridLengthAnimation Storyboard.TargetName="Data" From="*" To="0" Duration="0:0:0.4" ></service:GridLengthAnimation>
-                <service:GridLengthAnimation Storyboard.TargetName="Preview" From="0" To="*" Duration="0:0:0.4"></service:GridLengthAnimation>
-            </Storyboard>
-
-            <Storyboard x:Key="PreviewToData" TargetProperty="Width"  >
-                <service:GridLengthAnimation Storyboard.TargetName="Data" From="0" To="*" Duration="0:0:0.4"></service:GridLengthAnimation>
-                <service:GridLengthAnimation Storyboard.TargetName="Preview" From="*" To="0" Duration="0:0:0.4"></service:GridLengthAnimation>
-            </Storyboard>-->
-
 
             <SolidColorBrush x:Key="RedColorBrush" Color="Red"></SolidColorBrush>
             <SolidColorBrush x:Key="DarkRedColorBrush" Color="DarkRed"></SolidColorBrush>
