@@ -52,6 +52,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         private const string RequiredRow = @"<tr><td class='style1'>Required Attendees:</td><td class='style2'>{0}</td></tr>";
         private const string LocationRow = @"<tr><td class='style1'>Location: </td><td class='style2'><a href='{0}'>{0}</a></td></tr>";
         private const string MailTo = @"<a href='mailto:{0}'>{0}</a> ";
+        private const string MailToWithName = @"<a href='mailto:{0}'>{1}</a> ";
 
         // meeting
         private const string TopicRow = @"<tr><td class='style1'>Topic:</td><td class='style2'>{0}</td></tr>";
@@ -432,7 +433,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         {
             string page = GetBeginingOfPreview(mail, filename);
 
-            page += string.Format(SenderRow, HighlightSearchString(GetConvertetString(mail.SenderName)));
+            page += string.Format(SenderRow, GetMailTo(HighlightSearchString(GetConvertetString(mail.SenderName)),mail.SenderEmailAddress));
             if (!string.IsNullOrEmpty(mail.CC))
                 page += string.Format(CCRow, HighlightSearchString(GetConvertetString(mail.CC)));
             page += string.Format(ToRow, HighlightSearchString(GetConvertetString(mail.To)));
@@ -483,6 +484,23 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
                     mailtostring += string.Format("{0}; ", mail);
             }
             return mailtostring;
+        }
+
+        private string GetMailTo(string name, string email)
+        {
+            if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(email) && IsEmail(email))
+            {
+                return string.Format(MailToWithName, email, name);
+            }
+            if (!string.IsNullOrEmpty(name) && string.IsNullOrEmpty(email))
+            {
+                return email;
+            }
+            if (string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(email) && IsEmail(email))
+            {
+                return string.Format(MailTo, email);
+            }
+            return string.Empty;
         }
 
         private bool IsEmail(string email)
