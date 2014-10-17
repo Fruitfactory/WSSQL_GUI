@@ -492,9 +492,9 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             {
                 return string.Format(MailToWithName, email, name);
             }
-            if (!string.IsNullOrEmpty(name) && string.IsNullOrEmpty(email))
+            if (!string.IsNullOrEmpty(name) && (string.IsNullOrEmpty(email) || !IsEmail(email)))
             {
-                return email;
+                return name;
             }
             if (string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(email) && IsEmail(email))
             {
