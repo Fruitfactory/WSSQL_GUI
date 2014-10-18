@@ -11,6 +11,9 @@ namespace WSUI.Core.Data
         [Field("System.Message.ToName", 16, false)]
         public string[] ToName { get; set; }
 
+        [Field("System.Message.CcName", 17, false)]
+        public string[] CcName { get; set; }
+
         public EmailContactSearchObject()
         {
             TypeItem = TypeSearchItem.Contact;
@@ -31,6 +34,9 @@ namespace WSUI.Core.Data
                     break;
                 case 16:
                     ToName = CheckValidType(value);
+                    break;
+                case 17:
+                    CcName = CheckValidType(value);
                     break;
             }
         }

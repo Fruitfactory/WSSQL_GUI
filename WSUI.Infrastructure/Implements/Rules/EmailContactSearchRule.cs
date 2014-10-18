@@ -15,7 +15,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         private const string WhereTemplate = " WHERE CONTAINS(System.Kind,'email') AND ";
 
         private const string NamesTemplate =
-            "(CONTAINS(System.Message.SenderName,'\"{0}*\"') OR CONTAINS(System.Message.SenderAddress,'\"{0}*\"') OR CONTAINS(System.Message.FromAddress,'\"{0}*\"') OR CONTAINS(System.Message.CcAddress,'\"{0}*\"') OR CONTAINS(System.Message.ToAddress,'\"{0}*\"') OR CONTAINS(System.Message.ToName,'\"{0}*\"') OR CONTAINS(System.Search.Contents,'\"{0}*\"') )";
+            "(CONTAINS(System.Message.SenderName,'\"{0}*\"') OR CONTAINS(System.Message.SenderAddress,'\"{0}*\"') OR CONTAINS(System.Message.FromName,'\"{0}*\"') OR CONTAINS(System.Message.FromAddress,'\"{0}*\"') OR CONTAINS(System.Message.CcName,'\"{0}*\"') OR CONTAINS(System.Message.CcAddress,'\"{0}*\"') OR CONTAINS(System.Message.ToAddress,'\"{0}*\"') OR CONTAINS(System.Message.ToName,'\"{0}*\"') OR CONTAINS(System.Search.Contents,'\"{0}*\"') )";
         private const string CollapseTemplate = "( {0} )";
         private const string DateTemplate = " AND System.Message.DateReceived < '{0}' ORDER BY System.Message.DateReceived DESC";
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
@@ -86,9 +86,9 @@ namespace WSUI.Infrastructure.Implements.Rules
                 var arr = SplitSearchCriteria(Query);
                 string email =
                     GetEmailAddress(item.SenderName, item.SenderAddress, arr, ref item)
+                    ?? GetEmailAddress(item.FromName, item.FromAddress, arr, ref item)
                     ?? GetEmailAddress(item.ToName, item.ToAddress, arr, ref item)
-                    ?? GetEmailAddress(item.FromAddress, arr)
-                    ?? GetEmailAddress(item.CcAddress, arr);
+                    ?? GetEmailAddress(item.CcName,item.CcAddress, arr,ref item);
                 if(string.IsNullOrEmpty(email) || _listEmails.Contains(email))
                     continue;
                 _listEmails.Add(email);
