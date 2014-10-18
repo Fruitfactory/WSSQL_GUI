@@ -21,7 +21,8 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         #region [needs]
 
         private static char[] Symbol = new char[] { '@','.',',' };
-        private const string AfterStrongTemplate = "<font style='background-color: yellow'><strong>{0}</strong></font>";
+        private const string AfterStrongTemplateBegin = "<font style='background-color: yellow'><strong>";
+        private const string AfterStrongTemplateEnd = "</strong></font>";
         private const string OutlookProcessName = "OUTLOOK";
         private const string OutlookApplication = "Outlook.Application";
         private const string WordRegex = @"(?<word>\w+)";
@@ -251,7 +252,15 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             string result = inputString;
             foreach (var s in _itemArray)
             {
-                result = Regex.Replace(result, string.Format(@"\b({0})\b", Regex.Escape(s)), string.Format(AfterStrongTemplate, s), RegexOptions.IgnoreCase);
+
+                Match m = Regex.Match(result, string.Format(@"\b({0})\b", Regex.Escape(s)),RegexOptions.IgnoreCase);
+                if (m.Success)
+                {
+                    var partBegin = result.Substring(0, m.Index);
+                    var partMath = result.Substring(m.Index, m.Length);
+                    var partEnd = result.Substring(m.Index + m.Length);
+                    result = partBegin + AfterStrongTemplateBegin + partMath + AfterStrongTemplateEnd + partEnd;
+                }
             }
             return result;
         }
