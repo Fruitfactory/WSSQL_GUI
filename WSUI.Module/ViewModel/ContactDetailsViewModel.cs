@@ -301,7 +301,7 @@ namespace WSUI.Module.ViewModel
         {
             Emails = new List<string>() { dataObject.EMail };
             string name = string.Empty;
-            FirstName = IsAbleGetNameFromContact(dataObject.EMail.ToLower(), ref name) ? name : dataObject.EMail;
+            FirstName = !string.IsNullOrEmpty(dataObject.ContactName) ? dataObject.ContactName : IsAbleGetNameFromContact(dataObject.EMail.ToLower(), ref name) ? name : dataObject.EMail;
             RaiseNotification();
         }
 

@@ -15,7 +15,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         private const string WhereTemplate = " WHERE CONTAINS(System.Kind,'email') AND ";
 
         private const string NamesTemplate =
-            "(CONTAINS(System.Message.FromAddress,'\"{0}*\"') OR CONTAINS(System.Message.CcAddress,'\"{0}*\"') OR CONTAINS(System.Message.ToAddress,'\"{0}*\"') OR CONTAINS(System.Search.Contents,'\"{0}*\"') )";
+            "(CONTAINS(System.Message.SenderName,'\"{0}*\"') OR CONTAINS(System.Message.SenderAddress,'\"{0}*\"') OR CONTAINS(System.Message.FromAddress,'\"{0}*\"') OR CONTAINS(System.Message.CcAddress,'\"{0}*\"') OR CONTAINS(System.Message.ToAddress,'\"{0}*\"') OR CONTAINS(System.Message.ToName,'\"{0}*\"') OR CONTAINS(System.Search.Contents,'\"{0}*\"') )";
         private const string CollapseTemplate = "( {0} )";
         private const string DateTemplate = " AND System.Message.DateReceived < '{0}' ORDER BY System.Message.DateReceived DESC";
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
@@ -83,15 +83,17 @@ namespace WSUI.Infrastructure.Implements.Rules
             foreach (var group in groups)
             {
                 var item = group.First();
-                string email = GetEmailAddress(item.FromAddress, Query) 
-                    ?? GetEmailAddress(item.CcAddress, Query) 
-                    ?? GetEmailAddress(item.ToAddress, Query);
+                var arr = SplitSearchCriteria(Query);
+                string email =
+                    GetEmailAddress(item.SenderName, item.SenderAddress, arr, ref item)
+                    ?? GetEmailAddress(item.ToName, item.ToAddress, arr, ref item)
+                    ?? GetEmailAddress(item.FromAddress, arr)
+                    ?? GetEmailAddress(item.CcAddress, arr);
                 if(string.IsNullOrEmpty(email) || _listEmails.Contains(email))
                     continue;
                 _listEmails.Add(email);
                 item.EMail = email;
                 result.Add(item);
-                WSSqlLogger.Instance.LogInfo("Item: {0}", item.ToString());
             }
             if (Result.Any())
             {
@@ -104,30 +106,48 @@ namespace WSUI.Infrastructure.Implements.Rules
             }
         }
 
-        private string GetEmailAddress(string[] from, string searchCriteria)
+        private string[] SplitSearchCriteria(string searchCriteria)
+        {
+            return searchCriteria.Trim().Split(' ');
+        }
+
+        private string GetEmailAddress(string[] from, string[] searchCriteria)
         {
             if (from == null)
                 return null;
             string fromAddress = null;
-            var arr = searchCriteria.Trim().Split(' ');
-            if (arr != null && arr.Length > 0)
+            foreach (var email in from)
             {
-                foreach (var email in from)
+                if (searchCriteria.All(str => email.IndexOf(str, StringComparison.InvariantCultureIgnoreCase) > -1) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
                 {
-                    if (arr.All(str => email.IndexOf(str, StringComparison.InvariantCultureIgnoreCase) > -1) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
-                    {
-                        fromAddress = email;
-                        break;
-                    }
+                    fromAddress = email;
+                    break;
                 }
             }
-            else
-                fromAddress =
-                    from.FirstOrDefault(
-                        str =>
-                        str.IndexOf(searchCriteria.Trim(), StringComparison.CurrentCultureIgnoreCase) > -1 &&
-                        Regex.IsMatch(str, EmailPattern, RegexOptions.IgnoreCase));
             return fromAddress;
+        }
+
+        private string GetEmailAddress(string[] names, string[] emails, string[] searchCriteria, ref EmailContactSearchObject item)
+        {
+            if (names == null || names.Length == 0)
+            {
+                return GetEmailAddress(emails, searchCriteria);
+            }
+            string contactName = names.FirstOrDefault(n => searchCriteria.All(s => n.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) > -1));
+            if (string.IsNullOrEmpty(contactName))
+            {
+                return GetEmailAddress(emails, searchCriteria);
+            }
+            else
+            {
+                int index = Array.IndexOf(names, contactName);
+                if (index < emails.Length)
+                {
+                    item.ContactName = contactName;
+                    return emails[index];
+                }
+            }
+            return GetEmailAddress(emails, searchCriteria);
         }
     }
 }

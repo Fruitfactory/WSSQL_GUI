@@ -118,7 +118,15 @@ namespace WSUI.Module.Service
             var email = value as EmailContactSearchObject;
             if (email != null)
             {
-                result = string.Format("{0} ({0})", email.EMail);
+                if (string.IsNullOrEmpty(email.ContactName))
+                {
+                    result = string.Format("{0} ({0})", email.EMail);
+                }
+                else
+                {
+                    result = string.Format("{0} ({1})",email.ContactName, email.EMail);
+                }
+                
                 return result;
             }
             return result;

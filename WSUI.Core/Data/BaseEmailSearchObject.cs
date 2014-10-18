@@ -151,7 +151,7 @@ namespace WSUI.Core.Data
             return email.IsEmail();
         }
 
-        private string[] CheckValidType(object val)
+        protected string[] CheckValidType(object val)
         {
             if (val != null && val.GetType().IsArray)
             {
