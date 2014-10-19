@@ -441,8 +441,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         public string GetPreviewForEmail(Outlook.MailItem mail, string filename)
         {
             string page = GetBeginingOfPreview(mail, filename);
-
-            page += string.Format(SenderRow, HighlightSearchString(GetConvertetString(mail.SenderName)));//GetMailTo(HighlightSearchString(GetConvertetString(mail.SenderName)),mail.SenderEmailAddress)
+            page += string.Format(SenderRow, GetMailTo(HighlightSearchString(GetConvertetString(mail.SenderName)),mail.SenderEmailAddress) );
             if (!string.IsNullOrEmpty(mail.CC))
                 page += string.Format(CCRow, HighlightSearchString(GetConvertetString(mail.CC)));
             page += string.Format(ToRow, HighlightSearchString(GetConvertetString(mail.To)));
