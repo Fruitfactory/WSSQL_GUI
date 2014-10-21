@@ -111,7 +111,7 @@ namespace WSUI.Module.Service
                     result = string.Format("{0} ({0})", strEmail);
                 }
                 else
-                 result = string.Format("{0} {1} ({2})", contact.FirstName, contact.LastName,strEmail);
+                    result = string.Format( string.IsNullOrEmpty(strEmail) ? "{0} {1}":"{0} {1} ({2})", contact.FirstName, contact.LastName,strEmail);
 
                 return result;
             }

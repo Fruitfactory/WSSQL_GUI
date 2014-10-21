@@ -57,15 +57,25 @@ namespace WSUI.Infrastructure.Implements.Rules
             var emailPart = CriteriaHelpers.Instance.GetFieldCriteriaForEmail(_to);
             var namePart = CriteriaHelpers.Instance.GetFieldCriteriaForName(_name, _to);
 
-            var searchedCriteria = string.Format("Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') OR CONTAINS(*,'{0}',1033) ",
-                emailPart);
-
-            if (!string.IsNullOrEmpty(namePart))
+            var searchedCriteria = string.Empty;
+            if (!string.IsNullOrEmpty(emailPart))
+            {
+                searchedCriteria = string.Format("Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') OR CONTAINS(*,'{0}',1033) ",
+                    emailPart);
+            }
+            
+            if (!string.IsNullOrEmpty(searchedCriteria) && !string.IsNullOrEmpty(namePart))
             {
                 const string template = "( {0} OR {1} )";
                 var nameCriteriaPart = string.Format("Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') ",
                     namePart);
                 return string.Format(template, nameCriteriaPart, searchedCriteria);
+            }
+            else if (!string.IsNullOrEmpty(namePart))
+            {
+                var nameCriteriaPart = string.Format("Contains(System.Message.FromName,'{0}') OR Contains(System.Message.ToName,'{0}') OR  Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcName,'{0}') OR  Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccName,'{0}') OR  Contains(System.Message.BccAddress,'{0}') ",
+                        namePart);
+                return string.Format("( {0} )", nameCriteriaPart);
             }
             return string.Format("( {0} )", searchedCriteria);
         }

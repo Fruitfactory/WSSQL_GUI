@@ -113,6 +113,10 @@ namespace WSUI.Infrastructure.Implements.Rules
                         Result.Add(contactSearchObject);
                         _listExistingEmails.Add(contactSearchObject.EmailAddress3.ToLowerInvariant());
                     }
+                    else if (!string.IsNullOrEmpty(contactSearchObject.FirstName) && !string.IsNullOrEmpty(contactSearchObject.LastName))
+                    {
+                        Result.Add(contactSearchObject);
+                    }
                 }
             }
 
