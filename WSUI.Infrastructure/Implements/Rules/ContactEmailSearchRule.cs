@@ -20,6 +20,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         private string _name;
         private string _to;
+        private string _keyWord;
 
         #region [ctor]
 
@@ -42,6 +43,7 @@ namespace WSUI.Infrastructure.Implements.Rules
             var arrStr = criteria.Split(new[] { Separator });
             _name = arrStr.Length > 0 ? arrStr[0] : string.Empty;
             _to = arrStr.Length > 1 ? arrStr[1] : string.Empty;
+            _keyWord = arrStr.Length > 2 ? arrStr[2] :string.Empty;
         }
 
         protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)

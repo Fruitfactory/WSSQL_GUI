@@ -10,6 +10,7 @@
              xmlns:core="clr-namespace:WSUI.Module.Core"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors1="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure"
+             xmlns:enums="clr-namespace:WSUI.Module.Enums"
              x:Name="this">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -52,6 +53,7 @@
                 <ColumnDefinition Width="0.25*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
@@ -109,6 +111,47 @@
                         </Style>
                     </Image.Style>
                 </Image>
+
+            </Grid>
+
+            <Grid Grid.Column="0" Grid.Row="3">
+                <Grid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                        <Setter Property="Margin" Value="2 0 0 2"></Setter>
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0" Visibility="{Binding BusinessPhoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">Business phone:</TextBlock>
+                <TextBlock Grid.Column="1" Visibility="{Binding BusinessPhoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Hyperlink Command="{Binding CopyPhoneCommand}" CommandParameter="{x:Static enums:PhoneType.Business}">
+                        <TextBlock Text="{Binding BusinessTelephone,UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                    </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Grid.Column="0" Grid.Row="1" Visibility="{Binding HomeTelephoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">Home phone:</TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="1" Visibility="{Binding HomeTelephoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Hyperlink Command="{Binding CopyPhoneCommand}" CommandParameter="{x:Static enums:PhoneType.Home}">
+                        <TextBlock Text="{Binding HomeTelephone,UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                    </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Grid.Column="0" Grid.Row="2" Visibility="{Binding MobileTelephoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">Mobile phone:</TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="2" Visibility="{Binding MobileTelephoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Hyperlink Command="{Binding CopyPhoneCommand}" CommandParameter="{x:Static enums:PhoneType.Mobile}">
+                        <TextBlock Text="{Binding MobileTelephone,UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                    </Hyperlink>
+                </TextBlock>
+
 
             </Grid>
 

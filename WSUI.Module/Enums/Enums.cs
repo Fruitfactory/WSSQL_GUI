@@ -5,4 +5,12 @@
         DataToPreview,
         PreviewToData
     }
+
+    internal enum PhoneType
+    {
+        None,
+        Business,
+        Home,
+        Mobile
+    }
 }

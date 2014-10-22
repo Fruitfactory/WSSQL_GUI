@@ -28,6 +28,15 @@ namespace WSUI.Core.Data
         [Field("System.Contact.EmailAddress3", 11, false)]
         public string EmailAddress3 { get; set; }
 
+        [Field("System.Contact.BusinessTelephone", 12, false)]
+        public string BusinessTelephone { get; set; }
+
+        [Field("System.Contact.HomeTelephone", 13, false)]
+        public string HomeTelephone { get; set; }
+
+        [Field("System.Contact.MobileTelephone", 14, false)]
+        public string MobileTelephone { get; set; }
+
         public ContactSearchObject()
         {
             TypeItem = TypeSearchItem.Contact;
@@ -42,21 +51,26 @@ namespace WSUI.Core.Data
                 case 7:
                     FirstName = value as string;
                     break;
-
                 case 8:
                     LastName = value as string;
                     break;
-
                 case 9:
                     EmailAddress = value as string;
                     break;
-
                 case 10:
                     EmailAddress2 = value as string;
                     break;
-
                 case 11:
                     EmailAddress3 = value as string;
+                    break;
+                case 12:
+                    BusinessTelephone = value as string;
+                    break;
+                case 13:
+                    HomeTelephone = value as string;
+                    break;
+                case 14:
+                    MobileTelephone = value as string;
                     break;
             }
         }
