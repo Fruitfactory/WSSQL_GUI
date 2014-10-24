@@ -49,12 +49,36 @@ namespace WSUI.Infrastructure.Implements.Rules
         protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
         {
             var dateString = FormatDate(ref LastDate);
-            string addCritetis = GetEmailsCriteria();
+            var keyWordCriteria = GetKeywoardCriteria(listCriterisRules);
+            string addCritetis = GetEmailsCriteria(keyWordCriteria);
+            GetKeywoardCriteria(listCriterisRules);
             return string.Format(WhereTemplate, dateString, addCritetis);
         }
 
+        private string GetKeywoardCriteria(IList<IRule> listCriterisRules)
+        {
+            var listW = new List<string>();
+            var temp = _keyWord;
+            foreach (var rule in listCriterisRules.OrderBy(i => i.Priority))
+            {
+                listW.AddRange(rule.ApplyRule(temp));
+                temp = rule.ClearCriteriaAccordingRule(temp);
+            }
+            var builder = new StringBuilder();
+            if (listW.Count > 0)
+            {
+                builder.Append(string.Format("\"{0}*\"", listW[0]));
+                foreach (var item in listW.Skip(1))
+                {
+                    builder.Append(string.Format(" OR \"{0}*\"", item));
+                }
+            }
 
-        private string GetEmailsCriteria()
+            return builder.ToString();
+        }
+
+
+        private string GetEmailsCriteria(string keyWordCriteria)
         {
             var emailPart = CriteriaHelpers.Instance.GetFieldCriteriaForEmail(_to);
             var namePart = CriteriaHelpers.Instance.GetFieldCriteriaForName(_name, _to);
@@ -65,7 +89,14 @@ namespace WSUI.Infrastructure.Implements.Rules
                 searchedCriteria = string.Format("Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') OR CONTAINS(*,'{0}',1033) ",
                     emailPart);
             }
-            
+
+            if (!string.IsNullOrEmpty(searchedCriteria) && !string.IsNullOrEmpty(namePart) && !string.IsNullOrEmpty(keyWordCriteria))
+            {
+                const string template = "( ({0} OR {1}) AND  Contains(*,'{2}') )";
+                var nameCriteriaPart = string.Format("Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') ",
+                    namePart);
+                return string.Format(template, nameCriteriaPart, searchedCriteria, keyWordCriteria);
+            }
             if (!string.IsNullOrEmpty(searchedCriteria) && !string.IsNullOrEmpty(namePart))
             {
                 const string template = "( {0} OR {1} )";
@@ -73,7 +104,13 @@ namespace WSUI.Infrastructure.Implements.Rules
                     namePart);
                 return string.Format(template, nameCriteriaPart, searchedCriteria);
             }
-            else if (!string.IsNullOrEmpty(namePart))
+            if (!string.IsNullOrEmpty(namePart) && !string.IsNullOrEmpty(keyWordCriteria))
+            {
+                var nameCriteriaPart = string.Format("Contains(System.Message.FromName,'{0}') OR Contains(System.Message.ToName,'{0}') OR  Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcName,'{0}') OR  Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccName,'{0}') OR  Contains(System.Message.BccAddress,'{0}') ",
+                        namePart);
+                return string.Format("( ({0}) AND  Contains(*,'{1}') )", nameCriteriaPart, keyWordCriteria);
+            }
+            if (!string.IsNullOrEmpty(namePart))
             {
                 var nameCriteriaPart = string.Format("Contains(System.Message.FromName,'{0}') OR Contains(System.Message.ToName,'{0}') OR  Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcName,'{0}') OR  Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccName,'{0}') OR  Contains(System.Message.BccAddress,'{0}') ",
                         namePart);

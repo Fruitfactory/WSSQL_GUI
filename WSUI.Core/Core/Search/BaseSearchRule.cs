@@ -114,21 +114,14 @@ namespace WSUI.Core.Core.Search
                 if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
-                //Stopwatch watch = null;
-                DataTable resultTable = GetDataTable(query);// IndexerDataReader.Instance.GetDataByReader(query);
+                
+                DataTable resultTable = GetDataTable(query);
                 // additional process
                 if (!NeedStop && resultTable != null)
                 {
-                    //(watch = new Stopwatch()).Start();
                     ReadDataFromTable(resultTable);
-                    //watch.Stop();
-                    //WSSqlLogger.Instance.LogInfo("ReadDataFromTable<{0}>: {1}",typeof(T).Name,watch.ElapsedMilliseconds);
-
-                    //(watch = new Stopwatch()).Start();
                     ProcessResult();
                     _typeResult = TypeResult.Ok;
-                    //watch.Stop();
-                    //WSSqlLogger.Instance.LogInfo("ProcessResult<{0}>: {1}", typeof(T).Name, watch.ElapsedMilliseconds);
                 }
                 else
                 {

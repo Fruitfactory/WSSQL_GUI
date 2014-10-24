@@ -341,7 +341,8 @@ namespace WSUI.Module.ViewModel
                         {
                             PreviewView.SetFullFolderPath(SearchItemHelper.GetFullFolderPath(_currentData));
                         }
-                        PreviewView.SetSearchPattern(_currentItem != null
+
+                        PreviewView.SetSearchPattern( _contactDetails != null ? _contactDetails.SearchCriteria : _currentItem != null
                             ? _currentItem.SearchString
                             : string.Empty);
                         PreviewView.SetPreviewFile(filename);

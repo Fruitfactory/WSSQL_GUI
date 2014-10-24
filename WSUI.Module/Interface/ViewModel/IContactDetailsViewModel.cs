@@ -26,5 +26,7 @@ namespace WSUI.Module.Interface.ViewModel
 
         IEnumerable<UIItem> ContactUIItemCollection { get; }
         int SelectedIndex { get; }
+
+        string SearchCriteria { get; }
     }
 }

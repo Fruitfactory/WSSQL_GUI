@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
@@ -51,9 +52,12 @@ namespace WSUI.Module.ViewModel
         private string _from = string.Empty;
         private string _to = string.Empty;
 
+        private string _searchEmailString = string.Empty;
+
 
         private bool _isAttachmentBusy = true;
         private bool _isEmailBusy = true;
+        private string _searchAttachmentString;
 
         public ContactDetailsViewModel(IEventAggregator eventAggregator, IContactDetailsView contactDetailsView, IMainViewModel mainViewModel)
         {
@@ -61,14 +65,10 @@ namespace WSUI.Module.ViewModel
             _mainViewModel = mainViewModel;
             View = contactDetailsView;
             contactDetailsView.Model = this;
-            CreateEmailCommand = new WSUIRelayCommand(CreateEmailExecute);
-            MoreCommand = new DelegateCommand<object>(MoreCommandExecute, o => true);
             InitializeSearchSystem();
-            MainEmailSource = new ObservableCollection<EmailSearchObject>();
-            MainFileSource = new ObservableCollection<AttachmentSearchObject>();
-            ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
-            ScrollChangedCommand2 = new DelegateCommand<object>(OnScroll2, o => true);
-            CopyPhoneCommand = new DelegateCommand<object>(CopyPhoneToClipboard,o => true);
+
+            InitCommands();
+
             _scrollBehavior = new ScrollBehavior { LimitReaction = 85 };
             _scrollBehavior.SearchGo += ScrollBehaviorOnSearchGo;
             _scrollBehavior2 = new ScrollBehavior { LimitReaction = 85 };
@@ -79,7 +79,30 @@ namespace WSUI.Module.ViewModel
             InitContactCommands();
         }
 
+        private void InitCommands()
+        {
+            CreateEmailCommand = new WSUIRelayCommand(CreateEmailExecute);
+            MoreCommand = new DelegateCommand<object>(MoreCommandExecute, o => true);
+            MainEmailSource = new ObservableCollection<EmailSearchObject>();
+            MainFileSource = new ObservableCollection<AttachmentSearchObject>();
+            ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
+            ScrollChangedCommand2 = new DelegateCommand<object>(OnScroll2, o => true);
+            CopyPhoneCommand = new DelegateCommand<object>(CopyPhoneToClipboard, o => true);
+            SearchEmailCommand = new DelegateCommand<object>(EmailSearchExecute, o => true);
+            SearchAttachmentCommand = new DelegateCommand<object>(AttacmentSearchExecute, o => true);
+            EmailContextKeyDownCommand = new DelegateCommand<object>(KeyEmailDown, o => true);
+            AttachmentContextKeyDownCommand = new DelegateCommand<object>(KeyAttachmentDown, o => true);
+        }
 
+        private void EmailSearchExecute(object o)
+        {
+            RunEmailSearching(_from,_to);    
+        }
+
+        private void AttacmentSearchExecute(object o)
+        {
+            RunAttachmentSearching(_from,_to);
+        }
 
         private void ScrollBehaviorOnSearchGo()
         {
@@ -90,7 +113,6 @@ namespace WSUI.Module.ViewModel
         {
             RunAttachmentSearching(_from, _to);
         }
-
 
         #region [interface]
 
@@ -157,6 +179,17 @@ namespace WSUI.Module.ViewModel
 
         public ICommand MoreCommand { get; private set; }
 
+        public ICommand CopyPhoneCommand { get; private set; }
+
+        public ICommand SearchEmailCommand { get; private set; }
+
+        public ICommand SearchAttachmentCommand { get; private set; }
+
+        public ICommand EmailContextKeyDownCommand { get; private set; }
+
+        public ICommand AttachmentContextKeyDownCommand { get; private set; }
+
+
         #endregion [commands]
 
         #region [property]
@@ -212,6 +245,15 @@ namespace WSUI.Module.ViewModel
 
         public int SelectedIndex { get; private set; }
 
+        public string SearchCriteria 
+        { 
+            get 
+            {
+                return SelectedIndex == 1 ? SearchEmailString 
+                    : SelectedIndex == 2 ? SearchAttachmentString 
+                    : string.Empty;
+            } 
+        }
 
         public IEnumerable<MenuItem> EmailMenuItems { get { return _mainViewModel.EmailsMenuItems; } }
 
@@ -238,7 +280,52 @@ namespace WSUI.Module.ViewModel
             get { return !string.IsNullOrEmpty(MobileTelephone); }
         }
 
-        public ICommand CopyPhoneCommand { get; private set; }
+        public string SearchEmailString
+        {
+            get { return _searchEmailString; }
+            set
+            {
+                SearchString = _searchEmailString = value;
+                ResetEmailSearch();
+            }
+        }
+
+        private void ResetEmailSearch()
+        {
+            if (_emailSearchSystem == null)
+            {
+                return;
+            }
+            _emailSearchSystem.Reset();
+            EmailsSource.Clear();
+            OnPropertyChanged(() => EmailsSource);
+        }
+
+        public string SearchAttachmentString
+        {
+            get { return _searchAttachmentString; }
+            set
+            {
+                SearchString = _searchAttachmentString = value;
+                ResetAttacmentSearch();
+            }
+        }
+
+        private void ResetAttacmentSearch()
+        {
+            if (_attachmentSearchSystem == null)
+            {
+                return;
+            }
+            _attachmentSearchSystem.Reset();
+            ItemsSource.Clear();
+            OnPropertyChanged(() => ItemsSource);
+        }
+
+        public bool IsEmailBusy { get; private set; }
+
+        public bool IsAttachmentBusy { get; private set; }
+
 
         #endregion [property]
 
@@ -284,10 +371,11 @@ namespace WSUI.Module.ViewModel
                 FileHeight = IsFileMoreVisible ? avaibleHeight.Item1 : ItemsSource.Count * AvaregeOneRowItemHeight;
             }
             _isAttachmentBusy = false;
+            IsAttachmentBusy = false;
+            OnPropertyChanged(() => IsAttachmentBusy);
             OnPropertyChanged(() => ItemsSource);
             OnPropertyChanged(() => IsBusy);
             NotifyFilesPartChanged();
-
         }
 
         private void ProcessEmailResult()
@@ -308,6 +396,8 @@ namespace WSUI.Module.ViewModel
                 _isEmailsInitialized = true;
             }
             _isEmailBusy = false;
+            IsEmailBusy = false;
+            OnPropertyChanged(() => IsEmailBusy);
             OnPropertyChanged(() => EmailsSource);
             OnPropertyChanged(() => IsBusy);
             NotifyEmailPartChanged();
@@ -347,19 +437,23 @@ namespace WSUI.Module.ViewModel
 
         private void RunEmailSearching(string from, string to)
         {
-            RunSearching(_emailSearchSystem, from, to);
+            RunSearching(_emailSearchSystem, from, to,SearchEmailString);
+            IsEmailBusy = true;
+            OnPropertyChanged(() => IsEmailBusy);
         }
 
         private void RunAttachmentSearching(string from, string to)
         {
-            RunSearching(_attachmentSearchSystem, from, to);
+            RunSearching(_attachmentSearchSystem, from, to,SearchAttachmentString);
+            IsAttachmentBusy = true;
+            OnPropertyChanged(() => IsAttachmentBusy);
         }
 
-        private void RunSearching(ISearchSystem searchSystem, string from, string to)
+        private void RunSearching(ISearchSystem searchSystem, string from, string to,string searchCriteria)
         {
             if (searchSystem == null)
                 return;
-            searchSystem.SetSearchCriteria(string.Format("{0};{1}", from, to));
+            searchSystem.SetSearchCriteria(string.Format("{0};{1};{2}", from, to, searchCriteria));
             searchSystem.Search();
         }
 
@@ -456,7 +550,6 @@ namespace WSUI.Module.ViewModel
 
         }
 
-
         private void CopyPhoneToClipboard(object phoneType)
         {
             var type = (PhoneType)phoneType;
@@ -470,6 +563,32 @@ namespace WSUI.Module.ViewModel
                     break;
                 case PhoneType.Mobile:
                     Clipboard.SetText(MobileTelephone);
+                    break;
+            }
+        }
+
+        protected void KeyEmailDown(object args)
+        {
+            if (args == null || !(args is KeyEventArgs))
+                return;
+            var keys = args as KeyEventArgs;
+            switch (keys.Key)
+            {
+                case Key.Enter:
+                    RunEmailSearching(_from,_to);
+                    break;
+            }
+        }
+
+        protected void KeyAttachmentDown(object args)
+        {
+            if (args == null || !(args is KeyEventArgs))
+                return;
+            var keys = args as KeyEventArgs;
+            switch (keys.Key)
+            {
+                case Key.Enter:
+                    RunAttachmentSearching(_from, _to);
                     break;
             }
         }

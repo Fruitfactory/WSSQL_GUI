@@ -16,6 +16,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Service\ResourceTemplate.xaml" />
+                <ResourceDictionary Source="../Service/SearchButtonStyle.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
             <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></service:BoolToVisibilityConverter>
@@ -278,40 +279,124 @@
 
                 <TabItem ToolTip="Conversations" HeaderTemplate="{x:Null}"
                          Visibility="Collapsed">
-                    <listBox:WSUIListBox x:Name="listBox" Style="{StaticResource SimpleListBoxStyle}"
-                             ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
-                            BorderBrush="Transparent"
-                            Background="Transparent"
-                             ItemsSource="{Binding Path=EmailsSource,UpdateSourceTrigger=PropertyChanged}"
-                             attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                             attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
-                             ItemTemplateSelector="{StaticResource templateSelector}"
-                             ScrollViewer.ScrollChanged="ListBox_OnScrollChanged"
-                             HorizontalContentAlignment="Stretch">
-                        <listBox:WSUIListBox.ContextMenu>
-                            <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
-                        </listBox:WSUIListBox.ContextMenu>
-                        <i:Interaction.Behaviors>
-                            <behaviors1:SelectedItemTrackingBehavior TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors1:SelectedItemTrackingBehavior>
-                        </i:Interaction.Behaviors>
-                    </listBox:WSUIListBox>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBox  
+                               Text="{Binding Path=SearchEmailString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                Controls:TextboxHelper.Watermark="Enter Search Context for Contact"
+                                Controls:TextboxHelper.ClearTextButton="True"
+                                service:KeyDownBehavior.KeyDown="{Binding EmailContextKeyDownCommand}" 
+                                VerticalAlignment="Center"    
+                                VerticalContentAlignment="Center"
+                                Grid.Column="0" 
+                                MinHeight="22" />
+                            <Button Command="{Binding Path=SearchEmailCommand}"
+                                    Style="{StaticResource SearchButton}"
+                                    Grid.Column="1" 
+                                    HorizontalAlignment="Stretch" 
+                                    VerticalAlignment="Top" 
+                                    Height="23"
+                                    />
+                        </Grid>
+
+
+                        <listBox:WSUIListBox x:Name="listBox" 
+                                             Grid.Row="1"
+                                             Style="{StaticResource SimpleListBoxStyle}"
+                                             ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
+                                             BorderBrush="Transparent"
+                                             Background="Transparent"
+                                             ItemsSource="{Binding Path=EmailsSource,UpdateSourceTrigger=PropertyChanged}"
+                                             attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                             attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
+                                             ItemTemplateSelector="{StaticResource templateSelector}"
+                                             ScrollViewer.ScrollChanged="ListBox_OnScrollChanged"
+                                             HorizontalContentAlignment="Stretch">
+                            <listBox:WSUIListBox.ContextMenu>
+                                <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+                            </listBox:WSUIListBox.ContextMenu>
+                            <i:Interaction.Behaviors>
+                                <behaviors1:SelectedItemTrackingBehavior TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors1:SelectedItemTrackingBehavior>
+                            </i:Interaction.Behaviors>
+                        </listBox:WSUIListBox>
+
+
+                        <Border Background="#80FFFFFF" Visibility="{Binding IsEmailBusy,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2">
+                            <Grid>
+                                <Controls:ProgressRing
+                                       IsActive="True"
+                                       Visibility="{Binding IsEmailBusy, Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </Border>
+
+
+                    </Grid>
                 </TabItem>
 
                 <TabItem  HeaderTemplate="{x:Null}" ToolTip="File Exchanged"
                          Visibility="Collapsed">
-                    <ListBox x:Name="FileListBox" ItemsSource="{Binding Path=ItemsSource,UpdateSourceTrigger=PropertyChanged}"
-                         ItemTemplateSelector="{StaticResource templateSelector}"
-                         SelectedItem="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                         HorizontalContentAlignment="Stretch"
-                             ScrollViewer.ScrollChanged="ListBox_ScrollChanged">
-                        <i:Interaction.Behaviors>
-                            <behaviors1:ListBoxBehavior></behaviors1:ListBoxBehavior>
-                            <behaviors1:SelectedItemTrackingBehavior TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors1:SelectedItemTrackingBehavior>
-                        </i:Interaction.Behaviors>
-                        <ListBox.ContextMenu>
-                            <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
-                        </ListBox.ContextMenu>
-                    </ListBox>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBox  
+                               Text="{Binding Path=SearchAttachmentString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                Controls:TextboxHelper.Watermark="Enter Search Context for Attachment"
+                                Controls:TextboxHelper.ClearTextButton="True"
+                                service:KeyDownBehavior.KeyDown="{Binding AttachmentContextKeyDownCommand}" 
+                                VerticalAlignment="Center"    
+                                VerticalContentAlignment="Center"
+                                Grid.Column="0" 
+                                MinHeight="22" />
+                            <Button Command="{Binding Path=SearchAttachmentCommand}"
+                                    Style="{StaticResource SearchButton}"
+                                    Grid.Column="1" 
+                                    HorizontalAlignment="Stretch" 
+                                    VerticalAlignment="Top" 
+                                    Height="23"
+                                    />
+                        </Grid>
+
+                        <ListBox x:Name="FileListBox" 
+                                 Grid.Row="1"
+                                 ItemsSource="{Binding Path=ItemsSource,UpdateSourceTrigger=PropertyChanged}"
+                                 ItemTemplateSelector="{StaticResource templateSelector}"
+                                 SelectedItem="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                 HorizontalContentAlignment="Stretch"
+                                 ScrollViewer.ScrollChanged="ListBox_ScrollChanged">
+                            <i:Interaction.Behaviors>
+                                <behaviors1:ListBoxBehavior></behaviors1:ListBoxBehavior>
+                                <behaviors1:SelectedItemTrackingBehavior TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors1:SelectedItemTrackingBehavior>
+                            </i:Interaction.Behaviors>
+                            <ListBox.ContextMenu>
+                                <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+                            </ListBox.ContextMenu>
+                        </ListBox>
+
+                        <Border Background="#80FFFFFF" Visibility="{Binding IsAttachmentBusy,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2">
+                            <Grid>
+                                <Controls:ProgressRing
+                                       IsActive="True"
+                                       Visibility="{Binding IsAttachmentBusy, Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </Border>
+                    </Grid>
 
                 </TabItem>
             </Controls:MetroAnimatedSingleRowTabControl>

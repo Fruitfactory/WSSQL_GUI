@@ -16,7 +16,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         private string _name;
         private string _to;
-
+        private string _keyWord;
 
         #region [ctor]
 
@@ -48,17 +48,40 @@ namespace WSUI.Infrastructure.Implements.Rules
             var arrStr = criteria.Split(new[] { Separator });
             _name = arrStr.Length > 0 ? arrStr[0] : string.Empty;
             _to = arrStr.Length > 1 ? arrStr[1] : string.Empty;
+            _keyWord = arrStr.Length > 2 ? arrStr[2] : string.Empty;
         }
 
         protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
         {
             var dateString = FormatDate(ref LastDate);
-            string addCritetis = GetContactCriteria();
+            var keyWordCriteria = GetKeywoardCriteria(listCriterisRules);
+            string addCritetis = GetContactCriteria(keyWordCriteria);
             return string.Format(WhereTemplate, dateString, addCritetis);
         }
 
+        private string GetKeywoardCriteria(IList<IRule> listCriterisRules)
+        {
+            var listW = new List<string>();
+            var temp = _keyWord;
+            foreach (var rule in listCriterisRules.OrderBy(i => i.Priority))
+            {
+                listW.AddRange(rule.ApplyRule(temp));
+                temp = rule.ClearCriteriaAccordingRule(temp);
+            }
+            var builder = new StringBuilder();
+            if (listW.Count > 0)
+            {
+                builder.Append(string.Format("\"{0}*\"", listW[0]));
+                foreach (var item in listW.Skip(1))
+                {
+                    builder.Append(string.Format(" OR \"{0}*\"", item));
+                }
+            }
 
-        private string GetContactCriteria()
+            return builder.ToString();
+        }
+
+        private string GetContactCriteria(string keyWordCriteria)
         {
             var CurrentUserInfo = OutlookHelper.Instance.GetCurrentyUserInfo();
 
@@ -85,7 +108,9 @@ namespace WSUI.Infrastructure.Implements.Rules
                     searchedContactCtiteria, criteriaForName2);
             }
 
-            searchedContactCtiteria = string.Format("( {0} OR CONTAINS(*,'{1}',1033))", searchedContactCtiteria, criteriaForField);
+            searchedContactCtiteria = string.IsNullOrEmpty(keyWordCriteria) 
+                ? string.Format("( {0} OR CONTAINS(*,'{1}',1033)) ", searchedContactCtiteria, criteriaForField)
+                : string.Format("( {0} OR CONTAINS(*,'{1}',1033)) AND CONTAINS(*,'{2}',1033) ", searchedContactCtiteria, criteriaForField, keyWordCriteria);
 
             const string templateTwo = "(( {0} OR {1} ) AND {2} )";
             const string templateOne = "(( {0}) AND {1} )";
