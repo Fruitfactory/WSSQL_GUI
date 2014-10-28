@@ -85,5 +85,12 @@ namespace WSUI.Core.Data
                         ? EmailAddress3
                         : string.Empty;
         }
+
+
+        public override string ToString()
+        {
+            return string.Format("{0} {1}; {2}; {3}; {4}", this.FirstName, this.LastName, this.EmailAddress, this.EmailAddress2, this.EmailAddress3);
+        }
+
     }//end ContactSearchObject
 }//end namespace Data

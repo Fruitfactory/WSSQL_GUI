@@ -93,6 +93,8 @@ namespace WSUI.Infrastructure.Implements.Rules
             {
                 foreach (var contactSearchObject in resultContacts)
                 {
+                    var contactName = string.Format("{0} {1}", contactSearchObject.FirstName, contactSearchObject.LastName);
+
                     if (IsEmail(contactSearchObject.EmailAddress) && IsContainsSearchCriterias(contactSearchObject.EmailAddress, arrQuery) &&
                         !_listExistingEmails.Contains(contactSearchObject.EmailAddress.ToLowerInvariant()))
                     {
@@ -113,9 +115,11 @@ namespace WSUI.Infrastructure.Implements.Rules
                         Result.Add(contactSearchObject);
                         _listExistingEmails.Add(contactSearchObject.EmailAddress3.ToLowerInvariant());
                     }
-                    else if (!string.IsNullOrEmpty(contactSearchObject.FirstName) && !string.IsNullOrEmpty(contactSearchObject.LastName))
+                    else if (!string.IsNullOrEmpty(contactSearchObject.FirstName) && !string.IsNullOrEmpty(contactSearchObject.LastName) &&
+                        !_listExistingEmails.Contains(contactName))
                     {
                         Result.Add(contactSearchObject);
+                        _listExistingEmails.Add(contactName);
                     }
                 }
             }
@@ -125,7 +129,7 @@ namespace WSUI.Infrastructure.Implements.Rules
             {
                 foreach (var emailContact in resultEmailContact)
                 {
-                    if(_listExistingEmails.Contains(emailContact.EMail.ToLowerInvariant()))
+                    if(!IsEmail(emailContact.EMail) || _listExistingEmails.Contains(emailContact.EMail.ToLowerInvariant()))
                         continue;
                     Result.Add(emailContact);
                     _listExistingEmails.Add(emailContact.EMail.ToLowerInvariant());
