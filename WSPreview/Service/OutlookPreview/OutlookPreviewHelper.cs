@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using GDIDraw.Service;
 using HtmlAgilityPack;
@@ -35,7 +36,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         private const string PageBegin = @"<!DOCTYPE html><html lang='en'><head><title></title><meta charset='utf-8' http-equiv='Content-Type' content='text/html; charset=utf-8;'><style type='text/css'>.style1{color: gray;word-wrap: break-word}.style2{width:100%;}</style></head><body style='font-family: Arial, Helvetica, sans-serif;font-size: x-small;word-wrap: break-word;;white-space: nowrap;'>";
         private const string TableBegin = @"<table style='width: 100%; table-layout: auto;'>";
         private const string SubjectRow = @"<tr><td  style='color: #0c0202; font-size: small; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
-        private const string SenderRow = @"<tr><td  style='color: #0c0202; font-size: small; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
+        private const string SenderRow = @"<tr><td class='style1'>From:</td><td class='style2'>{0}</td></tr>";// @"<tr><td  style='color: #0c0202; font-size: small; margin: 5px 5px 5px 5px' colspan='2'>{0}</td></tr>";
         private const string ToRow = @"<tr><td class='style1'>To:</td><td class='style2'>{0}</td></tr>";
         private const string CCRow = @"<tr><td class='style1'>CC:</td><td class='style2'>{0}</td></tr>";
         private const string InRow = @"<tr><td class='style1'>In:</td><td ><a href='uuid:{0}'>{1}</a></td></tr>";
@@ -444,7 +445,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             page += string.Format(SenderRow, GetMailTo(HighlightSearchString(GetConvertetString(mail.SenderName)),mail.SenderEmailAddress) );
             if (!string.IsNullOrEmpty(mail.CC))
                 page += string.Format(CCRow, HighlightSearchString(GetConvertetString(mail.CC)));
-            page += string.Format(ToRow, HighlightSearchString(GetConvertetString(mail.To)));
+            page += string.Format(ToRow, GetRecipientsRow(mail));
             var folder = GetEmailFolder();
             if (folder != null && !string.IsNullOrEmpty(folder.Item1) && !string.IsNullOrEmpty(folder.Item2))
             {
@@ -456,6 +457,17 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             page += string.Format(EmailRow, temp);
             page += TableEnd + PageEnd;
             return page;
+        }
+
+        private string GetRecipientsRow(Outlook.MailItem mail)
+        {
+            if (mail == null || mail.Recipients == null || mail.Recipients.Count == 0)
+            {
+                return string.Empty;
+            }
+            var list = mail.Recipients.OfType<Outlook.Recipient>().Select(recipient => GetMailTo(HighlightSearchString(recipient.Name), recipient.Address)).ToList();
+
+            return string.Join("; ", list.Where(s => !string.IsNullOrEmpty(s)));
         }
 
         private string GetConvertetString(string str)

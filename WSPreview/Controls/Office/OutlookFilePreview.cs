@@ -145,7 +145,6 @@ namespace WSPreview.PreviewHandler.Controls.Office
             {
                 try
                 {
-                    System.Diagnostics.Debug.WriteLine(GetDefaultBrowserPath());
                     args.Cancel = true;
                     Process.Start(path);
                 }

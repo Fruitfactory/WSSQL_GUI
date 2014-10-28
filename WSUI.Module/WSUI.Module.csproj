@@ -134,6 +134,7 @@
     <Compile Include="Core\BaseEmailPreviewCommand.cs" />
     <Compile Include="Core\BaseFilePreviewCommand.cs" />
     <Compile Include="Core\BasePreviewCommand.cs" />
+    <Compile Include="Core\ContactKindDetailsViewModelBase.cs" />
     <Compile Include="Core\KindNameAttribute.cs" />
     <Compile Include="Core\KindsConstName.cs" />
     <Compile Include="Core\KindViewModelBase.cs" />
@@ -142,8 +143,14 @@
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Interface\Service\ICommandStrategy.cs" />
     <Compile Include="Interface\Service\INavigationService.cs" />
+    <Compile Include="Interface\ViewModel\IContactAttachmentDetailsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IContactDetailsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IContactEmailDetailsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IContactKindDetailsViewModel.cs" />
+    <Compile Include="Interface\View\IContactAttachmentDetailsView.cs" />
     <Compile Include="Interface\View\IContactDetailsView.cs" />
+    <Compile Include="Interface\View\IContactEmailDetailsView.cs" />
+    <Compile Include="Interface\View\IContactKindDetailsView.cs" />
     <Compile Include="Interface\View\IDataKindView.cs" />
     <Compile Include="Interface\View\IDataView.cs" />
     <Compile Include="Interface\ViewModel\IKindItem.cs" />
