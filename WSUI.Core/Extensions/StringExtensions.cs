@@ -12,7 +12,7 @@ namespace WSUI.Core.Extensions
 
         private static readonly char[] separators = new char[] { ' ', '.', ',' };
         private readonly static char Apersand = '@';
-
+        
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
 
 
@@ -56,6 +56,10 @@ namespace WSUI.Core.Extensions
             return !string.IsNullOrEmpty(email) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase);
         }
 
+        public static string ClearString(this string str, string pattern = "['()\"]")
+        {
+            return string.IsNullOrEmpty(str) ? string.Empty : Regex.Replace(str, pattern, "",RegexOptions.Compiled);
+        }
 
     }
 }

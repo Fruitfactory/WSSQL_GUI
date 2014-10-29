@@ -469,11 +469,12 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             var list = new List<string>();
             foreach (Outlook.Recipient recipient in mail.Recipients.OfType<Outlook.Recipient>())
             {
-                list.Add(GetMailTo(HighlightSearchString(recipient.Name), recipient.Address));
+                var clearStr = recipient.Name.ClearString();
+                list.Add(GetMailTo(HighlightSearchString(clearStr), recipient.Address));
             }
-
             return string.Join("; ", list.Where(s => !string.IsNullOrEmpty(s)));
         }
+
 
         private string GetConvertetString(string str)
         {
