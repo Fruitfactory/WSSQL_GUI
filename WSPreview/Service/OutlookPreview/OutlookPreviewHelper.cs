@@ -55,6 +55,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         private const string LocationRow = @"<tr><td class='style1'>Location: </td><td class='style2'><a href='{0}'>{0}</a></td></tr>";
         private const string MailTo = @"<a href='mailto:{0}'>{0}</a> ";
         private const string MailToWithName = @"<a href='mailto:{0}'>{1}</a> ";
+        private const string ContactName = @"<a href='fax:{0}'>{0}</a> ";
 
         // meeting
         private const string TopicRow = @"<tr><td class='style1'>Topic:</td><td class='style2'>{0}</td></tr>";
@@ -470,7 +471,9 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             foreach (Outlook.Recipient recipient in mail.Recipients.OfType<Outlook.Recipient>())
             {
                 var clearStr = recipient.Name.ClearString();
-                list.Add(GetMailTo(HighlightSearchString(clearStr), recipient.Address));
+                var str = clearStr.Replace(' ',':');
+                var tt = IsEmail(recipient.Address) ? GetMailTo(HighlightSearchString(clearStr), recipient.Address) : GetContactName(clearStr);
+                list.Add(tt);
             }
             return string.Join("; ", list.Where(s => !string.IsNullOrEmpty(s)));
         }
@@ -520,13 +523,18 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             }
             if (!string.IsNullOrEmpty(name) && (string.IsNullOrEmpty(email) || !IsEmail(email)))
             {
-                return name;
+                return string.Format(MailToWithName, name, name);
             }
             if (string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(email) && IsEmail(email))
             {
                 return string.Format(MailTo, email);
             }
             return string.Empty;
+        }
+
+        private string GetContactName(string name)
+        {
+            return string.Format(ContactName, name);
         }
 
         private bool IsEmail(string email)
