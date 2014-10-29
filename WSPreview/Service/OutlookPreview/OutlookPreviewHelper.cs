@@ -465,7 +465,12 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             {
                 return string.Empty;
             }
-            var list = mail.Recipients.OfType<Outlook.Recipient>().Select(recipient => GetMailTo(HighlightSearchString(recipient.Name), recipient.Address)).ToList();
+
+            var list = new List<string>();
+            foreach (Outlook.Recipient recipient in mail.Recipients.OfType<Outlook.Recipient>())
+            {
+                list.Add(GetMailTo(HighlightSearchString(recipient.Name), recipient.Address));
+            }
 
             return string.Join("; ", list.Where(s => !string.IsNullOrEmpty(s)));
         }
