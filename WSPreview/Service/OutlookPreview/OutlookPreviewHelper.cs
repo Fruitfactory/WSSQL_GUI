@@ -56,6 +56,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         private const string MailTo = @"<a href='mailto:{0}'>{0}</a> ";
         private const string MailToWithName = @"<a href='mailto:{0}'>{1}</a> ";
         private const string ContactName = @"<a href='fax:{0}'>{0}</a> ";
+        private const string ContactNameWithEmail = @"<a href='fax:{0}'>{1}</a> ";
 
         // meeting
         private const string TopicRow = @"<tr><td class='style1'>Topic:</td><td class='style2'>{0}</td></tr>";
@@ -471,8 +472,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             foreach (Outlook.Recipient recipient in mail.Recipients.OfType<Outlook.Recipient>())
             {
                 var clearStr = recipient.Name.ClearString();
-                var str = clearStr.Replace(' ',':');
-                var tt = IsEmail(recipient.Address) ? GetMailTo(HighlightSearchString(clearStr), recipient.Address) : GetContactName(clearStr);
+                var tt = IsEmail(recipient.Address) ? GetContactNameWithEmail(clearStr,recipient.Address): GetContactName(clearStr);
                 list.Add(tt);
             }
             return string.Join("; ", list.Where(s => !string.IsNullOrEmpty(s)));
@@ -530,6 +530,11 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
                 return string.Format(MailTo, email);
             }
             return string.Empty;
+        }
+
+        private string GetContactNameWithEmail(string name, string email)
+        {
+            return string.Format(ContactNameWithEmail, string.Format("{0}:{1}", name, email), HighlightSearchString(name));
         }
 
         private string GetContactName(string name)

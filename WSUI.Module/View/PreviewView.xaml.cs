@@ -35,6 +35,9 @@ namespace WSUI.Module.View
                 case WSPreviewCommand.ShowFolder:
                     Model.ShowOutlookFolder(wsuiPreviewCommandArgs.Tag as string);
                     break;
+                case WSPreviewCommand.ShowContact:
+                    Model.ShowContactPreview(wsuiPreviewCommandArgs.Tag);
+                    break;
             }
         }
 

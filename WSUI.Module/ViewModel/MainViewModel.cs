@@ -302,15 +302,25 @@ namespace WSUI.Module.ViewModel
             _currentData = searchObjectPayload.Data as BaseSearchObject;
             if (_currentData == null || _currentData.TypeItem == TypeSearchItem.None)
                 return;
-            ChooseStrategy(Current);
+            ShowPreview(Current);
+        }
+
+        private void ShowPreview(BaseSearchObject data)
+        {
+            if (data == null)
+            {
+                return;
+            }
+            ChooseStrategy(data);
             try
             {
                 Enabled = false;
 
-                switch (_currentData.TypeItem)
+                switch (data.TypeItem)
                 {
                     case TypeSearchItem.Contact:
-                        Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => ShowPreviewForPreviewObject(_currentData)), null);
+                        Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => ShowPreviewForPreviewObject(data)),
+                            null);
                         break;
 
                     default:
@@ -320,11 +330,10 @@ namespace WSUI.Module.ViewModel
 
                 IsBusy = true;
                 DataVisibility = Visibility.Collapsed;
-
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "OnCurrentImageChanged", ex.Message));
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "ShowPreview", ex.Message));
             }
         }
 
@@ -638,6 +647,11 @@ namespace WSUI.Module.ViewModel
             if (_eventAggregator == null)
                 return;
             _eventAggregator.GetEvent<WSUIShowFolder>().Publish(folder);
+        }
+
+        public void ShowContactPreview(object tag)
+        {
+            ShowPreview(tag as BaseSearchObject);
         }
 
         public BaseSearchObject Current

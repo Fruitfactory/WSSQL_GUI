@@ -2,13 +2,16 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using WSPreview.PreviewHandler.Controls.Office.WebUtils;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.EventArguments;
+using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
@@ -18,11 +21,12 @@ using WSPreview.PreviewHandler.Service.OutlookPreview;
 namespace WSPreview.PreviewHandler.Controls.Office
 {
     [KeyControl(ControlsKey.Outlook)]
-    public partial class OutlookFilePreview : ExtWebBrowser,IPreviewControl,ICommandPreviewControl
+    public partial class OutlookFilePreview : ExtWebBrowser, IPreviewControl, ICommandPreviewControl
     {
 
         private string _hitString;
         private string _fileName;
+        private dynamic _outlookItem;
 
         public OutlookFilePreview()
         {
@@ -34,7 +38,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         private void OnNavigated(object sender, WebBrowserNavigatedEventArgs webBrowserNavigatedEventArgs)
         {
-            
+
         }
 
         #region public
@@ -60,27 +64,26 @@ namespace WSPreview.PreviewHandler.Controls.Office
             Outlook._Application app = OutlookPreviewHelper.Instance.OutlookApp;
             if (app == null)
                 return;
-            var mail = app.CreateItemFromTemplate(filename);
+            _outlookItem = app.CreateItemFromTemplate(filename);
 
-            if (mail == null)
+            if (_outlookItem == null)
                 return;
 
             string page = string.Empty;
 
-            if (mail is Outlook.MailItem)
+            if (_outlookItem is Outlook.MailItem)
             {
-                page = OutlookPreviewHelper.Instance.GetPreviewForEmail(mail as Outlook.MailItem, filename);
+                page = OutlookPreviewHelper.Instance.GetPreviewForEmail(_outlookItem as Outlook.MailItem, filename);
             }
-            else if (mail is Outlook.AppointmentItem)
+            else if (_outlookItem is Outlook.AppointmentItem)
             {
-                page = OutlookPreviewHelper.Instance.GetPreviewForAppointment(mail as Outlook.AppointmentItem, filename);
+                page = OutlookPreviewHelper.Instance.GetPreviewForAppointment(_outlookItem as Outlook.AppointmentItem, filename);
             }
-            else if (mail is Outlook.MeetingItem)
+            else if (_outlookItem is Outlook.MeetingItem)
             {
-                page = OutlookPreviewHelper.Instance.GetPreviewForMeeting(mail as Outlook.MeetingItem, filename);
+                page = OutlookPreviewHelper.Instance.GetPreviewForMeeting(_outlookItem as Outlook.MeetingItem, filename);
             }
             DocumentText = page;
-            Marshal.ReleaseComObject(mail);
         }
 
         public void LoadFile(Stream stream)
@@ -96,15 +99,19 @@ namespace WSPreview.PreviewHandler.Controls.Office
         public void Unload()
         {
             OutlookPreviewHelper.Instance.DeleteAllTempFile();
+            if (_outlookItem != null)
+            {
+                Marshal.ReleaseComObject(_outlookItem);
+            }
         }
 
         #endregion
 
         public void CopySelectedText()
         {
-            if(!Focused)
+            if (!Focused)
                 return;
-            
+
             IHTMLDocument2 htmlDocument = Document.DomDocument as IHTMLDocument2;
             IHTMLSelectionObject currentSelection = htmlDocument.selection;
             if (currentSelection != null)
@@ -137,8 +144,12 @@ namespace WSPreview.PreviewHandler.Controls.Office
                     path = OutlookPreviewHelper.Instance.GetPathForEmail(args.Url, _fileName);
                     break;
                 case "uuid":
-                    RaisePreviewCommandExecuted(WSPreviewCommand.ShowFolder,args.Url.LocalPath);
+                    RaisePreviewCommandExecuted(WSPreviewCommand.ShowFolder, args.Url.LocalPath);
                     break;
+                case "fax":
+                    SendShowContactCommand(args.Url.LocalPath);
+
+                    return;
             }
 
             if (!string.IsNullOrEmpty(path))
@@ -157,6 +168,34 @@ namespace WSPreview.PreviewHandler.Controls.Office
             {
                 WSSqlLogger.Instance.LogInfo("Path is empty. Outlook Preview");
             }
+        }
+
+        private void SendShowContactCommand(string localPath)
+        {
+            if (string.IsNullOrEmpty(localPath) || !localPath.Contains(":"))
+            {
+                return;
+            }
+            var data = localPath.Split(':');
+            if (data.Length < 2)
+            {
+                return;
+            }
+
+            if ( data[1].IsEmail() || data.All(s => s.IsEmail()))
+            {
+                var tag = new EmailContactSearchObject(){ ContactName = !data[0].IsEmail() ? data[0] : string.Empty,EMail = data[1] };
+                RaisePreviewCommandExecuted(WSPreviewCommand.ShowContact, tag);
+                return;
+            }
+            if (!string.IsNullOrEmpty(data[0]) && data[0].Contains(" "))
+            {
+                var names = data[0].Split(' ');
+                var tag = new ContactSearchObject() { FirstName = names[0], LastName = names[1]};
+                RaisePreviewCommandExecuted(WSPreviewCommand.ShowContact, tag);
+                return;
+            }
+            
         }
 
         public static string GetDefaultBrowserPath()
@@ -195,7 +234,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
             var temp = PreviewCommandExecuted;
             if (temp != null)
             {
-                temp(this,new WSUIPreviewCommandArgs(cmd,tag));
+                temp(this, new WSUIPreviewCommandArgs(cmd, tag));
             }
         }
     }

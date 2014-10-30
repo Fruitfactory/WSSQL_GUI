@@ -39,6 +39,8 @@ namespace WSUI.Module.Interface.ViewModel
 
         void ShowOutlookFolder(string folder);
 
+        void ShowContactPreview(object tag);
+
         BaseSearchObject Current { get; }
 
         BaseSearchObject CurrentTracked { get; }

@@ -3,6 +3,7 @@
     public enum WSPreviewCommand
     {
         None,
-        ShowFolder
+        ShowFolder,
+        ShowContact
     }
 }
