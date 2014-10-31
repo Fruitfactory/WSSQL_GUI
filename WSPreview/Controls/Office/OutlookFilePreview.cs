@@ -148,7 +148,6 @@ namespace WSPreview.PreviewHandler.Controls.Office
                     break;
                 case "fax":
                     SendShowContactCommand(args.Url.LocalPath);
-
                     return;
             }
 

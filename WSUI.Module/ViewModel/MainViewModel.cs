@@ -70,16 +70,12 @@ namespace WSUI.Module.ViewModel
         private int _selectedUIItemIndex;
         private IContactDetailsViewModel _contactDetails;
 
-        public MainViewModel(IUnityContainer container, IKindsView kindView,
-            IPreviewView previewView, IEventAggregator eventAggregator)
+        public MainViewModel(IUnityContainer container, IKindsView kindView, IEventAggregator eventAggregator)
         {
             _container = container;
             _eventAggregator = eventAggregator;
             KindsView = kindView;
             kindView.Model = this;
-            PreviewView = previewView;
-            PreviewView.StopLoad += PreviewViewOnStopLoad;
-            previewView.Model = this;
             MainDataSource = new List<BaseSearchObject>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
             DataVisibility = Visibility.Visible;
@@ -92,8 +88,6 @@ namespace WSUI.Module.ViewModel
         }
 
         public IKindsView KindsView { get; protected set; }
-
-        public IPreviewView PreviewView { get; protected set; }
 
         public ObservableCollection<LazyKind> KindsCollection { get; protected set; }
 
@@ -270,8 +264,10 @@ namespace WSUI.Module.ViewModel
                 _navigationService.ShowSelectedKind(kindItem);
             }
 
-            if (PreviewView != null)
-                PreviewView.ClearPreview();
+            if (_navigationService.IsPreviewVisible)
+            {
+                _navigationService.PreviewView.ClearPreview();
+            }
             OnPropertyChanged(() => Commands);
             OnPropertyChanged(() => BackButtonVisibility);
             OnPropertyChanged(() => IsKindsVisible);
@@ -342,23 +338,23 @@ namespace WSUI.Module.ViewModel
             try
             {
                 string filename = SearchItemHelper.GetFileName(_currentData);
-                if (PreviewView != null)
+                var previewView = _container.Resolve<IPreviewView>();
+                if (previewView != null)
                 {
+                    previewView.Model = this;
                     if (!string.IsNullOrEmpty(filename))
                     {
                         if (_currentData.TypeItem == TypeSearchItem.Email)
                         {
-                            PreviewView.SetFullFolderPath(SearchItemHelper.GetFullFolderPath(_currentData));
+                            previewView.SetFullFolderPath(SearchItemHelper.GetFullFolderPath(_currentData));
                         }
 
-                        PreviewView.SetSearchPattern( _contactDetails != null ? _contactDetails.SearchCriteria : _currentItem != null
+                        previewView.SetSearchPattern( _contactDetails != null ? _contactDetails.SearchCriteria : _currentItem != null
                             ? _currentItem.SearchString
                             : string.Empty);
-                        PreviewView.SetPreviewFile(filename);
-                        MoveToLeft(PreviewView);
+                        previewView.SetPreviewFile(filename);
+                        MoveToLeft(previewView);
                     }
-                    else
-                        PreviewView.ClearPreview();
                 }
             }
             catch (Exception ex)
@@ -539,7 +535,10 @@ namespace WSUI.Module.ViewModel
                 case WSActionType.Cut:
                 case WSActionType.Paste:
                 case WSActionType.ShowContextMenu:
-                    PreviewView.PassActionForPreview(action);
+                    if (_navigationService.IsPreviewVisible)
+                    {
+                        _navigationService.PreviewView.PassActionForPreview(action);
+                    }
                     break;
 
                 case WSActionType.Search:
@@ -569,9 +568,9 @@ namespace WSUI.Module.ViewModel
 
         public void ForceClosePreview()
         {
-            if (PreviewView != null)
+            if (_navigationService.IsPreviewVisible)
             {
-                PreviewView.ClearPreview();
+                _navigationService.PreviewView.ClearPreview();
             }
         }
 

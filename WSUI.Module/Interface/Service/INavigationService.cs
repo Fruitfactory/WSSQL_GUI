@@ -1,4 +1,5 @@
 ﻿using WSUI.Core.Interfaces;
+using WSUI.Module.Interface.View;
 using WSUI.Module.Interface.ViewModel;
 
 namespace WSUI.Module.Interface.Service
@@ -12,6 +13,7 @@ namespace WSUI.Module.Interface.Service
         void MoveToRight();
         bool IsBackButtonVisible { get; }
         bool IsPreviewVisible { get; }
+        IPreviewView PreviewView { get; }
         void MoveToFirstDataView();
 
     }
