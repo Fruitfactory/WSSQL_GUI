@@ -125,6 +125,10 @@ namespace WSUI.Module.Service
         }
 
         public bool IsPreviewVisible { get { return CurrentView is IPreviewView; } }
+        public IPreviewView PreviewView 
+        {
+            get { return CurrentView as IPreviewView; }
+        }
 
         public void MoveToFirstDataView()
         {
