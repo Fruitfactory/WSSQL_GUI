@@ -172,30 +172,52 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         private void SendShowContactCommand(string localPath)
         {
-            if (string.IsNullOrEmpty(localPath) || !localPath.Contains(":"))
+            if (string.IsNullOrEmpty(localPath))
             {
                 return;
             }
-            var data = localPath.Split(':');
+            if (localPath.Contains(":"))
+            {
+                ProcessFullContactInformation(localPath);
+                return;
+            }
+            if (localPath.Contains(" "))
+            {
+                ProcessHalfContactInformation(localPath);
+                return;
+            }
+        }
+
+
+        private void ProcessFullContactInformation(string info)
+        {
+            var data = info.Split(':');
             if (data.Length < 2)
             {
                 return;
             }
 
-            if ( data[1].IsEmail() || data.All(s => s.IsEmail()))
+            if (data[1].IsEmail() || data.All(s => s.IsEmail()))
             {
-                var tag = new EmailContactSearchObject(){ ContactName = !data[0].IsEmail() ? data[0] : string.Empty,EMail = data[1] };
+                var tag = new EmailContactSearchObject() { ContactName = !data[0].IsEmail() ? data[0] : string.Empty, EMail = data[1] };
                 RaisePreviewCommandExecuted(WSPreviewCommand.ShowContact, tag);
                 return;
             }
             if (!string.IsNullOrEmpty(data[0]) && data[0].Contains(" "))
             {
                 var names = data[0].Split(' ');
-                var tag = new ContactSearchObject() { FirstName = names[0], LastName = names[1]};
+                var tag = new ContactSearchObject() { FirstName = names[0], LastName = names[1] };
                 RaisePreviewCommandExecuted(WSPreviewCommand.ShowContact, tag);
                 return;
             }
-            
+        }
+
+        private void ProcessHalfContactInformation(string info)
+        {
+            var names = info.Split(' ');
+            var tag = new ContactSearchObject() { FirstName = names[0], LastName = names[1] };
+            RaisePreviewCommandExecuted(WSPreviewCommand.ShowContact, tag);
+            return;
         }
 
         public static string GetDefaultBrowserPath()
