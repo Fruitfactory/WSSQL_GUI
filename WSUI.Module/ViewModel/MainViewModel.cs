@@ -736,7 +736,20 @@ namespace WSUI.Module.ViewModel
                 return;
             BeforeMoveToRight();
             _navigationService.MoveToRight();
+            AfterMoveToRight();
             OnPropertyChanged(() => IsKindsVisible);
+        }
+
+        private void AfterMoveToRight()
+        {
+            if (_navigationService.IsContactDetailsVisible)
+            {
+                var contacDetailsModel = _navigationService.ContactDetailsViewModel;
+                ContactUIItems = new ObservableCollection<UIItem>(contacDetailsModel.ContactUIItemCollection);
+                SelectedUIItemIndex = 0;
+                OnPropertyChanged(() => ContactUIItems);
+                OnPropertyChanged(() => SelectedUIItemIndex);
+            }
         }
 
         private void BeforeMoveToRight()
