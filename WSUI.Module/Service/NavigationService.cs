@@ -6,6 +6,7 @@ using System.Windows;
 using Microsoft.Practices.Prism.Regions;
 using Transitionals;
 using Transitionals.Transitions;
+using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
 using WSUI.Infrastructure;
 using WSUI.Module.Interface.Service;
@@ -112,10 +113,17 @@ namespace WSUI.Module.Service
                 {
                     regionSidebarData.Remove(oldView);
                     ReleaseContactDetailsViewModel(oldView as INavigationView);
+                    System.Diagnostics.Debug.WriteLine("Old - " + oldView.GetType().Name);
                 }
                 var newView = _stackViews.Pop();
                 regionSidebarData.Add(newView, newView.GetType().FullName);
                 CurrentView = newView;
+                System.Diagnostics.Debug.WriteLine("New - " + CurrentView.GetType().Name);
+
+                CommonExtensions.ForEach(_stackViews, t =>
+                {
+                    System.Diagnostics.Debug.WriteLine("=> Left - " + t.GetType().Name);
+                });
             }
         }
 
@@ -129,6 +137,18 @@ namespace WSUI.Module.Service
         {
             get { return CurrentView as IPreviewView; }
         }
+
+        public bool IsContactDetailsVisible 
+        {
+            get { return CurrentView is IContactDetailsView; }
+        }
+
+        public IContactDetailsViewModel ContactDetailsViewModel
+        {
+            get { return (CurrentView as IContactDetailsView).Model; }
+
+        }
+
 
         public void MoveToFirstDataView()
         {

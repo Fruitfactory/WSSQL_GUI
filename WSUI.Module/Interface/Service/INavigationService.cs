@@ -14,6 +14,8 @@ namespace WSUI.Module.Interface.Service
         bool IsBackButtonVisible { get; }
         bool IsPreviewVisible { get; }
         IPreviewView PreviewView { get; }
+        bool IsContactDetailsVisible { get; }
+        IContactDetailsViewModel ContactDetailsViewModel { get; }
         void MoveToFirstDataView();
 
     }
