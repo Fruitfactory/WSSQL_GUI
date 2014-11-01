@@ -28,8 +28,7 @@ namespace WSPreview.PreviewHandler.Service.Preview
         private readonly string InterfaceName = "WSPreview.PreviewHandler.PreviewHandlerFramework.IPreviewControl";
 
         private readonly Dictionary<string, Type> _handlersDictionary = null;
-        private readonly Dictionary<string, PreviewHandler.PreviewHandlerFramework.PreviewHandler> _poolPreviewHandlers;
-        private readonly Dictionary<ControlsKey, IPreviewControl> _poolPreviewControls; 
+        private readonly Dictionary<ControlsKey, Type> _poolPreviewControlsTypes; 
         private readonly static Lazy<HelperPreviewHandlers>  _instance = new Lazy<HelperPreviewHandlers>(() =>
                                                                                                     {
                                                                                                         var inst = new HelperPreviewHandlers ();
@@ -43,8 +42,7 @@ namespace WSPreview.PreviewHandler.Service.Preview
         private HelperPreviewHandlers()
         {   
             _handlersDictionary = new Dictionary<string, Type>();
-            _poolPreviewHandlers = new Dictionary<string, PreviewHandlerFramework.PreviewHandler>();
-            _poolPreviewControls = new Dictionary<ControlsKey, IPreviewControl>();
+            _poolPreviewControlsTypes = new Dictionary<ControlsKey, Type>();
         }
 
         #endregion
@@ -59,31 +57,24 @@ namespace WSPreview.PreviewHandler.Service.Preview
             get { return _handlersDictionary; }
         }
 
-        public Dictionary<string,PreviewHandlerFramework.PreviewHandler> HandlersInstances
-        {
-            get { return _poolPreviewHandlers; }
-        }
-
         public PreviewHandlerFramework.PreviewHandler GetReadyHandler(string ext)
         {
             var type = HandlersDictionary.ContainsKey(ext) ? HandlersDictionary[ext] : null;
             if (type == null)
                 return null;
-            string key = type.FullName;
-            var handler = HandlersInstances.ContainsKey(key) ? HandlersInstances[key] : null;
+            var handler = Activator.CreateInstance(type) as PreviewHandlerFramework.PreviewHandler;
             return handler;
         }
 
         public IPreviewControl GetPreviewControl(ControlsKey key)
         {
-            var ctrl = _poolPreviewControls.ContainsKey(key) ? _poolPreviewControls[key] : null;
+            var ctrl = _poolPreviewControlsTypes.ContainsKey(key) ?  Activator.CreateInstance(_poolPreviewControlsTypes[key]) as IPreviewControl : null;
             return ctrl;
         }
 
         public void Inititialize()
         {
             Init();
-            //Dispatcher.CurrentDispatcher.BeginInvoke(new Action(Init), null);
         }
 
         #region [private]
@@ -110,11 +101,6 @@ namespace WSPreview.PreviewHandler.Service.Preview
                     if (!_handlersDictionary.ContainsKey(ext))
                         _handlersDictionary.Add(ext, type);
                 }
-                var handler = Activator.CreateInstance(type) as PreviewHandlerFramework.PreviewHandler;
-                if (!_poolPreviewHandlers.ContainsKey(type.FullName))
-                {
-                    _poolPreviewHandlers.Add(type.FullName, handler);
-                }
             } 
         }
 
@@ -126,10 +112,9 @@ namespace WSPreview.PreviewHandler.Service.Preview
             foreach (var listType in listTypes)
             {
                 var key = GetControlKey(listType);
-                if(key == ControlsKey.None || _poolPreviewControls.ContainsKey(key))
+                if(key == ControlsKey.None || _poolPreviewControlsTypes.ContainsKey(key))
                     continue;
-                var ctrl = Activator.CreateInstance(listType) as IPreviewControl;
-                _poolPreviewControls.Add(key,ctrl);
+                _poolPreviewControlsTypes.Add(key,listType);
             }
         }
 

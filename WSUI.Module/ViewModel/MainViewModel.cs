@@ -99,9 +99,9 @@ namespace WSUI.Module.ViewModel
             set
             {
                 _selectedUIItemIndex = value;
-                if (_contactDetails != null)
+                if (_navigationService.IsContactDetailsVisible)
                 {
-                    _contactDetails.ApplyIndexForShowing(value);
+                    _navigationService.ContactDetailsViewModel.ApplyIndexForShowing(value);
                 }
             }
         }
@@ -260,7 +260,10 @@ namespace WSUI.Module.ViewModel
         {
             if (_navigationService != null)
             {
-                ResetContactDetails();
+                if (_navigationService.IsContactDetailsVisible)
+                {
+                    ResetContactDetails();
+                }
                 _navigationService.ShowSelectedKind(kindItem);
             }
 
@@ -349,7 +352,7 @@ namespace WSUI.Module.ViewModel
                             previewView.SetFullFolderPath(SearchItemHelper.GetFullFolderPath(_currentData));
                         }
 
-                        previewView.SetSearchPattern( _contactDetails != null ? _contactDetails.SearchCriteria : _currentItem != null
+                        previewView.SetSearchPattern( _navigationService.IsContactDetailsVisible ? _navigationService.ContactDetailsViewModel.SearchCriteria : _currentItem != null
                             ? _currentItem.SearchString
                             : string.Empty);
                         previewView.SetPreviewFile(filename);
@@ -375,9 +378,9 @@ namespace WSUI.Module.ViewModel
                 return;
             try
             {
-                _contactDetails = _container.Resolve<IContactDetailsViewModel>();
-                MoveToLeft(_contactDetails.View);
-                Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => _contactDetails.SetDataObject(previewData)));
+                var contactDetails = _container.Resolve<IContactDetailsViewModel>();
+                MoveToLeft(contactDetails.View);
+                Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => contactDetails.SetDataObject(previewData)));
 
             }
             catch (Exception ex)
@@ -718,8 +721,9 @@ namespace WSUI.Module.ViewModel
         {
             if (view is IContactDetailsView)
             {
-                ContactUIItems = new ObservableCollection<UIItem>(_contactDetails.ContactUIItemCollection);
-                _contactDetails.PropertyChanged += OnContactDetailsPropertyChanged;
+                var contacDetailsModel = (view as IContactDetailsView).Model;
+                ContactUIItems = new ObservableCollection<UIItem>(contacDetailsModel.ContactUIItemCollection);
+                contacDetailsModel.PropertyChanged += OnContactDetailsPropertyChanged;
                 SelectedUIItemIndex = 0;
                 OnPropertyChanged(() => ContactUIItems);
                 OnPropertyChanged(() => SelectedUIItemIndex);
@@ -737,7 +741,7 @@ namespace WSUI.Module.ViewModel
 
         private void BeforeMoveToRight()
         {
-            if (_navigationService.CurrentView is IContactDetailsView)
+            if (_navigationService.IsContactDetailsVisible)
             {
                 ResetContactDetails();
             }
@@ -745,10 +749,10 @@ namespace WSUI.Module.ViewModel
 
         private void ResetContactDetails()
         {
-            if (_contactDetails == null)
+
+            if (_navigationService.ContactDetailsViewModel == null)
                 return;
-            _contactDetails.PropertyChanged -= OnContactDetailsPropertyChanged;
-            _contactDetails = null;
+            _navigationService.ContactDetailsViewModel.PropertyChanged -= OnContactDetailsPropertyChanged;
             ContactUIItems = null;
             OnPropertyChanged(() => ContactUIItems);
         }
@@ -758,9 +762,9 @@ namespace WSUI.Module.ViewModel
             switch (propertyChangedEventArgs.PropertyName)
             {
                 case "SelectedIndex":
-                    if (_contactDetails != null)
+                    if (_navigationService.IsContactDetailsVisible)
                     {
-                        _selectedUIItemIndex = _contactDetails.SelectedIndex;
+                        _selectedUIItemIndex = _navigationService.ContactDetailsViewModel.SelectedIndex;
                         OnPropertyChanged(() => SelectedUIItemIndex);
                     }
                     break;
@@ -782,7 +786,7 @@ namespace WSUI.Module.ViewModel
 
         private BaseSearchObject GetContactDetailsTrackedObject()
         {
-            return _contactDetails != null ?  _contactDetails.TrackedElement as BaseSearchObject :  null;
+            return _navigationService.IsContactDetailsVisible ?  _navigationService.ContactDetailsViewModel.TrackedElement as BaseSearchObject :  null;
         }
 
         private BaseSearchObject GetKindItemTrackedObject()
