@@ -33,13 +33,11 @@
                 <Setter Property="Margin" Value="5 5 5 0"></Setter>
             </Style>
 
-
             <Style x:Key="HeaderStyle" TargetType="headerControl:WSUIHeaderControl" BasedOn="{StaticResource {x:Type headerControl:WSUIHeaderControl}}">
                 <Setter Property="HeaderFontWeight" Value="Normal"></Setter>
                 <Setter Property="Foreground" Value="{StaticResource LabelTextBrush}"></Setter>
                 <Setter Property="BorderThickness" Value="0 1 0 0"></Setter>
             </Style>
-
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -97,8 +95,6 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-
-
             <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="3">
                 <Image x:Name="FotoImage" Source="{Binding FotoFilepath,UpdateSourceTrigger=PropertyChanged}">
                     <Image.Style>
@@ -112,7 +108,6 @@
                         </Style>
                     </Image.Style>
                 </Image>
-
             </Grid>
 
             <Grid Grid.Column="0" Grid.Row="3">
@@ -152,16 +147,12 @@
                         <TextBlock Text="{Binding MobileTelephone,UpdateSourceTrigger=PropertyChanged}"></TextBlock>
                     </Hyperlink>
                 </TextBlock>
-
-
             </Grid>
-
         </Grid>
 
         <Grid Grid.Row="1" Margin="0 5 0 0">
-            <Controls:MetroAnimatedSingleRowTabControl 
-                SelectedIndex="{Binding SelectedIndex,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
-                >
+            <Controls:MetroAnimatedSingleRowTabControl
+                SelectedIndex="{Binding SelectedIndex,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}">
 
                 <TabItem x:Name="MainTab" HeaderTemplate="{x:Null}" ToolTip="Everething" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                          Visibility="Collapsed">
@@ -184,7 +175,7 @@
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <listBox:WSUIListBox 
+                                <listBox:WSUIListBox
                                     x:Name="WsuiListBox"
                                     Style="{StaticResource SimpleListBoxStyle}"
                                      ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
@@ -195,7 +186,7 @@
                                      attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
                                      ItemTemplateSelector="{StaticResource templateSelector}"
                                      IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
-                                     HorizontalContentAlignment="Stretch" >
+                                     HorizontalContentAlignment="Stretch">
                                     <listBox:WSUIListBox.ContextMenu>
                                         <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
                                     </listBox:WSUIListBox.ContextMenu>
@@ -219,7 +210,7 @@
 
                         <headerControl:WSUIHeaderControl Grid.Row="1"
                                                          Header="Files"
-                                                         Style="{StaticResource HeaderStyle}" 
+                                                         Style="{StaticResource HeaderStyle}"
                                                          Visibility="{Binding IsFileVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
                                                          BorderBrush="{StaticResource ControlBorderBrush}">
 
@@ -228,7 +219,7 @@
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <ListBox 
+                                <ListBox
                                     x:Name="ListBox"
                                     ItemsSource="{Binding Path=MainFileSource,UpdateSourceTrigger=PropertyChanged}"
                                      ItemTemplateSelector="{StaticResource templateSelector}"
@@ -273,7 +264,6 @@
                             </TextBlock.Style>
                             No data exists for current contact.
                         </TextBlock>
-
                     </Grid>
                 </TabItem>
 
@@ -285,31 +275,29 @@
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0" >
+                        <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <TextBox  
-                               Text="{Binding Path=SearchEmailString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                            <TextBox
+                               Text="{Binding Path=SearchEmailString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                 Controls:TextboxHelper.Watermark="Enter Search Context for Contact"
                                 Controls:TextboxHelper.ClearTextButton="True"
-                                service:KeyDownBehavior.KeyDown="{Binding EmailContextKeyDownCommand}" 
-                                VerticalAlignment="Center"    
+                                service:KeyDownBehavior.KeyDown="{Binding EmailContextKeyDownCommand}"
+                                VerticalAlignment="Center"
                                 VerticalContentAlignment="Center"
-                                Grid.Column="0" 
+                                Grid.Column="0"
                                 MinHeight="22" />
                             <Button Command="{Binding Path=SearchEmailCommand}"
                                     Style="{StaticResource SearchButton}"
-                                    Grid.Column="1" 
-                                    HorizontalAlignment="Stretch" 
-                                    VerticalAlignment="Top" 
-                                    Height="23"
-                                    />
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Top"
+                                    Height="23" />
                         </Grid>
 
-
-                        <listBox:WSUIListBox x:Name="listBox" 
+                        <listBox:WSUIListBox x:Name="listBox"
                                              Grid.Row="1"
                                              Style="{StaticResource SimpleListBoxStyle}"
                                              ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
@@ -329,7 +317,6 @@
                             </i:Interaction.Behaviors>
                         </listBox:WSUIListBox>
 
-
                         <Border Background="#80FFFFFF" Visibility="{Binding IsEmailBusy,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2">
                             <Grid>
                                 <Controls:ProgressRing
@@ -337,8 +324,6 @@
                                        Visibility="{Binding IsEmailBusy, Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </Border>
-
-
                     </Grid>
                 </TabItem>
 
@@ -350,30 +335,29 @@
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0" >
+                        <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <TextBox  
-                               Text="{Binding Path=SearchAttachmentString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                            <TextBox
+                               Text="{Binding Path=SearchAttachmentString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                 Controls:TextboxHelper.Watermark="Enter Search Context for Attachment"
                                 Controls:TextboxHelper.ClearTextButton="True"
-                                service:KeyDownBehavior.KeyDown="{Binding AttachmentContextKeyDownCommand}" 
-                                VerticalAlignment="Center"    
+                                service:KeyDownBehavior.KeyDown="{Binding AttachmentContextKeyDownCommand}"
+                                VerticalAlignment="Center"
                                 VerticalContentAlignment="Center"
-                                Grid.Column="0" 
+                                Grid.Column="0"
                                 MinHeight="22" />
                             <Button Command="{Binding Path=SearchAttachmentCommand}"
                                     Style="{StaticResource SearchButton}"
-                                    Grid.Column="1" 
-                                    HorizontalAlignment="Stretch" 
-                                    VerticalAlignment="Top" 
-                                    Height="23"
-                                    />
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Top"
+                                    Height="23" />
                         </Grid>
 
-                        <ListBox x:Name="FileListBox" 
+                        <ListBox x:Name="FileListBox"
                                  Grid.Row="1"
                                  ItemsSource="{Binding Path=ItemsSource,UpdateSourceTrigger=PropertyChanged}"
                                  ItemTemplateSelector="{StaticResource templateSelector}"
@@ -397,7 +381,6 @@
                             </Grid>
                         </Border>
                     </Grid>
-
                 </TabItem>
             </Controls:MetroAnimatedSingleRowTabControl>
 

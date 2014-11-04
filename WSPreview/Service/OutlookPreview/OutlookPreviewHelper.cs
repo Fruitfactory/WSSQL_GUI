@@ -444,7 +444,8 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         public string GetPreviewForEmail(Outlook.MailItem mail, string filename)
         {
             string page = GetBeginingOfPreview(mail, filename);
-            page += string.Format(SenderRow, GetMailTo(HighlightSearchString(GetConvertetString(mail.SenderName)),mail.SenderEmailAddress) );
+            var senderEmailAddress = mail.GetSenderSMTPAddress();
+            page += string.Format(SenderRow, GetMailTo(HighlightSearchString(GetConvertetString(mail.SenderName)), senderEmailAddress));
             if (!string.IsNullOrEmpty(mail.CC))
                 page += string.Format(CCRow, HighlightSearchString(GetConvertetString(mail.CC)));
             page += string.Format(ToRow, GetRecipientsRow(mail));
@@ -472,10 +473,11 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             foreach (Outlook.Recipient recipient in mail.Recipients.OfType<Outlook.Recipient>())
             {
                 var clearStr = recipient.Name.ClearString();
-                var tt = IsEmail(recipient.Address) ? GetContactNameWithEmail(clearStr,recipient.Address): GetContactName(clearStr);
+                var email = recipient.GetSMTPAddress();
+                var tt = IsEmail(email) ? GetContactNameWithEmail(clearStr,email): GetContactName(clearStr);
                 list.Add(tt);
             }
-            return string.Join("; ", list.Where(s => !string.IsNullOrEmpty(s)));
+            return string.Join("; ", list.Select(s => !string.IsNullOrEmpty(s)));
         }
 
 
