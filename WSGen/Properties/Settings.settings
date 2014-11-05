@@ -26,5 +26,8 @@
     <Setting Name="SetupProjectFile" Type="System.String" Scope="Application">
       <Value Profile="(Default)">\WSUI.OutlookPlugin\WSUI.OutlookPluginSetup\Product.wxs</Value>
     </Setting>
+    <Setting Name="BuildCount" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

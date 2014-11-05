@@ -50,6 +50,11 @@ namespace WSUIOutlookPlugin
 
         public void SetBootStraper(IPluginBootStraper bootStraper)
         {
+            if (bootStraper == null)
+            {
+                WSSqlLogger.Instance.LogWarning("Bootstraper eqaul 'NULL'.");
+                return;
+            }
             _wsuiBootStraper = bootStraper;
             UIElement el = _wsuiBootStraper.View as UIElement;
             var parent = el.GetParentProperty();

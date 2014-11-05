@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,16 +20,28 @@ namespace WSGen
 
         static void Main(string[] args)
         {
+
             if (args.Length == 0)
             {
                 Console.WriteLine("Source dir argument is absent.");
                 return;
             }
+
+            Process git = new Process();
+            git.StartInfo.FileName = "git.exe";
+            git.StartInfo.Arguments = " rev-parse --short HEAD ";
+            git.StartInfo.UseShellExecute = false;
+            git.StartInfo.RedirectStandardOutput = true;
+            git.Start();
+            var shortRev = (short)Math.Abs(git.StandardOutput.ReadToEnd().Trim().GetHashCode());
+            git.WaitForExit();
+
             string source = args[0];
-            string buildNumber = Properties.Settings.Default.BuildNumber;
+            string buildNumber = string.Format("{0}.{1}", Properties.Settings.Default.BuildNumber, shortRev);
             string setupProject = string.Format("{0}{1}", source, Properties.Settings.Default.SetupProjectFile);
             GenerateVersionFile(source, buildNumber);
             UpdateSetupProject(setupProject, buildNumber);
+
         }
 
         static void GenerateVersionFile(string sourceDir, string buildNumber)
@@ -61,5 +74,6 @@ namespace WSGen
 
             doc.Save(setupProject);
         }
+
     }
 }

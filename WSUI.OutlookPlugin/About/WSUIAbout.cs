@@ -15,7 +15,7 @@ namespace WSUIOutlookPlugin.About
 {
     public partial class WSUIAbout : Form
     {
-        private const string VersionTemplate = "Version: v{0}.{1}.{2}";
+        private const string VersionTemplate = "Version: v{0}.{1}.{2}.{3}";
         private const string CompanyTemplate = "Company: {0}";
         private const string EmailTemplate = "Email: {0}";
         private const string DescriptionTemplate = "Desription: {0}";
@@ -60,7 +60,7 @@ namespace WSUIOutlookPlugin.About
             var version = currentAssembly.GetName().Version;
             WSSqlLogger.Instance.LogInfo("Vesrion: {0}",version);
             if(version != null)
-                strBuilder.AppendLine(string.Format(VersionTemplate, version.Major,version.Minor,version.Build));
+                strBuilder.AppendLine(string.Format(VersionTemplate, version.Major,version.Minor,version.Build,version.Revision));
             if (description != null && description.Length > 0)
             {
                 strBuilder.AppendLine(string.Format(DescriptionTemplate, description[0].Description));
