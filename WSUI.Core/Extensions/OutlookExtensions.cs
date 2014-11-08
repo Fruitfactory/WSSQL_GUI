@@ -56,7 +56,7 @@ namespace WSUI.Core.Extensions
                 }
                 else
                 {
-                    return sender.PropertyAccessor.GetProperty(PR_SMTP_ADDRESS) as string;
+                    return sender.Address; //sender.PropertyAccessor.GetProperty(PR_SMTP_ADDRESS) as string;
                 }
             }
             else

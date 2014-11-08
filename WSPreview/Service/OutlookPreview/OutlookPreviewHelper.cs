@@ -477,7 +477,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
                 var tt = IsEmail(email) ? GetContactNameWithEmail(clearStr,email): GetContactName(clearStr);
                 list.Add(tt);
             }
-            return string.Join("; ", list.Select(s => !string.IsNullOrEmpty(s)));
+            return string.Join("; ", list.Where(s => !string.IsNullOrEmpty(s)));
         }
 
 
