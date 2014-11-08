@@ -7,5 +7,6 @@ namespace WSUI.Module.Interface.View
         IContactDetailsViewModel Model { get; set; }
 
         double ActualHeight { get; }
+        double ActualFileHeight { get; }
     }
 }

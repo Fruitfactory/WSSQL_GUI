@@ -113,6 +113,7 @@
     <Compile Include="Behaviors\ExpanderEmailBehavior.cs" />
     <Compile Include="Behaviors\GridListItemBehavior.cs" />
     <Compile Include="Behaviors\ListBoxBehavior.cs" />
+    <Compile Include="Behaviors\ListBoxExpandBehavior.cs" />
     <Compile Include="Behaviors\MainListBoxBehavior.cs" />
     <Compile Include="Behaviors\SelectedItemTrackingBehavior.cs" />
     <Compile Include="Controls\Application\AppEmpty.cs" />

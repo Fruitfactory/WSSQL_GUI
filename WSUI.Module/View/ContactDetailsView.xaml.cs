@@ -52,6 +52,12 @@ namespace WSUI.Module.View
             get { return MainTabGrid.ActualHeight; }
         }
 
+        double IContactDetailsView.ActualFileHeight
+        {
+            get { return FileHeaderControl.ActualHeight; }
+        }
+
+
         private void ListBox_OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             if (!(DataContext is IScrollableView))
