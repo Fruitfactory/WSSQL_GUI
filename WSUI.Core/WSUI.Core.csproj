@@ -131,6 +131,7 @@
     <Compile Include="Data\FileSearchObject.cs" />
     <Compile Include="Data\UI\UIItem.cs" />
     <Compile Include="Data\WSAction.cs" />
+    <Compile Include="Data\WSUIExpanderData.cs" />
     <Compile Include="Enums\ActivationButtons.cs" />
     <Compile Include="Enums\ActivationState.cs" />
     <Compile Include="Enums\HostType.cs" />

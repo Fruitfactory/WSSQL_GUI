@@ -326,6 +326,7 @@
                     </Grid>
                     <i:Interaction.Behaviors>
                         <behaviors:ExpanderEmailBehavior></behaviors:ExpanderEmailBehavior>
+                        <behaviors:ListBoxExpandBehavior></behaviors:ListBoxExpandBehavior>
                     </i:Interaction.Behaviors>
                 </Expander>
             </Grid>

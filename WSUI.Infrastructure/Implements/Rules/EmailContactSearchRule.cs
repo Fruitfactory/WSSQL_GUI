@@ -138,7 +138,7 @@ namespace WSUI.Infrastructure.Implements.Rules
             {
                 return GetEmailAddress(emails, searchCriteria);
             }
-            else
+            if(emails != null)
             {
                 int index = Array.IndexOf(names, contactName);
                 if (index < emails.Length)

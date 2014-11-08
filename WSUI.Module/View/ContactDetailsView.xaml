@@ -16,69 +16,70 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Service\ResourceTemplate.xaml" />
-                <ResourceDictionary Source="../Service/SearchButtonStyle.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="../Service/SearchButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></service:BoolToVisibilityConverter>
+            <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
             <Style TargetType="Label">
-                <Setter Property="Margin" Value="1 1 1 0"></Setter>
+                <Setter Property="Margin" Value="1 1 1 0" />
             </Style>
 
             <Style TargetType="TextBlock">
-                <Setter Property="Margin" Value="1 5 1 0"></Setter>
+                <Setter Property="Margin" Value="1 5 1 0" />
             </Style>
 
             <Style TargetType="ItemsControl">
-                <Setter Property="Margin" Value="5 5 5 0"></Setter>
+                <Setter Property="Margin" Value="5 5 5 0" />
             </Style>
 
-            <Style x:Key="HeaderStyle" TargetType="headerControl:WSUIHeaderControl" BasedOn="{StaticResource {x:Type headerControl:WSUIHeaderControl}}">
-                <Setter Property="HeaderFontWeight" Value="Normal"></Setter>
-                <Setter Property="Foreground" Value="{StaticResource LabelTextBrush}"></Setter>
-                <Setter Property="BorderThickness" Value="0 1 0 0"></Setter>
+            <Style x:Key="HeaderStyle" TargetType="headerControl:WSUIHeaderControl"
+                   BasedOn="{StaticResource {x:Type headerControl:WSUIHeaderControl}}">
+                <Setter Property="HeaderFontWeight" Value="Normal" />
+                <Setter Property="Foreground" Value="{StaticResource LabelTextBrush}" />
+                <Setter Property="BorderThickness" Value="0 1 0 0" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.75*"></ColumnDefinition>
-                <ColumnDefinition Width="0.25*"></ColumnDefinition>
+                <ColumnDefinition Width="0.75*" />
+                <ColumnDefinition Width="0.25*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <TextBlock  FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Stretch"
-                       FontSize="20" TextTrimming="CharacterEllipsis">
+                <TextBlock FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Stretch"
+                           FontSize="20" TextTrimming="CharacterEllipsis">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
-                            <Setter Property="Margin" Value="1 5 1 0"></Setter>
-                            <Setter Property="Visibility" Value="Visible"></Setter>
+                            <Setter Property="Margin" Value="1 5 1 0" />
+                            <Setter Property="Visibility" Value="Visible" />
                             <Style.Triggers>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding FirstName,Mode=OneWay}" Value="{x:Null}"></Condition>
-                                        <Condition Binding="{Binding LastName,Mode=OneWay}" Value="{x:Null}"></Condition>
+                                        <Condition Binding="{Binding FirstName,Mode=OneWay}" Value="{x:Null}" />
+                                        <Condition Binding="{Binding LastName,Mode=OneWay}" Value="{x:Null}" />
                                     </MultiDataTrigger.Conditions>
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                    <Setter Property="Visibility" Value="Collapsed" />
                                 </MultiDataTrigger>
                             </Style.Triggers>
                         </Style>
                     </TextBlock.Style>
-                <Run Text="{Binding FirstName,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></Run>
-                <Run> </Run>
-                <Run Text="{Binding LastName,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></Run>
+                    <Run Text="{Binding FirstName,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <Run />
+                    <Run Text="{Binding LastName,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
                 </TextBlock>
             </Grid>
 
@@ -87,8 +88,9 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock>
-                            <Hyperlink Command="{Binding Path=DataContext.CreateEmailCommand,ElementName=this}" CommandParameter="{Binding}">
-                                <TextBlock TextWrapping="Wrap" Text="{Binding}"></TextBlock>
+                            <Hyperlink Command="{Binding Path=DataContext.CreateEmailCommand,ElementName=this}"
+                                       CommandParameter="{Binding}">
+                                <TextBlock TextWrapping="Wrap" Text="{Binding}" />
                             </Hyperlink>
                         </TextBlock>
                     </DataTemplate>
@@ -99,10 +101,11 @@
                 <Image x:Name="FotoImage" Source="{Binding FotoFilepath,UpdateSourceTrigger=PropertyChanged}">
                     <Image.Style>
                         <Style TargetType="Image">
-                            <Setter Property="Visibility" Value="Visible"></Setter>
+                            <Setter Property="Visibility" Value="Visible" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding FotoFilepath,UpdateSourceTrigger=PropertyChanged}" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                <DataTrigger Binding="{Binding FotoFilepath,UpdateSourceTrigger=PropertyChanged}"
+                                             Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -113,38 +116,52 @@
             <Grid Grid.Column="0" Grid.Row="3">
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
-                        <Setter Property="VerticalAlignment" Value="Center"></Setter>
-                        <Setter Property="Margin" Value="2 0 0 2"></Setter>
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="2 0 0 2" />
                     </Style>
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" Visibility="{Binding BusinessPhoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">Business phone:</TextBlock>
-                <TextBlock Grid.Column="1" Visibility="{Binding BusinessPhoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">
-                    <Hyperlink Command="{Binding CopyPhoneCommand}" CommandParameter="{x:Static enums:PhoneType.Business}">
-                        <TextBlock Text="{Binding BusinessTelephone,UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                <TextBlock Grid.Column="0"
+                           Visibility="{Binding BusinessPhoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">
+                    Business phone:
+                </TextBlock>
+                <TextBlock Grid.Column="1"
+                           Visibility="{Binding BusinessPhoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Hyperlink Command="{Binding CopyPhoneCommand}"
+                               CommandParameter="{x:Static enums:PhoneType.Business}">
+                        <TextBlock Text="{Binding BusinessTelephone,UpdateSourceTrigger=PropertyChanged}" />
                     </Hyperlink>
                 </TextBlock>
 
-                <TextBlock Grid.Column="0" Grid.Row="1" Visibility="{Binding HomeTelephoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">Home phone:</TextBlock>
-                <TextBlock Grid.Column="1" Grid.Row="1" Visibility="{Binding HomeTelephoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock Grid.Column="0" Grid.Row="1"
+                           Visibility="{Binding HomeTelephoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">
+                    Home phone:
+                </TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                           Visibility="{Binding HomeTelephoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">
                     <Hyperlink Command="{Binding CopyPhoneCommand}" CommandParameter="{x:Static enums:PhoneType.Home}">
-                        <TextBlock Text="{Binding HomeTelephone,UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                        <TextBlock Text="{Binding HomeTelephone,UpdateSourceTrigger=PropertyChanged}" />
                     </Hyperlink>
                 </TextBlock>
 
-                <TextBlock Grid.Column="0" Grid.Row="2" Visibility="{Binding MobileTelephoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">Mobile phone:</TextBlock>
-                <TextBlock Grid.Column="1" Grid.Row="2" Visibility="{Binding MobileTelephoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">
-                    <Hyperlink Command="{Binding CopyPhoneCommand}" CommandParameter="{x:Static enums:PhoneType.Mobile}">
-                        <TextBlock Text="{Binding MobileTelephone,UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                <TextBlock Grid.Column="0" Grid.Row="2"
+                           Visibility="{Binding MobileTelephoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">
+                    Mobile phone:
+                </TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="2"
+                           Visibility="{Binding MobileTelephoneVisible,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Hyperlink Command="{Binding CopyPhoneCommand}"
+                               CommandParameter="{x:Static enums:PhoneType.Mobile}">
+                        <TextBlock Text="{Binding MobileTelephone,UpdateSourceTrigger=PropertyChanged}" />
                     </Hyperlink>
                 </TextBlock>
             </Grid>
@@ -154,23 +171,25 @@
             <Controls:MetroAnimatedSingleRowTabControl
                 SelectedIndex="{Binding SelectedIndex,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}">
 
-                <TabItem x:Name="MainTab" HeaderTemplate="{x:Null}" ToolTip="Everething" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                <TabItem x:Name="MainTab" HeaderTemplate="{x:Null}" ToolTip="Everething"
+                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                          Visibility="Collapsed">
-                    <Grid  x:Name="MainTabGrid"
+                    <Grid x:Name="MainTabGrid"
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Stretch"
                           Margin="0 10 0 0">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <headerControl:WSUIHeaderControl Grid.Row="0"
                                                          Header="Conversations"
                                                          Style="{StaticResource HeaderStyle}"
                                                          Visibility="{Binding IsEmailVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
-                                                         BorderBrush="{StaticResource ControlBorderBrush}">
-                            <Grid Height="{Binding EmailHeight,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+                                                         BorderBrush="{StaticResource ControlBorderBrush}"
+                                                         Height="{Binding EmailHeight,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+                            <Grid >
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />
@@ -178,41 +197,46 @@
                                 <listBox:WSUIListBox
                                     x:Name="WsuiListBox"
                                     Style="{StaticResource SimpleListBoxStyle}"
-                                     ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
-                                     BorderBrush="Transparent"
-                                     Background="Transparent"
-                                     ItemsSource="{Binding Path=MainEmailSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                     attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                     attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
-                                     ItemTemplateSelector="{StaticResource templateSelector}"
-                                     IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
-                                     HorizontalContentAlignment="Stretch">
+                                    ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
+                                    BorderBrush="Transparent"
+                                    Background="Transparent"
+                                    ItemsSource="{Binding Path=MainEmailSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                    attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                    attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
+                                    ItemTemplateSelector="{StaticResource templateSelector}"
+                                    IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
+                                    HorizontalContentAlignment="Stretch"
+                                    CalculateActualHeightCommand="{Binding FileHeightCalculateCommand}">
                                     <listBox:WSUIListBox.ContextMenu>
-                                        <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+                                        <ContextMenu
+                                            ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}" />
                                     </listBox:WSUIListBox.ContextMenu>
                                     <i:Interaction.Behaviors>
-                                        <behaviors1:SelectedItemTrackingBehavior TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors1:SelectedItemTrackingBehavior>
+                                        <behaviors1:SelectedItemTrackingBehavior
+                                            TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                                     </i:Interaction.Behaviors>
                                 </listBox:WSUIListBox>
 
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
-                                    Grid.Row="1"
-                                    Visibility="{Binding IsEmailMoreVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">
+                                <StackPanel x:Name="MoreEmail" Orientation="Horizontal" HorizontalAlignment="Right"
+                                            Grid.Row="1"
+                                            Visibility="{Binding IsEmailMoreVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">
                                     <TextBlock>
-                                                <Hyperlink Command="{Binding MoreCommand}"
-                                                           CommandParameter="1">
-                                                    more >>
-                                                </Hyperlink>
+                                        <Hyperlink Command="{Binding MoreCommand}"
+                                                   CommandParameter="1">
+                                            more >>
+                                        </Hyperlink>
                                     </TextBlock>
                                 </StackPanel>
                             </Grid>
                         </headerControl:WSUIHeaderControl>
 
-                        <headerControl:WSUIHeaderControl Grid.Row="1"
-                                                         Header="Files"
-                                                         Style="{StaticResource HeaderStyle}"
-                                                         Visibility="{Binding IsFileVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
-                                                         BorderBrush="{StaticResource ControlBorderBrush}">
+                        <headerControl:WSUIHeaderControl
+                            x:Name="FileHeaderControl"
+                            Grid.Row="1"
+                            Header="Files"
+                            Style="{StaticResource HeaderStyle}"
+                            Visibility="{Binding IsFileVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
+                            BorderBrush="{StaticResource ControlBorderBrush}">
 
                             <Grid Height="{Binding FileHeight,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
                                 <Grid.RowDefinitions>
@@ -222,30 +246,32 @@
                                 <ListBox
                                     x:Name="ListBox"
                                     ItemsSource="{Binding Path=MainFileSource,UpdateSourceTrigger=PropertyChanged}"
-                                     ItemTemplateSelector="{StaticResource templateSelector}"
-                                     behaviors:WSUIListboxSelectOnClickBehavior.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                     HorizontalContentAlignment="Stretch"
+                                    ItemTemplateSelector="{StaticResource templateSelector}"
+                                    behaviors:WSUIListboxSelectOnClickBehavior.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                    HorizontalContentAlignment="Stretch"
                                     ScrollViewer.CanContentScroll="False"
                                     ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                                     ScrollViewer.VerticalScrollBarVisibility="Hidden">
                                     <i:Interaction.Behaviors>
-                                        <behaviors:WSUIListboxSelectOnClickBehavior></behaviors:WSUIListboxSelectOnClickBehavior>
-                                        <behaviors1:ListBoxBehavior></behaviors1:ListBoxBehavior>
-                                        <behaviors1:SelectedItemTrackingBehavior TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors1:SelectedItemTrackingBehavior>
+                                        <behaviors:WSUIListboxSelectOnClickBehavior />
+                                        <behaviors1:ListBoxBehavior />
+                                        <behaviors1:SelectedItemTrackingBehavior
+                                            TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                                     </i:Interaction.Behaviors>
                                     <ListBox.ContextMenu>
-                                        <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+                                        <ContextMenu
+                                            ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}" />
                                     </ListBox.ContextMenu>
                                 </ListBox>
 
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
-                                Grid.Row="1"
-                                Visibility="{Binding IsFileMoreVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">
+                                            Grid.Row="1"
+                                            Visibility="{Binding IsFileMoreVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">
                                     <TextBlock>
-                                            <Hyperlink Command="{Binding MoreCommand}"
-                                                       CommandParameter="2">
-                                                more >>
-                                            </Hyperlink>
+                                        <Hyperlink Command="{Binding MoreCommand}"
+                                                   CommandParameter="2">
+                                            more >>
+                                        </Hyperlink>
                                     </TextBlock>
                                 </StackPanel>
                             </Grid>
@@ -254,10 +280,12 @@
                         <TextBlock TextTrimming="CharacterEllipsis">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                    <Setter Property="Visibility" Value="Collapsed" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsDataExist,UpdateSourceTrigger=PropertyChanged}" Value="False">
-                                            <Setter Property="Visibility" Value="Visible"></Setter>
+                                        <DataTrigger
+                                            Binding="{Binding IsDataExist,UpdateSourceTrigger=PropertyChanged}"
+                                            Value="False">
+                                            <Setter Property="Visibility" Value="Visible" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -271,17 +299,17 @@
                          Visibility="Collapsed">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBox
-                               Text="{Binding Path=SearchEmailString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                Text="{Binding Path=SearchEmailString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                 Controls:TextboxHelper.Watermark="Enter Search Context for Contact"
                                 Controls:TextboxHelper.ClearTextButton="True"
                                 service:KeyDownBehavior.KeyDown="{Binding EmailContextKeyDownCommand}"
@@ -310,38 +338,41 @@
                                              ScrollViewer.ScrollChanged="ListBox_OnScrollChanged"
                                              HorizontalContentAlignment="Stretch">
                             <listBox:WSUIListBox.ContextMenu>
-                                <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+                                <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}" />
                             </listBox:WSUIListBox.ContextMenu>
                             <i:Interaction.Behaviors>
-                                <behaviors1:SelectedItemTrackingBehavior TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors1:SelectedItemTrackingBehavior>
+                                <behaviors1:SelectedItemTrackingBehavior
+                                    TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                             </i:Interaction.Behaviors>
                         </listBox:WSUIListBox>
 
-                        <Border Background="#80FFFFFF" Visibility="{Binding IsEmailBusy,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2">
+                        <Border Background="#80FFFFFF"
+                                Visibility="{Binding IsEmailBusy,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
+                                Grid.RowSpan="2">
                             <Grid>
                                 <Controls:ProgressRing
-                                       IsActive="True"
-                                       Visibility="{Binding IsEmailBusy, Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                    IsActive="True"
+                                    Visibility="{Binding IsEmailBusy, Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </Border>
                     </Grid>
                 </TabItem>
 
-                <TabItem  HeaderTemplate="{x:Null}" ToolTip="File Exchanged"
+                <TabItem HeaderTemplate="{x:Null}" ToolTip="File Exchanged"
                          Visibility="Collapsed">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBox
-                               Text="{Binding Path=SearchAttachmentString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                Text="{Binding Path=SearchAttachmentString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                 Controls:TextboxHelper.Watermark="Enter Search Context for Attachment"
                                 Controls:TextboxHelper.ClearTextButton="True"
                                 service:KeyDownBehavior.KeyDown="{Binding AttachmentContextKeyDownCommand}"
@@ -365,30 +396,35 @@
                                  HorizontalContentAlignment="Stretch"
                                  ScrollViewer.ScrollChanged="ListBox_ScrollChanged">
                             <i:Interaction.Behaviors>
-                                <behaviors1:ListBoxBehavior></behaviors1:ListBoxBehavior>
-                                <behaviors1:SelectedItemTrackingBehavior TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors1:SelectedItemTrackingBehavior>
+                                <behaviors1:ListBoxBehavior />
+                                <behaviors1:SelectedItemTrackingBehavior
+                                    TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                             </i:Interaction.Behaviors>
                             <ListBox.ContextMenu>
-                                <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+                                <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}" />
                             </ListBox.ContextMenu>
                         </ListBox>
 
-                        <Border Background="#80FFFFFF" Visibility="{Binding IsAttachmentBusy,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2">
+                        <Border Background="#80FFFFFF"
+                                Visibility="{Binding IsAttachmentBusy,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
+                                Grid.RowSpan="2">
                             <Grid>
                                 <Controls:ProgressRing
-                                       IsActive="True"
-                                       Visibility="{Binding IsAttachmentBusy, Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                                    IsActive="True"
+                                    Visibility="{Binding IsAttachmentBusy, Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </Border>
                     </Grid>
                 </TabItem>
             </Controls:MetroAnimatedSingleRowTabControl>
 
-            <Border Background="#80FFFFFF" Visibility="{Binding IsBusy,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="4">
+            <Border Background="#80FFFFFF"
+                    Visibility="{Binding IsBusy,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
+                    Grid.RowSpan="4">
                 <Grid>
                     <Controls:ProgressRing
-                                       IsActive="True"
-                                       Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                        IsActive="True"
+                        Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
             </Border>
         </Grid>
