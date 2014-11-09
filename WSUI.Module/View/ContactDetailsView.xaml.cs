@@ -49,12 +49,16 @@ namespace WSUI.Module.View
 
         double IContactDetailsView.ActualHeight
         {
-            get { return MainTabGrid.ActualHeight; }
+            get 
+            {
+                this.InvalidateMeasure();
+                return MainTabGrid.RenderSize.Height; 
+            }
         }
 
         double IContactDetailsView.ActualFileHeight
         {
-            get { return FileHeaderControl.ActualHeight; }
+            get { return FileHeaderControl.RenderSize.Height; }
         }
 
 
