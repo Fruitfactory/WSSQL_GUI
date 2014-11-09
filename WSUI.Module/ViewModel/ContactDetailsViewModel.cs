@@ -33,7 +33,7 @@ namespace WSUI.Module.ViewModel
     public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel, IScrollableViewExtended
     {
 
-        private const double AvaregeTwoRowItemHeight = 47;
+        private const double AvaregeTwoRowItemHeight = 49;
         private const double AvaregeOneRowItemHeight = 25;
         private const double FileValue = 0.2;
         private const double EmailValue = 0.7;
@@ -657,7 +657,7 @@ namespace WSUI.Module.ViewModel
             double restHeightForEmails = ContactDetailsView.ActualHeight - ContactDetailsView.ActualFileHeight;
             double delta = data.NewSize.Height - data.OldSize.Height;
             double restDelta = (restHeightForEmails - Delta) - EmailHeight;
-            if (restDelta > delta)
+            if (restDelta > delta && delta > 0)
             {
                 EmailHeight += delta;    
                 OnPropertyChanged(() => EmailHeight);
