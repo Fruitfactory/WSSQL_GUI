@@ -29,7 +29,7 @@ namespace WSGen
             
             var strYear = DateTime.Now.Year.ToString().Substring(2);
 			var date = string.Format("{0}{1}",strYear,DateTime.Now.DayOfYear);
-            var shortRev = Convert.ToShort(date);
+            var shortRev = Convert.ToInt16(date);
 
             string source = args[0];
             string buildNumber = string.Format("{0}.{1}", Properties.Settings.Default.BuildNumber, shortRev);

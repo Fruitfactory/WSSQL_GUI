@@ -13,7 +13,7 @@ namespace WSUI.Module.View
     /// <summary>
     /// Interaction logic for AllFilesDataView.xaml
     /// </summary>
-    public partial class AllFilesDataView : IDataView<AllFilesViewModel>,INavigationView
+    public partial class AllFilesDataView : IDataView<AllFilesViewModel>,INavigationView, IAllDataView
     {
         public AllFilesDataView()
         {
@@ -51,5 +51,7 @@ namespace WSUI.Module.View
 
         #endregion
 
+        public double ActualContactHeight { get { return ContactControl.ActualHeight; } }
+        public double ActualFileHeight { get { return FileControl.ActualHeight; } }
     }
 }

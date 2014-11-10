@@ -45,7 +45,9 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <headerControl:WSUIHeaderControl Style="{StaticResource HeaderStyle}" Grid.Row="0" Header="People"
+        <headerControl:WSUIHeaderControl 
+            x:Name="ContactControl"
+            Style="{StaticResource HeaderStyle}" Grid.Row="0" Header="People"
                                          Visibility="{Binding IsContactVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
                                          BorderBrush="{StaticResource ControlBorderBrush}"
                                          >
@@ -83,7 +85,9 @@
             </Grid>
         </headerControl:WSUIHeaderControl>
 
-        <headerControl:WSUIHeaderControl Style="{StaticResource HeaderStyle}" Grid.Row="1" Header="Emails"
+        <headerControl:WSUIHeaderControl 
+            x:Name="EmailControl"
+            Style="{StaticResource HeaderStyle}" Grid.Row="1" Header="Emails"
                                          Visibility="{Binding IsEmailVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
                                          BorderBrush="{StaticResource ControlBorderBrush}">
             <Grid Height="{Binding EmailHeight,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
@@ -100,7 +104,8 @@
                                      attch:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
                                      ItemTemplateSelector="{StaticResource templateSelector}"
                                      IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
-                                     HorizontalContentAlignment="Stretch" >
+                                     HorizontalContentAlignment="Stretch" 
+                                     CalculateActualHeightCommand="{Binding EmailHeightCalculateCommand}">
                     <listBox:WSUIListBox.ContextMenu>
                         <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
                     </listBox:WSUIListBox.ContextMenu>
@@ -122,7 +127,9 @@
             </Grid>
         </headerControl:WSUIHeaderControl>
 
-        <headerControl:WSUIHeaderControl Style="{StaticResource HeaderStyle}" Grid.Row="2" Header="Files"
+        <headerControl:WSUIHeaderControl 
+            x:Name="FileControl"
+            Style="{StaticResource HeaderStyle}" Grid.Row="2" Header="Files"
                                          Visibility="{Binding IsFileVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
                                          BorderBrush="{StaticResource ControlBorderBrush}">
             <Grid Height="{Binding FileHeight,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">

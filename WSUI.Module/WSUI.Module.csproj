@@ -147,6 +147,7 @@
     <Compile Include="Interface\ViewModel\IContactDetailsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IContactEmailDetailsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IContactKindDetailsViewModel.cs" />
+    <Compile Include="Interface\View\IAllDataView.cs" />
     <Compile Include="Interface\View\IContactAttachmentDetailsView.cs" />
     <Compile Include="Interface\View\IContactDetailsView.cs" />
     <Compile Include="Interface\View\IContactEmailDetailsView.cs" />

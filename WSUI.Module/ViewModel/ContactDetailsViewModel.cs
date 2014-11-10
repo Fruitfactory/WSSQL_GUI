@@ -33,12 +33,12 @@ namespace WSUI.Module.ViewModel
     public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel, IScrollableViewExtended
     {
 
-        private const double AvaregeTwoRowItemHeight = 49;
+        private const double AvaregeTwoRowItemHeight = 41;
         private const double AvaregeOneRowItemHeight = 25;
         private const double FileValue = 0.2;
         private const double EmailValue = 0.7;
         private const double DefaultHeight = 600;//px
-        private const double Delta = 32;
+        private const double Delta = 32; // "more" section, mergings and paddings
 
         private IMainViewModel _mainViewModel;
         private IEventAggregator _eventAggregator;
@@ -93,7 +93,7 @@ namespace WSUI.Module.ViewModel
             SearchAttachmentCommand = new DelegateCommand<object>(AttacmentSearchExecute, o => true);
             EmailContextKeyDownCommand = new DelegateCommand<object>(KeyEmailDown, o => true);
             AttachmentContextKeyDownCommand = new DelegateCommand<object>(KeyAttachmentDown, o => true);
-            FileHeightCalculateCommand = new DelegateCommand<object>(CalculateFileListBoxHeight, o => true);
+            EmailHeightCalculateCommand = new DelegateCommand<object>(CalculateEmailListBoxHeight, o => true);
         }
 
         private void EmailSearchExecute(object o)
@@ -191,7 +191,7 @@ namespace WSUI.Module.ViewModel
 
         public ICommand AttachmentContextKeyDownCommand { get; private set; }
 
-        public ICommand FileHeightCalculateCommand { get; private set; }
+        public ICommand EmailHeightCalculateCommand { get; private set; }
 
         #endregion [commands]
 
@@ -647,19 +647,19 @@ namespace WSUI.Module.ViewModel
             behavior.NeedSearch(args);
         }
 
-        private void CalculateFileListBoxHeight(object arg)
+        private void CalculateEmailListBoxHeight(object arg)
         {
             var data = arg as WSUIExpanderData;
             if (data == null)
             {
                 return;
             }
-            double restHeightForEmails = ContactDetailsView.ActualHeight - ContactDetailsView.ActualFileHeight;
+            double avaibleHeight = ContactDetailsView.ActualHeight - ContactDetailsView.ActualFileHeight;
             double delta = data.NewSize.Height - data.OldSize.Height;
-            double restDelta = (restHeightForEmails - Delta) - EmailHeight;
+            double restDelta = (avaibleHeight - Delta) - EmailHeight;
             if (restDelta > delta && delta > 0)
             {
-                //EmailHeight += delta;    
+                EmailHeight += delta;    
                 OnPropertyChanged(() => EmailHeight);
             }
         }
