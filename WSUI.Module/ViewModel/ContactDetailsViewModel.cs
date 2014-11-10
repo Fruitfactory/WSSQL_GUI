@@ -659,7 +659,7 @@ namespace WSUI.Module.ViewModel
             double restDelta = (restHeightForEmails - Delta) - EmailHeight;
             if (restDelta > delta && delta > 0)
             {
-                EmailHeight += delta;    
+                //EmailHeight += delta;    
                 OnPropertyChanged(() => EmailHeight);
             }
         }
