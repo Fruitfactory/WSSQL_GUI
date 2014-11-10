@@ -26,15 +26,10 @@ namespace WSGen
                 Console.WriteLine("Source dir argument is absent.");
                 return;
             }
-
-            Process git = new Process();
-            git.StartInfo.FileName = "git.exe";
-            git.StartInfo.Arguments = " rev-parse --short HEAD ";
-            git.StartInfo.UseShellExecute = false;
-            git.StartInfo.RedirectStandardOutput = true;
-            git.Start();
-            var shortRev = (short)Math.Abs(git.StandardOutput.ReadToEnd().Trim().GetHashCode());
-            git.WaitForExit();
+            
+            var strYear = DateTime.Now.Year.ToString().Substring(2);
+			var date = string.Format("{0}{1}",strYear,DateTime.Now.DayOfYear);
+            var shortRev = Convert.ToShort(date);
 
             string source = args[0];
             string buildNumber = string.Format("{0}.{1}", Properties.Settings.Default.BuildNumber, shortRev);
