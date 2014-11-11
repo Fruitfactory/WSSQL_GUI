@@ -1,5 +1,6 @@
 ﻿using System;
 using Outlook = Microsoft.Office.Interop.Outlook;
+using WSUI.Core.Logger;
 
 namespace WSUI.Core.Extensions
 {
@@ -43,16 +44,24 @@ namespace WSUI.Core.Extensions
                 if (sender.AddressEntryUserType == Outlook.OlAddressEntryUserType.olExchangeUserAddressEntry
                     || sender.AddressEntryUserType == Outlook.OlAddressEntryUserType.olExchangeRemoteUserAddressEntry)
                 {
-                    //Use the ExchangeUser object PrimarySMTPAddress
-                    Outlook.ExchangeUser exchUser = sender.GetExchangeUser();
-                    if (exchUser != null)
+                    try
                     {
-                        return exchUser.PrimarySmtpAddress;
+                        //Use the ExchangeUser object PrimarySMTPAddress
+                        Outlook.ExchangeUser exchUser = sender.GetExchangeUser();
+                        if (exchUser != null)
+                        {
+                            return exchUser.PrimarySmtpAddress;
+                        }
+                        else
+                        {
+                            return null;
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        return null;
+                        WSSqlLogger.Instance.LogError(ex.Message);
                     }
+                    return null;
                 }
                 else
                 {

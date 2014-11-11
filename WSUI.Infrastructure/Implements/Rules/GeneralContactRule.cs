@@ -95,20 +95,23 @@ namespace WSUI.Infrastructure.Implements.Rules
                 {
                     var contactName = string.Format("{0} {1}", contactSearchObject.FirstName, contactSearchObject.LastName);
 
-                    if (IsEmail(contactSearchObject.EmailAddress) && IsContainsSearchCriterias(contactSearchObject.EmailAddress, arrQuery) &&
+                    if (IsEmail(contactSearchObject.EmailAddress) && 
+                        ( IsContainsSearchCriterias(contactName, arrQuery) || IsContainsSearchCriterias(contactSearchObject.EmailAddress, arrQuery)) &&
                         !_listExistingEmails.Contains(contactSearchObject.EmailAddress.ToLowerInvariant()))
                     {
                         Result.Add(contactSearchObject);
                         _listExistingEmails.Add(contactSearchObject.EmailAddress.ToLowerInvariant());
                     }
-                    else if (IsEmail(contactSearchObject.EmailAddress2) && IsContainsSearchCriterias(contactSearchObject.EmailAddress2, arrQuery) &&
+                    else if (IsEmail(contactSearchObject.EmailAddress2) &&
+                        (IsContainsSearchCriterias(contactName, arrQuery) || IsContainsSearchCriterias(contactSearchObject.EmailAddress2, arrQuery)) &&
                              !_listExistingEmails.Contains(contactSearchObject.EmailAddress2.ToLowerInvariant()))
                     {
                         contactSearchObject.EmailAddress = contactSearchObject.EmailAddress2;
                         Result.Add(contactSearchObject);
                         _listExistingEmails.Add(contactSearchObject.EmailAddress2.ToLowerInvariant());
                     }
-                    else if (IsEmail(contactSearchObject.EmailAddress3) && IsContainsSearchCriterias(contactSearchObject.EmailAddress3, arrQuery) &&
+                    else if (IsEmail(contactSearchObject.EmailAddress3) &&
+                        (IsContainsSearchCriterias(contactName, arrQuery) || IsContainsSearchCriterias(contactSearchObject.EmailAddress3, arrQuery)) &&
                              !_listExistingEmails.Contains(contactSearchObject.EmailAddress3.ToLowerInvariant()))
                     {
                         contactSearchObject.EmailAddress = contactSearchObject.EmailAddress3;

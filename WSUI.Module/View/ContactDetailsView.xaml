@@ -41,7 +41,7 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid behaviors:WSUIActualHeightBehavior.IsObserve="True" behaviors:WSUIActualHeightBehavior.ActualHeight="{Binding ActualHeight,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -188,8 +188,8 @@
                                                          Style="{StaticResource HeaderStyle}"
                                                          Visibility="{Binding IsEmailVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
                                                          BorderBrush="{StaticResource ControlBorderBrush}"
-                                                         Height="{Binding EmailHeight,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
-                            <Grid >
+                                                         >
+                            <Grid Height="{Binding EmailHeight,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />
@@ -206,7 +206,7 @@
                                     ItemTemplateSelector="{StaticResource templateSelector}"
                                     IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
                                     HorizontalContentAlignment="Stretch"
-                                    CalculateActualHeightCommand="{Binding FileHeightCalculateCommand}">
+                                    CalculateActualHeightCommand="{Binding EmailHeightCalculateCommand}">
                                     <listBox:WSUIListBox.ContextMenu>
                                         <ContextMenu
                                             ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}" />
