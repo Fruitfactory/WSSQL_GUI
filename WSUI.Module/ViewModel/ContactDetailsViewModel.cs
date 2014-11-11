@@ -33,8 +33,8 @@ namespace WSUI.Module.ViewModel
     public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel, IScrollableViewExtended
     {
 
-        private const double AvaregeTwoRowItemHeight = 41;
-        private const double AvaregeOneRowItemHeight = 25;
+        private const double AvaregeTwoRowItemHeight = 50;
+        private const double AvaregeOneRowItemHeight = 30;
         private const double FileValue = 0.2;
         private const double EmailValue = 0.7;
         private const double DefaultHeight = 600;//px
@@ -502,7 +502,7 @@ namespace WSUI.Module.ViewModel
 
         private Tuple<double, int> GetAvaibleHeightAndCount(double a, double avaregeHeight)
         {
-            var height = !double.Equals(ContactDetailsView.ActualHeight, 0.0) ? ContactDetailsView.ActualHeight : DefaultHeight;
+            var height = !double.Equals(ActualHeight, 0.0) ? ActualHeight : DefaultHeight;
             var avaibleHeight = height * a;
             var count = avaibleHeight / avaregeHeight;
             return new Tuple<double, int>(avaibleHeight, (int)count);
@@ -657,7 +657,7 @@ namespace WSUI.Module.ViewModel
             double avaibleHeight = ContactDetailsView.ActualHeight - ContactDetailsView.ActualFileHeight;
             double delta = data.NewSize.Height - data.OldSize.Height;
             double restDelta = (avaibleHeight - Delta) - EmailHeight;
-            if (restDelta > delta && delta > 0)
+            if (restDelta > delta && delta > 0 && EmailHeight < data.NewSize.Height)
             {
                 EmailHeight += delta;    
                 OnPropertyChanged(() => EmailHeight);

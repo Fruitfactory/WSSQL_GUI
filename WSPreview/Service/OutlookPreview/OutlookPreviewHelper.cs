@@ -546,8 +546,12 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         private bool IsEmail(string email)
         {
+            if (string.IsNullOrEmpty(email))
+            {
+                return false;
+            }
             Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-            return regex.IsMatch(email);
+            return  regex.IsMatch(email);
         }
 
         public string GetPreviewForMeeting(Outlook.MeetingItem meeting, string filename)
