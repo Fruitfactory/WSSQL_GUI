@@ -585,7 +585,7 @@ namespace WSUI.Module.ViewModel
 
         protected void KeyAttachmentDown(object args)
         {
-            if (args == null || !(args is KeyEventArgs))
+            if (!(args is KeyEventArgs))
                 return;
             var keys = args as KeyEventArgs;
             switch (keys.Key)

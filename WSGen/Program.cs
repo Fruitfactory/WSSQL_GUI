@@ -26,17 +26,18 @@ namespace WSGen
                 Console.WriteLine("Source dir argument is absent.");
                 return;
             }
-            
-            var strYear = DateTime.Now.Year.ToString().Substring(2);
-			var date = string.Format("{0}{1}",strYear,DateTime.Now.DayOfYear);
-            var shortRev = Convert.ToInt16(date);
+
+
+            var build = Convert.ToInt16(Properties.Settings.Default.BuildCount);
 
             string source = args[0];
-            string buildNumber = string.Format("{0}.{1}", Properties.Settings.Default.BuildNumber, shortRev);
+            string buildNumber = string.Format("{0}.{1}", Properties.Settings.Default.BuildNumber, build);
             string setupProject = string.Format("{0}{1}", source, Properties.Settings.Default.SetupProjectFile);
             GenerateVersionFile(source, buildNumber);
             UpdateSetupProject(setupProject, buildNumber);
-
+            Properties.Settings.Default["BuildCount"] = Convert.ToInt32(++build);
+            Properties.Settings.Default.Save();
+            Properties.Settings.Default.Reload();
         }
 
         static void GenerateVersionFile(string sourceDir, string buildNumber)

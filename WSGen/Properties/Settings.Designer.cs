@@ -23,88 +23,63 @@ namespace WSGen.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("wsui.number")]
         public string BulidNumberFilename {
             get {
                 return ((string)(this["BulidNumberFilename"]));
             }
+            set {
+                this["BulidNumberFilename"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1.0.0")]
         public string BuildNumber {
             get {
                 return ((string)(this["BuildNumber"]));
             }
+            set {
+                this["BuildNumber"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Version.cs")]
         public string VersionFilename {
             get {
                 return ((string)(this["VersionFilename"]));
             }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"ProductVersion\" = \"8:[1-9]{1}\\.[0-9]{1}\\.[0-9]{1}\"")]
-        public string ProductVersion {
-            get {
-                return ((string)(this["ProductVersion"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"ProductCode\" = \"8:\\{[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{" +
-            "4}\\-[0-9a-fA-F]{12}\\}\"")]
-        public string ProductCode {
-            get {
-                return ((string)(this["ProductCode"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"ProductVersion\" = \"8:{0}\"")]
-        public string ProductVersionTemplate {
-            get {
-                return ((string)(this["ProductVersionTemplate"]));
+            set {
+                this["VersionFilename"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"ProductCode\" = \"8:{0}\"")]
-        public string ProductCodeTemplate {
-            get {
-                return ((string)(this["ProductCodeTemplate"]));
-            }
-            set {
-                this["ProductCodeTemplate"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("\\WSUI.OutlookPlugin\\WSUI.OutlookPluginSetup\\Product.wxs")]
         public string SetupProjectFile {
             get {
                 return ((string)(this["SetupProjectFile"]));
             }
+            set {
+                this["SetupProjectFile"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int BuildCount {
             get {
                 return ((int)(this["BuildCount"]));
+            }
+            set {
+                this["BuildCount"] = value;
             }
         }
     }
