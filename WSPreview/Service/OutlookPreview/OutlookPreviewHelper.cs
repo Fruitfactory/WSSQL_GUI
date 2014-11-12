@@ -445,7 +445,9 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         {
             string page = GetBeginingOfPreview(mail, filename);
             var senderEmailAddress = mail.GetSenderSMTPAddress();
-            page += string.Format(SenderRow, GetMailTo(HighlightSearchString(GetConvertetString(mail.SenderName)), senderEmailAddress));
+            var clearSenderName = mail.SenderName.ClearString();
+            var clearsenderEmail = senderEmailAddress.ClearString();
+            page += string.Format(SenderRow, IsEmail(senderEmailAddress) ? GetContactNameWithEmail(GetConvertetString(clearSenderName), clearsenderEmail) : GetContactName(GetConvertetString(clearSenderName)));
             if (!string.IsNullOrEmpty(mail.CC))
                 page += string.Format(CCRow, HighlightSearchString(GetConvertetString(mail.CC)));
             page += string.Format(ToRow, GetRecipientsRow(mail));
