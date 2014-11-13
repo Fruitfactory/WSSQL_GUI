@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Text;
 using WSUI.Core.Helpers.DetectEncoding;
 using System.Text.RegularExpressions;
@@ -32,6 +33,14 @@ namespace WSUI.Core.Extensions
             var bytes = encoding != null ? encoding.GetBytes(str) : Encoding.Default.GetBytes(str);
             var result = encoding.GetString(bytes);//Encoding.UTF8.GetString(bytes);
             return result;
+        }
+
+        public static string DecodeString(this string str)
+        {
+            if(string.IsNullOrEmpty(str))
+                return null;
+            var decode = WebUtility.HtmlDecode(str);
+            return decode;
         }
 
         public static string[] SplitString(this string str)
