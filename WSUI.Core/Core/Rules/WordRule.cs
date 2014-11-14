@@ -10,7 +10,7 @@
         {
             base.InitRule();
             Rule = @"(?<group>\w+)";
-            Priority = 2;
+            Priority = 100;
         }
     }
 }

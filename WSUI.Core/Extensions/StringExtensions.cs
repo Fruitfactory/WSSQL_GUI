@@ -31,7 +31,7 @@ namespace WSUI.Core.Extensions
                 return string.Empty;
             encoding = encoding ?? EncodingTools.GetMostEfficientEncoding(str);
             var bytes = encoding != null ? encoding.GetBytes(str) : Encoding.Default.GetBytes(str);
-            var result = encoding.GetString(bytes);//Encoding.UTF8.GetString(bytes);
+            var result = encoding.GetString(bytes);
             return result;
         }
 
@@ -65,7 +65,7 @@ namespace WSUI.Core.Extensions
             return !string.IsNullOrEmpty(email) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase);
         }
 
-        public static string ClearString(this string str, string pattern = "['()\"]")
+        public static string ClearString(this string str, string pattern = "['\\$()\"]")
         {
             return string.IsNullOrEmpty(str) ? string.Empty : Regex.Replace(str, pattern, "",RegexOptions.Compiled);
         }

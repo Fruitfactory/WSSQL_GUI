@@ -15,7 +15,7 @@ namespace WSUI.Infrastructure.Converters
         {
             if (string.IsNullOrEmpty((string)value))
                 return string.Empty;
-            var result = ((string)value).ConvertToMostEfficientEncoding();
+            var result = ((string)value).DecodeString();
             return result;
         }
 

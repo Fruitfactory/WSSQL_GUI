@@ -21,7 +21,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
     {
         #region [needs]
 
-        private static char[] Symbol = new char[] { '@','.',',' };
+        private static char[] Symbol = new char[] { '@','.',',','$' };
         private const string AfterStrongTemplateBegin = "<font style='background-color: yellow'><strong>";
         private const string AfterStrongTemplateEnd = "</strong></font>";
         private const string OutlookProcessName = "OUTLOOK";
@@ -222,7 +222,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         #region [strign process]
 
-        public void CreateWordsList(string inputSequence)
+        private void CreateWordsList(string inputSequence)
         {
             if (string.IsNullOrEmpty(inputSequence) || inputSequence.IndexOfAny(Symbol) > -1 )
             {
@@ -255,8 +255,8 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             string result = inputString;
             foreach (var s in _itemArray)
             {
-
-                Match m = Regex.Match(result, string.Format(@"\b({0})\b", Regex.Escape(s)),RegexOptions.IgnoreCase);
+                var temp = Regex.Escape(s.ClearString());
+                Match m = Regex.Match(result, string.Format(@"\b({0})\b",temp),RegexOptions.IgnoreCase);
                 if (m.Success)
                 {
                     var partBegin = result.Substring(0, m.Index);
@@ -267,6 +267,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             }
             return result;
         }
+
 
         private string GetHtmlBodyHightlight(string body)
         {
@@ -437,7 +438,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             {
                 subject = ((string) item.Subject);
             }
-            page += string.Format(SubjectRow, HighlightSearchString(subject.ConvertToMostEfficientEncoding()));
+            page += string.Format(SubjectRow, HighlightSearchString(subject.DecodeString()));
             return page;
         }
 
@@ -485,7 +486,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         private string GetConvertetString(string str)
         {
-            return !string.IsNullOrEmpty(str) ? str.ConvertToMostEfficientEncoding() : NAEmpty;
+            return !string.IsNullOrEmpty(str) ? str.DecodeString() : NAEmpty;
         }
 
         public string GetPreviewForAppointment(Outlook.AppointmentItem appointment, string filename)
@@ -559,8 +560,8 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         public string GetPreviewForMeeting(Outlook.MeetingItem meeting, string filename)
         {
             string page = GetBeginingOfPreview(meeting, filename);
-            page += string.Format(TopicRow, meeting.ConversationTopic.ConvertToMostEfficientEncoding());
-            page += string.Format(SendRow, GetMailTo(new string[] { meeting.SenderName.ConvertToMostEfficientEncoding() }));
+            page += string.Format(TopicRow, meeting.ConversationTopic.DecodeString());
+            page += string.Format(SendRow, GetMailTo(new string[] { meeting.SenderName.DecodeString() }));
             page += GetAttachments(meeting, filename);
             page += TableEnd + PageEnd;
             return page;

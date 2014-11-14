@@ -23,9 +23,14 @@ namespace WSUI.Core.Core.Rules
             return CreateRule(typeof(WordRule));
         }
 
+        public IRule GetAmountRule()
+        {
+            return CreateRule(typeof (AmountRule));
+        }
+
         public IList<IRule> GetAllRules()
         {
-            var list = new List<IRule>() { GetQueteRule(), GetWordRule() };
+            var list = new List<IRule>() { GetQueteRule(), GetWordRule(), GetAmountRule() };
             return list.OrderBy(rule => rule.Priority).ToList();
         }
 

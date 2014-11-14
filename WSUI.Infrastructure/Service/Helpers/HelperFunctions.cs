@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using WSUI.Core.Extensions;
 
 namespace WSUI.Infrastructure.Service.Helpers
 {
@@ -67,7 +68,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             var listMatches = new List<MatchInfo>();
             foreach (var word in list)
             {
-                var col = Regex.Matches(text, string.Format(@"({0})", Regex.Escape(word)),RegexOptions.IgnoreCase);
+                var col = Regex.Matches(text, string.Format(@"({0})", Regex.Escape(word.ClearString())),RegexOptions.IgnoreCase);
                 if(col.Count ==  0)
                     continue;
                 for (int i = 0; i < col.Count; i++)
