@@ -109,6 +109,7 @@
     <Compile Include="Core\LimeLM\TurboActivate.cs" />
     <Compile Include="Core\LimeLM\TurboLimeActivate.cs" />
     <Compile Include="Core\Payload\BasePayload.cs" />
+    <Compile Include="Core\Rules\AmountRule.cs" />
     <Compile Include="Core\Rules\BaseRule.cs" />
     <Compile Include="Core\Rules\IRule.cs" />
     <Compile Include="Core\Rules\QuoteRule.cs" />

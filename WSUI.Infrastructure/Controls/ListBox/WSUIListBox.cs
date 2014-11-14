@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using WSUI.Core.Data;
 using WSUI.Infrastructure.Helpers.AttachedProperty;
 using WSUI.Core.Extensions;
@@ -12,6 +14,8 @@ namespace WSUI.Infrastructure.Controls.ListBox
 {
     public class WSUIListBox : System.Windows.Controls.ListBox
     {
+
+        private ScrollViewer _scrollHost;
 
         public EventHandler ResetSelection;
 
@@ -36,6 +40,13 @@ namespace WSUI.Infrastructure.Controls.ListBox
             DefaultStyleKey = typeof(System.Windows.Controls.ListBox);
             IsChildUnselectAll = false;
         }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            _scrollHost =  VisualTreeHelper.GetChild(this, 0) as ScrollViewer;
+        }
+
 
         public bool IsChildUnselectAll { get; set; }
 
