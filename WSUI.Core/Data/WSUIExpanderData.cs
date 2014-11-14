@@ -11,5 +11,7 @@ namespace WSUI.Core.Data
 
         public Size OldSize { get; set; }
 
+        public Point Location { get; set; }
+
     }
 }

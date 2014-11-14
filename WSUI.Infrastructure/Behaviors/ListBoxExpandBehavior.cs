@@ -28,14 +28,15 @@ namespace WSUI.Infrastructure.Behaviors
 
         private void AssociatedObjectOnSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
         {
+            var point = AssociatedObject.TranslatePoint(new Point(0, 0), ParentListBox);
             if (IsExpanded && ParentListBox  != null)
             {
-                ParentListBox.RaiseCalculationHeight(new WSUIExpanderData(){ExpandDirection =  AssociatedObject.ExpandDirection,NewSize = sizeChangedEventArgs.NewSize, OldSize = sizeChangedEventArgs.PreviousSize});
+                ParentListBox.RaiseCalculationHeight(new WSUIExpanderData(){ExpandDirection =  AssociatedObject.ExpandDirection,NewSize = sizeChangedEventArgs.NewSize, OldSize = sizeChangedEventArgs.PreviousSize, Location = point});
                 IsExpanded = false;
             }
             if (IsCollapsed && ParentListBox != null)
             {
-                ParentListBox.RaiseCalculationHeight(new WSUIExpanderData() { ExpandDirection = AssociatedObject.ExpandDirection, NewSize = sizeChangedEventArgs.NewSize , OldSize = sizeChangedEventArgs.PreviousSize});
+                ParentListBox.RaiseCalculationHeight(new WSUIExpanderData() { ExpandDirection = AssociatedObject.ExpandDirection, NewSize = sizeChangedEventArgs.NewSize, OldSize = sizeChangedEventArgs.PreviousSize, Location = point });
                 IsCollapsed = false;
             }
             System.Diagnostics.Debug.WriteLine(AssociatedObject.ExpandDirection.ToString());
