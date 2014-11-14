@@ -261,13 +261,12 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
                 {
                     var partBegin = result.Substring(0, m.Index);
                     var partMath = result.Substring(m.Index, m.Length);
-                    var partEnd = result.Substring(m.Index + m.Length);
+                    var partEnd = HighlightSearchString(result.Substring(m.Index + m.Length));
                     result = partBegin + AfterStrongTemplateBegin + partMath + AfterStrongTemplateEnd + partEnd;
                 }
             }
             return result;
         }
-
 
         private string GetHtmlBodyHightlight(string body)
         {
