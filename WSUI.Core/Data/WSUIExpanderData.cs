@@ -13,5 +13,7 @@ namespace WSUI.Core.Data
 
         public Point Location { get; set; }
 
+        public bool IsScrollBarVisible { get; set; }
+
     }
 }

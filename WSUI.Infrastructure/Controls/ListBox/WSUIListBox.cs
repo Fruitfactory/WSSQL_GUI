@@ -79,10 +79,12 @@ namespace WSUI.Infrastructure.Controls.ListBox
 
         internal void RaiseCalculationHeight(WSUIExpanderData data)
         {
+            this.InvalidateMeasure();
             if (CalculateActualHeightCommand == null)
                 return;
             if (CalculateActualHeightCommand.CanExecute(data))
             {
+                data.IsScrollBarVisible = _scrollHost.ComputedVerticalScrollBarVisibility == Visibility.Visible;
                 CalculateActualHeightCommand.Execute(data);
             }
         }

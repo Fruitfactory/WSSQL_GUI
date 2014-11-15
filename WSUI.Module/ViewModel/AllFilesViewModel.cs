@@ -74,9 +74,9 @@ namespace WSUI.Module.ViewModel
             double avaibleHeight = ((ActualHeight - AllDataView.ActualFileHeight) - AllDataView.ActualContactHeight);
             double delta = data.NewSize.Height - data.OldSize.Height;
             double restDelta = avaibleHeight - EmailHeight;
-            if (restDelta > delta && delta > 0 && EmailHeight < data.NewSize.Height)
+            if (data.IsScrollBarVisible) //&& restDelta > delta && delta > 0
             {
-                EmailHeight += delta;
+                EmailHeight += restDelta;
                 OnPropertyChanged(() => EmailHeight);
             }
         }

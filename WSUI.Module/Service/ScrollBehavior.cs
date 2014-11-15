@@ -17,7 +17,6 @@ namespace WSUI.Module.Service
         public void NeedSearch(ScrollData sd)
         {
             var scrollArgs = sd as ScrollData;
-            System.Diagnostics.Debug.WriteLine(scrollArgs.ToString());
             var result = scrollArgs.VerticalOffset * 100 / scrollArgs.ScrollableHeight;
             if (result > LimitReaction)
             {
