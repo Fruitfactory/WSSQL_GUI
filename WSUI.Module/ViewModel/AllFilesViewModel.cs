@@ -71,12 +71,12 @@ namespace WSUI.Module.ViewModel
             {
                 return;
             }
-            double avaibleHeight = ((ActualHeight - AllDataView.ActualFileHeight) - AllDataView.ActualContactHeight);
+            double avaibleHeight = ((ActualHeight - AllDataView.ActualFileHeight) - AllDataView.ActualContactHeight) - EmailHeight;
             double delta = data.NewSize.Height - data.OldSize.Height;
             double restDelta = avaibleHeight - EmailHeight;
-            if (data.IsScrollBarVisible) //&& restDelta > delta && delta > 0
+            if (data.IsScrollBarVisible && restDelta > delta && delta > 0) //
             {
-                EmailHeight += restDelta;
+                EmailHeight += delta;
                 OnPropertyChanged(() => EmailHeight);
             }
         }
