@@ -21,12 +21,12 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
     {
         #region [needs]
 
-        private static char[] Symbol = new char[] { '@','.',',','$' };
+        private static char[] Symbol = new char[] { '@','.',',' };
         private const string AfterStrongTemplateBegin = "<font style='background-color: yellow'><strong>";
         private const string AfterStrongTemplateEnd = "</strong></font>";
         private const string OutlookProcessName = "OUTLOOK";
         private const string OutlookApplication = "Outlook.Application";
-        private const string WordRegex = @"(?<word>\w+)";
+        private const string WordRegex = @"(?<word>[\\$\d\w\.]+)";
         private const string ExtOfImage = "png";
         private const string BodyTag = "<body";
         private const string NAEmpty = "<n/a>";
@@ -224,7 +224,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         private void CreateWordsList(string inputSequence)
         {
-            if (string.IsNullOrEmpty(inputSequence) || inputSequence.IndexOfAny(Symbol) > -1 )
+            if (string.IsNullOrEmpty(inputSequence))
             {
                 _itemArray = new string[] { inputSequence };
                 return;
