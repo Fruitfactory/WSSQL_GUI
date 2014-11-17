@@ -255,13 +255,14 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             string result = inputString;
             foreach (var s in _itemArray)
             {
-                var temp = Regex.Escape(s.ClearString());
-                Match m = Regex.Match(result, string.Format(@"\b({0})\b",temp),RegexOptions.IgnoreCase);
-                if (m.Success)
+                var temp = s;
+                var index = result.IndexOf(temp,StringComparison.InvariantCultureIgnoreCase);
+                var lenght = temp.Length;    
+                if (index > -1)
                 {
-                    var partBegin = result.Substring(0, m.Index);
-                    var partMath = result.Substring(m.Index, m.Length);
-                    var partEnd = HighlightSearchString(result.Substring(m.Index + m.Length));
+                    var partBegin = result.Substring(0, index);
+                    var partMath = result.Substring(index, lenght);
+                    var partEnd = HighlightSearchString(result.Substring(index + lenght));
                     result = partBegin + AfterStrongTemplateBegin + partMath + AfterStrongTemplateEnd + partEnd;
                 }
             }

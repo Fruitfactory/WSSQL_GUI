@@ -65,7 +65,7 @@ namespace WSUI.Core.Extensions
             return !string.IsNullOrEmpty(email) && Regex.IsMatch(email, EmailPattern, RegexOptions.IgnoreCase);
         }
 
-        public static string ClearString(this string str, string pattern = "['\\$()\"]")
+        public static string ClearString(this string str, string pattern = "['()\"]")
         {
             return string.IsNullOrEmpty(str) ? string.Empty : Regex.Replace(str, pattern, "",RegexOptions.Compiled);
         }
