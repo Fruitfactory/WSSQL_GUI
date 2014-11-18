@@ -250,19 +250,21 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         private string HighlightSearchString(string inputString)
         {
-            if (string.IsNullOrEmpty(HitString) || string.IsNullOrEmpty(inputString) || _itemArray == null)
+            if (string.IsNullOrEmpty(HitString) || string.IsNullOrEmpty(inputString) || inputString.IsHtmlComment() || _itemArray == null )
                 return inputString;
             string result = inputString;
+            
             foreach (var s in _itemArray)
             {
-                var temp = s;
-                var index = result.IndexOf(temp,StringComparison.InvariantCultureIgnoreCase);
-                var lenght = temp.Length;    
-                if (index > -1)
+                var temp = Regex.Escape(s.ClearString());
+                Match m = s.IsAmount () ? Regex.Match(result, string.Format(@"{0}", temp), RegexOptions.IgnoreCase) : 
+                    Regex.Match(result, string.Format(@"\b({0})\b", temp), RegexOptions.IgnoreCase);
+                
+                if (m.Success)
                 {
-                    var partBegin = result.Substring(0, index);
-                    var partMath = result.Substring(index, lenght);
-                    var partEnd = HighlightSearchString(result.Substring(index + lenght));
+                    var partBegin = result.Substring(0, m.Index);
+                    var partMath = result.Substring(m.Index, m.Length);
+                    var partEnd = HighlightSearchString(result.Substring(m.Index + m.Length));
                     result = partBegin + AfterStrongTemplateBegin + partMath + AfterStrongTemplateEnd + partEnd;
                 }
             }
