@@ -15,6 +15,8 @@ namespace WSUI.Core.Extensions
         private readonly static char Apersand = '@';
         
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
+        private const string HtmlCommentPattern = @"<!--[\d\D]*?-->";
+        private const string AmountPattern = @"^\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{0,2})?$";
 
 
         public static string ConvertToIso(this string str)
@@ -68,6 +70,29 @@ namespace WSUI.Core.Extensions
         public static string ClearString(this string str, string pattern = "['()\"]")
         {
             return string.IsNullOrEmpty(str) ? string.Empty : Regex.Replace(str, pattern, "",RegexOptions.Compiled);
+        }
+
+        public static string EkranString(this string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return str;
+            }
+            if (str.IndexOf('$') > -1)
+            {
+                return str.Replace("$",@"\$");
+            }
+            return str;
+        }
+
+        public static bool IsHtmlComment(this string str)
+        {
+            return !string.IsNullOrEmpty(str) && Regex.IsMatch(str, HtmlCommentPattern,RegexOptions.IgnoreCase);
+        }
+
+        public static bool IsAmount(this string str)
+        {
+            return !string.IsNullOrEmpty(str) && Regex.IsMatch(str, AmountPattern, RegexOptions.IgnoreCase);
         }
 
     }
