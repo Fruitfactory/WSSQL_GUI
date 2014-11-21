@@ -15,5 +15,7 @@ namespace WSUI.Core.Data
 
         public bool IsScrollBarVisible { get; set; }
 
+        public bool IsVisibleOne { get; set; }
+
     }
 }

@@ -85,6 +85,7 @@ namespace WSUI.Infrastructure.Controls.ListBox
             if (CalculateActualHeightCommand.CanExecute(data))
             {
                 data.IsScrollBarVisible = _scrollHost.ComputedVerticalScrollBarVisibility == Visibility.Visible;
+                data.IsVisibleOne = _scrollHost.ViewportHeight == 1;
                 CalculateActualHeightCommand.Execute(data);
             }
         }
