@@ -364,7 +364,7 @@ namespace WSUI.Module.Core
         {
             get
             {
-                var list = OutlookHelper.Instance.GetFolderList();
+                var list = OutlookHelper.Instance.GetFolderNameList();
                 if (list.Count > 0)
                 {
                     OnPropertyChanged(() => FolderList);

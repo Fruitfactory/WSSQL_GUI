@@ -20,6 +20,7 @@ using WSUI.Core.Enums;
 using WSUI.Core.Events;
 using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
+using WSUI.Core.Extensions;
 using WSUI.Infrastructure.Controls.Application;
 using WSUI.Infrastructure.Service.Dumper;
 using WSUIOutlookPlugin.Core;
@@ -49,6 +50,7 @@ namespace WSUIOutlookPlugin
         private ISidebarForm _sidebarForm;
         private bool IsLoading = true;
         private int _initHashCode;
+        private string _previewReferenceSelected = null;
 
         #region [const]
 
@@ -115,6 +117,7 @@ namespace WSUIOutlookPlugin
             //watch.Stop();
             this.OnSendMessage += WSUIAddinModule_OnSendMessage;
             this.AddinInitialize += OnAddinInitialize;
+            
 
             //WSSqlLogger.Instance.LogInfo(string.Format("WSUIAddinModule [ctor]: {0}ms", watch.ElapsedMilliseconds));
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -203,13 +206,13 @@ namespace WSUIOutlookPlugin
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
             this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
-            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem)
-                        | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem)
-                        | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem)
-                        | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem)
-                        | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem)
-                        | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem)
-                        | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
+            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
             this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
             this.formRightSidebar.FormClassName = "WSUIOutlookPlugin.WSUISidebar";
             this.formRightSidebar.IsMinimizedStateAllowed = false;
@@ -459,6 +462,7 @@ namespace WSUIOutlookPlugin
             // 
             this.OutlookFinderEvents.Quit += new System.EventHandler(this.OutlookFinderEvents_Quit);
             this.OutlookFinderEvents.NewExplorer += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_NewExplorer);
+            this.OutlookFinderEvents.ExplorerSelectionChange += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerSelectionChange);
             // 
             // WSUIAddinModule
             // 
@@ -1046,6 +1050,15 @@ namespace WSUIOutlookPlugin
             this.SendMessage(WM_LOADED, IntPtr.Zero, IntPtr.Zero);
             OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
             OutlookHelper.Instance.OutlookApp = OutlookApp;
+            //_itemsEvents = new WSUIOutlookItemsEvents(this);
+
+            //var folders = OutlookHelper.Instance.GetFolders();
+            //foreach (var mapiFolder in folders)
+            //{
+            //    _itemsEvents.ConnectTo(mapiFolder, true);
+            //}
+
+
             WSSqlLogger.Instance.LogInfo("WSUI AddinModule Startup Complete...");
         }
 
@@ -1229,5 +1242,36 @@ namespace WSUIOutlookPlugin
                 e.Value = false;
             }
         }
+
+        private void OutlookFinderEvents_ExplorerSelectionChange(object sender, object explorer)
+        {
+            var exp = explorer as Outlook._Explorer;
+            if (exp == null || exp.Selection.Count == 0)
+                return;
+            var item = exp.Selection[1] as Outlook.MailItem;
+            var referenceItem = item.EntryID;
+            if (item == null ||  ( _previewReferenceSelected != null && _previewReferenceSelected == referenceItem))
+                return;
+            System.Diagnostics.Debug.WriteLine(string.Format("----------{0} >> {1}",item.Subject,item.EntryID));
+            _previewReferenceSelected = item.EntryID;
+            var senderContact = item.Sender;
+            var names = senderContact.Name.Split(' ');
+            string email = senderContact.GetEmailAddress();
+            if (_wsuiBootStraper == null)
+                return;
+
+            if(names.Length > 1 && !string.IsNullOrEmpty(email))
+            {
+                var tag = new ContactSearchObject() {FirstName = names[0], LastName = names[1], EmailAddress = email};
+                _wsuiBootStraper.PassAction(new WSAction(WSActionType.ShowContact, tag));
+            }
+            else if (names.Length > 0 && !string.IsNullOrEmpty(email))
+            {
+                var tag = new EmailContactSearchObject() { ContactName = names[0],  EMail = email};
+                _wsuiBootStraper.PassAction(new WSAction(WSActionType.ShowContact, tag));
+            }
+        }
+
+
     }
 }

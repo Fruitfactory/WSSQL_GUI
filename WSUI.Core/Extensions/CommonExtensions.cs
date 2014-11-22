@@ -28,5 +28,16 @@ namespace WSUI.Core.Extensions
             foreach (var item in items)
                 col.Add(item);
         }
+
+        public static bool IsNull(this object arg)
+        {
+            return ReferenceEquals(arg, null);
+        }
+
+        public static bool IsNotNull(this object arg)
+        {
+            return !ReferenceEquals(arg, null);
+        }
+
     }
 }

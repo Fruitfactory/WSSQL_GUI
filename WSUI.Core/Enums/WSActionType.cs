@@ -10,6 +10,7 @@
         Show,
         Hide,
         Quit,
-        ClearText
+        ClearText,
+        ShowContact
     }
 }

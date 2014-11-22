@@ -18,6 +18,8 @@ namespace WSUI.Module.Interface.ViewModel
 
         void SetDataObject(ISearchObject dataSearchObject);
 
+        bool IsSameData(ISearchObject dataObject);
+
         ISearchObject SelectedElement { get; set; }
 
         ISearchObject TrackedElement { get; set; }
@@ -28,5 +30,8 @@ namespace WSUI.Module.Interface.ViewModel
         int SelectedIndex { get; }
 
         string SearchCriteria { get; }
+
+
+
     }
 }

@@ -236,7 +236,7 @@ namespace WSUI.Core.Helpers
             return folder.FullFolderPath;
         }
 
-        public List<string> GetFolderList()
+        public List<string> GetFolderNameList()
         {
             List<string> res = new List<string>();
             if (this.OutlookApp == null)
@@ -251,12 +251,38 @@ namespace WSUI.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolderList", ex.Message));
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolderNameList", ex.Message));
                 return res;
             }
             res.Insert(0, OutlookHelper.AllFolders);
             return res;
         }
+
+        public List<object> GetFolders()
+        {
+            List<object> res = new List<object>();
+            if (this.OutlookApp == null)
+                return res;
+            try
+            {
+                if (!IsOutlookAlive() && IsHostIsApplication())
+                    ReopenOutlook(ref _app);
+                Outlook.NameSpace ns = this.OutlookApp.GetNamespace("MAPI");
+                foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
+                {
+                    res.Add(folder);
+                    GetOutlookFolders(folder, res);
+                }
+                    
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolders", ex.Message));
+                return res;
+            }
+            return res;
+        }
+
 
         public void Logoff()
         {
@@ -539,6 +565,31 @@ namespace WSUI.Core.Helpers
                     try
                     {
                         res.Add(subfolder.Name);
+                        GetOutlookFolders(subfolder, res);
+                    }
+                    catch (Exception e)
+                    {
+                        WSSqlLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetOutlookFolders", e.Message));
+            }
+        }
+
+        private void GetOutlookFolders(Outlook.MAPIFolder folder, List<object> res)
+        {
+            try
+            {
+                if (folder.Folders.Count == 0)
+                    return;
+                foreach (var subfolder in folder.Folders.OfType<Outlook.MAPIFolder>())
+                {
+                    try
+                    {
+                        res.Add(subfolder);
                         GetOutlookFolders(subfolder, res);
                     }
                     catch (Exception e)

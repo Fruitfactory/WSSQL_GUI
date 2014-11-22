@@ -178,6 +178,7 @@
     <Compile Include="Interfaces\IUpdatable.cs" />
     <Compile Include="Interfaces\IWSUICommandManager.cs" />
     <Compile Include="Core\BaseCommandManager.cs" />
+    <Compile Include="Interfaces\IWSUIOutlookItemEvents.cs" />
     <Compile Include="Managers\WSUIAboutCommandManager.cs" />
     <Compile Include="Managers\WSUICommandBarManager.cs" />
     <Compile Include="Managers\WSUIRibbonManager.cs" />

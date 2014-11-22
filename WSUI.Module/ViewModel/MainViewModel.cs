@@ -352,7 +352,7 @@ namespace WSUI.Module.ViewModel
                             previewView.SetFullFolderPath(SearchItemHelper.GetFullFolderPath(_currentData));
                         }
 
-                        previewView.SetSearchPattern( _navigationService.IsContactDetailsVisible ? _navigationService.ContactDetailsViewModel.SearchCriteria : _currentItem != null
+                        previewView.SetSearchPattern(_navigationService.IsContactDetailsVisible ? _navigationService.ContactDetailsViewModel.SearchCriteria : _currentItem != null
                             ? _currentItem.SearchString
                             : string.Empty);
                         previewView.SetPreviewFile(filename);
@@ -402,11 +402,12 @@ namespace WSUI.Module.ViewModel
                 temp(this, null);
             Enabled = _currentItem.Enabled;
             IsBusy = true;
-            if (_navigationService != null && _navigationService.IsBackButtonVisible)
+            if (_navigationService.IsNotNull())
             {
                 ResetNavigation();
             }
             OnPropertyChanged(() => BackButtonVisibility);
+            OnPropertyChanged(() => IsKindsVisible);
         }
 
         private void ResetNavigation()
@@ -545,11 +546,7 @@ namespace WSUI.Module.ViewModel
                     break;
 
                 case WSActionType.Search:
-                    var searchCriteria = action.Data as string;
-                    if (string.IsNullOrEmpty(searchCriteria))
-                        break;
-                    _currentItem.SearchString = searchCriteria;
-                    _currentItem.SearchCommand.Execute(null);
+                    RunSearchFromExternal(action);
                     break;
 
                 case WSActionType.Show:
@@ -566,6 +563,33 @@ namespace WSUI.Module.ViewModel
                 case WSActionType.ClearText:
                     ClearTextCriteriaForAllKinds();
                     break;
+                case WSActionType.ShowContact:
+                    ShowSenderOfSelectedOutlookEmail(action);
+                    break;
+            }
+        }
+
+        private void RunSearchFromExternal(IWSAction action)
+        {
+            var searchCriteria = action.Data as string;
+            if (string.IsNullOrEmpty(searchCriteria))
+                return;
+            _currentItem.SearchString = searchCriteria;
+            _currentItem.SearchCommand.Execute(null);
+        }
+
+        private void ShowSenderOfSelectedOutlookEmail(IWSAction action)
+        {
+            if (_navigationService != null && _navigationService.IsContactDetailsVisible &&
+                !_navigationService.ContactDetailsViewModel.IsSameData(action.Data as ISearchObject))
+            {
+                _navigationService.MoveToFirstDataView();
+                ShowContactPreview(action.Data);
+            }
+            else if(!_navigationService.IsContactDetailsVisible)
+            {
+                _navigationService.MoveToFirstDataView();
+                ShowContactPreview(action.Data);
             }
         }
 
@@ -661,12 +685,12 @@ namespace WSUI.Module.ViewModel
             get { return _currentData; }
         }
 
-        public BaseSearchObject CurrentTracked 
+        public BaseSearchObject CurrentTracked
         {
             get { return GetContactDetailsTrackedObject() ?? GetKindItemTrackedObject(); }
         }
 
-        public IEnumerable<MenuItem> EmailsMenuItems 
+        public IEnumerable<MenuItem> EmailsMenuItems
         {
             get { return _menuItems[TypeSearchItem.Email]; }
         }
@@ -676,7 +700,7 @@ namespace WSUI.Module.ViewModel
             get { return _menuItems[TypeSearchItem.File]; }
         }
 
-        public bool IsPreviewVisible 
+        public bool IsPreviewVisible
         {
             get { return _navigationService != null && _navigationService.IsPreviewVisible; }
         }
@@ -792,14 +816,14 @@ namespace WSUI.Module.ViewModel
         {
             if (current == null)
                 return;
-            _currentStrategy = _commandStrategies.ContainsKey(current.TypeItem) ? _commandStrategies[current.TypeItem] : null;
+            _currentStrategy = _commandStrategies.IsNotNull() && _commandStrategies.ContainsKey(current.TypeItem) ? _commandStrategies[current.TypeItem] : null;
 
             OnPropertyChanged(() => Commands);
         }
 
         private BaseSearchObject GetContactDetailsTrackedObject()
         {
-            return _navigationService.IsContactDetailsVisible ?  _navigationService.ContactDetailsViewModel.TrackedElement as BaseSearchObject :  null;
+            return _navigationService.IsContactDetailsVisible ? _navigationService.ContactDetailsViewModel.TrackedElement as BaseSearchObject : null;
         }
 
         private BaseSearchObject GetKindItemTrackedObject()

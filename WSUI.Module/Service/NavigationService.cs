@@ -145,22 +145,31 @@ namespace WSUI.Module.Service
 
         public IContactDetailsViewModel ContactDetailsViewModel
         {
-            get { return (CurrentView as IContactDetailsView).Model; }
+            get
+            {
+                var contactDetailsViewModel = (CurrentView as IContactDetailsView);
+                return contactDetailsViewModel != null ? contactDetailsViewModel.Model : null;
+            }
 
         }
 
 
         public void MoveToFirstDataView()
         {
+            if(CurrentView is IDataKindView)
+                return;
             SetTransition(_moveToRightTransition);
             IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
             if (regionSidebarData != null)
             {
-                var oldView = regionSidebarData.GetView(CurrentView.GetType().FullName);
-                if (oldView != null)
+                if (CurrentView != null)
                 {
-                    regionSidebarData.Remove(oldView);
-                    ReleaseContactDetailsViewModel(oldView as INavigationView);
+                    var oldView = regionSidebarData.GetView(CurrentView.GetType().FullName);
+                    if (oldView != null)
+                    {
+                        regionSidebarData.Remove(oldView);
+                        ReleaseContactDetailsViewModel(oldView as INavigationView);
+                    }    
                 }
 
                 while (_stackViews.Count > 0) 

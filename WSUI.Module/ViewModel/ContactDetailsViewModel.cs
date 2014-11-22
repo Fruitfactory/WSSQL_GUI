@@ -152,6 +152,25 @@ namespace WSUI.Module.ViewModel
             OnPropertyChanged(() => SearchString);
         }
 
+        public bool IsSameData(ISearchObject dataObject)
+        {
+            if (dataObject is EmailContactSearchObject)
+            {
+                var emailContact = dataObject as EmailContactSearchObject;
+                var result = FirstName == emailContact.ContactName && Emails.Any( e => string.Equals(e,emailContact.EMail,StringComparison.InvariantCultureIgnoreCase));
+                return result;
+            }
+            if (dataObject is ContactSearchObject)
+            {
+                var contact = dataObject as ContactSearchObject;
+                var result = FirstName == contact.FirstName && LastName == contact.LastName &&
+                       Emails.Any(
+                           e => string.Equals(e, contact.EmailAddress, StringComparison.InvariantCultureIgnoreCase));
+                return result;
+            }
+            return false;
+        }
+
         public ISearchObject SelectedElement
         {
             get { return _selectedAttachment; }

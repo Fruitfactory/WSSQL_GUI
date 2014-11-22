@@ -33,10 +33,10 @@ namespace WSUI.Core.Extensions
             }
             Outlook.AddressEntry addressEntry = recipient.AddressEntry;
 
-            return GetEmailAddress(addressEntry);
+            return addressEntry.GetEmailAddress();
         }
 
-        private static string GetEmailAddress(Outlook.AddressEntry sender)
+        public static string GetEmailAddress(this Outlook.AddressEntry sender)
         {
             if (sender != null)
             {
