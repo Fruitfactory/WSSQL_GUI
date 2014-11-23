@@ -5,7 +5,10 @@ using System.Linq;
 using System.Windows.Documents;
 using System.Windows.Input;
 using Microsoft.Practices.Prism;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
+using WSUI.Core.Data;
+using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Infrastructure.Events;
@@ -14,6 +17,7 @@ using WSUI.Module.Interface.Service;
 using WSUI.Module.Interface.View;
 using WSUI.Module.Interface.ViewModel;
 using WSUI.Module.Service;
+using WSUI.Module.View;
 
 namespace WSUI.Module.Core
 {
@@ -21,6 +25,7 @@ namespace WSUI.Module.Core
     {
 
         private const double DefaultHeight = 600;//px
+        private const double Delta = 32; // "more" section, mergings and paddings
 
 
 
@@ -101,6 +106,7 @@ namespace WSUI.Module.Core
         {
             try
             {
+                InitCommands();
                 _searchSystem = CreateSearchSystem();
                 _searchSystem.Init();
                 _searchSystem.SearchFinished += SearchSystemOnSearchFinished;
@@ -114,6 +120,49 @@ namespace WSUI.Module.Core
             }
         }
 
+        private void InitCommands()
+        {
+            SearchCommand = new DelegateCommand(SearchExecute);
+            KeyDowmCommand = new DelegateCommand<object>(KeyDownExecute, o => true);
+            HeightCalculateCommand  = new DelegateCommand<object>(HeightCalculateExecute, o => true);
+        }
+
+        private void SearchExecute()
+        {
+            RunSearching();
+        }
+
+        private void HeightCalculateExecute(object o)
+        {
+            var data = o as WSUIExpanderData;
+            if (data.IsNull())
+            {
+                return;
+            }
+            double avaibleHeight = _mainContactDetailsView.ActualHeight - _mainContactDetailsView.ActualFileHeight;
+            double delta = data.NewSize.Height - data.OldSize.Height;
+            double restDelta = (avaibleHeight - Delta) - Height;
+            if ((data.IsScrollBarVisible || data.IsVisibleOne) && restDelta > delta && delta > 0) //
+            {
+                Height += delta;
+                OnPropertyChanged(() => Height);
+            }
+        }
+
+        private void KeyDownExecute(object o)
+        {
+              var keys = o as KeyEventArgs;
+            if (keys.IsNull())
+                return;
+
+            switch (keys.Key)
+            {
+                case Key.Enter:
+                    RunSearching();
+                    break;
+            }
+        }
+
         private void ScrollBehaviorOnSearchGo()
         {
             RunSearching();
@@ -122,6 +171,7 @@ namespace WSUI.Module.Core
         private void SearchSystemOnSearchFinished(object o)
         {
             System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)ProcessResult);
+            RaiseSearchingFinish();
         }
 
         private void ProcessResult()
@@ -151,6 +201,15 @@ namespace WSUI.Module.Core
             _from = from;
             _to = to;
         }
+
+        void IContactKindDetailsViewModel<T>.RunSearching()
+        {
+            RunSearching();
+        }
+
+        public event EventHandler SearchFinished;
+        public ICommand HeightCalculateCommand { get; private set; }
+        public ICommand KeySearchCommand { get; private set; }
 
         protected abstract ISearchSystem CreateSearchSystem();
 
@@ -190,6 +249,14 @@ namespace WSUI.Module.Core
             var avaibleHeight = height * a;
             var count = avaibleHeight / avaregeHeight;
             return new Tuple<double, int>(avaibleHeight, (int)count);
+        }
+
+        private void RaiseSearchingFinish()
+        {
+            if (SearchFinished != null)
+            {
+                SearchFinished(this, EventArgs.Empty);
+            }
         }
 
 

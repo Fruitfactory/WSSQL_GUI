@@ -220,6 +220,12 @@
     <Compile Include="View\ContactDetailsView.xaml.cs">
       <DependentUpon>ContactDetailsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ContactEmailDetailsView.xaml.cs">
+      <DependentUpon>ContactEmailDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ContactFileDetailsView.xaml.cs">
+      <DependentUpon>ContactFileDetailsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ContactSettingsView.xaml.cs">
       <DependentUpon>ContactSettingsView.xaml</DependentUpon>
     </Compile>
@@ -297,6 +303,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ContactDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ContactEmailDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ContactFileDetailsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

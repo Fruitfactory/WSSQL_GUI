@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using WSUI.Core.Interfaces;
 
 namespace WSUI.Module.Interface.ViewModel
@@ -23,5 +24,14 @@ namespace WSUI.Module.Interface.ViewModel
         void Initialize();
 
         void SetSearchContext(string from, string to);
+
+        void RunSearching();
+
+        event EventHandler SearchFinished;
+
+        ICommand HeightCalculateCommand { get; }
+
+        ICommand KeySearchCommand { get; }
+
     }
 }
