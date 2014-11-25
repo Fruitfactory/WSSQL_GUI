@@ -85,9 +85,9 @@ namespace WSUI.Module.Service
             _stackViews.Clear();
         }
 
-        public void MoveToLeft(INavigationView newView)
+        public void MoveToLeft(INavigationView newView,bool useTransaction = true)
         {
-            SetTransition(_moveToLeftTransition);
+            SetTransition(useTransaction ? _moveToLeftTransition : null);
             IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
             if (regionSidebarData != null)
             {
@@ -154,11 +154,11 @@ namespace WSUI.Module.Service
         }
 
 
-        public void MoveToFirstDataView()
+        public void MoveToFirstDataView(bool useTransaction = true)
         {
             if(CurrentView is IDataKindView)
                 return;
-            SetTransition(_moveToRightTransition);
+            SetTransition(useTransaction ? _moveToRightTransition : null);
             IRegion regionSidebarData = _regionManager.Regions[RegionNames.SidebarDataRegion];
             if (regionSidebarData != null)
             {

@@ -304,7 +304,7 @@ namespace WSUI.Module.ViewModel
             ShowPreview(Current);
         }
 
-        private void ShowPreview(BaseSearchObject data)
+        private void ShowPreview(BaseSearchObject data, bool useTransaction = true)
         {
             if (data == null)
             {
@@ -318,12 +318,12 @@ namespace WSUI.Module.ViewModel
                 switch (data.TypeItem)
                 {
                     case TypeSearchItem.Contact:
-                        Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => ShowPreviewForPreviewObject(data)),
+                        Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => ShowPreviewForPreviewObject(data,useTransaction)),
                             null);
                         break;
 
                     default:
-                        Dispatcher.CurrentDispatcher.BeginInvoke(new Action(ShowPreviewForCurrentItem), null);
+                        Dispatcher.CurrentDispatcher.BeginInvoke((Action)(ShowPreviewForCurrentItem));
                         break;
                 }
 
@@ -372,14 +372,14 @@ namespace WSUI.Module.ViewModel
             }
         }
 
-        private void ShowPreviewForPreviewObject(BaseSearchObject previewData)
+        private void ShowPreviewForPreviewObject(BaseSearchObject previewData, bool useTransaction = true)
         {
             if (previewData == null)
                 return;
             try
             {
                 var contactDetails = _container.Resolve<IContactDetailsViewModel>();
-                MoveToLeft(contactDetails.View);
+                MoveToLeft(contactDetails.View,useTransaction);
                 Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => contactDetails.SetDataObject(previewData)));
 
             }
@@ -412,7 +412,7 @@ namespace WSUI.Module.ViewModel
 
         private void ResetNavigation()
         {
-            _navigationService.MoveToFirstDataView();
+            _navigationService.MoveToFirstDataView(false);
         }
 
         private void OnComplete(object sender, EventArgs<bool> e)
@@ -583,13 +583,13 @@ namespace WSUI.Module.ViewModel
             if (_navigationService != null && _navigationService.IsContactDetailsVisible &&
                 !_navigationService.ContactDetailsViewModel.IsSameData(action.Data as ISearchObject))
             {
-                _navigationService.MoveToFirstDataView();
-                ShowContactPreview(action.Data);
+                _navigationService.MoveToFirstDataView(false);
+                ShowContactPreview(action.Data,false);
             }
             else if(!_navigationService.IsContactDetailsVisible)
             {
-                _navigationService.MoveToFirstDataView();
-                ShowContactPreview(action.Data);
+                _navigationService.MoveToFirstDataView(false);
+                ShowContactPreview(action.Data,false);
             }
         }
 
@@ -675,9 +675,9 @@ namespace WSUI.Module.ViewModel
             _eventAggregator.GetEvent<WSUIShowFolder>().Publish(folder);
         }
 
-        public void ShowContactPreview(object tag)
+        public void ShowContactPreview(object tag, bool useTransaction = true)
         {
-            ShowPreview(tag as BaseSearchObject);
+            ShowPreview(tag as BaseSearchObject,useTransaction);
         }
 
         public BaseSearchObject Current
@@ -732,12 +732,12 @@ namespace WSUI.Module.ViewModel
             return BackButtonVisibility == Visibility.Visible;
         }
 
-        private void MoveToLeft(object view)
+        private void MoveToLeft(object view, bool useTransaction = true)
         {
             if (_navigationService == null)
                 return;
             BeforeMoveToLeft(view);
-            _navigationService.MoveToLeft(view as INavigationView);
+            _navigationService.MoveToLeft(view as INavigationView,useTransaction);
             OnPropertyChanged(() => IsKindsVisible);
         }
 

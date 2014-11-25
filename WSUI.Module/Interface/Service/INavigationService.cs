@@ -9,14 +9,14 @@ namespace WSUI.Module.Interface.Service
         INavigationView CurrentView { get; }
         void SetMainViewModel(IMainViewModel main);
         void ShowSelectedKind(object kindItem);
-        void MoveToLeft(INavigationView newView);
+        void MoveToLeft(INavigationView newView,bool useTransaction);
         void MoveToRight();
         bool IsBackButtonVisible { get; }
         bool IsPreviewVisible { get; }
         IPreviewView PreviewView { get; }
         bool IsContactDetailsVisible { get; }
         IContactDetailsViewModel ContactDetailsViewModel { get; }
-        void MoveToFirstDataView();
+        void MoveToFirstDataView(bool useTransaction);
 
     }
 }
