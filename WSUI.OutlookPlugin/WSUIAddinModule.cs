@@ -1249,20 +1249,32 @@ namespace WSUIOutlookPlugin
             if (exp == null || exp.Selection.Count == 0)
                 return;
 
+            string email = string.Empty;
+            string[] names = default(string[]);
             dynamic item = null;
             if (exp.Selection[1] is Outlook.MailItem)
             {
-                item = exp.Selection[1] as Outlook.MailItem;
+                var itemMail = exp.Selection[1] as Outlook.MailItem;
+                var senderContact = itemMail.Sender as Outlook.AddressEntry;
+                names = senderContact.Name.Split(' ');
+                email = senderContact.GetEmailAddress();
+                item = itemMail;
             }
             else if (exp.Selection[1] is Outlook.AppointmentItem)
             {
-                item = exp.Selection[1] as Outlook.AppointmentItem;
+                var itemAppointment = exp.Selection[1] as Outlook.AppointmentItem;
+                var organizer = itemAppointment.GetOrganizer() as Outlook.AddressEntry;
+                names = organizer.Name.Split(' ');
+                email = organizer.GetEmailAddress();
+                item = itemAppointment;
             }
             else if (exp.Selection[1] is Outlook.MeetingItem)
             {
-                item = exp.Selection[1] as Outlook.MeetingItem;
+                var itemMeeting = exp.Selection[1] as Outlook.MeetingItem;
+                names = itemMeeting.SenderName.Split(' ');
+                email = itemMeeting.SenderEmailAddress;
+                item = itemMeeting;
             }
-
             if (item == null)
             {
                 return;
@@ -1270,10 +1282,8 @@ namespace WSUIOutlookPlugin
             var referenceItem = item.EntryID;
             if ( _previewReferenceSelected != null && _previewReferenceSelected == referenceItem)
                 return;
-            _previewReferenceSelected = item.EntryID;
-            var senderContact = item.Sender as Outlook.AddressEntry;
-            var names = senderContact.Name.Split(' ');
-            string email = senderContact.GetEmailAddress();
+            _previewReferenceSelected = referenceItem;
+          
             if (_wsuiBootStraper == null)
                 return;
 
