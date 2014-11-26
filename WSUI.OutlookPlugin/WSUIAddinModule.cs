@@ -1248,13 +1248,30 @@ namespace WSUIOutlookPlugin
             var exp = explorer as Outlook._Explorer;
             if (exp == null || exp.Selection.Count == 0)
                 return;
-            var item = exp.Selection[1] as Outlook.MailItem;
-            var referenceItem = item.EntryID;
-            if (item == null ||  ( _previewReferenceSelected != null && _previewReferenceSelected == referenceItem))
+
+            dynamic item = null;
+            if (exp.Selection[1] is Outlook.MailItem)
+            {
+                item = exp.Selection[1] as Outlook.MailItem;
+            }
+            else if (exp.Selection[1] is Outlook.AppointmentItem)
+            {
+                item = exp.Selection[1] as Outlook.AppointmentItem;
+            }
+            else if (exp.Selection[1] is Outlook.MeetingItem)
+            {
+                item = exp.Selection[1] as Outlook.MeetingItem;
+            }
+
+            if (item == null)
+            {
                 return;
-            System.Diagnostics.Debug.WriteLine(string.Format("----------{0} >> {1}",item.Subject,item.EntryID));
+            }
+            var referenceItem = item.EntryID;
+            if ( _previewReferenceSelected != null && _previewReferenceSelected == referenceItem)
+                return;
             _previewReferenceSelected = item.EntryID;
-            var senderContact = item.Sender;
+            var senderContact = item.Sender as Outlook.AddressEntry;
             var names = senderContact.Name.Split(' ');
             string email = senderContact.GetEmailAddress();
             if (_wsuiBootStraper == null)
