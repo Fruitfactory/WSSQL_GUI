@@ -34,5 +34,7 @@ namespace WSUI.Core.Interfaces
         IList<ISystemSearchResult> GetResult();
 
         bool IsSearching { get; }
+
+        void SetProcessingRecordCount(int first, int second);
     }//end ISearchSystem
 }//end namespace Interfaces

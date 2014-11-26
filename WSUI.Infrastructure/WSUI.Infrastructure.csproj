@@ -149,6 +149,9 @@
     <Compile Include="Events\SelectedChangedPayloadEvent.cs" />
     <Compile Include="Helpers\AttachedProperty\ListBoxSelectedObjectAttachedProperty.cs" />
     <Compile Include="Helpers\AttachedProperty\ListBoxShouldSetSelectAttachedProperty.cs" />
+    <Compile Include="Implements\Contact\BaseContactSearching.cs" />
+    <Compile Include="Implements\Contact\ContactAttachmentSearching.cs" />
+    <Compile Include="Implements\Contact\ContactEmailSearching.cs" />
     <Compile Include="Implements\Rules\AttachmentContentSearchRule.cs" />
     <Compile Include="Implements\Rules\AttachmentFilenameSearchRule.cs" />
     <Compile Include="Implements\Rules\ContactAttachmentSearchRule.cs" />
@@ -171,6 +174,7 @@
     <Compile Include="Implements\Rules\EmailSubjectSearchRule.cs" />
     <Compile Include="Implements\Rules\FileContentSearchRule.cs" />
     <Compile Include="Implements\Rules\FileFilenameSearchRule.cs" />
+    <Compile Include="Interfaces\Search\IContactSearchSystem.cs" />
     <Compile Include="Payloads\SearchObjectPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionNames.cs" />

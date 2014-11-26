@@ -86,6 +86,10 @@ namespace WSUI.Core.Core.Search
         }
 
         public bool IsSearching { get { return _IsSearching; } }
+        public virtual void SetProcessingRecordCount(int first, int second)
+        {
+            
+        }
 
         protected virtual void RaiseSearchStarted()
         {
