@@ -58,6 +58,9 @@ namespace WSUI.Module.ViewModel
         private bool _isEmailBusy = false;
         private string _searchAttachmentString;
 
+        private readonly object Lock = new object();
+
+
         public ContactDetailsViewModel(IEventAggregator eventAggregator, IContactDetailsView contactDetailsView, IMainViewModel mainViewModel)
         {
             _eventAggregator = eventAggregator;
@@ -74,7 +77,6 @@ namespace WSUI.Module.ViewModel
             _scrollBehavior2.SearchGo += ScrollBehaviorOnSearchGo2;
             EmailsSource = new ObservableCollection<EmailSearchObject>();
             ItemsSource = new ObservableCollection<AttachmentSearchObject>();
-            IsDataExist = true;
             InitContactCommands();
         }
 
@@ -356,12 +358,12 @@ namespace WSUI.Module.ViewModel
 
         private void InitializeSearchSystem()
         {
-            _contactAttachmentSearching = new ContactAttachmentSearching();
+            _contactAttachmentSearching = new ContactAttachmentSearching(Lock);
             _contactAttachmentSearching.Initialize();
             _contactAttachmentSearching.PreviewSearchingFinished += ContactAttachmentSearchingOnPreviewSearchingFinished;
             _contactAttachmentSearching.MainSearchingFinished += ContactAttachmentSearchingOnMainSearchingFinished;
 
-            _contactEmailSearching = new ContactEmailSearching();
+            _contactEmailSearching = new ContactEmailSearching(Lock);
             _contactEmailSearching.Initialize();
             _contactEmailSearching.PreviewSearchingFinished += ContactEmailSearchingOnPreviewSearchingFinished;
             _contactEmailSearching.MainSearchingFinished += ContactEmailSearchingOnMainSearchingFinished;
@@ -602,7 +604,12 @@ namespace WSUI.Module.ViewModel
 
         private void CheckExistingData()
         {
-            IsDataExist = IsEmailVisible || IsFileVisible;
+            if (!_isEmailsInitialized || !_isFilesInitialized)
+            {
+                IsDataExist = true;
+            }
+            else
+                IsDataExist = IsEmailVisible || IsFileVisible;
             OnPropertyChanged(() => IsDataExist);
         }
 

@@ -6,14 +6,15 @@ namespace WSUI.Infrastructure.Implements.Systems
 {
     public class ContactEmailSearchSystem : BaseSearchSystem
     {
-        public ContactEmailSearchSystem()
+        public ContactEmailSearchSystem(object Lock)
+            :base(Lock)
         {
             
         }
 
         public override void Init()
         {
-            AddRule(new ContactEmailSearchRule());
+            AddRule(new ContactEmailSearchRule(Lock1));
             base.Init();
         }
 

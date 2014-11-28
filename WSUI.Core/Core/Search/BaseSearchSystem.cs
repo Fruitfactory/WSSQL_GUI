@@ -35,6 +35,13 @@ namespace WSUI.Core.Core.Search
             InternalResult = new List<ISystemSearchResult>();
         }
 
+        protected BaseSearchSystem(object Lock)
+        :this()
+        {
+            Lock1 = Lock;
+        }
+
+
         public virtual void Init()
         {
             _IsSearching = false;

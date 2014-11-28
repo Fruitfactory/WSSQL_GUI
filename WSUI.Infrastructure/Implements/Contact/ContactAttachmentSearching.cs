@@ -8,9 +8,13 @@ namespace WSUI.Infrastructure.Implements.Contact
 {
     public class ContactAttachmentSearching : BaseContactSearching
     {
+        public ContactAttachmentSearching(object Lock) : base(Lock)
+        {
+        }
+
         protected override ISearchSystem GetPreviewSystem()
         {
-            var searchSystem = new ContactAttachmentSearchSystem();
+            var searchSystem = new ContactAttachmentSearchSystem(LockObject);
             searchSystem.Init();
             searchSystem.SetProcessingRecordCount(10,0);
             return searchSystem;
@@ -18,7 +22,7 @@ namespace WSUI.Infrastructure.Implements.Contact
 
         protected override ISearchSystem GetMainSystem()
         {
-            var searchSystem = new ContactAttachmentSearchSystem();
+            var searchSystem = new ContactAttachmentSearchSystem(LockObject);
             searchSystem.Init();
             return searchSystem;
         }

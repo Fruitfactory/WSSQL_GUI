@@ -7,13 +7,14 @@ namespace WSUI.Infrastructure.Implements.Systems
 {
     public class ContactAttachmentSearchSystem : BaseSearchSystem
     {
-        public ContactAttachmentSearchSystem()
+        public ContactAttachmentSearchSystem(object Lock)
+            :base(Lock)
         {   
         }
 
         public override void Init()
         {
-            AddRule(new ContactAttachmentSearchRule());
+            AddRule(new ContactAttachmentSearchRule(Lock1));
             base.Init();
         }
 

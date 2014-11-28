@@ -7,11 +7,14 @@ namespace WSUI.Infrastructure.Implements.Contact
 {
     public abstract class BaseContactSearching : IContactSearchSystem
     {
+        protected readonly object LockObject = null;
+
         private ISearchSystem _previewSystem;
         private ISearchSystem _mainSystem;
 
-        protected BaseContactSearching()
+        protected BaseContactSearching( object Lock )
         {
+            LockObject = Lock;
         }
 
         private void MainSystemOnSearchFinished(object o)
