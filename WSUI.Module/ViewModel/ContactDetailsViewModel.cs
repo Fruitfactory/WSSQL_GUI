@@ -1,23 +1,21 @@
-﻿using System;
+﻿using Microsoft.Practices.Prism;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Events;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
-using Microsoft.Practices.Prism;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Events;
 using WSUI.Core.Data;
 using WSUI.Core.Data.UI;
-using WSUI.Core.Extensions;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Utils.Dialog;
 using WSUI.Infrastructure.Events;
-using WSUI.Infrastructure.Implements.Systems;
+using WSUI.Infrastructure.Implements.Contact;
+using WSUI.Infrastructure.Interfaces.Search;
 using WSUI.Infrastructure.Payloads;
 using WSUI.Infrastructure.Service;
 using WSUI.Module.Core;
@@ -32,7 +30,6 @@ namespace WSUI.Module.ViewModel
 {
     public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel, IScrollableViewExtended
     {
-
         private const double AvaregeTwoRowItemHeight = 47;
         private const double AvaregeOneRowItemHeight = 25;
         private const double FileValue = 0.2;
@@ -42,8 +39,10 @@ namespace WSUI.Module.ViewModel
 
         private IMainViewModel _mainViewModel;
         private IEventAggregator _eventAggregator;
-        private ISearchSystem _attachmentSearchSystem;
-        private ISearchSystem _emailSearchSystem;
+
+        private IContactSearchSystem _contactEmailSearching;
+        private IContactSearchSystem _contactAttachmentSearching;
+
         private ISearchObject _selectedAttachment;
         private bool _isEmailsInitialized = false;
         private bool _isFilesInitialized = false;
@@ -55,9 +54,8 @@ namespace WSUI.Module.ViewModel
 
         private string _searchEmailString = string.Empty;
 
-
-        private bool _isAttachmentBusy = true;
-        private bool _isEmailBusy = true;
+        private bool _isAttachmentBusy = false;
+        private bool _isEmailBusy = false;
         private string _searchAttachmentString;
 
         public ContactDetailsViewModel(IEventAggregator eventAggregator, IContactDetailsView contactDetailsView, IMainViewModel mainViewModel)
@@ -147,8 +145,10 @@ namespace WSUI.Module.ViewModel
                 _to = temp.GetEmail();
             }
             SearchString = _to;
-            RunAttachmentSearching(_from, _to);
-            RunEmailSearching(_from, _to);
+
+            RunEmailPreviewSearching(_from, _to);
+            RunAttachemntPreviewSearching(_from, _to);
+
             OnPropertyChanged(() => SearchString);
         }
 
@@ -157,7 +157,7 @@ namespace WSUI.Module.ViewModel
             if (dataObject is EmailContactSearchObject)
             {
                 var emailContact = dataObject as EmailContactSearchObject;
-                var result = FirstName == emailContact.ContactName && Emails.Any( e => string.Equals(e,emailContact.EMail,StringComparison.InvariantCultureIgnoreCase));
+                var result = FirstName == emailContact.ContactName && Emails.Any(e => string.Equals(e, emailContact.EMail, StringComparison.InvariantCultureIgnoreCase));
                 return result;
             }
             if (dataObject is ContactSearchObject)
@@ -314,11 +314,11 @@ namespace WSUI.Module.ViewModel
 
         private void ResetEmailSearch()
         {
-            if (_emailSearchSystem == null)
+            if (_contactEmailSearching == null)
             {
                 return;
             }
-            _emailSearchSystem.Reset();
+            _contactEmailSearching.ResetMainSystem();
             EmailsSource.Clear();
             OnPropertyChanged(() => EmailsSource);
         }
@@ -335,11 +335,11 @@ namespace WSUI.Module.ViewModel
 
         private void ResetAttacmentSearch()
         {
-            if (_attachmentSearchSystem == null)
+            if (_contactAttachmentSearching == null)
             {
                 return;
             }
-            _attachmentSearchSystem.Reset();
+            _contactAttachmentSearching.ResetMainSystem();
             ItemsSource.Clear();
             OnPropertyChanged(() => ItemsSource);
         }
@@ -347,7 +347,6 @@ namespace WSUI.Module.ViewModel
         public bool IsEmailBusy { get; private set; }
 
         public bool IsAttachmentBusy { get; private set; }
-
 
         #endregion [property]
 
@@ -357,73 +356,102 @@ namespace WSUI.Module.ViewModel
 
         private void InitializeSearchSystem()
         {
-            _attachmentSearchSystem = new ContactAttachmentSearchSystem();
-            _attachmentSearchSystem.Init();
-            _attachmentSearchSystem.SearchFinished += AttachmentSearchFinished;
+            _contactAttachmentSearching = new ContactAttachmentSearching();
+            _contactAttachmentSearching.Initialize();
+            _contactAttachmentSearching.PreviewSearchingFinished += ContactAttachmentSearchingOnPreviewSearchingFinished;
+            _contactAttachmentSearching.MainSearchingFinished += ContactAttachmentSearchingOnMainSearchingFinished;
 
-            _emailSearchSystem = new ContactEmailSearchSystem();
-            _emailSearchSystem.Init();
-            _emailSearchSystem.SearchFinished += EmailSearchFinished;
+            _contactEmailSearching = new ContactEmailSearching();
+            _contactEmailSearching.Initialize();
+            _contactEmailSearching.PreviewSearchingFinished += ContactEmailSearchingOnPreviewSearchingFinished;
+            _contactEmailSearching.MainSearchingFinished += ContactEmailSearchingOnMainSearchingFinished;
         }
 
-        private void EmailSearchFinished(object o)
+        private void ContactAttachmentSearchingOnMainSearchingFinished(object sender, EventArgs eventArgs)
         {
-            System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)ProcessEmailResult);
+            System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)ProcessMainAttachmentResult);
         }
 
-        private void AttachmentSearchFinished(object o)
+        private void ContactAttachmentSearchingOnPreviewSearchingFinished(object sender, EventArgs eventArgs)
         {
-            System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)ProcessResult);
+            System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)ProcessPreviewAttachmentResult);
         }
 
-        private void ProcessResult()
+        private void ContactEmailSearchingOnMainSearchingFinished(object sender, EventArgs eventArgs)
         {
-            IList<ISystemSearchResult> result = _attachmentSearchSystem.GetResult();
+            System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)ProcessMainEmailResult);
+        }
+
+        private void ContactEmailSearchingOnPreviewSearchingFinished(object sender, EventArgs eventArgs)
+        {
+            System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)ProcessPreviewEmailResult);
+        }
+
+        private void ProcessMainAttachmentResult()
+        {
+            IList<ISystemSearchResult> result = _contactAttachmentSearching.GetMainResult();
             if (result == null || !result.Any())
                 return;
             foreach (var systemSearchResult in result)
             {
                 CollectionExtensions.AddRange(ItemsSource, systemSearchResult.Result.OfType<AttachmentSearchObject>());
             }
-            if (!_isFilesInitialized && ItemsSource.Any())
-            {
-                var avaibleHeight = GetAvaibleHeightAndCount(FileValue, AvaregeOneRowItemHeight);
-                IsFileMoreVisible = ItemsSource.Count > avaibleHeight.Item2 - 1;
-                CollectionExtensions.AddRange(MainFileSource, ItemsSource.Take(avaibleHeight.Item2 - 1));
-                FileHeight = IsFileMoreVisible ? avaibleHeight.Item1 : ItemsSource.Count * AvaregeOneRowItemHeight;
-            }
-            _isAttachmentBusy = false;
-            IsAttachmentBusy = false;
-            OnPropertyChanged(() => IsAttachmentBusy);
             OnPropertyChanged(() => ItemsSource);
-            OnPropertyChanged(() => IsBusy);
-            NotifyFilesPartChanged();
         }
 
-        private void ProcessEmailResult()
+        private void ProcessPreviewAttachmentResult()
         {
-            IList<ISystemSearchResult> result = _emailSearchSystem.GetResult();
+            IList<ISystemSearchResult> result = _contactAttachmentSearching.GetPreviewResult();
+            if (result == null || !result.Any())
+                return;
+            List<AttachmentSearchObject> items = new List<AttachmentSearchObject>();
+            foreach (var systemSearchResult in result)
+            {
+                items.AddRange(systemSearchResult.Result.OfType<AttachmentSearchObject>());
+            }
+            if (!_isFilesInitialized && items.Any())
+            {
+                var avaibleHeight = GetAvaibleHeightAndCount(FileValue, AvaregeOneRowItemHeight);
+                IsFileMoreVisible = items.Count > avaibleHeight.Item2 - 1;
+                CollectionExtensions.AddRange(MainFileSource, items.Take(avaibleHeight.Item2 - 1));
+                FileHeight = IsFileMoreVisible ? avaibleHeight.Item1 : items.Count * AvaregeOneRowItemHeight;
+            }
+            NotifyFilesPartChanged();
+            RunAttachmentSearching(_from, _to);
+        }
+
+        private void ProcessMainEmailResult()
+        {
+            IList<ISystemSearchResult> result = _contactEmailSearching.GetMainResult();
             if (result == null || !result.Any())
                 return;
             foreach (var systemSearchResult in result)
             {
                 CollectionExtensions.AddRange(EmailsSource, systemSearchResult.Result.OfType<EmailSearchObject>());
             }
-            if (!_isEmailsInitialized && EmailsSource.Any())
+            OnPropertyChanged(() => EmailsSource);
+        }
+
+        private void ProcessPreviewEmailResult()
+        {
+            IList<ISystemSearchResult> result = _contactEmailSearching.GetPreviewResult();
+            if (result == null || !result.Any())
+                return;
+            List<EmailSearchObject> items = new List<EmailSearchObject>();
+            foreach (var systemSearchResult in result)
             {
-                System.Diagnostics.Debug.WriteLine("Avaible Actual Height " + ContactDetailsView.ActualHeight);
+                items.AddRange(systemSearchResult.Result.OfType<EmailSearchObject>());
+            }
+            if (!_isEmailsInitialized && items.Any())
+            {
                 var avaibleHeight = GetAvaibleHeightAndCount(EmailValue, AvaregeTwoRowItemHeight);
-                IsEmailMoreVisible = EmailsSource.Count > avaibleHeight.Item2;
-                CollectionExtensions.AddRange(MainEmailSource, EmailsSource.Take(avaibleHeight.Item2));
-                EmailHeight = IsEmailMoreVisible ? avaibleHeight.Item1 : EmailsSource.Count * AvaregeTwoRowItemHeight;
+                IsEmailMoreVisible = items.Count > avaibleHeight.Item2;
+                CollectionExtensions.AddRange(MainEmailSource, items.Take(avaibleHeight.Item2));
+                EmailHeight = IsEmailMoreVisible ? avaibleHeight.Item1 : items.Count * AvaregeTwoRowItemHeight;
                 _isEmailsInitialized = true;
             }
-            _isEmailBusy = false;
-            IsEmailBusy = false;
-            OnPropertyChanged(() => IsEmailBusy);
-            OnPropertyChanged(() => EmailsSource);
-            OnPropertyChanged(() => IsBusy);
             NotifyEmailPartChanged();
+            RunEmailSearching(_from, _to);
         }
 
         private void ApplyContactInfo(ContactSearchObject dataObject)
@@ -460,24 +488,39 @@ namespace WSUI.Module.ViewModel
 
         private void RunEmailSearching(string from, string to)
         {
-            RunSearching(_emailSearchSystem, from, to, SearchEmailString);
-            IsEmailBusy = true;
-            OnPropertyChanged(() => IsEmailBusy);
+            RunSearching(_contactEmailSearching, from, to, SearchEmailString);
         }
 
         private void RunAttachmentSearching(string from, string to)
         {
-            RunSearching(_attachmentSearchSystem, from, to, SearchAttachmentString);
-            IsAttachmentBusy = true;
-            OnPropertyChanged(() => IsAttachmentBusy);
+            RunSearching(_contactAttachmentSearching, from, to, SearchAttachmentString);
         }
 
-        private void RunSearching(ISearchSystem searchSystem, string from, string to, string searchCriteria)
+        private void RunSearching(IContactSearchSystem searchSystem, string from, string to, string searchCriteria)
         {
             if (searchSystem == null)
                 return;
             searchSystem.SetSearchCriteria(string.Format("{0};{1};{2}", from, to, searchCriteria));
-            searchSystem.Search();
+            searchSystem.StartMainSearch();
+        }
+
+        private void RunAttachemntPreviewSearching(string from, string to)
+        {
+            RunPreviewSearching(_contactAttachmentSearching, from, to, SearchAttachmentString);
+        }
+
+        private void RunEmailPreviewSearching(string from, string to)
+        {
+            RunPreviewSearching(_contactEmailSearching, from, to, SearchEmailString);
+        }
+
+        private void RunPreviewSearching(IContactSearchSystem searchSystem, string from, string to,
+            string searchCriteria)
+        {
+            if (searchSystem == null)
+                return;
+            searchSystem.SetSearchCriteria(string.Format("{0};{1};{2}", from, to, searchCriteria));
+            searchSystem.StartPreviewSearch();
         }
 
         private void RaiseNotification()
@@ -535,6 +578,7 @@ namespace WSUI.Module.ViewModel
             OnPropertyChanged(() => FileHeight);
             OnPropertyChanged(() => FileHeader);
             OnPropertyChanged(() => MainFileSource);
+            CheckExistingData();
         }
 
         private void NotifyEmailPartChanged()
@@ -544,6 +588,7 @@ namespace WSUI.Module.ViewModel
             OnPropertyChanged(() => EmailHeight);
             OnPropertyChanged(() => EmailHeader);
             OnPropertyChanged(() => MainEmailSource);
+            CheckExistingData();
         }
 
         private void MoreCommandExecute(object arg)
@@ -554,7 +599,6 @@ namespace WSUI.Module.ViewModel
             OnPropertyChanged(() => SelectedIndex);
             ResetSelectedChanged();
         }
-
 
         private void CheckExistingData()
         {
@@ -570,7 +614,6 @@ namespace WSUI.Module.ViewModel
                 new UIItem(){UIName =  "Conversations", Data = "M0,4.0800388L0.030031017,4.0800388 12.610706,16.409995 26.621516,30.149985 40.642334,16.409995 53.223011,4.0800388 53.333001,4.0800388 53.333001,39.080039 0,39.080039z M3.1698808,0L26.660885,0 50.161892,0 38.411389,11.791528 26.660885,23.573054 14.920383,11.791528z"},
                 new UIItem(){UIName =  "File Exchanged", Data = "F1M-1800.12,3181.48C-1800.12,3181.48 -1803.22,3172.42 -1813.67,3175.58 -1813.67,3175.58 -1822.52,3177.87 -1820.93,3188.08L-1807.87,3226.17 -1804.99,3225.18 -1817.71,3188.05C-1817.71,3188.05 -1820.44,3181.75 -1812.98,3178.38 -1812.98,3178.38 -1805.77,3175.6 -1802.56,3183.22L-1786.65,3229.63C-1786.65,3229.63 -1786.14,3234.44 -1790.63,3235.46 -1790.63,3235.46 -1792.78,3236.54 -1796.5,3233.79L-1803.82,3212.42 -1809.85,3194.84C-1809.85,3194.84 -1809.94,3192.33 -1808.27,3191.61 -1807.43,3191.25 -1805.9,3191.14 -1805.05,3193.37L-1794.19,3225.06 -1791.09,3224 -1802.17,3191.67C-1802.17,3191.67 -1803.96,3187.16 -1809.04,3188.84 -1810.81,3189.42 -1813.38,3190.48 -1812.95,3195.18L-1799.38,3234.78C-1799.38,3234.78 -1796.27,3240.08 -1789.53,3238.67 -1789.53,3238.67 -1783.39,3237.06 -1783.69,3229.41L-1800.12,3181.48z"}
             };
-
         }
 
         private void CopyPhoneToClipboard(object phoneType)
@@ -581,9 +624,11 @@ namespace WSUI.Module.ViewModel
                 case PhoneType.Business:
                     Clipboard.SetText(BusinessTelephone);
                     break;
+
                 case PhoneType.Home:
                     Clipboard.SetText(HomeTelephone);
                     break;
+
                 case PhoneType.Mobile:
                     Clipboard.SetText(MobileTelephone);
                     break;
@@ -616,7 +661,6 @@ namespace WSUI.Module.ViewModel
             }
         }
 
-
         #endregion [private]
 
         #region [override]
@@ -625,15 +669,16 @@ namespace WSUI.Module.ViewModel
         {
             if (!Disposed && disposing)
             {
-                if (_attachmentSearchSystem != null)
+                if (_contactAttachmentSearching != null)
                 {
-                    _attachmentSearchSystem.SearchFinished -= AttachmentSearchFinished;
-                    _attachmentSearchSystem = null;
+                    _contactAttachmentSearching.PreviewSearchingFinished -= ContactAttachmentSearchingOnPreviewSearchingFinished;
+                    _contactAttachmentSearching.MainSearchingFinished -= ContactAttachmentSearchingOnMainSearchingFinished;
                 }
-                if (_emailSearchSystem != null)
+                if (_contactEmailSearching != null)
                 {
-                    _emailSearchSystem.SearchFinished -= EmailSearchFinished;
-                    _emailSearchSystem = null;
+                    _contactEmailSearching.PreviewSearchingFinished -= ContactEmailSearchingOnPreviewSearchingFinished;
+                    _contactEmailSearching.MainSearchingFinished -= ContactEmailSearchingOnMainSearchingFinished;
+                    _contactEmailSearching = null;
                 }
             }
             base.Dispose(disposing);
@@ -653,7 +698,6 @@ namespace WSUI.Module.ViewModel
             get;
             private set;
         }
-
 
         private void OnScroll2(object args)
         {
@@ -675,15 +719,13 @@ namespace WSUI.Module.ViewModel
                 return;
             }
             double avaibleHeight = ContactDetailsView.ActualHeight - ContactDetailsView.ActualFileHeight;
-            System.Diagnostics.Debug.WriteLine("Actual Height " + ContactDetailsView.ActualHeight);
             double delta = data.NewSize.Height - data.OldSize.Height;
             double restDelta = (avaibleHeight - Delta) - EmailHeight;
-            if ((data.IsScrollBarVisible || data.IsVisibleOne ) && restDelta > delta && delta > 0) //
+            if ((data.IsScrollBarVisible || data.IsVisibleOne) && restDelta > delta && delta > 0) //
             {
-                EmailHeight += delta;    
+                EmailHeight += delta;
                 OnPropertyChanged(() => EmailHeight);
             }
         }
-
     }
 }

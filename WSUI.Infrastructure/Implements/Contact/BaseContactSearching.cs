@@ -40,6 +40,16 @@ namespace WSUI.Infrastructure.Implements.Contact
             _mainSystem.SearchFinished += MainSystemOnSearchFinished;
         }
 
+        public void ResetPreviewSystem()
+        {
+            _previewSystem.Reset();
+        }
+
+        public void ResetMainSystem()
+        {
+            _mainSystem.Reset();
+        }
+
         protected abstract ISearchSystem GetPreviewSystem();
         protected abstract ISearchSystem GetMainSystem();
 

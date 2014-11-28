@@ -12,7 +12,7 @@ namespace WSUI.Infrastructure.Implements.Contact
         {
             var searchsystem = new ContactEmailSearchSystem();
             searchsystem.Init();
-            searchsystem.SetProcessingRecordCount(50,0);
+            searchsystem.SetProcessingRecordCount(30,0);
             return searchsystem;
         }
 

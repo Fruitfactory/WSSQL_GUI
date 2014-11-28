@@ -23,5 +23,9 @@ namespace WSUI.Infrastructure.Interfaces.Search
 
         void Initialize();
 
+        void ResetPreviewSystem();
+
+        void ResetMainSystem();
+
     }
 }
