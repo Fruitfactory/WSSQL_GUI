@@ -389,6 +389,49 @@ namespace WSUI.Core.Helpers
             return ci;
         }
 
+        public IEnumerable<Outlook.ContactItem> GetContact(string firstname, string lastname)
+        {
+            if (this.OutlookApp == null)
+                return null;
+            List<Outlook.ContactItem> ci = new List<Outlook.ContactItem>();
+            try
+            {
+                if (!IsOutlookAlive() && IsHostIsApplication())
+                    ReopenOutlook(ref _app);
+                Outlook.NameSpace ns = this.OutlookApp.GetNamespace("MAPI");
+                
+                foreach (var item in ns.Folders.OfType<Outlook.MAPIFolder>().ToList())
+                {
+                    try
+                    {
+                        foreach (var fol in item.Folders.OfType<Outlook.MAPIFolder>().ToList())
+                        {
+                            if (string.IsNullOrEmpty(fol.AddressBookName))
+                                continue;
+
+                            var filter =
+                                string.Format("([FirstName] = {0} and [LastName] = {1}) or ([FirstName] = {1} and [LastName] = {0})", firstname, lastname);
+                            var contact =
+                                (Outlook.ContactItem)
+                                    fol.Items.Find(filter);
+
+                            if (contact != null)
+                                ci.Add(contact);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        WSSqlLogger.Instance.LogError("GetContact: {0}", ex.Message);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.Message));
+            }
+            return ci;
+        }
 
         #endregion public
 

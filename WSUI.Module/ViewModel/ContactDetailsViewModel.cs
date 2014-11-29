@@ -159,15 +159,15 @@ namespace WSUI.Module.ViewModel
             if (dataObject is EmailContactSearchObject)
             {
                 var emailContact = dataObject as EmailContactSearchObject;
-                var result = FirstName == emailContact.ContactName && Emails.Any(e => string.Equals(e, emailContact.EMail, StringComparison.InvariantCultureIgnoreCase));
+                var result = FirstName == emailContact.ContactName && ( string.IsNullOrEmpty(emailContact.EMail) || Emails.Any(e => string.Equals(e, emailContact.EMail, StringComparison.InvariantCultureIgnoreCase)));
                 return result;
             }
             if (dataObject is ContactSearchObject)
             {
                 var contact = dataObject as ContactSearchObject;
                 var result = FirstName == contact.FirstName && LastName == contact.LastName &&
-                       Emails.Any(
-                           e => string.Equals(e, contact.EmailAddress, StringComparison.InvariantCultureIgnoreCase));
+                       (string.IsNullOrEmpty(contact.EmailAddress) || Emails.Any(
+                           e => string.Equals(e, contact.EmailAddress, StringComparison.InvariantCultureIgnoreCase)));
                 return result;
             }
             return false;

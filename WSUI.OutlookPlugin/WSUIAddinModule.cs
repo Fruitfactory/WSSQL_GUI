@@ -1272,7 +1272,22 @@ namespace WSUIOutlookPlugin
             {
                 var itemMeeting = exp.Selection[1] as Outlook.MeetingItem;
                 names = itemMeeting.SenderName.Split(' ');
-                email = itemMeeting.SenderEmailAddress;
+                if (itemMeeting.SenderEmailAddress.IsEmail())
+                {
+                    email = itemMeeting.SenderEmailAddress;
+                }
+                else if (names.Length > 1)
+                {
+                    var contact = OutlookHelper.Instance.GetContact(names[0], names[1]);
+                    if (contact.Any())
+                    {
+                        var ct = contact.FirstOrDefault(c => !string.IsNullOrEmpty(c.Email1Address));
+                        if (ct.IsNotNull() && ct.Email1Address.IsEmail())
+                        {
+                            email = ct.Email1Address;
+                        }
+                    }
+                }
                 item = itemMeeting;
             }
             if (item == null)
@@ -1287,12 +1302,12 @@ namespace WSUIOutlookPlugin
             if (_wsuiBootStraper == null)
                 return;
 
-            if(names.Length > 1 && !string.IsNullOrEmpty(email))
+            if(names.Length > 1)
             {
                 var tag = new ContactSearchObject() {FirstName = names[0], LastName = names[1], EmailAddress = email};
                 _wsuiBootStraper.PassAction(new WSAction(WSActionType.ShowContact, tag));
             }
-            else if (names.Length > 0 && !string.IsNullOrEmpty(email))
+            else if (names.Length > 0)
             {
                 var tag = new EmailContactSearchObject() { ContactName = names[0],  EMail = email};
                 _wsuiBootStraper.PassAction(new WSAction(WSActionType.ShowContact, tag));
