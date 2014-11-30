@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.Prism;
+﻿using System.Windows.Forms.VisualStyles;
+using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using System;
@@ -149,8 +150,7 @@ namespace WSUI.Module.ViewModel
             SearchString = _to;
 
             RunEmailPreviewSearching(_from, _to);
-            RunAttachemntPreviewSearching(_from, _to);
-
+            
             OnPropertyChanged(() => SearchString);
         }
 
@@ -358,15 +358,15 @@ namespace WSUI.Module.ViewModel
 
         private void InitializeSearchSystem()
         {
-            _contactAttachmentSearching = new ContactAttachmentSearching(Lock);
-            _contactAttachmentSearching.Initialize();
-            _contactAttachmentSearching.PreviewSearchingFinished += ContactAttachmentSearchingOnPreviewSearchingFinished;
-            _contactAttachmentSearching.MainSearchingFinished += ContactAttachmentSearchingOnMainSearchingFinished;
-
             _contactEmailSearching = new ContactEmailSearching(Lock);
             _contactEmailSearching.Initialize();
             _contactEmailSearching.PreviewSearchingFinished += ContactEmailSearchingOnPreviewSearchingFinished;
             _contactEmailSearching.MainSearchingFinished += ContactEmailSearchingOnMainSearchingFinished;
+
+            _contactAttachmentSearching = new ContactAttachmentSearching(Lock);
+            _contactAttachmentSearching.Initialize();
+            _contactAttachmentSearching.PreviewSearchingFinished += ContactAttachmentSearchingOnPreviewSearchingFinished;
+            _contactAttachmentSearching.MainSearchingFinished += ContactAttachmentSearchingOnMainSearchingFinished;
         }
 
         private void ContactAttachmentSearchingOnMainSearchingFinished(object sender, EventArgs eventArgs)
@@ -454,6 +454,7 @@ namespace WSUI.Module.ViewModel
             }
             NotifyEmailPartChanged();
             RunEmailSearching(_from, _to);
+            RunAttachemntPreviewSearching(_from, _to);
         }
 
         private void ApplyContactInfo(ContactSearchObject dataObject)
