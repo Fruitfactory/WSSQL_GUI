@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -115,7 +116,14 @@ namespace WSUI.Core.Core.Search
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
                 
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
+
                 DataTable resultTable = GetDataTable(query);
+
+                watch.Stop();
+                WSSqlLogger.Instance.LogInfo("GetDataTable: {0}, {1}",typeof(T).Name,watch.ElapsedMilliseconds);
+
                 // additional process
                 if (!NeedStop && resultTable != null)
                 {

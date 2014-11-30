@@ -117,7 +117,7 @@ namespace WSUIOutlookPlugin
             //watch.Stop();
             this.OnSendMessage += WSUIAddinModule_OnSendMessage;
             this.AddinInitialize += OnAddinInitialize;
-            
+
 
             //WSSqlLogger.Instance.LogInfo(string.Format("WSUIAddinModule [ctor]: {0}ms", watch.ElapsedMilliseconds));
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -206,12 +206,12 @@ namespace WSUIOutlookPlugin
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
             this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
-            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem) 
+            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem)
             | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
             this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
             this.formRightSidebar.FormClassName = "WSUIOutlookPlugin.WSUISidebar";
@@ -531,10 +531,11 @@ namespace WSUIOutlookPlugin
             }
         }
 
-        
+
         public bool IsMainUIVisible
         {
-            get; set;
+            get;
+            set;
         }
 
         #region my own initialization
@@ -564,55 +565,27 @@ namespace WSUIOutlookPlugin
         {
             if (IsLoading)
                 return;
-
-            _sidebarForm = GetSidebarForm();
-
-            if (!IsMainUIVisible)
-            {
-                HideUi(false);
-            }
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            HidaSidebarDuringSwitching();
+            watch.Stop();
+            System.Diagnostics.Debug.WriteLine(string.Format("---Folder  Switch {0}", watch.ElapsedMilliseconds));
         }
 
-        private void CreateInboxSubFolder(Outlook.Application outlookApp, bool shouldBeAdded = true)
+        private void HidaSidebarDuringSwitching()
         {
-            if (outlookApp == null)
+            var app = (AppEmpty)System.Windows.Application.Current;
+            if (app.IsNull())
                 return;
-            Outlook.NameSpace nameSpace = outlookApp.GetNamespace("MAPI");
-            Outlook.MAPIFolder folderInbox = nameSpace.GetDefaultFolder(
-                  Outlook.OlDefaultFolders.olPublicFoldersAllPublicFolders);
-            Outlook.Folders inboxFolders = folderInbox.Folders;
-            Outlook.MAPIFolder subfolderInbox = null;
-            try
+            app.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (shouldBeAdded)
+                _sidebarForm = GetSidebarForm();
+
+                if (!IsMainUIVisible)
                 {
-                    subfolderInbox = inboxFolders.Add("OutlookFinder",
-                         Outlook.OlDefaultFolders.olFolderInbox);
+                    HideUi(false);
                 }
-                else
-                {
-                    int index = 0;
-                    foreach (var inboxFolder in inboxFolders)
-                    {
-                        index++;
-                        if (((Outlook.MAPIFolder)inboxFolder).Name == "OutlookFinder")
-                        {
-                            inboxFolders.Remove(index);
-                            break;
-                        }
-                    }
-                }
-            }
-            catch (COMException exception)
-            {
-                if (exception.ErrorCode == -2147352567)
-                    //  Cannot create the folder.
-                    System.Windows.Forms.MessageBox.Show(exception.Message);
-            }
-            if (subfolderInbox != null) Marshal.ReleaseComObject(subfolderInbox);
-            if (inboxFolders != null) Marshal.ReleaseComObject(inboxFolders);
-            if (folderInbox != null) Marshal.ReleaseComObject(folderInbox);
-            if (nameSpace != null) Marshal.ReleaseComObject(nameSpace);
+            }));
         }
 
         #endregion my own initialization
@@ -776,102 +749,6 @@ namespace WSUIOutlookPlugin
             olToDoPane = 5
         }
 
-        private Outlook.MAPIFolder GetCurrentFolder()
-        {
-            Outlook.Explorer activeExplorer = (OutlookApp as Outlook._Application).ActiveExplorer();
-            if (activeExplorer != null)
-                try
-                {
-                    return activeExplorer.CurrentFolder;
-                }
-                finally
-                {
-                    Marshal.ReleaseComObject(activeExplorer);
-                }
-            return null;
-        }
-
-        private Outlook.MAPIFolder GetDefaultFolder()
-        {
-            Outlook.NameSpace outlookNqamespace = OutlookApp.GetNamespace(DefaultNamespace);
-            return outlookNqamespace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox);
-        }
-
-        private Tuple<string, Outlook.MAPIFolder> GetFullPathOfDefaultFolder()
-        {
-            var folder = GetDefaultFolder();
-            return new Tuple<string, Outlook.MAPIFolder>(folder != null ? GetFullFolderName(folder) : string.Empty, folder);
-        }
-
-        private void RefreshCurrentFolder(bool isOpenUI = true, Outlook.MAPIFolder folder = null)
-        {
-            _refreshCurrentFolderExecuting = true;
-            try
-            {
-                Outlook.Explorer activeExplorer = (OutlookApp as Outlook._Application).ActiveExplorer();
-                Outlook.MAPIFolder currentFolder = folder ?? (isOpenUI ? GetDefaultFolder() : _lastMapiFolder);//activeExplorer.CurrentFolder;
-                Outlook.NameSpace nameSpace = (OutlookApp as Outlook._Application).GetNamespace(DefaultNamespace);
-                Outlook.MAPIFolder outboxFolder = nameSpace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderOutbox);
-                _lastMapiFolder = isOpenUI ? activeExplorer.CurrentFolder : null;
-                try
-                {
-                    SetExplorerFolder(activeExplorer, outboxFolder);
-                    Application.DoEvents();
-                    SetExplorerFolder(activeExplorer, currentFolder);
-                    Application.DoEvents();
-                }
-                finally
-                {
-                    if (nameSpace != null)
-                        Marshal.ReleaseComObject(nameSpace);
-                    if (currentFolder != null)
-                        Marshal.ReleaseComObject(currentFolder);
-                    if (outboxFolder != null)
-                        Marshal.ReleaseComObject(outboxFolder);
-                    if (activeExplorer != null)
-                        Marshal.ReleaseComObject(activeExplorer);
-                }
-            }
-            finally
-            {
-                _refreshCurrentFolderExecuting = false;
-            }
-        }
-
-        private void SwitchFolders(Outlook.MAPIFolder folder)
-        {
-            _refreshCurrentFolderExecuting = true;
-            try
-            {
-                Outlook.Explorer activeExplorer = (OutlookApp as Outlook._Application).ActiveExplorer();
-                Outlook.MAPIFolder currentFolder = folder;
-                Outlook.NameSpace nameSpace = (OutlookApp as Outlook._Application).GetNamespace(DefaultNamespace);
-                Outlook.MAPIFolder outboxFolder = nameSpace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderOutbox);
-                _lastMapiFolder = null;
-                try
-                {
-                    SetExplorerFolder(activeExplorer, outboxFolder);
-                    Application.DoEvents();
-                    SetExplorerFolder(activeExplorer, currentFolder);
-                    Application.DoEvents();
-                }
-                finally
-                {
-                    if (nameSpace != null)
-                        Marshal.ReleaseComObject(nameSpace);
-                    if (currentFolder != null)
-                        Marshal.ReleaseComObject(currentFolder);
-                    if (outboxFolder != null)
-                        Marshal.ReleaseComObject(outboxFolder);
-                    if (activeExplorer != null)
-                        Marshal.ReleaseComObject(activeExplorer);
-                }
-            }
-            finally
-            {
-                _refreshCurrentFolderExecuting = false;
-            }
-        }
 
         private void SetExplorerFolder(Outlook.Explorer Explorer, Outlook.MAPIFolder Folder)
         {
@@ -891,156 +768,6 @@ namespace WSUIOutlookPlugin
             }
         }
 
-        private void ClearFolderWebViewProperties(Outlook.MAPIFolder Folder)
-        {
-            if (Folder != null)
-            {
-                Folder.WebViewURL = string.Empty;
-                Folder.WebViewOn = false;
-            }
-        }
-
-        private bool IsExplorerPaneVisible(object Explorer, OutlookPane OlPane)
-        {
-            return Convert.ToBoolean(Explorer.GetType().InvokeMember("IsPaneVisible", System.Reflection.BindingFlags.InvokeMethod, null, Explorer, new object[] { (int)OlPane }));
-        }
-
-        private string GetFullFolderName(object FolderObj)
-        {
-            if (FolderObj == null)
-                return string.Empty;
-
-            string fullName = String.Empty;
-
-            if (_outlookVersion == 2007 || _outlookVersion == 2003)
-            {
-                try
-                {
-                    fullName = Convert.ToString(FolderObj.GetType().InvokeMember("FolderPath", BindingFlags.GetProperty, null, FolderObj, null));
-                }
-                catch (Exception err)
-                {
-                    MessageBox.Show("GetFullFolderName.FolderPath Error: " + err.Message,
-                                    "Switching WebViewPane", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            else
-            {
-                try
-                {
-                    object _folder = null;
-                    object folderObj = null;
-                    IntPtr ifolder = new IntPtr();
-                    string tmp;
-                    Guid folderGuid = new Guid("00063006-0000-0000-C000-000000000046");
-
-                    IntPtr unk = Marshal.GetIUnknownForObject(FolderObj);
-                    if (unk == IntPtr.Zero) return String.Empty;
-                    try
-                    {
-                        folderObj = Marshal.GetObjectForIUnknown(unk);
-                        _folder = folderObj;
-                        Marshal.QueryInterface(unk, ref folderGuid, out ifolder);
-                        Marshal.Release(unk);
-                        while (ifolder != IntPtr.Zero)
-                        {
-                            Marshal.Release(ifolder);
-                            ifolder = IntPtr.Zero;
-                            tmp = Convert.ToString(folderObj.GetType().InvokeMember("Name", BindingFlags.GetProperty, null, folderObj, null));
-                            fullName = "\\" + tmp + fullName;
-                            try
-                            {
-                                _folder = folderObj.GetType().InvokeMember("Parent", BindingFlags.GetProperty, null, folderObj, null);
-                            }
-                            catch
-                            {
-                                _folder = null;
-                                _folder = null;
-                            }
-                            finally
-                            {
-                                Marshal.ReleaseComObject(folderObj);
-                                folderObj = null;
-                            }
-                            if (_folder != null)
-                            {
-                                unk = Marshal.GetIUnknownForObject(_folder);
-                                Marshal.QueryInterface(unk, ref folderGuid, out ifolder);
-                                Marshal.Release(unk);
-                                folderObj = _folder;
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        if (folderObj != null)
-                            Marshal.ReleaseComObject(folderObj);
-                    }
-                }
-                catch (Exception err)
-                {
-                    MessageBox.Show("GetFullFolderName error: " + err.Message,
-                                    "Switching WebViewPane", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-
-            while (fullName != String.Empty && fullName[0] == '\\')
-            {
-                fullName = fullName.Remove(0, 1);
-            }
-            return fullName;
-        }
-
-        private Tuple<string, string> GetFullNameOfCurrentFolder()
-        {
-            Outlook.Explorer activeExplorer = (OutlookApp as Outlook._Application).ActiveExplorer();
-            if (activeExplorer != null)
-                try
-                {
-                    Outlook.MAPIFolder currentFolder = activeExplorer.CurrentFolder;
-                    if (currentFolder != null)
-                        try
-                        {
-                            return new Tuple<string, string>(currentFolder.EntryID, GetFullFolderName(currentFolder));
-                        }
-                        finally
-                        {
-                            Marshal.ReleaseComObject(currentFolder);
-                        }
-                }
-                finally
-                {
-                    Marshal.ReleaseComObject(activeExplorer);
-                }
-            return default(Tuple<string, string>);
-        }
-
-        private bool IsADXWebViewUrl(Outlook.MAPIFolder folder)
-        {
-            if (folder == null || folder.WebViewURL == null || folder.WebViewURL.Length <= 0)
-                return false;
-            return (CultureInfo.InvariantCulture.CompareInfo.IndexOf(folder.WebViewURL,
-                    ADXHTMLFileName, System.Globalization.CompareOptions.IgnoreCase) > 0);
-        }
-
-        private bool ExistsVisibleForm(AddinExpress.OL.ADXOlFormsCollectionItem Item)
-        {
-            for (int i = 0; i < Item.FormInstanceCount; i++)
-            {
-                if (Item.FormInstances(i).Visible)
-                    return true;
-            }
-            return false;
-        }
-
-        private void CloseVisibleForm(AddinExpress.OL.ADXOlFormsCollectionItem Item)
-        {
-            for (int i = 0; i < Item.FormInstanceCount; i++)
-            {
-                Item.FormInstances(i).Close();
-            }
-        }
-
         #endregion Outlook Object Model routines
 
         private void WSUIAddinModule_AddinStartupComplete(object sender, EventArgs e)
@@ -1050,15 +777,6 @@ namespace WSUIOutlookPlugin
             this.SendMessage(WM_LOADED, IntPtr.Zero, IntPtr.Zero);
             OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
             OutlookHelper.Instance.OutlookApp = OutlookApp;
-            //_itemsEvents = new WSUIOutlookItemsEvents(this);
-
-            //var folders = OutlookHelper.Instance.GetFolders();
-            //foreach (var mapiFolder in folders)
-            //{
-            //    _itemsEvents.ConnectTo(mapiFolder, true);
-            //}
-
-
             WSSqlLogger.Instance.LogInfo("WSUI AddinModule Startup Complete...");
         }
 
@@ -1280,21 +998,21 @@ namespace WSUIOutlookPlugin
                 return;
             }
             var referenceItem = item.EntryID;
-            if ( _previewReferenceSelected != null && _previewReferenceSelected == referenceItem)
+            if (_previewReferenceSelected != null && _previewReferenceSelected == referenceItem)
                 return;
             _previewReferenceSelected = referenceItem;
-          
+
             if (_wsuiBootStraper == null)
                 return;
 
-            if(names.Length > 1 && !string.IsNullOrEmpty(email))
+            if (names.Length > 1 && !string.IsNullOrEmpty(email))
             {
-                var tag = new ContactSearchObject() {FirstName = names[0], LastName = names[1], EmailAddress = email};
+                var tag = new ContactSearchObject() { FirstName = names[0], LastName = names[1], EmailAddress = email };
                 _wsuiBootStraper.PassAction(new WSAction(WSActionType.ShowContact, tag));
             }
             else if (names.Length > 0 && !string.IsNullOrEmpty(email))
             {
-                var tag = new EmailContactSearchObject() { ContactName = names[0],  EMail = email};
+                var tag = new EmailContactSearchObject() { ContactName = names[0], EMail = email };
                 _wsuiBootStraper.PassAction(new WSAction(WSActionType.ShowContact, tag));
             }
         }
