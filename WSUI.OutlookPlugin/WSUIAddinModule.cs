@@ -22,13 +22,11 @@ using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
 using WSUI.Core.Extensions;
 using WSUI.Infrastructure.Controls.Application;
-using WSUI.Infrastructure.Service.Dumper;
 using WSUIOutlookPlugin.Core;
 using WSUIOutlookPlugin.Events;
 using WSUIOutlookPlugin.Interfaces;
 using WSUIOutlookPlugin.Managers;
 using Application = System.Windows.Forms.Application;
-using MessageBox = System.Windows.Forms.MessageBox;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace WSUIOutlookPlugin
@@ -51,6 +49,7 @@ namespace WSUIOutlookPlugin
         private bool IsLoading = true;
         private int _initHashCode;
         private string _previewReferenceSelected = null;
+        private Stopwatch _watch;
 
         #region [const]
 
@@ -106,20 +105,11 @@ namespace WSUIOutlookPlugin
         {
             AppDomain.CurrentDomain.SetupInformation.ShadowCopyFiles = "false";
             Application.EnableVisualStyles();
-            //Stopwatch watch = new Stopwatch();
-            //watch.Start();
             InitializeComponent();
-            //watch.Stop();
-            //WSSqlLogger.Instance.LogInfo(string.Format("InitializeComponent [ctor]: {0}ms", watch.ElapsedMilliseconds));
-            // Please add any initialization code to the AddinInitialize event handler
-            //(watch = new Stopwatch()).Start();
             Init();
-            //watch.Stop();
             this.OnSendMessage += WSUIAddinModule_OnSendMessage;
             this.AddinInitialize += OnAddinInitialize;
 
-
-            //WSSqlLogger.Instance.LogInfo(string.Format("WSUIAddinModule [ctor]: {0}ms", watch.ElapsedMilliseconds));
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
         }
@@ -468,7 +458,6 @@ namespace WSUIOutlookPlugin
             // 
             this.AddinName = "Outlook Finder";
             this.HandleShortcuts = true;
-            this.LoadBehavior = AddinExpress.MSO.ADXLoadBehavior.lbLoadAtStartup;
             this.SupportedApps = AddinExpress.MSO.ADXOfficeHostApp.ohaOutlook;
             this.AddinStartupComplete += new AddinExpress.MSO.ADXEvents_EventHandler(this.WSUIAddinModule_AddinStartupComplete);
             this.OnKeyDown += new AddinExpress.MSO.ADXKeyDown_EventHandler(this.WSUIAddinModule_OnKeyDown);
@@ -543,6 +532,7 @@ namespace WSUIOutlookPlugin
 
         private void Init()
         {
+            StartWatch();
             WSSqlLogger.Instance.LogInfo("Plugin is loading...");
             outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
 
@@ -560,13 +550,16 @@ namespace WSUIOutlookPlugin
                 _updatable = UpdateHelper.Instance;
                 _updatable.Module = this;
             }
+            StopWatch("Init");
         }
 
         private void OutlookFormManagerOnAdxFolderSwitchEx(object sender, FolderSwitchExEventArgs args)
         {
+            StartWatch();
             if (IsLoading)
                 return;
             HidaSidebarDuringSwitching();
+            StopWatch("OutlookFormManagerOnAdxFolderSwitchEx");
         }
 
         private void HidaSidebarDuringSwitching()
@@ -601,6 +594,7 @@ namespace WSUIOutlookPlugin
 
         private void RunPluginUI()
         {
+            StartWatch();
             DllPreloader.Instance.PreloadDll();
             _wsuiBootStraper = new PluginBootStraper();
             _wsuiBootStraper.Run();
@@ -620,10 +614,12 @@ namespace WSUIOutlookPlugin
             SubscribeToEvents();
 
             IsLoading = false;
+            StopWatch("RunPluginUI");
         }
 
         private ISidebarForm GetSidebarForm()
         {
+
             ISidebarForm form = null;
             for (int i = 0; i < formRightSidebar.FormInstanceCount; i++)
             {
@@ -671,6 +667,7 @@ namespace WSUIOutlookPlugin
 
         private void ShowUi(bool show)
         {
+            StartWatch();
             _sidebarForm = GetSidebarForm();
             if (_sidebarForm != null && !_sidebarForm.IsDisposed)
             {
@@ -679,10 +676,12 @@ namespace WSUIOutlookPlugin
                 IsMainUIVisible = true;
                 RegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
             }
+            StopWatch("ShowUi");
         }
 
         private void HideUi(bool hide)
         {
+            StartWatch();
             _sidebarForm = GetSidebarForm();
             if (_sidebarForm != null && !_sidebarForm.IsDisposed)
             {
@@ -690,6 +689,7 @@ namespace WSUIOutlookPlugin
                 IsMainUIVisible = false;
                 RegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
             }
+            StopWatch("HideUi");
         }
 
         private void StartSearch(string criteria)
@@ -769,12 +769,14 @@ namespace WSUIOutlookPlugin
 
         private void WSUIAddinModule_AddinStartupComplete(object sender, EventArgs e)
         {
+            StartWatch();
             RestoreOutlookFolder();
             //CheckUpdate(); // TODO: just for testing
             this.SendMessage(WM_LOADED, IntPtr.Zero, IntPtr.Zero);
             OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
             OutlookHelper.Instance.OutlookApp = OutlookApp;
             WSSqlLogger.Instance.LogInfo("WSUI AddinModule Startup Complete...");
+            StopWatch("WSUIAddinModule_AddinStartupComplete");
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -821,6 +823,7 @@ namespace WSUIOutlookPlugin
 
         private void outlookFormManager_OnInitialize()
         {
+            StartWatch();
             if ((OutlookApp != null) && (_outlookVersion == 0))
             {
                 string hostVersion = OutlookApp.Version;
@@ -837,13 +840,16 @@ namespace WSUIOutlookPlugin
                 if (hostVersion.StartsWith("15.0"))
                     _outlookVersion = 2013;
             }
+            StopWatch("outlookFormManager_OnInitialize");
         }
 
         private void OutlookFinderEvents_Quit(object sender, EventArgs e)
         {
+            StartWatch();
             _wsuiBootStraper.PassAction(new WSAction(WSActionType.Quit, null));
             SetOutlookFolderProperties(string.Empty, string.Empty);
             WSSqlLogger.Instance.LogInfo("Shutdown...");
+            StopWatch("OutlookFinderEvents_Quit");
         }
 
         private void SetOutlookFolderProperties(string folderName, string folderWebUrl)
@@ -935,11 +941,13 @@ namespace WSUIOutlookPlugin
 
         private void OutlookFinderEvents_NewExplorer(object sender, object explorer)
         {
+            StartWatch();
             var exp = explorer as Outlook._Explorer;
             if (IsLoading && exp != null)
             {
                 _initHashCode = exp.GetHashCode();
             }
+            StopWatch("OutlookFinderEvents_NewExplorer");
         }
 
         private void wsuiTab_PropertyChanging(object sender, ADXRibbonPropertyChangingEventArgs e)
@@ -957,6 +965,18 @@ namespace WSUIOutlookPlugin
                 e.Value = false;
             }
         }
+
+        private void StartWatch()
+        {
+            (_watch = new Stopwatch()).Start();
+        }
+
+        private void StopWatch(string method)
+        {
+            _watch.Stop();
+            WSSqlLogger.Instance.LogInfo("--------------- {0} => {1}",method,_watch.ElapsedMilliseconds);
+        }
+
 
         private void OutlookFinderEvents_ExplorerSelectionChange(object sender, object explorer)
         {
