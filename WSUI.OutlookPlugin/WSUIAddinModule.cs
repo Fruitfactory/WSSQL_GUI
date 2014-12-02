@@ -206,12 +206,12 @@ namespace WSUIOutlookPlugin
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
             this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
-            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem)
+            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem) 
             | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
             this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
             this.formRightSidebar.FormClassName = "WSUIOutlookPlugin.WSUISidebar";
@@ -468,6 +468,7 @@ namespace WSUIOutlookPlugin
             // 
             this.AddinName = "Outlook Finder";
             this.HandleShortcuts = true;
+            this.LoadBehavior = AddinExpress.MSO.ADXLoadBehavior.lbLoadAtStartup;
             this.SupportedApps = AddinExpress.MSO.ADXOfficeHostApp.ohaOutlook;
             this.AddinStartupComplete += new AddinExpress.MSO.ADXEvents_EventHandler(this.WSUIAddinModule_AddinStartupComplete);
             this.OnKeyDown += new AddinExpress.MSO.ADXKeyDown_EventHandler(this.WSUIAddinModule_OnKeyDown);
@@ -565,11 +566,7 @@ namespace WSUIOutlookPlugin
         {
             if (IsLoading)
                 return;
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
             HidaSidebarDuringSwitching();
-            watch.Stop();
-            System.Diagnostics.Debug.WriteLine(string.Format("---Folder  Switch {0}", watch.ElapsedMilliseconds));
         }
 
         private void HidaSidebarDuringSwitching()
@@ -963,6 +960,8 @@ namespace WSUIOutlookPlugin
 
         private void OutlookFinderEvents_ExplorerSelectionChange(object sender, object explorer)
         {
+            return;
+
             var exp = explorer as Outlook._Explorer;
             if (exp == null || exp.Selection.Count == 0)
                 return;
