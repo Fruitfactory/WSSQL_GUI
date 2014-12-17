@@ -277,7 +277,7 @@ namespace WSUI.Core.Core.Search
             if (listW.Count > 1)
             {
                 StringBuilder temp = new StringBuilder();
-                temp.Append(string.Format("'\"{0}\"", listW[0]));
+                temp.Append(string.Format("'\"{0}*\"'", listW[0]));
                 for (int i = 1; i < listW.Count; i++)
                 {
                     temp.Append(string.Format(QueryAnd, listW[i]));
@@ -286,7 +286,7 @@ namespace WSUI.Core.Core.Search
             }
             else
             {
-                andClause = string.Format("'\"{0}\"'", listW[0]);
+                andClause = string.Format("'\"{0}*\"'", listW[0]);
             }
             return new Tuple<string, List<string>>(andClause, listW.ToList());
         }

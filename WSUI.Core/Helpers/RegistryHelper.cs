@@ -14,6 +14,10 @@ namespace WSUI.Core.Helpers
 
         #region [needs]
 
+        private const int ShutdodwnNotificationNotRequired = 0;
+        private const int ShutdodwnNotificationRequired = 1;
+
+
         private const string ProductSubKey = "SOFTWARE\\WSUIOutlookPlugin";
         private const string SilentUpdateKey = "IsSilentUpdate";
         private const string IsOutlookClosedByInstallerKey = "IsOutlookClosedByInstaller";
@@ -22,6 +26,10 @@ namespace WSUI.Core.Helpers
         private const string OutlookFolderWebUrl = "OutlookFolderWebUrl";
         private const string PKeyId = "Id";
         private const string IsPluginUiVisible = "IsPluginUiVisible";
+
+        private const string AddInOutlookSubKey = @"Software\Microsoft\Office\Outlook\Addins\WSUIOutlookPlugin.AddinModule";
+        private const string RequireShutdownNotificationKey = "RequireShutdownNotification";
+
 
         private RegistryKey _baseRegistry = Registry.CurrentUser;
 
@@ -40,8 +48,7 @@ namespace WSUI.Core.Helpers
 
         private static Lazy<RegistryHelper> _instance = new Lazy<RegistryHelper>(() =>
                                                                                      {
-                                                                                         var helper =
-                                                                                             new RegistryHelper();
+                                                                                         var helper = new RegistryHelper();
                                                                                          helper.Init();
                                                                                          return helper;
                                                                                      });
@@ -52,6 +59,23 @@ namespace WSUI.Core.Helpers
         }
 
         #endregion [instance]
+
+        public void ResetShutdownNotification()
+        {
+            var valKey = ReadKey<int>(RequireShutdownNotificationKey, false);
+            try
+            {
+                var valInt = Convert.ToInt32(valKey);
+                if (valInt == ShutdodwnNotificationRequired)
+                {
+                    Write(RequireShutdownNotificationKey,ShutdodwnNotificationNotRequired,false);
+                }
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
 
         public bool IsSilendUpdate()
         {
@@ -85,7 +109,7 @@ namespace WSUI.Core.Helpers
 
         private bool ProcessBoolKey(string key)
         {
-            var v = ReadKey(key);
+            var v = ReadKey<string>(key);
             if (string.IsNullOrEmpty(v))
                 return false;
             bool parseresult = false;
@@ -100,7 +124,7 @@ namespace WSUI.Core.Helpers
 
         public CallIndex GetCallIndex()
         {
-            var val = ReadKey(CallIndexKey);
+            var val = ReadKey<string>(CallIndexKey);
             var parse = (CallIndex)Enum.Parse(typeof(CallIndex), val);
             return parse;
         }
@@ -112,7 +136,7 @@ namespace WSUI.Core.Helpers
 
         public string GetOutllokFolderName()
         {
-            return ReadKey(OutlookFolderName);
+            return ReadKey<string>(OutlookFolderName);
         }
 
         public void SetOutlookFolderWebUrl(string url)
@@ -122,7 +146,7 @@ namespace WSUI.Core.Helpers
 
         public string GetOutlookFolderWebUrl()
         {
-            return ReadKey(OutlookFolderWebUrl);
+            return ReadKey<string>(OutlookFolderWebUrl);
         }
 
         public void SetPKetId(string id)
@@ -132,12 +156,12 @@ namespace WSUI.Core.Helpers
 
         public string GetPKeyId()
         {
-            return ReadKey(PKeyId);
+            return ReadKey<string>(PKeyId);
         }
 
         public bool GetIsPluginUiVisible()
         {
-            var res = ReadKey(IsPluginUiVisible);
+            var res = ReadKey<string>(IsPluginUiVisible);
             return string.IsNullOrEmpty(res) || bool.Parse(res);
         }
 
@@ -150,33 +174,34 @@ namespace WSUI.Core.Helpers
 
         public bool IsShouldRestoreOutlookFolder()
         {
-            return !string.IsNullOrEmpty(ReadKey(OutlookFolderName));
+            return !string.IsNullOrEmpty(ReadKey<string>(OutlookFolderName));
         }
 
         #endregion [restore outlook folders]
 
-        private string ReadKey(string key)
+        private T ReadKey<T>(string key, bool IsProduct = true)
         {
             try
             {
                 RegistryKey temp = _baseRegistry;
-                RegistryKey subKey = temp.CreateSubKey(ProductSubKey);
+                RegistryKey subKey = temp.CreateSubKey(IsProduct ? ProductSubKey : AddInOutlookSubKey);
                 if (subKey == null)
-                    return null;
-                return subKey.GetValue(key.ToLower()) as string;
+                    return default(T);
+                var objVal = subKey.GetValue(key.ToLower());
+                return objVal != null ? (T)objVal : default (T);
             }
             catch (Exception)
             {
-                return null;
+                return default(T);
             }
         }
 
-        private void Write(string key, object value)
+        private void Write(string key, object value, bool IsProduct = true)
         {
             try
             {
                 RegistryKey temp = _baseRegistry;
-                RegistryKey subKey = temp.CreateSubKey(ProductSubKey);
+                RegistryKey subKey = temp.CreateSubKey(IsProduct ? ProductSubKey : AddInOutlookSubKey);
                 if (subKey == null)
                     return;
                 if (value is bool)

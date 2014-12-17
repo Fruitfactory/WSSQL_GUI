@@ -5,10 +5,13 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using AddinExpress.MSO;
 using AddinExpress.OL;
+using Extensibility;
 using Microsoft.Office.Core;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
@@ -28,6 +31,8 @@ using WSUIOutlookPlugin.Interfaces;
 using WSUIOutlookPlugin.Managers;
 using Application = System.Windows.Forms.Application;
 using Outlook = Microsoft.Office.Interop.Outlook;
+using Microsoft.Win32;
+
 
 namespace WSUIOutlookPlugin
 {
@@ -38,6 +43,7 @@ namespace WSUIOutlookPlugin
     public class WSUIAddinModule : AddinExpress.MSO.ADXAddinModule
     {
         private int _outlookVersion = 0;
+        private string _officeVersion = string.Empty;
         private bool _refreshCurrentFolderExecuting = false;
         private IUpdatable _updatable = null;
         private IPluginBootStraper _wsuiBootStraper = null;
@@ -109,9 +115,17 @@ namespace WSUIOutlookPlugin
             Init();
             this.OnSendMessage += WSUIAddinModule_OnSendMessage;
             this.AddinInitialize += OnAddinInitialize;
-
+            this.AddinFinalize += OnAddinFinalize;
+            
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
+            
+        }
+
+        private void OnAddinFinalize(object sender, EventArgs eventArgs)
+        {
+            Thread.Sleep(1000);
+            WSSqlLogger.Instance.LogInfo("--------OnAddinFinalize");
         }
 
         private void OnAddinInitialize(object sender, EventArgs eventArgs)
@@ -196,13 +210,13 @@ namespace WSUIOutlookPlugin
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
             this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
-            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
+            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem)
+                        | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem)
+                        | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem)
+                        | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem)
+                        | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem)
+                        | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem)
+                        | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
             this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
             this.formRightSidebar.FormClassName = "WSUIOutlookPlugin.WSUISidebar";
             this.formRightSidebar.IsMinimizedStateAllowed = false;
@@ -535,7 +549,7 @@ namespace WSUIOutlookPlugin
             StartWatch();
             WSSqlLogger.Instance.LogInfo("Plugin is loading...");
             outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
-
+            RegistryHelper.Instance.ResetShutdownNotification();
             if (System.Windows.Application.Current == null)
             {
                 new AppEmpty();
@@ -558,16 +572,17 @@ namespace WSUIOutlookPlugin
             StartWatch();
             if (IsLoading)
                 return;
-            HidaSidebarDuringSwitching();
+            HideSidebarDuringSwitching();
             StopWatch("OutlookFormManagerOnAdxFolderSwitchEx");
         }
 
-        private void HidaSidebarDuringSwitching()
+        private void HideSidebarDuringSwitching()
         {
             var app = (AppEmpty)System.Windows.Application.Current;
             if (app.IsNull())
                 return;
-            app.Dispatcher.BeginInvoke(new Action(() =>
+
+            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
             {
                 _sidebarForm = GetSidebarForm();
 
@@ -613,13 +628,19 @@ namespace WSUIOutlookPlugin
             SetEventAggregatorToManager();
             SubscribeToEvents();
 
+            var fieldINfo = typeof(ADXAddinModule).GetField("disconnectMode",
+                BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static);
+            if (fieldINfo.IsNotNull())
+            {
+                fieldINfo.SetValue(this, ADXDisconnectMode.adx_dm_UISetupComplete);
+            }
+
             IsLoading = false;
             StopWatch("RunPluginUI");
         }
 
         private ISidebarForm GetSidebarForm()
         {
-
             ISidebarForm form = null;
             for (int i = 0; i < formRightSidebar.FormInstanceCount; i++)
             {
@@ -752,11 +773,9 @@ namespace WSUIOutlookPlugin
             try
             {
                 if (_outlookVersion == 2000 || _outlookVersion == 2002)
-                    //|| _outlookVersion == 2007 || _outlookVersion == 2010
                     Explorer.CurrentFolder = Folder;
                 else
                     Explorer.SelectFolder(Folder);
-                // Explorer.GetType().InvokeMember("SelectFolder", BindingFlags.InvokeMethod, null, Explorer, new object[] { Folder });
             }
             catch (Exception ex)
             {
@@ -822,25 +841,42 @@ namespace WSUIOutlookPlugin
         #endregion [event handlers for ribbon]
 
         private void outlookFormManager_OnInitialize()
-        {
-            StartWatch();
+        { 
             if ((OutlookApp != null) && (_outlookVersion == 0))
             {
                 string hostVersion = OutlookApp.Version;
                 if (hostVersion.StartsWith("9.0"))
+                {
                     _outlookVersion = 2000;
+                    _officeVersion = "9.0";
+                }
                 if (hostVersion.StartsWith("10.0"))
+                {
                     _outlookVersion = 2002;
+                    _officeVersion = "10.0";
+                }
                 if (hostVersion.StartsWith("11.0"))
+                {
                     _outlookVersion = 2003;
+                    _officeVersion = "11.0";
+                }
                 if (hostVersion.StartsWith("12.0"))
+                {
                     _outlookVersion = 2007;
+                    _officeVersion = "12.0";
+                }
                 if (hostVersion.StartsWith("14.0"))
+                {
                     _outlookVersion = 2010;
+                    _officeVersion = "14.0";
+                }
                 if (hostVersion.StartsWith("15.0"))
+                {
                     _outlookVersion = 2013;
+                    _officeVersion = "15.0";
+                }
+                ResetLoadingTime();
             }
-            StopWatch("outlookFormManager_OnInitialize");
         }
 
         private void OutlookFinderEvents_Quit(object sender, EventArgs e)
@@ -864,7 +900,7 @@ namespace WSUIOutlookPlugin
         {
             if (RegistryHelper.Instance.IsShouldRestoreOutlookFolder())
             {
-                WSSqlLogger.Instance.LogInfo("{0}", "OUtlookFolder is empty");
+                WSSqlLogger.Instance.LogInfo("{0}", "OutlookFolder is empty");
                 return;
             }
 
@@ -1051,6 +1087,28 @@ namespace WSUIOutlookPlugin
             }
         }
 
+        private void ResetLoadingTime()
+        {
+            const string AddInLoadTimesKey = "Software\\Microsoft\\Office\\{0}\\Outlook\\AddInLoadTimes";
+            const string ModuleKey = "WSUIOutlookPlugin.AddinModule";
+
+            var CurrentOulookVersion = string.Format(AddInLoadTimesKey, _officeVersion);
+            try
+            {
+                var key = Registry.CurrentUser.OpenSubKey(CurrentOulookVersion,true);
+                if (key.IsNull())
+                    return;
+                var value = (byte[])key.GetValue(ModuleKey, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
+                if (value.IsNull())
+                    return;
+                var buffer = new byte[value.Length];
+                key.SetValue(ModuleKey,buffer,RegistryValueKind.Binary);
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+        }
 
     }
 }
