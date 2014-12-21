@@ -119,7 +119,7 @@ namespace WSUI.Infrastructure.Implements.Rules
                         _listExistingEmails.Add(contactSearchObject.EmailAddress3.ToLowerInvariant());
                     }
                     else if (!string.IsNullOrEmpty(contactSearchObject.FirstName) && !string.IsNullOrEmpty(contactSearchObject.LastName) &&
-                        !_listExistingEmails.Contains(contactName))
+                        !_listExistingEmails.Contains(contactName) && string.IsNullOrEmpty(contactSearchObject.EmailAddress) && string.IsNullOrEmpty(contactSearchObject.EmailAddress2) && string.IsNullOrEmpty(contactSearchObject.EmailAddress3))
                     {
                         Result.Add(contactSearchObject);
                         _listExistingEmails.Add(contactName);
