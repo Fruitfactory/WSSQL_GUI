@@ -56,7 +56,7 @@ namespace WSUI.Core.Core.Search
 
         private IList<IResultMessage> _listMessage;
 
-        protected string QueryAnd = " AND \"{0}\"";
+        protected string QueryAnd = " AND \"{0}*\"";
 
         protected string RuleName;
 
@@ -277,12 +277,12 @@ namespace WSUI.Core.Core.Search
             if (listW.Count > 1)
             {
                 StringBuilder temp = new StringBuilder();
-                temp.Append(string.Format("'\"{0}*\"'", listW[0]));
+                temp.Append(string.Format("\"{0}*\"", listW[0]));
                 for (int i = 1; i < listW.Count; i++)
                 {
                     temp.Append(string.Format(QueryAnd, listW[i]));
                 }
-                andClause = temp.ToString() + "'";
+                andClause = string.Format("'{0}'", temp.ToString());
             }
             else
             {
