@@ -30,7 +30,7 @@ namespace WSUI.Module.Core
             OnPropertyChanged(propertyName);
         }
 
-        private static string GetPropertyName<T>(Expression<Func<T>> action)
+        protected static string GetPropertyName<T>(Expression<Func<T>> action)
         {
             var expression = (MemberExpression)action.Body;
             var propertyName = expression.Member.Name;

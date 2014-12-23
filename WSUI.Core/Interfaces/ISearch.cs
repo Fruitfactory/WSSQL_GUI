@@ -42,5 +42,9 @@ namespace WSUI.Core.Interfaces
         void Init();
 
         void SetProcessingRecordCount(int first, int second);
+
+        bool IsAdvancedMode { get; set; }
+
+        bool IncludedInAdvancedMode { get; }
     }//end ISearch
 }//end namespace Interfaces

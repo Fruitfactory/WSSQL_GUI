@@ -1,4 +1,6 @@
-﻿namespace WSUI.Module.Enums
+﻿using WSUI.Core.Core.Attributes;
+
+namespace WSUI.Module.Enums
 {
     public enum UiSlideDirection
     {
@@ -13,4 +15,17 @@
         Home,
         Mobile
     }
+
+    public enum AdvancedSearchCriteriaType
+    {
+        [EnumPrefix("none")]
+        None,
+        [EnumPrefix("to")]
+        To,
+        [EnumPrefix("folder")]
+        Folder,
+        [EnumPrefix("body")]
+        Body
+    }
+
 }

@@ -196,12 +196,20 @@ namespace WSUI.Module.Core
 
         protected virtual void OnSearchStringChanged()
         {
-            SearchSystem.Reset();
+            ResetSearchSystem();
             ClearDataSource();
             if (Parent != null)
                 Parent.ForceClosePreview();
             _canSearch = true;
             ShowMessageNoMatches = true;
+        }
+
+        private void ResetSearchSystem()
+        {
+            if (SearchSystem.IsNotNull())
+            {
+                SearchSystem.Reset();
+            }
         }
 
         protected virtual void OnInit()
@@ -233,7 +241,7 @@ namespace WSUI.Module.Core
         {
             if (string.IsNullOrEmpty(SearchString))
                 return;
-            SearchSystem.Reset();
+            ResetSearchSystem();
             ClearDataSource();
             Search();
         }

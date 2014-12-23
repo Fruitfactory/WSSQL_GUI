@@ -135,12 +135,14 @@
     <Compile Include="Core\BaseFilePreviewCommand.cs" />
     <Compile Include="Core\BasePreviewCommand.cs" />
     <Compile Include="Core\ContactKindDetailsViewModelBase.cs" />
+    <Compile Include="Core\DataViewModel.cs" />
     <Compile Include="Core\KindNameAttribute.cs" />
     <Compile Include="Core\KindsConstName.cs" />
     <Compile Include="Core\KindViewModelBase.cs" />
     <Compile Include="Core\LazyKind.cs" />
     <Compile Include="Core\ViewModelBase.cs" />
     <Compile Include="Enums\Enums.cs" />
+    <Compile Include="Interface\Service\IAdvancedSearchCriteria.cs" />
     <Compile Include="Interface\Service\ICommandStrategy.cs" />
     <Compile Include="Interface\Service\INavigationService.cs" />
     <Compile Include="Interface\ViewModel\IContactAttachmentDetailsViewModel.cs" />
@@ -168,6 +170,7 @@
     <Compile Include="Interface\View\IUIView.cs" />
     <Compile Include="Interface\Service\IWSCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\AdvancedSearch\AdvancedSearchCriteria.cs" />
     <Compile Include="Service\AllFilesDataTemplateSelector.cs" />
     <Compile Include="Service\Behaviors\WSUIActualHeightBehavior.cs" />
     <Compile Include="Service\Behaviors\WSUIListboxSelectOnClickBehavior.cs" />
@@ -434,7 +437,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\application-plus-red.png" />
+    <Resource Include="Images\Advanced.png" />
+    <Resource Include="Images\application-plus-red.png" />
     <Content Include="Images\cross-button.png" />
     <Resource Include="Images\openfolder.png" />
     <Resource Include="Images\picture.png" />

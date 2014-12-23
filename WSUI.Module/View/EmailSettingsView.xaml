@@ -4,12 +4,108 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                              xmlns:Service="clr-namespace:WSUI.Module.Service">
+                              xmlns:Service="clr-namespace:WSUI.Module.Service"
+                              xmlns:advancedSearch="clr-namespace:WSUI.Module.Service.AdvancedSearch">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Service\ResourceTemplate.xaml" />
                 <ResourceDictionary Source="../Service/SearchButtonStyle.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+
+
+            <DataTemplate x:Key="AdvancedSearchCriteriaTemplate" DataType="advancedSearch:AdvancedSearchCriteria" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="52"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox Grid.Column="0" ItemsSource="{Binding CriteriaTypes}" SelectedValue="{Binding CriteriaType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+
+                    <TextBox Grid.Column="1" Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" >
+
+                        <Button x:Name="AddButton" Height="22" Padding="1, 1, 1, 1" Width="26" BorderThickness="1, 1, 1, 1" Focusable="True" 
+                                HorizontalAlignment="Right" HorizontalContentAlignment="Center" IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}" IsTabStop="False" 
+                                MaxHeight="34" RenderSize="34, 30" ToolTip="Add" VerticalAlignment="Top" VerticalContentAlignment="Center"
+                                Command="{Binding AddCommand}">
+                            <Grid Background="Transparent" RenderSize="26, 22">
+                                <Path Height="16" Margin="0,0,0,0" Width="16" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" RenderSize="10, 8" RenderTransformOrigin="0.5,0.5" SnapsToDevicePixels="True" Stretch="Uniform">
+                                    <Path.Data>
+                                        M19.833,0L32.5,0 32.5,19.833999 52.334,19.833999 52.334,32.500999 32.5,32.500999 32.5,52.333 19.833,52.333 19.833,32.500999 0,32.500999 0,19.833999 19.833,19.833999z
+                                    </Path.Data>
+                                    <Path.RenderTransform>
+                                        <TransformGroup>
+                                            <TransformGroup.Children>
+                                                <RotateTransform Angle="271" />
+                                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                                            </TransformGroup.Children>
+                                        </TransformGroup>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Grid>
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource ChromelessButtonStyle}" TargetType="Button">
+                                    <Setter Property="Foreground" Value="{StaticResource AccentColorBrush}"></Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="Button.IsMouseOver" Value="True">
+                                            <Setter Property="Button.Background" Value="{StaticResource AccentColorBrush2}" />
+                                            <Setter Property="Button.Foreground" Value="{StaticResource WhiteColorBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Button.IsPressed" Value="True">
+                                            <Setter Property="Button.Background" Value="{StaticResource AccentDarkColorBrush}" />
+                                            <Setter Property="Button.Foreground" Value="{StaticResource WhiteColorBrush}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button x:Name="RemoveButton" Height="22" Padding="1, 1, 1, 1" Width="26" BorderThickness="1, 1, 1, 1" Focusable="True" 
+                                HorizontalAlignment="Right" HorizontalContentAlignment="Center" IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}" 
+                                IsTabStop="False" MaxHeight="34" RenderSize="34, 30" ToolTip="Remove" VerticalAlignment="Top" VerticalContentAlignment="Center"
+                                Visibility="{Binding RemoveButtonVisibility,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}"
+                                Command="{Binding RemoveCommand}" CommandParameter="{Binding}">
+                            <Grid Background="Transparent" RenderSize="26, 22">
+                                <Path Height="16" Margin="0,0,0,0" Width="16" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" RenderSize="10, 8" RenderTransformOrigin="0.5,0.5" SnapsToDevicePixels="True" Stretch="Uniform">
+                                    <Path.Data>
+                                        M51.527958,0L64,12.4741 44.47221,32.001027 64,51.52871 51.528,64.000001 32.000016,44.472668 12.471823,64.000001 0.0010004044,51.528802 19.528015,32.001088 0,12.473726 12.472,0.0010004044 31.999884,19.528773z
+                                    </Path.Data>
+                                    <Path.RenderTransform>
+                                        <TransformGroup>
+                                            <TransformGroup.Children>
+                                                <RotateTransform Angle="271" />
+                                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                                            </TransformGroup.Children>
+                                        </TransformGroup>
+                                    </Path.RenderTransform>
+                                </Path>
+                            </Grid>
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource ChromelessButtonStyle}" TargetType="Button">
+                                    <Setter Property="Foreground" Value="{StaticResource AccentColorBrush}"></Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="Button.IsMouseOver" Value="True">
+                                            <Setter Property="Button.Background" Value="{StaticResource AccentColorBrush2}" />
+                                            <Setter Property="Button.Foreground" Value="{StaticResource WhiteColorBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="Button.IsPressed" Value="True">
+                                            <Setter Property="Button.Background" Value="{StaticResource AccentDarkColorBrush}" />
+                                            <Setter Property="Button.Foreground" Value="{StaticResource WhiteColorBrush}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                    </StackPanel>
+
+                </Grid>
+            </DataTemplate>
+
+
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Margin="0 5 0 5"  Focusable="False">
@@ -20,6 +116,12 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            
             <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 Controls:TextboxHelper.Watermark="Enter Search Criteria"
                 Controls:TextboxHelper.ClearTextButton="True"
@@ -28,11 +130,25 @@
                 VerticalContentAlignment="Center"
                 Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
                 Grid.Column="0" MinHeight="32"
-                        IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
+                        IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" 
+                     IsReadOnly="{Binding ElementName=AdvancedToggleButton,Path=IsChecked}"/>
                 <Button Command="{Binding Path=SearchCommand}" 
                         Style="{StaticResource SearchButton}"
                     Grid.Column="1" MinHeight="32"
                         IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
+            
+            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <ToggleButton x:Name="AdvancedToggleButton" Width="70" IsChecked="{Binding IsAdvancedMode,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0 0 0 0" >Advanced</ToggleButton>
+            </StackPanel>
+
+            <ItemsControl Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Margin="0 0 0 0" 
+                          ItemsSource="{Binding CriteriaSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                          ItemTemplate="{StaticResource AdvancedSearchCriteriaTemplate}"
+                          Visibility="{Binding ElementName=AdvancedToggleButton,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}"></ItemsControl>
+
+
+
+
         </Grid>
     </Grid>
 </UserControl>

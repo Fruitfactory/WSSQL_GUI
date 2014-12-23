@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WSUI.Core.Extensions
 {
@@ -38,6 +40,12 @@ namespace WSUI.Core.Extensions
         {
             return !ReferenceEquals(arg, null);
         }
+
+        public static bool IsOneExist<T>(this IEnumerable<T> list)
+        {
+            return list.IsNotNull() && list.Count() == 1;
+        }
+
 
     }
 }

@@ -6,5 +6,6 @@
         public const string People = "People";
         public const string Email = "Email";
         public const string Attachments = "Attachments";
+        public const string AdvancedSearch = "Advanced";
     }
 }

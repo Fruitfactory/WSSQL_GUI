@@ -111,7 +111,7 @@ namespace WSUI.Core.Core.Search
             try
             {
                 _isSearching = true;
-                string query = QueryGenerator.Instance.GenerateQuery(typeof(T), Query, TopQueryResult, this);
+                string query = QueryGenerator.Instance.GenerateQuery(typeof(T), Query, TopQueryResult, this,IsAdvancedMode);
                 if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
@@ -237,12 +237,30 @@ namespace WSUI.Core.Core.Search
             CountSecondProcess = second;
         }
 
+        public bool IsAdvancedMode { get; set; }
+        public bool IncludedInAdvancedMode { get { return GetIncludedInAdvancedMode(); } }
+
         public string GenerateWherePart(IList<IRule> listCriteriaRules)
         {
             return OnGenerateWherePart(listCriteriaRules);
         }
 
+        public string GenerateAdvancedWherePart(string advancedCriteria)
+        {
+            return OnGenerateAdvancedWherePart(advancedCriteria);
+        }
+
         protected virtual string OnGenerateWherePart(IList<IRule> listCriterisRules)
+        {
+            return string.Empty;
+        }
+
+        protected virtual bool GetIncludedInAdvancedMode()
+        {
+            return false;
+        }
+
+        protected virtual string OnGenerateAdvancedWherePart(string advancedCriteria)
         {
             return string.Empty;
         }

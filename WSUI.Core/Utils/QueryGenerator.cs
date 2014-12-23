@@ -41,14 +41,14 @@ namespace WSUI.Core.Utils
         /// <param name="type"></param>
         /// <param name="searchCriteria"></param>
         /// <param name="exludeIgnored"></param>
-        public string GenerateQuery(Type type, string searchCriteria, int topResult, IRuleQueryGenerator ruleQueryGenerator)
+        public string GenerateQuery(Type type, string searchCriteria, int topResult, IRuleQueryGenerator ruleQueryGenerator, bool isAdvancedMode)
         {
             var listFields = FieldCash.Instance.GetFieldList(type);
             if (listFields == null || listFields.Count == 0)
                 return "";
             var selectPart = GenerateSelectPart(listFields, topResult);
             var fromPart = GenerateFromPart();
-            var wherePart = GenerateWherePart(ruleQueryGenerator);
+            var wherePart = isAdvancedMode ? GenerateAdvancedWherePart(ruleQueryGenerator,searchCriteria) : GenerateWherePart(ruleQueryGenerator);
             var query = string.Format(QueryTemplate, selectPart, fromPart, wherePart);
             return query;
         }
@@ -76,5 +76,14 @@ namespace WSUI.Core.Utils
             string where = ruleQueryGenerator.GenerateWherePart(RuleFactory.Instance.GetAllRules());
             return where;
         }
+
+        private string GenerateAdvancedWherePart(IRuleQueryGenerator ruleQueryGenerator,string advancedCriteria)
+        {
+            if (ruleQueryGenerator == null)
+                return "";
+            string where = ruleQueryGenerator.GenerateAdvancedWherePart(advancedCriteria);
+            return where;
+        }
+
     }//end QueryGenerator
 }//end namespace Utils

@@ -103,6 +103,7 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Core\Attributes\BaseWSUIAttribute.cs" />
+    <Compile Include="Core\Attributes\EnumPrefixAttribute.cs" />
     <Compile Include="Core\Attributes\FieldAttribute.cs" />
     <Compile Include="Core\Event\BasePayloadEvent.cs" />
     <Compile Include="Core\LimeLM\LimeLM.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Extensions\OutlookExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UiExtensions.cs" />
+    <Compile Include="GlobalConst.cs" />
     <Compile Include="Helpers\DetectEncoding\EncodingTools.cs" />
     <Compile Include="Helpers\DetectEncoding\Multilang\CMLangConvertCharset.cs" />
     <Compile Include="Helpers\DetectEncoding\Multilang\CMLangConvertCharsetClass.cs" />
