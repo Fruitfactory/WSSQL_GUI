@@ -28,8 +28,8 @@
             </Grid.ColumnDefinitions>
             <TextBox
                                 Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                Controls:TextboxHelper.Watermark="Enter Search Context for Contact"
-                                Controls:TextboxHelper.ClearTextButton="True"
+                                Controls:TextBoxHelper.Watermark="Enter Search Context for Contact"
+                                Controls:TextBoxHelper.ClearTextButton="True"
                                 service:KeyDownBehavior.KeyDown="{Binding KeyDowmCommand}"
                                 VerticalAlignment="Center"
                                 VerticalContentAlignment="Center"

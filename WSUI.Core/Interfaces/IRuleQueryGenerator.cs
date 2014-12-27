@@ -17,6 +17,6 @@ namespace WSUI.Core.Interfaces
         /// <param name="listCriteriaRules"></param>
         string GenerateWherePart(IList<IRule> listCriteriaRules);
 
-        string GenerateAdvancedWherePart(string advancedCriteria);
+        string GenerateAdvancedWherePart();
     }//end IRuleQueryGenerator
 }//end namespace Interfaces

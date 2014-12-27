@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using WSUI.Core.Core.MVVM;
 using WSUI.Core.Data;
 using WSUI.Core.Data.UI;
 using WSUI.Core.Helpers;

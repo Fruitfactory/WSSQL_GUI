@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using WSUI.Core.Core.AdvancedSearchCriteria;
 
 namespace WSUI.Core.Interfaces
 {
@@ -20,6 +21,8 @@ namespace WSUI.Core.Interfaces
         ///
         /// <param name="searchCriteris"></param>
         void SetSearchCriteria(string searchCriteris);
+
+        void SetAdvancedSearchCriterias(IEnumerable<IAdvancedSearchCriteria> advancedSearchCriterias);
 
         void Search();
 

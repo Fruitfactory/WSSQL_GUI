@@ -1,4 +1,5 @@
-﻿using WSUI.Core.Core.Attributes;
+﻿using System;
+using WSUI.Core.Core.Attributes;
 
 namespace WSUI.Module.Enums
 {
@@ -16,16 +17,6 @@ namespace WSUI.Module.Enums
         Mobile
     }
 
-    public enum AdvancedSearchCriteriaType
-    {
-        [EnumPrefix("none")]
-        None,
-        [EnumPrefix("to")]
-        To,
-        [EnumPrefix("folder")]
-        Folder,
-        [EnumPrefix("body")]
-        Body
-    }
+   
 
 }

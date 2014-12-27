@@ -41,6 +41,8 @@ namespace WSUI.Module.Interface.ViewModel
 
         void ShowContactPreview(object tag, bool useTransaction);
 
+        void ShowAdvancedSearch(object tag);
+
         BaseSearchObject Current { get; }
 
         BaseSearchObject CurrentTracked { get; }

@@ -102,6 +102,9 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Core\AdvancedSearchCriteria\AdvancedSearchCriteria.cs" />
+    <Compile Include="Core\AdvancedSearchCriteria\IAdvancedSearchCriteria.cs" />
+    <Compile Include="Core\AdvancedSearchCriteria\VariantAdvancedSearchCriteria.cs" />
     <Compile Include="Core\Attributes\BaseWSUIAttribute.cs" />
     <Compile Include="Core\Attributes\EnumPrefixAttribute.cs" />
     <Compile Include="Core\Attributes\FieldAttribute.cs" />
@@ -109,6 +112,8 @@
     <Compile Include="Core\LimeLM\LimeLM.cs" />
     <Compile Include="Core\LimeLM\TurboActivate.cs" />
     <Compile Include="Core\LimeLM\TurboLimeActivate.cs" />
+    <Compile Include="Core\MVVM\DataViewModel.cs" />
+    <Compile Include="Core\MVVM\ViewModelBase.cs" />
     <Compile Include="Core\Payload\BasePayload.cs" />
     <Compile Include="Core\Rules\AmountRule.cs" />
     <Compile Include="Core\Rules\BaseRule.cs" />
@@ -136,6 +141,7 @@
     <Compile Include="Data\WSUIExpanderData.cs" />
     <Compile Include="Enums\ActivationButtons.cs" />
     <Compile Include="Enums\ActivationState.cs" />
+    <Compile Include="Enums\Enums.cs" />
     <Compile Include="Enums\HostType.cs" />
     <Compile Include="Enums\RuleOjectType.cs" />
     <Compile Include="Enums\TypeResult.cs" />
@@ -275,6 +281,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

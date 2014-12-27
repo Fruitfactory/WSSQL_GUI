@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using WSUI.Core.Core.AdvancedSearchCriteria;
 using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
@@ -63,6 +64,11 @@ namespace WSUI.Core.Core.Search
         {
             _listRules.ForEach(item => item.SetSearchCriteria(searchCriteris));
             WSSqlLogger.Instance.LogInfo("Criteria: {0}", searchCriteris);
+        }
+
+        public void SetAdvancedSearchCriterias(IEnumerable<IAdvancedSearchCriteria> advancedSearchCriterias)
+        {
+            _listRules.ForEach(item => item.SetAdvancedSearchCriteria(advancedSearchCriterias));
         }
 
         public virtual void Search()

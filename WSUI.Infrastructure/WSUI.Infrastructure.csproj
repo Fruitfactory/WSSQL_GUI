@@ -108,6 +108,8 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="AdvancedSearch\SortByAdvancedSearchCriteria.cs" />
+    <Compile Include="AdvancedSearch\StringAdvancedSearchCriteria.cs" />
     <Compile Include="Attributes\FieldIndexAttribute.cs" />
     <Compile Include="Behaviors\ChildListBoxBehavior.cs" />
     <Compile Include="Behaviors\ExpanderEmailBehavior.cs" />

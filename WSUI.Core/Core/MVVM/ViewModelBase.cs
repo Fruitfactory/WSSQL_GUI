@@ -1,16 +1,19 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using WSUI.Core.Enums;
 
-namespace WSUI.Module.Core
+namespace WSUI.Core.Core.MVVM
 {
     public class ViewModelBase : INotifyPropertyChanged, IDisposable
     {
+        private IDictionary<string, object> _values;
         protected bool Disposed = false;
 
         public ViewModelBase()
         {
+            _values = new Dictionary<string, object>();
             Host = HostType.Unknown;
         }
 
@@ -35,6 +38,30 @@ namespace WSUI.Module.Core
             var expression = (MemberExpression)action.Body;
             var propertyName = expression.Member.Name;
             return propertyName;
+        }
+
+        protected virtual void Set<T>(Expression<Func<T>> exp, T value)
+        {
+            var name = GetPropertyName(exp);
+            if (_values.ContainsKey(name))
+            {
+                _values[name] = value;
+            }
+            else
+            {
+                _values.Add(name, value);
+            }
+            OnPropertyChanged(name);
+        }
+
+        protected virtual T Get<T>(Expression<Func<T>> exp)
+        {
+            var name = GetPropertyName(exp);
+            if (_values.ContainsKey(name))
+            {
+                return (T)_values[name];
+            }
+            return default(T);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

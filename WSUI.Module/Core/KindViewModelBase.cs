@@ -1,3 +1,6 @@
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Events;
+using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -5,31 +8,20 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media.Imaging;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Events;
-using Microsoft.Practices.Unity;
+using WSUI.Core.Core.MVVM;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Extensions;
 using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
-using WSUI.Core.Win32;
-using WSUI.Infrastructure.Controls.ProgressManager;
 using WSUI.Infrastructure.Events;
 using WSUI.Infrastructure.Payloads;
 using WSUI.Infrastructure.Service.Helpers;
-using WSUI.Infrastructure.Service.Rules;
 using WSUI.Infrastructure.Services;
-using WSUI.Module.Interface;
 using WSUI.Module.Interface.Service;
 using WSUI.Module.Interface.ViewModel;
-using WSUI.Module.Service;
 using WSUI.Module.Service.Dialogs.Message;
 using Application = System.Windows.Application;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
@@ -38,7 +30,6 @@ namespace WSUI.Module.Core
 {
     public abstract class KindViewModelBase : ViewModelBase, IKindItem
     {
-
         protected string _name = string.Empty;
 
         protected string _prefix = string.Empty;
@@ -54,7 +45,6 @@ namespace WSUI.Module.Core
 
         protected IScrollBehavior ScrollBehavior = null;
         protected int TopQueryResult = 100;
-
 
         private volatile bool _isQueryRun = false;
 
@@ -74,6 +64,7 @@ namespace WSUI.Module.Core
             KeyDownCommand = new DelegateCommand<KeyEventArgs>(KeyDown, o => true);
             DoubleClickCommand = new DelegateCommand<MouseButtonEventArgs>(DoubleClick, o => true);
             ClearCriteriaCommand = new DelegateCommand<object>(ClearCriteriaClicked, o => true);
+            ShowAdvancedSearchCommand = new DelegateCommand<object>(ShowAdvancedSearchCommandExecute, o => true);
             Enabled = true;
             DataSource = new ObservableCollection<ISearchObject>();
             Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
@@ -115,7 +106,6 @@ namespace WSUI.Module.Core
                         TypeItem = TypeSearchItem.None
                     };
                     DataSource.Add(message);
-
                 }
                 else
                 {
@@ -281,6 +271,7 @@ namespace WSUI.Module.Core
                 case ActivationState.Activated:
                 case ActivationState.Trial:
                     return true;
+
                 default:
                     return false;
             }
@@ -324,6 +315,7 @@ namespace WSUI.Module.Core
         public bool Toggle { get { return _toggle; } set { _toggle = value; OnPropertyChanged(() => Toggle); } }
 
         public BaseSearchObject CurrentTrackedObject { get; set; }
+
         public ObservableCollection<ISearchObject> DataSource { get; protected set; }
 
         public ICommand ChooseCommand { get; protected set; }
@@ -335,6 +327,8 @@ namespace WSUI.Module.Core
         public ICommand ClearCriteriaCommand { get; private set; }
 
         public ICommand DoubleClickCommand { get; protected set; }
+
+        public ICommand ShowAdvancedSearchCommand { get; protected set; }
 
         public event EventHandler Start;
 
@@ -464,6 +458,13 @@ namespace WSUI.Module.Core
                 return;
             ShowMessageNoMatches = false;
             Search();
+        }
+
+        private void ShowAdvancedSearchCommandExecute(object arg)
+        {
+            if (Parent.IsNull())
+                return;
+            Parent.ShowAdvancedSearch(null);
         }
     }
 }

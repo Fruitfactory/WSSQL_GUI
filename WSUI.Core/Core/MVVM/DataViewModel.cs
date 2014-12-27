@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace WSUI.Module.Core
+namespace WSUI.Core.Core.MVVM
 {
     public class DataViewModel : ViewModelBase
     {

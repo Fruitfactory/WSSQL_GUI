@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WSUI.Core.Core.AdvancedSearchCriteria;
 using WSUI.Core.Core.Rules;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
@@ -39,6 +40,7 @@ namespace WSUI.Core.Core.Search
         protected IList<T> Result;
         protected bool NeedInterrup;
         protected DateTime LastDate;
+        protected IEnumerable<IAdvancedSearchCriteria> AdvancedSearchCriterias; 
         protected string Query;
         protected AutoResetEvent Event;
         protected int TopQueryResult = 100;
@@ -87,6 +89,11 @@ namespace WSUI.Core.Core.Search
         public virtual void SetSearchCriteria(string criteria)
         {
             Query = criteria.Trim();
+        }
+
+        public virtual void SetAdvancedSearchCriteria(IEnumerable<IAdvancedSearchCriteria> advancedSearchCriterias)
+        {
+            AdvancedSearchCriterias = advancedSearchCriterias;
         }
 
         public void Search()
@@ -245,9 +252,9 @@ namespace WSUI.Core.Core.Search
             return OnGenerateWherePart(listCriteriaRules);
         }
 
-        public string GenerateAdvancedWherePart(string advancedCriteria)
+        public string GenerateAdvancedWherePart()
         {
-            return OnGenerateAdvancedWherePart(advancedCriteria);
+            return OnGenerateAdvancedWherePart();
         }
 
         protected virtual string OnGenerateWherePart(IList<IRule> listCriterisRules)
@@ -260,7 +267,7 @@ namespace WSUI.Core.Core.Search
             return false;
         }
 
-        protected virtual string OnGenerateAdvancedWherePart(string advancedCriteria)
+        protected virtual string OnGenerateAdvancedWherePart()
         {
             return string.Empty;
         }

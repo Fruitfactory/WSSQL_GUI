@@ -2,19 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Microsoft.Office.Interop.Outlook;
-using WSUI.Infrastructure.Service.Dumper;
-using WSUI.Module.Core;
-using WSUI.Module.Enums;
-using WSUI.Module.Interface.Service;
+using WSUI.Core.Core.MVVM;
+using WSUI.Core.Enums;
 
-namespace WSUI.Module.Service.AdvancedSearch
+namespace WSUI.Core.Core.AdvancedSearchCriteria
 {
-    internal class AdvancedSearchCriteria : DataViewModel, IAdvancedSearchCriteria
+    public abstract class AdvancedSearchCriteria : DataViewModel, IAdvancedSearchCriteria
     {
 
 
-        public AdvancedSearchCriteria(ICommand addCommand, ICommand removeCommand)
+        protected AdvancedSearchCriteria(ICommand addCommand, ICommand removeCommand)
         {
             AddCommand = addCommand;
             RemoveCommand = removeCommand;
@@ -33,7 +30,7 @@ namespace WSUI.Module.Service.AdvancedSearch
             set {Set(() => CriteriaType,value);}
         }
 
-        public string Value
+        public object Value
         {
             get { return Get(() => Value); }
             set { Set(() => Value, value); }

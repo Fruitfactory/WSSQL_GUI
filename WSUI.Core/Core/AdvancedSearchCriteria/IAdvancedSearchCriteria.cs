@@ -1,13 +1,12 @@
-﻿using System.Windows.Input;
-using WSUI.Module.Enums;
+﻿using WSUI.Core.Enums;
 
-namespace WSUI.Module.Interface.Service
+namespace WSUI.Core.Core.AdvancedSearchCriteria
 {
     public interface IAdvancedSearchCriteria
     {
         AdvancedSearchCriteriaType CriteriaType { get; }
 
-        string Value { get; set; }
+        object Value { get; set; }
 
         bool RemoveButtonVisibility { get; set; }
 

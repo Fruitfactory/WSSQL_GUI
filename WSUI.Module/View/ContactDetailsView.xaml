@@ -310,8 +310,8 @@
                             </Grid.ColumnDefinitions>
                             <TextBox
                                 Text="{Binding Path=SearchEmailString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                Controls:TextboxHelper.Watermark="Enter Search Context for Contact"
-                                Controls:TextboxHelper.ClearTextButton="True"
+                                Controls:TextBoxHelper.Watermark="Enter Search Context for Contact"
+                                Controls:TextBoxHelper.ClearTextButton="True"
                                 service:KeyDownBehavior.KeyDown="{Binding EmailContextKeyDownCommand}"
                                 VerticalAlignment="Center"
                                 VerticalContentAlignment="Center"
@@ -373,8 +373,8 @@
                             </Grid.ColumnDefinitions>
                             <TextBox
                                 Text="{Binding Path=SearchAttachmentString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                Controls:TextboxHelper.Watermark="Enter Search Context for Attachment"
-                                Controls:TextboxHelper.ClearTextButton="True"
+                                Controls:TextBoxHelper.Watermark="Enter Search Context for Attachment"
+                                Controls:TextBoxHelper.ClearTextButton="True"
                                 service:KeyDownBehavior.KeyDown="{Binding AttachmentContextKeyDownCommand}"
                                 VerticalAlignment="Center"
                                 VerticalContentAlignment="Center"

@@ -81,7 +81,7 @@ namespace WSUI.Core.Utils
         {
             if (ruleQueryGenerator == null)
                 return "";
-            string where = ruleQueryGenerator.GenerateAdvancedWherePart(advancedCriteria);
+            string where = ruleQueryGenerator.GenerateAdvancedWherePart();
             return where;
         }
 

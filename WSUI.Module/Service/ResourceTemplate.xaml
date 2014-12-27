@@ -6,6 +6,7 @@
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro.Resources;component/Icons.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <service:DateToStringConverter x:Key="dateConverter" />
@@ -762,8 +763,11 @@
         </Style.Triggers>
     </Style>
     
-    
-    
+    <Grid x:Key="AdvancedSearchButtonContent">
+        <Viewbox>
+            <ContentControl Content="{StaticResource appbar_list}"></ContentControl>
+        </Viewbox>
+    </Grid>
     
     
 </ResourceDictionary>
