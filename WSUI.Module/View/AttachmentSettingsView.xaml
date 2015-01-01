@@ -10,6 +10,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Service/ResourceTemplate.xaml"></ResourceDictionary>
                 <ResourceDictionary Source="../Service/SearchButtonStyle.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -22,12 +23,14 @@
             </Grid.ColumnDefinitions>
             <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
                 Controls:TextBoxHelper.Watermark="Enter Search Criteria"
-                Controls:TextBoxHelper.ClearTextButton="True"
-                Controls:TextBoxHelper.ClearTextCommand="{Binding ClearCriteriaCommand}"
+                      Controls:TextBoxHelper.CustomTextButton="True"
+                Controls:TextBoxHelper.CustomTextButtonContent="{StaticResource AdvancedSearchButtonContent}"
+                Controls:TextBoxHelper.CustomTextButtonCommand="{Binding ShowAdvancedSearchCommand}"
+                     Controls:TextBoxHelper.CustomTextButtonTooltip="{StaticResource AdvancedSearchTooltip}"
                 VerticalAlignment="Center"    
                 VerticalContentAlignment="Center"
                 Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
-                    Grid.Column="0" MinHeight="32"
+                    Grid.Column="0" Height="32"
                         IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"/>
             <Button Command="{Binding Path=SearchCommand}" 
                     Style="{StaticResource SearchButton}"

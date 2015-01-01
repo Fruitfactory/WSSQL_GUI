@@ -77,7 +77,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolkits\Log4Net\net40-client\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro, Version=0.10.0.1, Culture=neutral, PublicKeyToken=fa99175fddbc0f1f, processorArchitecture=MSIL">
+    <Reference Include="MahApps.Metro, Version=1.0.1.0, Culture=neutral, PublicKeyToken=fa99175fddbc0f1f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolkits\MahAppMetro\MahApps.Metro.dll</HintPath>
     </Reference>

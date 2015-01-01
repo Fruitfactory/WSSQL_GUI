@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using WSUI.Core.Core.AdvancedSearchCriteria;
 using WSUI.Core.Core.Rules;
 using WSUI.Core.Enums;
 using WSUI.Core.Extensions;
@@ -19,10 +20,15 @@ namespace WSUI.Infrastructure.Implements.Rules
     public class EmailSubjectSearchRule : BaseEmailSearchRule
     {
 
+        private string AscTemplateFirst = "  ORDER BY System.Message.DateReceived ASC";
+        private string AscTemplateContinue = " AND System.Message.DateReceived > '{0}' ORDER BY System.Message.DateReceived ASC";
+
+        private string DescTemplate = " AND System.Message.DateReceived < '{0}' ORDER BY System.Message.DateReceived DESC";
+
         private string WhereTemplate =
             "WHERE CONTAINS(System.Kind,'email') AND System.Message.DateReceived < '{0}' AND CONTAINS(System.Subject,{1},1033) ORDER BY System.Message.DateReceived DESC";
 
-        private string WhereAdvancedTemplate = "WHERE CONTAINS(System.Kind,'email') AND System.Message.DateReceived < '{0}' AND {1} ORDER BY System.Message.DateReceived DESC";
+        private string WhereAdvancedTemplate = "WHERE CONTAINS(System.Kind,'email')  AND {0} {1}";
 
         public EmailSubjectSearchRule()
         {
@@ -44,22 +50,21 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         protected override string OnGenerateAdvancedWherePart()
         {
-
-
             var dateString = FormatDate(ref LastDate);
             var advancedPart = ProcessAdvancedCriteria();
-            return string.Format(WhereAdvancedTemplate, dateString, advancedPart);
+            var sortingPart = string.Format(ProcessSortingCriteria(),dateString);
+            return string.Format(WhereAdvancedTemplate, advancedPart,sortingPart);
         }
 
         private string ProcessAdvancedCriteria()
         {
-            if(AdvancedSearchCriterias.IsNull() || !AdvancedSearchCriterias.Any())
+            if (AdvancedSearchCriterias.IsNull() || !AdvancedSearchCriterias.Any())
                 return string.Empty;
             var criterias = new List<string>();
 
             foreach (var advancedSearchCriteria in AdvancedSearchCriterias)
             {
-                if(advancedSearchCriteria.Value.IsNull())
+                if (advancedSearchCriteria.Value.IsNull() || advancedSearchCriteria.Value.IsStringEmptyOrNull())
                     continue;
                 switch (advancedSearchCriteria.CriteriaType)
                 {
@@ -72,12 +77,30 @@ namespace WSUI.Infrastructure.Implements.Rules
                     case AdvancedSearchCriteriaType.Body:
                         criterias.Add(string.Format("CONTAINS(*,'\"{0}*\"',1033)", advancedSearchCriteria.Value));
                         break;
-                    case AdvancedSearchCriteriaType.SortBy:
-                        break;
                 }
             }
 
             return string.Join(" AND ", criterias);
+        }
+
+        private string ProcessSortingCriteria()
+        {
+            if (AdvancedSearchCriterias.IsNull() ||
+                AdvancedSearchCriterias.All(c => c.CriteriaType != AdvancedSearchCriteriaType.SortBy))
+                return string.Empty;
+
+            var sortingCriteria = AdvancedSearchCriterias.First(c => c.CriteriaType == AdvancedSearchCriteriaType.SortBy);
+            var sort = (AdvancedSearchSortByType)sortingCriteria.Value;
+            switch (sort)
+            {
+
+                case AdvancedSearchSortByType.NewestToOldest:
+                    return DescTemplate;
+                case AdvancedSearchSortByType.OldestToNewest:
+                    return IsInit ?  AscTemplateFirst : AscTemplateContinue;
+                default:
+                    return string.Empty;
+            }
         }
 
         protected override bool GetIncludedInAdvancedMode()

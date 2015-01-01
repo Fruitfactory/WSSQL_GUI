@@ -59,6 +59,7 @@ namespace WSUI.Module.ViewModel
             ScrollBehavior = new ScrollBehavior { CountFirstProcess = 500, CountSecondProcess = 100, LimitReaction = 85 };
             ScrollBehavior.SearchGo += OnScrollNeedSearch;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
+            SearchSystem.SetProcessingRecordCount(ScrollBehavior.CountFirstProcess,ScrollBehavior.CountSecondProcess);
         }
 
         protected override void OnSearchStringChanged()
@@ -124,7 +125,7 @@ namespace WSUI.Module.ViewModel
             var criteria = new StringBuilder();
             CriteriaSource.ForEach(c =>
             {
-                if (c.CriteriaType == AdvancedSearchCriteriaType.None || c.Value.IsNull())
+                if (c.CriteriaType == AdvancedSearchCriteriaType.None || c.Value.IsNull() || c.Value.IsStringEmptyOrNull())
                     return;
                 criteria.AppendFormat(GlobalConst.AdvancedSearchFormat, _prefixes[c.CriteriaType], c.Value.ToString());
             });
@@ -139,6 +140,13 @@ namespace WSUI.Module.ViewModel
         {
             SearchSystem.SetAdvancedSearchCriterias(CriteriaSource.Select(c => c).ToList());
             base.Search();
+        }
+
+        protected override void AdvancedSearchButtonPress(object arg)
+        {
+            if(Parent.IsNull())
+                return;
+            Parent.SelectKind(KindsConstName.Everything);
         }
     }
 }

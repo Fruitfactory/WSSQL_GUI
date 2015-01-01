@@ -12,7 +12,8 @@
              xmlns:attachedProperty="clr-namespace:WSUI.Infrastructure.Helpers.AttachedProperty;assembly=WSUI.Infrastructure"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure"
-             xmlns:advancedSearch="clr-namespace:WSUI.Module.Service.AdvancedSearch">
+             xmlns:advancedSearch="clr-namespace:WSUI.Module.Service.AdvancedSearch"
+             xmlns:advancedSearch1="clr-namespace:WSUI.Infrastructure.AdvancedSearch;assembly=WSUI.Infrastructure">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -20,28 +21,33 @@
                 <ResourceDictionary Source="../Service/SearchButtonStyle.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
-            <DataTemplate x:Key="StringDataTemplate" DataType="advancedSearch:StringAdvancedSearchCriteria" >
+
+            <converters:AdvancedSearchTypeToStringConverter x:Key="AdvancedSearchTypeToStringConverter"></converters:AdvancedSearchTypeToStringConverter>
+            
+            <DataTemplate x:Key="StringDataTemplate" DataType="advancedSearch1:StringAdvancedSearchCriteria" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="75"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <ComboBox Grid.Column="0" ItemsSource="{Binding CriteriaTypes}" SelectedValue="{Binding CriteriaType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="False"></ComboBox>
+                    <TextBlock Grid.Column="0" Text="{Binding CriteriaType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource AdvancedSearchTypeToStringConverter}}"
+                               Margin="10 5 0 0"></TextBlock>
 
                     <TextBox Grid.Column="1" Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" service:KeyDownBehavior.KeyDown="{Binding Path=DataContext.KeyDownCommand,ElementName=this}" ></TextBox>
 
                 </Grid>
             </DataTemplate>
 
-            <DataTemplate x:Key="SortDataTemplate" DataType="advancedSearch:SortByAdvancedSearchCriteria" >
+            <DataTemplate x:Key="SortDataTemplate" DataType="advancedSearch1:SortByAdvancedSearchCriteria" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="75"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <ComboBox Grid.Column="0" ItemsSource="{Binding CriteriaTypes}" SelectedValue="{Binding CriteriaType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="False"></ComboBox>
+                    <TextBlock Grid.Column="0" Text="{Binding CriteriaType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource AdvancedSearchTypeToStringConverter}}"  
+                               Margin="10 5 0 0"></TextBlock>
                     <ComboBox Grid.Column="1" SelectedValue="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding VariantSource}"
                               service:KeyDownBehavior.KeyDown="{Binding Path=DataContext.KeyDownCommand,ElementName=this}" ></ComboBox>
                 </Grid>

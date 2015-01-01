@@ -33,12 +33,14 @@
             
             <TextBox Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 Controls:TextBoxHelper.Watermark="Enter Search Criteria"
-                Controls:TextBoxHelper.ClearTextButton="True"
-                Controls:TextBoxHelper.ClearTextCommand="{Binding ClearCriteriaCommand}"
+                Controls:TextBoxHelper.CustomTextButton="True"
+                Controls:TextBoxHelper.CustomTextButtonContent="{StaticResource AdvancedSearchButtonContent}"
+                Controls:TextBoxHelper.CustomTextButtonCommand="{Binding ShowAdvancedSearchCommand}"
+                Controls:TextBoxHelper.CustomTextButtonTooltip="{StaticResource AdvancedSearchTooltip}"
                 VerticalAlignment="Center"    
                 VerticalContentAlignment="Center"
                 Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
-                Grid.Column="0" MinHeight="32"
+                Grid.Column="0" Height="32"
                         IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" 
                      IsReadOnly="{Binding ElementName=AdvancedToggleButton,Path=IsChecked}"/>
                 <Button Command="{Binding Path=SearchCommand}" 

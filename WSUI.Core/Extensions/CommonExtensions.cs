@@ -46,6 +46,11 @@ namespace WSUI.Core.Extensions
             return list.IsNotNull() && list.Count() == 1;
         }
 
+        public static bool IsStringEmptyOrNull(this object obj)
+        {
+            return obj is string && string.IsNullOrEmpty(obj as string);
+        }
+
 
     }
 }

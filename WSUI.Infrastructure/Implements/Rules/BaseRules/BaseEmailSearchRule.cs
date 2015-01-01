@@ -15,11 +15,11 @@ using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 
-namespace WSUI.Infrastructure.Implements.Rules.BaseRules 
+namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 {
-	public class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject> , IEmailSearchRule
+    public class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject>, IEmailSearchRule
     {
-        
+
 
         #region [needs]
 
@@ -29,74 +29,96 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 
         public BaseEmailSearchRule()
         {
-		}
+        }
 
-	    public BaseEmailSearchRule(object lockObject)
-            :base(lockObject,false)
-	    {
-	    }
-
-	    public override void Init()
-	    {
-	        CountFirstProcess = 150;
-	        CountSecondProcess = 75;
-            ObjectType = RuleObjectType.Email;
-	        base.Init();
-	    }
-
-	    public override void Reset()
-	    {
-            _listID.Clear();
-	        base.Reset();
-	    }
-
-	    protected override void ProcessResult()
+        public BaseEmailSearchRule(object lockObject)
+            : base(lockObject, false)
         {
-            var groped = Result.OrderByDescending(i => i.DateReceived).GroupBy(e => e.ConversationId);
-	        var result = new List<EmailSearchObject>();
+        }
+
+        public override void Init()
+        {
+            CountFirstProcess = 150;
+            CountSecondProcess = 75;
+            ObjectType = RuleObjectType.Email;
+            base.Init();
+        }
+
+        public override void Reset()
+        {
+            _listID.Clear();
+            base.Reset();
+        }
+
+        protected override void ProcessResult()
+        {
+            IEnumerable<IGrouping<string, EmailSearchObject>> groped = null;
+
+            if (!IsAdvancedMode)
+                groped = Result.OrderByDescending(i => i.DateReceived).GroupBy(e => e.ConversationId);
+            else
+                groped = GetSortedResult(Result);
+
+            var result = new List<EmailSearchObject>();
             foreach (var group in groped)
-	        {
+            {
                 var convIndex = group.GroupBy(i => i.ConversationIndex);
-                if(!convIndex.Any())
+                if (!convIndex.Any())
                     continue;
-	            var data = convIndex.FirstOrDefault().First(); 
-                if(data == null || string.IsNullOrEmpty(data.ConversationId) || _listID.Contains(data.ConversationId))
+                var data = convIndex.FirstOrDefault().First();
+                if (data == null || string.IsNullOrEmpty(data.ConversationId) || _listID.Contains(data.ConversationId))
                     continue;
-	            _listID.Add(data.ConversationId);
+                _listID.Add(data.ConversationId);
                 foreach (var emailSearchObject in convIndex.Skip(1))
-	            {
-                    data.AddItem(emailSearchObject.First());	                
-	            }
+                {
+                    data.AddItem(emailSearchObject.First());
+                }
                 result.Add(data);
-	        }
+            }
             Result.Clear();
-	        if (result.Count > 0)
-	        {
-                WSSqlLogger.Instance.LogInfo("{0}: {1}",RuleName,result.Count);
+            if (result.Count > 0)
+            {
+                WSSqlLogger.Instance.LogInfo("{0}: {1}", RuleName, result.Count);
                 Result = result;
-                LastDate = Result.Last().DateReceived;    
-	        }
-	    }
+                LastDate = Result.Last().DateReceived;
+            }
+        }
 
-	    public IEnumerable<string> GetConversationId()
-	    {
-	        return Result.Select(e => e.ConversationId);
-	    }
+        private IEnumerable<IGrouping<string, EmailSearchObject>> GetSortedResult(IList<EmailSearchObject> result)
+        {
+            if (AdvancedSearchCriterias.All(c => c.CriteriaType != AdvancedSearchCriteriaType.SortBy))
+                return result.GroupBy(e => e.ConversationId);
+            var sort = (AdvancedSearchSortByType)AdvancedSearchCriterias.First(c => c.CriteriaType == AdvancedSearchCriteriaType.SortBy).Value;
+            switch (sort)
+            {
+                case AdvancedSearchSortByType.NewestToOldest:
+                    return result.OrderByDescending(i => i.DateReceived).GroupBy(e => e.ConversationId);
+                case AdvancedSearchSortByType.OldestToNewest:
+                    return result.OrderBy(i => i.DateReceived).GroupBy(e => e.ConversationId);
+                default:
+                    return result.GroupBy(e => e.ConversationId);
+            }
+        }
 
-	    public void ApplyFilter(IEnumerable<string> conversationIds)
-	    {
-	        if (conversationIds == null || !conversationIds.Any())
-	            return;
-	        for (int i = 0; i < Result.Count; i++)
-	        {
-	            var obj = Result[i];
-	            if (conversationIds.Contains(obj.ConversationId))
-	            {
-	                Result.Remove(obj);
-	                i--;
-	            }
-	        }
-	    }
+        public IEnumerable<string> GetConversationId()
+        {
+            return Result.Select(e => e.ConversationId);
+        }
+
+        public void ApplyFilter(IEnumerable<string> conversationIds)
+        {
+            if (conversationIds == null || !conversationIds.Any())
+                return;
+            for (int i = 0; i < Result.Count; i++)
+            {
+                var obj = Result[i];
+                if (conversationIds.Contains(obj.ConversationId))
+                {
+                    Result.Remove(obj);
+                    i--;
+                }
+            }
+        }
 
     }//end BaseEmailSearchRule
 

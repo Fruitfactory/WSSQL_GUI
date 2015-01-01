@@ -112,7 +112,7 @@ namespace WSUI.Core.Core.Search
 
         public virtual void SetProcessingRecordCount(int first, int second)
         {
-
+            GetRules().ForEach(r => r.SetProcessingRecordCount(first, second));
         }
 
         protected virtual void RaiseSearchStarted()

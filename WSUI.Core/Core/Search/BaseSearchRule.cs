@@ -50,6 +50,7 @@ namespace WSUI.Core.Core.Search
         protected int CountProcess = 0;
         protected volatile bool NeedStop = false;
         protected volatile object Lock = null;
+        
 
         protected volatile object InternalLock = new object();
 
@@ -137,6 +138,7 @@ namespace WSUI.Core.Core.Search
                     ReadDataFromTable(resultTable);
                     ProcessResult();
                     _typeResult = TypeResult.Ok;
+                    
                 }
                 else
                 {
@@ -157,6 +159,7 @@ namespace WSUI.Core.Core.Search
                 _isSearching = false;
                 NeedStop = false;
                 IsInterupt = false;
+                IsInit = false;
                 Event.Set();
             }
         }
@@ -165,6 +168,8 @@ namespace WSUI.Core.Core.Search
         {
             return IndexerDataReader.Instance.GetDataByAdapter(query);
         }
+
+        protected bool IsInit { get; private set; }
 
         protected virtual void ReadDataFromTable(DataTable data)
         {
@@ -216,6 +221,7 @@ namespace WSUI.Core.Core.Search
             LastDate = GetCurrentDateTime();
             IsInterupt = false;
             NeedStop = false;
+            IsInit = true;
             Result.Clear();
         }
 
@@ -236,6 +242,7 @@ namespace WSUI.Core.Core.Search
             CountAdded = 0;
             _typeResult = TypeResult.None;
             _listMessage = new List<IResultMessage>();
+            IsInit = true;
         }
 
         public void SetProcessingRecordCount(int first, int second)

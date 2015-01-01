@@ -462,9 +462,15 @@ namespace WSUI.Module.Core
 
         private void ShowAdvancedSearchCommandExecute(object arg)
         {
+            AdvancedSearchButtonPress(arg);
+        }
+
+        protected virtual void AdvancedSearchButtonPress(object arg)
+        {
             if (Parent.IsNull())
                 return;
             Parent.ShowAdvancedSearch(null);
         }
+
     }
 }
