@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
+using WSUI.Core.Core.MVVM;
 using WSUI.Core.Data;
 using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;

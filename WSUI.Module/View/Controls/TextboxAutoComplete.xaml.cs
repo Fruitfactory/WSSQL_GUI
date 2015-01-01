@@ -65,8 +65,8 @@ namespace WSUI.Module.View.Controls
 
             Binding binding = new Binding("SearchText") { Source = this, Mode = BindingMode.TwoWay,UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged};
             _textBox.SetBinding(TextBox.TextProperty, binding);
-            _textBox.SetValue(TextboxHelper.WatermarkProperty, "Enter Search Criteria");
-            _textBox.SetValue(TextboxHelper.ClearTextButtonProperty,true);
+            _textBox.SetValue(TextBoxHelper.WatermarkProperty, "Enter Search Criteria");
+            _textBox.SetValue(TextBoxHelper.ClearTextButtonProperty, true);
             _controls.Add(_comboBox);
             _controls.Add(_textBox);
             Canvas.SetZIndex(_textBox,100);

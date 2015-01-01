@@ -79,6 +79,7 @@ namespace WSUI.Module.Core
             ID = customAttr[0].Id;
             Icon = customAttr[0].Icon;
             Data = customAttr[0].Data;
+            IsVisibleByDefault = customAttr[0].IsVisibleByDefault;
             Toggle = false;
             switch (_parent.Host)
             {
@@ -88,6 +89,8 @@ namespace WSUI.Module.Core
             }
             OnPropertyChanged("UIName");
         }
+
+        public bool IsVisibleByDefault { get; private set; }
 
         public ICommand ChooseCommand { get; protected set; }
 

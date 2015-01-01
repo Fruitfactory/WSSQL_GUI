@@ -75,6 +75,10 @@ namespace WSUI.Module
             _unityContainer.RegisterType<IContactDetailsView, ContactDetailsView>();
             _unityContainer.RegisterType<IContactDetailsViewModel, ContactDetailsViewModel>();
 
+            _unityContainer.RegisterType<ISettingsView<AdvancedSearchViewModel>, AdvancedSearchSettingsView>();
+            _unityContainer.RegisterType<IDataView<AdvancedSearchViewModel>, AdvancedSearchDataView>();
+
+
             watch.Stop();
             WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));
         }

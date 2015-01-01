@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WSUI.Core.Core.AdvancedSearchCriteria;
 using WSUI.Core.Core.Rules;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
@@ -39,6 +40,7 @@ namespace WSUI.Core.Core.Search
         protected IList<T> Result;
         protected bool NeedInterrup;
         protected DateTime LastDate;
+        protected IEnumerable<IAdvancedSearchCriteria> AdvancedSearchCriterias; 
         protected string Query;
         protected AutoResetEvent Event;
         protected int TopQueryResult = 100;
@@ -48,6 +50,7 @@ namespace WSUI.Core.Core.Search
         protected int CountProcess = 0;
         protected volatile bool NeedStop = false;
         protected volatile object Lock = null;
+        
 
         protected volatile object InternalLock = new object();
 
@@ -89,6 +92,11 @@ namespace WSUI.Core.Core.Search
             Query = criteria.Trim();
         }
 
+        public virtual void SetAdvancedSearchCriteria(IEnumerable<IAdvancedSearchCriteria> advancedSearchCriterias)
+        {
+            AdvancedSearchCriterias = advancedSearchCriterias;
+        }
+
         public void Search()
         {
             if (_isSearching)
@@ -111,7 +119,7 @@ namespace WSUI.Core.Core.Search
             try
             {
                 _isSearching = true;
-                string query = QueryGenerator.Instance.GenerateQuery(typeof(T), Query, TopQueryResult, this);
+                string query = QueryGenerator.Instance.GenerateQuery(typeof(T), Query, TopQueryResult, this,IsAdvancedMode);
                 if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
@@ -130,6 +138,7 @@ namespace WSUI.Core.Core.Search
                     ReadDataFromTable(resultTable);
                     ProcessResult();
                     _typeResult = TypeResult.Ok;
+                    
                 }
                 else
                 {
@@ -150,6 +159,7 @@ namespace WSUI.Core.Core.Search
                 _isSearching = false;
                 NeedStop = false;
                 IsInterupt = false;
+                IsInit = false;
                 Event.Set();
             }
         }
@@ -158,6 +168,8 @@ namespace WSUI.Core.Core.Search
         {
             return IndexerDataReader.Instance.GetDataByAdapter(query);
         }
+
+        protected bool IsInit { get; private set; }
 
         protected virtual void ReadDataFromTable(DataTable data)
         {
@@ -209,6 +221,7 @@ namespace WSUI.Core.Core.Search
             LastDate = GetCurrentDateTime();
             IsInterupt = false;
             NeedStop = false;
+            IsInit = true;
             Result.Clear();
         }
 
@@ -229,6 +242,7 @@ namespace WSUI.Core.Core.Search
             CountAdded = 0;
             _typeResult = TypeResult.None;
             _listMessage = new List<IResultMessage>();
+            IsInit = true;
         }
 
         public void SetProcessingRecordCount(int first, int second)
@@ -237,12 +251,30 @@ namespace WSUI.Core.Core.Search
             CountSecondProcess = second;
         }
 
+        public bool IsAdvancedMode { get; set; }
+        public bool IncludedInAdvancedMode { get { return GetIncludedInAdvancedMode(); } }
+
         public string GenerateWherePart(IList<IRule> listCriteriaRules)
         {
             return OnGenerateWherePart(listCriteriaRules);
         }
 
+        public string GenerateAdvancedWherePart()
+        {
+            return OnGenerateAdvancedWherePart();
+        }
+
         protected virtual string OnGenerateWherePart(IList<IRule> listCriterisRules)
+        {
+            return string.Empty;
+        }
+
+        protected virtual bool GetIncludedInAdvancedMode()
+        {
+            return false;
+        }
+
+        protected virtual string OnGenerateAdvancedWherePart()
         {
             return string.Empty;
         }

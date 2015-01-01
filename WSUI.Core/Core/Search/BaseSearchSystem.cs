@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using WSUI.Core.Core.AdvancedSearchCriteria;
 using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
@@ -23,6 +24,7 @@ namespace WSUI.Core.Core.Search
         private Thread _mainSearchThread;
         private IList<ISearch> _listRules;
         private volatile bool _needStop = false;
+        private bool _isAdvancedMode = false;
 
         protected IList<ISystemSearchResult> InternalResult;
         protected volatile bool _IsSearching = false;
@@ -36,7 +38,7 @@ namespace WSUI.Core.Core.Search
         }
 
         protected BaseSearchSystem(object Lock)
-        :this()
+            : this()
         {
             Lock1 = Lock;
         }
@@ -62,6 +64,11 @@ namespace WSUI.Core.Core.Search
         {
             _listRules.ForEach(item => item.SetSearchCriteria(searchCriteris));
             WSSqlLogger.Instance.LogInfo("Criteria: {0}", searchCriteris);
+        }
+
+        public void SetAdvancedSearchCriterias(IEnumerable<IAdvancedSearchCriteria> advancedSearchCriterias)
+        {
+            _listRules.ForEach(item => item.SetAdvancedSearchCriteria(advancedSearchCriterias));
         }
 
         public virtual void Search()
@@ -93,9 +100,19 @@ namespace WSUI.Core.Core.Search
         }
 
         public bool IsSearching { get { return _IsSearching; } }
+        public bool IsAdvancedMode
+        {
+            get { return _isAdvancedMode; }
+            set
+            {
+                _isAdvancedMode = value;
+                GetRules().ForEach(r => r.IsAdvancedMode = value);
+            }
+        }
+
         public virtual void SetProcessingRecordCount(int first, int second)
         {
-            
+            GetRules().ForEach(r => r.SetProcessingRecordCount(first, second));
         }
 
         protected virtual void RaiseSearchStarted()
@@ -134,7 +151,7 @@ namespace WSUI.Core.Core.Search
             {
                 var watch = new Stopwatch();
                 watch.Start();
-                var events = _listRules.Select(item => item.GetEvent()).ToArray();
+                var events = IsAdvancedMode ? _listRules.Where(item => item.IncludedInAdvancedMode).Select(item => item.GetEvent()).ToArray() : _listRules.Select(item => item.GetEvent()).ToArray();
                 if (events == null || events.Length == 0)
                 {
                     WSSqlLogger.Instance.LogInfo("List of Events is empty");
@@ -142,7 +159,12 @@ namespace WSUI.Core.Core.Search
                 }
                 //var watchSearch = new Stopwatch();
                 //watchSearch.Start();
-                _listRules.ForEach(item => item.Search());
+
+                if (IsAdvancedMode)
+                    _listRules.Where(item => item.IncludedInAdvancedMode).ForEach(item => item.Search());
+                else 
+                    _listRules.ForEach(item => item.Search());
+
                 WaitHandle.WaitAll(events);
                 //watchSearch.Stop();
                 WSSqlLogger.Instance.LogInfo("------------------- searching is DONE!!!!--------------------- ");//,watchSearch.ElapsedMilliseconds
@@ -155,7 +177,10 @@ namespace WSUI.Core.Core.Search
                     return;
                 }
                 ProcessData();
-                foreach (var item in _listRules.OrderBy(i => i.Priority))
+                var items = IsAdvancedMode
+                    ? _listRules.Where(item => item.IncludedInAdvancedMode).OrderBy(i => i.Priority)
+                    : _listRules.OrderBy(i => i.Priority);
+                foreach (var item in items)
                 {
                     var result = (item as ISearchRule).GetResults();
                     if (result == null)

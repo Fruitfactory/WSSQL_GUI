@@ -11,6 +11,8 @@ namespace WSUI.Module.Interface.ViewModel
         int ID { get; }
         bool Toggle { get; set; }
         void Initialize();
+
+        bool IsVisibleByDefault { get; }
         ICommand ChooseCommand { get; }
 
     }

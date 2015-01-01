@@ -6,7 +6,9 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
 using System.Threading;
+using WSUI.Core.Core.AdvancedSearchCriteria;
 using WSUI.Core.Enums;
 
 namespace WSUI.Core.Interfaces
@@ -18,6 +20,8 @@ namespace WSUI.Core.Interfaces
         /// </summary>
         /// <param name="criteria"></param>
         void SetSearchCriteria(string criteria);
+
+        void SetAdvancedSearchCriteria(IEnumerable<IAdvancedSearchCriteria> advancedSearchCriterias);
 
         void Search();
 
@@ -42,5 +46,9 @@ namespace WSUI.Core.Interfaces
         void Init();
 
         void SetProcessingRecordCount(int first, int second);
+
+        bool IsAdvancedMode { get; set; }
+
+        bool IncludedInAdvancedMode { get; }
     }//end ISearch
 }//end namespace Interfaces

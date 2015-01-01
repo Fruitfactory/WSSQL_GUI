@@ -108,6 +108,8 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="AdvancedSearch\SortByAdvancedSearchCriteria.cs" />
+    <Compile Include="AdvancedSearch\StringAdvancedSearchCriteria.cs" />
     <Compile Include="Attributes\FieldIndexAttribute.cs" />
     <Compile Include="Behaviors\ChildListBoxBehavior.cs" />
     <Compile Include="Behaviors\ExpanderEmailBehavior.cs" />
@@ -145,6 +147,7 @@
     </Compile>
     <Compile Include="Converters\ActivationStatusToButtonVisibilityConverter.cs" />
     <Compile Include="Converters\ActivationStatusToGridVisibilityConverter.cs" />
+    <Compile Include="Converters\AdvancedSearchTypeToStringConverter.cs" />
     <Compile Include="Converters\StringToStringConverter.cs" />
     <Compile Include="Events\SelectedChangedPayloadEvent.cs" />
     <Compile Include="Helpers\AttachedProperty\ListBoxSelectedObjectAttachedProperty.cs" />

@@ -1,4 +1,7 @@
-﻿namespace WSUI.Module.Enums
+﻿using System;
+using WSUI.Core.Core.Attributes;
+
+namespace WSUI.Module.Enums
 {
     public enum UiSlideDirection
     {
@@ -13,4 +16,7 @@
         Home,
         Mobile
     }
+
+   
+
 }

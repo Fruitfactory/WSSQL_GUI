@@ -93,7 +93,7 @@
         </Button>
 
         <ListBox Grid.Column="1" Grid.Row="0" Style="{StaticResource HorizotalMetroListBox}" ItemsSource="{Binding KindsCollection}" Height="Auto"
-                    SelectedItem="{Binding SelectedLazyKind,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    SelectedValue="{Binding SelectedLazyKind,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsSynchronizedWithCurrentItem="True"
                     ItemContainerStyle="{StaticResource WSUIMetroListBoxItem}"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     ScrollViewer.HorizontalScrollBarVisibility="Auto"

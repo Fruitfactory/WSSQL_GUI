@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="WSUI.Module.View.AdvancedSearchDataView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:service="clr-namespace:WSUI.Module.Service"
+             xmlns:ctrl="clr-namespace:WSUI.Infrastructure.Controls;assembly=WSUI.Infrastructure"
+             x:Name="this"
+             xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
+             xmlns:listBox="clr-namespace:WSUI.Infrastructure.Controls.ListBox;assembly=WSUI.Infrastructure"
+             xmlns:attachedProperty="clr-namespace:WSUI.Infrastructure.Helpers.AttachedProperty;assembly=WSUI.Infrastructure"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure"
+             xmlns:advancedSearch="clr-namespace:WSUI.Module.Service.AdvancedSearch"
+             xmlns:advancedSearch1="clr-namespace:WSUI.Infrastructure.AdvancedSearch;assembly=WSUI.Infrastructure">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Service\ResourceTemplate.xaml" />
+                <ResourceDictionary Source="../Service/SearchButtonStyle.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+
+
+            <converters:AdvancedSearchTypeToStringConverter x:Key="AdvancedSearchTypeToStringConverter"></converters:AdvancedSearchTypeToStringConverter>
+            
+            <DataTemplate x:Key="StringDataTemplate" DataType="advancedSearch1:StringAdvancedSearchCriteria" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="{Binding CriteriaType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource AdvancedSearchTypeToStringConverter}}"
+                               Margin="10 5 0 0"></TextBlock>
+
+                    <TextBox Grid.Column="1" Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" service:KeyDownBehavior.KeyDown="{Binding Path=DataContext.KeyDownCommand,ElementName=this}" ></TextBox>
+
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="SortDataTemplate" DataType="advancedSearch1:SortByAdvancedSearchCriteria" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="{Binding CriteriaType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource AdvancedSearchTypeToStringConverter}}"  
+                               Margin="10 5 0 0"></TextBlock>
+                    <ComboBox Grid.Column="1" SelectedValue="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding VariantSource}"
+                              service:KeyDownBehavior.KeyDown="{Binding Path=DataContext.KeyDownCommand,ElementName=this}" ></ComboBox>
+                </Grid>
+            </DataTemplate>
+
+            <advancedSearch:AdvancedSearchTemplateSelector x:Key="AdvancedSearchTemplateSelector"
+                                                           StringTemplate="{StaticResource StringDataTemplate}"
+                                                           SortByTemplate="{StaticResource SortDataTemplate}"
+                                                           ></advancedSearch:AdvancedSearchTemplateSelector>
+            
+            
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Grid IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" Focusable="False">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <ItemsControl Grid.Row="0" Margin="0 0 0 0" 
+                          ItemsSource="{Binding CriteriaSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                            ItemTemplateSelector="{StaticResource AdvancedSearchTemplateSelector}"    
+                      ></ItemsControl>
+
+
+        <listBox:WSUIListBox x:Name="listBox" 
+                        Grid.Row="1"
+                        Style="{StaticResource SimpleListBoxStyle}"
+                        ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
+                        BorderBrush="Transparent"
+                        Background="Transparent"            
+                        ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
+                        ItemTemplateSelector="{StaticResource templateSelector}"
+                        attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
+                        ScrollViewer.ScrollChanged="ListBox_OnScrollChanged"
+                        service:DoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
+                        HorizontalContentAlignment="Stretch"
+                      >
+            <listBox:WSUIListBox.ContextMenu>
+                <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+            </listBox:WSUIListBox.ContextMenu>
+            <i:Interaction.Behaviors>
+                <behaviors:SelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors:SelectedItemTrackingBehavior>
+            </i:Interaction.Behaviors>
+        </listBox:WSUIListBox>
+    </Grid>
+</UserControl>

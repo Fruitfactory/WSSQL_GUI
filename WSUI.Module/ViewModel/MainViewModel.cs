@@ -15,6 +15,7 @@ using Microsoft.Practices.Unity;
 using Transitionals;
 using WSPreview.PreviewHandler.Service.OutlookPreview;
 using WSUI.Core.Core.LimeLM;
+using WSUI.Core.Core.MVVM;
 using WSUI.Core.Data;
 using WSUI.Core.Data.UI;
 using WSUI.Core.Enums;
@@ -146,8 +147,12 @@ namespace WSUI.Module.ViewModel
             GetAllKinds();
             if (_listItems.Count > 0)
             {
-                _listItems.ForEach(k => KindsCollection.Add(k));
-                SelectedLazyKind = _listItems[0];
+                _listItems.ForEach(k =>
+                {
+                    if (k.IsVisibleByDefault)
+                        KindsCollection.Add(k);
+                });
+                SelectedLazyKind = _listItems.FirstOrDefault(k => k.IsVisibleByDefault);
             }
             OnPropertyChanged(() => KindsCollection);
             UpdatedActivatedStatus();
@@ -256,25 +261,7 @@ namespace WSUI.Module.ViewModel
             });
         }
 
-        private void CurrentKindChanged(object kindItem)
-        {
-            if (_navigationService != null)
-            {
-                if (_navigationService.IsContactDetailsVisible)
-                {
-                    ResetContactDetails();
-                }
-                _navigationService.ShowSelectedKind(kindItem);
-            }
-
-            if (_navigationService.IsPreviewVisible)
-            {
-                _navigationService.PreviewView.ClearPreview();
-            }
-            OnPropertyChanged(() => Commands);
-            OnPropertyChanged(() => BackButtonVisibility);
-            OnPropertyChanged(() => IsKindsVisible);
-        }
+        
 
         private void Disconnect()
         {
@@ -435,7 +422,7 @@ namespace WSUI.Module.ViewModel
                 return;
             Disconnect();
             string searchString = string.Empty;
-            if (_currentItem != null)
+            if (_currentItem != null && !(_currentItem is IAdvancedSearchViewModel))
                 searchString = _currentItem.SearchString;
             _currentItem = sendItem;
             Connect();
@@ -447,6 +434,26 @@ namespace WSUI.Module.ViewModel
                 _currentItem.SearchString = searchString;
                 _currentItem.FilterData();
             }
+        }
+
+        private void CurrentKindChanged(object kindItem)
+        {
+            if (_navigationService != null)
+            {
+                if (_navigationService.IsContactDetailsVisible)
+                {
+                    ResetContactDetails();
+                }
+                _navigationService.ShowSelectedKind(kindItem);
+            }
+
+            if (_navigationService.IsPreviewVisible)
+            {
+                _navigationService.PreviewView.ClearPreview();
+            }
+            OnPropertyChanged(() => Commands);
+            OnPropertyChanged(() => BackButtonVisibility);
+            OnPropertyChanged(() => IsKindsVisible);
         }
 
         private void InternalBuy()
@@ -678,6 +685,14 @@ namespace WSUI.Module.ViewModel
         public void ShowContactPreview(object tag, bool useTransaction = true)
         {
             ShowPreview(tag as BaseSearchObject,useTransaction);
+        }
+
+        public void ShowAdvancedSearch(object tag)
+        {
+            var advancedSearch = _listItems.FirstOrDefault(k => k.Kind is IAdvancedSearchViewModel);
+            if (advancedSearch.IsNull())
+                return;
+            SelectKind(advancedSearch.UIName);
         }
 
         public BaseSearchObject Current

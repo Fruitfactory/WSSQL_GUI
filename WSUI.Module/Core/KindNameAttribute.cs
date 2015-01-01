@@ -11,7 +11,18 @@ namespace WSUI.Module.Core
             Id = id;
             Icon = icon;
             Data = data;
+            IsVisibleByDefault = true;
         }
+
+        public KindNameIdAttribute(string name, int id, string icon, string data, bool isVisibleByDefault)
+        {
+            Name = name;
+            Id = id;
+            Icon = icon;
+            Data = data;
+            IsVisibleByDefault = isVisibleByDefault;
+        }
+
 
         public string Name
         {
@@ -29,6 +40,8 @@ namespace WSUI.Module.Core
         }
 
         public string Data { get; private set; }
+
+        public bool IsVisibleByDefault { get; private set; }
 
 
     }
