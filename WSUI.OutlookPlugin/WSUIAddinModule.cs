@@ -115,17 +115,10 @@ namespace WSUIOutlookPlugin
             Init();
             this.OnSendMessage += WSUIAddinModule_OnSendMessage;
             this.AddinInitialize += OnAddinInitialize;
-            this.AddinFinalize += OnAddinFinalize;
             
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
             
-        }
-
-        private void OnAddinFinalize(object sender, EventArgs eventArgs)
-        {
-            Thread.Sleep(1000);
-            WSSqlLogger.Instance.LogInfo("--------OnAddinFinalize");
         }
 
         private void OnAddinInitialize(object sender, EventArgs eventArgs)

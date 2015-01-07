@@ -388,6 +388,12 @@ namespace WSUI.Module.Core
             set;
         }
 
+
+        public string HighlightPattern
+        {
+            get { return GetSearchPattern(); }
+        }
+
         private void ShowPath()
         {
             var filename = SearchItemHelper.GetFileName(Current);
@@ -470,6 +476,16 @@ namespace WSUI.Module.Core
             if (Parent.IsNull())
                 return;
             Parent.ShowAdvancedSearch(null);
+        }
+
+        public string GetSearchPattern()
+        {
+            return GetInternalSearchPattern();
+        }
+
+        protected virtual string GetInternalSearchPattern()
+        {
+            return SearchString;
         }
 
     }

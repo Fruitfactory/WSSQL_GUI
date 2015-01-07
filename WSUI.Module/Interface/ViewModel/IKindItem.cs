@@ -79,5 +79,6 @@ namespace WSUI.Module.Interface.ViewModel
         void Init();
         void FilterData();
 
+        string GetSearchPattern();
     }
 }

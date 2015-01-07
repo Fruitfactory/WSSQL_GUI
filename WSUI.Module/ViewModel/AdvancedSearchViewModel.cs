@@ -52,6 +52,18 @@ namespace WSUI.Module.ViewModel
 
         public ObservableCollection<IAdvancedSearchCriteria> CriteriaSource { get; private set; }
 
+        protected override string GetInternalSearchPattern()
+        {
+            var pattern = new  StringBuilder();
+            CriteriaSource.ForEach(c =>
+            {
+                if (c.CriteriaType == AdvancedSearchCriteriaType.None || c.Value.IsNull() || c.Value.IsStringEmptyOrNull())
+                    return;
+                pattern.AppendFormat(" {0}", c.Value.ToString());
+            });
+            return pattern.ToString();
+        }
+
         protected override void OnInit()
         {
             base.OnInit();

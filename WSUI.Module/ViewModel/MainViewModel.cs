@@ -340,7 +340,7 @@ namespace WSUI.Module.ViewModel
                         }
 
                         previewView.SetSearchPattern(_navigationService.IsContactDetailsVisible ? _navigationService.ContactDetailsViewModel.SearchCriteria : _currentItem != null
-                            ? _currentItem.SearchString
+                            ? _currentItem.GetSearchPattern()
                             : string.Empty);
                         previewView.SetPreviewFile(filename);
                         MoveToLeft(previewView);

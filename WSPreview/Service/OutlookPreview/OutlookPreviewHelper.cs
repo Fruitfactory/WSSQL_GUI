@@ -258,7 +258,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             {
                 var temp = Regex.Escape(s.ClearString());
                 Match m = s.IsAmount () ? Regex.Match(result, string.Format(@"{0}", temp), RegexOptions.IgnoreCase) : 
-                    Regex.Match(result, string.Format(@"\b({0})\b", temp), RegexOptions.IgnoreCase);
+                    Regex.Match(result, string.Format("{0}", temp), RegexOptions.IgnoreCase);//@"\b({0})\b"
                 
                 if (m.Success)
                 {

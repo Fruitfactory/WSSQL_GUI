@@ -75,7 +75,7 @@ namespace WSUI.Infrastructure.Implements.Rules
                         criterias.Add(string.Format("CONTAINS(System.ItemUrl,'\"{0}*\"',1033)", advancedSearchCriteria.Value));
                         break;
                     case AdvancedSearchCriteriaType.Body:
-                        criterias.Add(string.Format("CONTAINS(*,'\"{0}*\"',1033)", advancedSearchCriteria.Value));
+                        criterias.Add(string.Format("CONTAINS(System.Search.Contents,'\"{0}\"',1033)", advancedSearchCriteria.Value));
                         break;
                 }
             }
