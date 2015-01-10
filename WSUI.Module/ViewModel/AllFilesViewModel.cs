@@ -76,7 +76,7 @@ namespace WSUI.Module.ViewModel
             double restDelta = avaibleHeight - EmailHeight;
             if ((data.IsScrollBarVisible || data.IsVisibleOne) && delta > 0) //
             {
-                EmailHeight += restDelta > delta ? delta : restDelta < 0 && avaibleHeight > AvaregeTwoRowItemHeight ? avaibleHeight : 0;
+                EmailHeight += restDelta > delta ? delta : restDelta < 0 && avaibleHeight > AvaregeTwoRowItemHeight ? avaibleHeight : restDelta > 0 ? restDelta : 0;
                 OnPropertyChanged(() => EmailHeight);
             }
         }
