@@ -206,7 +206,8 @@
                                     ItemTemplateSelector="{StaticResource templateSelector}"
                                     IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
                                     HorizontalContentAlignment="Stretch"
-                                    CalculateActualHeightCommand="{Binding EmailHeightCalculateCommand}">
+                                    CalculateActualHeightCommand="{Binding EmailHeightCalculateCommand}"
+                                    ScrollViewer.CanContentScroll="False">
                                     <listBox:WSUIListBox.ContextMenu>
                                         <ContextMenu
                                             ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}" />
