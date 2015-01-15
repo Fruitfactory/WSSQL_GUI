@@ -38,7 +38,7 @@
 
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid behaviors:WSUIActualHeightBehavior.IsObserve="True" behaviors:WSUIActualHeightBehavior.ActualHeight="{Binding ActualHeight,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+    <Grid x:Name="AllDataRootGrid" behaviors:WSUIActualHeightBehavior.IsObserve="True" behaviors:WSUIActualHeightBehavior.ActualHeight="{Binding ActualHeight,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -130,22 +130,25 @@
 
         <headerControl:WSUIHeaderControl 
             x:Name="FileControl"
-            Style="{StaticResource HeaderStyle}" Grid.Row="2" Header="Files"
-                                         Visibility="{Binding IsFileVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
-                                         BorderBrush="{StaticResource ControlBorderBrush}">
-            <Grid Height="{Binding FileHeight,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+            Style="{StaticResource HeaderStyle}" 
+            Grid.Row="2" 
+            Header="Files"
+            Visibility="{Binding IsFileVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
+            BorderBrush="{StaticResource ControlBorderBrush}">
+            
+            <Grid x:Name="FileGrid" Height="{Binding FileHeight,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                
                 <ListBox x:Name="FileListBox" ItemsSource="{Binding Path=FileSource,UpdateSourceTrigger=PropertyChanged}"
-                         ItemTemplateSelector="{StaticResource templateSelector}"
-                         behaviors:WSUIListboxSelectOnClickBehavior.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                         HorizontalContentAlignment="Stretch" 
-                        ScrollViewer.CanContentScroll="False"
-                        ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
-                        ScrollViewer.VerticalScrollBarVisibility="Hidden"
-
+                            ItemTemplateSelector="{StaticResource templateSelector}"
+                            behaviors:WSUIListboxSelectOnClickBehavior.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            HorizontalContentAlignment="Stretch" 
+                            ScrollViewer.CanContentScroll="False"
+                            ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+                            ScrollViewer.VerticalScrollBarVisibility="Hidden"
                          >
                     <i:Interaction.Behaviors>
                         <behaviors:WSUIListboxSelectOnClickBehavior></behaviors:WSUIListboxSelectOnClickBehavior>
@@ -153,20 +156,20 @@
                         <behaviorsInfra:SelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviorsInfra:SelectedItemTrackingBehavior>
                     </i:Interaction.Behaviors>
                     <ListBox.ContextMenu>
-                        <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
+                        <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"></ContextMenu>
                     </ListBox.ContextMenu>
                 </ListBox>
 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                <StackPanel x:Name="FileMorePanel" Orientation="Horizontal" HorizontalAlignment="Right"
                             Grid.Row="1"
                             Visibility="{Binding IsFileMoreVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">
                     <TextBlock>
-                        <Hyperlink Command="{Binding MoreCommand}"
-                                   CommandParameter="{x:Static core:KindsConstName.Attachments}">
+                        <Hyperlink Command="{Binding MoreCommand}" CommandParameter="{x:Static core:KindsConstName.Attachments}">
                             more >>
                         </Hyperlink>
                     </TextBlock>
                 </StackPanel>
+            
             </Grid>
         </headerControl:WSUIHeaderControl>
 

@@ -52,6 +52,13 @@ namespace WSUI.Module.View
         #endregion
 
         public double ActualContactHeight { get { return ContactControl.ActualHeight; } }
-        public double ActualFileHeight { get { return FileControl.ActualHeight; } }
+        public double ActualFileHeight 
+        {
+            get
+            {
+                return FileControl.ActualHeight;
+            } 
+        }
+        public double ActualGridHeight { get { return AllDataRootGrid.ActualHeight; } }
     }
 }

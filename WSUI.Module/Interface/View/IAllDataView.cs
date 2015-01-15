@@ -5,5 +5,7 @@
         double ActualContactHeight { get; }
 
         double ActualFileHeight { get; }
+
+        double ActualGridHeight { get; }
     }
 }

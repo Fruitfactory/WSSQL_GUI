@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -32,6 +33,8 @@ namespace WSUI.Module.ViewModel
         private const double EmailValue = 0.5;
 
         private const int ContactMaxCount = 5;
+
+        private const double FILE_TEMPLATE = 35; // sum of margins in Header Template
 
         public AllFilesViewModel(IUnityContainer container,
             IEventAggregator eventAggregator,
@@ -71,7 +74,8 @@ namespace WSUI.Module.ViewModel
             {
                 return;
             }
-            double avaibleHeight = ((ActualHeight - AllDataView.ActualFileHeight) - AllDataView.ActualContactHeight) - EmailHeight;
+            
+            double avaibleHeight = ((AllDataView.ActualGridHeight - AllDataView.ActualFileHeight - FILE_TEMPLATE) - AllDataView.ActualContactHeight) - EmailHeight;
             double delta = data.NewSize.Height - data.OldSize.Height;
             double restDelta = avaibleHeight - EmailHeight;
             if ((data.IsScrollBarVisible || data.IsVisibleOne) && delta > 0) //
