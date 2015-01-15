@@ -26,7 +26,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         private const string AfterStrongTemplateEnd = "</strong></font>";
         private const string OutlookProcessName = "OUTLOOK";
         private const string OutlookApplication = "Outlook.Application";
-        private const string WordRegex = @"(?<word>[\\$\d\w\.]+)";
+        private const string WordRegex = @"(?<word>[\/\$\d\w\.]+)";
         private const string ExtOfImage = "png";
         private const string BodyTag = "<body";
         private const string NAEmpty = "<n/a>";
