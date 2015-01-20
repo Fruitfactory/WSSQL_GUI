@@ -86,13 +86,13 @@ namespace WSUI.Infrastructure.Implements.Rules
             var searchedCriteria = string.Empty;
             if (!string.IsNullOrEmpty(emailPart))
             {
-                searchedCriteria = string.Format("Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') OR CONTAINS(*,'{0}',1033) ",
+                searchedCriteria = string.Format("Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}')  ", //OR CONTAINS(*,'{0}',1033)
                     emailPart);
             }
 
             if (!string.IsNullOrEmpty(searchedCriteria) && !string.IsNullOrEmpty(namePart) && !string.IsNullOrEmpty(keyWordCriteria))
             {
-                const string template = "( ({0} OR {1}) AND  Contains(*,'{2}') )";
+                const string template = "( ({0} OR {1}) )"; // AND  Contains(*,'{2}')
                 var nameCriteriaPart = string.Format("Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccAddress,'{0}') ",
                     namePart);
                 return string.Format(template, nameCriteriaPart, searchedCriteria, keyWordCriteria);
@@ -108,7 +108,7 @@ namespace WSUI.Infrastructure.Implements.Rules
             {
                 var nameCriteriaPart = string.Format("Contains(System.Message.FromName,'{0}') OR Contains(System.Message.ToName,'{0}') OR  Contains(System.Message.ToAddress,'{0}') OR Contains(System.Message.FromAddress,'{0}') OR Contains(System.Message.CcName,'{0}') OR  Contains(System.Message.CcAddress,'{0}') OR Contains(System.Message.BccName,'{0}') OR  Contains(System.Message.BccAddress,'{0}') ",
                         namePart);
-                return string.Format("( ({0}) AND  Contains(*,'{1}') )", nameCriteriaPart, keyWordCriteria);
+                return string.Format("( ({0})  )", nameCriteriaPart, keyWordCriteria);//AND  Contains(*,'{1}')
             }
             if (!string.IsNullOrEmpty(namePart))
             {
