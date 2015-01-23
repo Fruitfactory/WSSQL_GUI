@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using log4net;
 using log4net.Config;
@@ -63,13 +65,22 @@ namespace WSUI.Core.Logger
 
         public void LogError(string message)
         {
-            WriteLog(LevelLogging.Error, message);
+            StackTrace stackTrace = new StackTrace();
+            StackFrame stackFrame = stackTrace.GetFrame(1);
+            MethodBase methodBase = stackFrame.GetMethod();
+            string tempMessage = string.Format("{0}: {1}", methodBase.Name, message);    
+            WriteLog(LevelLogging.Error, tempMessage);
         }
 
         public void LogError(string format, params object[] args)
         {
             var message = string.Format(format, args);
-            LogError(message);
+
+            StackTrace stackTrace = new StackTrace();
+            StackFrame stackFrame = stackTrace.GetFrame(1);
+            MethodBase methodBase = stackFrame.GetMethod();
+            string tempMessage = string.Format("{0}: {1}", methodBase.Name, message);
+            WriteLog(LevelLogging.Error, tempMessage);
         }
 
         public void LogInfo(string message)

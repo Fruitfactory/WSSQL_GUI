@@ -51,6 +51,5 @@ namespace WSUI.Core.Extensions
             return obj is string && string.IsNullOrEmpty(obj as string);
         }
 
-
     }
 }

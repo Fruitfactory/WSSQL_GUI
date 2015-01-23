@@ -80,5 +80,7 @@ namespace WSUI.Module.Interface.ViewModel
         void FilterData();
 
         string GetSearchPattern();
+
+        void SetSearchString(string searchCriteria);
     }
 }

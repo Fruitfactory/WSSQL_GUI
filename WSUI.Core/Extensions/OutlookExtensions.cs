@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using WSUI.Core.Logger;
 
@@ -38,7 +39,12 @@ namespace WSUI.Core.Extensions
 
         public static string GetEmailAddress(this Outlook.AddressEntry sender)
         {
-            if (sender != null)
+            if (sender == null)
+            {
+                return null;
+            }
+
+            try
             {
                 //Now we have an AddressEntry representing the Sender
                 if (sender.AddressEntryUserType == Outlook.OlAddressEntryUserType.olExchangeUserAddressEntry
@@ -48,30 +54,20 @@ namespace WSUI.Core.Extensions
                     {
                         //Use the ExchangeUser object PrimarySMTPAddress
                         Outlook.ExchangeUser exchUser = sender.GetExchangeUser();
-                        if (exchUser != null)
-                        {
-                            return exchUser.PrimarySmtpAddress;
-                        }
-                        else
-                        {
-                            return null;
-                        }
+                        return exchUser != null ? exchUser.PrimarySmtpAddress : null;
                     }
                     catch (Exception ex)
                     {
-                        WSSqlLogger.Instance.LogError(ex.Message);
+                        WSSqlLogger.Instance.LogInfo(ex.Message);
                     }
-                    return null;
                 }
-                else
-                {
-                    return sender.Address; //sender.PropertyAccessor.GetProperty(PR_SMTP_ADDRESS) as string;
-                }
+                return sender.Address; //sender.PropertyAccessor.GetProperty(PR_SMTP_ADDRESS) as string;
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                WSSqlLogger.Instance.LogError(ex.Message);
             }
+            return null;
         }
     }
 }

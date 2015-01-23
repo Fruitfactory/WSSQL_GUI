@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -142,36 +143,50 @@ namespace WSUI.Module.ViewModel
 
         private void InitializeInThread()
         {
-            _listItems = new List<LazyKind>();
-            KindsCollection = new ObservableCollection<LazyKind>();
-            GetAllKinds();
-            if (_listItems.Count > 0)
+            try
             {
-                _listItems.ForEach(k =>
+                _listItems = new List<LazyKind>();
+                KindsCollection = new ObservableCollection<LazyKind>();
+                GetAllKinds();
+                if (_listItems.Count > 0)
                 {
-                    if (k.IsVisibleByDefault)
-                        KindsCollection.Add(k);
-                });
-                SelectedLazyKind = _listItems.FirstOrDefault(k => k.IsVisibleByDefault);
-            }
-            OnPropertyChanged(() => KindsCollection);
-            UpdatedActivatedStatus();
-            InitCommandStrategies();
+                    _listItems.ForEach(k =>
+                    {
+                        if (k.IsVisibleByDefault)
+                            KindsCollection.Add(k);
+                    });
+                    SelectedLazyKind = _listItems.FirstOrDefault(k => k.IsVisibleByDefault);
+                }
+                OnPropertyChanged(() => KindsCollection);
+                UpdatedActivatedStatus();
+                InitCommandStrategies();
 
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogInfo(ex.Message);
+            }
         }
 
         private void InitCommandStrategies()
         {
-            _commandStrategies = new Dictionary<TypeSearchItem, ICommandStrategy>();
-            _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
-            ICommandStrategy fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
-            _commandStrategies.Add(TypeSearchItem.File, fileAttach);
-            _commandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
-            _commandStrategies.Add(TypeSearchItem.Picture, fileAttach);
-            _commandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
+            try
+            {
+                _commandStrategies = new Dictionary<TypeSearchItem, ICommandStrategy>();
+                _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
+                ICommandStrategy fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
+                _commandStrategies.Add(TypeSearchItem.File, fileAttach);
+                _commandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
+                _commandStrategies.Add(TypeSearchItem.Picture, fileAttach);
+                _commandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
 
-            InitMenuItems(_commandStrategies);
+                InitMenuItems(_commandStrategies);
 
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogInfo(ex.Message);
+            }
         }
 
         private void InitMenuItems(Dictionary<TypeSearchItem, ICommandStrategy> commandStrategies)
@@ -207,34 +222,48 @@ namespace WSUI.Module.ViewModel
 
         private void UpdatedActivatedStatus()
         {
-            ActivateStatus = TurboLimeActivate.Instance.State;
+            try
+            {
+                ActivateStatus = TurboLimeActivate.Instance.State;
 
-            WSSqlLogger.Instance.LogInfo("Activated Status: {0}", ActivateStatus.ToString());
-            OnPropertyChanged(() => ActivateStatus);
-            OnPropertyChanged(() => VisibleTrialLabel);
-            OnPropertyChanged(() => DaysLeft);
+                WSSqlLogger.Instance.LogInfo("Activated Status: {0}", ActivateStatus.ToString());
+                OnPropertyChanged(() => ActivateStatus);
+                OnPropertyChanged(() => VisibleTrialLabel);
+                OnPropertyChanged(() => DaysLeft);
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogInfo(ex.Message);
+            }
         }
 
         private void CheckStateAndShowActivatedForm()
         {
-            TurboLimeActivate.Instance.TryCheckAgain();
-            ActivateStatus = TurboLimeActivate.Instance.State;
-            switch (ActivateStatus)
+            try
             {
+                TurboLimeActivate.Instance.TryCheckAgain();
+                ActivateStatus = TurboLimeActivate.Instance.State;
+                switch (ActivateStatus)
+                {
 #if !TRIAL
-                //case ActivationState.Trial:
+                    //case ActivationState.Trial:
 #endif
-                case ActivationState.TrialEnded:
-                case ActivationState.NonActivated:
-                    RunInternalActivate();
-                    break;
+                    case ActivationState.TrialEnded:
+                    case ActivationState.NonActivated:
+                        RunInternalActivate();
+                        break;
 
-                case ActivationState.Trial:
-                case ActivationState.Activated:
+                    case ActivationState.Trial:
+                    case ActivationState.Activated:
 
-                    break;
+                        break;
+                }
+                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => TurboLimeActivate.Instance.IncreaseTimeUsedFlag()));
             }
-            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => TurboLimeActivate.Instance.IncreaseTimeUsedFlag()));
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogInfo(ex.Message);
+            }
         }
 
         private void RunInternalActivate()
@@ -244,21 +273,28 @@ namespace WSUI.Module.ViewModel
 
         private void GetAllKinds()
         {
-            IEnumerable<Type> types = this.GetType().Assembly.GetTypes().Where(t => !t.IsAbstract && t.IsClass && t.GetInterface(Interface, true) != null);
-            foreach (Type type in types)
+            try
             {
-                var kind = new LazyKind(_container, type, this, null, OnPropertyChanged);
-                kind.Initialize();
-                _listItems.Add(kind);
+                IEnumerable<Type> types = this.GetType().Assembly.GetTypes().Where(t => !t.IsAbstract && t.IsClass && t.GetInterface(Interface, true) != null);
+                foreach (Type type in types)
+                {
+                    var kind = new LazyKind(_container, type, this, null, OnPropertyChanged);
+                    kind.Initialize();
+                    _listItems.Add(kind);
+                }
+                _listItems.Sort((x, y) =>
+                {
+                    if (x.ID < y.ID)
+                        return -1;
+                    if (x.ID > y.ID)
+                        return 1;
+                    return 0;
+                });
             }
-            _listItems.Sort((x, y) =>
+            catch (Exception ex)
             {
-                if (x.ID < y.ID)
-                    return -1;
-                if (x.ID > y.ID)
-                    return 1;
-                return 0;
-            });
+                WSSqlLogger.Instance.LogInfo(ex.Message);
+            }
         }
 
         
@@ -319,7 +355,7 @@ namespace WSUI.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "ShowPreview", ex.Message));
+                WSSqlLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -349,7 +385,7 @@ namespace WSUI.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "ShowPreviewForCurrentItem", ex.Message));
+                WSSqlLogger.Instance.LogInfo(ex.Message);
             }
             finally
             {
@@ -372,7 +408,7 @@ namespace WSUI.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "ShowPreviewForPreviewObject", ex.Message));
+                WSSqlLogger.Instance.LogInfo(ex.Message);
             }
             finally
             {
@@ -384,17 +420,25 @@ namespace WSUI.Module.ViewModel
 
         private void OnStart(object sender, EventArgs e)
         {
-            EventHandler temp = Start;
-            if (temp != null)
-                temp(this, null);
-            Enabled = _currentItem.Enabled;
-            IsBusy = true;
-            if (_navigationService.IsNotNull())
+            try
             {
-                ResetNavigation();
+                EventHandler temp = Start;
+                if (temp != null)
+                    temp(this, null);
+                Enabled = _currentItem.Enabled;
+                IsBusy = true;
+                if (_navigationService.IsNotNull())
+                {
+                    ResetNavigation();
+                }
+                OnPropertyChanged(() => BackButtonVisibility);
+                OnPropertyChanged(() => IsKindsVisible);
+
             }
-            OnPropertyChanged(() => BackButtonVisibility);
-            OnPropertyChanged(() => IsKindsVisible);
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogInfo(ex.Message);
+            }
         }
 
         private void ResetNavigation()
@@ -420,40 +464,54 @@ namespace WSUI.Module.ViewModel
             var sendItem = sender as IKindItem;
             if (sendItem == null)
                 return;
-            Disconnect();
-            string searchString = string.Empty;
-            if (_currentItem != null && !(_currentItem is IAdvancedSearchViewModel))
-                searchString = _currentItem.SearchString;
-            _currentItem = sendItem;
-            Connect();
-            if (BackCommand.CanExecute(null))
-                BackCommand.Execute(null);
-            CurrentKindChanged(_currentItem);
-            if (!string.IsNullOrEmpty(searchString) && searchString != _currentItem.SearchString)
+            try
             {
-                _currentItem.SearchString = searchString;
-                _currentItem.FilterData();
+                Disconnect();
+                string searchString = string.Empty;
+                if (_currentItem != null && !(_currentItem is IAdvancedSearchViewModel))
+                    searchString = _currentItem.SearchString;
+                _currentItem = sendItem;
+                Connect();
+                if (BackCommand.CanExecute(null))
+                    BackCommand.Execute(null);
+                CurrentKindChanged(_currentItem);
+                if (!string.IsNullOrEmpty(searchString) && searchString != _currentItem.SearchString)
+                {
+                    _currentItem.SearchString = searchString;
+                    _currentItem.FilterData();
+                }
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogInfo(ex.Message);
             }
         }
 
         private void CurrentKindChanged(object kindItem)
         {
-            if (_navigationService != null)
+            try
             {
-                if (_navigationService.IsContactDetailsVisible)
+                if (_navigationService != null)
                 {
-                    ResetContactDetails();
+                    if (_navigationService.IsContactDetailsVisible)
+                    {
+                        ResetContactDetails();
+                    }
+                    _navigationService.ShowSelectedKind(kindItem);
                 }
-                _navigationService.ShowSelectedKind(kindItem);
-            }
 
-            if (_navigationService.IsPreviewVisible)
-            {
-                _navigationService.PreviewView.ClearPreview();
+                if (_navigationService.IsPreviewVisible)
+                {
+                    _navigationService.PreviewView.ClearPreview();
+                }
+                OnPropertyChanged(() => Commands);
+                OnPropertyChanged(() => BackButtonVisibility);
+                OnPropertyChanged(() => IsKindsVisible);
             }
-            OnPropertyChanged(() => Commands);
-            OnPropertyChanged(() => BackButtonVisibility);
-            OnPropertyChanged(() => IsKindsVisible);
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogInfo(ex.Message);
+            }
         }
 
         private void InternalBuy()
@@ -470,20 +528,34 @@ namespace WSUI.Module.ViewModel
 
         private void InternalTryAgain()
         {
-            TurboLimeActivate.Instance.TryCheckAgain();
-            UpdatedActivatedStatus();
+            try
+            {
+                TurboLimeActivate.Instance.TryCheckAgain();
+                UpdatedActivatedStatus();
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogInfo(ex.Message);
+            }
         }
 
         private void InternalDeactivate()
         {
-            if (TurboLimeActivate.Instance.Deactivate(true))
+            try
             {
-                UpdatedActivatedStatus();
+                if (TurboLimeActivate.Instance.Deactivate(true))
+                {
+                    UpdatedActivatedStatus();
+                }
+                else
+                {
+                    MessageBoxService.Instance.Show("Warning", "Something wrong during Deactivate", MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBoxService.Instance.Show("Warning", "Something wrong during Deactivate", MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                WSSqlLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -578,25 +650,39 @@ namespace WSUI.Module.ViewModel
 
         private void RunSearchFromExternal(IWSAction action)
         {
-            var searchCriteria = action.Data as string;
-            if (string.IsNullOrEmpty(searchCriteria))
-                return;
-            _currentItem.SearchString = searchCriteria;
-            _currentItem.SearchCommand.Execute(null);
+            try
+            {
+                var searchCriteria = action.Data as string;
+                if (string.IsNullOrEmpty(searchCriteria))
+                    return;
+                _currentItem.SetSearchString(searchCriteria);
+                _currentItem.SearchCommand.Execute(null);
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogInfo(ex.Message);
+            }
         }
 
         private void ShowSenderOfSelectedOutlookEmail(IWSAction action)
         {
-            if (_navigationService != null && _navigationService.IsContactDetailsVisible &&
-                !_navigationService.ContactDetailsViewModel.IsSameData(action.Data as ISearchObject))
+            try
             {
-                _navigationService.MoveToFirstDataView(false);
-                ShowContactPreview(action.Data,false);
+                if (_navigationService != null && _navigationService.IsContactDetailsVisible &&
+                        !_navigationService.ContactDetailsViewModel.IsSameData(action.Data as ISearchObject))
+                {
+                    _navigationService.MoveToFirstDataView(false);
+                    ShowContactPreview(action.Data, false);
+                }
+                else if (!_navigationService.IsContactDetailsVisible)
+                {
+                    _navigationService.MoveToFirstDataView(false);
+                    ShowContactPreview(action.Data, false);
+                }
             }
-            else if(!_navigationService.IsContactDetailsVisible)
+            catch (Exception ex)
             {
-                _navigationService.MoveToFirstDataView(false);
-                ShowContactPreview(action.Data,false);
+                WSSqlLogger.Instance.LogInfo(ex.Message);
             }
         }
 

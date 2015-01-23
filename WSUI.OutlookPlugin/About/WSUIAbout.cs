@@ -58,7 +58,7 @@ namespace WSUIOutlookPlugin.About
             }
             var strBuilder = new StringBuilder();
             var version = currentAssembly.GetName().Version;
-            WSSqlLogger.Instance.LogInfo("Vesrion: {0}",version);
+            WSSqlLogger.Instance.LogInfo("Version: {0}",version);
             if(version != null)
                 strBuilder.AppendLine(string.Format(VersionTemplate, version.Major,version.Minor,version.Build,version.Revision));
             if (description != null && description.Length > 0)

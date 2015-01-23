@@ -483,10 +483,21 @@ namespace WSUI.Module.Core
             return GetInternalSearchPattern();
         }
 
+        public void SetSearchString(string searchCriteria)
+        {
+            SetInternalSearchCriteria(searchCriteria);    
+        }
+
         protected virtual string GetInternalSearchPattern()
         {
             return SearchString;
         }
+
+        protected virtual void SetInternalSearchCriteria(string searchCriteria)
+        {
+            SearchString = searchCriteria;
+        }
+
 
     }
 }

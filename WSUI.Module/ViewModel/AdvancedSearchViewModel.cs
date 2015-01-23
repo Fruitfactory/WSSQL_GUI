@@ -1,4 +1,6 @@
-﻿using Microsoft.Practices.Prism.Commands;
+﻿using System.Reflection;
+using System.Windows.Forms.VisualStyles;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using System;
@@ -14,6 +16,7 @@ using WSUI.Core.Core.AdvancedSearchCriteria;
 using WSUI.Core.Core.Attributes;
 using WSUI.Core.Enums;
 using WSUI.Core.Extensions;
+using WSUI.Core.Logger;
 using WSUI.Infrastructure.Implements.Systems;
 using WSUI.Infrastructure.Service;
 using WSUI.Module.Core;
@@ -159,6 +162,24 @@ namespace WSUI.Module.ViewModel
             if(Parent.IsNull())
                 return;
             Parent.SelectKind(KindsConstName.Everything);
+        }
+
+        protected override void SetInternalSearchCriteria(string searchCriteria)
+        {
+            var bodySearchCriteria =
+                CriteriaSource.FirstOrDefault(c => c.CriteriaType == AdvancedSearchCriteriaType.Body);
+            if (bodySearchCriteria.IsNull())
+            {
+                return;
+            }
+            try
+            {
+                bodySearchCriteria.Value = searchCriteria;
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogInfo(ex.Message);
+            }
         }
     }
 }

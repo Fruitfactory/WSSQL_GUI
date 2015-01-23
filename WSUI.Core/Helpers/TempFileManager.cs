@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Logger;
@@ -116,7 +117,7 @@ namespace WSUI.Core.Helpers
                     }
                     catch (Exception ex)
                     {
-                        WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "ClearTempFolder", ex.Message));
+                        WSSqlLogger.Instance.LogInfo(ex.Message);
                     }
                 }
             }
