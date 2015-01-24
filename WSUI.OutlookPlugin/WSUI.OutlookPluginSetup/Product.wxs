@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.6" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.7" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFacory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />-->
     <Upgrade Id="6169fa5d-89fa-44d3-9801-cefe8fc8755e">
@@ -38,6 +38,7 @@
     <CustomAction Id="UnregisterDll" BinaryKey="adxregistrator_exe" Execute="deferred" ExeCommand="/uninstall=&quot;[INSTALLFOLDER]$(var.WSUI.OutlookPlugin.TargetFileName)&quot; /privileges=user" Impersonate="yes" Return="ignore" />
     <CustomAction Id="Deactivate" BinaryKey="managedAction" DllEntry="Deactivate" Execute="immediate" Return="check" />
     <CustomAction Id="DeleteFiles" BinaryKey="managedAction" DllEntry="ClearFiles" Execute="immediate" Return="check" />
+    <CustomAction Id="ResetRegistry" BinaryKey="managedAction" DllEntry="ResetRegistry" Execute="immediate" Return="check" />
     <!--<CustomAction Id="CloseOutlook" BinaryKey="managedAction" DllEntry="CloseOutlook" Execute="immediate" Return="check" />-->
     <!--<CustomAction Id="OpenOutlook" BinaryKey="managedAction" DllEntry="OpenOutlook" Execute="immediate" Return="check" />-->
     <CustomAction Id="SuccesMessage" BinaryKey="managedAction" DllEntry="SuccesMessage" Execute="immediate" Return="check" />
@@ -51,6 +52,7 @@
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallValidate" />
       <Custom Action="RegisterDll" After="SelfRegModules">NOT Installed</Custom>
+      <Custom Action="ResetRegistry" After="RegisterDll">NOT Installed</Custom>
       <Custom Action="UnregisterDll" After="SelfUnregModules">Installed</Custom>
       <Custom Action="Deactivate" After="UnregisterDll">Installed</Custom>
       <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>

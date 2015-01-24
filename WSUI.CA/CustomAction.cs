@@ -843,5 +843,27 @@ namespace WSUI.CA
         }
 
         #endregion [cancel message]
+
+
+        #region [clear registry (loading times, disabling etc)]
+
+        [CustomAction]
+        public static ActionResult ResetRegistry(Session session)
+        {
+            try
+            {
+                var officeVersion = RegistryHelper.Instance.GetOutlookVersion();
+                RegistryHelper.Instance.DeleteLoadingTime(officeVersion.Item1);
+                RegistryHelper.Instance.DeleteAddIn(officeVersion.Item1);
+                RegistryHelper.Instance.DeleteDisabling(officeVersion.Item1);
+            }
+            catch (Exception)
+            {
+            }
+            return ActionResult.Success;
+        }
+
+        #endregion
+
     }
 }

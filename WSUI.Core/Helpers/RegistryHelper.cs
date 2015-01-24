@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using Microsoft.Win32;
 
 namespace WSUI.Core.Helpers
@@ -29,11 +30,17 @@ namespace WSUI.Core.Helpers
 
         private const string AddInOutlookSubKey = @"Software\Microsoft\Office\Outlook\Addins\WSUIOutlookPlugin.AddinModule";
         private const string RequireShutdownNotificationKey = "RequireShutdownNotification";
-
+        private const string LoadBehaviorKey = "LoadBehavior"; // value => 3
+        private const int LoadBehaviorDefaultValue = 3;
+        private const string ADXStartModeKey = "ADXStartMode"; // value => NORMAL
+        private const string ADXStartModeDefaultValue = "NORMAL"; // value => NORMAL
 
         private RegistryKey _baseRegistry = Registry.CurrentUser;
 
         private const string DefaultNamespace = "MAPI";
+
+        public const string ProgIdKey = "WSUIOutlookPlugin.AddinModule";
+
 
         #endregion [needs]
 
@@ -75,6 +82,145 @@ namespace WSUI.Core.Helpers
             {
                 return;
             }
+        }
+
+        public void ResetLoadingAddinMode()
+        {
+            try
+            {
+                Write(LoadBehaviorKey,LoadBehaviorDefaultValue,false);
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
+
+        public void ResetAdxStartMode()
+        {
+            try
+            {
+                Write(ADXStartModeKey,ADXStartModeDefaultValue, false);
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
+
+        public void DeleteLoadingTime(string officeVersion)
+        {
+            const string AddInLoadTimesKey = "Software\\Microsoft\\Office\\{0}\\Outlook\\AddInLoadTimes";
+            const string ModuleKey = "WSUIOutlookPlugin.AddinModule";
+
+            var CurrentOulookVersion = string.Format(AddInLoadTimesKey, officeVersion);
+            try
+            {
+                var key = Registry.CurrentUser.OpenSubKey(CurrentOulookVersion, true);
+                if (key == null)
+                    return;
+                key.DeleteValue(ModuleKey);
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        public void DeleteAddIn(string officeVersion)
+        {
+            const string AddInLoadTimesKey = "Software\\Microsoft\\Office\\{0}\\Outlook\\AddIns\\WSUIOutlookPlugin.AddinModule";
+            var CurrentOulookVersion = string.Format(AddInLoadTimesKey, officeVersion);
+
+            try
+            {
+                var key = Registry.CurrentUser.OpenSubKey(CurrentOulookVersion, true);
+                if (key == null)
+                    return;
+
+                foreach (var valueName in key.GetValueNames())
+                {
+                    key.DeleteValue(valueName);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        public void DeleteDisabling(string officeVersion)
+        {
+            const string DisableKey = "Software\\Microsoft\\Office\\{0}\\Outlook\\Resiliency\\DisabledItems";
+            var CurrentOulookVersion = string.Format(DisableKey, officeVersion);
+            RegistryKey registry = null;
+            try
+            {
+                registry = Registry.CurrentUser.OpenSubKey(CurrentOulookVersion, true);
+                if (registry != null)
+                {
+
+                    foreach (var item in registry.GetValueNames())
+                    {
+                        var val =
+                            (byte[])registry.GetValue(item, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
+
+                        var temp = System.Text.Encoding.Unicode.GetString(val);
+                        if (temp.Length > 0 && temp.IndexOf(ProgIdKey) > -1)
+                        {
+                            registry.DeleteValue(item);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                if (registry != null)
+                {
+                    registry.Close();
+                }
+            }
+        }
+
+
+
+        public Tuple<string, int> GetOutlookVersion()
+        {
+            try
+            {
+                RegistryKey reg = Registry.ClassesRoot.OpenSubKey("Outlook.Application");
+                if (reg == null)
+                {
+                    return new Tuple<string, int>(string.Empty,-1);
+                }
+                var curVer = reg.OpenSubKey("CurVer");
+
+                if (curVer == null)
+                {
+                    return new Tuple<string, int>(string.Empty, -1);
+                }
+
+                var val = curVer.GetValue(null) as string;
+
+                if (string.IsNullOrEmpty(val))
+                {
+                    return new Tuple<string, int>(string.Empty, -1);
+                }
+                var arr = val.Split('.');
+                if (arr == null || arr.Length == 0)
+                {
+                    return new Tuple<string, int>(string.Empty, -1);
+                }
+
+                int version = 0;
+                int.TryParse(arr[arr.Length - 1], out version);
+                return new Tuple<string, int>(string.Format("{0:0.0}",version),version);
+            }
+            catch (Exception)
+            {   
+            }
+            return new Tuple<string, int>(string.Empty, -1);
         }
 
         public bool IsSilendUpdate()

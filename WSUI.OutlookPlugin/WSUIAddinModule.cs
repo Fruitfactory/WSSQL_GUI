@@ -39,7 +39,7 @@ namespace WSUIOutlookPlugin
     /// <summary>
     ///   Add-in Express Add-in Module
     /// </summary>
-    [GuidAttribute("E854FABB-353C-4B9A-8D18-F66E61F6FCA5"), ProgId("WSUIOutlookPlugin.AddinModule")]
+    [GuidAttribute("E854FABB-353C-4B9A-8D18-F66E61F6FCA5"), ProgId(ProgIdDefault)]
     public class WSUIAddinModule : AddinExpress.MSO.ADXAddinModule
     {
         private int _outlookVersion = 0;
@@ -58,6 +58,8 @@ namespace WSUIOutlookPlugin
         private Stopwatch _watch;
 
         #region [const]
+
+        public const string ProgIdDefault = RegistryHelper.ProgIdKey;
 
         private const string ADXHTMLFileName = "ADXOlFormGeneral.html";
         private const int WM_USER = 0x0400;
@@ -115,19 +117,10 @@ namespace WSUIOutlookPlugin
             Init();
             this.OnSendMessage += WSUIAddinModule_OnSendMessage;
             this.AddinInitialize += OnAddinInitialize;
-            //this.AddinFinalize += OnAddinFinalize;
-            //this.AddinBeginShutdown += OnAddinBeginShutdown;
+            this.AddinFinalize += OnAddinFinalize;
             
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
-            
-            
-        }
-
-        private void OnAddinBeginShutdown(object sender, EventArgs eventArgs)
-        {
-            WSSqlLogger.Instance.LogError("****");
-            Thread.Sleep(1000);
         }
 
         private void OnAddinFinalize(object sender, EventArgs eventArgs)
@@ -999,7 +992,6 @@ namespace WSUIOutlookPlugin
                         _outlookVersion = 2013;
                         _officeVersion = "15.0";
                     }
-                    ResetLoadingTime();
                     WSSqlLogger.Instance.LogInfo("Outlook Version: {0}, {1}, {2}", hostVersion, _outlookVersion, _officeVersion);
                 }
             }
@@ -1012,6 +1004,11 @@ namespace WSUIOutlookPlugin
         private void OutlookFinderEvents_Quit(object sender, EventArgs e)
         {
             StartWatch();
+            RegistryHelper.Instance.ResetLoadingAddinMode();
+            RegistryHelper.Instance.ResetAdxStartMode();
+            ResetLoadingTime();
+            ResetAddIn();
+            ResetDisabling();
             _wsuiBootStraper.PassAction(new WSAction(WSActionType.Quit, null));
             SetOutlookFolderProperties(string.Empty, string.Empty);
             WSSqlLogger.Instance.LogInfo("Shutdown...");
@@ -1266,6 +1263,70 @@ namespace WSUIOutlookPlugin
             catch (Exception ex)
             {
                 WSSqlLogger.Instance.LogError(ex.Message);
+            }
+        }
+
+        private void ResetAddIn()
+        {
+            const string AddInLoadTimesKey = "Software\\Microsoft\\Office\\{0}\\Outlook\\AddIns\\WSUIOutlookPlugin.AddinModule";
+            var CurrentOulookVersion = string.Format(AddInLoadTimesKey, _officeVersion);
+
+            try
+            {
+                var key = Registry.CurrentUser.OpenSubKey(CurrentOulookVersion, true);
+                if (key.IsNull())
+                    return;
+
+                foreach (var valueName in key.GetValueNames())
+                {
+                    var value = (byte[])key.GetValue(valueName, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
+                    if (value.IsNull())
+                        return;
+                    var buffer = new byte[value.Length];
+                    key.SetValue(valueName, buffer, RegistryValueKind.Binary);    
+                }
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+        }
+
+        private void ResetDisabling()
+        {
+            const string DisableKey = "Software\\Microsoft\\Office\\{0}\\Outlook\\Resiliency\\DisabledItems";
+            var CurrentOulookVersion = string.Format(DisableKey, _officeVersion);
+            RegistryKey registry = null;
+            try
+            {
+                registry = Registry.CurrentUser.OpenSubKey(CurrentOulookVersion, true);
+                if (registry != null)
+                {
+
+                    foreach (var item in registry.GetValueNames())
+                    {
+                        var val =
+                            (byte[]) registry.GetValue(item, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
+
+                        var temp = System.Text.Encoding.Unicode.GetString(val);
+                        if (temp.Length > 0 && temp.IndexOf(ProgIdDefault) > -1)
+                        {
+                            registry.DeleteValue(item);
+                        }
+                        WSSqlLogger.Instance.LogInfo("Disabled Add-ins: {0}; {1}",item,temp);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+            finally
+            {
+                if (registry.IsNotNull())
+                {
+                    registry.Close();
+                }
             }
         }
 
