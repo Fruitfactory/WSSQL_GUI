@@ -871,7 +871,7 @@ namespace WSUI.Module.ViewModel
             {
                 var contacDetailsModel = _navigationService.ContactDetailsViewModel;
                 ContactUIItems = new ObservableCollection<UIItem>(contacDetailsModel.ContactUIItemCollection);
-                SelectedUIItemIndex = 0;
+                //SelectedUIItemIndex = 0; // TODO: cause the reseting contact details to first tab.
                 OnPropertyChanged(() => ContactUIItems);
                 OnPropertyChanged(() => SelectedUIItemIndex);
             }
