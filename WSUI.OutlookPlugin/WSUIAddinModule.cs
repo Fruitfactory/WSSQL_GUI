@@ -32,6 +32,7 @@ using WSUIOutlookPlugin.Managers;
 using Application = System.Windows.Forms.Application;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
+using WSUI.Core;
 
 
 namespace WSUIOutlookPlugin
@@ -117,18 +118,10 @@ namespace WSUIOutlookPlugin
             Init();
             this.OnSendMessage += WSUIAddinModule_OnSendMessage;
             this.AddinInitialize += OnAddinInitialize;
-            this.AddinFinalize += OnAddinFinalize;
             
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
         }
-
-        private void OnAddinFinalize(object sender, EventArgs eventArgs)
-        {
-            WSSqlLogger.Instance.LogError("****");
-            Thread.Sleep(1000);
-        }
-
 
         private void OnAddinInitialize(object sender, EventArgs eventArgs)
         {
@@ -336,14 +329,14 @@ namespace WSUIOutlookPlugin
             // 
             // adxMainPluginCommandBar
             // 
-            this.adxMainPluginCommandBar.CommandBarName = "WSUIPluginCommandBar";
+            this.adxMainPluginCommandBar.CommandBarName = "adxMainPluginCommandBar";
             this.adxMainPluginCommandBar.CommandBarTag = "674128a0-9ce1-485c-b1a5-f5ff6897bfc8";
             this.adxMainPluginCommandBar.Controls.Add(this.buttonShow2007);
             this.adxMainPluginCommandBar.Controls.Add(this.buttonHide2007);
             this.adxMainPluginCommandBar.Controls.Add(this.adxCommandBarEditSearchText);
             this.adxMainPluginCommandBar.Controls.Add(this.adxCommandBarButtonSearch);
             this.adxMainPluginCommandBar.Temporary = true;
-            this.adxMainPluginCommandBar.UpdateCounter = 18;
+            this.adxMainPluginCommandBar.UpdateCounter = 21;
             // 
             // buttonShow2007
             // 
@@ -966,31 +959,37 @@ namespace WSUIOutlookPlugin
                     {
                         _outlookVersion = 2000;
                         _officeVersion = "9.0";
+                        GlobalConst.CurrentOutlookVersion = OutlookVersions.None;
                     }
                     if (hostVersion.StartsWith("10.0"))
                     {
                         _outlookVersion = 2002;
                         _officeVersion = "10.0";
+                        GlobalConst.CurrentOutlookVersion = OutlookVersions.None;
                     }
                     if (hostVersion.StartsWith("11.0"))
                     {
                         _outlookVersion = 2003;
                         _officeVersion = "11.0";
+                        GlobalConst.CurrentOutlookVersion = OutlookVersions.None;
                     }
                     if (hostVersion.StartsWith("12.0"))
                     {
                         _outlookVersion = 2007;
                         _officeVersion = "12.0";
+                        GlobalConst.CurrentOutlookVersion = OutlookVersions.Outlook2007;
                     }
                     if (hostVersion.StartsWith("14.0"))
                     {
                         _outlookVersion = 2010;
                         _officeVersion = "14.0";
+                        GlobalConst.CurrentOutlookVersion = OutlookVersions.Outlook2010;
                     }
                     if (hostVersion.StartsWith("15.0"))
                     {
                         _outlookVersion = 2013;
                         _officeVersion = "15.0";
+                        GlobalConst.CurrentOutlookVersion = OutlookVersions.Otlook2013;
                     }
                     WSSqlLogger.Instance.LogInfo("Outlook Version: {0}, {1}, {2}", hostVersion, _outlookVersion, _officeVersion);
                 }
@@ -1004,6 +1003,9 @@ namespace WSUIOutlookPlugin
         private void OutlookFinderEvents_Quit(object sender, EventArgs e)
         {
             StartWatch();
+
+            FinalizeComponents();
+
             RegistryHelper.Instance.ResetLoadingAddinMode();
             RegistryHelper.Instance.ResetAdxStartMode();
             ResetLoadingTime();
@@ -1012,7 +1014,17 @@ namespace WSUIOutlookPlugin
             _wsuiBootStraper.PassAction(new WSAction(WSActionType.Quit, null));
             SetOutlookFolderProperties(string.Empty, string.Empty);
             WSSqlLogger.Instance.LogInfo("Shutdown...");
+
             StopWatch("OutlookFinderEvents_Quit");
+        }
+
+        private void FinalizeComponents()
+        {
+            if (adxMainPluginCommandBar.IsNotNull())
+            {
+                adxMainPluginCommandBar.Dispose();
+                adxCommandBarButtonSearch = null;
+            }
         }
 
         private void SetOutlookFolderProperties(string folderName, string folderWebUrl)
@@ -1174,73 +1186,73 @@ namespace WSUIOutlookPlugin
         {
             return;
 
-            var exp = explorer as Outlook._Explorer;
-            if (exp == null || exp.Selection.Count == 0)
-                return;
+            //var exp = explorer as Outlook._Explorer;
+            //if (exp == null || exp.Selection.Count == 0)
+            //    return;
 
-            string email = string.Empty;
-            string[] names = default(string[]);
-            dynamic item = null;
-            if (exp.Selection[1] is Outlook.MailItem)
-            {
-                var itemMail = exp.Selection[1] as Outlook.MailItem;
-                var senderContact = itemMail.Sender as Outlook.AddressEntry;
-                names = senderContact.Name.Split(' ');
-                email = senderContact.GetEmailAddress();
-                item = itemMail;
-            }
-            else if (exp.Selection[1] is Outlook.AppointmentItem)
-            {
-                var itemAppointment = exp.Selection[1] as Outlook.AppointmentItem;
-                var organizer = itemAppointment.GetOrganizer() as Outlook.AddressEntry;
-                names = organizer.Name.Split(' ');
-                email = organizer.GetEmailAddress();
-                item = itemAppointment;
-            }
-            else if (exp.Selection[1] is Outlook.MeetingItem)
-            {
-                var itemMeeting = exp.Selection[1] as Outlook.MeetingItem;
-                names = itemMeeting.SenderName.Split(' ');
-                if (itemMeeting.SenderEmailAddress.IsEmail())
-                {
-                    email = itemMeeting.SenderEmailAddress;
-                }
-                else if (names.Length > 1)
-                {
-                    var contact = OutlookHelper.Instance.GetContact(names[0], names[1]);
-                    if (contact.Any())
-                    {
-                        var ct = contact.FirstOrDefault(c => !string.IsNullOrEmpty(c.Email1Address));
-                        if (ct.IsNotNull() && ct.Email1Address.IsEmail())
-                        {
-                            email = ct.Email1Address;
-                        }
-                    }
-                }
-                item = itemMeeting;
-            }
-            if (item == null)
-            {
-                return;
-            }
-            var referenceItem = item.EntryID;
-            if (_previewReferenceSelected != null && _previewReferenceSelected == referenceItem)
-                return;
-            _previewReferenceSelected = referenceItem;
+            //string email = string.Empty;
+            //string[] names = default(string[]);
+            //dynamic item = null;
+            //if (exp.Selection[1] is Outlook.MailItem)
+            //{
+            //    var itemMail = exp.Selection[1] as Outlook.MailItem;
+            //    var senderContact = itemMail.Sender as Outlook.AddressEntry;
+            //    names = senderContact.Name.Split(' ');
+            //    email = senderContact.GetEmailAddress();
+            //    item = itemMail;
+            //}
+            //else if (exp.Selection[1] is Outlook.AppointmentItem)
+            //{
+            //    var itemAppointment = exp.Selection[1] as Outlook.AppointmentItem;
+            //    var organizer = itemAppointment.GetOrganizer() as Outlook.AddressEntry;
+            //    names = organizer.Name.Split(' ');
+            //    email = organizer.GetEmailAddress();
+            //    item = itemAppointment;
+            //}
+            //else if (exp.Selection[1] is Outlook.MeetingItem)
+            //{
+            //    var itemMeeting = exp.Selection[1] as Outlook.MeetingItem;
+            //    names = itemMeeting.SenderName.Split(' ');
+            //    if (itemMeeting.SenderEmailAddress.IsEmail())
+            //    {
+            //        email = itemMeeting.SenderEmailAddress;
+            //    }
+            //    else if (names.Length > 1)
+            //    {
+            //        var contact = OutlookHelper.Instance.GetContact(names[0], names[1]);
+            //        if (contact.Any())
+            //        {
+            //            var ct = contact.FirstOrDefault(c => !string.IsNullOrEmpty(c.Email1Address));
+            //            if (ct.IsNotNull() && ct.Email1Address.IsEmail())
+            //            {
+            //                email = ct.Email1Address;
+            //            }
+            //        }
+            //    }
+            //    item = itemMeeting;
+            //}
+            //if (item == null)
+            //{
+            //    return;
+            //}
+            //var referenceItem = item.EntryID;
+            //if (_previewReferenceSelected != null && _previewReferenceSelected == referenceItem)
+            //    return;
+            //_previewReferenceSelected = referenceItem;
 
-            if (_wsuiBootStraper == null)
-                return;
+            //if (_wsuiBootStraper == null)
+            //    return;
 
-            if(names.Length > 1)
-            {
-                var tag = new ContactSearchObject() { FirstName = names[0], LastName = names[1], EmailAddress = email };
-                _wsuiBootStraper.PassAction(new WSAction(WSActionType.ShowContact, tag));
-            }
-            else if (names.Length > 0)
-            {
-                var tag = new EmailContactSearchObject() { ContactName = names[0], EMail = email };
-                _wsuiBootStraper.PassAction(new WSAction(WSActionType.ShowContact, tag));
-            }
+            //if(names.Length > 1)
+            //{
+            //    var tag = new ContactSearchObject() { FirstName = names[0], LastName = names[1], EmailAddress = email };
+            //    _wsuiBootStraper.PassAction(new WSAction(WSActionType.ShowContact, tag));
+            //}
+            //else if (names.Length > 0)
+            //{
+            //    var tag = new EmailContactSearchObject() { ContactName = names[0], EMail = email };
+            //    _wsuiBootStraper.PassAction(new WSAction(WSActionType.ShowContact, tag));
+            //}
         }
 
         private void ResetLoadingTime()

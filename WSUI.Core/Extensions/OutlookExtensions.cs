@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using WSUI.Core.Enums;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using WSUI.Core.Logger;
 
@@ -17,8 +18,19 @@ namespace WSUI.Core.Extensions
             }
             if (mail.SenderEmailType == "EX")
             {
-                Outlook.AddressEntry sender = mail.Sender;
-                return GetEmailAddress(sender);
+                var email = string.Empty;
+                switch (GlobalConst.CurrentOutlookVersion)
+                {
+                    case OutlookVersions.Outlook2007:
+                        email = mail.SenderEmailAddress;
+                        break;
+                    case OutlookVersions.Outlook2010:
+                    case OutlookVersions.Otlook2013:
+                        Outlook.AddressEntry sender = mail.GetType().InvokeMember("Sender", BindingFlags.GetProperty, null, mail, null) as Outlook.AddressEntry;
+                        email = GetEmailAddress(sender);
+                        break;
+                }
+                return email;
             }
             else
             {

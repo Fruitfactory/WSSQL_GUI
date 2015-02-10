@@ -22,4 +22,12 @@ namespace WSUI.Core.Enums
         NewestToOldest,
         OldestToNewest
     }
+
+    public enum OutlookVersions
+    {
+        None = 0,
+        Outlook2007 = 12,
+        Outlook2010 = 14,
+        Otlook2013 = 15
+    }
 }
