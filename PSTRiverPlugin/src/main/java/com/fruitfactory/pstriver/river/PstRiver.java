@@ -8,6 +8,7 @@ package com.fruitfactory.pstriver.river;
 
 import com.fruitfactory.pstriver.helpers.AttachmentHelper;
 import com.fruitfactory.pstriver.helpers.Pair;
+import com.fruitfactory.pstriver.utils.PstFeedDefinition;
 import com.fruitfactory.pstriver.utils.PstGlobalConst;
 import com.fruitfactory.pstriver.utils.PstMetadataTags;
 import com.fruitfactory.pstriver.utils.PstSignTool;
@@ -20,6 +21,9 @@ import com.pff.PSTMessage;
 import com.pff.PSTRecipient;
 import example.TestGui;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +53,7 @@ import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.util.concurrent.EsExecutors;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
+import org.elasticsearch.common.xcontent.support.XContentMapValues;
 import org.elasticsearch.indices.IndexAlreadyExistsException;
 import org.elasticsearch.river.AbstractRiverComponent;
 import org.elasticsearch.river.River;
@@ -76,6 +81,7 @@ public class PstRiver extends AbstractRiverComponent implements River{
     
     private volatile Thread _pstParseThread;
     private volatile boolean _closed = false;
+    private PstFeedDefinition _definition;
     
     @Inject
     public PstRiver(RiverName riverName, RiverSettings settings, Client client) {
@@ -83,8 +89,18 @@ public class PstRiver extends AbstractRiverComponent implements River{
         this._client = client;
         this._indexName = riverName.name();
         this._typeName = PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE;
+        
+        if(settings.settings().containsKey(PstGlobalConst.PST_PREFIX)){
+            Map<String,Object> feed = (Map<String,Object>)settings.settings().get(PstGlobalConst.PST_PREFIX);
+            TimeValue updateRate = XContentMapValues.nodeTimeValue(feed.get(PstFeedDefinition.UPDATE_RATE), TimeValue.timeValueMinutes(60));
+            
+            String[] pstList = PstFeedDefinition.getListOfPst(settings.settings(), PstFeedDefinition.PST_LIST_PATH);
+            _definition = new PstFeedDefinition(riverName.getName(), pstList, updateRate);
+        }else{
+            _definition = new PstFeedDefinition(riverName.getName(), null, TimeValue.timeValueMinutes(60));
+        }
         logger.warn(LOG_TAG + "River was created...");
-    }
+   }
     
     @Override
     public void start() {
@@ -150,7 +166,7 @@ public class PstRiver extends AbstractRiverComponent implements River{
                 .build();
         
         _pstParseThread = EsExecutors.daemonThreadFactory(settings.globalSettings(), "pst_slurper")
-                .newThread(new PstParser());
+                .newThread(new PstParser(_definition));
         _pstParseThread.start();
         logger.warn(LOG_TAG + "PstRiver was started...");
     }
@@ -216,11 +232,13 @@ public class PstRiver extends AbstractRiverComponent implements River{
     }
     
     class PstParser implements Runnable {
-        private static final String FILE_NAME = "c:\\Users\\Yariki\\AppData\\Local\\Microsoft\\Outlook\\iyariki.ya@gmail.com.ost";
+        private static final String FILE_NAME = "c:\\Users\\Yariki\\AppData\\Local\\Microsoft\\Outlook\\iyariki.ost";
         private Date _lastUpdatedDate;
+        private PstFeedDefinition _def;
+                 
         
-        public PstParser() {
-            
+        public PstParser(PstFeedDefinition def) {
+            _def = def;
         }
         
         @Override
@@ -233,14 +251,26 @@ public class PstRiver extends AbstractRiverComponent implements River{
                 Date scanDateNew = new Date();
                 _lastUpdatedDate = getLastDateFromRiver();
                 
-                PSTFile pstFile = new PSTFile(FILE_NAME);
-                processFolder(pstFile.getRootFolder());
+                String[] psts = _def.getDataArray();
                 
+                for(String file : psts){
+                    if(!Files.exists(Paths.get(file), LinkOption.NOFOLLOW_LINKS)){
+                        continue;
+                    }
+                    PSTFile pstFile = new PSTFile(file);
+                    processFolder(pstFile.getRootFolder());    
+                }
                 updateFsRiver(scanDateNew);
                 
             } catch (Exception e) {
-                logger.error(LOG_TAG, e.getMessage());
+                logger.error(LOG_TAG + e.getMessage());
             }
+            try{
+               Thread.sleep(_def.getUpdateRate().getMillis());
+            }catch(Exception ex){
+                logger.error(LOG_TAG + ex.getMessage());
+            }
+            
         }
         
         public void processFolder(PSTFolder pstFolder){
@@ -297,7 +327,8 @@ public class PstRiver extends AbstractRiverComponent implements River{
                             for(int i = 0; i < count; i++){
                                 PSTRecipient recipient = message.getRecipient(i);
                                 Pair<String,String> pairRecipient = new Pair<String,String>(recipient.getDisplayName(),recipient.getEmailAddress());
-                                switch(recipient.getRecipientFlags()){
+                                int flag = recipient.getRecipientType();
+                                switch(flag){
                                     case PSTRecipient.MAPI_TO:
                                         listTo.add(pairRecipient);
                                         break;
