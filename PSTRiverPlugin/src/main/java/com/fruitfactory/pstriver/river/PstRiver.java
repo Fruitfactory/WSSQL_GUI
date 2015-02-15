@@ -6,18 +6,36 @@
 
 package com.fruitfactory.pstriver.river;
 
+import com.fruitfactory.pstriver.helpers.AttachmentHelper;
+import com.fruitfactory.pstriver.helpers.Pair;
+import com.fruitfactory.pstriver.utils.PstGlobalConst;
 import com.fruitfactory.pstriver.utils.PstMetadataTags;
 import com.fruitfactory.pstriver.utils.PstSignTool;
+import com.pff.PSTAttachment;
+import com.pff.PSTConversationIndexData;
+import com.pff.PSTException;
 import com.pff.PSTFile;
 import com.pff.PSTFolder;
 import com.pff.PSTMessage;
+import com.pff.PSTRecipient;
+import example.TestGui;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.elasticsearch.ExceptionsHelper;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
 import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.cluster.ClusterState;
@@ -25,6 +43,8 @@ import org.elasticsearch.cluster.block.ClusterBlockException;
 import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.cluster.metadata.MappingMetaData;
 import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.common.joda.time.DateTime;
+import org.elasticsearch.common.joda.time.format.ISODateTimeFormat;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.util.concurrent.EsExecutors;
 import org.elasticsearch.common.xcontent.XContentBuilder;
@@ -87,8 +107,7 @@ public class PstRiver extends AbstractRiverComponent implements River{
                 return;
             }
         }
-        
-         try {
+        try {
             pushMapping(_indexName,_typeName);
         } catch (Exception e) {
             logger.warn("failed to create mapping for [{}/{}], disabling river...",
@@ -198,7 +217,8 @@ public class PstRiver extends AbstractRiverComponent implements River{
     
     class PstParser implements Runnable {
         private static final String FILE_NAME = "c:\\Users\\Yariki\\AppData\\Local\\Microsoft\\Outlook\\iyariki.ya@gmail.com.ost";
-
+        private Date _lastUpdatedDate;
+        
         public PstParser() {
             
         }
@@ -210,8 +230,14 @@ public class PstRiver extends AbstractRiverComponent implements River{
                 return;
             }
             try {
+                Date scanDateNew = new Date();
+                _lastUpdatedDate = getLastDateFromRiver();
+                
                 PSTFile pstFile = new PSTFile(FILE_NAME);
                 processFolder(pstFile.getRootFolder());
+                
+                updateFsRiver(scanDateNew);
+                
             } catch (Exception e) {
                 logger.error(LOG_TAG, e.getMessage());
             }
@@ -220,8 +246,9 @@ public class PstRiver extends AbstractRiverComponent implements River{
         public void processFolder(PSTFolder pstFolder){
             
             try {
+                String folderName = pstFolder.getDisplayName();
                 
-                logger.warn(LOG_TAG + " Folder: " + pstFolder.getDisplayName());
+                logger.warn(LOG_TAG + " Folder: " + folderName);
                 
                 
                 if(pstFolder.hasSubfolders() ){
@@ -234,24 +261,125 @@ public class PstRiver extends AbstractRiverComponent implements River{
                 if(pstFolder.getContentCount() > 0 ){
                     PSTMessage message = (PSTMessage)pstFolder.getNextChild();
                     while(message  != null){
+                        
+                        if(_lastUpdatedDate  != null && message.getLastModificationTime().getTime() > _lastUpdatedDate.getTime()){
+                            continue;
+                        }
+                        
                         String subject = message.getSubject();
-                        String sender = message.getSenderName();
-                        String senderEmail = message.getSenderEmailAddress();
+                        String sender = message.getSentRepresentingName();
+                        String senderEmail = message.getSentRepresentingEmailAddress();
                         String body = message.getBody();
                         if(body.isEmpty()){
                             body = message.getBodyHTML();
                         }
                         boolean hasAttachment = message.hasAttachments();
+                        Date dateCreated = message.getCreationTime();
+                        Date dateReceived = message.getMessageDeliveryTime();
+                        long size = message.getMessageSize();
+                        PSTConversationIndexData indexData = message.getConversationIndexData();
+                        UUID id = null;
+                        try {
+                            id = indexData.getConversationUUID(message.getConversationTopic(),message.getConversationIndexTracking());
+                        } catch (NoSuchAlgorithmException ex) {
+                            Logger.getLogger(TestGui.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        String conversationId = id != null ? id.toString() : "";
+                        
+                        List<Pair<String,String>> listTo = new ArrayList<Pair<String,String>>();
+                        List<Pair<String,String>> listCc = new ArrayList<Pair<String,String>>();
+                        List<Pair<String,String>> listBcc = new ArrayList<Pair<String,String>>();
+                        List<AttachmentHelper> listAttachments = new ArrayList<AttachmentHelper>();
+                        int count = 0;
+                        try {
+                            count = message.getNumberOfRecipients();
+
+                            for(int i = 0; i < count; i++){
+                                PSTRecipient recipient = message.getRecipient(i);
+                                Pair<String,String> pairRecipient = new Pair<String,String>(recipient.getDisplayName(),recipient.getEmailAddress());
+                                switch(recipient.getRecipientFlags()){
+                                    case PSTRecipient.MAPI_TO:
+                                        listTo.add(pairRecipient);
+                                        break;
+                                    case PSTRecipient.MAPI_CC:
+                                        listCc.add(pairRecipient);
+                                        break;
+                                    case PSTRecipient.MAPI_BCC:
+                                        listBcc.add(pairRecipient);
+                                        break;
+                                }
+                            }
+                        } catch (PSTException ex) {
+                            Logger.getLogger(TestGui.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(TestGui.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        try{
+                            int countAttachments  = message.getNumberOfAttachments();
+                            for(int i= 0; i < countAttachments; i++){
+                                PSTAttachment attachment = message.getAttachment(i);
+                                if(attachment == null){
+                                    continue;
+                                }
+                                AttachmentHelper helper = new AttachmentHelper(attachment.getLongFilename(),attachment.getLongPathname(),attachment.getFilesize(),attachment.getMimeTag());
+                                listAttachments.add(helper);
+                            }
+                        }catch(Exception ex){
+                            System.out.println(ex.getMessage());
+                        }
                         
                         XContentBuilder source = jsonBuilder().startObject();
                         
-                        source.startObject(PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE)
+                        if (logger.isTraceEnabled()) {
+                            source.prettyPrint();
+                        }
+                        
+                        source
+                                .field(PstMetadataTags.Email.ITEM_NAME,subject)
+                                .field(PstMetadataTags.Email.ITEM_URL,subject)
+                                .field(PstMetadataTags.Email.FOLDER,folderName)
+                                .field(PstMetadataTags.Email.DATE_CREATED,dateCreated)
+                                .field(PstMetadataTags.Email.DATE_RECEIVED,dateReceived)
+                                .field(PstMetadataTags.Email.SIZE,size)
+                                .field(PstMetadataTags.Email.CONVERSATION_ID,conversationId)
+                                .field(PstMetadataTags.Email.CONVERSATION_INDEX,"")
                                 .field(PstMetadataTags.Email.SUBJECT, subject)
-                                .field(PstMetadataTags.Email.SENDER,sender)
-                                .field(PstMetadataTags.Email.SENDER_EMAIL_ADDRESS, senderEmail)
-                                .field(PstMetadataTags.Email.BODY,body)
-                                .field(PstMetadataTags.Email.HAS_ATTACHMENTS, Boolean.toString(hasAttachment));
-                        source.endObject().endObject();
+                                .field(PstMetadataTags.Email.CONTENT,body)
+                                .field(PstMetadataTags.Email.HAS_ATTACHMENTS, Boolean.toString(hasAttachment))
+                                .field(PstMetadataTags.Email.FROM_NAME,sender)
+                                .field(PstMetadataTags.Email.FROM_ADDRESS, senderEmail);
+                        
+                        AddArrayOfEmails(source, listTo, 
+                                PstMetadataTags.Email.TO, 
+                                PstMetadataTags.Email.To.NAME, 
+                                PstMetadataTags.Email.To.ADDRESS);
+                        AddArrayOfEmails(source, listCc, 
+                                PstMetadataTags.Email.CC, 
+                                PstMetadataTags.Email.Cc.NAME, 
+                                PstMetadataTags.Email.Cc.ADDRESS);
+                        AddArrayOfEmails(source, listBcc, 
+                                PstMetadataTags.Email.BCC, 
+                                PstMetadataTags.Email.Bcc.NAME, 
+                                PstMetadataTags.Email.Bcc.ADDRESS);
+                        
+                        if(!listAttachments.isEmpty()){
+                            source.field(PstMetadataTags.Email.ATTACHMENTS).startArray();
+                            for (AttachmentHelper listAttachment : listAttachments) {
+                                source.startObject();
+                                source.field(PstMetadataTags.Email.Attachments.FILENAME,
+                                        listAttachment.getFilename());
+                                source.field(PstMetadataTags.Email.Attachments.PATH,
+                                        listAttachment.getPath());
+                                source.field(PstMetadataTags.Email.Attachments.SIZE,
+                                        listAttachment.getSize());
+                                source.field(PstMetadataTags.Email.Attachments.MIME_TAG,
+                                        listAttachment.getMimetype());
+                                source.endObject();
+                            }
+                            source.endArray();
+                        }
+                        
+                        source.endObject();
                         
                         esIndex(_indexName, _typeName, PstSignTool.sign(body).toString(), source);
                         //logger.info(LOG_TAG + message.getSubject());
@@ -264,12 +392,26 @@ public class PstRiver extends AbstractRiverComponent implements River{
             }
         }
         
+        private void AddArrayOfEmails(XContentBuilder builder, List<Pair<String,String>> list, String objectName, String nameTag, String addressTag) throws IOException{
+            if(list.isEmpty()){
+                return;
+            }
+            builder.field(objectName).startArray();
+            for (Pair<String, String> item : list) {
+                builder.startObject();
+                builder.field(nameTag,item.getItem1());
+                builder.field(addressTag,item.getItem2());
+                builder.endObject();
+            }
+            builder.endArray();
+        }
+        
         private void esIndex(String index, String type, String id,
                              XContentBuilder xb) throws Exception {
             //if (logger.isDebugEnabled()) logger.debug("Indexing in ES " + index + ", " + type + ", " + id);
             logger.warn("Indexing in ES " + index + ", " + type + ", " + id);
             if (logger.isTraceEnabled()) logger.trace("JSon indexed : {}", xb.string());
-            //logger.warn("JSon indexed : {}", xb.string());
+            logger.warn("JSon indexed : {}", xb.string());
 
             if (!_closed) {
                 _bulkProcessor.add(new IndexRequest(index, type, id).source(xb));
@@ -277,6 +419,67 @@ public class PstRiver extends AbstractRiverComponent implements River{
                 logger.warn("trying to add new file while closing river. Document [{}]/[{}]/[{}] has been ignored", index, type, id);
             }
         }
+        
+        @SuppressWarnings("unchecked")
+        private Date getLastDateFromRiver() {
+            Date lastDate = null;
+            try {
+                // Do something
+                // If the river is being closed, we return
+                if (_closed) {
+                    return lastDate;
+                }
+
+                _client.admin().indices().prepareRefresh("_river").execute()
+                        .actionGet();
+
+                // If the river is being closed, we return
+                if (_closed) {
+                    return lastDate;
+                }
+                GetResponse lastSeqGetResponse = _client
+                        .prepareGet("_river", riverName().name(),
+                                PstGlobalConst.LAST_UPDATED_FIELD).execute().actionGet();
+                if (lastSeqGetResponse.isExists()) {
+                    Map<String, Object> fsState = (Map<String, Object>) lastSeqGetResponse
+                            .getSourceAsMap().get(PstGlobalConst.PST_PREFIX);
+
+                    if (fsState != null) {
+                        Object lastupdate = fsState.get("lastdate");
+                        if (lastupdate != null) {
+                            String strLastDate = lastupdate.toString();
+                            lastDate = ISODateTimeFormat
+                                    .dateOptionalTimeParser()
+                                    .parseDateTime(strLastDate).toDate();
+                        }
+                    }
+                } else {
+                    // First call
+                    if (logger.isDebugEnabled())
+                        logger.debug("{} doesn't exist", PstGlobalConst.LAST_UPDATED_FIELD);
+                }
+            } catch (Exception e) {
+                logger.warn("failed to get _lastupdate, throttling....", e);
+            }
+            return lastDate;
+        }
+
+        private void updateFsRiver(Date scanDate)
+                throws Exception {
+            // We store the lastupdate date and some stats
+            scanDate = new DateTime(scanDate).secondOfDay().roundFloorCopy().minusSeconds(2).toDate();
+
+            XContentBuilder xb = jsonBuilder()
+                    .startObject()
+                    .startObject(PstGlobalConst.PST_PREFIX)
+                    .field("feedname", riverName.getName())
+                    .field("lastdate", scanDate)
+                    .endObject()
+                    .endObject();
+            esIndex("_river", riverName.name(), PstGlobalConst.LAST_UPDATED_FIELD, xb);
+        }
+        
+        
         
     }
     
