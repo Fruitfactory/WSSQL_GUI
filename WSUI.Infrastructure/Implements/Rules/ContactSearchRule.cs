@@ -13,11 +13,12 @@ using System.Text;
 using WSUI.Core.Core.Rules;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
+using WSUI.Core.Data.ElasticSearch;
 using WSUI.Core.Enums;
 
 namespace WSUI.Infrastructure.Implements.Rules 
 {
-	public class ContactSearchRule : BaseSearchRule<ContactSearchObject>
+	public class ContactSearchRule : BaseSearchRule<ContactSearchObject,WSUIStub>
 	{
         private const string WhereTemplate =
             " WHERE CONTAINS(System.Kind,'contact') AND ";

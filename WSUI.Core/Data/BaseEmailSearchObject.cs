@@ -8,10 +8,10 @@
 
 using System;
 using System.Globalization;
-using System.Text.RegularExpressions;
 using WSUI.Core.Core.Attributes;
-using WSUI.Core.Helpers;
+using WSUI.Core.Data.ElasticSearch;
 using WSUI.Core.Extensions;
+using WSUI.Core.Helpers;
 
 namespace WSUI.Core.Data
 {
@@ -20,48 +20,73 @@ namespace WSUI.Core.Data
         #region [needs]
 
         private string _fromEmailName = string.Empty;
-        
 
         #endregion [needs]
 
         [Field("System.Message.ConversationID", 7, false)]
-        public string ConversationId { get; set; }
+
+        public string ConversationId
+        {
+            get { return Get(() => ConversationId); }
+            set { Set(() => ConversationId,value);}
+        }
 
         [Field("System.Message.ToAddress", 8, false)]
-        public string[] ToAddress { get; set; }
+        public WSUIRecipient[] To
+        {
+            get { return Get(() => To); }
+            set { Set(() => To, value);}
+        }
+
+        public WSUIRecipient[] Cc
+        {
+            get { return Get(() => Cc); }
+            set { Set(() => Cc, value); }
+        }
+
+        public WSUIRecipient[] Bcc
+        {
+            get { return Get(() => Bcc); }
+            set { Set(() => Bcc, value); }
+        }
 
         [Field("System.Message.DateReceived", 9, false)]
-        public DateTime DateReceived { get; set; }
+        public DateTime DateReceived
+        {
+            get { return Get(() => DateReceived); }
+            set { Set(() => DateReceived,value);}
+        }
 
         [Field("System.Message.ConversationIndex", 10, false)]
-        public string ConversationIndex { get; set; }
+        public string ConversationIndex
+        {
+            get { return Get(() => ConversationIndex); }
+            set { Set(() => ConversationIndex,value);}
+        }
 
         [Field("System.Message.FromAddress", 11, false)]
-        public string[] FromAddress { get; set; }
+        public string FromAddress
+        {
+            get { return Get(() => FromAddress); }
+            set { Set(() => FromAddress,value);}
+        }
 
         [Field("System.Message.FromName", 12, false)]
-        public string[] FromName { get; set; }
+        public string FromName
+        {
+            get { return Get(() => FromName); }
+            set { Set(() => FromName,value);}
+        }
 
-        [Field("System.Message.SenderAddress", 13, false)]
-        public string[] SenderAddress { get; set; }
-
-        [Field("System.Message.SenderName", 14, false)]
-        public string[] SenderName { get; set; }
-
-        //[Field("System.Message.HasAttachments", 15, false)]
-        private bool? _internalHasAttachment = null;
+        public WSUIAttachment[] Attachments
+        {
+            get { return Get(() => Attachments); }
+            set { Set(() => Attachments, value); }
+        }
 
         public bool HasAttachments
         {
-            get { return InternalCheckAttachment(); }
-        }
-
-        private bool InternalCheckAttachment()
-        {
-            if (_internalHasAttachment.HasValue)
-                return _internalHasAttachment.Value;
-            _internalHasAttachment = OutlookHelper.Instance.HasAttachment(this);
-            return _internalHasAttachment.Value;
+            get { return Get(() => HasAttachments); }
         }
 
         public string From
@@ -71,8 +96,6 @@ namespace WSUI.Core.Data
                 if (string.IsNullOrEmpty(_fromEmailName))
                 {
                     _fromEmailName = GetEmailOrName(FromAddress, FromName);
-                    if (string.IsNullOrEmpty(_fromEmailName))
-                        _fromEmailName = GetEmailOrName(SenderAddress, SenderName);
                 }
                 return _fromEmailName;
             }
@@ -82,68 +105,10 @@ namespace WSUI.Core.Data
         {
         }
 
-        public override void SetValue(int index, object value)
+        private string GetEmailOrName(string address, string name)
         {
-            base.SetValue(index, value);
-            switch (index)
-            {
-                case 7:
-                    ConversationId = value as string;
-                    break;
-
-                case 8:
-                    ToAddress = value as string[];
-                    break;
-
-                case 9:
-                    DateReceived = (DateTime)Convert.ChangeType(value, typeof(DateTime), CultureInfo.InvariantCulture);
-                    break;
-
-                case 10:
-                    ConversationIndex = value as string;
-                    break;
-
-                case 11:
-                    FromAddress = value as string[];
-                    break;
-
-                case 12:
-                    FromName = value as string[];
-                    break;
-
-                case 13:
-                    SenderAddress = CheckValidType(value);
-                    break;
-
-                case 14:
-                    SenderName = CheckValidType(value);
-                    break;
-                //case 15:
-                //    HasAttachments = (bool) value;
-                //break;
-            }
-        }
-
-        private string GetEmailOrName(string[] address, string[] name)
-        {
-            if (address == null || address.Length == 0)
-            {
-                return GetFieldValue(FromName);
-            }
-            foreach (string email in address)
-            {
-                if (IsEmail(email))
-                {
-                    _fromEmailName = email;
-                    break;
-                }
-            }
-            return string.IsNullOrEmpty(_fromEmailName) ? (_fromEmailName = GetFieldValue(name)) : _fromEmailName;
-        }
-
-        private string GetFieldValue(string[] val)
-        {
-            return val != null && val.Length > 0 ? val[0] : string.Empty;
+            
+            return !string.IsNullOrEmpty(address) && IsEmail(address) ? address : name;
         }
 
         private bool IsEmail(string email)

@@ -10,10 +10,11 @@ using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using System.Text.RegularExpressions;
+using WSUI.Core.Data.ElasticSearch;
 
 namespace WSUI.Infrastructure.Implements.Rules
 {
-    public class GeneralContactRule : BaseSearchRule<BaseSearchObject>
+    public class GeneralContactRule : BaseSearchRule<BaseSearchObject,WSUIStub>
     {
         #region [needs]
 

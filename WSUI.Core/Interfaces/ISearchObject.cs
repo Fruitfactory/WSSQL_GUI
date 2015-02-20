@@ -17,5 +17,7 @@ namespace WSUI.Core.Interfaces
         IEnumerable<ISearchObject> Items { get; }
 
         void AddItem(ISearchObject item);
+
+        void SetDataObject(object data);
     }
 }

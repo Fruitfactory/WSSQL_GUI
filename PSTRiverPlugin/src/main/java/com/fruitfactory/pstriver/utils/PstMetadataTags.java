@@ -26,6 +26,7 @@ public class PstMetadataTags {
     public static final class Email{
         public static final String ITEM_NAME = "itemname";
         public static final String ITEM_URL = "itemurl";
+        public static final String ITEM_NAME_DISPLAY = "itemnamedisplay";
         public static final String FOLDER = "folder";
         public static final String DATE_CREATED = "datecreated";
         public static final String DATE_RECEIVED = "datereceived";
@@ -70,6 +71,7 @@ public class PstMetadataTags {
         mapping.startObject(PROPERTIES);
             addAnalyzedString(mapping, Email.ITEM_NAME);
             addAnalyzedString(mapping, Email.ITEM_URL);
+            addAnalyzedString(mapping, Email.ITEM_NAME_DISPLAY);
             addAnalyzedString(mapping, Email.FOLDER);
             addDate(mapping, Email.DATE_CREATED);
             addDate(mapping, Email.DATE_RECEIVED);
@@ -98,6 +100,14 @@ public class PstMetadataTags {
                 mapping.startObject(PROPERTIES);
                     addAnalyzedString(mapping, Email.Bcc.NAME);
                     addAnalyzedString(mapping, Email.Bcc.ADDRESS);
+            mapping.endObject().endObject();
+            
+            mapping.startObject(Email.ATTACHMENTS);
+                mapping.startObject(PROPERTIES);
+                    addAnalyzedString(mapping, Email.Attachments.FILENAME);
+                    addAnalyzedString(mapping, Email.Attachments.PATH);
+                    addLong(mapping, Email.Attachments.SIZE);
+                    addAnalyzedString(mapping, Email.Attachments.MIME_TAG);
             mapping.endObject().endObject();
             
         mapping.endObject();

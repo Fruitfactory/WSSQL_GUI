@@ -11,13 +11,14 @@ using System.Collections.Generic;
 using System.Linq;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
+using WSUI.Core.Data.ElasticSearch;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 
 namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 {
-    public class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject>, IEmailSearchRule
+    public class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject,WSUIEmail>, IEmailSearchRule
     {
 
 

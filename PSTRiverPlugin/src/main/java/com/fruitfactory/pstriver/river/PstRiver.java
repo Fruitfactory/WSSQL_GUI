@@ -368,6 +368,7 @@ public class PstRiver extends AbstractRiverComponent implements River{
                         source
                                 .field(PstMetadataTags.Email.ITEM_NAME,subject)
                                 .field(PstMetadataTags.Email.ITEM_URL,subject)
+                                .field(PstMetadataTags.Email.ITEM_NAME_DISPLAY,subject)
                                 .field(PstMetadataTags.Email.FOLDER,folderName)
                                 .field(PstMetadataTags.Email.DATE_CREATED,dateCreated)
                                 .field(PstMetadataTags.Email.DATE_RECEIVED,dateReceived)

@@ -1,47 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using System.Linq;
+using System.Reflection;
+using WSUI.Core.Extensions;
 
 namespace WSUI.Core.Core.MVVM
 {
     public class DataViewModel : ViewModelBase
     {
-        protected readonly Dictionary<string, object> _values = new Dictionary<string, object>();
-
-        protected T Get<T>(Expression<Func<T>> expression)
-        {
-            return Get<T>(GetPropertyName(expression), default(T));
+        private object _data = null;
+        private IEnumerable<PropertyInfo> _properties; 
+        public DataViewModel()
+        {   
         }
 
-        protected T Get<T>(Expression<Func<T>> expression, T defaultValue)
+        public DataViewModel(object data)
         {
-            return Get<T>(GetPropertyName(expression), defaultValue);
+            SetDataObject(data);
         }
 
-        protected T Get<T>(string name)
+        public T GetDataObject<T>()
         {
-            return Get<T>(name, default(T));
+            return (T) _data;
         }
 
-        protected virtual T Get<T>(string name, T defaultValue)
+        protected void SetDataObject<T>(T data)
         {
-            if (_values.ContainsKey(name))
+            _data = data;
+            if (_data.IsNotNull())
             {
-                return (T)_values[name];
+                _properties = _data.GetType().GetAllPublicProperties();
             }
-            return defaultValue;
         }
 
-        protected void Set<T>(Expression<Func<T>> expression, T val)
+        protected override void Set<T>(string propertyName, T value)
         {
-            var name = GetPropertyName(expression);
-            Set<T>(name, val);
+
+            if (_data.IsNotNull() && _data.GetType().HasProperty(propertyName))
+            {
+                var pi = _properties.FirstOrDefault(p => p.Name.ToLowerInvariant() == propertyName);
+                if (pi.IsNotNull())
+                {
+                    pi.SetPropertyValue(_data, value);
+                }
+            }
+            else
+            {
+                base.Set(propertyName, value);    
+            }
         }
 
-        protected virtual void Set<T>(string name, T val)
+        protected override T Get<T>(string name, T defaultValue)
         {
-            _values[name] = val;
-            OnPropertyChanged(name);
+            if (_data.IsNotNull() && _data.GetType().HasProperty(name))
+            {
+                var pi = _properties.FirstOrDefault(p => p.Name.ToLowerInvariant() == name);
+                if (pi.IsNotNull())
+                {
+                    return pi.GetPropertyValue<T>(_data);
+                }
+            }
+            return base.Get(name, defaultValue);
         }
     }
 }

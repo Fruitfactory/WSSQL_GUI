@@ -78,7 +78,7 @@ namespace WSUI.Core.Helpers
                     Write(RequireShutdownNotificationKey,ShutdodwnNotificationNotRequired,false);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return;
             }
@@ -90,7 +90,7 @@ namespace WSUI.Core.Helpers
             {
                 Write(LoadBehaviorKey,LoadBehaviorDefaultValue,false);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return;
             }
@@ -102,7 +102,7 @@ namespace WSUI.Core.Helpers
             {
                 Write(ADXStartModeKey,ADXStartModeDefaultValue, false);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return;
             }
@@ -121,7 +121,7 @@ namespace WSUI.Core.Helpers
                     return;
                 key.DeleteValue(ModuleKey);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -142,7 +142,7 @@ namespace WSUI.Core.Helpers
                     key.DeleteValue(valueName);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -171,7 +171,7 @@ namespace WSUI.Core.Helpers
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             finally

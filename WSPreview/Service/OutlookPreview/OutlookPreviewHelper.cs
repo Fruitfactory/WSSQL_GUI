@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.RegularExpressions;
 using GDIDraw.Service;
 using HtmlAgilityPack;
@@ -21,7 +20,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
     {
         #region [needs]
 
-        private static char[] Symbol = new char[] { '@','.',',' };
+        private static char[] Symbol = new char[] { '@', '.', ',' };
         private const string AfterStrongTemplateBegin = "<font style='background-color: yellow'><strong>";
         private const string AfterStrongTemplateEnd = "</strong></font>";
         private const string OutlookProcessName = "OUTLOOK";
@@ -129,9 +128,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         public string FullFolderPath { get; set; }
 
-
-        #endregion
-
+        #endregion [full folder path]
 
         #region [host type]
 
@@ -250,16 +247,16 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         private string HighlightSearchString(string inputString)
         {
-            if (string.IsNullOrEmpty(HitString) || string.IsNullOrEmpty(inputString) || inputString.IsHtmlComment() || _itemArray == null )
+            if (string.IsNullOrEmpty(HitString) || string.IsNullOrEmpty(inputString) || inputString.IsHtmlComment() || _itemArray == null)
                 return inputString;
             string result = inputString;
-            
+
             foreach (var s in _itemArray)
             {
                 var temp = Regex.Escape(s.ClearString());
-                Match m = s.IsAmount () ? Regex.Match(result, string.Format(@"{0}", temp), RegexOptions.IgnoreCase) : 
+                Match m = s.IsAmount() ? Regex.Match(result, string.Format(@"{0}", temp), RegexOptions.IgnoreCase) :
                     Regex.Match(result, string.Format("{0}", temp), RegexOptions.IgnoreCase);//@"\b({0})\b"
-                
+
                 if (m.Success)
                 {
                     var partBegin = result.Substring(0, m.Index);
@@ -344,7 +341,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
                 return mail;
             }
             catch (Exception)
-            { 
+            {
                 return null;
             }
         }
@@ -431,14 +428,14 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         private string GetBeginingOfPreview(dynamic item, string filename)
         {
             string page = PageBegin + TableBegin;
-            string  subject = string.Empty;
+            string subject = string.Empty;
             if (item is Outlook.MailItem)
             {
-                subject = ((string) (item as Outlook.MailItem).Subject);
+                subject = ((string)(item as Outlook.MailItem).Subject);
             }
             else
             {
-                subject = ((string) item.Subject);
+                subject = ((string)item.Subject);
             }
             page += string.Format(SubjectRow, HighlightSearchString(subject.DecodeString()));
             return page;
@@ -457,7 +454,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             var folder = GetEmailFolder();
             if (folder != null && !string.IsNullOrEmpty(folder.Item1) && !string.IsNullOrEmpty(folder.Item2))
             {
-                page += string.Format(InRow, folder.Item1,folder.Item2);
+                page += string.Format(InRow, folder.Item1, folder.Item2);
             }
             page += string.Format(SendRow, mail.ReceivedTime.ToString());
             page += GetAttachments(mail, filename);
@@ -479,12 +476,11 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             {
                 var clearStr = recipient.Name.ClearString();
                 var email = recipient.GetSMTPAddress();
-                var tt = IsEmail(email) ? GetContactNameWithEmail(clearStr,email): GetContactName(clearStr);
+                var tt = IsEmail(email) ? GetContactNameWithEmail(clearStr, email) : GetContactName(clearStr);
                 list.Add(tt);
             }
             return string.Join("; ", list.Where(s => !string.IsNullOrEmpty(s)));
         }
-
 
         private string GetConvertetString(string str)
         {
@@ -556,7 +552,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
                 return false;
             }
             Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-            return  regex.IsMatch(email);
+            return regex.IsMatch(email);
         }
 
         public string GetPreviewForMeeting(Outlook.MeetingItem meeting, string filename)
@@ -630,7 +626,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         private Tuple<string, string> GetEmailFolder()
         {
-            if(string.IsNullOrEmpty(FullFolderPath))
+            if (string.IsNullOrEmpty(FullFolderPath))
                 return default(Tuple<string, string>);
             var name = FullFolderPath.Substring(FullFolderPath.LastIndexOf('\\') + 1);
             return new Tuple<string, string>(FullFolderPath, name);

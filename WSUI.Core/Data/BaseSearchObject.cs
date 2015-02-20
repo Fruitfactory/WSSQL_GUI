@@ -11,12 +11,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using WSUI.Core.Core.Attributes;
+using WSUI.Core.Core.MVVM;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
 
 namespace WSUI.Core.Data
 {
-    public class BaseSearchObject : ISearchObject
+    public class BaseSearchObject : DataViewModel, ISearchObject
     {
         #region [needs]
 
@@ -26,22 +27,53 @@ namespace WSUI.Core.Data
         #endregion [needs]
 
         [Field("System.ItemName", 1, false)]
-        public string ItemName { get; set; }
+        public string ItemName
+        {
+            get
+            {
+                return Get(() => ItemName);
+            }
+            set { Set(() => ItemName, value); }
+        }
 
         [Field("System.ItemUrl", 2, false)]
-        public string ItemUrl { get; set; }
+        public string ItemUrl
+        {
+            get
+            {
+                return Get(() => ItemUrl);
+            }
+            set { Set(() => ItemUrl, value); }
+        }
 
         [Field("System.Kind", 3, false)]
         public string[] Kind { get; set; }
 
         [Field("System.DateCreated", 4, true)]
-        public DateTime DateCreated { get; set; }
+        public DateTime DateCreated
+        {
+            get { return Get(() => DateCreated); }
+            set { Set(() => DateCreated, value); }
+        }
 
         [Field("System.ItemNameDisplay", 5, false)]
-        public string ItemNameDisplay { get; set; }
+        public string ItemNameDisplay
+        {
+            get { return Get(() => ItemNameDisplay); }
+            set { Set(() => ItemNameDisplay, value); }
+        }
 
         [Field("System.Size", 6, false)]
-        public int Size { get; set; }
+        public int Size {
+            get
+            {
+                return Get(() => Size);
+            }
+            set
+            {
+              Set(() => Size, value);  
+            } 
+        }
 
         public Guid Id { get; private set; }
 
@@ -94,6 +126,11 @@ namespace WSUI.Core.Data
         {
             if (!_internaList.Contains(item))
                 _internaList.Add(item);
+        }
+
+        public void SetDataObject(object data)
+        {
+            base.SetDataObject(data);
         }
 
         public TypeSearchItem TypeItem { get; set; }

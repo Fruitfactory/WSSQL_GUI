@@ -13,6 +13,7 @@ using System.Text;
 using WSUI.Core.Core.Rules;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
+using WSUI.Core.Data.ElasticSearch;
 using WSUI.Core.Enums;
 using WSUI.Core.Logger;
 using WSUI.Core.Utils;
@@ -20,7 +21,7 @@ using WSUI.Infrastructure.Service.Helpers;
 
 namespace WSUI.Infrastructure.Implements.Rules.BaseRules 
 {
-	public class BaseAttachmentSearchRule : BaseSearchRule<AttachmentSearchObject>
+	public class BaseAttachmentSearchRule : BaseSearchRule<AttachmentSearchObject,WSUIStub>
 	{
         protected const string WhereTemplate = "WHERE Contains(System.ItemUrl,'\"at=*\"') AND System.DateModified < '{0}'  AND ( {1} ) ORDER BY System.DateModified DESC";
 

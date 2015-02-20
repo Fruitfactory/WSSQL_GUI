@@ -40,28 +40,45 @@ namespace WSUI.Core.Core.MVVM
             return propertyName;
         }
 
-        protected virtual void Set<T>(Expression<Func<T>> exp, T value)
+        protected void Set<T>(Expression<Func<T>> exp, T value)
         {
             var name = GetPropertyName(exp);
-            if (_values.ContainsKey(name))
+            Set<T>(name,value);
+        }
+
+        protected virtual void Set<T>(string propertyName, T value)
+        {
+            if (_values.ContainsKey(propertyName))
             {
-                _values[name] = value;
+                _values[propertyName] = value;
             }
             else
             {
-                _values.Add(name, value);
+                _values.Add(propertyName, value);
             }
-            OnPropertyChanged(name);
+            OnPropertyChanged(propertyName);
         }
 
-        protected virtual T Get<T>(Expression<Func<T>> exp)
+
+        protected T Get<T>(Expression<Func<T>> exp)
         {
             var name = GetPropertyName(exp);
+            return Get<T>(name,default(T));
+        }
+
+        protected T Get<T>(Expression<Func<T>> exp, T defaultValue)
+        {
+            var name = GetPropertyName(exp);
+            return Get<T>(name, defaultValue);
+        }
+
+        protected virtual T Get<T>(string name, T defaultValue)
+        {
             if (_values.ContainsKey(name))
             {
                 return (T)_values[name];
             }
-            return default(T);
+            return defaultValue;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

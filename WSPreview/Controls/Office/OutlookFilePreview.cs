@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using mshtml;
 using WSPreview.PreviewHandler.Controls.Office.WebUtils;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using WSPreview.PreviewHandler.Service.OutlookPreview;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.EventArguments;
@@ -15,15 +16,12 @@ using WSUI.Core.Extensions;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
-using mshtml;
-using WSPreview.PreviewHandler.Service.OutlookPreview;
 
 namespace WSPreview.PreviewHandler.Controls.Office
 {
     [KeyControl(ControlsKey.Outlook)]
     public partial class OutlookFilePreview : ExtWebBrowser, IPreviewControl, ICommandPreviewControl
     {
-
         private string _hitString;
         private string _fileName;
         private dynamic _outlookItem;
@@ -38,7 +36,6 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         private void OnNavigated(object sender, WebBrowserNavigatedEventArgs webBrowserNavigatedEventArgs)
         {
-
         }
 
         #region public
@@ -105,7 +102,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
             }
         }
 
-        #endregion
+        #endregion public
 
         public void CopySelectedText()
         {
@@ -126,7 +123,6 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         private void OnNavigating(object sender, WebBrowserNavigatingEventArgs e)
         {
-
         }
 
         private void WebEmailOnBeforeNavigate(object sender, WebBrowserNavigatingEventArgs args)
@@ -139,13 +135,16 @@ namespace WSPreview.PreviewHandler.Controls.Office
                 case "http":
                     path = args.Url.AbsoluteUri;
                     break;
+
                 case "about":
                 case "re":
                     path = OutlookPreviewHelper.Instance.GetPathForEmail(args.Url, _fileName);
                     break;
+
                 case "uuid":
                     RaisePreviewCommandExecuted(WSPreviewCommand.ShowFolder, args.Url.LocalPath);
                     break;
+
                 case "fax":
                     SendShowContactCommand(args.Url.LocalPath);
                     return;
@@ -186,7 +185,6 @@ namespace WSPreview.PreviewHandler.Controls.Office
                 return;
             }
         }
-
 
         private void ProcessFullContactInformation(string info)
         {
@@ -259,5 +257,4 @@ namespace WSPreview.PreviewHandler.Controls.Office
             }
         }
     }
-
 }

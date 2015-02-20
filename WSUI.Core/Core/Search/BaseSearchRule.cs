@@ -15,7 +15,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WSUI.Core.Core.AdvancedSearchCriteria;
+using WSUI.Core.Core.ElasticSearch;
 using WSUI.Core.Core.Rules;
+using WSUI.Core.Data.ElasticSearch;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
@@ -23,7 +25,7 @@ using WSUI.Core.Utils;
 
 namespace WSUI.Core.Core.Search
 {
-    public abstract class BaseSearchRule<T> : ISearch, ISearchRule, IRuleQueryGenerator where T : class, new()
+    public abstract class BaseSearchRule<T, E> : ISearch, ISearchRule, IRuleQueryGenerator where T : class, ISearchObject, new() where E : class, IElasticSearchObject
     {
         #region [needs private]
 
@@ -31,6 +33,8 @@ namespace WSUI.Core.Core.Search
         private IQueryReader _reader;
         private volatile bool _isSearching = false;
         private bool _exludeIgnored = false;
+        private WSUIElasticSearchClient _elasticSearchClient;
+        private Func<T> _create; 
 
         #endregion [needs private]
 
@@ -68,6 +72,8 @@ namespace WSUI.Core.Core.Search
         protected BaseSearchRule()
             : this(null, false)
         {
+            _elasticSearchClient = new WSUIElasticSearchClient();
+            _create = New<T>.Instance;
         }
 
         protected BaseSearchRule(object lockObject, bool exludeIgnored)
@@ -119,7 +125,7 @@ namespace WSUI.Core.Core.Search
             try
             {
                 _isSearching = true;
-                string query = QueryGenerator.Instance.GenerateQuery(typeof(T), Query, TopQueryResult, this,IsAdvancedMode);
+                string query = Query; //QueryGenerator.Instance.GenerateQuery(typeof(T), Query, TopQueryResult, this,IsAdvancedMode);
                 if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
@@ -127,15 +133,20 @@ namespace WSUI.Core.Core.Search
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                DataTable resultTable = GetDataTable(query);
+                //DataTable resultTable = GetDataTable(query);
+                var result = _elasticSearchClient.ElasticClient.Search<E>(s => s
+                    .From(0)
+                    .Size(TopQueryResult)
+                    .Query(q => q.QueryString(d => d.Query(query))).MatchAll()
+                    );
 
                 watch.Stop();
                 WSSqlLogger.Instance.LogInfo("GetDataTable: {0}, {1}",typeof(T).Name,watch.ElapsedMilliseconds);
 
                 // additional process
-                if (!NeedStop && resultTable != null)
+                if (!NeedStop && result != null && result.Documents.Any())
                 {
-                    ReadDataFromTable(resultTable);
+                    ReadDataFromTable(result.Documents);
                     ProcessResult();
                     _typeResult = TypeResult.Ok;
                     
@@ -171,20 +182,19 @@ namespace WSUI.Core.Core.Search
 
         protected bool IsInit { get; private set; }
 
-        protected virtual void ReadDataFromTable(DataTable data)
+        protected virtual void ReadDataFromTable(IEnumerable<E> data)
         {
-            if (data.Rows.Count == 0)
-                return;
             Parallel.ForEach(data.AsEnumerable(), ReadData);
         }
 
         ///
         /// <param name="reader"></param>
-        private void ReadData(IDataReader reader)
+        private void ReadData(E email)
         {
-            var result = Reader.ReadResult(reader) as T;
+            var result = _create.Invoke() as T;
             if (result == null)
                 return;
+            result.SetDataObject(email);
             Result.Add(result);
             ProcessCountAdded();
         }
