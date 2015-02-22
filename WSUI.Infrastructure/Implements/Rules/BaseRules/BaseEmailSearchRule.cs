@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Nest;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
 using WSUI.Core.Data.ElasticSearch;
@@ -18,7 +19,7 @@ using WSUI.Core.Logger;
 
 namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 {
-    public class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject,WSUIEmail>, IEmailSearchRule
+    public class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject, WSUIEmail>, IEmailSearchRule
     {
 
 
@@ -49,6 +50,11 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
         {
             _listID.Clear();
             base.Reset();
+        }
+
+        protected override QueryContainer BuildQuery(QueryDescriptor<WSUIEmail> queryDescriptor)
+        {
+            return queryDescriptor.Term(e => e.Subject, Query);
         }
 
         protected override void ProcessResult()

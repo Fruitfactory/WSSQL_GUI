@@ -92,7 +92,7 @@
     <Style x:Key="ImageStyleEmail" TargetType="{x:Type Image}" BasedOn="{StaticResource ImageStyle}">
         <Setter Property="Source" Value="..\Images\mail.png"></Setter>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding HasAttachments}" Value="True">
+            <DataTrigger Binding="{Binding HasAttachments}" Value="true">
                 <Setter Property="Source" Value="..\Images\mail_attachment.png"></Setter>
             </DataTrigger>
         </Style.Triggers>

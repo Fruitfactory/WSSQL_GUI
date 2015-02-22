@@ -84,9 +84,12 @@ namespace WSUI.Core.Data
             set { Set(() => Attachments, value); }
         }
 
-        public bool HasAttachments
+        public string HasAttachments
         {
-            get { return Get(() => HasAttachments); }
+            get
+            {
+                return Get(() => HasAttachments);
+            }
         }
 
         public string From

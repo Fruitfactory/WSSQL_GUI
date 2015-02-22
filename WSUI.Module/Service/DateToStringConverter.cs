@@ -81,7 +81,7 @@ namespace WSUI.Module.Service
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int size = (int) value / 1024;
+            long size = (long) value / 1024;
             string result = string.Format("Size: {0} kb", size > 0 ? size : 1);
             return result;
         }

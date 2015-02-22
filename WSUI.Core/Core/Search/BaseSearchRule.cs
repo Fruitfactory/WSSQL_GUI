@@ -11,9 +11,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Nest;
 using WSUI.Core.Core.AdvancedSearchCriteria;
 using WSUI.Core.Core.ElasticSearch;
 using WSUI.Core.Core.Rules;
@@ -72,7 +74,7 @@ namespace WSUI.Core.Core.Search
         protected BaseSearchRule()
             : this(null, false)
         {
-            _elasticSearchClient = new WSUIElasticSearchClient();
+            _elasticSearchClient = new WSUIElasticSearchClient(WSUIElasticSearchClient.ElasticSearchHost, "psttest");
             _create = New<T>.Instance;
         }
 
@@ -133,15 +135,14 @@ namespace WSUI.Core.Core.Search
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                //DataTable resultTable = GetDataTable(query);
+                
                 var result = _elasticSearchClient.ElasticClient.Search<E>(s => s
                     .From(0)
                     .Size(TopQueryResult)
-                    .Query(q => q.QueryString(d => d.Query(query))).MatchAll()
+                    .Query(BuildQuery)
                     );
 
                 watch.Stop();
-                WSSqlLogger.Instance.LogInfo("GetDataTable: {0}, {1}",typeof(T).Name,watch.ElapsedMilliseconds);
 
                 // additional process
                 if (!NeedStop && result != null && result.Documents.Any())
@@ -173,6 +174,11 @@ namespace WSUI.Core.Core.Search
                 IsInit = false;
                 Event.Set();
             }
+        }
+
+        protected virtual QueryContainer BuildQuery(QueryDescriptor<E> queryDescriptor)
+        {
+            return default (QueryContainer);
         }
 
         protected virtual DataTable GetDataTable(string query)

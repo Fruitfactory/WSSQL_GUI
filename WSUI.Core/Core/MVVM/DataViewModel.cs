@@ -38,7 +38,7 @@ namespace WSUI.Core.Core.MVVM
 
             if (_data.IsNotNull() && _data.GetType().HasProperty(propertyName))
             {
-                var pi = _properties.FirstOrDefault(p => p.Name.ToLowerInvariant() == propertyName);
+                var pi = _properties.FirstOrDefault(p => p.Name == propertyName);
                 if (pi.IsNotNull())
                 {
                     pi.SetPropertyValue(_data, value);
@@ -54,7 +54,7 @@ namespace WSUI.Core.Core.MVVM
         {
             if (_data.IsNotNull() && _data.GetType().HasProperty(name))
             {
-                var pi = _properties.FirstOrDefault(p => p.Name.ToLowerInvariant() == name);
+                var pi = _properties.FirstOrDefault(p => p.Name == name);
                 if (pi.IsNotNull())
                 {
                     return pi.GetPropertyValue<T>(_data);
