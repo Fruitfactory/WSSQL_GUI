@@ -234,6 +234,14 @@
         <File Id="_DDay_Collections_dll" Name="DDay.Collections.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_DDay_iCal_dll" Name="DDay.iCal.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
         <File Id="_Transitionals_dll" Name="Transitionals.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+
+        <File Id="_Elasticsearch_Net_dll" Name="Elasticsearch.Net.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Nest_dll" Name="Nest.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        <File Id="_Newtonsoft_Json_dll" Name="Newtonsoft.Json.dll" Source="$(var.WSUI.OutlookPlugin.TargetDir)" />
+        
+        
+        
+        
       </Component>
     </ComponentGroup>
   </Fragment>

@@ -7,7 +7,7 @@ using Exception = System.Exception;
 
 namespace WSUI.Core.Core.ElasticSearch
 {
-    public class WSUIElasticSearchClient
+    public class WSUIElasticSearchClient : IDisposable
     {
         public static readonly string ElasticSearchHost = "http://localhost:9200";
         public static readonly string DefaultIndexName = "outlookfinder";
@@ -50,5 +50,8 @@ namespace WSUI.Core.Core.ElasticSearch
         }
 
 
+        public void Dispose()
+        {   
+        }
     }
 }

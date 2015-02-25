@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
@@ -11,6 +13,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using AddinExpress.MSO;
 using AddinExpress.OL;
+using Elasticsearch.Net.Serialization;
 using Extensibility;
 using Microsoft.Office.Core;
 using Microsoft.Practices.Prism.Events;
@@ -32,7 +35,9 @@ using WSUIOutlookPlugin.Managers;
 using Application = System.Windows.Forms.Application;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
+using Nest;
 using WSUI.Core;
+using WSUI.Core.Core.ElasticSearch;
 
 
 namespace WSUIOutlookPlugin
@@ -118,7 +123,7 @@ namespace WSUIOutlookPlugin
             Init();
             this.OnSendMessage += WSUIAddinModule_OnSendMessage;
             this.AddinInitialize += OnAddinInitialize;
-            
+
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
         }
@@ -543,7 +548,7 @@ namespace WSUIOutlookPlugin
             get;
             set;
         }
-         
+
         #region my own initialization
 
         private void Init()
@@ -675,12 +680,12 @@ namespace WSUIOutlookPlugin
 
         private void LogVersions()
         {
-            var currentOFVersion = typeof (WSUIAddinModule).Assembly.GetName().Version;
-            WSSqlLogger.Instance.LogInfo("OF Version: {0}",currentOFVersion);
-            WSSqlLogger.Instance.LogInfo("OS Version: {0}",Environment.OSVersion);
+            var currentOFVersion = typeof(WSUIAddinModule).Assembly.GetName().Version;
+            WSSqlLogger.Instance.LogInfo("OF Version: {0}", currentOFVersion);
+            WSSqlLogger.Instance.LogInfo("OS Version: {0}", Environment.OSVersion);
             WSSqlLogger.Instance.LogInfo("OS x64 Version: {0}", Environment.Is64BitOperatingSystem);
             WSSqlLogger.Instance.LogInfo("Outlook x64 Version: {0}", Environment.Is64BitProcess);
-            
+
         }
 
         private ISidebarForm GetSidebarForm()
@@ -878,6 +883,7 @@ namespace WSUIOutlookPlugin
             {
                 StartWatch();
                 RestoreOutlookFolder();
+                InitElasticSearch();
                 //CheckUpdate(); // TODO: just for testing
                 this.SendMessage(WM_LOADED, IntPtr.Zero, IntPtr.Zero);
                 OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
@@ -1178,7 +1184,7 @@ namespace WSUIOutlookPlugin
         private void StopWatch(string method)
         {
             _watch.Stop();
-            WSSqlLogger.Instance.LogInfo("--------------- {0} => {1}",method,_watch.ElapsedMilliseconds);
+            WSSqlLogger.Instance.LogInfo("--------------- {0} => {1}", method, _watch.ElapsedMilliseconds);
         }
 
 
@@ -1263,14 +1269,14 @@ namespace WSUIOutlookPlugin
             var CurrentOulookVersion = string.Format(AddInLoadTimesKey, _officeVersion);
             try
             {
-                var key = Registry.CurrentUser.OpenSubKey(CurrentOulookVersion,true);
+                var key = Registry.CurrentUser.OpenSubKey(CurrentOulookVersion, true);
                 if (key.IsNull())
                     return;
                 var value = (byte[])key.GetValue(ModuleKey, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
                 if (value.IsNull())
                     return;
                 var buffer = new byte[value.Length];
-                key.SetValue(ModuleKey,buffer,RegistryValueKind.Binary);
+                key.SetValue(ModuleKey, buffer, RegistryValueKind.Binary);
             }
             catch (Exception ex)
             {
@@ -1295,7 +1301,7 @@ namespace WSUIOutlookPlugin
                     if (value.IsNull())
                         return;
                     var buffer = new byte[value.Length];
-                    key.SetValue(valueName, buffer, RegistryValueKind.Binary);    
+                    key.SetValue(valueName, buffer, RegistryValueKind.Binary);
                 }
             }
             catch (Exception ex)
@@ -1318,14 +1324,14 @@ namespace WSUIOutlookPlugin
                     foreach (var item in registry.GetValueNames())
                     {
                         var val =
-                            (byte[]) registry.GetValue(item, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
+                            (byte[])registry.GetValue(item, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
 
                         var temp = System.Text.Encoding.Unicode.GetString(val);
                         if (temp.Length > 0 && temp.IndexOf(ProgIdDefault) > -1)
                         {
                             registry.DeleteValue(item);
                         }
-                        WSSqlLogger.Instance.LogInfo("Disabled Add-ins: {0}; {1}",item,temp);
+                        WSSqlLogger.Instance.LogInfo("Disabled Add-ins: {0}; {1}", item, temp);
                     }
                 }
             }
@@ -1341,6 +1347,58 @@ namespace WSUIOutlookPlugin
                 }
             }
         }
+
+
+        private void InitElasticSearch()
+        {
+            try
+            {
+                var elasticSearchClient = new WSUIElasticSearchClient();
+                var resp = elasticSearchClient.ElasticClient.IndexExists(WSUIElasticSearchClient.DefaultIndexName);
+                if (resp.Exists)
+                {
+                    return;
+                }
+                var list = GetOutlookFiles();
+                var index = new
+                {
+                    type = "pst",
+                    pst = new
+                    {
+                        update_rate = "10h",
+                        pst_list = list
+                    }
+                };
+                var body = elasticSearchClient.ElasticClient.Serializer.Serialize(index, SerializationFormatting.Indented);
+                var r = elasticSearchClient.ElasticClient.Raw.IndexPut("_river", "psttest", "_meta", body);
+                WSSqlLogger.Instance.LogInfo(r.Response.ToString());
+            }
+            catch (Exception ex) 
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);                
+            }
+        }
+
+        private IEnumerable<string> GetOutlookFiles()
+        {
+            string path = string.Format("{0}\\Microsoft\\Outlook",
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+            if (Directory.Exists(path))
+            {
+                var files = Directory.GetFiles(path, "*.pst");
+                var files1 = Directory.GetFiles(path, "*.ost");
+                var list = new List<string>(files);
+                list.AddRange(files1);
+
+                foreach (var file in list)
+                {
+                    System.Diagnostics.Debug.WriteLine(file);
+                }
+                return list;
+            }
+            return null;
+        }
+
 
     }
 }
