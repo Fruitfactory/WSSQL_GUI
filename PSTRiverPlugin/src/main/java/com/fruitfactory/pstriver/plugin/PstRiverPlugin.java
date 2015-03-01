@@ -3,22 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.fruitfactory.pstriver.plugin;
 
+import com.fruitfactory.pstriver.rest.PstRestModule;
 import com.fruitfactory.pstriver.river.PstRiverModule;
 import com.fruitfactory.pstriver.utils.PstGlobalConst;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.inject.Module;
 import org.elasticsearch.plugins.AbstractPlugin;
+import org.elasticsearch.rest.RestModule;
 import org.elasticsearch.river.RiversModule;
 
 /**
  *
  * @author Yariki
  */
-public class PstRiverPlugin extends AbstractPlugin{
-    
+public class PstRiverPlugin extends AbstractPlugin {
+
     @Inject
     public PstRiverPlugin() {
     }
@@ -35,11 +36,13 @@ public class PstRiverPlugin extends AbstractPlugin{
 
     @Override
     public void processModule(Module module) {
-            if(module instanceof RiversModule){
-                ((RiversModule)module).registerRiver(PstGlobalConst.PST_PREFIX, PstRiverModule.class);
-            }
+        if (module instanceof RiversModule) {
+            ((RiversModule) module).registerRiver(PstGlobalConst.PST_PREFIX, PstRiverModule.class);
+        }
+        
+        if(module instanceof RestModule){
+            ((RestModule)module).addRestAction(PstRestModule.class);
+        }
     }
-    
-    
-    
+
 }
