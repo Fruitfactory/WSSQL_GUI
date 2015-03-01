@@ -116,6 +116,146 @@ public class PstMetadataTags {
         return mapping;
     }
     
+    public static final class Contact{
+        public static final String ITEM_FIRST_NAME = "firstname";
+        public static final String ITEM_LAST_NAME = "lastname";
+        public static final String ITEM_EMAILADDRESS1 = "emailaddress1";
+        public static final String ITEM_EMAILADDRESS2 = "emailaddress2";
+        public static final String ITEM_EMAILADDRESS3 = "emailaddress3";
+        public static final String ITEM_BUSINESSTELEPHONE = "businesstelephone";
+        public static final String ITEM_HOMETELEPHONE = "hometelephone";
+        public static final String ITEM_MOBILETELEPHONE = "mobiletelephone";
+        
+        public static final String ITEM_HOMEADDRESSCITY = "homeaddresscity";
+        public static final String ITEM_HOMEADDRESSCOUNTRY = "homeaddresscountry";
+        public static final String ITEM_HOMEADDRESSPOSTALCODE = "homeaddresspostalcode";
+        public static final String ITEM_HOMEADDRESSSTATE = "homeaddressstate";
+        public static final String ITEM_HOMEADRESSSTREET = "homeaddressstreet";
+        public static final String ITEM_HOMEADDRESSPOSTOFFICEBOX = "homeaddresspostofficebox";
+        
+        public static final String ITEM_BUSINESSADDRESSCITY = "businessaddresscity";
+        public static final String ITEM_BUSINESSADDRESSCOUTRY = "businessaddresscountry";
+        public static final String ITEM_BUSINESSADDRESSSTATE = "businessaddressstate";
+        public static final String ITEM_BUSINESSADDRESSSTREET = "businessaddressstreet";
+        public static final String ITEM_BUSINESSADDRESSPOSTOFFICEBOX = "businessaddresspostofficebox";
+        
+        public static final String ITEM_KEYWORD = "keyword";
+        public static final String ITEM_LOCATION = "location";
+        public static final String ITEM_COMPANY_NAME = "companyname";
+        public static final String ITEM_TITLE = "title";
+        public static final String ITEM_DEPARTMENT_NAME = "departmentname";
+        public static final String ITEM_MIDDLE_NAME = "middlename";
+        public static final String ITEM_DISPLAY_NAME_PREFIX = "displaynameprefix";
+        public static final String ITEM_PROFESSION = "profession";
+        public static final String ITEM_NOTE = "note";
+        
+        public static final String ITEM_HOME_ADDRESS = "homeaddress";
+        public static final String ITEM_WORK_ADDRESS = "workaddress";
+        public static final String ITEM_OTHER_ADDRESS = "otheraddress";
+        
+        public static final String ITEM_BIRTHDAY = "birthday";
+        
+    }
+    
+    
+    public static final class Appointment{
+        
+        public static final String ITEM_LOCATION = "location";
+        public static final String ITEM_STARTTIME = "starttime";
+        public static final String ITEM_ENDTIME = "endtime";
+        public static final String ITEM_TIMEZONE = "timezone";
+        public static final String ITEM_DURATION = "duration";
+        public static final String ITEM_MEETING_STATUS = "meetingstatus";
+        public static final String ITEM_ALL_ATTENDEES = "allattendees";
+        public static final String ITEM_TO_ATTENDEES = "toattendees";
+        public static final String ITEM_CC_ATTENDEES = "ccattendees";
+        public static final String ITEM_ISONLINE_MEETING = "isonlinemeeting";
+        public static final String ITEM_NETMEETING_SERVER = "netmeetingserver";
+        public static final String ITEM_NETMEETING_DOCUMENT_PATH = "meetingdocumentpath";
+        public static final String ITEM_NETSHOW_URL = "netshowurl";
+        public static final String ITEM_REQUIRED_ATTENDEES = "requiredattendees";
+        
+    }
+    
+    public static XContentBuilder buildPstContactMapping() throws IOException {
+        XContentBuilder mapping = jsonBuilder().prettyPrint().startObject();
+        mapping.startObject(INDEX_TYPE_CONTACT);
+        mapping.startObject(PROPERTIES);
+            addAnalyzedString(mapping, Contact.ITEM_FIRST_NAME);
+            addAnalyzedString(mapping, Contact.ITEM_LAST_NAME);
+            addAnalyzedString(mapping, Contact.ITEM_EMAILADDRESS1);
+            addAnalyzedString(mapping, Contact.ITEM_EMAILADDRESS2);
+            addAnalyzedString(mapping, Contact.ITEM_EMAILADDRESS3);
+            
+            addNotAnalyzedString(mapping, Contact.ITEM_BUSINESSTELEPHONE);
+            addNotAnalyzedString(mapping, Contact.ITEM_HOMETELEPHONE);
+            addNotAnalyzedString(mapping, Contact.ITEM_MOBILETELEPHONE);
+            
+            addAnalyzedString(mapping, Contact.ITEM_HOMEADDRESSCITY);
+            addAnalyzedString(mapping, Contact.ITEM_HOMEADDRESSCOUNTRY);
+            addAnalyzedString(mapping, Contact.ITEM_HOMEADDRESSPOSTALCODE);
+            addAnalyzedString(mapping, Contact.ITEM_HOMEADDRESSPOSTOFFICEBOX);
+            addAnalyzedString(mapping, Contact.ITEM_HOMEADDRESSSTATE);
+            addAnalyzedString(mapping, Contact.ITEM_HOMEADRESSSTREET);
+            
+            addAnalyzedString(mapping, Contact.ITEM_BUSINESSADDRESSCITY);
+            addAnalyzedString(mapping, Contact.ITEM_BUSINESSADDRESSCOUTRY);
+            addAnalyzedString(mapping, Contact.ITEM_BUSINESSADDRESSPOSTOFFICEBOX);
+            addAnalyzedString(mapping, Contact.ITEM_BUSINESSADDRESSSTATE);
+            addAnalyzedString(mapping, Contact.ITEM_BUSINESSADDRESSSTREET);
+            
+            addAnalyzedString(mapping, Contact.ITEM_KEYWORD);
+            addAnalyzedString(mapping, Contact.ITEM_LOCATION);
+            addAnalyzedString(mapping, Contact.ITEM_COMPANY_NAME);
+            addNotAnalyzedString(mapping, Contact.ITEM_TITLE);
+            addAnalyzedString(mapping, Contact.ITEM_DEPARTMENT_NAME);
+            addAnalyzedString(mapping, Contact.ITEM_MIDDLE_NAME);
+            addNotAnalyzedString(mapping, Contact.ITEM_DISPLAY_NAME_PREFIX);
+            addAnalyzedString(mapping, Contact.ITEM_PROFESSION);
+            addAnalyzedString(mapping, Contact.ITEM_NOTE);
+            
+            addAnalyzedString(mapping, Contact.ITEM_HOME_ADDRESS);
+            addAnalyzedString(mapping, Contact.ITEM_WORK_ADDRESS);
+            addAnalyzedString(mapping, Contact.ITEM_OTHER_ADDRESS);
+            
+            addDate(mapping, Contact.ITEM_BIRTHDAY);
+            
+        mapping.endObject();
+        mapping.endObject();
+        mapping.endObject();
+        
+        return mapping;
+    }
+    
+    
+    public static XContentBuilder buildPstAppointmentMapping() throws IOException{
+        XContentBuilder mapping = jsonBuilder().prettyPrint().startObject();
+        mapping.startObject(INDEX_TYPE_CALENDAR);
+        mapping.startObject(PROPERTIES);
+            addAnalyzedString(mapping, Appointment.ITEM_LOCATION);
+            addDate(mapping,Appointment.ITEM_STARTTIME);
+            addDate(mapping,Appointment.ITEM_ENDTIME);
+            addNotAnalyzedString(mapping, Appointment. ITEM_TIMEZONE);
+            addLong(mapping, Appointment.ITEM_DURATION);
+            addLong(mapping, Appointment.ITEM_MEETING_STATUS);
+            addAnalyzedString(mapping, Appointment.ITEM_ALL_ATTENDEES);
+            addAnalyzedString(mapping, Appointment.ITEM_TO_ATTENDEES);
+            addAnalyzedString(mapping, Appointment.ITEM_CC_ATTENDEES);
+            addNotAnalyzedString(mapping, Appointment.ITEM_ISONLINE_MEETING);
+            addNotIndexedString(mapping, Appointment.ITEM_NETMEETING_SERVER);
+            addNotIndexedString(mapping, Appointment.ITEM_NETMEETING_DOCUMENT_PATH);
+            addNotAnalyzedString(mapping, Appointment.ITEM_NETSHOW_URL);
+            addNotAnalyzedString(mapping, Appointment.ITEM_REQUIRED_ATTENDEES);
+            
+        
+        mapping.endObject();
+        mapping.endObject();
+        mapping.endObject();
+        
+        return mapping;
+    }
+    
+    
     private static void addAnalyzedString(XContentBuilder xcb, String fieldName) throws IOException {
         xcb.startObject(fieldName)
                 .field("type", "string")
