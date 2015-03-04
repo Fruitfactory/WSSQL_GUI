@@ -138,13 +138,17 @@
     <Compile Include="Core\Search\ResultMessage.cs" />
     <Compile Include="Core\Search\SearchResult.cs" />
     <Compile Include="Core\Search\SystemSearchResult.cs" />
+    <Compile Include="Data\AbstractSearchObject.cs" />
     <Compile Include="Data\AdressSearchObject.cs" />
+    <Compile Include="Data\AppointmentSearchObject.cs" />
     <Compile Include="Data\AttachmentSearchObject.cs" />
     <Compile Include="Data\BaseEmailSearchObject.cs" />
     <Compile Include="Data\BaseSearchObject.cs" />
     <Compile Include="Data\CommandSearchObject.cs" />
     <Compile Include="Data\ContactSearchObject.cs" />
+    <Compile Include="Data\ElasticSearch\WSUIAppointment.cs" />
     <Compile Include="Data\ElasticSearch\WSUIAttachment.cs" />
+    <Compile Include="Data\ElasticSearch\WSUIContact.cs" />
     <Compile Include="Data\ElasticSearch\WSUIElasticSearchBaseEntity.cs" />
     <Compile Include="Data\ElasticSearch\WSUIEmail.cs" />
     <Compile Include="Data\ElasticSearch\WSUIRecipient.cs" />

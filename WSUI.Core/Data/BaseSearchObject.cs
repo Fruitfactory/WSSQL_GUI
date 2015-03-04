@@ -17,7 +17,7 @@ using WSUI.Core.Interfaces;
 
 namespace WSUI.Core.Data
 {
-    public class BaseSearchObject : DataViewModel, ISearchObject
+    public class BaseSearchObject : AbstractSearchObject
     {
         #region [needs]
 
@@ -26,15 +26,7 @@ namespace WSUI.Core.Data
 
         #endregion [needs]
 
-        [Field("System.ItemName", 1, false)]
-        public string ItemName
-        {
-            get
-            {
-                return Get(() => ItemName);
-            }
-            set { Set(() => ItemName, value); }
-        }
+        
 
         [Field("System.ItemUrl", 2, false)]
         public string ItemUrl
@@ -75,44 +67,12 @@ namespace WSUI.Core.Data
             } 
         }
 
-        public Guid Id { get; private set; }
-
         public BaseSearchObject()
+            :base()
         {
-            Id = Guid.NewGuid();
         }
 
-        public virtual void SetValue(int index, object value)
-        {
-            switch (index)
-            {
-                case 1:
-                    ItemName = value as string;
-                    break;
-
-                case 2:
-                    ItemUrl = value as string;
-                    break;
-
-                case 3:
-                    Kind = value as string[];
-                    break;
-
-                case 4:
-                    DateCreated = (DateTime)Convert.ChangeType(value, typeof(DateTime), CultureInfo.InvariantCulture);
-                    break;
-
-                case 5:
-                    ItemNameDisplay = value as string;
-                    break;
-
-                case 6:
-                    Size = (int)Convert.ChangeType(value, typeof(int), CultureInfo.InvariantCulture);
-                    break;
-            }
-        }
-
-        public IEnumerable<ISearchObject> Items
+        public override IEnumerable<ISearchObject> Items
         {
             get { return _internaList; }
         }
@@ -122,20 +82,13 @@ namespace WSUI.Core.Data
             get { return Items.Any() ? (Items.Count() + IncludeParentCount).ToString(CultureInfo.InvariantCulture) : 0.ToString(); }
         }
 
-        public void AddItem(ISearchObject item)
+        public override void AddItem(ISearchObject item)
         {
             if (!_internaList.Contains(item))
                 _internaList.Add(item);
         }
 
-        public void SetDataObject(object data)
-        {
-            base.SetDataObject(data);
-        }
-
-        public TypeSearchItem TypeItem { get; set; }
-
-        public object Tag { get; set; }
+        
 
         public override string ToString()
         {

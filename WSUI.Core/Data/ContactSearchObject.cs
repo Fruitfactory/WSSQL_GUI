@@ -6,73 +6,223 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
+using System;
+using System.Collections.Generic;
+using System.Windows;
 using WSUI.Core.Core.Attributes;
+using WSUI.Core.Core.MVVM;
 using WSUI.Core.Enums;
+using WSUI.Core.Interfaces;
 
 namespace WSUI.Core.Data
 {
-    public class ContactSearchObject : BaseSearchObject
+    public class ContactSearchObject : AbstractSearchObject
     {
         [Field("System.Contact.FirstName", 7, false)]
-        public string FirstName { get; set; }
+        public string FirstName
+        {
+            get { return Get(() => FirstName); }
+            set { Set(() => LastName, value); }
+        }
 
         [Field("System.Contact.LastName", 8, false)]
-        public string LastName { get; set; }
+        public string LastName
+        {
+            get { return Get(() => LastName); }
+            set { Set(() => LastName, value); }
+        }
 
         [Field("System.Contact.EmailAddress", 9, false)]
-        public string EmailAddress { get; set; }
+        public string EmailAddress
+        {
+            get { return Get(() => EmailAddress); }
+            set { Set(() => EmailAddress, value); }
+        }
 
         [Field("System.Contact.EmailAddress2", 10, false)]
-        public string EmailAddress2 { get; set; }
+        public string EmailAddress2
+        {
+            get { return Get(() => EmailAddress2); }
+            set { Set(() => EmailAddress2, value); }
+        }
 
         [Field("System.Contact.EmailAddress3", 11, false)]
-        public string EmailAddress3 { get; set; }
+        public string EmailAddress3
+        {
+            get { return Get(() => EmailAddress3); }
+            set { Set(() => EmailAddress3, value); }
+        }
 
         [Field("System.Contact.BusinessTelephone", 12, false)]
-        public string BusinessTelephone { get; set; }
+        public string BusinessTelephone
+        {
+            get { return Get(() => BusinessTelephone); }
+            set { Set(() => BusinessTelephone, value); }
+        }
 
         [Field("System.Contact.HomeTelephone", 13, false)]
-        public string HomeTelephone { get; set; }
+        public string HomeTelephone
+        {
+            get { return Get(() => HomeTelephone); }
+            set { Set(() => HomeTelephone, value); }
+        }
 
         [Field("System.Contact.MobileTelephone", 14, false)]
-        public string MobileTelephone { get; set; }
+        public string MobileTelephone
+        {
+            get { return Get(() => MobileTelephone); }
+            set { Set(() => MobileTelephone, value); }
+        }
+
+        public string HomeAddressCity
+        {
+            get { return Get(() => HomeAddressCity); }
+            set { Set(() => HomeAddressCity, value); }
+        }
+
+        public string HomeAddressCountry
+        {
+            get { return Get(() => HomeAddressCountry); }
+            set { Set(() => HomeAddressCountry, value); }
+        }
+
+        public string HomeAddressPostalCode
+        {
+            get { return Get(() => HomeAddressPostalCode); }
+            set { Set(() => HomeAddressPostalCode, value); }
+        }
+
+        public string HomeAddressState
+        {
+            get { return Get(() => HomeAddressState); }
+            set { Set(() => HomeAddressState, value); }
+        }
+
+        public string HomeAddressStreet
+        {
+            get { return Get(() => HomeAddressStreet); }
+            set { Set(() => HomeAddressStreet, value); }
+        }
+
+        public string HomeAddressPostOfficeBox
+        {
+            get { return Get(() => HomeAddressPostOfficeBox); }
+            set { Set(() => HomeAddressPostOfficeBox, value); }
+        }
+
+        public string BusinessAddressCity
+        {
+            get { return Get(() => BusinessAddressCity); }
+            set { Set(() => BusinessAddressCity, value); }
+        }
+
+        public string BusinessAddressCountry
+        {
+            get { return Get(() => BusinessAddressCountry); }
+            set { Set(() => BusinessAddressCountry, value); }
+        }
+
+        public string BusinessAddressState
+        {
+            get { return Get(() => BusinessAddressState); }
+            set { Set(() => BusinessAddressState, value); }
+        }
+
+        public string BusinessAddressStreet
+        {
+            get { return Get(() => BusinessAddressStreet); }
+            set { Set(() => BusinessAddressStreet, value); }
+        }
+
+        public string BusinessAddressPostOfficeBox
+        {
+            get { return Get(() => BusinessAddressPostOfficeBox); }
+            set { Set(() => BusinessAddressPostOfficeBox, value); }
+        }
+
+        public string Keyword
+        {
+            get { return Get(() => Keyword); }
+            set { Set(() => Keyword, value); }
+        }
+
+        public string Location
+        {
+            get { return Get(() => Location); }
+            set { Set(() => Location, value); }
+        }
+
+        public string CompanyName
+        {
+            get { return Get(() => CompanyName); }
+            set { Set(() => CompanyName, value); }
+        }
+
+        public string Title
+        {
+            get { return Get(() => Title); }
+            set { Set(() => Title, value); }
+        }
+
+        public string DepartmentName
+        {
+            get { return Get(() => DepartmentName); }
+            set { Set(() => DepartmentName, value); }
+        }
+
+        public string MiddleName
+        {
+            get { return Get(() => MiddleName); }
+            set { Set(() => MiddleName, value); }
+        }
+
+        public string DisplayNamePrefix
+        {
+            get { return Get(() => DisplayNamePrefix); }
+            set { Set(() => DisplayNamePrefix, value); }
+        }
+
+        public string Profession
+        {
+            get { return Get(() => Profession); }
+            set { Set(() => Profession, value); }
+        }
+
+        public string Note
+        {
+            get { return Get(() => Note); }
+            set { Set(() => Note, value); }
+        }
+
+        public string HomeAddress
+        {
+            get { return Get(() => HomeAddress); }
+            set { Set(() => HomeAddress, value); }
+        }
+
+
+        public string WorkAddress
+        {
+            get { return Get(() => WorkAddress); }
+            set { Set(() => WorkAddress, value); }
+        }
+
+        public string OtherAddress
+        {
+            get { return Get(() => OtherAddress); }
+            set { Set(() => OtherAddress, value); }
+        }
+
+        public DateTime Birthday
+        {
+            get { return Get(() => Birthday); }
+            set { Set(() => Birthday, value); }
+        }
 
         public ContactSearchObject()
         {
             TypeItem = TypeSearchItem.Contact;
-            Tag = "Click to email recipient";
-        }
-
-        public override void SetValue(int index, object value)
-        {
-            base.SetValue(index, value);
-            switch (index)
-            {
-                case 7:
-                    FirstName = value as string;
-                    break;
-                case 8:
-                    LastName = value as string;
-                    break;
-                case 9:
-                    EmailAddress = value as string;
-                    break;
-                case 10:
-                    EmailAddress2 = value as string;
-                    break;
-                case 11:
-                    EmailAddress3 = value as string;
-                    break;
-                case 12:
-                    BusinessTelephone = value as string;
-                    break;
-                case 13:
-                    HomeTelephone = value as string;
-                    break;
-                case 14:
-                    MobileTelephone = value as string;
-                    break;
-            }
+            //Tag = "Click to email recipient";
         }
 
         public string GetEmail()
