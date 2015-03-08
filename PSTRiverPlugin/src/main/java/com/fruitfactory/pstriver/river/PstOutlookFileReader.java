@@ -174,6 +174,7 @@ public class PstOutlookFileReader implements Runnable {
         if (body.isEmpty()) {
             body = message.getBodyHTML();
         }
+        String entryID = message.getEntryID();
         boolean hasAttachment = message.hasAttachments();
         Date dateCreated = message.getCreationTime();
         Date dateReceived = message.getMessageDeliveryTime();
@@ -250,7 +251,8 @@ public class PstOutlookFileReader implements Runnable {
                 .field(PstMetadataTags.Email.CONTENT, body)
                 .field(PstMetadataTags.Email.HAS_ATTACHMENTS, Boolean.toString(hasAttachment))
                 .field(PstMetadataTags.Email.FROM_NAME, sender)
-                .field(PstMetadataTags.Email.FROM_ADDRESS, senderEmail);
+                .field(PstMetadataTags.Email.FROM_ADDRESS, senderEmail)
+                .field(PstMetadataTags.Email.ENTRY_ID,entryID);
 
         AddArrayOfEmails(source, listTo,
                 PstMetadataTags.Email.TO,
@@ -326,6 +328,7 @@ public class PstOutlookFileReader implements Runnable {
         String otherAddress = contact.getOtherAddress();
 
         Date birthday = contact.getBirthday();
+        String entryID = contact.getEntryID();
 
         XContentBuilder source = jsonBuilder().startObject();
 
@@ -365,7 +368,8 @@ public class PstOutlookFileReader implements Runnable {
                 .field(PstMetadataTags.Contact.ITEM_HOME_ADDRESS, homeAddress)
                 .field(PstMetadataTags.Contact.ITEM_WORK_ADDRESS, workAddress)
                 .field(PstMetadataTags.Contact.ITEM_OTHER_ADDRESS, otherAddress)
-                .field(PstMetadataTags.Contact.ITEM_BIRTHDAY, birthday);
+                .field(PstMetadataTags.Contact.ITEM_BIRTHDAY, birthday)
+                .field(PstMetadataTags.Contact.ENTRY_ID,entryID);
         source.endObject();
 
         esIndex(_indexName, PstMetadataTags.INDEX_TYPE_CONTACT, PstSignTool.sign(contact.toString()).toString(), source);
@@ -387,6 +391,8 @@ public class PstOutlookFileReader implements Runnable {
         String docPath = appointment.getNetMeetingDocumentPathName();
         String url = appointment.getNetShowURL();
         String requiredAttendees = appointment.getRequiredAttendees();
+        String entryID = appointment.getEntryID();
+                
 
         XContentBuilder source = jsonBuilder().startObject();
 
@@ -408,7 +414,8 @@ public class PstOutlookFileReader implements Runnable {
                 .field(PstMetadataTags.Appointment.ITEM_NETMEETING_DOCUMENT_PATH, docPath)
                 .field(PstMetadataTags.Appointment.ITEM_NETMEETING_SERVER, meetingServer)
                 .field(PstMetadataTags.Appointment.ITEM_NETSHOW_URL, url)
-                .field(PstMetadataTags.Appointment.ITEM_REQUIRED_ATTENDEES, requiredAttendees);
+                .field(PstMetadataTags.Appointment.ITEM_REQUIRED_ATTENDEES, requiredAttendees)
+                .field(PstMetadataTags.Appointment.ENTRY_ID,entryID);
         source.endObject();
 
         esIndex(_indexName, PstMetadataTags.INDEX_TYPE_CALENDAR, PstSignTool.sign(appointment.toString()).toString(), source);

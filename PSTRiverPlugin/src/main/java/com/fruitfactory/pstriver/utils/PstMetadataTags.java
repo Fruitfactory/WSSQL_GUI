@@ -38,6 +38,7 @@ public class PstMetadataTags {
         public static final String HAS_ATTACHMENTS = "hasattachments";
         public static final String FROM_NAME = "fromname";
         public static final String FROM_ADDRESS = "fromaddress";
+        public static final String ENTRY_ID = "entryid";
         
         public static final String TO = "to";
         public static final class To{
@@ -83,6 +84,7 @@ public class PstMetadataTags {
             addNotAnalyzedString(mapping, Email.HAS_ATTACHMENTS);
             addAnalyzedString(mapping, Email.FROM_NAME);
             addAnalyzedString(mapping, Email.FROM_ADDRESS);
+            addNotAnalyzedString(mapping, Email.ENTRY_ID);
             
             mapping.startObject(Email.TO);
                 mapping.startObject(PROPERTIES);
@@ -154,6 +156,7 @@ public class PstMetadataTags {
         public static final String ITEM_OTHER_ADDRESS = "otheraddress";
         
         public static final String ITEM_BIRTHDAY = "birthday";
+        public static final String ENTRY_ID = "entryid";
         
     }
     
@@ -174,6 +177,7 @@ public class PstMetadataTags {
         public static final String ITEM_NETMEETING_DOCUMENT_PATH = "meetingdocumentpath";
         public static final String ITEM_NETSHOW_URL = "netshowurl";
         public static final String ITEM_REQUIRED_ATTENDEES = "requiredattendees";
+        public static final String ENTRY_ID = "entryid";
         
     }
     
@@ -219,6 +223,7 @@ public class PstMetadataTags {
             addAnalyzedString(mapping, Contact.ITEM_OTHER_ADDRESS);
             
             addDate(mapping, Contact.ITEM_BIRTHDAY);
+            addNotAnalyzedString(mapping, Contact.ENTRY_ID);
             
         mapping.endObject();
         mapping.endObject();
@@ -246,8 +251,8 @@ public class PstMetadataTags {
             addNotIndexedString(mapping, Appointment.ITEM_NETMEETING_DOCUMENT_PATH);
             addNotAnalyzedString(mapping, Appointment.ITEM_NETSHOW_URL);
             addNotAnalyzedString(mapping, Appointment.ITEM_REQUIRED_ATTENDEES);
+            addNotAnalyzedString(mapping, Appointment.ENTRY_ID);
             
-        
         mapping.endObject();
         mapping.endObject();
         mapping.endObject();
