@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 
 namespace WSUI.Core.Helpers
@@ -53,7 +54,7 @@ namespace WSUI.Core.Helpers
 
         #region public
 
-        public string GenerateTempFileName(BaseSearchObject searchitem)
+        public string GenerateTempFileName(ISearchObject searchitem)
         {
             return InternalGetTempFilename(searchitem.Id, GetFilename(searchitem), GetExtension(searchitem));
         }
@@ -194,7 +195,7 @@ namespace WSUI.Core.Helpers
             }
         }
 
-        private string GetExtension(BaseSearchObject searchItem)
+        private string GetExtension(ISearchObject searchItem)
         {
             string ext = null;
             switch (searchItem.TypeItem)
@@ -204,12 +205,12 @@ namespace WSUI.Core.Helpers
                     break;
 
                 case Enums.TypeSearchItem.Attachment:
-                    string filename = searchItem.ItemUrl.Substring(searchItem.ItemUrl.LastIndexOf(':') + 1);
+                    string filename = searchItem.ItemName;
                     ext = Path.GetExtension(filename);
                     break;
 
                 case Enums.TypeSearchItem.Contact:
-                    ext = Path.GetExtension(searchItem.ItemUrl);
+                    ext = Path.GetExtension(searchItem.ItemName); // TODO: should check!! ItenUrl was changed yo ItemName
                     break;
 
                 case Enums.TypeSearchItem.Calendar:
@@ -219,7 +220,7 @@ namespace WSUI.Core.Helpers
             return ext;
         }
 
-        private string GetFilename(BaseSearchObject searchItem)
+        private string GetFilename(ISearchObject searchItem)
         {
             string filename = string.Empty;
             switch (searchItem.TypeItem)

@@ -13,7 +13,6 @@ namespace WSUI.Core.Data
 {
     public class EmailSearchObject : BaseEmailSearchObject
     {
-        [Field("System.Subject", 15, false)]
         public string Subject { get; set; }
 
         public EmailSearchObject()
@@ -21,15 +20,5 @@ namespace WSUI.Core.Data
             TypeItem = TypeSearchItem.Email;
         }
 
-        public override void SetValue(int index, object value)
-        {
-            base.SetValue(index, value);
-            switch (index)
-            {
-                case 15:
-                    Subject = value as string;
-                    break;
-            }
-        }
     }//end EmailSearchObject
 }//end namespace Data

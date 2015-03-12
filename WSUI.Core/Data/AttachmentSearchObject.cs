@@ -15,7 +15,6 @@ namespace WSUI.Core.Data
 {
     public class AttachmentSearchObject : BaseEmailSearchObject
     {
-        [Field("System.DateModified", 15, false)]
         public DateTime DateModified { get; set; }
 
         public AttachmentSearchObject()
@@ -23,15 +22,5 @@ namespace WSUI.Core.Data
             TypeItem = TypeSearchItem.Attachment;
         }
 
-        public override void SetValue(int index, object value)
-        {
-            base.SetValue(index, value);
-            switch (index)
-            {
-                case 15:
-                    DateModified = (DateTime)Convert.ChangeType(value, typeof(DateTime), CultureInfo.InvariantCulture);
-                    break;
-            }
-        }
     }//end AttachmentSearchObject
 }//end namespace Data

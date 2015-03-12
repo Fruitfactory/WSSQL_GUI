@@ -42,11 +42,12 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
             return "*"; // searching in all property
         }
 
+        // TODO: refactore
 	    protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
 	    {
 	        var dateString = FormatDate(ref LastDate);
-	        var tuple = GetProcessingSearchCriteria(listCriterisRules);
-	        string addCriteria = GetAdditionalCriteria(tuple.Item2);
+	        var tuple = GetProcessingSearchCriteria();
+	        string addCriteria = GetAdditionalCriteria(tuple);
 	        return string.Format(WhereTemplate, dateString, addCriteria);
 	    }
 

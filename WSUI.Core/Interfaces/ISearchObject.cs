@@ -9,6 +9,7 @@ namespace WSUI.Core.Interfaces
         Guid Id { get; }
 
         string ItemName { get; set; }
+        string EntryID { get; set; }
 
         TypeSearchItem TypeItem { get; set; }
 

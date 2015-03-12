@@ -186,14 +186,13 @@ namespace WSUI.Core.Helpers
         {
             if (data == null)
                 return null;
-            string mapiUrl = data.ItemUrl;
             Outlook.ContactItem ci = GetContact(data);
             if (ci == null)
                 return null;
             Outlook.Attachment att = GetFotoAttachment(ci);
             if (att == null)
                 return null;
-            data.ItemUrl = att.DisplayName;
+            //data.ItemUrl = att.DisplayName;  TODO: should be changed according our new approach
 
             string tempFilename = TempFileManager.Instance.GenerateTempFileName(data);
 

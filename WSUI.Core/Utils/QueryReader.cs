@@ -25,6 +25,10 @@ namespace WSUI.Core.Utils
         public static readonly Func<T> Instance = Expression.Lambda<Func<T>>(Expression.New(typeof(T))).Compile();
     }
 
+    /// <summary>
+    /// we don't uset it from this moment. Deprecated. Should delete this file
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class QueryReader<T> : IQueryReader where T : new()
     {
         #region [needs]
@@ -66,7 +70,7 @@ namespace WSUI.Core.Utils
                         val = reader[index];
                     if (DBNull.Value.Equals(val))
                         return;
-                    result.SetValue(tuple.Item3, val);
+                    //result.SetValue(tuple.Item3, val);
                 }
                 catch (Exception ex)
                 {
@@ -94,7 +98,7 @@ namespace WSUI.Core.Utils
                         val = row[index];
                     if (DBNull.Value.Equals(val))
                         return;
-                    result.SetValue(tuple.Item3, val);
+                    //result.SetValue(tuple.Item3, val);
                 }
                 catch (Exception ex)
                 {

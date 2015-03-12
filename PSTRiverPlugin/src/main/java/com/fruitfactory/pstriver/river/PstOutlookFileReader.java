@@ -21,10 +21,14 @@ import com.pff.PSTException;
 import com.pff.PSTFile;
 import com.pff.PSTFolder;
 import com.pff.PSTMessage;
+import com.pff.PSTNodeInputStream;
+import com.pff.PSTObject;
 import com.pff.PSTRecipient;
 import com.pff.PSTTimeZone;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import example.TestGui;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
@@ -54,6 +58,7 @@ public class PstOutlookFileReader implements Runnable {
     private Date _lastUpdateDate;
     private String _indexName;
     private String _name;
+    private int _emailCount = 0;
 
     public PstOutlookFileReader(String indexName, String filename, Date lastUpdatedDate, ESLogger _logger, BulkProcessor _bulkProcessor) {
         this._filename = filename;
@@ -65,12 +70,12 @@ public class PstOutlookFileReader implements Runnable {
 
     private void esIndex(String index, String type, String id,
             XContentBuilder xb) throws Exception {
-        //if (logger.isDebugEnabled()) logger.debug("Indexing in ES " + index + ", " + type + ", " + id);
-        _logger.warn("Indexing in ES " + index + ", " + type + ", " + id);
+        if (_logger.isDebugEnabled()) {
+            _logger.debug("Indexing in ES " + index + ", " + type + ", " + id);
+        }
         if (_logger.isTraceEnabled()) {
             _logger.trace("JSon indexed : {}", xb.string());
         }
-        _logger.warn("JSon indexed : {}", xb.string());
 
         if (!_closed) {
             _bulkProcessor.add(new IndexRequest(index, type, id).source(xb));
@@ -82,7 +87,7 @@ public class PstOutlookFileReader implements Runnable {
     public void close() {
         _closed = true;
     }
-    
+
     @Override
     public void run() {
         try {
@@ -102,7 +107,7 @@ public class PstOutlookFileReader implements Runnable {
         int count = countItems(rootFolder);
         Path pathFileName = Paths.get(_filename).getFileName();
         _name = pathFileName.toString();
-        PstReaderStatusInfo  statusInfo = new PstReaderStatusInfo(_name, count);
+        PstReaderStatusInfo statusInfo = new PstReaderStatusInfo(_name, count);
         statusInfo.setStatus(PstReaderStatus.NonStarted);
         PstStatusRepository.setStatusInfo(statusInfo);
     }
@@ -144,25 +149,38 @@ public class PstOutlookFileReader implements Runnable {
             if (pstFolder.getContentCount() > 0) {
                 PSTMessage message = (PSTMessage) pstFolder.getNextChild();
                 while (message != null) {
+                    if (_lastUpdateDate == null) {
+                        processObject(message, folderName);
+                        message = (PSTMessage) pstFolder.getNextChild();
 
-                    if (_lastUpdateDate != null && message.getLastModificationTime().getTime() > _lastUpdateDate.getTime()) {
                         continue;
+                    } else {
+                        long creationTime = message.getCreationTime().getTime();
+                        long lastUpdated = _lastUpdateDate.getTime();
+
+                        if (lastUpdated > creationTime) {
+                            message = (PSTMessage) pstFolder.getNextChild();
+                            continue;
+                        }
+                        processObject(message, folderName);
+                        message = (PSTMessage) pstFolder.getNextChild();
                     }
 
-                    if (message instanceof PSTContact) {
-                        indexContact((PSTContact) message);
-                    } else if (message instanceof PSTAppointment) {
-                        indexAppointment((PSTAppointment) message);
-                    } else if (message != null) {
-                        indexEmail(message, folderName);
-                    }
-
-                    message = (PSTMessage) pstFolder.getNextChild();
                 }
                 PstStatusRepository.setProcessCount(_name, pstFolder.getContentCount());
             }
         } catch (Exception e) {
             _logger.error(LOG_TAG + e.getMessage());
+        }
+    }
+
+    private void processObject(PSTObject object, String folderName) throws Exception {
+        if (object instanceof PSTContact) {
+            indexContact((PSTContact) object);
+        } else if (object instanceof PSTAppointment) {
+            indexAppointment((PSTAppointment) object);
+        } else if (object != null && object instanceof PSTMessage) {
+            indexEmail((PSTMessage)object, folderName);
         }
     }
 
@@ -181,8 +199,10 @@ public class PstOutlookFileReader implements Runnable {
         long size = message.getMessageSize();
         PSTConversationIndexData indexData = message.getConversationIndexData();
         UUID id = null;
+        String conversationIndex = "";
         try {
             id = indexData.getConversationUUID(message.getConversationTopic(), message.getConversationIndexTracking());
+            conversationIndex = Integer.toString(indexData.getConversationIndex());
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(TestGui.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -226,6 +246,8 @@ public class PstOutlookFileReader implements Runnable {
                 }
                 AttachmentHelper helper = new AttachmentHelper(attachment.getLongFilename(), attachment.getLongPathname(), attachment.getFilesize(), attachment.getMimeTag());
                 listAttachments.add(helper);
+
+                saveAttachment(attachment, entryID);
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -246,13 +268,13 @@ public class PstOutlookFileReader implements Runnable {
                 .field(PstMetadataTags.Email.DATE_RECEIVED, dateReceived)
                 .field(PstMetadataTags.Email.SIZE, size)
                 .field(PstMetadataTags.Email.CONVERSATION_ID, conversationId)
-                .field(PstMetadataTags.Email.CONVERSATION_INDEX, "")
+                .field(PstMetadataTags.Email.CONVERSATION_INDEX, conversationIndex)
                 .field(PstMetadataTags.Email.SUBJECT, subject)
                 .field(PstMetadataTags.Email.CONTENT, body)
                 .field(PstMetadataTags.Email.HAS_ATTACHMENTS, Boolean.toString(hasAttachment))
                 .field(PstMetadataTags.Email.FROM_NAME, sender)
                 .field(PstMetadataTags.Email.FROM_ADDRESS, senderEmail)
-                .field(PstMetadataTags.Email.ENTRY_ID,entryID);
+                .field(PstMetadataTags.Email.ENTRY_ID, entryID);
 
         AddArrayOfEmails(source, listTo,
                 PstMetadataTags.Email.TO,
@@ -286,7 +308,46 @@ public class PstOutlookFileReader implements Runnable {
 
         source.endObject();
 
-        esIndex(_indexName, PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE, PstSignTool.sign(body).toString(), source);
+        esIndex(_indexName, PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
+    }
+
+    private void saveAttachment(PSTAttachment attachment, String emailID) throws IOException, Exception {
+        if (attachment == null) {
+            return;
+        }
+        String filename = attachment.getLongFilename();
+        String pathname = attachment.getLongPathname();
+        int size = attachment.getSize();
+        String mime = attachment.getMimeTag();
+        String entryid = attachment.getEntryID();
+        StringBuilder strBuilder = new StringBuilder();
+        try (InputStream reader = attachment.getFileInputStream()) {
+            final int lenght = 8176;
+            byte[] output = new byte[lenght];
+            while (reader.read(output) > -1) {
+                String temp = Base64.encode(output);
+                strBuilder.append(temp);
+            }
+        } catch (Exception ex) {
+            _logger.error(LOG_TAG, ex.getMessage());
+        }
+
+        XContentBuilder source = jsonBuilder().startObject();
+
+        if (_logger.isTraceEnabled()) {
+            source.prettyPrint();
+        }
+
+        source
+                .field(PstMetadataTags.Attachment.FILENAME, filename)
+                .field(PstMetadataTags.Attachment.PATH, pathname)
+                .field(PstMetadataTags.Attachment.SIZE, size)
+                .field(PstMetadataTags.Attachment.MIME_TAG, mime)
+                .field(PstMetadataTags.Attachment.CONTENT, strBuilder.toString())
+                .field(PstMetadataTags.Attachment.EMAIL_ID, emailID)
+                .field(PstMetadataTags.Attachment.ENTRYID, entryid);
+        source.endObject();
+        esIndex(_indexName, PstMetadataTags.INDEX_TYPE_ATTACHMENT, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
     }
 
     private void indexContact(PSTContact contact) throws IOException, Exception {
@@ -369,7 +430,7 @@ public class PstOutlookFileReader implements Runnable {
                 .field(PstMetadataTags.Contact.ITEM_WORK_ADDRESS, workAddress)
                 .field(PstMetadataTags.Contact.ITEM_OTHER_ADDRESS, otherAddress)
                 .field(PstMetadataTags.Contact.ITEM_BIRTHDAY, birthday)
-                .field(PstMetadataTags.Contact.ENTRY_ID,entryID);
+                .field(PstMetadataTags.Contact.ENTRY_ID, entryID);
         source.endObject();
 
         esIndex(_indexName, PstMetadataTags.INDEX_TYPE_CONTACT, PstSignTool.sign(contact.toString()).toString(), source);
@@ -392,7 +453,6 @@ public class PstOutlookFileReader implements Runnable {
         String url = appointment.getNetShowURL();
         String requiredAttendees = appointment.getRequiredAttendees();
         String entryID = appointment.getEntryID();
-                
 
         XContentBuilder source = jsonBuilder().startObject();
 
@@ -415,10 +475,10 @@ public class PstOutlookFileReader implements Runnable {
                 .field(PstMetadataTags.Appointment.ITEM_NETMEETING_SERVER, meetingServer)
                 .field(PstMetadataTags.Appointment.ITEM_NETSHOW_URL, url)
                 .field(PstMetadataTags.Appointment.ITEM_REQUIRED_ATTENDEES, requiredAttendees)
-                .field(PstMetadataTags.Appointment.ENTRY_ID,entryID);
+                .field(PstMetadataTags.Appointment.ENTRY_ID, entryID);
         source.endObject();
 
-        esIndex(_indexName, PstMetadataTags.INDEX_TYPE_CALENDAR, PstSignTool.sign(appointment.toString()).toString(), source);
+        esIndex(_indexName, PstMetadataTags.INDEX_TYPE_CALENDAR, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
     }
 
     private void AddArrayOfEmails(XContentBuilder builder, List<Pair<String, String>> list, String objectName, String nameTag, String addressTag) throws IOException {

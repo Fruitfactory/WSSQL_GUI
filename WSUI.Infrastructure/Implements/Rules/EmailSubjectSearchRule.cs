@@ -41,10 +41,12 @@ namespace WSUI.Infrastructure.Implements.Rules
             Priority = 2;
         }
 
+
+        //TODO refactore
         protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
         {
             var dateString = FormatDate(ref LastDate);
-            var and = GetProcessingSearchCriteria(listCriterisRules).Item1;
+            var and = GetProcessingSearchCriteria();
             return string.Format(WhereTemplate, dateString, and);
         }
 

@@ -18,56 +18,48 @@ namespace WSUI.Core.Data
 {
     public class ContactSearchObject : AbstractSearchObject
     {
-        [Field("System.Contact.FirstName", 7, false)]
         public string FirstName
         {
             get { return Get(() => FirstName); }
             set { Set(() => LastName, value); }
         }
 
-        [Field("System.Contact.LastName", 8, false)]
         public string LastName
         {
             get { return Get(() => LastName); }
             set { Set(() => LastName, value); }
         }
 
-        [Field("System.Contact.EmailAddress", 9, false)]
         public string EmailAddress
         {
             get { return Get(() => EmailAddress); }
             set { Set(() => EmailAddress, value); }
         }
 
-        [Field("System.Contact.EmailAddress2", 10, false)]
         public string EmailAddress2
         {
             get { return Get(() => EmailAddress2); }
             set { Set(() => EmailAddress2, value); }
         }
 
-        [Field("System.Contact.EmailAddress3", 11, false)]
         public string EmailAddress3
         {
             get { return Get(() => EmailAddress3); }
             set { Set(() => EmailAddress3, value); }
         }
 
-        [Field("System.Contact.BusinessTelephone", 12, false)]
         public string BusinessTelephone
         {
             get { return Get(() => BusinessTelephone); }
             set { Set(() => BusinessTelephone, value); }
         }
 
-        [Field("System.Contact.HomeTelephone", 13, false)]
         public string HomeTelephone
         {
             get { return Get(() => HomeTelephone); }
             set { Set(() => HomeTelephone, value); }
         }
 
-        [Field("System.Contact.MobileTelephone", 14, false)]
         public string MobileTelephone
         {
             get { return Get(() => MobileTelephone); }

@@ -28,7 +28,6 @@ namespace WSUI.Core.Data
 
         
 
-        [Field("System.ItemUrl", 2, false)]
         public string ItemUrl
         {
             get
@@ -38,25 +37,21 @@ namespace WSUI.Core.Data
             set { Set(() => ItemUrl, value); }
         }
 
-        [Field("System.Kind", 3, false)]
         public string[] Kind { get; set; }
 
-        [Field("System.DateCreated", 4, true)]
         public DateTime DateCreated
         {
             get { return Get(() => DateCreated); }
             set { Set(() => DateCreated, value); }
         }
 
-        [Field("System.ItemNameDisplay", 5, false)]
         public string ItemNameDisplay
         {
             get { return Get(() => ItemNameDisplay); }
             set { Set(() => ItemNameDisplay, value); }
         }
 
-        [Field("System.Size", 6, false)]
-        public int Size {
+        public long Size {
             get
             {
                 return Get(() => Size);

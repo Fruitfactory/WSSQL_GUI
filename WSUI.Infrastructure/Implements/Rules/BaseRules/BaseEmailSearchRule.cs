@@ -7,8 +7,10 @@
 ///////////////////////////////////////////////////////////
 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Documents;
 using Nest;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
@@ -54,6 +56,14 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 
         protected override QueryContainer BuildQuery(QueryDescriptor<WSUIEmail> queryDescriptor)
         {
+            var preparedCriterias = GetProcessingSearchCriteria();
+            if (preparedCriterias.Count > 1)
+            {
+                return queryDescriptor.Bool(descriptor =>
+                {
+                    descriptor.Must(preparedCriterias.Select(preparedCriteria => (Func<QueryDescriptor<WSUIEmail>, QueryContainer>) (descriptor1 => descriptor1.Term(e => e.Subject, preparedCriteria))).ToArray());
+                });
+            }
             return queryDescriptor.Term(e => e.Subject, Query);
         }
 

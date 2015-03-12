@@ -14,7 +14,7 @@ using WSUI.Core.Data.ElasticSearch;
 
 namespace WSUI.Infrastructure.Implements.Rules
 {
-    public class GeneralContactRule : BaseSearchRule<BaseSearchObject,WSUIStub>
+    public class GeneralContactRule : BaseSearchRule<ContactSearchObject,WSUIStub>
     {
         #region [needs]
 
@@ -128,17 +128,18 @@ namespace WSUI.Infrastructure.Implements.Rules
                 }
             }
 
-            var resultEmailContact = (_listContactsRules[1] as ISearchRule).GetResults().OperationResult.OfType<EmailContactSearchObject>();
-            if (resultEmailContact != null && resultEmailContact.Any())
-            {
-                foreach (var emailContact in resultEmailContact)
-                {
-                    if(!IsEmail(emailContact.EMail) || _listExistingEmails.Contains(emailContact.EMail.ToLowerInvariant()))
-                        continue;
-                    Result.Add(emailContact);
-                    _listExistingEmails.Add(emailContact.EMail.ToLowerInvariant());
-                }    
-            }
+            //TODO: add seraching by email addresses.
+            //var resultEmailContact = (_listContactsRules[1] as ISearchRule).GetResults().OperationResult.OfType<EmailContactSearchObject>();
+            //if (resultEmailContact != null && resultEmailContact.Any())
+            //{
+            //    foreach (var emailContact in resultEmailContact)
+            //    {
+            //        if(!IsEmail(emailContact.EMail) || _listExistingEmails.Contains(emailContact.EMail.ToLowerInvariant()))
+            //            continue;
+            //        Result.Add(emailContact);
+            //        _listExistingEmails.Add(emailContact.EMail.ToLowerInvariant());
+            //    }    
+            //}
         }
 
         private bool IsContainsSearchCriterias(string emailAddress, string[] arrQuery)

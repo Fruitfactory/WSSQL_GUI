@@ -10,19 +10,20 @@ package com.fruitfactory.pstriver.helpers;
  * @author Yariki
  */
 public class Pair<T, T1> {
+
     private T _item1;
     private T1 _item2;
-    
-    public Pair(T item1, T1 item2){
+
+    public Pair(T item1, T1 item2) {
         _item1 = item1;
         _item2 = item2;
     }
-    
-    public T getItem1(){
+
+    public T getItem1() {
         return _item1;
     }
-    
-    public T1 getItem2(){
+
+    public T1 getItem2() {
         return _item2;
     }
 }

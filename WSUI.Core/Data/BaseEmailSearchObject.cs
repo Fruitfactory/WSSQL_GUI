@@ -23,7 +23,6 @@ namespace WSUI.Core.Data
 
         #endregion [needs]
 
-        [Field("System.Message.ConversationID", 7, false)]
 
         public string ConversationId
         {
@@ -31,7 +30,6 @@ namespace WSUI.Core.Data
             set { Set(() => ConversationId,value);}
         }
 
-        [Field("System.Message.ToAddress", 8, false)]
         public WSUIRecipient[] To
         {
             get { return Get(() => To); }
@@ -50,28 +48,24 @@ namespace WSUI.Core.Data
             set { Set(() => Bcc, value); }
         }
 
-        [Field("System.Message.DateReceived", 9, false)]
         public DateTime DateReceived
         {
             get { return Get(() => DateReceived); }
             set { Set(() => DateReceived,value);}
         }
 
-        [Field("System.Message.ConversationIndex", 10, false)]
         public string ConversationIndex
         {
             get { return Get(() => ConversationIndex); }
             set { Set(() => ConversationIndex,value);}
         }
 
-        [Field("System.Message.FromAddress", 11, false)]
         public string FromAddress
         {
             get { return Get(() => FromAddress); }
             set { Set(() => FromAddress,value);}
         }
 
-        [Field("System.Message.FromName", 12, false)]
         public string FromName
         {
             get { return Get(() => FromName); }

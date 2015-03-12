@@ -10,6 +10,7 @@ package com.fruitfactory.pstriver.helpers;
  * @author Yariki
  */
 public class AttachmentHelper {
+
     private String _filename;
     private String _path;
     private long _size;
@@ -37,5 +38,5 @@ public class AttachmentHelper {
     public long getSize() {
         return _size;
     }
-    
+
 }

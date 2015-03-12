@@ -74,7 +74,7 @@ namespace WSUI.Core.Core.Search
         protected BaseSearchRule()
             : this(null, false)
         {
-            _elasticSearchClient = new WSUIElasticSearchClient(WSUIElasticSearchClient.ElasticSearchHost, "psttest");
+            _elasticSearchClient = new WSUIElasticSearchClient();
             _create = New<T>.Instance;
         }
 
@@ -310,8 +310,9 @@ namespace WSUI.Core.Core.Search
             return date.ToString("yyyy/MM/dd hh:mm:ss").Replace('.', '/');
         }
 
-        protected Tuple<string, List<string>> GetProcessingSearchCriteria(IList<IRule> listRuleCriteriasRules)
+        protected List<string> GetProcessingSearchCriteria()
         {
+            IList<IRule> listRuleCriteriasRules = RuleFactory.Instance.GetAllRules();
             var tempCriteria = Query;
             var andClause = string.Empty;
             var listW = new List<string>();
@@ -321,22 +322,7 @@ namespace WSUI.Core.Core.Search
                 listW.AddRange(rule.ApplyRule(tempCriteria));
                 tempCriteria = rule.ClearCriteriaAccordingRule(tempCriteria);
             }
-
-            if (listW.Count > 1)
-            {
-                StringBuilder temp = new StringBuilder();
-                temp.Append(string.Format("\"{0}*\"", listW[0]));
-                for (int i = 1; i < listW.Count; i++)
-                {
-                    temp.Append(string.Format(QueryAnd, listW[i]));
-                }
-                andClause = string.Format("'{0}'", temp.ToString());
-            }
-            else
-            {
-                andClause = string.Format("'\"{0}*\"'", listW[0]);
-            }
-            return new Tuple<string, List<string>>(andClause, listW.ToList());
+            return listW;
         }
 
         protected virtual void InitBeforeSearching()

@@ -1,7 +1,7 @@
 ﻿namespace WSUI.Core.Interfaces
 {
-    public interface IElasticSearchObject
+    public interface  IElasticSearchObject
     {
-         
+        string EntryID { get; set; }
     }
 }

@@ -15,11 +15,11 @@ import org.elasticsearch.common.xcontent.support.XContentMapValues;
  * @author Yariki
  */
 public class PstFeedDefinition {
-    
+
     public static final String UPDATE_RATE = "update_rate";
     public static final String PST_LIST_PATH = "pst.pst_list";
     private static final String SEPARATOR = ",";
-    
+
     private String _riverName;
     private String[] _dataArray;
     private TimeValue _updateRate;
@@ -41,22 +41,22 @@ public class PstFeedDefinition {
     public TimeValue getUpdateRate() {
         return _updateRate;
     }
-    
-    public static String[] getListOfPst(Map<String,Object> settings, String path){
+
+    public static String[] getListOfPst(Map<String, Object> settings, String path) {
         String temp[];
-        
-        if(XContentMapValues.isArray(XContentMapValues.extractValue(path, settings))){
-            List<String> listData =  (List<String>)XContentMapValues.extractValue(path, settings);
+
+        if (XContentMapValues.isArray(XContentMapValues.extractValue(path, settings))) {
+            List<String> listData = (List<String>) XContentMapValues.extractValue(path, settings);
             int i = 0;
             temp = new String[listData.size()];
-            for(String value : listData){
+            for (String value : listData) {
                 temp[i++] = Strings.trimAllWhitespace(value);
             }
-        }else{
-            String tempValues = (String)XContentMapValues.extractValue(path, settings);
+        } else {
+            String tempValues = (String) XContentMapValues.extractValue(path, settings);
             temp = Strings.commaDelimitedListToStringArray(tempValues);
         }
         return temp;
     }
-    
+
 }

@@ -13,11 +13,11 @@ import java.security.NoSuchAlgorithmException;
  * @author Yariki
  */
 public class PstSignTool {
-    
+
     public static String sign(String toSign) throws NoSuchAlgorithmException {
 
         MessageDigest md = MessageDigest.getInstance("MD5");
-        
+
         md.update(toSign.getBytes());
 
         String key = "";

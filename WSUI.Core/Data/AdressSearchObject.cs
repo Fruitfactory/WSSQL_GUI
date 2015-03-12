@@ -12,36 +12,13 @@ namespace WSUI.Core.Data
 {
     public class AdressSearchObject : BaseSearchObject
     {
-        [Field("System.Message.ToAddress", 7, false)]
         public string ToAddress { get; set; }
-
-        [Field("System.Message.FromAddress", 8, false)]
         public string FromAddress { get; set; }
-
-        [Field("System.Message.CcAddress", 9, false)]
         public string CcAddress { get; set; }
 
         public AdressSearchObject()
         {
         }
 
-        public override void SetValue(int index, object value)
-        {
-            base.SetValue(index, value);
-            switch (index)
-            {
-                case 7:
-                    ToAddress = value as string;
-                    break;
-
-                case 8:
-                    FromAddress = value as string;
-                    break;
-
-                case 9:
-                    CcAddress = value as string;
-                    break;
-            }
-        }
     }//end AdressSearchObject
 }//end namespace Data

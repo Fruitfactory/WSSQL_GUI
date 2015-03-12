@@ -10,6 +10,7 @@ package com.fruitfactory.pstriver.helpers;
  * @author Yariki
  */
 public class PstReaderStatusInfo {
+
     private String _name;
     private int _count;
     private int _proccedCount;
@@ -22,7 +23,7 @@ public class PstReaderStatusInfo {
     public void setStatus(PstReaderStatus _status) {
         this._status = _status;
     }
-    
+
     public PstReaderStatusInfo(String _name, int _count) {
         this._name = _name;
         this._count = _count;
@@ -51,5 +52,5 @@ public class PstReaderStatusInfo {
     public void setProccedCount(int _proccedCount) {
         this._proccedCount = _proccedCount;
     }
-    
+
 }

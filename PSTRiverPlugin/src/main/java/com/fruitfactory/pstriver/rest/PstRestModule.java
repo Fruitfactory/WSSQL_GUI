@@ -22,7 +22,7 @@ import org.elasticsearch.rest.RestStatus;
  * @author Yariki
  */
 public class PstRestModule extends BaseRestHandler {
-    
+
     @Inject
     public PstRestModule(Settings stngs, Client client, RestController controlller) {
         super(stngs, client);
@@ -31,10 +31,10 @@ public class PstRestModule extends BaseRestHandler {
 
     @Override
     protected void handleRequest(RestRequest rr, RestChannel rc, Client client) throws Exception {
-        
+
         String command = rr.param("command");
-        
-        if("status".equals(command)){
+
+        if ("status".equals(command)) {
             processStatusRequest(rc);
             return;
         }
@@ -42,18 +42,17 @@ public class PstRestModule extends BaseRestHandler {
 
     private void processStatusRequest(RestChannel rc) {
         try {
-            
+
             XContentBuilder status = PstStatusRepository.getStatusInfo();
-            rc.sendResponse(new BytesRestResponse(RestStatus.OK,status));
-            
+            rc.sendResponse(new BytesRestResponse(RestStatus.OK, status));
+
         } catch (IOException e) {
             try {
-                rc.sendResponse(new BytesRestResponse(rc,e));
+                rc.sendResponse(new BytesRestResponse(rc, e));
             } catch (IOException e1) {
                 rc.sendResponse(new BytesRestResponse(RestStatus.INTERNAL_SERVER_ERROR));
             }
         }
     }
-    
-    
+
 }

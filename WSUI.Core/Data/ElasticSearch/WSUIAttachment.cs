@@ -1,5 +1,8 @@
-﻿namespace WSUI.Core.Data.ElasticSearch
+﻿using Nest;
+
+namespace WSUI.Core.Data.ElasticSearch
 {
+    
     public class WSUIAttachment : WSUIElasticSearchBaseEntity
     {
         public string FileName { get; set; }

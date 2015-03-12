@@ -19,9 +19,6 @@ namespace WSUI.Core.Data
             get;
             private set;
         }
-
-
-        [Field("System.ItemName", 1, false)]
         public string ItemName
         {
             get
@@ -29,6 +26,12 @@ namespace WSUI.Core.Data
                 return Get(() => ItemName);
             }
             set { Set(() => ItemName, value); }
+        }
+
+        public string EntryID
+        {
+            get { return Get(() => EntryID); }
+            set { Set(() => EntryID, value); }
         }
 
         public TypeSearchItem TypeItem

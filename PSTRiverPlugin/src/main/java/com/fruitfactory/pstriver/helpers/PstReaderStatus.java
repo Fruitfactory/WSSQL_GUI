@@ -10,6 +10,7 @@ package com.fruitfactory.pstriver.helpers;
  * @author Yariki
  */
 public enum PstReaderStatus {
+
     None,
     NonStarted,
     Busy,
