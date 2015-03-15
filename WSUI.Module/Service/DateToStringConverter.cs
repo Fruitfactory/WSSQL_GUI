@@ -105,7 +105,7 @@ namespace WSUI.Module.Service
             if (contact != null)
             {
                 
-                var strEmail = IsEmail(contact.EmailAddress) ?? IsEmail(contact.EmailAddress2) ?? IsEmail(contact.EmailAddress3);
+                var strEmail = IsEmail(contact.EmailAddress1) ?? IsEmail(contact.EmailAddress2) ?? IsEmail(contact.EmailAddress3);
                 if(string.IsNullOrEmpty(contact.FirstName) || string.IsNullOrEmpty(contact.LastName))
                 {
                     result = string.Format("{0} ({0})", strEmail);

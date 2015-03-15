@@ -49,7 +49,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         {
             Priority = 0;
             _listContactsRules.Add(new ContactSearchRule(Lock));
-            _listContactsRules.Add(new EmailContactSearchRule(Lock));
+            //_listContactsRules.Add(new EmailContactSearchRule(Lock)); // TODO implement sorting for email via contacts
             _listExistingEmails = new List<string>();
         }
 
@@ -96,18 +96,18 @@ namespace WSUI.Infrastructure.Implements.Rules
                 {
                     var contactName = string.Format("{0} {1}", contactSearchObject.FirstName, contactSearchObject.LastName);
 
-                    if (IsEmail(contactSearchObject.EmailAddress) && 
-                        ( IsContainsSearchCriterias(contactName, arrQuery) || IsContainsSearchCriterias(contactSearchObject.EmailAddress, arrQuery)) &&
-                        !_listExistingEmails.Contains(contactSearchObject.EmailAddress.ToLowerInvariant()))
+                    if (IsEmail(contactSearchObject.EmailAddress1) && 
+                        ( IsContainsSearchCriterias(contactName, arrQuery) || IsContainsSearchCriterias(contactSearchObject.EmailAddress1, arrQuery)) &&
+                        !_listExistingEmails.Contains(contactSearchObject.EmailAddress1.ToLowerInvariant()))
                     {
                         Result.Add(contactSearchObject);
-                        _listExistingEmails.Add(contactSearchObject.EmailAddress.ToLowerInvariant());
+                        _listExistingEmails.Add(contactSearchObject.EmailAddress1.ToLowerInvariant());
                     }
                     else if (IsEmail(contactSearchObject.EmailAddress2) &&
                         (IsContainsSearchCriterias(contactName, arrQuery) || IsContainsSearchCriterias(contactSearchObject.EmailAddress2, arrQuery)) &&
                              !_listExistingEmails.Contains(contactSearchObject.EmailAddress2.ToLowerInvariant()))
                     {
-                        contactSearchObject.EmailAddress = contactSearchObject.EmailAddress2;
+                        contactSearchObject.EmailAddress1 = contactSearchObject.EmailAddress2;
                         Result.Add(contactSearchObject);
                         _listExistingEmails.Add(contactSearchObject.EmailAddress2.ToLowerInvariant());
                     }
@@ -115,12 +115,12 @@ namespace WSUI.Infrastructure.Implements.Rules
                         (IsContainsSearchCriterias(contactName, arrQuery) || IsContainsSearchCriterias(contactSearchObject.EmailAddress3, arrQuery)) &&
                              !_listExistingEmails.Contains(contactSearchObject.EmailAddress3.ToLowerInvariant()))
                     {
-                        contactSearchObject.EmailAddress = contactSearchObject.EmailAddress3;
+                        contactSearchObject.EmailAddress1 = contactSearchObject.EmailAddress3;
                         Result.Add(contactSearchObject);
                         _listExistingEmails.Add(contactSearchObject.EmailAddress3.ToLowerInvariant());
                     }
                     else if (!string.IsNullOrEmpty(contactSearchObject.FirstName) && !string.IsNullOrEmpty(contactSearchObject.LastName) &&
-                        !_listExistingEmails.Contains(contactName) && string.IsNullOrEmpty(contactSearchObject.EmailAddress) && string.IsNullOrEmpty(contactSearchObject.EmailAddress2) && string.IsNullOrEmpty(contactSearchObject.EmailAddress3))
+                        !_listExistingEmails.Contains(contactName) && string.IsNullOrEmpty(contactSearchObject.EmailAddress1) && string.IsNullOrEmpty(contactSearchObject.EmailAddress2) && string.IsNullOrEmpty(contactSearchObject.EmailAddress3))
                     {
                         Result.Add(contactSearchObject);
                         _listExistingEmails.Add(contactName);

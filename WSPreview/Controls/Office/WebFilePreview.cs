@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GDIDraw.Service;
 using WSPreview.PreviewHandler.Controls.Office.WebUtils;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using WSUI.Core.Data;
 using WSUI.Core.Logger;
 using Html = HtmlAgilityPack;
 
@@ -38,7 +39,12 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         public void LoadFile(Stream stream)
         {
-            throw new System.NotImplementedException();
+           
+        }
+
+        public void LoadObject(BaseSearchObject obj)
+        {
+            
         }
 
         public void Clear()

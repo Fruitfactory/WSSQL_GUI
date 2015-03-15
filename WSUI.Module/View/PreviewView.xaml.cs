@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using WSPreview.PreviewHandler.PreviewHandlerHost;
+using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.EventArguments;
 using WSUI.Core.Interfaces;
@@ -71,6 +72,14 @@ namespace WSUI.Module.View
             if (_previewControl == null)
                 return false;
             _previewControl.FilePath = filename;
+            return true;
+        }
+
+        public bool SetPreviewObject(BaseSearchObject searchObject)
+        {
+            if (_previewControl == null)
+                return false;
+            _previewControl.PreviewForSearchObject(searchObject);
             return true;
         }
 

@@ -42,13 +42,6 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 	        base.Init();
 	    }
 
-        //TODO refactore
-	    protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
-        {
-            var dateFormat = FormatDate(ref LastDate);
-            var and = GetProcessingSearchCriteria();
-            return string.Format(WhereTemplate, and, dateFormat);
-        }
 
 	    protected override void ProcessResult()
 	    {

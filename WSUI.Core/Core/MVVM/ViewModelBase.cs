@@ -48,13 +48,14 @@ namespace WSUI.Core.Core.MVVM
 
         protected virtual void Set<T>(string propertyName, T value)
         {
-            if (_values.ContainsKey(propertyName))
+            string property = propertyName.ToLowerInvariant();
+            if (_values.ContainsKey(property))
             {
-                _values[propertyName] = value;
+                _values[property] = value;
             }
             else
             {
-                _values.Add(propertyName, value);
+                _values.Add(property, value);
             }
             OnPropertyChanged(propertyName);
         }
@@ -74,9 +75,10 @@ namespace WSUI.Core.Core.MVVM
 
         protected virtual T Get<T>(string name, T defaultValue)
         {
-            if (_values.ContainsKey(name))
+            string property = name.ToLowerInvariant();
+            if (_values.ContainsKey(property))
             {
-                return (T)_values[name];
+                return (T)_values[property];
             }
             return defaultValue;
         }

@@ -7,20 +7,20 @@ namespace WSUI.Core.Data.ElasticSearch
     [ElasticType(Name = "contact")]
     public class WSUIContact : WSUIElasticSearchBaseEntity
     {
-        public string FirstName { get; set; }
+        public string Firstname { get; set; }
         
-        public string LastName { get; set; }
+        public string Lastname { get; set; }
         
-        public string EmailAddress1 { get; set; }
+        public string Emailaddress1 { get; set; }
         
-        public string EmailAddress2 { get; set; }
+        public string Emailaddress2 { get; set; }
         
-        public string EmailAddress3 { get; set; }
+        public string Emailaddress3 { get; set; }
 
-        public string BusinessTelephone { get; set; }
-        public string HomeTelephone { get; set; }
+        public string Businesstelephone { get; set; }
+        public string Hometelephone { get; set; }
 
-        public string MobileTelephone { get; set; }
+        public string Mobiletelephone { get; set; }
 
         #region [home]
 

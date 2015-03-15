@@ -13,6 +13,7 @@ using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.EventArguments;
 using WSUI.Core.Extensions;
+using WSUI.Core.Helpers;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
@@ -25,6 +26,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
         private string _hitString;
         private string _fileName;
         private dynamic _outlookItem;
+        private ISearchObject _searchObject;
 
         public OutlookFilePreview()
         {
@@ -83,6 +85,21 @@ namespace WSPreview.PreviewHandler.Controls.Office
             DocumentText = page;
         }
 
+        public void LoadObject(BaseSearchObject obj)
+        {
+            //
+            string page = string.Empty;
+
+            if (obj is EmailSearchObject)
+            {
+                _searchObject = obj;
+                
+                page = OutlookPreviewHelper.Instance.GetPreviewForEmail(obj as EmailSearchObject);
+            }
+
+            DocumentText = page;
+        }
+
         public void LoadFile(Stream stream)
         {
         }
@@ -138,7 +155,14 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
                 case "about":
                 case "re":
-                    path = OutlookPreviewHelper.Instance.GetPathForEmail(args.Url, _fileName);
+                    if (!string.IsNullOrEmpty(_fileName))
+                    {
+                        path = OutlookPreviewHelper.Instance.GetPathForEmail(args.Url, _fileName);
+                    }
+                    if (_searchObject != null && args.Url.LocalPath != "blank")
+                    {
+                        path = string.Format("{0}\\{1}", TempFileManager.Instance.GenerateTempFolderForObject(_searchObject),args.Url.LocalPath);
+                    }
                     break;
 
                 case "uuid":

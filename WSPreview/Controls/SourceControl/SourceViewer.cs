@@ -8,6 +8,7 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
+using WSUI.Core.Data;
 
 namespace WSPreview.PreviewHandler.Controls
 {
@@ -45,6 +46,11 @@ namespace WSPreview.PreviewHandler.Controls
 
         public void LoadFile(Stream stream)
         {
+        }
+
+        public void LoadObject(BaseSearchObject obj)
+        {
+            
         }
 
         public void Clear()

@@ -12,6 +12,7 @@ using System.Configuration;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using System.Management;
 using WSPreview.PreviewHandler.TypeResolver;
+using WSUI.Core.Data;
 
 namespace WSPreview.PreviewHandler
 {
@@ -91,6 +92,11 @@ namespace WSPreview.PreviewHandler
 
         public void LoadFile(Stream stream)
         {
+        }
+
+        public void LoadObject(BaseSearchObject obj)
+        {
+            
         }
 
         public void Clear()

@@ -21,9 +21,8 @@ using WSUI.Infrastructure.Service.Helpers;
 
 namespace WSUI.Infrastructure.Implements.Rules.BaseRules 
 {
-	public class BaseAttachmentSearchRule : BaseSearchRule<AttachmentSearchObject,WSUIStub>
+	public class BaseAttachmentSearchRule : BaseSearchRule<AttachmentSearchObject,WSUIAttachmentContent>
 	{
-        protected const string WhereTemplate = "WHERE Contains(System.ItemUrl,'\"at=*\"') AND System.DateModified < '{0}'  AND ( {1} ) ORDER BY System.DateModified DESC";
 
 		public BaseAttachmentSearchRule()
             :base(null,true)
@@ -42,35 +41,12 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
             return "*"; // searching in all property
         }
 
-        // TODO: refactore
-	    protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
-	    {
-	        var dateString = FormatDate(ref LastDate);
-	        var tuple = GetProcessingSearchCriteria();
-	        string addCriteria = GetAdditionalCriteria(tuple);
-	        return string.Format(WhereTemplate, dateString, addCriteria);
-	    }
 
         protected override System.Data.DataTable GetDataTable(string query)
         {
             var listIgnored = FieldCash.Instance.GetIgnoredFields(typeof (AttachmentSearchObject));
             return IndexerDataReader.Instance.GetDataByReader(query,listIgnored);
         }
-
-	    private string GetAdditionalCriteria(List<string> listWord)
-	    {
-            if (listWord.Count == 0)
-                 return string.Empty;
-             var temp = new StringBuilder();
-
-             temp.Append(string.Format("Contains({0},'\"{1}\"') ", GetSearchProperty(), listWord[0]));// System.ItemUrl
-
-             if (listWord.Count > 1)
-                 for (int i = 1; i < listWord.Count; i++)
-                     temp.Append(string.Format("AND Contains({0},'\"{1}\"') ", GetSearchProperty(), listWord.ElementAt(i)));
-
-             return temp.ToString();
-	    }
 
 	    public override void Init()
 	    {

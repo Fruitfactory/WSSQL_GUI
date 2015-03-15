@@ -167,8 +167,8 @@ namespace WSUI.Module.ViewModel
             {
                 var contact = dataObject as ContactSearchObject;
                 var result = FirstName == contact.FirstName && LastName == contact.LastName &&
-                       (string.IsNullOrEmpty(contact.EmailAddress) || Emails.Any(
-                           e => string.Equals(e, contact.EmailAddress, StringComparison.InvariantCultureIgnoreCase)));
+                       (string.IsNullOrEmpty(contact.EmailAddress1) || Emails.Any(
+                           e => string.Equals(e, contact.EmailAddress1, StringComparison.InvariantCultureIgnoreCase)));
                 return result;
             }
             return false;
@@ -463,7 +463,7 @@ namespace WSUI.Module.ViewModel
             FirstName = dataObject.FirstName;
             LastName = dataObject.LastName;
             string name = "";
-            Emails = new List<string> { dataObject.EmailAddress, dataObject.EmailAddress2, dataObject.EmailAddress3 };
+            Emails = new List<string> { dataObject.EmailAddress1, dataObject.EmailAddress2, dataObject.EmailAddress3 };
             FotoFilepath = OutlookHelper.Instance.GetContactFotoTempFileName(dataObject);
             BusinessTelephone = dataObject.BusinessTelephone;
             HomeTelephone = dataObject.HomeTelephone;

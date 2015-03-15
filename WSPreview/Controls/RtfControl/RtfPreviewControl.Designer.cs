@@ -1,4 +1,6 @@
-﻿namespace WSPreview.PreviewHandler.Controls.RtfControl
+﻿using WSUI.Core.Data;
+
+namespace WSPreview.PreviewHandler.Controls.RtfControl
 {
     partial class RtfPreviewControl
     {
@@ -54,5 +56,9 @@
         #endregion
 
         private System.Windows.Forms.RichTextBox rtfPreview;
+        public void LoadObject(BaseSearchObject obj)
+        {
+            
+        }
     }
 }

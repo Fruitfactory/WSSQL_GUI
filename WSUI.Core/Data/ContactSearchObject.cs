@@ -16,7 +16,7 @@ using WSUI.Core.Interfaces;
 
 namespace WSUI.Core.Data
 {
-    public class ContactSearchObject : AbstractSearchObject
+    public class ContactSearchObject : BaseSearchObject
     {
         public string FirstName
         {
@@ -30,10 +30,10 @@ namespace WSUI.Core.Data
             set { Set(() => LastName, value); }
         }
 
-        public string EmailAddress
+        public string EmailAddress1
         {
-            get { return Get(() => EmailAddress); }
-            set { Set(() => EmailAddress, value); }
+            get { return Get(() => EmailAddress1); }
+            set { Set(() => EmailAddress1, value); }
         }
 
         public string EmailAddress2
@@ -219,8 +219,8 @@ namespace WSUI.Core.Data
 
         public string GetEmail()
         {
-            return !string.IsNullOrEmpty(EmailAddress)
-                ? EmailAddress
+            return !string.IsNullOrEmpty(EmailAddress1)
+                ? EmailAddress1
                 : !string.IsNullOrEmpty(EmailAddress2)
                     ? EmailAddress2
                     : !string.IsNullOrEmpty(EmailAddress3)
@@ -231,7 +231,7 @@ namespace WSUI.Core.Data
 
         public override string ToString()
         {
-            return string.Format("{0} {1}; {2}; {3}; {4}", this.FirstName, this.LastName, this.EmailAddress, this.EmailAddress2, this.EmailAddress3);
+            return string.Format("{0} {1}; {2}; {3}; {4}", this.FirstName, this.LastName, this.EmailAddress1, this.EmailAddress2, this.EmailAddress3);
         }
 
     }//end ContactSearchObject

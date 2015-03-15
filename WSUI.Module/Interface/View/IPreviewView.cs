@@ -1,4 +1,5 @@
 using System;
+using WSUI.Core.Data;
 using WSUI.Core.Interfaces;
 using WSUI.Module.ViewModel;
 
@@ -13,6 +14,7 @@ namespace WSUI.Module.Interface.View
         }
 
         bool SetPreviewFile(string filename);
+        bool SetPreviewObject(BaseSearchObject searchObject);
         void SetSearchPattern(string pattern);
         void SetFullFolderPath(string path);
         void ClearPreview();

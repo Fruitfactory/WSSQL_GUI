@@ -35,10 +35,10 @@ namespace WSUI.Core.Core.MVVM
 
         protected override void Set<T>(string propertyName, T value)
         {
-
-            if (_data.IsNotNull() && _data.GetType().HasProperty(propertyName))
+            string property = propertyName.ToLowerInvariant();
+            if (_data.IsNotNull() && _properties.Any(p => p.Name.ToLowerInvariant() == property))
             {
-                var pi = _properties.FirstOrDefault(p => p.Name == propertyName);
+                var pi = _properties.FirstOrDefault(p => p.Name.ToLowerInvariant() == property);
                 if (pi.IsNotNull())
                 {
                     pi.SetPropertyValue(_data, value);
@@ -52,9 +52,10 @@ namespace WSUI.Core.Core.MVVM
 
         protected override T Get<T>(string name, T defaultValue)
         {
-            if (_data.IsNotNull() && _data.GetType().HasProperty(name))
+            string property = name.ToLowerInvariant();
+            if (_data.IsNotNull() && _properties.Any(p => p.Name.ToLowerInvariant() == property))
             {
-                var pi = _properties.FirstOrDefault(p => p.Name == name);
+                var pi = _properties.FirstOrDefault(p => p.Name.ToLowerInvariant() == property);
                 if (pi.IsNotNull())
                 {
                     return pi.GetPropertyValue<T>(_data);

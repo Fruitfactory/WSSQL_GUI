@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using WSPreview.PreviewHandler.Controls.ImageControl.Interface;
 using WSPreview.PreviewHandler.Controls.ImageControl.Service;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using WSUI.Core.Data;
 
 namespace WSPreview.PreviewHandler.Controls.ImageControl
 {
@@ -43,6 +44,11 @@ namespace WSPreview.PreviewHandler.Controls.ImageControl
 
         public void LoadFile(Stream stream)
         {
+        }
+
+        public void LoadObject(BaseSearchObject obj)
+        {
+            
         }
 
         public void Clear()

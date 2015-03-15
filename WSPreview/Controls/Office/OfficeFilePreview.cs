@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using WSPreview.PreviewHandler.PInvoke;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using WSUI.Core.Data;
 
 namespace WSPreview.PreviewHandler.Controls.Office
 {
@@ -37,6 +38,11 @@ namespace WSPreview.PreviewHandler.Controls.Office
 
         public void LoadFile(Stream stream)
         {
+        }
+
+        public void LoadObject(BaseSearchObject obj)
+        {
+            
         }
 
         public void Clear()

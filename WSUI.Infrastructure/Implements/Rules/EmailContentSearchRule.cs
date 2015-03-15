@@ -7,8 +7,11 @@
 ///////////////////////////////////////////////////////////
 
 
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using WSUI.Core.Core.Rules;
+using WSUI.Core.Data.ElasticSearch;
 using WSUI.Infrastructure.Implements.Rules.BaseRules;
 
 namespace WSUI.Infrastructure.Implements.Rules 
@@ -30,18 +33,15 @@ namespace WSUI.Infrastructure.Implements.Rules
             Priority = 3;
         }
 
-        //TODO refactore
-	    protected override string OnGenerateWherePart(IList<IRule> listCriterisRules)
-	    {
-            var dateString = FormatDate(ref LastDate);
-            var and = GetProcessingSearchCriteria();
-            return string.Format(WhereTemplate, dateString, and);
-	    }
-
 	    public override void Init()
 	    {
             RuleName = "EmailContent";
 	        base.Init();
+	    }
+
+	    protected override Expression<Func<WSUIEmail, string>> GetSearchedProperty()
+	    {
+	        return e => e.Content;
 	    }
     }//end EmailContentSearchRule
 

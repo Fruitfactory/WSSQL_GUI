@@ -27,6 +27,7 @@ import com.pff.PSTRecipient;
 import com.pff.PSTTimeZone;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import example.TestGui;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -188,10 +189,7 @@ public class PstOutlookFileReader implements Runnable {
         String subject = message.getSubject();
         String sender = message.getSentRepresentingName();
         String senderEmail = message.getSentRepresentingEmailAddress();
-        String body = message.getBody();
-        if (body.isEmpty()) {
-            body = message.getBodyHTML();
-        }
+        String body = message.getBodyHTML();
         String entryID = message.getEntryID();
         boolean hasAttachment = message.hasAttachments();
         Date dateCreated = message.getCreationTime();
@@ -322,12 +320,15 @@ public class PstOutlookFileReader implements Runnable {
         String entryid = attachment.getEntryID();
         StringBuilder strBuilder = new StringBuilder();
         try (InputStream reader = attachment.getFileInputStream()) {
+            ByteArrayOutputStream bufferStream = new ByteArrayOutputStream();
             final int lenght = 8176;
             byte[] output = new byte[lenght];
-            while (reader.read(output) > -1) {
-                String temp = Base64.encode(output);
-                strBuilder.append(temp);
+            int nRead;
+            while ( (nRead = reader.read(output)) != -1) {
+                bufferStream.write(output,0,nRead);
             }
+            bufferStream.flush();
+            strBuilder.append(Base64.encode(bufferStream.toByteArray()));
         } catch (Exception ex) {
             _logger.error(LOG_TAG, ex.getMessage());
         }

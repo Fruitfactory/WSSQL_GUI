@@ -13,7 +13,17 @@ namespace WSUI.Core.Data
 {
     public class EmailSearchObject : BaseEmailSearchObject
     {
-        public string Subject { get; set; }
+        public string Subject
+        {
+            get { return Get(() => Subject); }
+            set { Set(() => Subject,value);}
+        }
+
+        public string Content
+        {
+            get { return Get(() => Content); }
+            set { Set(() => Content, value); }
+        }
 
         public EmailSearchObject()
         {

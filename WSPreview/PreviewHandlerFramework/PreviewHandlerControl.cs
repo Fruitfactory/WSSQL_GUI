@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows.Forms;
 using WSPreview.PreviewHandler.Controls.CsvControl;
 using WSPreview.PreviewHandler.Service.Preview;
+using WSUI.Core.Data;
 
 namespace WSPreview.PreviewHandler.PreviewHandlerFramework
 {
@@ -33,7 +34,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerFramework
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.ToString());
+                throw new Exception(ex.ToString(),ex);
             }
         }
         public virtual void Load(Stream stream)
@@ -52,7 +53,25 @@ namespace WSPreview.PreviewHandler.PreviewHandlerFramework
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.ToString());
+                throw new Exception(ex.ToString(),ex);
+            }
+        }
+
+        public virtual void Load(BaseSearchObject obj)
+        {
+            try
+            {
+                Control ctrl = GetPreviewControl();
+                PrepareForLoading();
+                var previewControl = ctrl as IPreviewControl;
+                if (previewControl != null)
+                {
+                    previewControl.LoadObject(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString(),ex);
             }
         }
 

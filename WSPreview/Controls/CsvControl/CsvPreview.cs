@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using WSPreview.PreviewHandler.Service.CsvHelper;
+using WSUI.Core.Data;
 
 namespace WSPreview.PreviewHandler.Controls.CsvControl
 {
@@ -27,6 +28,11 @@ namespace WSPreview.PreviewHandler.Controls.CsvControl
             dataGridCsv.ReadOnly = true;
             dataGridCsv.Dock = DockStyle.Fill;
             dataGridCsv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+        }
+
+        public void LoadObject(BaseSearchObject obj)
+        {
+            
         }
 
         public void Clear()

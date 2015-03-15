@@ -15,6 +15,7 @@ using WSPreview.PreviewHandler.Service;
 using WSUI.Core.EventArguments;
 using WSUI.Core.Logger;
 using WSPreview.PreviewHandler.Service.Preview;
+using WSUI.Core.Data;
 using WSUI.Core.Interfaces;
 
 namespace WSPreview.PreviewHandler.PreviewHandlerHost
@@ -90,6 +91,48 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             }
         }
 
+        public void PreviewForSearchObject(BaseSearchObject searchObject)
+        {
+            if (IsDesignTime() || searchObject == null)
+            {
+                return;
+            }
+
+            OnStartLoad(null);
+            GeneratePreviewForObject(searchObject);
+            OnStopLoad(null);
+        }
+
+        private void GeneratePreviewForObject(BaseSearchObject searchObject)
+        {
+            PrepareForGenerating();
+            _comInstance = HelperPreviewHandlers.Instance.GetReadyHandlerForSearchObject(searchObject.TypeItem);
+            if (_comInstance == null)
+            {
+                return;
+            }
+            if (_comInstance is ISearchWordHighlight)
+                ((ISearchWordHighlight)_comInstance).HitString = SearchCriteria;
+            if (_comInstance is IOutlookFolder)
+                ((IOutlookFolder)_comInstance).FolderPath = FullFolderPath;
+
+            var previewControlCommands = _comInstance as ICommandPreviewControl;
+            if (previewControlCommands != null)
+            {
+                previewControlCommands.PreviewCommandExecuted -= PreviewControlCommandsOnPreviewCommandExecuted;
+                previewControlCommands.PreviewCommandExecuted += PreviewControlCommandsOnPreviewCommandExecuted;
+            }
+            ((IInitializeWithSearchObject)_comInstance).Initialize(searchObject);
+
+            RECT r;
+            r.top = 0;
+            r.bottom = this.Height;
+            r.left = 0;
+            r.right = this.Width;
+            ((IPreviewHandler)_comInstance).SetWindow(this.Handle, ref r);
+            ((IPreviewHandler)_comInstance).DoPreview();
+        }
+
         public void UnloadPreview()
         {
             if (_comInstance != null)
@@ -137,17 +180,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         /// </summary>
         private void GeneratePreview()
         {
-            if (this.Controls.Contains(webMessage))
-            {
-                this.Controls.Remove(webMessage);
-                webMessage.Visible = false;
-            }
-            ClearAllStreams();
-            if (_comInstance != null)
-            {
-                ((IPreviewHandler)_comInstance).Unload();
-                _comInstance = null;
-            }
+            PrepareForGenerating();
             _registreHandler = true;
 
 
@@ -186,7 +219,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
 
             try
             {
-                GenerateProviewByType(comType);
+                GeneratePreviewByType(comType);
             }
             catch (Exception ex)
             {
@@ -194,6 +227,21 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                 WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "Error", ex.Message));
                 _comInstance = null;
                 SecondChance();
+            }
+        }
+
+        private void PrepareForGenerating()
+        {
+            if (this.Controls.Contains(webMessage))
+            {
+                this.Controls.Remove(webMessage);
+                webMessage.Visible = false;
+            }
+            ClearAllStreams();
+            if (_comInstance != null)
+            {
+                ((IPreviewHandler) _comInstance).Unload();
+                _comInstance = null;
             }
         }
 
@@ -257,7 +305,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
                     Type comType = GetOwnPreviewHandlersType();
                     if (comType == null)
                         return;
-                    GenerateProviewByType(comType);
+                    GeneratePreviewByType(comType);
                 }
                 else
                 {
@@ -273,7 +321,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             }
         }
 
-        private void GenerateProviewByType(Type type)
+        private void GeneratePreviewByType(Type type)
         {
             // Create an instance of the preview handler
             if (_comInstance == null)

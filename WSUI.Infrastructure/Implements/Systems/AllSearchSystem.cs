@@ -24,10 +24,10 @@ namespace WSUI.Infrastructure.Implements.Systems
             AddRule(new GeneralContactRule(100, 0, Lock1));
             AddRule(new EmailSubjectSearchRule(Lock1));
             AddRule(new EmailContentSearchRule(Lock1));
-            AddRule(new FileFilenameSearchRule(Lock1));
-            AddRule(new FileContentSearchRule(Lock1));
-            AddRule(new AttachmentFilenameSearchRule(Lock1));
-            AddRule(new AttachmentContentSearchRule(Lock1));
+            //AddRule(new FileFilenameSearchRule(Lock1));
+            //AddRule(new FileContentSearchRule(Lock1));
+            //AddRule(new AttachmentFilenameSearchRule(Lock1));
+            //AddRule(new AttachmentContentSearchRule(Lock1));
 	        base.Init();
 	    }
 

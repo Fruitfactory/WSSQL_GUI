@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Windows.Documents;
 using Nest;
 using WSUI.Core.Core.Search;
@@ -21,7 +22,7 @@ using WSUI.Core.Logger;
 
 namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 {
-    public class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject, WSUIEmail>, IEmailSearchRule
+    public abstract class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject, WSUIEmail>, IEmailSearchRule
     {
 
 
@@ -61,11 +62,18 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
             {
                 return queryDescriptor.Bool(descriptor =>
                 {
-                    descriptor.Must(preparedCriterias.Select(preparedCriteria => (Func<QueryDescriptor<WSUIEmail>, QueryContainer>) (descriptor1 => descriptor1.Term(e => e.Subject, preparedCriteria))).ToArray());
+                    descriptor.Must(preparedCriterias.Select(preparedCriteria => (Func<QueryDescriptor<WSUIEmail>, QueryContainer>) (descriptor1 => descriptor1.Term(GetSearchedProperty(), preparedCriteria))).ToArray());
                 });
             }
-            return queryDescriptor.Term(e => e.Subject, Query);
+            return queryDescriptor.Term(GetSearchedProperty(), Query);
         }
+
+        protected override IFieldSort BuildSortSelector(SortFieldDescriptor<WSUIEmail> sortFieldDescriptor)
+        {
+            return sortFieldDescriptor.OnField(e => e.Datereceived).Descending();
+        }
+
+        protected abstract Expression<Func<WSUIEmail, string>> GetSearchedProperty();
 
         protected override void ProcessResult()
         {

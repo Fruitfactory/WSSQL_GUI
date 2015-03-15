@@ -12,9 +12,9 @@ namespace WSUI.Core.Data.ElasticSearch
 
         public string Folder { get; set; }
 
-        public DateTime DateCreated { get; set; }
+        public DateTime Datecreated { get; set; }
 
-        public DateTime DateReceived { get; set; }
+        public DateTime Datereceived { get; set; }
 
         public long Size { get; set; }
 

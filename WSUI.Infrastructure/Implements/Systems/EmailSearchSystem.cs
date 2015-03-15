@@ -21,7 +21,7 @@ namespace WSUI.Infrastructure.Implements.Systems
 
 	    public override void Init()
 	    {
-            //AddRule(new EmailSubjectSearchRule());
+            AddRule(new EmailSubjectSearchRule());
             AddRule(new EmailContentSearchRule());
 	        base.Init();
 	    }

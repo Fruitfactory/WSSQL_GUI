@@ -86,6 +86,11 @@ namespace WSUI.Core.Data
             }
         }
 
+        public bool IsAttachmentPresent
+        {
+            get { return bool.Parse(HasAttachments); }
+        }
+
         public string From
         {
             get

@@ -9,8 +9,12 @@ using System.Text.RegularExpressions;
 using GDIDraw.Service;
 using HtmlAgilityPack;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using WSUI.Core.Core.ElasticSearch;
+using WSUI.Core.Data;
+using WSUI.Core.Data.ElasticSearch;
 using WSUI.Core.Enums;
 using WSUI.Core.Extensions;
+using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
@@ -365,9 +369,40 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             return null;
         }
 
+        private string GetAttachments(EmailSearchObject searchObj)
+        {
+            var esClient = new WSUIElasticSearchClient();
+            var result = esClient.ElasticClient.Search<WSUIAttachmentContent>(s => s.Query(d => d.QueryString(qq => qq.Query(searchObj.EntryID))));
+            if (result.Documents.Any())
+            {
+                var tempFolder = TempFileManager.Instance.GenerateTempFolderForObject(searchObj);
+                var urls = string.Empty;
+                foreach (var attachment in result.Documents)
+                {
+                    try
+                    {
+                        byte[] content = Convert.FromBase64String(attachment.Content);
+                        var filename = string.Format("{0}/{1}", tempFolder, attachment.Filename);
+                        File.WriteAllBytes(filename, content);
+                        if (!string.IsNullOrEmpty(filename))
+                            urls += string.Format(LinkTemplate, attachment.Filename, filename, HighlightSearchString(attachment.Filename));
+
+                    }
+                    catch (Exception exception)
+                    {
+                        WSSqlLogger.Instance.LogError(exception.Message);
+                    }
+                }
+                return string.Format(AttachmentsRow, urls);
+            }
+            return string.Empty;
+        }
+
+
+
         public string GetPathForEmail(Uri url, string filename)
         {
-            if (_outlook == null)
+            if (_outlook == null || string.IsNullOrEmpty(filename))
                 return string.Empty;
 
             Outlook._Application app = _outlook;
@@ -425,7 +460,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         #region [generate privew]
 
-        private string GetBeginingOfPreview(dynamic item, string filename)
+        private string GetBeginingOfPreview(dynamic item)
         {
             string page = PageBegin + TableBegin;
             string subject = string.Empty;
@@ -443,7 +478,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         public string GetPreviewForEmail(Outlook.MailItem mail, string filename)
         {
-            string page = GetBeginingOfPreview(mail, filename);
+            string page = GetBeginingOfPreview(mail);
             var senderEmailAddress = mail.GetSenderSMTPAddress();
             var clearSenderName = mail.SenderName.ClearString();
             var clearsenderEmail = senderEmailAddress.ClearString();
@@ -464,6 +499,31 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             return page;
         }
 
+        public string GetPreviewForEmail(EmailSearchObject email)
+        {
+            string page = GetBeginingOfPreview(email);
+            var senderEmailAddress = email.FromAddress;
+            var clearSenderName = email.FromName.ClearString();
+            var clearsenderEmail = senderEmailAddress.ClearString();
+            page += string.Format(SenderRow, IsEmail(senderEmailAddress) ? GetContactNameWithEmail(GetConvertetString(clearSenderName), clearsenderEmail) : GetContactName(GetConvertetString(clearSenderName)));
+            if (email.Cc != null && email.Cc.Length > 0)
+                page += string.Format(CCRow, HighlightSearchString(GetRecipientsRow(email.Cc)));
+            page += string.Format(ToRow, GetRecipientsRow(email.To));
+            var folder = GetEmailFolder();
+            if (folder != null && !string.IsNullOrEmpty(folder.Item1) && !string.IsNullOrEmpty(folder.Item2))
+            {
+                page += string.Format(InRow, folder.Item1, folder.Item2);
+            }
+            page += string.Format(SendRow, email.DateReceived.ToString());
+            if(email.IsAttachmentPresent)
+                page += GetAttachments(email);
+            string temp = GetHtmlBodyHightlight(email.Content);
+            page += string.Format(EmailRow, temp);
+            page += TableEnd + PageEnd;
+            return page;
+        }
+
+
         private string GetRecipientsRow(Outlook.MailItem mail)
         {
             if (mail == null || mail.Recipients == null || mail.Recipients.Count == 0)
@@ -482,6 +542,23 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             return string.Join("; ", list.Where(s => !string.IsNullOrEmpty(s)));
         }
 
+        private string GetRecipientsRow(WSUIRecipient[] ccs)
+        {
+            if (ccs == null || ccs.Length == 0)
+            {
+                return string.Empty;
+            }
+            var list = new List<string>();
+            foreach (WSUIRecipient recipient in ccs)
+            {
+                var clearStr = recipient.Name.ClearString();
+                var emailAddress = recipient.Address;
+                var tt = IsEmail(emailAddress) ? GetContactNameWithEmail(clearStr, emailAddress) : GetContactName(clearStr);
+                list.Add(tt);
+            }
+            return string.Join("; ", list.Where(s => !string.IsNullOrEmpty(s)));
+        }
+
         private string GetConvertetString(string str)
         {
             return !string.IsNullOrEmpty(str) ? str.DecodeString() : NAEmpty;
@@ -489,7 +566,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         public string GetPreviewForAppointment(Outlook.AppointmentItem appointment, string filename)
         {
-            string page = GetBeginingOfPreview(appointment, filename);
+            string page = GetBeginingOfPreview(appointment);
 
             page += string.Format(StartRow, appointment.Start.ToString());
             page += string.Format(EndRow, appointment.End.ToString());
@@ -557,7 +634,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         public string GetPreviewForMeeting(Outlook.MeetingItem meeting, string filename)
         {
-            string page = GetBeginingOfPreview(meeting, filename);
+            string page = GetBeginingOfPreview(meeting);
             page += string.Format(TopicRow, meeting.ConversationTopic.DecodeString());
             page += string.Format(SendRow, GetMailTo(new string[] { meeting.SenderName.DecodeString() }));
             page += GetAttachments(meeting, filename);

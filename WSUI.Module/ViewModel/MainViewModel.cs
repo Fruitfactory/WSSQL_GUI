@@ -363,25 +363,30 @@ namespace WSUI.Module.ViewModel
         {
             try
             {
-                string filename = SearchItemHelper.GetFileName(_currentData);
                 var previewView = _container.Resolve<IPreviewView>();
-                if (previewView != null)
+                if (previewView == null)
                 {
-                    previewView.Model = this;
-                    if (!string.IsNullOrEmpty(filename))
-                    {
+                    return;
+                }
+                previewView.Model = this;
+                previewView.SetSearchPattern(_navigationService.IsContactDetailsVisible ? _navigationService.ContactDetailsViewModel.SearchCriteria : _currentItem != null
+                    ? _currentItem.GetSearchPattern()
+                    : string.Empty);
+                switch(_currentData.TypeItem)
+                {
+                    case TypeSearchItem.Email:
                         if (_currentData.TypeItem == TypeSearchItem.Email)
                         {
-                            previewView.SetFullFolderPath(SearchItemHelper.GetFullFolderPath(_currentData));
+                            //previewView.SetFullFolderPath(SearchItemHelper.GetFullFolderPath(_currentData)); TODO: need id 
                         }
-
-                        previewView.SetSearchPattern(_navigationService.IsContactDetailsVisible ? _navigationService.ContactDetailsViewModel.SearchCriteria : _currentItem != null
-                            ? _currentItem.GetSearchPattern()
-                            : string.Empty);
-                        previewView.SetPreviewFile(filename);
-                        MoveToLeft(previewView);
-                    }
+                        previewView.SetPreviewObject(_currentData);
+                        break;
+                    default:
+                        string filename = SearchItemHelper.GetFileName(_currentData);
+                        previewView.SetPreviewFile(filename);    
+                        break;
                 }
+                MoveToLeft(previewView);
             }
             catch (Exception ex)
             {

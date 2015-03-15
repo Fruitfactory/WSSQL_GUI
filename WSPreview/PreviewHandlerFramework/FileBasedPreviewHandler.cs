@@ -4,12 +4,14 @@
 
 using System;
 using System.IO;
+using WSUI.Core.Data;
 
 namespace WSPreview.PreviewHandler.PreviewHandlerFramework
 {
-    public abstract class FileBasedPreviewHandler : PreviewHandler, IInitializeWithFile
+    public abstract class FileBasedPreviewHandler : PreviewHandler, IInitializeWithFile, IInitializeWithSearchObject
     {
         private string _filePath;
+        private BaseSearchObject _searchObject;
 
         int IInitializeWithFile.Initialize(string pszFilePath, uint grfMode)
         {
@@ -19,7 +21,22 @@ namespace WSPreview.PreviewHandler.PreviewHandlerFramework
 
         protected override void Load(PreviewHandlerControl c)
         {
-            c.Load(new FileInfo(_filePath));
+            if (!string.IsNullOrEmpty(_filePath))
+            {
+                c.Load(new FileInfo(_filePath));
+                return;
+            }
+            if (_searchObject != null)
+            {
+                c.Load(_searchObject);
+                return;
+            }
+        }
+
+        public int Initialize(BaseSearchObject obj)
+        {
+            _searchObject = obj;
+            return 0;
         }
     }
 }

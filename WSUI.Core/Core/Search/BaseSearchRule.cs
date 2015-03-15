@@ -27,7 +27,7 @@ using WSUI.Core.Utils;
 
 namespace WSUI.Core.Core.Search
 {
-    public abstract class BaseSearchRule<T, E> : ISearch, ISearchRule, IRuleQueryGenerator where T : class, ISearchObject, new() where E : class, IElasticSearchObject
+    public abstract class BaseSearchRule<T, E> : ISearch, ISearchRule where T : class, ISearchObject, new() where E : class, IElasticSearchObject
     {
         #region [needs private]
 
@@ -74,8 +74,7 @@ namespace WSUI.Core.Core.Search
         protected BaseSearchRule()
             : this(null, false)
         {
-            _elasticSearchClient = new WSUIElasticSearchClient();
-            _create = New<T>.Instance;
+          
         }
 
         protected BaseSearchRule(object lockObject, bool exludeIgnored)
@@ -84,6 +83,8 @@ namespace WSUI.Core.Core.Search
             Result = new List<T>();
             Lock = lockObject ?? new object();
             _exludeIgnored = exludeIgnored;
+            _elasticSearchClient = new WSUIElasticSearchClient();
+            _create = New<T>.Instance;
         }
 
         public ISearchResult GetResults()
@@ -136,12 +137,19 @@ namespace WSUI.Core.Core.Search
                 watch.Start();
 
                 
-                var result = _elasticSearchClient.ElasticClient.Search<E>(s => s
+                var result =  NeedSorting 
+                    ? _elasticSearchClient.ElasticClient.Search<E>(s => s
                     .From(0)
                     .Size(TopQueryResult)
                     .Query(BuildQuery)
-                    );
-
+                    .Sort(BuildSortSelector)
+                    )
+                    : _elasticSearchClient.ElasticClient.Search<E>(s => s
+                    .From(0)
+                    .Size(TopQueryResult)
+                    .Query(BuildQuery)
+                    ) 
+                    ;
                 watch.Stop();
 
                 // additional process
@@ -176,6 +184,11 @@ namespace WSUI.Core.Core.Search
             }
         }
 
+        protected virtual IFieldSort BuildSortSelector(SortFieldDescriptor<E> sortFieldDescriptor)
+        {
+            return default(IFieldSort);
+        }
+
         protected virtual QueryContainer BuildQuery(QueryDescriptor<E> queryDescriptor)
         {
             return default (QueryContainer);
@@ -202,16 +215,6 @@ namespace WSUI.Core.Core.Search
                 return;
             result.SetDataObject(email);
             Result.Add(result);
-            ProcessCountAdded();
-        }
-
-        private void ReadData(DataRow row)
-        {
-            var result = Reader.ReadResult(row) as T;
-            if (result == null)
-                return;
-            lock (InternalLock)
-                Result.Add(result);
             ProcessCountAdded();
         }
 
@@ -251,6 +254,11 @@ namespace WSUI.Core.Core.Search
         {
         }
 
+        protected virtual bool NeedSorting
+        {
+            get { return true; }
+        }
+
         public virtual void Init()
         {
             LastDate = GetCurrentDateTime();
@@ -270,21 +278,6 @@ namespace WSUI.Core.Core.Search
         public bool IsAdvancedMode { get; set; }
         public bool IncludedInAdvancedMode { get { return GetIncludedInAdvancedMode(); } }
 
-        public string GenerateWherePart(IList<IRule> listCriteriaRules)
-        {
-            return OnGenerateWherePart(listCriteriaRules);
-        }
-
-        public string GenerateAdvancedWherePart()
-        {
-            return OnGenerateAdvancedWherePart();
-        }
-
-        protected virtual string OnGenerateWherePart(IList<IRule> listCriterisRules)
-        {
-            return string.Empty;
-        }
-
         protected virtual bool GetIncludedInAdvancedMode()
         {
             return false;
@@ -293,11 +286,6 @@ namespace WSUI.Core.Core.Search
         protected virtual string OnGenerateAdvancedWherePart()
         {
             return string.Empty;
-        }
-
-        protected IQueryReader Reader
-        {
-            get { return _reader ?? (_reader = QueryReader<T>.CreateNewReader<T>(FieldCash.Instance.GetFields(typeof(T)))); }
         }
 
         protected DateTime GetCurrentDateTime()

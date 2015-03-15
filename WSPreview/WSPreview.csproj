@@ -83,6 +83,10 @@
     <Reference Include="DDay.iCal">
       <HintPath>..\Toolkits\DDayICal\DDay.iCal.dll</HintPath>
     </Reference>
+    <Reference Include="Elasticsearch.Net, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Output\Elasticsearch.Net.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\Toolkits\AgilityPack\Net40\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -119,6 +123,10 @@
       <HintPath>..\Toolkits\Interop\Word\Microsoft.Office.Interop.Word.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Nest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Output\Nest.dll</HintPath>
+    </Reference>
     <Reference Include="Office, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -224,9 +232,11 @@
     <Compile Include="Controls\SourceControl\SourceViewer.Designer.cs">
       <DependentUpon>SourceViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithSearchObject.cs" />
     <Compile Include="PreviewHandlerFramework\ControlsKey.cs" />
     <Compile Include="PreviewHandlerFramework\IOutlookPreviewHelper.cs" />
     <Compile Include="PreviewHandlerFramework\KeyControlAttribute.cs" />
+    <Compile Include="PreviewHandlerFramework\PreviewForSearchObjectAttribute.cs" />
     <Compile Include="PreviewHandlers\WebPreviewHandler.cs" />
     <Compile Include="Service\OutlookPreview\OutlookPreviewHelper.cs" />
     <Compile Include="Service\Preview\HelperPreviewHandlers.cs" />

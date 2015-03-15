@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using WSUI.Core.Core.LimeLM;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Interfaces;
@@ -59,6 +60,11 @@ namespace WSUI.Core.Helpers
             return InternalGetTempFilename(searchitem.Id, GetFilename(searchitem), GetExtension(searchitem));
         }
 
+        public string GenerateTempFolderForObject(ISearchObject searchItem)
+        {
+            return InternalGenerateForlderForObject(searchItem.Id);
+        }
+
         public string GenerateHtmlTempFileName(Guid id)
         {
             return GenerateTempFileName(id, ".html");
@@ -67,6 +73,15 @@ namespace WSUI.Core.Helpers
         public string GenerateTempFileName(Guid id, string ext)
         {
             return InternalGetTempFilename(id, id.ToString(), ext);
+        }
+
+        private string InternalGenerateForlderForObject(Guid id)
+        {
+            string path = CheckAndGetExistTempFilepath(id);
+            if (!string.IsNullOrEmpty(path))
+                return path;
+            string tempFolder = CreateAndGetTempFolder(id);
+            return tempFolder;
         }
 
         private string InternalGetTempFilename(Guid id, string file, string ext)

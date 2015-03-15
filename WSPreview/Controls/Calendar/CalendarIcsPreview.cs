@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using WSPreview.PreviewHandler.PreviewHandlerFramework;
 using DDay.iCal;
+using WSUI.Core.Data;
 using WSUI.Core.Extensions;
 
 namespace WSPreview.PreviewHandler.Controls.Calendar
@@ -75,6 +76,11 @@ namespace WSPreview.PreviewHandler.Controls.Calendar
 
         public void LoadFile(Stream stream)
         {
+        }
+
+        public void LoadObject(BaseSearchObject obj)
+        {
+            throw new NotImplementedException();
         }
 
         public void Clear()
