@@ -41,7 +41,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 
 	    protected override Expression<Func<WSUIEmail, string>> GetSearchedProperty()
 	    {
-	        return e => e.Content;
+	        return e => e.Analyzedcontent;
 	    }
     }//end EmailContentSearchRule
 

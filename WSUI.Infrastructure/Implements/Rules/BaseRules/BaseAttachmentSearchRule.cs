@@ -7,9 +7,12 @@
 ///////////////////////////////////////////////////////////
 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using Nest;
 using WSUI.Core.Core.Rules;
 using WSUI.Core.Core.Search;
 using WSUI.Core.Data;
@@ -21,7 +24,7 @@ using WSUI.Infrastructure.Service.Helpers;
 
 namespace WSUI.Infrastructure.Implements.Rules.BaseRules 
 {
-	public class BaseAttachmentSearchRule : BaseSearchRule<AttachmentSearchObject,WSUIAttachmentContent>
+	public abstract class BaseAttachmentSearchRule : BaseSearchRule<AttachmentContentSearchObject,WSUIAttachmentContent>
 	{
 
 		public BaseAttachmentSearchRule()
@@ -41,12 +44,25 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
             return "*"; // searching in all property
         }
 
-
-        protected override System.Data.DataTable GetDataTable(string query)
+        protected override QueryContainer BuildQuery(QueryDescriptor<WSUIAttachmentContent> queryDescriptor)
         {
-            var listIgnored = FieldCash.Instance.GetIgnoredFields(typeof (AttachmentSearchObject));
-            return IndexerDataReader.Instance.GetDataByReader(query,listIgnored);
+            var preparedCriterias = GetProcessingSearchCriteria();
+            if (preparedCriterias.Count > 1)
+            {
+                return queryDescriptor.Bool(descriptor =>
+                {
+                    descriptor.Must(preparedCriterias.Select(preparedCriteria => (Func<QueryDescriptor<WSUIAttachmentContent>, QueryContainer>)(descriptor1 => descriptor1.Term(GetSearchedProperty(), preparedCriteria))).ToArray());
+                });
+            }
+            return queryDescriptor.Term(GetSearchedProperty(), Query);
         }
+
+        protected abstract Expression<Func<WSUIAttachmentContent, string>> GetSearchedProperty();
+
+	    protected override bool NeedSorting
+	    {
+	        get { return false; }
+	    }
 
 	    public override void Init()
 	    {
@@ -71,8 +87,8 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 
 	    protected override void ProcessResult()
 	    {
-            var groups = GetSortedAttachmentSearchObjects(Result).GroupBy(i => new { Name = i.ItemNameDisplay, Size = i.Size });
-	        var result = new List<AttachmentSearchObject>();
+            var groups = Result.GroupBy(i => new { Name = i.ItemNameDisplay, Size = i.Size });
+	        var result = new List<AttachmentContentSearchObject>();
             WSSqlLogger.Instance.LogInfo(string.Format("Count attachments: {0}", groups.Count()));
             foreach (var group in groups)
             {
@@ -89,7 +105,7 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
             {
                 WSSqlLogger.Instance.LogInfo("{0}: {1}",RuleName,result.Count);
                 Result = result;
-                LastDate = Result.Min(d => d.DateReceived);
+                //LastDate = Result.Min(d => d.DateReceived); // TODO should be re-factored
             }
 	    }
 

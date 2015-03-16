@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using WSUI.Core.Data;
+using WSUI.Core.Data.ElasticSearch;
 using WSUI.Infrastructure.Implements.Rules.BaseRules;
 
 namespace WSUI.Infrastructure.Implements.Rules
@@ -28,6 +30,11 @@ namespace WSUI.Infrastructure.Implements.Rules
         protected override string GetSearchProperty()
         {
             return "System.ItemUrl";
+        }
+
+        protected override Expression<Func<WSUIAttachmentContent, string>> GetSearchedProperty()
+        {
+            return a => a.Filename;
         }
 
         public override void Init()

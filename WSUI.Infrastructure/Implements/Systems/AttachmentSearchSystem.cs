@@ -24,8 +24,8 @@ namespace WSUI.Infrastructure.Implements.Systems
 
 	    public override void Init()
 	    {
-            AddRule(new FileFilenameSearchRule());
-            AddRule(new FileContentSearchRule());
+            //AddRule(new FileFilenameSearchRule());
+            //AddRule(new FileContentSearchRule());
             AddRule(new AttachmentFilenameSearchRule());
             AddRule(new AttachmentContentSearchRule());
 	        base.Init();

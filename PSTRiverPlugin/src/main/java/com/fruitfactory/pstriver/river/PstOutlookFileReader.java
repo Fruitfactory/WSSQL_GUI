@@ -40,8 +40,11 @@ import java.util.UUID;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.tika.Tika;
+import org.apache.tika.metadata.Metadata;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.common.io.stream.BytesStreamInput;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
@@ -60,6 +63,8 @@ public class PstOutlookFileReader implements Runnable {
     private String _indexName;
     private String _name;
     private int _emailCount = 0;
+    
+    private final Tika _tika = new Tika();
 
     public PstOutlookFileReader(String indexName, String filename, Date lastUpdatedDate, ESLogger _logger, BulkProcessor _bulkProcessor) {
         this._filename = filename;
@@ -97,6 +102,7 @@ public class PstOutlookFileReader implements Runnable {
             PstStatusRepository.setStatus(_name, PstReaderStatus.Busy);
             processFolder(file.getRootFolder());
             PstStatusRepository.setStatus(_name, PstReaderStatus.Finished);
+            file.close();
 
         } catch (Exception e) {
             _logger.error(LOG_TAG + e.getMessage());
@@ -189,7 +195,9 @@ public class PstOutlookFileReader implements Runnable {
         String subject = message.getSubject();
         String sender = message.getSentRepresentingName();
         String senderEmail = message.getSentRepresentingEmailAddress();
-        String body = message.getBodyHTML();
+        String body = message.getBody();
+        String htmlbody = message.getBodyHTML();
+        String analyzedContent = _tika.parseToString(new BytesStreamInput(htmlbody.getBytes(),false),new Metadata());
         String entryID = message.getEntryID();
         boolean hasAttachment = message.hasAttachments();
         Date dateCreated = message.getCreationTime();
@@ -269,6 +277,8 @@ public class PstOutlookFileReader implements Runnable {
                 .field(PstMetadataTags.Email.CONVERSATION_INDEX, conversationIndex)
                 .field(PstMetadataTags.Email.SUBJECT, subject)
                 .field(PstMetadataTags.Email.CONTENT, body)
+                .field(PstMetadataTags.Email.HTML_CONTENT, htmlbody)
+                .field(PstMetadataTags.Email.ANALYZED_CONTENT,analyzedContent)
                 .field(PstMetadataTags.Email.HAS_ATTACHMENTS, Boolean.toString(hasAttachment))
                 .field(PstMetadataTags.Email.FROM_NAME, sender)
                 .field(PstMetadataTags.Email.FROM_ADDRESS, senderEmail)
@@ -319,6 +329,7 @@ public class PstOutlookFileReader implements Runnable {
         String mime = attachment.getMimeTag();
         String entryid = attachment.getEntryID();
         StringBuilder strBuilder = new StringBuilder();
+        String parsedContent = "";
         try (InputStream reader = attachment.getFileInputStream()) {
             ByteArrayOutputStream bufferStream = new ByteArrayOutputStream();
             final int lenght = 8176;
@@ -328,7 +339,9 @@ public class PstOutlookFileReader implements Runnable {
                 bufferStream.write(output,0,nRead);
             }
             bufferStream.flush();
-            strBuilder.append(Base64.encode(bufferStream.toByteArray()));
+            byte[] byteBuffer = bufferStream.toByteArray();
+            strBuilder.append(Base64.encode(byteBuffer));
+            parsedContent = _tika.parseToString(new BytesStreamInput(byteBuffer,false), new Metadata());
         } catch (Exception ex) {
             _logger.error(LOG_TAG, ex.getMessage());
         }
@@ -344,6 +357,7 @@ public class PstOutlookFileReader implements Runnable {
                 .field(PstMetadataTags.Attachment.PATH, pathname)
                 .field(PstMetadataTags.Attachment.SIZE, size)
                 .field(PstMetadataTags.Attachment.MIME_TAG, mime)
+                .field(PstMetadataTags.Attachment.ANALYZED_CONTENT,parsedContent)
                 .field(PstMetadataTags.Attachment.CONTENT, strBuilder.toString())
                 .field(PstMetadataTags.Attachment.EMAIL_ID, emailID)
                 .field(PstMetadataTags.Attachment.ENTRYID, entryid);

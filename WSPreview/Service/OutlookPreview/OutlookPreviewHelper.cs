@@ -517,7 +517,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             page += string.Format(SendRow, email.DateReceived.ToString());
             if(email.IsAttachmentPresent)
                 page += GetAttachments(email);
-            string temp = GetHtmlBodyHightlight(email.Content);
+            string temp = GetHtmlBodyHightlight(email.HtmlContent);
             page += string.Format(EmailRow, temp);
             page += TableEnd + PageEnd;
             return page;

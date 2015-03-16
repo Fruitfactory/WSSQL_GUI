@@ -37,6 +37,8 @@ public class PstMetadataTags {
         public static final String CONVERSATION_INDEX = "conversationindex";
         public static final String SUBJECT = "subject";
         public static final String CONTENT = "content";
+        public static final String HTML_CONTENT = "htmlcontent";
+        public static final String ANALYZED_CONTENT = "analyzedcontent";
         public static final String HAS_ATTACHMENTS = "hasattachments";
         public static final String FROM_NAME = "fromname";
         public static final String FROM_ADDRESS = "fromaddress";
@@ -82,6 +84,7 @@ public class PstMetadataTags {
         public static final String PATH = "path";
         public static final String SIZE = "size";
         public static final String MIME_TAG = "mimetag";
+        public static final String ANALYZED_CONTENT = "analyzedcontent";
         public static final String CONTENT = "content";
         public static final String EMAIL_ID = "emailid";
         public static final String ENTRYID = "entryid";
@@ -101,7 +104,9 @@ public class PstMetadataTags {
         addNotAnalyzedString(mapping, Email.CONVERSATION_ID);
         addNotAnalyzedString(mapping, Email.CONVERSATION_INDEX);
         addAnalyzedString(mapping, Email.SUBJECT);
-        addAnalyzedString(mapping, Email.CONTENT);
+        addNotIndexedString(mapping, Email.CONTENT);
+        addNotIndexedString(mapping, Email.HTML_CONTENT);
+        addAnalyzedString(mapping, Email.ANALYZED_CONTENT);
         addNotAnalyzedString(mapping, Email.HAS_ATTACHMENTS);
         addAnalyzedString(mapping, Email.FROM_NAME);
         addAnalyzedString(mapping, Email.FROM_ADDRESS);
@@ -143,10 +148,11 @@ public class PstMetadataTags {
         XContentBuilder mapping = jsonBuilder().prettyPrint().startObject();
         mapping.startObject(INDEX_TYPE_ATTACHMENT);
         mapping.startObject(PROPERTIES);
-        addNotAnalyzedString(mapping, Attachment.FILENAME);
+        addAnalyzedString(mapping, Attachment.FILENAME);
         addNotAnalyzedString(mapping, Attachment.PATH);
         addLong(mapping, Attachment.SIZE);
         addNotAnalyzedString(mapping, Attachment.MIME_TAG);
+        addAnalyzedString(mapping, Attachment.ANALYZED_CONTENT);
         addBinary(mapping, Attachment.CONTENT);
         addNotAnalyzedString(mapping, Attachment.EMAIL_ID);
         addNotAnalyzedString(mapping, Attachment.ENTRYID);

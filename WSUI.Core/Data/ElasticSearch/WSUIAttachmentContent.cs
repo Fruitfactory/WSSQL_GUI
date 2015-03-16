@@ -15,6 +15,8 @@ namespace WSUI.Core.Data.ElasticSearch
 
         public string Content { get; set; }
 
+        public string Analyzedcontent { get; set; }
+
         public string EmailId { get; set; }
     }
 }

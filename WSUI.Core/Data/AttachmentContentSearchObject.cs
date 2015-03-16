@@ -1,7 +1,15 @@
-﻿namespace WSUI.Core.Data
+﻿using WSUI.Core.Enums;
+
+namespace WSUI.Core.Data
 {
-    public class AttachmentContentSearchObject : AbstractSearchObject
+    public class AttachmentContentSearchObject : BaseSearchObject
     {
+
+        public AttachmentContentSearchObject()
+        {
+            TypeItem = TypeSearchItem.Attachment;
+        }
+
         public string Filename
         {
             get { return Get(() => Filename); }

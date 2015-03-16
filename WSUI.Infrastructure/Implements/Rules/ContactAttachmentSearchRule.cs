@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using WSUI.Core.Core.Rules;
+using WSUI.Core.Data.ElasticSearch;
 using WSUI.Core.Extensions;
 using WSUI.Core.Helpers;
 using WSUI.Infrastructure.Implements.Rules.BaseRules;
@@ -33,6 +36,11 @@ namespace WSUI.Infrastructure.Implements.Rules
         }
 
         #endregion
+
+        protected override Expression<Func<WSUIAttachmentContent, string>> GetSearchedProperty()
+        {
+            return a => a.Analyzedcontent;
+        }
 
         protected override void InitCounts()
         {

@@ -25,6 +25,12 @@ namespace WSUI.Core.Data
             set { Set(() => Content, value); }
         }
 
+        public string HtmlContent
+        {
+            get { return Get(() => HtmlContent); }
+            set { Set(() => HtmlContent, value); }
+        }
+
         public EmailSearchObject()
         {
             TypeItem = TypeSearchItem.Email;

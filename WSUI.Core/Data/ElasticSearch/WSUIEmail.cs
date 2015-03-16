@@ -26,7 +26,11 @@ namespace WSUI.Core.Data.ElasticSearch
 
         public string Content { get; set; }
 
-        public string HasAttachments { get; set; }
+        public string Htmlcontent { get; set; }
+
+        public string Analyzedcontent { get; set; }
+
+        public string Hasattachments { get; set; }
 
         public string FromName { get; set; }
 

@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using WSUI.Core.Data;
 using WSUI.Core.Enums;
+using WSUI.Core.Extensions;
+using WSUI.Core.Helpers.DetectEncoding.Multilang;
 using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
@@ -168,6 +170,28 @@ namespace WSUI.Core.Helpers
             }
 
             return list;
+        }
+
+        public string GetAttachmentTempFile(AttachmentContentSearchObject attachment)
+        {
+            if (attachment.IsNull() || string.IsNullOrEmpty(attachment.Content) || string.IsNullOrEmpty(attachment.Filename))
+                return string.Empty;
+
+            var folder = TempFileManager.Instance.GenerateTempFolderForObject(attachment);
+            if (string.IsNullOrEmpty(folder))
+                return string.Empty;
+            string filename = string.Format("{0}\\{1}", folder, attachment.Filename);
+            try
+            {
+                byte[] content = Convert.FromBase64String(attachment.Content);
+                File.WriteAllBytes(filename, content);
+                return filename;
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+            return string.Empty;
         }
 
         public bool HasAttachment(BaseSearchObject item)
