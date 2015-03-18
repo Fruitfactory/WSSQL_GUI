@@ -79,8 +79,8 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 
         protected override void ProcessCountAdded()
 	    {
-            lock(InternalLock)
-                CountAdded = Result.GroupBy(i => new { Name = i.ItemNameDisplay, Size = i.Size }).Count();
+           
+            CountAdded = Result.GroupBy(i => new { Name = i.ItemNameDisplay, Size = i.Size }).Count();
             if (CountAdded == CountProcess)
                 IsInterupt = true;
 	    }

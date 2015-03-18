@@ -18,9 +18,11 @@ namespace WSUI.Core.Data.ElasticSearch
 
         public long Size { get; set; }
 
-        public string ConversationId { get; set; }
+        public string Conversationid { get; set; }
 
-        public string ConversationIndex { get; set; }
+        public string Conversationindex { get; set; }
+
+        public string Outlookconversationid { get; set; }
 
         public string Subject { get; set; }
 

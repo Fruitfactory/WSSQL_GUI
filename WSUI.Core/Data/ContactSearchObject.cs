@@ -211,6 +211,12 @@ namespace WSUI.Core.Data
             set { Set(() => Birthday, value); }
         }
 
+        public string AddressType
+        {
+            get { return Get(() => AddressType); }
+            set { Set(() => AddressType, value); }
+        }
+
         public ContactSearchObject()
         {
             TypeItem = TypeSearchItem.Contact;

@@ -1370,7 +1370,7 @@ namespace WSUIOutlookPlugin
                     }
                 };
                 var body = elasticSearchClient.ElasticClient.Serializer.Serialize(index, SerializationFormatting.Indented);
-                var r = elasticSearchClient.ElasticClient.Raw.IndexPut("_river", "psttest", "_meta", body);
+                var r = elasticSearchClient.ElasticClient.Raw.IndexPut("_river", WSUIElasticSearchClient.DefaultIndexName, "_meta", body);
                 WSSqlLogger.Instance.LogInfo(r.Response.ToString());
             }
             catch (Exception ex) 

@@ -30,6 +30,12 @@ namespace WSUI.Core.Data
             set { Set(() => ConversationId,value);}
         }
 
+        public string OutlookConversationId
+        {
+            get { return Get(() => OutlookConversationId); }
+            set { Set(() => OutlookConversationId, value); }
+        }
+
         public WSUIRecipient[] To
         {
             get { return Get(() => To); }

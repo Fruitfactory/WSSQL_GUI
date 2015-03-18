@@ -6,7 +6,7 @@
 package com.fruitfactory.pstriver.river;
 
 import com.fruitfactory.pstriver.helpers.AttachmentHelper;
-import com.fruitfactory.pstriver.helpers.Pair;
+
 import com.fruitfactory.pstriver.utils.PstFeedDefinition;
 import com.fruitfactory.pstriver.utils.PstGlobalConst;
 import com.fruitfactory.pstriver.utils.PstMetadataTags;

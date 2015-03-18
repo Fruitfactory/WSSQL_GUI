@@ -58,7 +58,7 @@ namespace WSUI.Core.Core.Search
         protected volatile object Lock = null;
         
 
-        protected volatile object InternalLock = new object();
+        private volatile object _internalLock = new object();
 
         // results
         private TypeResult _typeResult;
@@ -208,14 +208,17 @@ namespace WSUI.Core.Core.Search
 
         ///
         /// <param name="reader"></param>
-        private void ReadData(E email)
+        private void ReadData(E searchObject)
         {
             var result = _create.Invoke() as T;
             if (result == null)
                 return;
-            result.SetDataObject(email);
-            Result.Add(result);
-            ProcessCountAdded();
+            result.SetDataObject(searchObject);
+            lock (_internalLock)
+            {
+                Result.Add(result);
+                ProcessCountAdded();    
+            }
         }
 
         protected virtual void ProcessCountAdded()

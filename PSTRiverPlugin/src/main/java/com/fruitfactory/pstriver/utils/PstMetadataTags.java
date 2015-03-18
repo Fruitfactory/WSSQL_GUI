@@ -34,6 +34,7 @@ public class PstMetadataTags {
         public static final String DATE_RECEIVED = "datereceived";
         public static final String SIZE = "size";
         public static final String CONVERSATION_ID = "conversationid";
+        public static final String OUTLOOK_CONVERSATION_ID = "outlookconversationid";
         public static final String CONVERSATION_INDEX = "conversationindex";
         public static final String SUBJECT = "subject";
         public static final String CONTENT = "content";
@@ -50,6 +51,7 @@ public class PstMetadataTags {
 
             public static final String NAME = "name";
             public static final String ADDRESS = "address";
+            public static final String EMAIL_ADDRESS_TYPE = "emailaddresstype";
         }
 
         public static final String CC = "cc";
@@ -58,6 +60,7 @@ public class PstMetadataTags {
 
             public static final String NAME = "name";
             public static final String ADDRESS = "address";
+            public static final String EMAIL_ADDRESS_TYPE = "emailaddresstype";
         }
         public static final String BCC = "bcc";
 
@@ -65,6 +68,7 @@ public class PstMetadataTags {
 
             public static final String NAME = "name";
             public static final String ADDRESS = "address";
+            public static final String EMAIL_ADDRESS_TYPE = "emailaddresstype";
         }
 
         public static final String ATTACHMENTS = "attachments";
@@ -103,6 +107,7 @@ public class PstMetadataTags {
         addLong(mapping, Email.SIZE);
         addNotAnalyzedString(mapping, Email.CONVERSATION_ID);
         addNotAnalyzedString(mapping, Email.CONVERSATION_INDEX);
+        addNotAnalyzedString(mapping, Email.OUTLOOK_CONVERSATION_ID);
         addAnalyzedString(mapping, Email.SUBJECT);
         addNotIndexedString(mapping, Email.CONTENT);
         addNotIndexedString(mapping, Email.HTML_CONTENT);
@@ -202,6 +207,7 @@ public class PstMetadataTags {
 
         public static final String ITEM_BIRTHDAY = "birthday";
         public static final String ENTRY_ID = "entryid";
+        public static final String ADDRESS_TYPE = "addresstype";
 
     }
 

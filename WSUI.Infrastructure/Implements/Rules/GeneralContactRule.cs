@@ -14,7 +14,7 @@ using WSUI.Core.Data.ElasticSearch;
 
 namespace WSUI.Infrastructure.Implements.Rules
 {
-    public class GeneralContactRule : BaseSearchRule<ContactSearchObject,WSUIStub>
+    public class GeneralContactRule : BaseSearchRule<BaseSearchObject,WSUIEmail>
     {
         #region [needs]
 
@@ -49,7 +49,7 @@ namespace WSUI.Infrastructure.Implements.Rules
         {
             Priority = 0;
             _listContactsRules.Add(new ContactSearchRule(Lock));
-            //_listContactsRules.Add(new EmailContactSearchRule(Lock)); // TODO implement sorting for email via contacts
+            _listContactsRules.Add(new EmailContactSearchRule(Lock));
             _listExistingEmails = new List<string>();
         }
 
@@ -128,18 +128,17 @@ namespace WSUI.Infrastructure.Implements.Rules
                 }
             }
 
-            //TODO: add seraching by email addresses.
-            //var resultEmailContact = (_listContactsRules[1] as ISearchRule).GetResults().OperationResult.OfType<EmailContactSearchObject>();
-            //if (resultEmailContact != null && resultEmailContact.Any())
-            //{
-            //    foreach (var emailContact in resultEmailContact)
-            //    {
-            //        if(!IsEmail(emailContact.EMail) || _listExistingEmails.Contains(emailContact.EMail.ToLowerInvariant()))
-            //            continue;
-            //        Result.Add(emailContact);
-            //        _listExistingEmails.Add(emailContact.EMail.ToLowerInvariant());
-            //    }    
-            //}
+            var resultEmailContact = (_listContactsRules[1] as ISearchRule).GetResults().OperationResult.OfType<EmailContactSearchObject>();
+            if (resultEmailContact != null && resultEmailContact.Any())
+            {
+                foreach (var emailContact in resultEmailContact)
+                {
+                    if (!IsEmail(emailContact.EMail) || _listExistingEmails.Contains(emailContact.EMail.ToLowerInvariant()))
+                        continue;
+                    Result.Add(emailContact);
+                    _listExistingEmails.Add(emailContact.EMail.ToLowerInvariant());
+                }
+            }
         }
 
         private bool IsContainsSearchCriterias(string emailAddress, string[] arrQuery)

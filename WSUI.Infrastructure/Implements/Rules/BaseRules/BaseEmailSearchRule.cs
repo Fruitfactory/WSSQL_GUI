@@ -80,7 +80,7 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
             IEnumerable<IGrouping<string, EmailSearchObject>> groped = null;
 
             if (!IsAdvancedMode)
-                groped = Result.OrderByDescending(i => i.DateReceived).GroupBy(e => e.ConversationId);
+                groped = Result.OrderByDescending(i => i.DateReceived).GroupBy(e => e.OutlookConversationId);
             else
                 groped = GetSortedResult(Result);
 
@@ -91,9 +91,9 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
                 if (!convIndex.Any())
                     continue;
                 var data = convIndex.FirstOrDefault().First();
-                if (data == null || string.IsNullOrEmpty(data.ConversationId) || _listID.Contains(data.ConversationId))
+                if (data == null || string.IsNullOrEmpty(data.OutlookConversationId) || _listID.Contains(data.OutlookConversationId))
                     continue;
-                _listID.Add(data.ConversationId);
+                _listID.Add(data.OutlookConversationId);
                 foreach (var emailSearchObject in convIndex.Skip(1))
                 {
                     data.AddItem(emailSearchObject.First());
@@ -112,22 +112,22 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
         private IEnumerable<IGrouping<string, EmailSearchObject>> GetSortedResult(IList<EmailSearchObject> result)
         {
             if (AdvancedSearchCriterias.All(c => c.CriteriaType != AdvancedSearchCriteriaType.SortBy))
-                return result.GroupBy(e => e.ConversationId);
+                return result.GroupBy(e => e.OutlookConversationId);
             var sort = (AdvancedSearchSortByType)AdvancedSearchCriterias.First(c => c.CriteriaType == AdvancedSearchCriteriaType.SortBy).Value;
             switch (sort)
             {
                 case AdvancedSearchSortByType.NewestToOldest:
-                    return result.OrderByDescending(i => i.DateReceived).GroupBy(e => e.ConversationId);
+                    return result.OrderByDescending(i => i.DateReceived).GroupBy(e => e.OutlookConversationId);
                 case AdvancedSearchSortByType.OldestToNewest:
-                    return result.OrderBy(i => i.DateReceived).GroupBy(e => e.ConversationId);
+                    return result.OrderBy(i => i.DateReceived).GroupBy(e => e.OutlookConversationId);
                 default:
-                    return result.GroupBy(e => e.ConversationId);
+                    return result.GroupBy(e => e.OutlookConversationId);
             }
         }
 
         public IEnumerable<string> GetConversationId()
         {
-            return Result.Select(e => e.ConversationId);
+            return Result.Select(e => e.OutlookConversationId);
         }
 
         public void ApplyFilter(IEnumerable<string> conversationIds)
@@ -137,7 +137,7 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
             for (int i = 0; i < Result.Count; i++)
             {
                 var obj = Result[i];
-                if (conversationIds.Contains(obj.ConversationId))
+                if (conversationIds.Contains(obj.OutlookConversationId))
                 {
                     Result.Remove(obj);
                     i--;

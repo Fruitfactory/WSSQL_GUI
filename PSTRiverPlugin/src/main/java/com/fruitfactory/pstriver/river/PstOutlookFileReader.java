@@ -6,9 +6,9 @@
 package com.fruitfactory.pstriver.river;
 
 import com.fruitfactory.pstriver.helpers.AttachmentHelper;
-import com.fruitfactory.pstriver.helpers.Pair;
 import com.fruitfactory.pstriver.helpers.PstReaderStatus;
 import com.fruitfactory.pstriver.helpers.PstReaderStatusInfo;
+import com.fruitfactory.pstriver.helpers.Triple;
 import com.fruitfactory.pstriver.rest.PstStatusRepository;
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
 import com.fruitfactory.pstriver.utils.PstMetadataTags;
@@ -206,17 +206,19 @@ public class PstOutlookFileReader implements Runnable {
         PSTConversationIndexData indexData = message.getConversationIndexData();
         UUID id = null;
         String conversationIndex = "";
+        String outlookConversationId = "";
         try {
             id = indexData.getConversationUUID(message.getConversationTopic(), message.getConversationIndexTracking());
             conversationIndex = Integer.toString(indexData.getConversationIndex());
+            outlookConversationId = indexData.getOutlookConversationId();
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(TestGui.class.getName()).log(Level.SEVERE, null, ex);
         }
         String conversationId = id != null ? id.toString() : "";
 
-        List<Pair<String, String>> listTo = new ArrayList<Pair<String, String>>();
-        List<Pair<String, String>> listCc = new ArrayList<Pair<String, String>>();
-        List<Pair<String, String>> listBcc = new ArrayList<Pair<String, String>>();
+        List<Triple<String, String,String>> listTo = new ArrayList<Triple<String, String,String>>();
+        List<Triple<String, String,String>> listCc = new ArrayList<Triple<String, String,String>>();
+        List<Triple<String, String,String>> listBcc = new ArrayList<Triple<String, String,String>>();
         List<AttachmentHelper> listAttachments = new ArrayList<AttachmentHelper>();
         int count = 0;
         try {
@@ -224,7 +226,7 @@ public class PstOutlookFileReader implements Runnable {
 
             for (int i = 0; i < count; i++) {
                 PSTRecipient recipient = message.getRecipient(i);
-                Pair<String, String> pairRecipient = new Pair<String, String>(recipient.getDisplayName(), recipient.getEmailAddress());
+                Triple<String, String,String> pairRecipient = new Triple<String, String,String>(recipient.getDisplayName(), recipient.getEmailAddress(),recipient.getEmailAddressType());
                 int flag = recipient.getRecipientType();
                 switch (flag) {
                     case PSTRecipient.MAPI_TO:
@@ -275,6 +277,7 @@ public class PstOutlookFileReader implements Runnable {
                 .field(PstMetadataTags.Email.SIZE, size)
                 .field(PstMetadataTags.Email.CONVERSATION_ID, conversationId)
                 .field(PstMetadataTags.Email.CONVERSATION_INDEX, conversationIndex)
+                .field(PstMetadataTags.Email.OUTLOOK_CONVERSATION_ID, outlookConversationId)
                 .field(PstMetadataTags.Email.SUBJECT, subject)
                 .field(PstMetadataTags.Email.CONTENT, body)
                 .field(PstMetadataTags.Email.HTML_CONTENT, htmlbody)
@@ -287,15 +290,18 @@ public class PstOutlookFileReader implements Runnable {
         AddArrayOfEmails(source, listTo,
                 PstMetadataTags.Email.TO,
                 PstMetadataTags.Email.To.NAME,
-                PstMetadataTags.Email.To.ADDRESS);
+                PstMetadataTags.Email.To.ADDRESS,
+                PstMetadataTags.Email.To.EMAIL_ADDRESS_TYPE);
         AddArrayOfEmails(source, listCc,
                 PstMetadataTags.Email.CC,
                 PstMetadataTags.Email.Cc.NAME,
-                PstMetadataTags.Email.Cc.ADDRESS);
+                PstMetadataTags.Email.Cc.ADDRESS,
+                PstMetadataTags.Email.Cc.EMAIL_ADDRESS_TYPE);
         AddArrayOfEmails(source, listBcc,
                 PstMetadataTags.Email.BCC,
                 PstMetadataTags.Email.Bcc.NAME,
-                PstMetadataTags.Email.Bcc.ADDRESS);
+                PstMetadataTags.Email.Bcc.ADDRESS,
+                PstMetadataTags.Email.Bcc.EMAIL_ADDRESS_TYPE);
 
         if (!listAttachments.isEmpty()) {
             source.field(PstMetadataTags.Email.ATTACHMENTS).startArray();
@@ -376,6 +382,7 @@ public class PstOutlookFileReader implements Runnable {
         String businessPhone = contact.getBusinessTelephoneNumber();
         String homePhone = contact.getHomeTelephoneNumber();
         String mobilePhone = contact.getMobileTelephoneNumber();
+        String addressType = contact.getAddrType();
 
         String homeCity = contact.getHomeAddressCity();
         String homeCountry = contact.getHomeAddressCountry();
@@ -445,7 +452,8 @@ public class PstOutlookFileReader implements Runnable {
                 .field(PstMetadataTags.Contact.ITEM_WORK_ADDRESS, workAddress)
                 .field(PstMetadataTags.Contact.ITEM_OTHER_ADDRESS, otherAddress)
                 .field(PstMetadataTags.Contact.ITEM_BIRTHDAY, birthday)
-                .field(PstMetadataTags.Contact.ENTRY_ID, entryID);
+                .field(PstMetadataTags.Contact.ENTRY_ID, entryID)
+                .field(PstMetadataTags.Contact.ADDRESS_TYPE,addressType);
         source.endObject();
 
         esIndex(_indexName, PstMetadataTags.INDEX_TYPE_CONTACT, PstSignTool.sign(contact.toString()).toString(), source);
@@ -496,15 +504,16 @@ public class PstOutlookFileReader implements Runnable {
         esIndex(_indexName, PstMetadataTags.INDEX_TYPE_CALENDAR, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
     }
 
-    private void AddArrayOfEmails(XContentBuilder builder, List<Pair<String, String>> list, String objectName, String nameTag, String addressTag) throws IOException {
+    private void AddArrayOfEmails(XContentBuilder builder, List<Triple<String, String,String>> list, String objectName, String nameTag, String addressTag, String addressTypeTag) throws IOException {
         if (list.isEmpty()) {
             return;
         }
         builder.field(objectName).startArray();
-        for (Pair<String, String> item : list) {
+        for (Triple<String, String,String> item : list) {
             builder.startObject();
             builder.field(nameTag, item.getItem1());
             builder.field(addressTag, item.getItem2());
+            builder.field(addressTypeTag, item.getItem3());
             builder.endObject();
         }
         builder.endArray();

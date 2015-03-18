@@ -78,6 +78,8 @@ namespace WSUI.Core.Data.ElasticSearch
 
         public DateTime Birthday { get; set; }
 
+        public string Addresstype { get; set; }
+
 
     }
 }
