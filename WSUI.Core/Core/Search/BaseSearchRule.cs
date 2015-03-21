@@ -36,7 +36,9 @@ namespace WSUI.Core.Core.Search
         private volatile bool _isSearching = false;
         private bool _exludeIgnored = false;
         private WSUIElasticSearchClient _elasticSearchClient;
-        private Func<T> _create; 
+        private Func<T> _create;
+        private int _from = 0;
+        private long _total = 0;
 
         #endregion [needs private]
 
@@ -53,7 +55,6 @@ namespace WSUI.Core.Core.Search
         protected int CountFirstProcess = 35;
         protected int CountSecondProcess = 7;
         protected int CountAdded = 0;
-        protected int CountProcess = 0;
         protected volatile bool NeedStop = false;
         protected volatile object Lock = null;
         
@@ -128,7 +129,7 @@ namespace WSUI.Core.Core.Search
             try
             {
                 _isSearching = true;
-                string query = Query; //QueryGenerator.Instance.GenerateQuery(typeof(T), Query, TopQueryResult, this,IsAdvancedMode);
+                string query = Query;
                 if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
                 WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
@@ -136,16 +137,20 @@ namespace WSUI.Core.Core.Search
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
+                if (_total != 0 && _from >= _total)
+                {
+                    return;
+                }
                 
                 var result =  NeedSorting 
                     ? _elasticSearchClient.ElasticClient.Search<E>(s => s
-                    .From(0)
+                    .From(_from)
                     .Size(TopQueryResult)
                     .Query(BuildQuery)
                     .Sort(BuildSortSelector)
                     )
                     : _elasticSearchClient.ElasticClient.Search<E>(s => s
-                    .From(0)
+                    .From(_from)
                     .Size(TopQueryResult)
                     .Query(BuildQuery)
                     ) 
@@ -155,6 +160,8 @@ namespace WSUI.Core.Core.Search
                 // additional process
                 if (!NeedStop && result != null && result.Documents.Any())
                 {
+                    _total = result.Total;
+                    _from +=  result.Documents.Count() == TopQueryResult ? TopQueryResult : result.Documents.Count();
                     ReadDataFromTable(result.Documents);
                     ProcessResult();
                     _typeResult = TypeResult.Ok;
@@ -175,7 +182,7 @@ namespace WSUI.Core.Core.Search
             finally
             {
                 CountAdded = 0;
-                TopQueryResult = CountProcess = CountSecondProcess;
+                TopQueryResult = CountSecondProcess;
                 _isSearching = false;
                 NeedStop = false;
                 IsInterupt = false;
@@ -224,8 +231,6 @@ namespace WSUI.Core.Core.Search
         protected virtual void ProcessCountAdded()
         {
             CountAdded++;
-            if (CountAdded == CountProcess)
-                IsInterupt = true;
         }
 
         public AutoResetEvent GetEvent()
@@ -237,8 +242,9 @@ namespace WSUI.Core.Core.Search
         public virtual void Reset()
         {
             CountAdded = 0;
-            CountProcess = 0;
-            TopQueryResult = CountProcess = CountFirstProcess;
+            _from = 0;
+            _total = 0;
+            TopQueryResult = CountFirstProcess;
             Query = string.Empty;
             LastDate = GetCurrentDateTime();
             IsInterupt = false;
@@ -264,8 +270,10 @@ namespace WSUI.Core.Core.Search
 
         public virtual void Init()
         {
+            _from = 0;
+            _total = 0;
             LastDate = GetCurrentDateTime();
-            TopQueryResult = CountProcess = CountFirstProcess;
+            TopQueryResult = CountFirstProcess;
             CountAdded = 0;
             _typeResult = TypeResult.None;
             _listMessage = new List<IResultMessage>();
@@ -274,7 +282,7 @@ namespace WSUI.Core.Core.Search
 
         public void SetProcessingRecordCount(int first, int second)
         {
-            TopQueryResult = CountProcess = CountFirstProcess = first;
+            TopQueryResult = CountFirstProcess = first;
             CountSecondProcess = second;
         }
 
