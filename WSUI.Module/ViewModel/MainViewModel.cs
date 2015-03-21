@@ -368,6 +368,7 @@ namespace WSUI.Module.ViewModel
                 {
                     return;
                 }
+                System.Diagnostics.Debug.WriteLine("Preview " + previewView.GetHashCode());
                 previewView.Model = this;
                 previewView.SetSearchPattern(_navigationService.IsContactDetailsVisible ? _navigationService.ContactDetailsViewModel.SearchCriteria : _currentItem != null
                     ? _currentItem.GetSearchPattern()

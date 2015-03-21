@@ -57,7 +57,10 @@ namespace WSUI.Module
             _unityContainer.RegisterType<IMainViewModel, MainViewModel>(new ContainerControlledLifetimeManager());
 
             _unityContainer.RegisterType<IKindsView, KindsView>();
-            _unityContainer.RegisterType<IPreviewView, PreviewView>();
+            //_unityContainer.RegisterType<IPreviewView, PreviewView>(new ContainerControlledLifetimeManager());
+            _unityContainer.RegisterInstance(typeof (IPreviewView), new PreviewView(),
+                new ContainerControlledLifetimeManager());
+
             //all files;
             _unityContainer.RegisterType<ISettingsView<AllFilesViewModel>, AllFilesSettingsView>();
             _unityContainer.RegisterType<IDataView<AllFilesViewModel>, AllFilesDataView>();

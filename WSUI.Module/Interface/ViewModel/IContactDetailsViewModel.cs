@@ -12,7 +12,7 @@ namespace WSUI.Module.Interface.ViewModel
     {
         object View { get; }
 
-        ObservableCollection<AttachmentSearchObject> ItemsSource { get; }
+        ObservableCollection<AttachmentContentSearchObject> ItemsSource { get; }
 
         ObservableCollection<EmailSearchObject> EmailsSource { get; } 
 

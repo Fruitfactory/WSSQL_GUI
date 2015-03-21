@@ -78,7 +78,7 @@ namespace WSUI.Module.ViewModel
             _scrollBehavior2 = new ScrollBehavior { LimitReaction = 85 };
             _scrollBehavior2.SearchGo += ScrollBehaviorOnSearchGo2;
             EmailsSource = new ObservableCollection<EmailSearchObject>();
-            ItemsSource = new ObservableCollection<AttachmentSearchObject>();
+            ItemsSource = new ObservableCollection<AttachmentContentSearchObject>();
             InitContactCommands();
         }
 
@@ -87,7 +87,7 @@ namespace WSUI.Module.ViewModel
             CreateEmailCommand = new WSUIRelayCommand(CreateEmailExecute);
             MoreCommand = new DelegateCommand<object>(MoreCommandExecute, o => true);
             MainEmailSource = new ObservableCollection<EmailSearchObject>();
-            MainFileSource = new ObservableCollection<AttachmentSearchObject>();
+            MainFileSource = new ObservableCollection<AttachmentContentSearchObject>();
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
             ScrollChangedCommand2 = new DelegateCommand<object>(OnScroll2, o => true);
             CopyPhoneCommand = new DelegateCommand<object>(CopyPhoneToClipboard, o => true);
@@ -122,11 +122,11 @@ namespace WSUI.Module.ViewModel
 
         public object View { get; private set; }
 
-        public ObservableCollection<AttachmentSearchObject> ItemsSource { get; private set; }
+        public ObservableCollection<AttachmentContentSearchObject> ItemsSource { get; private set; }
 
         public ObservableCollection<EmailSearchObject> EmailsSource { get; private set; }
 
-        public ObservableCollection<AttachmentSearchObject> MainFileSource { get; private set; }
+        public ObservableCollection<AttachmentContentSearchObject> MainFileSource { get; private set; }
 
         public ObservableCollection<EmailSearchObject> MainEmailSource { get; private set; }
 
@@ -397,7 +397,7 @@ namespace WSUI.Module.ViewModel
                 return;
             foreach (var systemSearchResult in result)
             {
-                CollectionExtensions.AddRange(ItemsSource, systemSearchResult.Result.OfType<AttachmentSearchObject>());
+                CollectionExtensions.AddRange(ItemsSource, systemSearchResult.Result.OfType<AttachmentContentSearchObject>());
             }
             OnPropertyChanged(() => ItemsSource);
         }
@@ -407,10 +407,10 @@ namespace WSUI.Module.ViewModel
             IList<ISystemSearchResult> result = _contactAttachmentSearching.GetPreviewResult();
             if (result == null || !result.Any())
                 return;
-            List<AttachmentSearchObject> items = new List<AttachmentSearchObject>();
+            List<AttachmentContentSearchObject> items = new List<AttachmentContentSearchObject>();
             foreach (var systemSearchResult in result)
             {
-                items.AddRange(systemSearchResult.Result.OfType<AttachmentSearchObject>());
+                items.AddRange(systemSearchResult.Result.OfType<AttachmentContentSearchObject>());
             }
             if (!_isFilesInitialized && items.Any())
             {

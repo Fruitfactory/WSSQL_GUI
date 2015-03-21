@@ -24,7 +24,7 @@ using WSUI.Infrastructure.Service.Helpers;
 
 namespace WSUI.Infrastructure.Implements.Rules.BaseRules 
 {
-	public abstract class BaseAttachmentSearchRule : BaseSearchRule<AttachmentContentSearchObject,WSUIAttachmentContent>
+	public class BaseAttachmentSearchRule : BaseSearchRule<AttachmentContentSearchObject,WSUIAttachmentContent>
 	{
 
 		public BaseAttachmentSearchRule()
@@ -57,7 +57,10 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
             return queryDescriptor.Term(GetSearchedProperty(), Query);
         }
 
-        protected abstract Expression<Func<WSUIAttachmentContent, string>> GetSearchedProperty();
+        protected virtual Expression<Func<WSUIAttachmentContent, string>> GetSearchedProperty()
+        {
+            return null;
+        }
 
 	    protected override bool NeedSorting
 	    {

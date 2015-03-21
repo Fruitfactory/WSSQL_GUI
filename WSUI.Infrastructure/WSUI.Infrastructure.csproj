@@ -166,7 +166,6 @@
     <Compile Include="Implements\Rules\ContactEmailSearchRule.cs" />
     <Compile Include="Implements\Rules\EmailContactSearchRule.cs" />
     <Compile Include="Implements\Rules\GeneralContactRule.cs" />
-    <Compile Include="Implements\Rules\Helpers\CriteriaHelpers.cs" />
     <Compile Include="Implements\Systems\AllSearchSystem.cs" />
     <Compile Include="Implements\Rules\BaseRules\BaseAttachmentSearchRule.cs" />
     <Compile Include="Implements\Systems\AttachmentSearchSystem.cs" />
@@ -236,6 +235,7 @@
     <None Include="WSUIInfrastructure.snk" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Implements\Rules\Helpers\" />
     <Folder Include="Service\Enums\" />
   </ItemGroup>
   <ItemGroup>

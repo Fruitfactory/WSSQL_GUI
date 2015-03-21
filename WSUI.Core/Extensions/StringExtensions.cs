@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using WSUI.Core.Helpers.DetectEncoding;
@@ -52,14 +53,14 @@ namespace WSUI.Core.Extensions
             return str.Split(separators, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public static Tuple<string[],string> SplitEmail(this string email)
+        public static string[] SplitEmail(this string email)
         {
             if (string.IsNullOrEmpty(email) || !email.IsEmail())
-                return default(Tuple<string[], string>);
+                return null;
             var part1 = email.Substring(0, email.IndexOf(Apersand));
             var part2 = email.Substring(email.IndexOf(Apersand) + 1);
-            var split1 = part1.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            return new Tuple<string[], string>(split1, part2);
+            var list = new List<string>() {part1,part2  };
+            return list.ToArray();
         }
 
         public static bool IsEmail(this string email)

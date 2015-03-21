@@ -301,11 +301,10 @@ namespace WSUI.Core.Core.Search
             return date.ToString("yyyy/MM/dd hh:mm:ss").Replace('.', '/');
         }
 
-        protected List<string> GetProcessingSearchCriteria()
+        protected List<string> GetProcessingSearchCriteria(string keyword = "")
         {
             IList<IRule> listRuleCriteriasRules = RuleFactory.Instance.GetAllRules();
-            var tempCriteria = Query;
-            var andClause = string.Empty;
+            var tempCriteria =  string.IsNullOrEmpty(keyword) ? Query : keyword;
             var listW = new List<string>();
 
             foreach (var rule in listRuleCriteriasRules.OrderBy(i => i.Priority))

@@ -2,7 +2,8 @@
 
 namespace WSUI.Control.Interfaces
 {
-    public interface IWSMainControl
+    public interface 
+        IWSMainControl
     {
         event EventHandler Close;
     }
