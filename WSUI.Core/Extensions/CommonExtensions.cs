@@ -46,6 +46,17 @@ namespace WSUI.Core.Extensions
             return list.IsNotNull() && list.Count() == 1;
         }
 
+        public static bool IsNotEmpty<T>(this IEnumerable<T> list)
+        {
+            return list.IsNotNull() && list.Count() != 0;
+        }
+
+        public static bool IsEmpty<T>(this IEnumerable<T> list)
+        {
+            return list.IsNotNull() && !list.Any();
+        }
+
+
         public static bool IsStringEmptyOrNull(this object obj)
         {
             return obj is string && string.IsNullOrEmpty(obj as string);

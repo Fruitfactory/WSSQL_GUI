@@ -71,7 +71,7 @@ namespace WSUI.Module.ViewModel
         {
             base.OnInit();
             SearchSystem.IsAdvancedMode = true;
-            ScrollBehavior = new ScrollBehavior { CountFirstProcess = 500, CountSecondProcess = 100, LimitReaction = 85 };
+            ScrollBehavior = new ScrollBehavior { CountFirstProcess = 150, CountSecondProcess = 100, LimitReaction = 85 };
             ScrollBehavior.SearchGo += OnScrollNeedSearch;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
             SearchSystem.SetProcessingRecordCount(ScrollBehavior.CountFirstProcess,ScrollBehavior.CountSecondProcess);

@@ -12,7 +12,6 @@ import com.fruitfactory.pstriver.utils.PstGlobalConst;
 import com.fruitfactory.pstriver.utils.PstMetadataTags;
 import com.fruitfactory.pstriver.utils.PstSignTool;
 import com.pff.*;
-import example.TestGui;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;

@@ -10,6 +10,12 @@ namespace WSUI.Core.Data
             TypeItem = TypeSearchItem.Attachment;
         }
 
+        public override string ItemName
+        {
+            get { return Filename; }
+            set { Filename = value; }
+        }
+
         public string Filename
         {
             get { return Get(() => Filename); }

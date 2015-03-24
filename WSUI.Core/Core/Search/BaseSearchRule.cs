@@ -141,20 +141,35 @@ namespace WSUI.Core.Core.Search
                 {
                     return;
                 }
-                
-                var result =  NeedSorting 
-                    ? _elasticSearchClient.ElasticClient.Search<E>(s => s
-                    .From(_from)
-                    .Size(TopQueryResult)
-                    .Query(BuildQuery)
-                    .Sort(BuildSortSelector)
-                    )
-                    : _elasticSearchClient.ElasticClient.Search<E>(s => s
-                    .From(_from)
-                    .Size(TopQueryResult)
-                    .Query(BuildQuery)
-                    ) 
-                    ;
+
+                ISearchResponse<E> result = null;
+
+                if (IsAdvancedMode)
+                {
+                    result = _elasticSearchClient.ElasticClient.Search<E>(s => s
+                        .From(_from)
+                        .Size(TopQueryResult)
+                        .Query(BuildAdvancedQuery)
+                        .Sort(BuildAdvancedFieldSortSortSelector)
+                        );
+                }
+                else
+                {
+                    result = NeedSorting
+                       ? _elasticSearchClient.ElasticClient.Search<E>(s => s
+                       .From(_from)
+                       .Size(TopQueryResult)
+                       .Query(BuildQuery)
+                       .Sort(BuildSortSelector)
+                       )
+                       : _elasticSearchClient.ElasticClient.Search<E>(s => s
+                       .From(_from)
+                       .Size(TopQueryResult)
+                       .Query(BuildQuery)
+                       )
+                       ;   
+                }
+                 
                 watch.Stop();
 
                 // additional process
@@ -196,10 +211,23 @@ namespace WSUI.Core.Core.Search
             return default(IFieldSort);
         }
 
+        protected virtual IFieldSort BuildAdvancedFieldSortSortSelector(SortFieldDescriptor<E> sortFieldDescriptor)
+        {
+            return default(IFieldSort);
+        }
+
         protected virtual QueryContainer BuildQuery(QueryDescriptor<E> queryDescriptor)
         {
             return default (QueryContainer);
         }
+
+        protected virtual QueryContainer BuildAdvancedQuery(QueryDescriptor<E> queryDescriptor)
+        {
+            return default(QueryContainer);
+        }
+
+
+
 
         protected virtual DataTable GetDataTable(string query)
         {
@@ -292,11 +320,6 @@ namespace WSUI.Core.Core.Search
         protected virtual bool GetIncludedInAdvancedMode()
         {
             return false;
-        }
-
-        protected virtual string OnGenerateAdvancedWherePart()
-        {
-            return string.Empty;
         }
 
         protected DateTime GetCurrentDateTime()

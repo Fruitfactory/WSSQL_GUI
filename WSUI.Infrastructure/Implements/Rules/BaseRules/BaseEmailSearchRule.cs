@@ -25,7 +25,6 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
     public abstract class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject, WSUIEmail>, IEmailSearchRule
     {
 
-
         #region [needs]
 
         private readonly List<string> _listID = new List<string>();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using WSUI.Core.Data;
@@ -243,6 +244,53 @@ namespace WSUI.Core.Helpers
             string entryID = EIDFromEncodeStringWDS30(mapiUrl.Substring(mapiUrl.LastIndexOf('/') + 1));
             dynamic mailItem = GetMailItem(entryID);
             return mailItem;
+        }
+
+        public Outlook.MailItem CreateEmailItem(EmailSearchObject data)
+        {
+            if (data.IsNull())
+            {
+                return null;
+            }
+            try
+            {
+                if (!IsOutlookAlive() && IsHostIsApplication())
+                    ReopenOutlook(ref _app);
+
+                Outlook.MailItem item = (Outlook.MailItem) this.OutlookApp.CreateItem(Outlook.OlItemType.olMailItem);
+                item.Subject = data.Subject;
+                item.HTMLBody = data.HtmlContent;
+                item.Body = data.Content;
+                item.SendUsingAccount = CreateSenderAccount(data);//FindAccountForEmail(data.FromAddress) ?? 
+                if (data.To.IsNotNull())
+                {
+                    item.To = string.Join(";", data.To.Select(r => r.Address).ToArray());    
+                }
+                if (data.Cc.IsNotNull())
+                {
+                    item.CC = string.Join(";", data.Cc.Select(r => r.Address).ToArray());    
+                }
+                if (data.Bcc.IsNotNull())
+                {
+                    item.BCC = string.Join(";", data.Bcc.Select(r => r.Address).ToArray());    
+                }
+                return item;
+            }
+            catch (Exception exception)
+            {
+                WSSqlLogger.Instance.LogError(exception.Message);
+            }
+            return null;
+        }
+
+        private Outlook.Account CreateSenderAccount(EmailSearchObject data)
+        {
+            Type[] types = new Type[0];
+            var construstor  = typeof(Outlook.Account).GetType().GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance,null,types,null) as ConstructorInfo;
+            if(construstor == null)
+                return null;
+            var account = construstor.Invoke(null) as Outlook.Account;
+            return account;
         }
 
         public string GetFullFolderPath(BaseSearchObject data)
@@ -702,6 +750,20 @@ namespace WSUI.Core.Helpers
             var att =
                 ci.Attachments.OfType<Outlook.Attachment>().ToList().Where(a => IsPicture(a.DisplayName));
             return att.Count() > 0 ? att.ElementAt(0) : null;
+        }
+
+        private Outlook.Account FindAccountForEmail(string email)
+        {
+            Outlook.Account result = null;
+            foreach (var account in this.OutlookApp.Session.Accounts.OfType<Outlook.Account>())
+            {
+                if (account.SmtpAddress.ToLowerInvariant().Contains(email.ToLowerInvariant()))
+                {
+                    result = account;
+                    break;
+                }
+            }
+            return result;
         }
 
         private bool IsPicture(string filename)

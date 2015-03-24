@@ -19,7 +19,8 @@ namespace WSUI.Core.Data
             get;
             private set;
         }
-        public string ItemName
+
+        public virtual string ItemName
         {
             get
             {
