@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.7" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
-    <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFacory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
+    <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />-->
     <Upgrade Id="6169fa5d-89fa-44d3-9801-cefe8fc8755e">
       <UpgradeVersion Minimum="0.0.0.0" IncludeMinimum="yes" OnlyDetect="no" Maximum="10.0.0.0" IncludeMaximum="yes" Property="PREVIOUSFOUND" />
@@ -18,6 +18,7 @@
     <Property Id="EMAILVALID" Value="true" />
     <WixVariable Id="WixUIBannerBmp" Value="Image\top.bmp" />
     <WixVariable Id="WixUIDialogBmp" Value="Image\dialog.bmp" />
+    <UIRef Id="WixUI_FeatureTree" />
     <Property Id="ALLUSERS" Secure="yes" />
     <Feature Id="ProductFeature" Title="OutlookFinder" Level="1" ConfigurableDirectory="INSTALLFOLDER">
       <ComponentRef Id="INSTALLFOLDER" />
@@ -25,6 +26,17 @@
       <ComponentRef Id="INSTALLFOLDERLIB64" />
       <ComponentGroupRef Id="ProductComponents" />
     </Feature>
+
+    <Feature Id="ElasticSearchProductFeature" Title="ElasticSearch" Level="1">
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDER" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERBIN" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLIB" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR" />
+      <ComponentGroupRef Id="ElasticSearchComponents" />
+    </Feature>
+    
+    
     <?ifndef TRIAL ?>
     <Binary Id="Turbo_Activate_dat" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)TurboActivate.dat" />
     <Binary Id="Turbo_Activate_dll" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)TurboActivate.dll" />
@@ -48,6 +60,11 @@
     <CustomAction Id="ClosePrompt" BinaryKey="managedAction" DllEntry="ClosePrompt" Execute="immediate" Return="check" />
     <?ifndef TRIAL ?>
     <CustomAction Id="ActivatePlugin" BinaryKey="managedAction" DllEntry="ActivatePlugin" Execute="immediate" Return="check" />
+
+    <CustomAction Id="InstallElasticSearch" BinaryKey="managedAction" DllEntry="InstallElasticSearch" Return="check" Execute="immediate" />
+
+    <CustomAction Id="UnInstallElasticSearch" BinaryKey="managedAction" DllEntry="UnInstallElasticSearch" Execute="immediate" Return="check" />
+    
     <?endif?>
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallValidate" />
@@ -55,7 +72,9 @@
       <Custom Action="ResetRegistry" After="RegisterDll">NOT Installed</Custom>
       <Custom Action="UnregisterDll" After="SelfUnregModules">Installed</Custom>
       <Custom Action="Deactivate" After="UnregisterDll">Installed</Custom>
+      <Custom Action="UnInstallElasticSearch" After="Deactivate">Installed</Custom>
       <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>
+      <Custom Action='InstallElasticSearch' After='InstallFinalize'>NOT Installed</Custom>
       <Custom Action="ClosePrompt" After="CostFinalize">NOT Installed OR Installed OR REMOVE="ALL"</Custom>
       <!--<Custom Action="CloseOutlook" After="AppSearch">NOT Installed OR Installed OR REMOVE="ALL"</Custom>-->
       <Custom Action="SuccesMessage" OnExit="success">NOT Installed</Custom>
@@ -70,72 +89,12 @@
     <!-- Properties for all current versions of the .NET Framework are available here: http://wix.sourceforge.net/manual-wix3/wixnetfxextension.htm -->
     <PropertyRef Id="NETFRAMEWORK40CLIENT" />
     <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again."><![CDATA[Installed OR NETFRAMEWORK40CLIENT]]></Condition>
-    <!--<UIRef Id="WixUI_InstallDir" />
-        <UIRef Id="WixUI_ErrorProgressText" />-->
-    <UIRef Id="WixUI_Common" />
-    <UIRef Id="MyUI" />
-    <UI Id="MyUI">
-      <Dialog Id="WsUiErrorDlg" Width="270" Height="105" Title="!(loc.ErrorDlg_Title)">
-        <Control Id="ErrorText" Type="Text" X="48" Y="15" Width="205" Height="60" Property="EMAILVALIDMESSAGE" TabSkip="no" NoPrefix="yes" Text="Email is not valid" />
-        <Control Id="ErrorIcon" Type="Icon" X="15" Y="15" Width="24" Height="24" ToolTip="!(loc.ErrorDlgErrorIconTooltip)" FixedSize="yes" IconSize="32" Text="!(loc.ErrorDlgErrorIcon)" />
-        <Control Id="O" Type="PushButton" X="100" Y="80" Width="56" Height="17" TabSkip="yes" Text="!(loc.WixUIOK)">
-          <Publish Event="EndDialog" Value="Exit">1</Publish>
-        </Control>
-      </Dialog>
-      <Dialog Id="EmailDialog" Title="!(loc.InstallDirDlg_Title)" Width="370" Height="270">
-        <Control Id="Next" Type="PushButton" Default="yes" Text="Next" X="236" Y="243" Width="56" Height="17">
-          <!--<Condition Action="disable">EMAILVALUE = ""</Condition>
-          <Condition Action="enable"><![CDATA[EMAILVALUE <> ""]]></Condition>-->
-          <!--<Publish Event="DoAction" Value="EmailValidation">1</Publish>-->
-          <Publish Event="SpawnDialog" Value="WsUiErrorDlg"><![CDATA[EMAILVALID="False"]]></Publish>
-          <Publish Event="NewDialog" Value="InstallDirDlg"><![CDATA[EMAILVALID="True"]]></Publish>
-        </Control>
-        <Control Id="Back" Type="PushButton" Text="Back" X="180" Y="243" Width="56" Height="17">
-          <Publish Event="NewDialog" Value="LicenseAgreementDlg" />
-        </Control>
-        <Control Id="Cancel" Type="PushButton" Cancel="yes" Text="Cancel" X="304" Y="243" Width="56" Height="17">
-          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
-        </Control>
-        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.InstallDirDlgBannerBitmap)" />
-        <Control Id="Title" Type="Text" Transparent="yes" NoPrefix="yes" Text="Enter Email" X="15" Y="6" Width="219" Height="28" />
-        <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
-        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
-        <Control Type="Text" Id="EmailLabel" Text="Please, enter the same email you entered on the website " Width="290" Height="10" X="20" Y="105" />
-        <Control Type="Text" Id="EmailLabel_2" Text="to download the software:" Width="290" Height="10" X="20" Y="117" />
-        <Control Id="EmailEdit" Type="Edit" Property="EMAILVALUE" X="20" Y="129" Width="250" Height="16" />
-      </Dialog>
-      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
-      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
-      <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
-      <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
-      <DialogRef Id="ErrorDlg" />
-      <DialogRef Id="FatalError" />
-      <DialogRef Id="FilesInUse" />
-      <DialogRef Id="UserExit" />
-      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseAgreementDlg">NOT Installed</Publish>
-      <Publish Dialog="LicenseAgreementDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
-      <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg">LicenseAccepted = "1"</Publish>
-      <!--<Publish Dialog="EmailDialog" Control="Back" Event="NewDialog" Value="LicenseAgreementDlg" Order="1">1</Publish>-->
-      <!-- EmailDialog -> Next -> defined in dialog -->
-      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
-      <Publish Dialog="InstallDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
-      <Publish Dialog="InstallDirDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath" Order="2">1</Publish>
-      <Publish Dialog="InstallDirDlg" Control="Next" Event="SpawnDialog" Value="InvalidDirDlg" Order="3"><![CDATA[NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
-      <Publish Dialog="InstallDirDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="4">WIXUI_INSTALLDIR_VALID="1"</Publish>
-      <Publish Dialog="InstallDirDlg" Control="ChangeFolder" Property="_BrowseProperty" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
-      <Publish Dialog="InstallDirDlg" Control="ChangeFolder" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
-      <Publish Dialog="BrowseDlg" Control="OK" Event="DoAction" Value="WixUIValidatePath" Order="3">1</Publish>
-      <Publish Dialog="BrowseDlg" Control="OK" Event="SpawnDialog" Value="InvalidDirDlg" Order="4"><![CDATA[WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
-      <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
-      <Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
-      <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
-      <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
-      <!-- Greys out the 'Change' button on MaintenanceTypeDlg -->
-      <Property Id="ARPNOMODIFY" Value="1" />
-      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="InstallDirDlg" Order="1">NOT Installed</Publish>
-      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="2">Installed</Publish>
-      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
-    </UI>
+    <!-- Check some requirements ONLY on "install", but not on modify or uninstall. -->
+    <Property Id="JAVA_CURRENT_VERSION">
+      <RegistrySearch Id="JRE_CURRENT_VERSION_REGSEARCH" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Name="CurrentVersion" Type="raw" Win64="yes" />
+    </Property>
+    <Condition Message="Java Runtime Environment (32 Bit) is not installed or outdated. Please install Oracle JRE 1.7 or later."><![CDATA[Installed OR (JAVA_CURRENT_VERSION >= "1.7")]]></Condition>
+    
   </Product>
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
@@ -158,9 +117,51 @@
             </Component>
           </Directory>
         </Directory>
+
+        <!-- elastic search dir -->
+        <Directory Id="ELASTICSEASRCHINSTALLFOLDER" Name="ElasticSearch">
+
+          <Component Id="ELASTICSEASRCHINSTALLFOLDER" Guid="20D2309D-3D31-45C6-9C34-34859D61A91B">
+            <RemoveFolder On="both" Id="ELASTICSEASRCHINSTALLFOLDER" />
+            <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="ElasticSearch" />
+          </Component>
+
+          <Directory Id="ELASTICSEASRCHINSTALLFOLDERBIN" Name="bin">
+            <Component Id="ELASTICSEASRCHINSTALLFOLDERBIN" Guid="7B2ED621-76B5-4FBC-BB23-8E0FADE4BDCC">
+              <RemoveFolder On="both" Id="ELASTICSEASRCHINSTALLFOLDERBIN" />
+              <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="bin" />
+            </Component>
+          </Directory>
+
+          <Directory Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" Name="config">
+            <Component Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" Guid="20AEDE7C-8EA0-4B41-B33A-7DDC77DF9925">
+              <RemoveFolder On="both" Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" />
+              <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="config" />
+            </Component>
+          </Directory>
+
+          <Directory Id="ELASTICSEASRCHINSTALLFOLDERLIB" Name="lib">
+            <Component Id="ELASTICSEASRCHINSTALLFOLDERLIB" Guid="7FA11EB8-B03F-44AB-B620-C8263C37C637">
+              <RemoveFolder On="both" Id="ELASTICSEASRCHINSTALLFOLDERLIB" />
+              <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="lib" />
+            </Component>
+
+            <Directory Id="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR" Name="sigar">
+              <Component Id="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR" Guid="CDA8023C-E724-4843-8F03-587D6CF64C53">
+                <RemoveFolder On="both" Id="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR" />
+                <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="sigar" />
+              </Component>
+            </Directory>
+
+
+          </Directory>
+
+        </Directory>
+        
       </Directory>
     </Directory>
   </Fragment>
+  
   <Fragment>
     <ComponentGroup Id="ProductComponents">
       <!-- gfl wrappers for x86 and x64 systems -->
@@ -243,6 +244,96 @@
         
         
       </Component>
+    </ComponentGroup>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="ElasticSearchComponents">
+      <!-- elastic search main -->
+      <Component Id="ElasticSearchProductComponent" Guid="03D268AC-83A1-45AA-9C92-3D7AB7E102F0" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDER">
+        <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
+          <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDER]" KeyPath="yes" />
+        </RegistryKey>
+        <File Id="_LICENSE_txt" Name="LICENSE.txt" Source="$(var.SolutionDir)Toolkits\Elasticsearch\"/>
+        <File Id="_NOTICE_txt" Name="NOTICE.txt" Source="$(var.SolutionDir)Toolkits\Elasticsearch\"/>
+        <File Id="_README_textile" Name="README.textile" Source="$(var.SolutionDir)Toolkits\Elasticsearch\"/>
+      </Component>
+
+      <Component Id="ElasticSearchProductComponentBin" Guid="3CC2D98E-C9F0-4DEE-8C20-62E25B6543D5" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERBIN">
+        <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
+          <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERBIN]" KeyPath="yes" />
+        </RegistryKey>
+        <File Id="_elasticsearch_" Name="elasticsearch" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
+        <File Id="_elasticsearch_bat" Name="elasticsearch.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
+        <File Id="_elasticsearch_service_mgr_exe" Name="elasticsearch-service-mgr.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
+        <File Id="_elasticsearch_service_x64_exe" Name="elasticsearch-service-x64.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
+        <File Id="_elasticsearch_service_x86_exe" Name="elasticsearch-service-x86.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
+        <File Id="_elasticsearch_in_sh" Name="elasticsearch.in.sh" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
+        <File Id="_plugin_" Name="plugin" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
+        <File Id="_plugin_bat" Name="plugin.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
+        <File Id="_service_bat" Name="service.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
+      </Component>
+
+      <Component Id="ElasticSearchConfigProductComponent" Guid="C7B8FDDD-0F0C-4ABD-83ED-58B15C1262AA" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERCONFIG">
+        <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
+          <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERCONFIG]" KeyPath="yes" />
+        </RegistryKey>
+        <File Id="_elasticsearch_yml" Name="elasticsearch.yml" Source="$(var.SolutionDir)Toolkits\Elasticsearch\config\"/>
+        <File Id="_logging_yml" Name="logging.yml" Source="$(var.SolutionDir)Toolkits\Elasticsearch\config\"/>
+      </Component>
+
+      <Component Id="ElasticSearchLibProductComponent" Guid="F3D1954B-7861-41C6-98A4-3D21E2A3CB32" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERLIB">
+        <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
+          <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERLIB]" KeyPath="yes" />
+        </RegistryKey>
+        <File Id="_antlr_runtime_3_5_jar" Name="antlr-runtime-3.5.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_asm_4_1_jar" Name="asm-4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_asm_commons_4_1_jar" Name="asm-commons-4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_elasticsearch_1_3_6_jar" Name="elasticsearch-1.3.6.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_groovy_all_2_3_2_jar" Name="groovy-all-2.3.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_jna_4_1_0_jar" Name="jna-4.1.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_jts_1_13_jar" Name="jts-1.13.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_log4j_1_2_17_jar" Name="log4j-1.2.17.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_analyzers_common_4_9_1_jar" Name="lucene-analyzers-common-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_codecs_4_9_1_jar" Name="lucene-codecs-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_core_4_9_1_jar" Name="lucene-core-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_expressions_4_9_1_jar" Name="lucene-expressions-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_grouping_4_9_1_jar" Name="lucene-grouping-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_highlighter_4_9_1_jar" Name="lucene-highlighter-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_join_4_9_1_jar" Name="lucene-join-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_memory_4_9_1_jar" Name="lucene-memory-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_misc_4_9_1_jar" Name="lucene-misc-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_queries_4_9_1_jar" Name="lucene-queries-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_queryparser_4_9_1_jar" Name="lucene-queryparser-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_sandbox_4_9_1_jar" Name="lucene-sandbox-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_spatial_4_9_1_jar" Name="lucene-spatial-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_suggest_4_9_1_jar" Name="lucene-suggest-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_spatial4j_0_4_1_jar" Name="spatial4j-0.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+      </Component>
+
+
+      <Component Id="ElasticSearchLibSigarProductComponent" Guid="7BACBEF6-7A63-46F3-8D1E-85486A5D870A" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR">
+        <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
+          <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERLIBSIGAR]" KeyPath="yes" />
+        </RegistryKey>
+        <File Id="_libsigar_amd64_freebsd_6_so" Name="libsigar-amd64-freebsd-6.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_libsigar_amd64_linux_so" Name="libsigar-amd64-linux.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_libsigar_amd64_solaris_so" Name="libsigar-amd64-solaris.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_libsigar_ia64_linux_so" Name="libsigar-ia64-linux.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_libsigar_sparc_solaris_so" Name="libsigar-sparc-solaris.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_libsigar_sparc64_solaris_so" Name="libsigar-sparc64-solaris.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_libsigar_universal_macosx_dylib" Name="libsigar-universal-macosx.dylib" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_libsigar_universal64_macosx_dylib" Name="libsigar-universal64-macosx.dylib" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_libsigar_x86_freebsd_5_so" Name="libsigar-x86-freebsd-5.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_libsigar_x86_freebsd_6_so" Name="libsigar-x86-freebsd-6.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_libsigar_x86_linux_so" Name="libsigar-x86-linux.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_libsigar_x86_solaris_so" Name="libsigar-x86-solaris.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_sigar_1_6_4_jar" Name="sigar-1.6.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_sigar_amd64_winnt_dll" Name="sigar-amd64-winnt.dll" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_sigar_x86_winnt_dll" Name="sigar-x86-winnt.dll" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_sigar_x86_winnt_lib" Name="sigar-x86-winnt.lib" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+      </Component>
+      
+      
     </ComponentGroup>
   </Fragment>
 </Wix>

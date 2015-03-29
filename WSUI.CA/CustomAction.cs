@@ -865,5 +865,88 @@ namespace WSUI.CA
 
         #endregion
 
+
+        #region [elastc search]
+
+        [CustomAction]
+        public static ActionResult InstallElasticSearch(Session session)
+        {
+            string elasticSearchPath = string.Empty;
+            try
+            {
+                elasticSearchPath = session["ELASTICSEASRCHINSTALLFOLDER"];
+                RegistryHelper.Instance.SetElasticSearchPath(elasticSearchPath);
+                if (!string.IsNullOrEmpty(elasticSearchPath))
+                {
+                    ProcessStartInfo si = new ProcessStartInfo();
+                    si.FileName = string.Format("{0}{1}{2}",elasticSearchPath, "\\bin\\", "service.bat");
+                    if (!File.Exists(si.FileName))
+                    {
+                        session.Log("File not Exits: " + si.FileName);
+                        return ActionResult.Success;
+                    }
+
+                    si.Arguments = "install";
+                    si.Verb = "runas";
+                    si.WindowStyle = ProcessWindowStyle.Normal;
+                    si.WorkingDirectory = string.Format("{0}{1}",elasticSearchPath, "\\bin\\");
+                    Process pInstall = new Process();
+                    pInstall.StartInfo = si;
+                    pInstall.Start();
+                    pInstall.WaitForExit();
+                    session.Log("Install Elastis Search: install service");
+                    si.Arguments = "start";
+                    Process pStart = new Process();
+                    pStart.StartInfo = si;
+                    pStart.Start();
+                    pStart.WaitForExit();
+                    session.Log("Install Elastis Search: run service");
+                }
+            }
+            catch (Exception exception)
+            {
+                session.Log("Install Elastis Search: " + exception.Message + "  => path : " + elasticSearchPath);
+            }
+            finally
+            {
+            }
+            return ActionResult.Success;
+        }
+
+
+        [CustomAction]
+        public static ActionResult UnInstallElasticSearch(Session session)
+        {
+            try
+            {
+                var elasticSearchPath = RegistryHelper.Instance.GetElasticSearchpath();
+                if (!string.IsNullOrEmpty(elasticSearchPath))
+                {
+                    ProcessStartInfo si = new ProcessStartInfo();
+                    si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "service.bat");
+                    si.Arguments = "stop";
+                    si.Verb = "runas";
+                    si.WindowStyle = ProcessWindowStyle.Normal;
+                    si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin\\");
+                    Process pInstall = new Process();
+                    pInstall.StartInfo = si;
+                    pInstall.Start();
+                    pInstall.WaitForExit();
+                    si.Arguments = "remove";
+                    Process pStart = new Process();
+                    pStart.StartInfo = si;
+                    pStart.Start();
+                    pStart.WaitForExit();
+                }
+            }
+            catch (Exception) { }
+            finally
+            {
+            }
+            return ActionResult.Success;
+        }
+
+        #endregion
+
     }
 }
