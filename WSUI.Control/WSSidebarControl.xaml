@@ -107,6 +107,10 @@
 			            Transition="{Binding CurrenTransition}">
                                 </transitionalsControls:TransitionElement>
                 </Grid>
+                
+                <ContentControl Grid.Row="1" Grid.RowSpan="3" Margin="4" regions:RegionManager.RegionName="ElasticSearchRegion"></ContentControl>
+                
+                
             </Grid>
         </Border>
     </Grid>

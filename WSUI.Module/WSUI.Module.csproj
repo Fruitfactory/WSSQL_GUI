@@ -73,6 +73,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Elasticsearch.Net, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Output\Elasticsearch.Net.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolkits\Log4Net\net40-client\log4net.dll</HintPath>
@@ -95,6 +99,10 @@
     <Reference Include="Microsoft.Practices.Unity">
       <HintPath>..\Toolkits\Prism\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
+    <Reference Include="Nest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Output\Nest.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
@@ -102,6 +110,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -147,6 +156,7 @@
     <Compile Include="Interface\ViewModel\IContactDetailsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IContactEmailDetailsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IContactKindDetailsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IElasticSearchViewModel.cs" />
     <Compile Include="Interface\View\IAllDataView.cs" />
     <Compile Include="Interface\View\IContactAttachmentDetailsView.cs" />
     <Compile Include="Interface\View\IContactDetailsView.cs" />
@@ -155,6 +165,7 @@
     <Compile Include="Interface\View\IDataKindView.cs" />
     <Compile Include="Interface\View\IDataView.cs" />
     <Compile Include="Interface\ViewModel\IKindItem.cs" />
+    <Compile Include="Interface\View\IElasticSearchView.cs" />
     <Compile Include="Interface\View\IKindsView.cs" />
     <Compile Include="Interface\ViewModel\ILazyKind.cs" />
     <Compile Include="Interface\View\IMainView.cs" />
@@ -202,6 +213,7 @@
     <Compile Include="ViewModel\AttachmentViewModel.cs" />
     <Compile Include="ViewModel\ContactDetailsViewModel.cs" />
     <Compile Include="ViewModel\ContactViewModel.cs" />
+    <Compile Include="ViewModel\ElasticSearchViewModel.cs" />
     <Compile Include="ViewModel\EmailViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\AdvancedSearchSettingsView.xaml.cs">
@@ -239,6 +251,9 @@
     </Compile>
     <Compile Include="View\Controls\TextboxAutoComplete.xaml.cs">
       <DependentUpon>TextboxAutoComplete.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ElasticSearchView.xaml.cs">
+      <DependentUpon>ElasticSearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\EmailDataView.xaml.cs">
       <DependentUpon>EmailDataView.xaml</DependentUpon>
@@ -337,6 +352,10 @@
     <Page Include="View\Controls\TextboxAutoComplete.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ElasticSearchView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\EmailDataView.xaml">
       <SubType>Designer</SubType>

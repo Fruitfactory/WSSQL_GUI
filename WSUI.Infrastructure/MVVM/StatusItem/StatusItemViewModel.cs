@@ -1,0 +1,69 @@
+﻿using WSUI.Core.Core.MVVM;
+using WSUI.Core.Data.ElasticSearch.Response;
+using WSUI.Core.Enums;
+
+namespace WSUI.Infrastructure.MVVM.StatusItem
+{
+    public class StatusItemViewModel : DataViewModel
+    {
+        public StatusItemViewModel(WSUIStatusItem item )
+        :base(item)
+        {
+            UpdateValue(item);
+        }
+
+        public string Name
+        {
+            get { return Get(() => Name); }
+            set { Set(() => Name, value); }
+        }
+
+        public int Count
+        {
+            get { return Get(() => Count); }
+            set { Set(() => Count, value); }
+        }
+
+        public int Processing
+        {
+            get { return Get(() => Processing); }
+            set { Set(() => Processing, value); }
+        }
+
+        public PstReaderStatus Status
+        {
+            get { return Get(() => Status); }
+            set { Set(() => Status, value); }
+        }
+
+        public double Value
+        {
+            get { return Get(() => Value); }
+            set { Set(() => Value, value); }
+        }
+
+        public override void Update(object item)
+        {
+            var data = item as WSUIStatusItem;
+            if (data == null)
+                return;
+
+            Name = data.Name;
+            Count = data.Count;
+            Processing = data.Processing;
+            Status = data.Status;
+            UpdateValue(data);
+        }
+
+        private void UpdateValue(WSUIStatusItem item)
+        {
+            if (item.Count == 0)
+            {
+                Value = 100;
+                return;
+            }
+            Value = (((double)item.Processing)/((double)item.Count))*100;
+        }
+    }
+
+}

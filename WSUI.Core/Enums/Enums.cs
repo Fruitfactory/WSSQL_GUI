@@ -30,4 +30,12 @@ namespace WSUI.Core.Enums
         Outlook2010 = 14,
         Otlook2013 = 15
     }
+
+    public enum PstReaderStatus
+    {
+        None,
+        NonStarted,
+        Busy,
+        Finished
+    }
 }

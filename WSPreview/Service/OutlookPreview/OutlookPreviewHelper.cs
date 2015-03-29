@@ -372,7 +372,7 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
         private string GetAttachments(EmailSearchObject searchObj)
         {
             var esClient = new WSUIElasticSearchClient();
-            var result = esClient.ElasticClient.Search<WSUIAttachmentContent>(s => s.Query(d => d.QueryString(qq => qq.Query(searchObj.EntryID))));
+            var result = esClient.Search<WSUIAttachmentContent>(s => s.Query(d => d.QueryString(qq => qq.Query(searchObj.EntryID))));
             if (result.Documents.Any())
             {
                 var tempFolder = TempFileManager.Instance.GenerateTempFolderForObject(searchObj);

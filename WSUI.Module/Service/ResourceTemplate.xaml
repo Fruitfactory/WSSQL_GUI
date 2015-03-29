@@ -20,6 +20,9 @@
     <service:IntToVisibilityConverter x:Key="IntToVisibilityConverter"></service:IntToVisibilityConverter>
     <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></service:BoolToVisibilityConverter>
     <service:BoolToVisibilityConverter x:Key="InvertBoolToVisibilityConverter" IsInvert="True"></service:BoolToVisibilityConverter>
+    
+    <service:NumericToStringConverter x:Key="NumericToStringConverter"></service:NumericToStringConverter>
+    <service:EnumConverter x:Key="EnumConverter"></service:EnumConverter>
 
     <Style TargetType="ToolTip">
         <Setter Property="Template">

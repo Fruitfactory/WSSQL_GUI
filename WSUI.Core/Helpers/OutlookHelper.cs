@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using Microsoft.Practices.ObjectBuilder2;
+using WSUI.Core.Core.ElasticSearch;
 using WSUI.Core.Data;
+using WSUI.Core.Data.ElasticSearch;
 using WSUI.Core.Enums;
 using WSUI.Core.Extensions;
 using WSUI.Core.Helpers.DetectEncoding.Multilang;
@@ -32,6 +37,9 @@ namespace WSUI.Core.Helpers
         private const int IDLENGHT = 24;
 
         public const string AllFolders = "All folders";
+
+        public const string MAIL_EXT = "eml";
+        public const string MAIL_FILTER = "*." + MAIL_EXT;
 
         #region fields
 
@@ -122,6 +130,77 @@ namespace WSUI.Core.Helpers
             }
 
             return tempFilename;
+        }
+
+        public string GetEmailEmlFilename(EmailSearchObject emailObject)
+        {
+            if (emailObject.IsNull())
+            {
+                return string.Empty;
+            }
+
+            if (TempFileManager.Instance.IsEmlFileExistForEmailObject(emailObject))
+            {
+                return TempFileManager.Instance.GetExistEmlFileForEmailObject(emailObject);
+            }
+            
+            string result = string.Empty;
+            string tempFolder = TempFileManager.Instance.GenerateTempFolderForObject(emailObject);
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress(emailObject.FromAddress,emailObject.FromName);
+            if (emailObject.To != null)
+            {
+                emailObject.To.ForEach(r =>
+                {
+                    if (r.Address.IsEmail())
+                        mail.To.Add(new MailAddress(r.Address, r.Name));
+                });
+            }
+            if (emailObject.Cc != null)
+            {
+                emailObject.Cc.ForEach(r =>
+                {
+                    if (r.Address.IsEmail())
+                        mail.CC.Add(new MailAddress(r.Address, r.Name));
+                });
+            }
+            if (emailObject.Bcc != null)
+            {
+                emailObject.Bcc.ForEach(r =>
+                {
+                    if (r.Address.IsEmail())
+                        mail.Bcc.Add(new MailAddress(r.Address, r.Name));
+                });
+            }
+
+            if (!string.IsNullOrEmpty(emailObject.Content))
+            {
+                mail.Body = emailObject.Content;
+            }
+            else
+            {
+                mail.Body = emailObject.HtmlContent;
+                mail.IsBodyHtml = true;
+            }
+            mail.Subject = emailObject.Subject;
+            if (emailObject.Attachments != null)
+            {
+                var fileList = GetAttachments(emailObject, tempFolder);
+                foreach (var filename in fileList)
+                {
+                    mail.Attachments.Add(new Attachment(filename));
+                }
+            }
+            try
+            {
+                result = SaveToEML(mail,tempFolder);
+                TempFileManager.Instance.SetEmlFileForEmailObject(emailObject,result);
+            }
+            catch (Exception ex )
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
+            }
+            return result;
         }
 
         public string GetAttachmentTempFileName(BaseSearchObject item)
@@ -233,6 +312,14 @@ namespace WSUI.Core.Helpers
             if (!IsOutlookAlive() && IsHostIsApplication())
                 ReopenOutlook(ref _app);
             var newMail = (Microsoft.Office.Interop.Outlook.MailItem)this.OutlookApp.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olMailItem);
+            return newMail;
+        }
+
+        public Outlook.MailItem CreateEmailFromTemplate(string filename)
+        {
+            if (!IsOutlookAlive() && IsHostIsApplication())
+                ReopenOutlook(ref _app);
+            var newMail = (Microsoft.Office.Interop.Outlook.MailItem) this.OutlookApp.CreateItemFromTemplate(filename);
             return newMail;
         }
 
@@ -786,6 +873,57 @@ namespace WSUI.Core.Helpers
         private bool IsHostIsApplication()
         {
             return InternalHostType == HostType.Application;
+        }
+
+        private string SaveToEML(MailMessage msg, string tempFolder)
+        {
+            string result = string.Empty;
+            using (var client = new SmtpClient())
+            {
+                client.UseDefaultCredentials = true;
+                client.DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory;
+                client.PickupDirectoryLocation = tempFolder;
+                client.Send(msg);
+            }
+            try
+            {
+                result = Directory.GetFiles(tempFolder, MAIL_FILTER).Single();
+                string filename = Path.Combine(tempFolder, Path.GetFileNameWithoutExtension(Path.GetTempFileName()) + "." + MAIL_EXT);
+                File.Copy(result, filename);
+                File.Delete(result);
+                result = filename;
+            }
+            catch (Exception e)
+            {
+                WSSqlLogger.Instance.LogError(e.Message);
+            }
+            return result;
+        }
+
+        private IEnumerable<string> GetAttachments(EmailSearchObject searchObj, string tempFolder)
+        {
+            var esClient = new WSUIElasticSearchClient();
+            var result = esClient.Search<WSUIAttachmentContent>(s => s.Query(d => d.QueryString(qq => qq.Query(searchObj.EntryID))));
+            var fileList = new List<string>();
+            if (result.Documents.Any())
+            {
+                foreach (var attachment in result.Documents)
+                {
+                    try
+                    {
+                        byte[] content = Convert.FromBase64String(attachment.Content);
+                        var filename = string.Format("{0}/{1}", tempFolder, attachment.Filename);
+                        File.WriteAllBytes(filename, content);
+                        fileList.Add(filename);
+
+                    }
+                    catch (Exception exception)
+                    {
+                        WSSqlLogger.Instance.LogError(exception.Message);
+                    }
+                }
+            }
+            return fileList;
         }
 
         #endregion private

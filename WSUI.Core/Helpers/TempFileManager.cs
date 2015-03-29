@@ -26,12 +26,14 @@ namespace WSUI.Core.Helpers
         #region fields
 
         private Dictionary<Guid, string> _tempFileList;
+        private Dictionary<Guid, string> _temppFileEmlForEmails; 
 
         #endregion fields
 
         private TempFileManager()
         {
             _tempFileList = new Dictionary<Guid, string>();
+            _temppFileEmlForEmails = new Dictionary<Guid, string>();
             string temp = string.Format(TempFolder, Path.GetTempPath());
             if (!File.Exists(temp))
             {
@@ -58,6 +60,11 @@ namespace WSUI.Core.Helpers
         public string GenerateTempFileName(ISearchObject searchitem)
         {
             return InternalGetTempFilename(searchitem.Id, GetFilename(searchitem), GetExtension(searchitem));
+        }
+
+        public string GetTemporaryFilename(ISearchObject searchObject)
+        {
+            return GetFilename(searchObject);
         }
 
         public string GenerateTempFolderForObject(ISearchObject searchItem)
@@ -139,6 +146,28 @@ namespace WSUI.Core.Helpers
             }
         }
 
+        public void SetEmlFileForEmailObject(ISearchObject email, string filename)
+        {
+            if (!_temppFileEmlForEmails.ContainsKey(email.Id))
+            {
+                _temppFileEmlForEmails.Add(email.Id, filename);
+            }
+            else
+            {
+                _temppFileEmlForEmails[email.Id] = filename;
+            }
+        }
+
+        public bool IsEmlFileExistForEmailObject(ISearchObject email)
+        {
+            return _temppFileEmlForEmails.ContainsKey(email.Id);
+        }
+
+        public string GetExistEmlFileForEmailObject(ISearchObject email)
+        {
+            return _temppFileEmlForEmails.ContainsKey(email.Id) ? _temppFileEmlForEmails[email.Id] : "";
+        }
+
         #endregion public
 
         #region private
@@ -216,7 +245,7 @@ namespace WSUI.Core.Helpers
             switch (searchItem.TypeItem)
             {
                 case Enums.TypeSearchItem.Email:
-                    ext = ".msg";
+                    ext = ".eml";
                     break;
 
                 case Enums.TypeSearchItem.Attachment:

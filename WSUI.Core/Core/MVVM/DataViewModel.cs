@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Nest;
 using WSUI.Core.Extensions;
 
 namespace WSUI.Core.Core.MVVM
 {
-    public class DataViewModel : ViewModelBase
+    public abstract class DataViewModel : ViewModelBase
     {
         private object _data = null;
         private IEnumerable<PropertyInfo> _properties; 
-        public DataViewModel()
+        protected DataViewModel()
         {   
         }
 
-        public DataViewModel(object data)
+        protected DataViewModel(object data)
         {
             SetDataObject(data);
         }
@@ -27,10 +28,11 @@ namespace WSUI.Core.Core.MVVM
         protected void SetDataObject<T>(T data)
         {
             _data = data;
-            if (_data.IsNotNull())
+            if (_data.IsNotNull() && _properties.IsNull())
             {
                 _properties = _data.GetType().GetAllPublicProperties();
             }
+            OnPropertyChanged(null);
         }
 
         protected override void Set<T>(string propertyName, T value)
@@ -62,6 +64,24 @@ namespace WSUI.Core.Core.MVVM
                 }
             }
             return base.Get(name, defaultValue);
+        }
+
+        protected override void OnPropertyChanged(string property)
+        {
+            if (property.IsStringEmptyOrNull())
+            {
+                foreach (var propertyInfo in _properties)
+                {
+                    base.OnPropertyChanged(propertyInfo.Name);
+                }
+                return;
+            }
+            base.OnPropertyChanged(property);
+        }
+
+        public virtual void Update(object data)
+        {
+            SetDataObject(data);
         }
     }
 }

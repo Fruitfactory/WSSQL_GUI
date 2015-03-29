@@ -2,7 +2,7 @@
 using WSUI.Core.Core.AdvancedSearchCriteria;
 using WSUI.Core.Enums;
 
-namespace WSUI.Infrastructure.AdvancedSearch
+namespace WSUI.Infrastructure.MVVM.AdvancedSearch
 {
     public class SortByAdvancedSearchCriteria : VariantAdvancedSearchCriteria<AdvancedSearchSortByType>
     {

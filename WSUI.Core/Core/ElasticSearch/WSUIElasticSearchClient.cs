@@ -1,19 +1,22 @@
 ﻿using System;
-using System.Security.Permissions;
-using Microsoft.Office.Interop.Outlook;
+using Elasticsearch.Net;
+using Microsoft.Practices.Unity;
 using Nest;
+using WSUI.Core.Data.ElasticSearch.Response;
+using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using Exception = System.Exception;
 
 namespace WSUI.Core.Core.ElasticSearch
 {
-    public class WSUIElasticSearchClient : IDisposable
+    public class WSUIElasticSearchClient : IDisposable, IElasticSearchInitializationIndex
     {
         public static readonly string ElasticSearchHost = "http://localhost:9200";
         public static readonly string DefaultIndexName = "outlookfinder";
 
         private ElasticClient _internalElasticClient;
 
+        [InjectionConstructor]
         public WSUIElasticSearchClient()
             :this(ElasticSearchHost)
         {
@@ -36,7 +39,7 @@ namespace WSUI.Core.Core.ElasticSearch
             {
                 var node = new Uri(host);
                 var settings = new ConnectionSettings(node, defaultIndexName);
-                _internalElasticClient = new ElasticClient(settings);
+                ElasticClient = new ElasticClient(settings);
             }
             catch (Exception ex)
             {
@@ -44,14 +47,58 @@ namespace WSUI.Core.Core.ElasticSearch
             }
         }
 
-        public ElasticClient ElasticClient
+        private ElasticClient ElasticClient
         {
             get { return _internalElasticClient; }
+            set { _internalElasticClient = value; }
         }
 
+        public ISearchResponse<T> Search<T>(Func<SearchDescriptor<T>, SearchDescriptor<T>> searchSelector)
+            where T : class
+        {
+            return ElasticClient.Search<T>(searchSelector);
+        }
+
+        public INestSerializer Serializer
+        {
+            get { return ElasticClient.Serializer; }
+        }
+
+        public IElasticsearchClient Raw
+        {
+            get { return ElasticClient.Raw; }
+        }
+
+        public IExistsResponse IndexExists(string name)
+        {
+            return ElasticClient.IndexExists(name);
+        }
+
+        public void CreateIndex(byte[] bodyRequest)
+        {
+            try
+            {
+                Raw.IndexPut("_river", WSUIElasticSearchClient.DefaultIndexName, "_meta", bodyRequest);
+            }
+            catch (Exception exception)
+            {
+                WSSqlLogger.Instance.LogError(exception.Message);
+            }
+            
+        }
+
+        public ElasticsearchResponse<WSUIStatusResponse> GetIndexingProgress()
+        {
+            return Raw.Get<WSUIStatusResponse>("_river", DefaultIndexName, "status");
+        } 
 
         public void Dispose()
-        {   
+        {
+            if (ElasticClient != null)
+            {
+                ElasticClient = null;
+            }
+            GC.SuppressFinalize(this);
         }
     }
 }

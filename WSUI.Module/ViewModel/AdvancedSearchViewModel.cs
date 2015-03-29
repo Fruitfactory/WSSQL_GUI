@@ -23,7 +23,7 @@ using WSUI.Module.Core;
 using WSUI.Module.Interface.View;
 using WSUI.Module.Interface.ViewModel;
 using WSUI.Module.Service;
-using WSUI.Infrastructure.AdvancedSearch;
+using WSUI.Infrastructure.MVVM.AdvancedSearch;
 
 namespace WSUI.Module.ViewModel
 {

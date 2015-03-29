@@ -47,8 +47,8 @@ public class PstStatusRepository {
     public static XContentBuilder getStatusInfo() throws IOException {
         synchronized (_repository) {
             XContentBuilder status = XContentFactory.jsonBuilder().prettyPrint();
-            status.startObject("status");
-            status.startObject("items").startArray();
+            status.startObject();
+            status.field("items").startArray();
 
             for (Map.Entry<String, PstReaderStatusInfo> entrySet : _repository.entrySet()) {
                 String key = entrySet.getKey();
@@ -61,7 +61,6 @@ public class PstStatusRepository {
                 status.endObject();
             }
             status.endArray();
-            status.endObject();
             status.endObject();
             return status;
         }

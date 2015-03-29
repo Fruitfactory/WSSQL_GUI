@@ -12,5 +12,7 @@ namespace WSUI.Infrastructure
         public const string SidebarStrategyRegion = "SidebarStrategyRegion";
         public const string SidebarDataRegion = "SidebarDataRegion";
         public const string SidebarPreviewRegion = "SidebarPreviewRegion";
+
+        public const string ElasticSearchRegion = "ElasticSearchRegion";
     }
 }

@@ -71,6 +71,7 @@ namespace WSUI.Module.ViewModel
         private ICommandStrategy _currentStrategy;
         private int _selectedUIItemIndex;
         private IContactDetailsViewModel _contactDetails;
+        private IElasticSearchViewModel _elasticSearchViewModel;
 
         public MainViewModel(IUnityContainer container, IKindsView kindView, IEventAggregator eventAggregator)
         {
@@ -87,6 +88,7 @@ namespace WSUI.Module.ViewModel
                 _navigationService.SetMainViewModel(this);
             }
             _token = _eventAggregator.GetEvent<SelectedChangedPayloadEvent>().Subscribe(OnSelectedItemChanged);
+            _elasticSearchViewModel = _container.Resolve<IElasticSearchViewModel>();
         }
 
         public IKindsView KindsView { get; protected set; }
@@ -160,6 +162,7 @@ namespace WSUI.Module.ViewModel
                 OnPropertyChanged(() => KindsCollection);
                 UpdatedActivatedStatus();
                 InitCommandStrategies();
+               
 
             }
             catch (Exception ex)
@@ -819,6 +822,16 @@ namespace WSUI.Module.ViewModel
             Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
             OutlookPreviewHelper.Instance.PreviewHostType = HostType.Plugin;
             InitializeCommands();
+            if (_elasticSearchViewModel.IsNotNull())
+            {
+                _elasticSearchViewModel.Initialize();
+                if (!_elasticSearchViewModel.IsServiceInstalled ||
+                    !_elasticSearchViewModel.IsServiceRunning ||
+                    !_elasticSearchViewModel.IsIndexExisted )
+                {
+                    _elasticSearchViewModel.Show();
+                }
+            }
         }
 
         private void InitializeCommands()

@@ -113,8 +113,8 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
-    <Compile Include="AdvancedSearch\SortByAdvancedSearchCriteria.cs" />
-    <Compile Include="AdvancedSearch\StringAdvancedSearchCriteria.cs" />
+    <Compile Include="MVVM\AdvancedSearch\SortByAdvancedSearchCriteria.cs" />
+    <Compile Include="MVVM\AdvancedSearch\StringAdvancedSearchCriteria.cs" />
     <Compile Include="Attributes\FieldIndexAttribute.cs" />
     <Compile Include="Behaviors\ChildListBoxBehavior.cs" />
     <Compile Include="Behaviors\ExpanderEmailBehavior.cs" />
@@ -182,6 +182,7 @@
     <Compile Include="Implements\Rules\FileContentSearchRule.cs" />
     <Compile Include="Implements\Rules\FileFilenameSearchRule.cs" />
     <Compile Include="Interfaces\Search\IContactSearchSystem.cs" />
+    <Compile Include="MVVM\StatusItem\StatusItemViewModel.cs" />
     <Compile Include="Payloads\SearchObjectPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionNames.cs" />

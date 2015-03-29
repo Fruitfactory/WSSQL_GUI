@@ -57,7 +57,7 @@ namespace WSUI.Infrastructure.Service.Helpers
             switch(item.TypeItem)
             {
                 case TypeSearchItem.Email:
-                    return OutlookHelper.Instance.GetEMailTempFileName(item);
+                    return OutlookHelper.Instance.GetEmailEmlFilename(item as EmailSearchObject); 
                 case TypeSearchItem.Attachment:
                     return OutlookHelper.Instance.GetAttachmentTempFile(item as AttachmentContentSearchObject);
                 case TypeSearchItem.Calendar:

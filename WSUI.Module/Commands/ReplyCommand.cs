@@ -1,7 +1,9 @@
 using Microsoft.Office.Interop.Outlook;
 using WSUI.Core.Enums;
+using WSUI.Core.Extensions;
 using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
+using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
 using WSUI.Module.Interface.ViewModel;
@@ -11,40 +13,35 @@ namespace WSUI.Module.Commands
 {
     public class ReplyCommand : BaseEmailPreviewCommand
     {
-        public ReplyCommand(IMainViewModel mainViewModel) : base(mainViewModel)
+        public ReplyCommand(IMainViewModel mainViewModel)
+            : base(mainViewModel)
         {
         }
 
         protected override void OnExecute()
         {
             var itemSearch = GetCurrentSearchObject();
-            var mail = OutlookHelper.Instance.GetEmailItem(itemSearch);
-            if (mail != null)
+            try
             {
-                try
+
+                switch (itemSearch.TypeItem)
                 {
-
-
-                    if (mail is _MailItem)
-                    {
-                        var replymail = (mail as _MailItem).Reply();
-                        replymail.Display(false);
-                        (mail as _MailItem).Close(OlInspectorClose.olDiscard);
-
-                    }
-                    else if (mail is _MeetingItem)
-                    {
-                        var replymail = (mail as _MeetingItem).Reply();
-                        replymail.Display(false);
-                        (mail as _MeetingItem).Close(OlInspectorClose.olDiscard);
-
-                    }
+                    case TypeSearchItem.Email:
+                        string filename = SearchItemHelper.GetFileName(itemSearch);
+                        MailItem mailItem = OutlookHelper.Instance.CreateEmailFromTemplate("c:\\Users\\Yariki\\Downloads\\test-sample-message.eml");
+                        if (mailItem.IsNotNull())
+                        {
+                            var reply = mailItem.Reply();
+                            reply.Display(false);
+                            mailItem.Close(OlInspectorClose.olDiscard);
+                        }
+                        break;
                 }
-                catch (System.Exception ex)
-                {
-                    MessageBoxService.Instance.Show("Error", "Can't open Outlook item.", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Asterisk);
-                    WSSqlLogger.Instance.LogError("Reply Command: " + ex.Message);
-                }
+            }
+            catch (System.Exception ex)
+            {
+                MessageBoxService.Instance.Show("Error", "Can't open Outlook item.", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Asterisk);
+                WSSqlLogger.Instance.LogError("Reply Command: " + ex.Message);
             }
         }
 

@@ -111,32 +111,27 @@ public class PstOutlookFileReader implements Runnable {
     }
 
     private void prepareStatusInfo(PSTFolder rootFolder) {
-        int count = countItems(rootFolder);
+        countItems(rootFolder);
         Path pathFileName = Paths.get(_filename).getFileName();
         _name = pathFileName.toString();
-        PstReaderStatusInfo statusInfo = new PstReaderStatusInfo(_name, count);
+        PstReaderStatusInfo statusInfo = new PstReaderStatusInfo(_name, _emailCount);
         statusInfo.setStatus(PstReaderStatus.NonStarted);
         PstStatusRepository.setStatusInfo(statusInfo);
     }
 
-    private int countItems(PSTFolder rootFolder) {
+    private void countItems(PSTFolder rootFolder) {
         try {
-            int count = 0;
-
             if (rootFolder.hasSubfolders()) {
                 for (PSTFolder subFolder : rootFolder.getSubFolders()) {
-                    count += countItems(subFolder);
+                    countItems(subFolder);
                 }
             }
             if (rootFolder.getContentCount() > 0) {
-                count += rootFolder.getContentCount();
+                _emailCount += rootFolder.getContentCount();
             }
-            return count;
-
         } catch (Exception e) {
             _logger.error(LOG_TAG, e);
         }
-        return 0;
     }
 
     private void processFolder(PSTFolder pstFolder) {
@@ -155,26 +150,44 @@ public class PstOutlookFileReader implements Runnable {
 
             if (pstFolder.getContentCount() > 0) {
                 PSTMessage message = (PSTMessage) pstFolder.getNextChild();
+                int count = pstFolder.getContentCount();
+                int tempCount = 0;
                 while (message != null) {
-                    if (_lastUpdateDate == null) {
-                        processObject(message, folderName);
-                        message = (PSTMessage) pstFolder.getNextChild();
-
-                        continue;
-                    } else {
-                        long creationTime = message.getCreationTime().getTime();
-                        long lastUpdated = _lastUpdateDate.getTime();
-
-                        if (lastUpdated > creationTime) {
+                    try{
+                        if (_lastUpdateDate == null) {
+                            processObject(message, folderName);
                             message = (PSTMessage) pstFolder.getNextChild();
+                            tempCount++;
+                            if(tempCount > 100){
+                                PstStatusRepository.setProcessCount(_name, tempCount);
+                                count = count - tempCount;
+                                tempCount = 0;
+                            }
                             continue;
+                        } else {
+                            long creationTime = message.getCreationTime().getTime();
+                            long lastUpdated = _lastUpdateDate.getTime();
+
+                            if (lastUpdated > creationTime) {
+                                message = (PSTMessage) pstFolder.getNextChild();
+                                tempCount++;
+                                continue;
+                            }
+                            processObject(message, folderName);
+                            message = (PSTMessage) pstFolder.getNextChild();
+                            tempCount++;
+                            if(tempCount > 100){
+                                PstStatusRepository.setProcessCount(_name, tempCount);
+                                count = count - tempCount;
+                                tempCount = 0;
+                            }
                         }
-                        processObject(message, folderName);
+                        
+                    }catch(Exception ex){
                         message = (PSTMessage) pstFolder.getNextChild();
                     }
-
                 }
-                PstStatusRepository.setProcessCount(_name, pstFolder.getContentCount());
+                PstStatusRepository.setProcessCount(_name, count);
             }
         } catch (Exception e) {
             _logger.error(LOG_TAG + e.getMessage());
@@ -192,6 +205,12 @@ public class PstOutlookFileReader implements Runnable {
     }
 
     private void indexEmail(PSTMessage message, String folderName) throws IOException, Exception {
+        
+        PSTConversationIndexData indexData = message.getConversationIndexData();
+        if(indexData.isDataEmpty()){
+            return;
+        }
+
         String subject = message.getSubject();
         String sender = message.getSentRepresentingName();
         String senderEmail = message.getSentRepresentingEmailAddress();
@@ -203,7 +222,7 @@ public class PstOutlookFileReader implements Runnable {
         Date dateCreated = message.getCreationTime();
         Date dateReceived = message.getMessageDeliveryTime();
         long size = message.getMessageSize();
-        PSTConversationIndexData indexData = message.getConversationIndexData();
+        
         UUID id = null;
         String conversationIndex = "";
         String outlookConversationId = "";
@@ -464,7 +483,8 @@ public class PstOutlookFileReader implements Runnable {
         Date startTime = appointment.getStartTime();
         Date endTime = appointment.getEndTime();
         PSTTimeZone zone = appointment.getStartTimeZone();
-        String timezone = zone.getName();
+        String timezone = zone != null ? zone.getName() : "";
+      
         int duration = appointment.getDuration();
         int meetingStatus = appointment.getMeetingStatus();
         String allAttendees = appointment.getAllAttendees();

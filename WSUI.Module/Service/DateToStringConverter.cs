@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using WSUI.Core.Data;
 using System.Text.RegularExpressions;
+using WSUI.Core.Extensions;
 
 namespace WSUI.Module.Service
 {
@@ -190,4 +191,44 @@ namespace WSUI.Module.Service
         }
     }
 
+    public class NumericToStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value.IsNull())
+                return "";
+            return value.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public class EnumConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter,
+                              System.Globalization.CultureInfo culture)
+        {
+            Enum enumValue = default(Enum);
+            if (parameter is Type)
+            {
+                enumValue = (Enum)Enum.Parse((Type)parameter, value.ToString());
+            }
+            return enumValue;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter,
+                                  System.Globalization.CultureInfo culture)
+        {
+            int returnValue = 0;
+            if (parameter is Type)
+            {
+                returnValue = (int)Enum.Parse((Type)parameter, value.ToString());
+            }
+            return returnValue;
+        }
+    }
 }

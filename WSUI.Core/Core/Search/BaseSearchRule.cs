@@ -146,7 +146,7 @@ namespace WSUI.Core.Core.Search
 
                 if (IsAdvancedMode)
                 {
-                    result = _elasticSearchClient.ElasticClient.Search<E>(s => s
+                    result = _elasticSearchClient.Search<E>(s => s
                         .From(_from)
                         .Size(TopQueryResult)
                         .Query(BuildAdvancedQuery)
@@ -156,13 +156,13 @@ namespace WSUI.Core.Core.Search
                 else
                 {
                     result = NeedSorting
-                       ? _elasticSearchClient.ElasticClient.Search<E>(s => s
+                       ? _elasticSearchClient.Search<E>(s => s
                        .From(_from)
                        .Size(TopQueryResult)
                        .Query(BuildQuery)
                        .Sort(BuildSortSelector)
                        )
-                       : _elasticSearchClient.ElasticClient.Search<E>(s => s
+                       : _elasticSearchClient.Search<E>(s => s
                        .From(_from)
                        .Size(TopQueryResult)
                        .Query(BuildQuery)

@@ -13,7 +13,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure"
              xmlns:advancedSearch="clr-namespace:WSUI.Module.Service.AdvancedSearch"
-             xmlns:advancedSearch1="clr-namespace:WSUI.Infrastructure.AdvancedSearch;assembly=WSUI.Infrastructure">
+             xmlns:advancedSearch2="clr-namespace:WSUI.Infrastructure.MVVM.AdvancedSearch;assembly=WSUI.Infrastructure">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -24,7 +24,7 @@
 
             <converters:AdvancedSearchTypeToStringConverter x:Key="AdvancedSearchTypeToStringConverter"></converters:AdvancedSearchTypeToStringConverter>
             
-            <DataTemplate x:Key="StringDataTemplate" DataType="advancedSearch1:StringAdvancedSearchCriteria" >
+            <DataTemplate x:Key="StringDataTemplate" DataType="advancedSearch2:StringAdvancedSearchCriteria" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="75"></ColumnDefinition>
@@ -39,7 +39,7 @@
                 </Grid>
             </DataTemplate>
 
-            <DataTemplate x:Key="SortDataTemplate" DataType="advancedSearch1:SortByAdvancedSearchCriteria" >
+            <DataTemplate x:Key="SortDataTemplate" DataType="advancedSearch2:SortByAdvancedSearchCriteria" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="75"></ColumnDefinition>

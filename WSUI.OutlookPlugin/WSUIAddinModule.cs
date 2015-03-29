@@ -883,7 +883,6 @@ namespace WSUIOutlookPlugin
             {
                 StartWatch();
                 RestoreOutlookFolder();
-                InitElasticSearch();
                 //CheckUpdate(); // TODO: just for testing
                 this.SendMessage(WM_LOADED, IntPtr.Zero, IntPtr.Zero);
                 OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
@@ -1349,55 +1348,7 @@ namespace WSUIOutlookPlugin
         }
 
 
-        private void InitElasticSearch()
-        {
-            try
-            {
-                var elasticSearchClient = new WSUIElasticSearchClient();
-                var resp = elasticSearchClient.ElasticClient.IndexExists(WSUIElasticSearchClient.DefaultIndexName);
-                if (resp.Exists)
-                {
-                    return;
-                }
-                var list = GetOutlookFiles();
-                var index = new
-                {
-                    type = "pst",
-                    pst = new
-                    {
-                        update_rate = "10h",
-                        pst_list = list
-                    }
-                };
-                var body = elasticSearchClient.ElasticClient.Serializer.Serialize(index, SerializationFormatting.Indented);
-                var r = elasticSearchClient.ElasticClient.Raw.IndexPut("_river", WSUIElasticSearchClient.DefaultIndexName, "_meta", body);
-                WSSqlLogger.Instance.LogInfo(r.Response.ToString());
-            }
-            catch (Exception ex) 
-            {
-                WSSqlLogger.Instance.LogError(ex.Message);                
-            }
-        }
-
-        private IEnumerable<string> GetOutlookFiles()
-        {
-            string path = string.Format("{0}\\Microsoft\\Outlook",
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
-            if (Directory.Exists(path))
-            {
-                var files = Directory.GetFiles(path, "*.pst");
-                var files1 = Directory.GetFiles(path, "*.ost");
-                var list = new List<string>(files);
-                list.AddRange(files1);
-
-                foreach (var file in list)
-                {
-                    System.Diagnostics.Debug.WriteLine(file);
-                }
-                return list;
-            }
-            return null;
-        }
+        
 
 
     }

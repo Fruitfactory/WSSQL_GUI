@@ -96,5 +96,10 @@ namespace WSUI.Core.Extensions
             return !string.IsNullOrEmpty(str) && Regex.IsMatch(str, AmountPattern, RegexOptions.IgnoreCase);
         }
 
+        public static bool IsEmpty(this string @this)
+        {
+            return string.IsNullOrEmpty(@this);
+        }
+
     }
 }

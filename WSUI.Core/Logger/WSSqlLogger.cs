@@ -70,6 +70,9 @@ namespace WSUI.Core.Logger
             MethodBase methodBase = stackFrame.GetMethod();
             string tempMessage = string.Format("{0}: {1}", methodBase.Name, message);    
             WriteLog(LevelLogging.Error, tempMessage);
+#if DEBUG 
+            System.Diagnostics.Debug.WriteLine(tempMessage);
+#endif
         }
 
         public void LogError(string format, params object[] args)
@@ -81,28 +84,45 @@ namespace WSUI.Core.Logger
             MethodBase methodBase = stackFrame.GetMethod();
             string tempMessage = string.Format("{0}: {1}", methodBase.Name, message);
             WriteLog(LevelLogging.Error, tempMessage);
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine(tempMessage);
+#endif
+
         }
 
         public void LogInfo(string message)
         {
             WriteLog(LevelLogging.Info, message);
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine(message);
+#endif
+
         }
 
         public void LogInfo(string format, params object[] args)
         {
             var message = string.Format(format, args);
             LogInfo(message);
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine(message);
+#endif
         }
 
         public void LogWarning(string message)
         {
             WriteLog(LevelLogging.Warning, message);
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine(message);
+#endif
         }
 
         public void LogWarning(string format, params object[] args)
         {
             var message = string.Format(format, args);
             LogWarning(message);
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine(message);
+#endif
         }
 
         #endregion public

@@ -27,6 +27,7 @@ namespace WSUI.Core.Helpers
         private const string OutlookFolderWebUrl = "OutlookFolderWebUrl";
         private const string PKeyId = "Id";
         private const string IsPluginUiVisible = "IsPluginUiVisible";
+        private const string ElastiSearchPath = "ElasticSearchPath";
 
         private const string AddInOutlookSubKey = @"Software\Microsoft\Office\Outlook\Addins\WSUIOutlookPlugin.AddinModule";
         private const string RequireShutdownNotificationKey = "RequireShutdownNotification";
@@ -314,6 +315,16 @@ namespace WSUI.Core.Helpers
         public void SetIsPluginUiVisible(bool visible)
         {
             Write(IsPluginUiVisible, visible);
+        }
+
+        public string GetElasticSearchpath()
+        {
+            return ReadKey<string>(ElastiSearchPath);
+        }
+
+        public void SetElasticSearchPath(string path)
+        {
+            Write(ElastiSearchPath,path);
         }
 
         #region [restore outlook folders]

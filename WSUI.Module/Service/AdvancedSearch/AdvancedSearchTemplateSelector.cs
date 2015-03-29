@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using WSUI.Infrastructure.AdvancedSearch;
+using WSUI.Infrastructure.MVVM.AdvancedSearch;
 
 namespace WSUI.Module.Service.AdvancedSearch
 {

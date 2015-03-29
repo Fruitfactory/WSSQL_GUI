@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
+using WSUI.Core.Core.ElasticSearch;
+using WSUI.Core.Interfaces;
 using WSUI.Core.Logger;
 using WSUI.Core.Utils;
 using WSUI.Infrastructure;
@@ -81,6 +83,10 @@ namespace WSUI.Module
             _unityContainer.RegisterType<ISettingsView<AdvancedSearchViewModel>, AdvancedSearchSettingsView>();
             _unityContainer.RegisterType<IDataView<AdvancedSearchViewModel>, AdvancedSearchDataView>();
 
+            _unityContainer.RegisterType<IElasticSearchInitializationIndex, WSUIElasticSearchClient>();
+            _unityContainer.RegisterType<IElasticSearchView, ElasticSearchView>();
+            _unityContainer.RegisterType<IElasticSearchViewModel, ElasticSearchViewModel>();
+            
 
             watch.Stop();
             WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));

@@ -28,9 +28,7 @@ namespace WSUI.Module.Commands
                 switch (type)
                 {
                     case TypeSearchItem.Email:
-                        filename = MainViewModel.IsPreviewVisible ? 
-                            TempFileManager.Instance.GenerateTempFileName(currentItem) :
-                            SearchItemHelper.GetFileName(currentItem);
+                        filename = SearchItemHelper.GetFileName(currentItem);
                         break;
                 }
                 if(string.IsNullOrEmpty(filename))
