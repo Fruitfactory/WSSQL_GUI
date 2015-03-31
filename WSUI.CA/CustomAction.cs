@@ -928,6 +928,9 @@ namespace WSUI.CA
                     si.Verb = "runas";
                     si.WindowStyle = ProcessWindowStyle.Normal;
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin\\");
+
+                    RegisterPlugin(session, elasticSearchPath);
+
                     Process pInstall = new Process();
                     pInstall.StartInfo = si;
                     pInstall.Start();
@@ -944,6 +947,50 @@ namespace WSUI.CA
             {
             }
             return ActionResult.Success;
+        }
+
+
+        private const string PstPluginKey = "pstriver_1_0_SNAPSHOT_zip";
+        private const string PstPluginFilename = "pstriver-1.0-SNAPSHOT.zip";
+        private const string PstPluginName = "pstriver";
+        private const string InstallArguments = "--install {0} --url file:{1}";
+
+        private static void ExtractPstPlugin(Session session, string path)
+        {
+            if (!CopyFileFromDatabase(session, path, PstPluginKey,PstPluginFilename))
+                throw new FileLoadException(PstPluginFilename);
+        }
+
+        
+        private static void RegisterPlugin(Session session, string elasticSearchPath)
+        {
+            try
+            {
+                string path = Path.GetDirectoryName(typeof(CustomActions).Assembly.Location);
+                session.Log(string.Format("Path {0}", path));
+                string fullpath = string.Format("{0}\\{1}", path, PstPluginFilename);
+                session.Log("Full path: " + fullpath);
+
+                ExtractPstPlugin(session, path);
+
+                if (File.Exists(fullpath)  && !string.IsNullOrEmpty(elasticSearchPath))
+                {
+                    ProcessStartInfo si = new ProcessStartInfo();
+                    si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "plugin.bat");
+                    si.Arguments = string.Format(InstallArguments,PstPluginName,fullpath);
+                    si.Verb = "runas";
+                    si.WindowStyle = ProcessWindowStyle.Normal;
+                    si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin\\");
+                    Process pInstall = new Process();
+                    pInstall.StartInfo = si;
+                    pInstall.Start();
+                    pInstall.WaitForExit();
+                }
+            }
+            catch (Exception exception)
+            {
+                session.Log(exception.Message);
+            }
         }
 
         #endregion

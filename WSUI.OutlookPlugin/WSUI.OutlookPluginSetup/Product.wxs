@@ -42,6 +42,7 @@
     <Binary Id="Turbo_Activate_dll" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)TurboActivate.dll" />
     <Binary Id="Turbo_Activate_exe" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)TurboActivate.exe" />
     <Binary Id="Turbo_Activate64_dll" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)TurboActivate64.dll" />
+    <Binary Id="pstriver_1_0_SNAPSHOT_zip" SourceFile="$(var.SolutionDir)PSTRiverPlugin\target\releases\pstriver-1.0-SNAPSHOT.zip" />
     <?endif?>
     <Binary Id="adxregistrator_exe" SourceFile="$(var.ADX_PATH)\Redistributables\adxregistrator.exe" />
     <Binary Id="managedAction" SourceFile="$(var.WSUI.OutlookPlugin.TargetDir)WSUI.CA.dll" />
