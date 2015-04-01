@@ -65,6 +65,8 @@
     <CustomAction Id="InstallElasticSearch" BinaryKey="managedAction" DllEntry="InstallElasticSearch" Return="check" Execute="immediate" />
 
     <CustomAction Id="UnInstallElasticSearch" BinaryKey="managedAction" DllEntry="UnInstallElasticSearch" Execute="immediate" Return="check" />
+    <CustomAction Id="SetJavaSdkVariable" BinaryKey="managedAction" DllEntry="SetJavaSdkVariable" Execute="immediate" Return="check" />
+    
     
     <?endif?>
     <InstallExecuteSequence>
@@ -75,7 +77,8 @@
       <Custom Action="Deactivate" After="UnregisterDll">Installed</Custom>
       <Custom Action="UnInstallElasticSearch" After="Deactivate">Installed</Custom>
       <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>
-      <Custom Action='InstallElasticSearch' After='InstallFinalize'>NOT Installed</Custom>
+      <Custom Action='SetJavaSdkVariable' After='InstallFinalize'>NOT Installed</Custom>
+      <Custom Action='InstallElasticSearch' After='SetJavaSdkVariable'>NOT Installed</Custom>
       <Custom Action="ClosePrompt" After="CostFinalize">NOT Installed OR Installed OR REMOVE="ALL"</Custom>
       <!--<Custom Action="CloseOutlook" After="AppSearch">NOT Installed OR Installed OR REMOVE="ALL"</Custom>-->
       <Custom Action="SuccesMessage" OnExit="success">NOT Installed</Custom>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -868,6 +869,43 @@ namespace WSUI.CA
 
         #region [elastc search]
 
+        private const string JavaHomeVar = "JAVA_HOME";
+
+        [CustomAction]
+        public static ActionResult SetJavaSdkVariable(Session session)
+        {
+            try
+            {
+                var isExistJavaHome = Environment.GetEnvironmentVariables().OfType<DictionaryEntry>().Any(e => e.Key.ToString().ToLowerInvariant() == JavaHomeVar.ToLowerInvariant());
+                if (isExistJavaHome)
+                {
+                    session.Log(string.Format("JAVA_HOME is exist"));
+                    return ActionResult.Success;
+                }
+                string javaPath = GetJavaInstallationPath();
+                session.Log(string.Format("JAVA_HOME will be set => {0}",javaPath));
+                Environment.SetEnvironmentVariable(JavaHomeVar,javaPath,EnvironmentVariableTarget.Machine);
+            }
+            catch (Exception ex)
+            {
+                session.Log(ex.Message);
+            }
+            return ActionResult.Success;
+        }
+
+
+        private static String GetJavaInstallationPath()
+        {
+            String javaKey = "SOFTWARE\\JavaSoft\\Java Runtime Environment";
+            using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(javaKey))
+            {
+                String currentVersion = baseKey.GetValue("CurrentVersion").ToString();
+                using (var homeKey = baseKey.OpenSubKey(currentVersion))
+                    return homeKey.GetValue("JavaHome").ToString();
+            }
+        }
+
+
         [CustomAction]
         public static ActionResult InstallElasticSearch(Session session)
         {
@@ -888,13 +926,16 @@ namespace WSUI.CA
 
                     si.Arguments = "install";
                     si.Verb = "runas";
-                    si.WindowStyle = ProcessWindowStyle.Normal;
+                    si.WindowStyle = ProcessWindowStyle.Hidden;
                     si.WorkingDirectory = string.Format("{0}{1}",elasticSearchPath, "\\bin\\");
                     Process pInstall = new Process();
                     pInstall.StartInfo = si;
                     pInstall.Start();
                     pInstall.WaitForExit();
                     session.Log("Install Elastis Search: install service");
+
+                    RegisterPlugin(session, elasticSearchPath);
+
                     si.Arguments = "start";
                     Process pStart = new Process();
                     pStart.StartInfo = si;
@@ -926,10 +967,8 @@ namespace WSUI.CA
                     si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "service.bat");
                     si.Arguments = "stop";
                     si.Verb = "runas";
-                    si.WindowStyle = ProcessWindowStyle.Normal;
+                    si.WindowStyle = ProcessWindowStyle.Hidden;
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin\\");
-
-                    RegisterPlugin(session, elasticSearchPath);
 
                     Process pInstall = new Process();
                     pInstall.StartInfo = si;
@@ -979,12 +1018,13 @@ namespace WSUI.CA
                     si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "plugin.bat");
                     si.Arguments = string.Format(InstallArguments,PstPluginName,fullpath);
                     si.Verb = "runas";
-                    si.WindowStyle = ProcessWindowStyle.Normal;
+                    si.WindowStyle = ProcessWindowStyle.Hidden;
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin\\");
                     Process pInstall = new Process();
                     pInstall.StartInfo = si;
                     pInstall.Start();
                     pInstall.WaitForExit();
+                    session.Log("PST plugin was installed.");
                 }
             }
             catch (Exception exception)
