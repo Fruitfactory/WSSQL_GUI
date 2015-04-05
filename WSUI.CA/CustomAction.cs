@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.ServiceProcess;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -912,6 +913,8 @@ namespace WSUI.CA
             string elasticSearchPath = string.Empty;
             try
             {
+                string javaHome = GetJavaInstallationPath();
+
                 elasticSearchPath = session["ELASTICSEASRCHINSTALLFOLDER"];
                 RegistryHelper.Instance.SetElasticSearchPath(elasticSearchPath);
                 if (!string.IsNullOrEmpty(elasticSearchPath))
@@ -924,19 +927,19 @@ namespace WSUI.CA
                         return ActionResult.Success;
                     }
 
-                    si.Arguments = "install";
-                    si.Verb = "runas";
+                    si.Arguments = string.Format(" {0} \"{1}\"","install", javaHome);
+                    //si.Verb = "runas";
                     si.WindowStyle = ProcessWindowStyle.Hidden;
-                    si.WorkingDirectory = string.Format("{0}{1}",elasticSearchPath, "\\bin\\");
+                    si.WorkingDirectory = string.Format("{0}{1}",elasticSearchPath, "\\bin");
                     Process pInstall = new Process();
                     pInstall.StartInfo = si;
                     pInstall.Start();
                     pInstall.WaitForExit();
                     session.Log("Install Elastis Search: install service");
 
-                    RegisterPlugin(session, elasticSearchPath);
+                    RegisterPlugin(session, elasticSearchPath, javaHome);
 
-                    si.Arguments = "start";
+                    si.Arguments = string.Format(" {0} \"{1}\"", "start", javaHome);
                     Process pStart = new Process();
                     pStart.StartInfo = si;
                     pStart.Start();
@@ -960,21 +963,34 @@ namespace WSUI.CA
         {
             try
             {
+                ServiceController sct = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName.IndexOf("elasticsearch", StringComparison.InvariantCultureIgnoreCase) > -1);
+                if (sct == null)
+                {
+                    session.Log("ElasticSearch isn't installed...");
+                    return ActionResult.Success;
+                }
+                if (sct != null && sct.Status == ServiceControllerStatus.Running)
+                {
+                    sct.Stop();
+                    session.Log("ElasticSearch was stopped...");
+                }
+                string javaHome = GetJavaInstallationPath();
                 var elasticSearchPath = RegistryHelper.Instance.GetElasticSearchpath();
                 if (!string.IsNullOrEmpty(elasticSearchPath))
                 {
                     ProcessStartInfo si = new ProcessStartInfo();
                     si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "service.bat");
-                    si.Arguments = "stop";
-                    si.Verb = "runas";
+                    si.Arguments = string.Format(" {0} \"{1}\"", "stop",javaHome);
+                    
+                    //si.Verb = "runas";
                     si.WindowStyle = ProcessWindowStyle.Hidden;
-                    si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin\\");
+                    si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
 
                     Process pInstall = new Process();
                     pInstall.StartInfo = si;
                     pInstall.Start();
                     pInstall.WaitForExit();
-                    si.Arguments = "remove";
+                    si.Arguments = string.Format(" {0} \"{1}\"", "remove", javaHome);
                     Process pStart = new Process();
                     pStart.StartInfo = si;
                     pStart.Start();
@@ -992,7 +1008,7 @@ namespace WSUI.CA
         private const string PstPluginKey = "pstriver_1_0_SNAPSHOT_zip";
         private const string PstPluginFilename = "pstriver-1.0-SNAPSHOT.zip";
         private const string PstPluginName = "pstriver";
-        private const string InstallArguments = "--install {0} --url file:{1}";
+        private const string InstallArguments = "-i {0} -u file:///{1} \"{2}\"";
 
         private static void ExtractPstPlugin(Session session, string path)
         {
@@ -1001,7 +1017,7 @@ namespace WSUI.CA
         }
 
         
-        private static void RegisterPlugin(Session session, string elasticSearchPath)
+        private static void RegisterPlugin(Session session, string elasticSearchPath, string javaHome)
         {
             try
             {
@@ -1016,10 +1032,10 @@ namespace WSUI.CA
                 {
                     ProcessStartInfo si = new ProcessStartInfo();
                     si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "plugin.bat");
-                    si.Arguments = string.Format(InstallArguments,PstPluginName,fullpath);
-                    si.Verb = "runas";
+                    si.Arguments = string.Format(InstallArguments,PstPluginName,fullpath,javaHome);
+                    //si.Verb = "runas";
                     si.WindowStyle = ProcessWindowStyle.Hidden;
-                    si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin\\");
+                    si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
                     Process pInstall = new Process();
                     pInstall.StartInfo = si;
                     pInstall.Start();

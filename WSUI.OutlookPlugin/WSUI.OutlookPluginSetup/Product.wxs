@@ -27,7 +27,7 @@
       <ComponentGroupRef Id="ProductComponents" />
     </Feature>
 
-    <Feature Id="ElasticSearchProductFeature" Title="ElasticSearch" Level="1">
+    <Feature Id="ElasticSearchProductFeature" Title="ElasticSearch" Level="1" >
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDER" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERBIN" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" />

@@ -89,6 +89,20 @@ namespace WSUI.Module.ViewModel
             }
             _token = _eventAggregator.GetEvent<SelectedChangedPayloadEvent>().Subscribe(OnSelectedItemChanged);
             _elasticSearchViewModel = _container.Resolve<IElasticSearchViewModel>();
+            if (_elasticSearchViewModel.IsNotNull())
+            {
+                _elasticSearchViewModel.IndexingFinished += ElasticSearchViewModelOnIndexingFinished;
+            }
+        }
+
+        private void ElasticSearchViewModelOnIndexingFinished(object sender, EventArgs eventArgs)
+        {
+            if (_elasticSearchViewModel.IsNull())
+            {
+                return;
+            }
+
+            Application.Current.Dispatcher.BeginInvoke(new Action(() => _elasticSearchViewModel.Close()));
         }
 
         public IKindsView KindsView { get; protected set; }

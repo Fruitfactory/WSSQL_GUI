@@ -158,7 +158,7 @@ public class PstOutlookFileReader implements Runnable {
                             processObject(message, folderName);
                             message = (PSTMessage) pstFolder.getNextChild();
                             tempCount++;
-                            if(tempCount > 100){
+                            if(tempCount >= 100){
                                 PstStatusRepository.setProcessCount(_name, tempCount);
                                 count = count - tempCount;
                                 tempCount = 0;
@@ -176,7 +176,7 @@ public class PstOutlookFileReader implements Runnable {
                             processObject(message, folderName);
                             message = (PSTMessage) pstFolder.getNextChild();
                             tempCount++;
-                            if(tempCount > 100){
+                            if(tempCount >= 100){
                                 PstStatusRepository.setProcessCount(_name, tempCount);
                                 count = count - tempCount;
                                 tempCount = 0;

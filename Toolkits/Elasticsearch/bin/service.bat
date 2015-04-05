@@ -1,17 +1,21 @@
 @echo off
 SETLOCAL
 
-if NOT DEFINED JAVA_HOME goto err
+set ES_JAVA_HOME=%~2
+
+
 
 set SCRIPT_DIR=%~dp0
 for %%I in ("%SCRIPT_DIR%..") do set ES_HOME=%%~dpfI
 
+
+
 rem Detect JVM version to figure out appropriate executable to use
-if not exist "%JAVA_HOME%\bin\java.exe" (
-echo JAVA_HOME points to an invalid Java installation (no java.exe found in "%JAVA_HOME%"^). Exiting...
+if not exist "%ES_JAVA_HOME%\bin\java.exe" (
+echo JAVA_HOME points to an invalid Java installation (no java.exe found in "%ES_JAVA_HOME%"^). Exiting...
 goto:eof
 )
-"%JAVA_HOME%\bin\java" -version 2>&1 | find "64-Bit" >nul:
+"%ES_JAVA_HOME%\bin\java" -version 2>&1 | find "64-Bit" >nul:
 
 if errorlevel 1 goto x86
 set EXECUTABLE=%ES_HOME%\bin\elasticsearch-service-x64.exe
@@ -34,10 +38,11 @@ set ES_VERSION=1.3.6
 if "%LOG_DIR%" == "" set LOG_DIR=%ES_HOME%\logs
 
 if "x%1x" == "xx" goto displayUsage
+
 set SERVICE_CMD=%1
-shift
-if "x%1x" == "xx" goto checkServiceCmd
-set SERVICE_ID=%1
+
+if "x%3x" == "xx" goto checkServiceCmd
+set SERVICE_ID=%3
 
 :checkServiceCmd
 
@@ -97,25 +102,29 @@ goto:eof
 
 :doInstall
 echo Installing service      :  "%SERVICE_ID%"
-echo Using JAVA_HOME (%ARCH%):  "%JAVA_HOME%"
+echo Using JAVA_HOME (%ARCH%):  "%ES_JAVA_HOME%"
+
+
 
 rem Check JVM server dll first
-set JVM_DLL=%JAVA_HOME%\jre\bin\server\jvm.dll
+set JVM_DLL=%ES_JAVA_HOME%\jre\bin\server\jvm.dll
 if exist "%JVM_DLL%" goto foundJVM
 
 rem Check 'server' JRE (JRE installed on Windows Server)
-set JVM_DLL=%JAVA_HOME%\bin\server\jvm.dll
+set JVM_DLL=%ES_JAVA_HOME%\bin\server\jvm.dll
 if exist "%JVM_DLL%" goto foundJVM
 
 rem Fallback to 'client' JRE
-set JVM_DLL=%JAVA_HOME%\bin\client\jvm.dll
+set JVM_DLL=%ES_JAVA_HOME%\bin\client\jvm.dll
 
 if exist "%JVM_DLL%" (
 echo Warning: JAVA_HOME points to a JRE and not JDK installation; a client (not a server^) JVM will be used...
 ) else (
-echo JAVA_HOME points to an invalid Java installation (no jvm.dll found in "%JAVA_HOME%"^). Existing...
+echo JAVA_HOME points to an invalid Java installation (no jvm.dll found in "%ES_JAVA_HOME%"^). Existing...
 goto:eof
 )
+
+
 
 :foundJVM
 if "%ES_MIN_MEM%" == "" set ES_MIN_MEM=256m
@@ -191,6 +200,7 @@ if not "%ES_JAVA_OPTS%" == "" set JVM_OPTS=%JVM_OPTS%;%JVM_ES_JAVA_OPTS%
 if "%ES_START_TYPE%" == "" set ES_START_TYPE=auto
 if "%ES_STOP_TIMEOUT%" == "" set ES_STOP_TIMEOUT=0
 
+
 "%EXECUTABLE%" //IS//%SERVICE_ID% --Startup %ES_START_TYPE% --StopTimeout %ES_STOP_TIMEOUT% --StartClass org.elasticsearch.bootstrap.Elasticsearch --StopClass org.elasticsearch.bootstrap.Elasticsearch --StartMethod main --StopMethod close --Classpath "%ES_CLASSPATH%" --JvmSs %JVM_SS% --JvmMs %JVM_XMS% --JvmMx %JVM_XMX% --JvmOptions %JVM_OPTS% ++JvmOptions %ES_PARAMS% %LOG_OPTS% --PidFile "%SERVICE_ID%.pid" --DisplayName "Elasticsearch %ES_VERSION% (%SERVICE_ID%)" --Description "Elasticsearch %ES_VERSION% Windows Service - http://elasticsearch.org" --Jvm "%JVM_DLL%" --StartMode jvm --StopMode jvm --StartPath "%ES_HOME%"
 
 
@@ -204,7 +214,6 @@ goto:eof
 
 :err
 echo JAVA_HOME environment variable must be set!
-pause
 
 goto:eof
 

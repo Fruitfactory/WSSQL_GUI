@@ -1,8 +1,10 @@
 using Microsoft.Office.Interop.Outlook;
+using WSUI.Core.Data;
 using WSUI.Core.Enums;
 using WSUI.Core.Extensions;
 using WSUI.Core.Helpers;
 using WSUI.Core.Logger;
+using WSUI.Infrastructure.Helpers;
 using WSUI.Infrastructure.Service.Helpers;
 using WSUI.Module.Core;
 using WSUI.Module.Interface;
@@ -27,20 +29,17 @@ namespace WSUI.Module.Commands
                 switch (itemSearch.TypeItem)
                 {
                     case TypeSearchItem.Email:
-                        string filename = SearchItemHelper.GetFileName(itemSearch);
-                        MailItem mailItem = OutlookHelper.Instance.CreateEmailFromTemplate("c:\\Users\\Yariki\\Downloads\\test-sample-message.eml");
-                        if (mailItem.IsNotNull())
+                        MailItem reply = EmailCommandPreviewHelper.Instance.CreateReplyEmail(itemSearch as EmailSearchObject);
+                        if (reply.IsNotNull())
                         {
-                            var reply = mailItem.Reply();
                             reply.Display(false);
-                            mailItem.Close(OlInspectorClose.olDiscard);
                         }
                         break;
                 }
             }
             catch (System.Exception ex)
             {
-                MessageBoxService.Instance.Show("Error", "Can't open Outlook item.", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Asterisk);
+                MessageBoxService.Instance.Show("Error", "Can't crete Reply email.", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Asterisk);
                 WSSqlLogger.Instance.LogError("Reply Command: " + ex.Message);
             }
         }

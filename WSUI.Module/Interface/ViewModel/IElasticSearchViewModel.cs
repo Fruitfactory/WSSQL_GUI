@@ -1,4 +1,6 @@
-﻿namespace WSUI.Module.Interface.ViewModel
+﻿using System;
+
+namespace WSUI.Module.Interface.ViewModel
 {
     public interface IElasticSearchViewModel
     {
@@ -13,5 +15,8 @@
 
         void Show();
         void Close();
+
+        event EventHandler IndexingStarted;
+        event EventHandler IndexingFinished;
     }
 }

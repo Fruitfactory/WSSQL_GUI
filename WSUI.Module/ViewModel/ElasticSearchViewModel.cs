@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Windows;
 using System.ServiceProcess;
 using System.Threading;
@@ -95,6 +96,9 @@ namespace WSUI.Module.ViewModel
             }
             region.Add(View);
             region.Activate(View);
+            OnPropertyChanged(() => IsServiceInstalled);
+            OnPropertyChanged(() => IsServiceRunning);
+            OnPropertyChanged(() => IsIndexExisted);
         }
 
         public void Close()
@@ -104,8 +108,12 @@ namespace WSUI.Module.ViewModel
             {
                 return;
             }
+            region.Deactivate(View);
             region.Remove(View);
         }
+
+        public event EventHandler IndexingStarted;
+        public event EventHandler IndexingFinished;
 
         #region [properties]
 
@@ -147,6 +155,24 @@ namespace WSUI.Module.ViewModel
 
 
         #region [private]
+
+        private void OnIndexingStarted()
+        {
+            var temp = this.IndexingStarted;
+            if (temp != null)
+            {
+                temp(this,EventArgs.Empty);
+            }
+        }
+
+        private void OnIndexingFinished()
+        {
+            var temp = this.IndexingFinished;
+            if (temp != null)
+            {
+                temp(this, EventArgs.Empty);
+            }
+        }
 
         private void CheckServices()
         {
@@ -221,13 +247,14 @@ namespace WSUI.Module.ViewModel
                     type = "pst",
                     pst = new
                     {
-                        update_rate = "10h",
+                        update_rate = "1h",
                         pst_list = list
                     }
                 };
                 var body = ElasticSearchClient.Serializer.Serialize(index, SerializationFormatting.Indented);
                 ElasticSearchClient.CreateIndex(body);
                 _timer = new Timer(TimerProgressCallback,null,1000,2000);
+                OnIndexingStarted();
                 
             }
             catch (Exception ex)
@@ -238,30 +265,39 @@ namespace WSUI.Module.ViewModel
 
         private void TimerProgressCallback(object state)
         {
-            var response = ElasticSearchClient.GetIndexingProgress();
-            if (response.Response.IsNull() || response.Response.Items.IsNull() || !response.Response.Items.Any())
+            try
             {
-                return;
-            }
-
-            foreach (var wsuiStatusItem in response.Response.Items)
-            {
-                if (_statuses.ContainsKey(wsuiStatusItem.Name))
+                var response = ElasticSearchClient.GetIndexingProgress();
+                if (response.Response.IsNull() || response.Response.Items.IsNull() || !response.Response.Items.Any())
                 {
-                    _statuses[wsuiStatusItem.Name].Update(wsuiStatusItem);
+                    return;
                 }
-                else
+
+                foreach (var wsuiStatusItem in response.Response.Items)
                 {
-                    _statuses[wsuiStatusItem.Name] = new StatusItemViewModel(wsuiStatusItem);
+                    if (_statuses.ContainsKey(wsuiStatusItem.Name))
+                    {
+                        _statuses[wsuiStatusItem.Name].Update(wsuiStatusItem);
+                    }
+                    else
+                    {
+                        _statuses[wsuiStatusItem.Name] = new StatusItemViewModel(wsuiStatusItem);
+                    }
+                }
+                Items = _statuses.Select(p => p.Value).ToList();
+                if (Items.All(i => i.Status == PstReaderStatus.Finished))
+                {
+                    _timer.Change(Timeout.Infinite, Timeout.Infinite);
+                    OnIndexingFinished();
                 }
             }
-            Items = _statuses.Select(p => p.Value).ToList();
-            if (Items.All(i => i.Status == PstReaderStatus.Finished))
+            catch (WebException w)
             {
-                _timer.Change(Timeout.Infinite,Timeout.Infinite);
-
-                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(Close));
-                //Close();
+                WSSqlLogger.Instance.LogError("[Web] " + w.Message);
+            }
+            catch (Exception e)
+            {
+                WSSqlLogger.Instance.LogError(e.Message);
             }
         }
 
@@ -271,7 +307,7 @@ namespace WSUI.Module.ViewModel
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
             if (Directory.Exists(path))
             {
-                var files = Directory.GetFiles(path, "*.pst");//}new List<string>() {path + "\\iyariki.ya@gmail.com.ost"}; //
+                var files = Directory.GetFiles(path, "*.pst");//new List<string>() { path + "\\iyariki.ya@hotmail.com.ost" }; //
                 var files1 = Directory.GetFiles(path, "*.ost");
                 var list = new List<string>(files);
                 list.AddRange(files1);
