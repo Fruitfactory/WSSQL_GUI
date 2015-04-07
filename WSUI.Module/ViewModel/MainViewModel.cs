@@ -395,7 +395,7 @@ namespace WSUI.Module.ViewModel
                     case TypeSearchItem.Email:
                         if (_currentData.TypeItem == TypeSearchItem.Email)
                         {
-                            //previewView.SetFullFolderPath(SearchItemHelper.GetFullFolderPath(_currentData)); TODO: need id 
+                            previewView.SetFullFolderPath(SearchItemHelper.GetFullFolderPath(_currentData));
                         }
                         previewView.SetPreviewObject(_currentData);
                         break;

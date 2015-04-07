@@ -21,6 +21,7 @@ import com.pff.PSTException;
 import com.pff.PSTFile;
 import com.pff.PSTFolder;
 import com.pff.PSTMessage;
+import com.pff.PSTMessageStore;
 import com.pff.PSTNodeInputStream;
 import com.pff.PSTObject;
 import com.pff.PSTRecipient;
@@ -63,6 +64,7 @@ public class PstOutlookFileReader implements Runnable {
     private String _indexName;
     private String _name;
     private int _emailCount = 0;
+    private String _storeDisplayName;
     
     private final Tika _tika = new Tika();
 
@@ -98,6 +100,10 @@ public class PstOutlookFileReader implements Runnable {
     public void run() {
         try {
             PSTFile file = new PSTFile(_filename);
+            PSTMessageStore store = file.getMessageStore();
+            if(store != null){
+                _storeDisplayName = store.getDisplayName();    
+            }
             prepareStatusInfo(file.getRootFolder());
             PstStatusRepository.setStatus(_name, PstReaderStatus.Busy);
             processFolder(file.getRootFolder());
@@ -138,6 +144,7 @@ public class PstOutlookFileReader implements Runnable {
 
         try {
             String folderName = pstFolder.getDisplayName();
+            pstFolder.getEntryID();
 
             _logger.warn(LOG_TAG + " Folder: " + folderName);
 
@@ -291,6 +298,7 @@ public class PstOutlookFileReader implements Runnable {
                 .field(PstMetadataTags.Email.ITEM_URL, subject)
                 .field(PstMetadataTags.Email.ITEM_NAME_DISPLAY, subject)
                 .field(PstMetadataTags.Email.FOLDER, folderName)
+                .field(PstMetadataTags.Email.STORE_DISPLAY_NAME, _storeDisplayName)
                 .field(PstMetadataTags.Email.DATE_CREATED, dateCreated)
                 .field(PstMetadataTags.Email.DATE_RECEIVED, dateReceived)
                 .field(PstMetadataTags.Email.SIZE, size)

@@ -119,6 +119,7 @@ namespace WSUI.Core.Helpers
                 WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Mail not found", itemsearch.ItemUrl));
                 return null;
             }
+            
             string tempFilename = TempFileManager.Instance.GenerateTempFileName(itemsearch);
             if (string.IsNullOrEmpty(tempFilename))
                 return null;
@@ -432,6 +433,7 @@ namespace WSUI.Core.Helpers
             if (data == null)
                 return string.Empty;
             Outlook.MailItem item = GetEmailItem(data);
+
             if (item == null)
                 return string.Empty;
 
@@ -451,6 +453,7 @@ namespace WSUI.Core.Helpers
                 if (!IsOutlookAlive() && IsHostIsApplication())
                     ReopenOutlook(ref _app);
                 Outlook.NameSpace ns = this.OutlookApp.GetNamespace("MAPI");
+
                 foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
                     GetOutlookFolders(folder, res);
             }

@@ -137,6 +137,8 @@ namespace WSUIOutlookPlugin
                     adxMainPluginCommandBar.UseForRibbon = false;
                 }
                 //CreateInboxSubFolder((Outlook.Application)OutlookApp);
+
+
             }
             catch (Exception ex)
             {
@@ -152,6 +154,7 @@ namespace WSUIOutlookPlugin
                     lock (this)
                     {
                         RunPluginUI();
+
                     }
                     break;
             }
@@ -1348,7 +1351,7 @@ namespace WSUIOutlookPlugin
         }
 
 
-        
+
 
 
     }
