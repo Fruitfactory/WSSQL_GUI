@@ -31,6 +31,8 @@ public class PstMetadataTags {
         public static final String ITEM_NAME_DISPLAY = "itemnamedisplay";
         public static final String FOLDER = "folder";
         public static final String STORE_DISPLAY_NAME = "storedisplayname";
+        public static final String FOLDER_MESSAGE_STORE = "foldermessagestore";
+        public static final String STORAGE_NAME = "storagename";
         public static final String DATE_CREATED = "datecreated";
         public static final String DATE_RECEIVED = "datereceived";
         public static final String SIZE = "size";
