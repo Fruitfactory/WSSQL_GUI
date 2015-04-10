@@ -12,6 +12,10 @@ namespace WSUI.Core.Data.ElasticSearch
 
         public string Folder { get; set; }
 
+        public string Foldermessagestoreidpart { get; set; }
+
+        public string Storagename { get; set; }
+
         public DateTime Datecreated { get; set; }
 
         public DateTime Datereceived { get; set; }

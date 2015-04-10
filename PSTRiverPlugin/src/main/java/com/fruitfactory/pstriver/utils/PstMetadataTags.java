@@ -30,8 +30,7 @@ public class PstMetadataTags {
         public static final String ITEM_URL = "itemurl";
         public static final String ITEM_NAME_DISPLAY = "itemnamedisplay";
         public static final String FOLDER = "folder";
-        public static final String STORE_DISPLAY_NAME = "storedisplayname";
-        public static final String FOLDER_MESSAGE_STORE = "foldermessagestore";
+        public static final String FOLDER_MESSAGE_STORE_ID_PART = "foldermessagestoreidpart";
         public static final String STORAGE_NAME = "storagename";
         public static final String DATE_CREATED = "datecreated";
         public static final String DATE_RECEIVED = "datereceived";
@@ -105,7 +104,8 @@ public class PstMetadataTags {
         addAnalyzedString(mapping, Email.ITEM_URL);
         addAnalyzedString(mapping, Email.ITEM_NAME_DISPLAY);
         addAnalyzedString(mapping, Email.FOLDER);
-        addAnalyzedString(mapping, Email.STORE_DISPLAY_NAME);
+        addNotAnalyzedString(mapping, Email.FOLDER_MESSAGE_STORE_ID_PART);
+        addNotAnalyzedString(mapping, Email.STORAGE_NAME);
         addDate(mapping, Email.DATE_CREATED);
         addDate(mapping, Email.DATE_RECEIVED);
         addLong(mapping, Email.SIZE);

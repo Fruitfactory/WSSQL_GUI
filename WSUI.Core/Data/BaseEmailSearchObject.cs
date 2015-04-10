@@ -36,6 +36,25 @@ namespace WSUI.Core.Data
             set { Set(() => OutlookConversationId, value); }
         }
 
+        public string FolderMessageStoreIdPart
+        {
+            get { return Get(() => FolderMessageStoreIdPart); }
+            set { Set(() => FolderMessageStoreIdPart, value); }
+        }
+
+        public string StorageName
+        {
+            get { return Get(() => StorageName); }
+            set { Set(() => StorageName, value); }
+        }
+
+        public string Folder
+        {
+            get { return Get(() => Folder); }
+            set { Set(() => Folder, value); }
+        }
+
+
         public WSUIRecipient[] To
         {
             get { return Get(() => To); }
@@ -122,6 +141,11 @@ namespace WSUI.Core.Data
         private bool IsEmail(string email)
         {
             return email.IsEmail();
+        }
+
+        public bool IsOst
+        {
+            get { return string.IsNullOrWhiteSpace(StorageName); }
         }
 
         protected string[] CheckValidType(object val)

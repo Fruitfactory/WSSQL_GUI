@@ -430,18 +430,87 @@ namespace WSUI.Core.Helpers
 
         public string GetFullFolderPath(BaseSearchObject data)
         {
-            if (data == null)
-                return string.Empty;
-            Outlook.MailItem item = GetEmailItem(data);
-
-            if (item == null)
+            BaseEmailSearchObject emailSearch = data as BaseEmailSearchObject;
+            if (emailSearch == null)
                 return string.Empty;
 
-            var folder = item.Parent as Outlook.MAPIFolder;
-            if (folder == null)
-                return string.Empty;
-            return folder.FullFolderPath;
+            Outlook.MAPIFolder folder = null;
+
+            if (emailSearch.IsOst)
+            {
+                int count = OutlookApp.Session.Stores.Count;
+                for (int i = 1; i < count; i++)
+                {
+                    Outlook.Store store = OutlookApp.Session.Stores[i];
+                    if (
+                        store.GetRootFolder()
+                            .EntryID.ToLowerInvariant()
+                            .IndexOf(emailSearch.FolderMessageStoreIdPart.ToLowerInvariant()) > -1)
+                    {
+                        folder = GetOstFolder(store.GetRootFolder(), emailSearch.FolderMessageStoreIdPart,
+                            emailSearch.Folder);
+                    }
+                }
+            }
+            else
+            {
+                int count = OutlookApp.Session.Stores.Count;
+                for (int i = 1; i < count; i++)
+                {
+                    Outlook.Store store = OutlookApp.Session.Stores[i];
+                    if (
+                        store.GetRootFolder()
+                            .Name.ToLowerInvariant()
+                            .IndexOf(emailSearch.StorageName.ToLowerInvariant()) > -1)
+                    {
+                        folder = GetPstFolder(store.GetRootFolder(),emailSearch.Folder);
+                    }
+                }
+            }
+            return folder.IsNotNull() ? folder.FullFolderPath : "";
         }
+
+        private Outlook.MAPIFolder GetOstFolder(Outlook.MAPIFolder root, string partId, string nameFolder)
+        {
+            if (root.EntryID.ToLowerInvariant().IndexOf(partId.ToLowerInvariant()) > -1 &&
+                root.Name.ToLowerInvariant().IndexOf(nameFolder.ToLowerInvariant()) > -1)
+            {
+                return root;
+            }
+            Outlook.MAPIFolder result = null;
+            if (root.Folders.Count > 0)
+            {
+                int count = root.Folders.Count;
+                for (int i = 1; i < count; i++)
+                {
+                    result = GetOstFolder(root.Folders[i], partId, nameFolder);
+                    if (result.IsNotNull())
+                        break;
+                }
+            }
+            return result;
+        }
+
+        private Outlook.MAPIFolder GetPstFolder(Outlook.MAPIFolder root, string nameFolder)
+        {
+            if (root.Name.ToLowerInvariant().IndexOf(nameFolder.ToLowerInvariant()) > -1)
+            {
+                return root;
+            }
+            Outlook.MAPIFolder result = null;
+            if (root.Folders.Count > 0)
+            {
+                int count = root.Folders.Count;
+                for (int i = 1; i < count; i++)
+                {
+                    result = GetPstFolder(root.Folders[i], nameFolder);
+                    if (result.IsNotNull())
+                        break;
+                }
+            }
+            return result;
+        }
+
 
         public List<string> GetFolderNameList()
         {

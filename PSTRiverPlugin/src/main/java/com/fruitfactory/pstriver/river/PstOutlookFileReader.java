@@ -65,6 +65,7 @@ public class PstOutlookFileReader implements Runnable {
     private String _name;
     private int _emailCount = 0;
     private String _storeDisplayName;
+    private String _storePartId;
     
     private final Tika _tika = new Tika();
 
@@ -102,7 +103,8 @@ public class PstOutlookFileReader implements Runnable {
             PSTFile file = new PSTFile(_filename);
             PSTMessageStore store = file.getMessageStore();
             if(store != null){
-                _storeDisplayName = store.getDisplayName();    
+                _storeDisplayName = store.getDisplayName(); 
+                _storePartId = store.getStoreIdPart();
             }
             prepareStatusInfo(file.getRootFolder());
             PstStatusRepository.setStatus(_name, PstReaderStatus.Busy);
@@ -298,7 +300,8 @@ public class PstOutlookFileReader implements Runnable {
                 .field(PstMetadataTags.Email.ITEM_URL, subject)
                 .field(PstMetadataTags.Email.ITEM_NAME_DISPLAY, subject)
                 .field(PstMetadataTags.Email.FOLDER, folderName)
-                .field(PstMetadataTags.Email.STORE_DISPLAY_NAME, _storeDisplayName)
+                .field(PstMetadataTags.Email.STORAGE_NAME, _storeDisplayName)
+                .field(PstMetadataTags.Email.FOLDER_MESSAGE_STORE_ID_PART, _storePartId)
                 .field(PstMetadataTags.Email.DATE_CREATED, dateCreated)
                 .field(PstMetadataTags.Email.DATE_RECEIVED, dateReceived)
                 .field(PstMetadataTags.Email.SIZE, size)
