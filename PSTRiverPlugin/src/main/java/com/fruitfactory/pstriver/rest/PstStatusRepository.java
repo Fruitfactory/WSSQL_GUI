@@ -36,6 +36,15 @@ public class PstStatusRepository {
         }
     }
 
+    public static void setProcessFolder(String name, String folder){
+        synchronized(_repository){
+            if(_repository.containsKey(name)){
+                _repository.get(name).setFolderName(folder);
+                
+            }
+        }
+    }
+    
     public static void setStatus(String name, PstReaderStatus readerStatus) {
         synchronized (_repository) {
             if (_repository.containsKey(name)) {
@@ -58,6 +67,7 @@ public class PstStatusRepository {
                 status.field("count", value.getCount());
                 status.field("processing", value.getProccedCount());
                 status.field("status", value.getStatus());
+                status.field("folder",value.getFolderName());
                 status.endObject();
             }
             status.endArray();

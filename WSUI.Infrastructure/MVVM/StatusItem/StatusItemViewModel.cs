@@ -42,6 +42,12 @@ namespace WSUI.Infrastructure.MVVM.StatusItem
             set { Set(() => Value, value); }
         }
 
+        public string Folder
+        {
+            get { return Get(() => Folder); }
+            set { Set(() => Folder, value); }
+        }
+
         public override void Update(object item)
         {
             var data = item as WSUIStatusItem;
@@ -52,6 +58,7 @@ namespace WSUI.Infrastructure.MVVM.StatusItem
             Count = data.Count;
             Processing = data.Processing;
             Status = data.Status;
+            Folder = data.Folder;
             UpdateValue(data);
         }
 

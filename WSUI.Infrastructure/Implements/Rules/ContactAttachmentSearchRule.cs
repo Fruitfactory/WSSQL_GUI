@@ -72,8 +72,8 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         protected override void InitCounts()
         {
-            CountFirstProcess = 250;
-            CountSecondProcess = 100;
+            CountFirstProcess = 150;
+            CountSecondProcess = 250;
         }
 
         public override void SetSearchCriteria(string criteria)

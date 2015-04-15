@@ -40,7 +40,6 @@ namespace WSUI.Module.ViewModel
         private IUnityContainer _unityContainer;
         private IRegionManager _regionManager;
         private Timer _timer;
-        private Dictionary<string, StatusItemViewModel> _statuses;
 
         [Dependency]
         public IElasticSearchInitializationIndex ElasticSearchClient { get; set; }
@@ -52,7 +51,6 @@ namespace WSUI.Module.ViewModel
             _eventAggregator = eventAggregator;
             _regionManager = regionManager;
             _unityContainer = unityContainer;
-            _statuses = new Dictionary<string, StatusItemViewModel>();
         }
 
         public void Initialize()
@@ -61,7 +59,11 @@ namespace WSUI.Module.ViewModel
             InstallServiceCommand = new WSUIRelayCommand(InstallServiceCommandExecute);
             RunServiceCommand = new WSUIRelayCommand(RunServiceCommandExecute);
             CreateIndexCommand = new WSUIRelayCommand(CreateIndexCommandExecute);
+            LetsGoCommand = new WSUIRelayCommand(o => this.Close());
             CreateIndexVisibility = Visibility.Visible;
+            ShowProgress = Visibility.Collapsed;
+            FinishedStepVisibility = Visibility.Collapsed;
+            
         }
 
         public object View
@@ -117,16 +119,34 @@ namespace WSUI.Module.ViewModel
 
         #region [properties]
 
-        public IEnumerable<StatusItemViewModel> Items
-        {
-            get { return Get(() => Items); }
-            private set {Set(() => Items, value);}
-        }
-
         public Visibility CreateIndexVisibility
         {
             get { return Get(() => CreateIndexVisibility); }
             set { Set(() => CreateIndexVisibility, value); }
+        }
+
+        public Visibility ShowProgress
+        {
+            get { return Get(() => ShowProgress); }
+            set { Set(() => ShowProgress, value); }
+        }
+
+        public Visibility FinishedStepVisibility
+        {
+            get { return Get(() => FinishedStepVisibility); }
+            set { Set(() => FinishedStepVisibility, value); }
+        }
+
+        public string CurrentFolder
+        {
+            get { return Get(() => CurrentFolder); }
+            set { Set(() => CurrentFolder, value); }
+        }
+
+        public double CurrentProgress
+        {
+            get { return Get(() => CurrentProgress); }
+            set { Set(() => CurrentProgress, value); }
         }
 
         #endregion
@@ -150,6 +170,14 @@ namespace WSUI.Module.ViewModel
             get { return Get(() => CreateIndexCommand); } 
             private set {Set(() => CreateIndexCommand,value);}
         }
+
+
+        public ICommand LetsGoCommand
+        {
+            get { return Get(() => LetsGoCommand); }
+            set { Set(() => LetsGoCommand, value); }
+        }
+
 
         #endregion
 
@@ -186,7 +214,9 @@ namespace WSUI.Module.ViewModel
                 IsServiceInstalled = true;
                 IsServiceRunning = sct.Status == ServiceControllerStatus.Running;
             }
-            IsServiceRunning = IsServiceInstalled = true; // TODO: for testing
+#if DEBUG
+            IsServiceRunning = IsServiceInstalled = true;
+#endif
             if (IsServiceRunning)
             {
                 var resp = ElasticSearchClient.IndexExists(WSUIElasticSearchClient.DefaultIndexName);
@@ -210,8 +240,11 @@ namespace WSUI.Module.ViewModel
         private void CreateIndexCommandExecute(object arg)
         {
             InitElasticSearch();
-            CheckServices();
             CreateIndexVisibility = Visibility.Collapsed;
+            ShowProgress = Visibility.Visible;
+
+            Thread.Sleep(2000);
+            //CheckServices();
         }
 
         private void ExecuteCommandForService(string command)
@@ -273,21 +306,20 @@ namespace WSUI.Module.ViewModel
                     return;
                 }
 
-                foreach (var wsuiStatusItem in response.Response.Items)
-                {
-                    if (_statuses.ContainsKey(wsuiStatusItem.Name))
-                    {
-                        _statuses[wsuiStatusItem.Name].Update(wsuiStatusItem);
-                    }
-                    else
-                    {
-                        _statuses[wsuiStatusItem.Name] = new StatusItemViewModel(wsuiStatusItem);
-                    }
-                }
-                Items = _statuses.Select(p => p.Value).ToList();
-                if (Items.All(i => i.Status == PstReaderStatus.Finished))
+                double sumAll = (double)response.Response.Items.Sum(s => s.Count);
+                double sumProcessing = response.Response.Items.Sum(s => s.Processing);
+                int max = response.Response.Items.Max(i => i.Count);
+                var item = response.Response.Items.FirstOrDefault(s => s.Count == max);
+                bool isFinished = response.Response.Items.All(s => s.Status == PstReaderStatus.Finished);
+
+                CurrentFolder = item.IsNotNull() ? item.Folder : "";
+                CurrentProgress = (sumProcessing / sumAll) * 100.0;
+                
+                if (isFinished)
                 {
                     _timer.Change(Timeout.Infinite, Timeout.Infinite);
+                    IsIndexExisted = true;
+                    FinishedStepVisibility = Visibility.Visible;
                     OnIndexingFinished();
                 }
             }
@@ -307,7 +339,7 @@ namespace WSUI.Module.ViewModel
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
             if (Directory.Exists(path))
             {
-                var files = Directory.GetFiles(path, "*.pst");//new List<string>() { path + "\\iyariki.ya@hotmail.com.ost" }; //
+                var files = Directory.GetFiles(path, "*.pst");//new List<string>() { "F:\\Visual\\iyariki.ya@gmail.com.ost", "F:\\Visual\\iyariki.ya@gmail.com.ost" }; //
                 var files1 = Directory.GetFiles(path, "*.ost");
                 var list = new List<string>(files);
                 list.AddRange(files1);

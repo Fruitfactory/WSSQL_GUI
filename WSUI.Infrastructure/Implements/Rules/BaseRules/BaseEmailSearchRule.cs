@@ -42,8 +42,8 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
 
         public override void Init()
         {
-            CountFirstProcess = 150;
-            CountSecondProcess = 75;
+            CountFirstProcess = 75;
+            CountSecondProcess = 50;
             ObjectType = RuleObjectType.Email;
             base.Init();
         }

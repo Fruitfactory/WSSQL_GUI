@@ -15,6 +15,7 @@
 
             <Style TargetType="TextBlock">
                 <Setter Property="Margin" Value="5"></Setter>
+                <Setter Property="FontSize" Value="16"></Setter>
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -25,6 +26,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="1" Orientation="Vertical">
@@ -64,7 +66,7 @@
             <Button Command="{Binding RunServiceCommand}" Margin="5">Run ElasticSearch Service</Button>
         </StackPanel>
 
-        <StackPanel Grid.Row="3" Orientation="Vertical">
+        <StackPanel Grid.Row="3" Orientation="Vertical" >
             <StackPanel.Style>
                 <Style TargetType="StackPanel">
                     <Setter Property="Visibility" Value="Collapsed"></Setter>
@@ -81,72 +83,32 @@
                 </Style>
             </StackPanel.Style>
 
-            <TextBlock>Index haven't been created.</TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                <Run FontWeight="Bold">OutlookFinder</Run> 
+                <Run> needs to do a one-time initial index of your email.</Run>
+            </TextBlock>
+            
+            <Button Command="{Binding CreateIndexCommand}" Margin="5" Visibility="{Binding CreateIndexVisibility,UpdateSourceTrigger=PropertyChanged}"
+                    Width="175">Run indexing process</Button>
 
-            <Button Command="{Binding CreateIndexCommand}" Margin="5" Visibility="{Binding CreateIndexVisibility,UpdateSourceTrigger=PropertyChanged}">Run indexing process</Button>
-
-            <ItemsControl Margin="0 5 0 5" ItemsSource="{Binding Items,UpdateSourceTrigger=PropertyChanged}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Margin="3">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-
-                                <TextBlock
-                                   Grid.Row="0"
-                                   Grid.Column="0"
-                                    Grid.ColumnSpan="4"
-                                   Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"
-                                    FontWeight="Bold"></TextBlock>
-
-                                <TextBlock
-                                   Grid.Row="1"
-                                   Grid.Column="1"
-                                   Text="Processing"></TextBlock>
-                                <TextBlock
-                                   Grid.Row="2"
-                                   Grid.Column="1"
-                                   Text="{Binding Processing,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NumericToStringConverter}}"></TextBlock>
-
-                                <TextBlock
-                                   Grid.Row="1"
-                                   Grid.Column="2"
-                                   Text="Count"></TextBlock>
-                                <TextBlock
-                                   Grid.Row="2"
-                                   Grid.Column="2"
-                                   Text="{Binding Count,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NumericToStringConverter}}"></TextBlock>
-
-                                <TextBlock
-                                   Grid.Row="1"
-                                   Grid.Column="3"
-                                   Text="Status"></TextBlock>
-                                <TextBlock
-                                   Grid.Row="2"
-                                   Grid.Column="3"
-                                   Text="{Binding Status,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource EnumConverter},ConverterParameter={x:Type enums:PstReaderStatus}}"></TextBlock>
-
-                                <controls:MetroProgressBar
-                                Grid.Row="3"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="4"
-                                Maximum="100" Value="{Binding Value, UpdateSourceTrigger=PropertyChanged}"></controls:MetroProgressBar>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <StackPanel Orientation="Vertical" Margin="0 5 0 5" Visibility="{Binding ShowProgress,UpdateSourceTrigger=PropertyChanged}">
+                <controls:MetroProgressBar Maximum="100" Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}"></controls:MetroProgressBar>
+                <TextBlock FontSize="12">Indexing Folders.</TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontSize="12">Folder:</TextBlock>
+                    <TextBlock FontSize="12" Text="{Binding CurrentFolder,UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                </StackPanel>
+            </StackPanel>
+            
         </StackPanel>
+
+        <StackPanel Grid.Row="4" Orientation="Vertical" Visibility="{Binding FinishedStepVisibility,UpdateSourceTrigger=PropertyChanged}">
+            
+            <TextBlock FontSize="20" FontWeight="Bold">Ready to Rock!</TextBlock>
+            <TextBlock TextWrapping="Wrap" FontSize="14" >OutlookFinder has finished examining your recent emails. The rest will be indexed later.</TextBlock>
+            <Button Command="{Binding LetsGoCommand}" Width="75">Let's Go!</Button>
+            
+        </StackPanel>
+        
     </Grid>
 </UserControl>

@@ -101,24 +101,45 @@ public class PstOutlookFileReader implements Runnable {
     public void run() {
         try {
             PSTFile file = new PSTFile(_filename);
+            _logger.info(LOG_TAG + _filename);
+            if(file == null){
+                _logger.error(LOG_TAG + _filename + " coldn't be opened...");
+                return;
+            }
+            
             PSTMessageStore store = file.getMessageStore();
             if(store != null){
                 _storeDisplayName = store.getDisplayName(); 
-                _storePartId = store.getStoreIdPart();
+                _logger.info(_name, _storeDisplayName);
+                if(_storeDisplayName.isEmpty()){
+                    _storePartId = store.getStoreIdPart();    
+                    _logger.info(_name, _storePartId);
+                }
             }
+            _logger.info("Prepare status info...");
             prepareStatusInfo(file.getRootFolder());
+            _logger.info("Update status info 1...");
             PstStatusRepository.setStatus(_name, PstReaderStatus.Busy);
+            _logger.info("Process folder...");
             processFolder(file.getRootFolder());
+            _logger.info("Update status folder 2...");
             PstStatusRepository.setStatus(_name, PstReaderStatus.Finished);
+            _logger.info("File close...");
             file.close();
 
         } catch (Exception e) {
-            _logger.error(LOG_TAG + e.getMessage());
-            PstStatusRepository.setStatus(_name, PstReaderStatus.Finished);
+            _logger.error(LOG_TAG + e.getMessage() + " " + e.toString());
+            //PstStatusRepository.setStatus(_name, PstReaderStatus.Finished);
         }
     }
 
     private void prepareStatusInfo(PSTFolder rootFolder) {
+        
+        if(rootFolder == null){
+            _logger.error(LOG_TAG + " root folder is null");
+            return;
+        }
+        
         countItems(rootFolder);
         Path pathFileName = Paths.get(_filename).getFileName();
         _name = pathFileName.toString();
@@ -138,7 +159,7 @@ public class PstOutlookFileReader implements Runnable {
                 _emailCount += rootFolder.getContentCount();
             }
         } catch (Exception e) {
-            _logger.error(LOG_TAG, e);
+            _logger.error(LOG_TAG  + e.getMessage());
         }
     }
 
@@ -146,9 +167,9 @@ public class PstOutlookFileReader implements Runnable {
 
         try {
             String folderName = pstFolder.getDisplayName();
-            pstFolder.getEntryID();
 
             _logger.warn(LOG_TAG + " Folder: " + folderName);
+            PstStatusRepository.setProcessFolder(_name, folderName);
 
             if (pstFolder.hasSubfolders()) {
                 Vector<PSTFolder> folders = pstFolder.getSubFolders();

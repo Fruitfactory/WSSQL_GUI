@@ -96,10 +96,10 @@ namespace WSUI.Core.Core.Search
         /// <summary>
         /// @param ="criteris"
         /// </summary>
-        /// <param name="criteria"></param>
+        /// <param name="crieria"></param>
         public virtual void SetSearchCriteria(string criteria)
         {
-            Query = criteria.Trim();
+            Query = criteria.ToLowerInvariant().Trim();
         }
 
         public virtual void SetAdvancedSearchCriteria(IEnumerable<IAdvancedSearchCriteria> advancedSearchCriterias)

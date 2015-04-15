@@ -14,5 +14,7 @@ namespace WSUI.Core.Data.ElasticSearch.Response
         public int Processing { get; set; }
 
         public PstReaderStatus Status { get; set; }
+
+        public string Folder { get; set; }
     }
 }

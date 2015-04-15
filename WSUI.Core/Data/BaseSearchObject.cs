@@ -28,7 +28,7 @@ namespace WSUI.Core.Data
 
         
 
-        public string ItemUrl
+        public virtual string ItemUrl
         {
             get
             {
@@ -45,7 +45,7 @@ namespace WSUI.Core.Data
             set { Set(() => DateCreated, value); }
         }
 
-        public string ItemNameDisplay
+        public virtual string ItemNameDisplay
         {
             get { return Get(() => ItemNameDisplay); }
             set { Set(() => ItemNameDisplay, value); }

@@ -15,6 +15,15 @@ public class PstReaderStatusInfo {
     private int _count;
     private int _proccedCount;
     private PstReaderStatus _status;
+    private String _folderName;
+
+    public String getFolderName() {
+        return _folderName;
+    }
+
+    public void setFolderName(String _folderName) {
+        this._folderName = _folderName;
+    }
 
     public PstReaderStatus getStatus() {
         return _status;

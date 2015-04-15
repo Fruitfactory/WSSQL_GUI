@@ -1,4 +1,5 @@
-﻿using WSUI.Core.Enums;
+﻿using System.Runtime.InteropServices;
+using WSUI.Core.Enums;
 
 namespace WSUI.Core.Data
 {
@@ -11,6 +12,18 @@ namespace WSUI.Core.Data
         }
 
         public override string ItemName
+        {
+            get { return Filename; }
+            set { Filename = value; }
+        }
+
+        public override string ItemUrl
+        {
+            get { return Filename; }
+            set { Filename = value; }
+        }
+
+        public override string ItemNameDisplay
         {
             get { return Filename; }
             set { Filename = value; }

@@ -264,6 +264,7 @@ public class PstRiver extends AbstractRiverComponent implements River {
                     }
                     Thread pstReaderThread = EsExecutors.daemonThreadFactory(settings.globalSettings(), "pst_" + Integer.toString(index))
                             .newThread(new PstOutlookFileReader(_indexName, file, _lastUpdatedDate, logger, _bulkProcessor));
+                    //pstReaderThread.setPriority(Thread.MIN_PRIORITY);
                     _readers.add(pstReaderThread);
                     pstReaderThread.start();
                     index++;
@@ -274,14 +275,14 @@ public class PstRiver extends AbstractRiverComponent implements River {
                 updateFsRiver(scanDateNew);
 
             } catch (InterruptedException e) {
-                logger.error(LOG_TAG + e.getMessage());
+                logger.error(LOG_TAG + e.getMessage() + " " + e.toString());
             } catch (Exception e) {
-                logger.error(LOG_TAG + e.getMessage());
+                logger.error(LOG_TAG + e.getMessage()  + " " + e.toString());
             }
             try {
                 Thread.sleep(_def.getUpdateRate().getMillis());
             } catch (Exception ex) {
-                logger.error(LOG_TAG + ex.getMessage());
+                logger.error(LOG_TAG + ex.getMessage()  + " " + ex.toString());
             }
 
         }

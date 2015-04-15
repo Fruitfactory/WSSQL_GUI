@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using MahApps.Metro;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
@@ -89,20 +90,7 @@ namespace WSUI.Module.ViewModel
             }
             _token = _eventAggregator.GetEvent<SelectedChangedPayloadEvent>().Subscribe(OnSelectedItemChanged);
             _elasticSearchViewModel = _container.Resolve<IElasticSearchViewModel>();
-            if (_elasticSearchViewModel.IsNotNull())
-            {
-                _elasticSearchViewModel.IndexingFinished += ElasticSearchViewModelOnIndexingFinished;
-            }
-        }
-
-        private void ElasticSearchViewModelOnIndexingFinished(object sender, EventArgs eventArgs)
-        {
-            if (_elasticSearchViewModel.IsNull())
-            {
-                return;
-            }
-
-            Application.Current.Dispatcher.BeginInvoke(new Action(() => _elasticSearchViewModel.Close()));
+            
         }
 
         public IKindsView KindsView { get; protected set; }
@@ -833,18 +821,26 @@ namespace WSUI.Module.ViewModel
 
         public virtual void Init()
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
-            OutlookPreviewHelper.Instance.PreviewHostType = HostType.Plugin;
-            InitializeCommands();
-            if (_elasticSearchViewModel.IsNotNull())
+            try
             {
-                _elasticSearchViewModel.Initialize();
-                if (!_elasticSearchViewModel.IsServiceInstalled ||
-                    !_elasticSearchViewModel.IsServiceRunning ||
-                    !_elasticSearchViewModel.IsIndexExisted )
+                Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
+                OutlookPreviewHelper.Instance.PreviewHostType = HostType.Plugin;
+                InitializeCommands();
+                if (_elasticSearchViewModel.IsNotNull())
                 {
-                    _elasticSearchViewModel.Show();
+                    _elasticSearchViewModel.Initialize();
+                    if (!_elasticSearchViewModel.IsServiceInstalled ||
+                        !_elasticSearchViewModel.IsServiceRunning ||
+                        !_elasticSearchViewModel.IsIndexExisted)
+                    {
+                        _elasticSearchViewModel.Show();
+                    }
                 }
+
+            }
+            catch (Exception ex)
+            {
+                WSSqlLogger.Instance.LogError(ex.Message);
             }
         }
 

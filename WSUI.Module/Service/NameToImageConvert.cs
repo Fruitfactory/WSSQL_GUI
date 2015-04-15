@@ -54,6 +54,8 @@ namespace WSUI.Module.Service
             _imageSettings.Add(".png", @"pack://application:,,,/WSUI.Module;component/Images/picture.png");
             _imageSettings.Add(".jpeg", @"pack://application:,,,/WSUI.Module;component/Images/picture.png");
             _imageSettings.Add(".gif", @"pack://application:,,,/WSUI.Module;component/Images/picture.png");
+            _imageSettings.Add(".rtf", @"pack://application:,,,/WSUI.Module;component/Images/document-word.png");
+
 
             _bitmaps = new Dictionary<string, BitmapImage>();
             _bitmaps.Add(DefaultKey, new BitmapImage(new Uri(@"pack://application:,,,/WSUI.Module;component/Images/document.png")));
