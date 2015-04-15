@@ -27,7 +27,16 @@
       <ComponentGroupRef Id="ProductComponents" />
     </Feature>
 
-    <Feature Id="ElasticSearchProductFeature" Title="ElasticSearch" Level="1" >
+    <Feature Id="ElasticSearchProductFeature" 
+             Title="Elastic Search" 
+             Level="1"
+             Absent="disallow"
+             TypicalDefault="install"
+             AllowAdvertise="no"
+             InstallDefault="local"
+             >
+
+      
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDER" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERBIN" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" />
