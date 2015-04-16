@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using WSUI.Core.Enums;
+using OF.Core.Enums;
 
-namespace WSUI.Infrastructure.Converters
+namespace OF.Infrastructure.Converters
 {
     [ValueConversion(typeof(ActivationState), typeof(Visibility))]
     public class ActivationStatusToButtonVisibilityConverter  : IValueConverter

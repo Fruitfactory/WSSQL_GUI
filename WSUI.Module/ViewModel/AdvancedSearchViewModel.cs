@@ -11,21 +11,21 @@ using System.Linq;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
-using WSUI.Core;
-using WSUI.Core.Core.AdvancedSearchCriteria;
-using WSUI.Core.Core.Attributes;
-using WSUI.Core.Enums;
-using WSUI.Core.Extensions;
-using WSUI.Core.Logger;
-using WSUI.Infrastructure.Implements.Systems;
-using WSUI.Infrastructure.Service;
-using WSUI.Module.Core;
-using WSUI.Module.Interface.View;
-using WSUI.Module.Interface.ViewModel;
-using WSUI.Module.Service;
-using WSUI.Infrastructure.MVVM.AdvancedSearch;
+using OF.Core;
+using OF.Core.Core.AdvancedSearchCriteria;
+using OF.Core.Core.Attributes;
+using OF.Core.Enums;
+using OF.Core.Extensions;
+using OF.Core.Logger;
+using OF.Infrastructure.Implements.Systems;
+using OF.Infrastructure.Service;
+using OF.Module.Core;
+using OF.Module.Interface.View;
+using OF.Module.Interface.ViewModel;
+using OF.Module.Service;
+using OF.Infrastructure.MVVM.AdvancedSearch;
 
-namespace WSUI.Module.ViewModel
+namespace OF.Module.ViewModel
 {
     [KindNameId(KindsConstName.AdvancedSearch, -1, @"", "", false)]
     public class AdvancedSearchViewModel : KindViewModelBase, IUView<AdvancedSearchViewModel>, IAdvancedSearchViewModel, IScrollableView

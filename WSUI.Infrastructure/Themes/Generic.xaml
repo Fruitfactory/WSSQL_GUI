@@ -1,11 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:headerControl="clr-namespace:WSUI.Infrastructure.Controls.HeaderControl">
+                    xmlns:headerControl="clr-namespace:OF.Infrastructure.Controls.HeaderControl">
 
-    <Style TargetType="headerControl:WSUIHeaderControl">
+    <Style TargetType="headerControl:OFHeaderControl">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="headerControl:WSUIHeaderControl">
+                <ControlTemplate TargetType="headerControl:OFHeaderControl">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -19,7 +19,7 @@
                                           Margin="5 0 0 5">
                             <ContentPresenter.ContentTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding}" FontWeight="{Binding HeaderFontWeight,RelativeSource={RelativeSource AncestorType=headerControl:WSUIHeaderControl,Mode=FindAncestor}}"></TextBlock>
+                                    <TextBlock Text="{Binding}" FontWeight="{Binding HeaderFontWeight,RelativeSource={RelativeSource AncestorType=headerControl:OFHeaderControl,Mode=FindAncestor}}"></TextBlock>
                                 </DataTemplate>
                             </ContentPresenter.ContentTemplate>
                         </ContentPresenter>

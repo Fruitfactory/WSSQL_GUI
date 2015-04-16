@@ -3,10 +3,10 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using Microsoft.Office.Interop.Outlook;
-using WSUI.Core.Extensions;
-using WSUI.Infrastructure.Service.Helpers;
+using OF.Core.Extensions;
+using OF.Infrastructure.Service.Helpers;
 
-namespace WSUI.Infrastructure.Controls
+namespace OF.Infrastructure.Controls
 {
     public class HightliteTextBlockBase : ContentControl
     {

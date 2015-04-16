@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Infrastructure.Implements.Rules.BaseRules;
+using OF.Core.Data.ElasticSearch;
+using OF.Infrastructure.Implements.Rules.BaseRules;
 
-namespace WSUI.Infrastructure.Implements.Rules
+namespace OF.Infrastructure.Implements.Rules
 {
     public class AttachmentContentSearchRule : BaseAttachmentSearchRule
     {
@@ -22,7 +22,7 @@ namespace WSUI.Infrastructure.Implements.Rules
             Priority = 7;
         }
 
-        protected override Expression<Func<WSUIAttachmentContent, string>> GetSearchedProperty()
+        protected override Expression<Func<OFAttachmentContent, string>> GetSearchedProperty()
         {
             return a => a.Analyzedcontent;
         }

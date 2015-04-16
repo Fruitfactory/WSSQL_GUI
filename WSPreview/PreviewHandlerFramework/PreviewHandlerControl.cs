@@ -5,11 +5,11 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using WSPreview.PreviewHandler.Controls.CsvControl;
-using WSPreview.PreviewHandler.Service.Preview;
-using WSUI.Core.Data;
+using OFPreview.PreviewHandler.Controls.CsvControl;
+using OFPreview.PreviewHandler.Service.Preview;
+using OF.Core.Data;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerFramework
+namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
     public abstract class PreviewHandlerControl : Control
     {

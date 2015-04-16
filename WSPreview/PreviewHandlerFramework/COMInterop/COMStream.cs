@@ -7,7 +7,7 @@ using System.IO;
 using System.Security;
 using System.Runtime.InteropServices;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerFramework
+namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
     public sealed class COMStream : IStream, IDisposable
     {

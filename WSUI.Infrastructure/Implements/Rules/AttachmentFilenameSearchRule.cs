@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using WSUI.Core.Data;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Infrastructure.Implements.Rules.BaseRules;
+using OF.Core.Data;
+using OF.Core.Data.ElasticSearch;
+using OF.Infrastructure.Implements.Rules.BaseRules;
 
-namespace WSUI.Infrastructure.Implements.Rules
+namespace OF.Infrastructure.Implements.Rules
 {
     public class AttachmentFilenameSearchRule : BaseAttachmentSearchRule
     {
@@ -32,7 +32,7 @@ namespace WSUI.Infrastructure.Implements.Rules
             return "System.ItemUrl";
         }
 
-        protected override Expression<Func<WSUIAttachmentContent, string>> GetSearchedProperty()
+        protected override Expression<Func<OFAttachmentContent, string>> GetSearchedProperty()
         {
             return a => a.Filename;
         }

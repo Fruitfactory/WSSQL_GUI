@@ -12,15 +12,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Nest;
-using WSUI.Core.Core.Rules;
-using WSUI.Core.Core.Search;
-using WSUI.Core.Data;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Core.Enums;
+using OF.Core.Core.Rules;
+using OF.Core.Core.Search;
+using OF.Core.Data;
+using OF.Core.Data.ElasticSearch;
+using OF.Core.Enums;
 
-namespace WSUI.Infrastructure.Implements.Rules 
+namespace OF.Infrastructure.Implements.Rules 
 {
-	public class ContactSearchRule : BaseSearchRule<ContactSearchObject,WSUIContact>
+	public class ContactSearchRule : BaseSearchRule<ContactSearchObject,OFContact>
 	{
         public ContactSearchRule()
 		{
@@ -47,13 +47,13 @@ namespace WSUI.Infrastructure.Implements.Rules
 	        get { return false; }
 	    }
 
-	    protected override QueryContainer BuildQuery(QueryDescriptor<WSUIContact> queryDescriptor)
+	    protected override QueryContainer BuildQuery(QueryDescriptor<OFContact> queryDescriptor)
 	    {
             var preparedCriterias = GetProcessingSearchCriteria();
             if (preparedCriterias.Count > 1)
             {
 
-                var list = new List<Func<QueryDescriptor<WSUIContact>, QueryContainer>>();
+                var list = new List<Func<QueryDescriptor<OFContact>, QueryContainer>>();
 
                 foreach (var criteria in preparedCriterias)
                 {

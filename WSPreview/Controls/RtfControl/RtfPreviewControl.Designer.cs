@@ -1,6 +1,6 @@
-﻿using WSUI.Core.Data;
+﻿using OF.Core.Data;
 
-namespace WSPreview.PreviewHandler.Controls.RtfControl
+namespace OFPreview.PreviewHandler.Controls.RtfControl
 {
     partial class RtfPreviewControl
     {

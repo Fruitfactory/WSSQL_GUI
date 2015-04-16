@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interactivity;
-using WSUI.Infrastructure.Helpers.AttachedProperty;
+using OF.Infrastructure.Helpers.AttachedProperty;
 
-namespace WSUI.Infrastructure.Behaviors
+namespace OF.Infrastructure.Behaviors
 {
     public class MainListBoxBehavior : Behavior<ListBox>
     {

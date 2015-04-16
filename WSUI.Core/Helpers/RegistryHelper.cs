@@ -2,7 +2,7 @@
 using System.Data;
 using Microsoft.Win32;
 
-namespace WSUI.Core.Helpers
+namespace OF.Core.Helpers
 {
     public class RegistryHelper
     {
@@ -19,7 +19,7 @@ namespace WSUI.Core.Helpers
         private const int ShutdodwnNotificationRequired = 1;
 
 
-        private const string ProductSubKey = "SOFTWARE\\WSUIOutlookPlugin";
+        private const string ProductSubKey = "SOFTWARE\\OFOutlookPlugin";
         private const string SilentUpdateKey = "IsSilentUpdate";
         private const string IsOutlookClosedByInstallerKey = "IsOutlookClosedByInstaller";
         private const string CallIndexKey = "CallIndex";
@@ -29,7 +29,7 @@ namespace WSUI.Core.Helpers
         private const string IsPluginUiVisible = "IsPluginUiVisible";
         private const string ElastiSearchPath = "ElasticSearchPath";
 
-        private const string AddInOutlookSubKey = @"Software\Microsoft\Office\Outlook\Addins\WSUIOutlookPlugin.AddinModule";
+        private const string AddInOutlookSubKey = @"Software\Microsoft\Office\Outlook\Addins\OFOutlookPlugin.AddinModule";
         private const string RequireShutdownNotificationKey = "RequireShutdownNotification";
         private const string LoadBehaviorKey = "LoadBehavior"; // value => 3
         private const int LoadBehaviorDefaultValue = 3;
@@ -40,7 +40,7 @@ namespace WSUI.Core.Helpers
 
         private const string DefaultNamespace = "MAPI";
 
-        public const string ProgIdKey = "WSUIOutlookPlugin.AddinModule";
+        public const string ProgIdKey = "OFOutlookPlugin.AddinModule";
 
 
         #endregion [needs]
@@ -112,7 +112,7 @@ namespace WSUI.Core.Helpers
         public void DeleteLoadingTime(string officeVersion)
         {
             const string AddInLoadTimesKey = "Software\\Microsoft\\Office\\{0}\\Outlook\\AddInLoadTimes";
-            const string ModuleKey = "WSUIOutlookPlugin.AddinModule";
+            const string ModuleKey = "OFOutlookPlugin.AddinModule";
 
             var CurrentOulookVersion = string.Format(AddInLoadTimesKey, officeVersion);
             try
@@ -129,7 +129,7 @@ namespace WSUI.Core.Helpers
 
         public void DeleteAddIn(string officeVersion)
         {
-            const string AddInLoadTimesKey = "Software\\Microsoft\\Office\\{0}\\Outlook\\AddIns\\WSUIOutlookPlugin.AddinModule";
+            const string AddInLoadTimesKey = "Software\\Microsoft\\Office\\{0}\\Outlook\\AddIns\\OFOutlookPlugin.AddinModule";
             var CurrentOulookVersion = string.Format(AddInLoadTimesKey, officeVersion);
 
             try

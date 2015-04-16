@@ -1,9 +1,9 @@
 ﻿using System;
-using WSUI.Infrastructure.Service;
-using WSUI.Module.Interface;
-using WSUI.Module.Interface.Service;
+using OF.Infrastructure.Service;
+using OF.Module.Interface;
+using OF.Module.Interface.Service;
 
-namespace WSUI.Module.Service
+namespace OF.Module.Service
 {
     public class ScrollBehavior : IScrollBehavior
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace WSUI.Infrastructure.Service.Dumper
+namespace OF.Infrastructure.Service.Dumper
 {
     public sealed class MiniDumper
     {

@@ -1,19 +1,19 @@
-﻿<UserControl x:Class="WSUI.Module.View.AdvancedSearchDataView"
+﻿<UserControl x:Class="OF.Module.View.AdvancedSearchDataView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
               xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:service="clr-namespace:WSUI.Module.Service"
-             xmlns:ctrl="clr-namespace:WSUI.Infrastructure.Controls;assembly=WSUI.Infrastructure"
+             xmlns:service="clr-namespace:OF.Module.Service"
+             xmlns:ctrl="clr-namespace:OF.Infrastructure.Controls;assembly=OF.Infrastructure"
              x:Name="this"
-             xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
-             xmlns:listBox="clr-namespace:WSUI.Infrastructure.Controls.ListBox;assembly=WSUI.Infrastructure"
-             xmlns:attachedProperty="clr-namespace:WSUI.Infrastructure.Helpers.AttachedProperty;assembly=WSUI.Infrastructure"
+             xmlns:converters="clr-namespace:OF.Infrastructure.Converters;assembly=OF.Infrastructure"
+             xmlns:listBox="clr-namespace:OF.Infrastructure.Controls.ListBox;assembly=OF.Infrastructure"
+             xmlns:attachedProperty="clr-namespace:OF.Infrastructure.Helpers.AttachedProperty;assembly=OF.Infrastructure"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:behaviors="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure"
-             xmlns:advancedSearch="clr-namespace:WSUI.Module.Service.AdvancedSearch"
-             xmlns:advancedSearch2="clr-namespace:WSUI.Infrastructure.MVVM.AdvancedSearch;assembly=WSUI.Infrastructure">
+             xmlns:behaviors="clr-namespace:OF.Infrastructure.Behaviors;assembly=OF.Infrastructure"
+             xmlns:advancedSearch="clr-namespace:OF.Module.Service.AdvancedSearch"
+             xmlns:advancedSearch2="clr-namespace:OF.Infrastructure.MVVM.AdvancedSearch;assembly=OF.Infrastructure">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -75,7 +75,7 @@
                       ></ItemsControl>
 
 
-        <listBox:WSUIListBox x:Name="listBox" 
+        <listBox:OFListBox x:Name="listBox" 
                         Grid.Row="1"
                         Style="{StaticResource SimpleListBoxStyle}"
                         ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
@@ -89,12 +89,12 @@
                         service:DoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
                         HorizontalContentAlignment="Stretch"
                       >
-            <listBox:WSUIListBox.ContextMenu>
+            <listBox:OFListBox.ContextMenu>
                 <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
-            </listBox:WSUIListBox.ContextMenu>
+            </listBox:OFListBox.ContextMenu>
             <i:Interaction.Behaviors>
                 <behaviors:SelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors:SelectedItemTrackingBehavior>
             </i:Interaction.Behaviors>
-        </listBox:WSUIListBox>
+        </listBox:OFListBox>
     </Grid>
 </UserControl>

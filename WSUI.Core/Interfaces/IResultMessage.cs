@@ -6,7 +6,7 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-namespace WSUI.Core.Interfaces
+namespace OF.Core.Interfaces
 {
     public interface IResultMessage
     {

@@ -9,12 +9,12 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Configuration;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
 using System.Management;
-using WSPreview.PreviewHandler.TypeResolver;
-using WSUI.Core.Data;
+using OFPreview.PreviewHandler.TypeResolver;
+using OF.Core.Data;
 
-namespace WSPreview.PreviewHandler
+namespace OFPreview.PreviewHandler
 {
     [KeyControl(ControlsKey.Pdf)]
     public partial class PDFViewer : UserControl,IPreviewControl

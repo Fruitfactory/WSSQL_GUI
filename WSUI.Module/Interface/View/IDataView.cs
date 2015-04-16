@@ -1,5 +1,5 @@
 
-namespace WSUI.Module.Interface.View
+namespace OF.Module.Interface.View
 {
     public interface IDataView<T> : IDataKindView
     {

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WSUI.Core.Extensions
+namespace OF.Core.Extensions
 {
     public static class CommonExtensions
     {

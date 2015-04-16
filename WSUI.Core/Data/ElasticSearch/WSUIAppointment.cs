@@ -1,10 +1,10 @@
 ﻿using System;
 using Nest;
 
-namespace WSUI.Core.Data.ElasticSearch
+namespace OF.Core.Data.ElasticSearch
 {
     [ElasticType(Name = "calendar")]
-    public class WSUIAppointment : WSUIElasticSearchBaseEntity
+    public class OFAppointment : OFElasticSearchBaseEntity
     {
         public string Location { get; set; }
 

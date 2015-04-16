@@ -1,7 +1,7 @@
 ﻿using System;
-using WSUI.Core.Enums;
+using OF.Core.Enums;
 
-namespace WSUI.Core.Interfaces
+namespace OF.Core.Interfaces
 {
     public interface IWSAction
     {

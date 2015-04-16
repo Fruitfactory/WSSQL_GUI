@@ -11,11 +11,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using WSUI.Core.Core.Attributes;
-using WSUI.Core.Data;
-using WSUI.Core.Interfaces;
+using OF.Core.Core.Attributes;
+using OF.Core.Data;
+using OF.Core.Interfaces;
 
-namespace WSUI.Core.Utils
+namespace OF.Core.Utils
 {
     public class FieldCash : IFieldCash
     {

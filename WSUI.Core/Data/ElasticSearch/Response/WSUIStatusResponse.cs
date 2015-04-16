@@ -1,10 +1,10 @@
 ﻿using Nest;
 using Newtonsoft.Json;
 
-namespace WSUI.Core.Data.ElasticSearch.Response
+namespace OF.Core.Data.ElasticSearch.Response
 {
-    public class WSUIStatusResponse
+    public class OFStatusResponse
     {
-        public WSUIStatusItem[] Items { get; set; }         
+        public OFStatusItem[] Items { get; set; }         
     }
 }

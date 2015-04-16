@@ -4,13 +4,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Nest;
-using WSUI.Core.Core.Rules;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Core.Extensions;
-using WSUI.Core.Helpers;
-using WSUI.Infrastructure.Implements.Rules.BaseRules;
+using OF.Core.Core.Rules;
+using OF.Core.Data.ElasticSearch;
+using OF.Core.Extensions;
+using OF.Core.Helpers;
+using OF.Infrastructure.Implements.Rules.BaseRules;
 
-namespace WSUI.Infrastructure.Implements.Rules
+namespace OF.Infrastructure.Implements.Rules
 {
     public class ContactAttachmentSearchRule : BaseAttachmentSearchRule
     {
@@ -37,30 +37,30 @@ namespace WSUI.Infrastructure.Implements.Rules
 
         #endregion
 
-        protected override QueryContainer BuildQuery(QueryDescriptor<WSUIAttachmentContent> queryDescriptor)
+        protected override QueryContainer BuildQuery(QueryDescriptor<OFAttachmentContent> queryDescriptor)
         {
             var emailCriterias = _to.SplitEmail();
             var nameCriteria = _name.SplitString();
             var keywordCriteria = GetProcessingSearchCriteria(_keyWord);
 
-            var listShould = new List<Func<QueryDescriptor<WSUIAttachmentContent>, QueryContainer>>();
+            var listShould = new List<Func<QueryDescriptor<OFAttachmentContent>, QueryContainer>>();
 
-            var listAnd = emailCriterias.Select(emailCriteria => (Func<QueryDescriptor<WSUIAttachmentContent>, QueryContainer>) (descriptor => descriptor.Term(a => a.Analyzedcontent, emailCriteria))).ToList();
+            var listAnd = emailCriterias.Select(emailCriteria => (Func<QueryDescriptor<OFAttachmentContent>, QueryContainer>) (descriptor => descriptor.Term(a => a.Analyzedcontent, emailCriteria))).ToList();
             var and = listAnd;
             listShould.Add(descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(and.ToArray())));
 
             
-            listAnd = nameCriteria.Select(name => (Func<QueryDescriptor<WSUIAttachmentContent>, QueryContainer>) (descriptor => descriptor.Term(a => a.Analyzedcontent, name))).ToList();
+            listAnd = nameCriteria.Select(name => (Func<QueryDescriptor<OFAttachmentContent>, QueryContainer>) (descriptor => descriptor.Term(a => a.Analyzedcontent, name))).ToList();
             listShould.Add(descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(listAnd.ToArray())));
 
             if (!string.IsNullOrEmpty(_keyWord) && keywordCriteria != null && keywordCriteria.Count > 0)
             {
 
-                var listKeyWordShould = new List<Func<QueryDescriptor<WSUIAttachmentContent>, QueryContainer>>();
-                listKeyWordShould.AddRange(keywordCriteria.Select(temp => (Func<QueryDescriptor<WSUIAttachmentContent>, QueryContainer>)(d => d.Term(a => a.Analyzedcontent, temp))).ToArray());
-                listKeyWordShould.AddRange(keywordCriteria.Select(temp => (Func<QueryDescriptor<WSUIAttachmentContent>, QueryContainer>)(d => d.Term(a => a.Filename, temp))).ToArray());
+                var listKeyWordShould = new List<Func<QueryDescriptor<OFAttachmentContent>, QueryContainer>>();
+                listKeyWordShould.AddRange(keywordCriteria.Select(temp => (Func<QueryDescriptor<OFAttachmentContent>, QueryContainer>)(d => d.Term(a => a.Analyzedcontent, temp))).ToArray());
+                listKeyWordShould.AddRange(keywordCriteria.Select(temp => (Func<QueryDescriptor<OFAttachmentContent>, QueryContainer>)(d => d.Term(a => a.Filename, temp))).ToArray());
 
-                var l = new List<Func<QueryDescriptor<WSUIAttachmentContent>, QueryContainer>>();
+                var l = new List<Func<QueryDescriptor<OFAttachmentContent>, QueryContainer>>();
                 l.Add(descriptor => descriptor.Bool(s => s.Should(listKeyWordShould.ToArray())));
                 l.Add(descriptor => descriptor.Bool(s => s.Should(listShould.ToArray())));
 

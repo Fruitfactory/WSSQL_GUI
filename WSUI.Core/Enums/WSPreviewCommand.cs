@@ -1,6 +1,6 @@
-﻿namespace WSUI.Core.Enums
+﻿namespace OF.Core.Enums
 {
-    public enum WSPreviewCommand
+    public enum OFPreviewCommand
     {
         None,
         ShowFolder,

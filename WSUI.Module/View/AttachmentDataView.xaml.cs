@@ -1,14 +1,14 @@
 ﻿using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Extensions;
-using WSUI.Infrastructure.Service;
-using WSUI.Module.Interface;
-using WSUI.Module.Interface.View;
-using WSUI.Module.ViewModel;
+using OF.Core.Interfaces;
+using OF.Core.Extensions;
+using OF.Infrastructure.Service;
+using OF.Module.Interface;
+using OF.Module.Interface.View;
+using OF.Module.ViewModel;
 
-namespace WSUI.Module.View
+namespace OF.Module.View
 {
     /// <summary>
     /// Interaction logic for AttachmentDataView.xaml

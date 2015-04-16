@@ -8,7 +8,7 @@
 
 using System;
 
-namespace WSUI.Core.Interfaces
+namespace OF.Core.Interfaces
 {
     public interface IQueryGenerator
     {

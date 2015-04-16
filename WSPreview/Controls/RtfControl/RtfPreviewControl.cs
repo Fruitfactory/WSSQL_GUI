@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace WSPreview.PreviewHandler.Controls.RtfControl
+namespace OFPreview.PreviewHandler.Controls.RtfControl
 {
     [KeyControl(ControlsKey.Rtf)]
     public partial class RtfPreviewControl : UserControl, IPreviewControl

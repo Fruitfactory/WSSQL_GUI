@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using WSUI.Core.Core.LimeLM;
-using WSUI.Core.Enums;
+using OF.Core.Core.LimeLM;
+using OF.Core.Enums;
 
-namespace WSUI.Unistall
+namespace OF.Unistall
 {
     internal class Program
     {

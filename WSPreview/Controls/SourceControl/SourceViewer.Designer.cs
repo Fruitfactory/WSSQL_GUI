@@ -1,4 +1,4 @@
-﻿namespace WSPreview.PreviewHandler.Controls
+﻿namespace OFPreview.PreviewHandler.Controls
 {
     partial class SourceViewer
     {

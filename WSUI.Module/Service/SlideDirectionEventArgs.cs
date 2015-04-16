@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Media.Media3D;
-using WSUI.Module.Enums;
+using OF.Module.Enums;
 
-namespace WSUI.Module.Service
+namespace OF.Module.Service
 {
     public class SlideDirectionEventArgs : EventArgs
     {

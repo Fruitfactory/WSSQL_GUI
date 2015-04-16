@@ -7,11 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using WSPreview.PreviewHandler.PInvoke;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
-using WSUI.Core.Data;
+using OFPreview.PreviewHandler.PInvoke;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
+using OF.Core.Data;
 
-namespace WSPreview.PreviewHandler.Controls.Office
+namespace OFPreview.PreviewHandler.Controls.Office
 {
     [KeyControl(ControlsKey.Office)]
     public partial class OfficeFilePreview : UserControl,IPreviewControl

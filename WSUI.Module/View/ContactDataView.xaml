@@ -1,12 +1,12 @@
-﻿<UserControl x:Class="WSUI.Module.View.ContactDataView"
+﻿<UserControl x:Class="OF.Module.View.ContactDataView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:service="clr-namespace:WSUI.Module.Service"
+             xmlns:service="clr-namespace:OF.Module.Service"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:behaviors="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure"
+             xmlns:behaviors="clr-namespace:OF.Infrastructure.Behaviors;assembly=OF.Infrastructure"
              x:Name="this"
                               
              >

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace WSUI.Module.Service
+namespace OF.Module.Service
 {
     public class MainWindowInfo
     {

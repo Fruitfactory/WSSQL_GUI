@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using WSUI.Core.Interfaces;
+using OF.Core.Interfaces;
 
-namespace WSUI.Module.Interface.ViewModel
+namespace OF.Module.Interface.ViewModel
 {
     public interface IContactKindDetailsViewModel<T> : IDisposable where T : ISearchObject
     {

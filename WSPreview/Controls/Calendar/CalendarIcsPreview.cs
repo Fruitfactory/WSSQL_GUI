@@ -11,12 +11,12 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
 using DDay.iCal;
-using WSUI.Core.Data;
-using WSUI.Core.Extensions;
+using OF.Core.Data;
+using OF.Core.Extensions;
 
-namespace WSPreview.PreviewHandler.Controls.Calendar
+namespace OFPreview.PreviewHandler.Controls.Calendar
 {
     [KeyControl(ControlsKey.Calendar)]
     public partial class CalendarIcsPreview : WebBrowser,IPreviewControl

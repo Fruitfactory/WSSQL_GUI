@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WSUI.Core.Core.Search;
-using WSUI.Core.Enums;
-using WSUI.Core.Interfaces;
+using OF.Core.Core.Search;
+using OF.Core.Enums;
+using OF.Core.Interfaces;
 
-namespace WSUI.Infrastructure.Implements.Systems.Core
+namespace OF.Infrastructure.Implements.Systems.Core
 {
     public class BaseAllEmailSearchSystem : BaseSearchSystem
     {

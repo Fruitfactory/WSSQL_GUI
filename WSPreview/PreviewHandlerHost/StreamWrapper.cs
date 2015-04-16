@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.IO;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerHost
+namespace OFPreview.PreviewHandler.PreviewHandlerHost
 {
     /// <summary>
     /// Very simple wrapper class implementation for the IStream interface.

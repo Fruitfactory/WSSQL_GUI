@@ -3,14 +3,14 @@ using System.Net;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using Microsoft.Office.Interop.Outlook;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
-using WSUI.Core.Data;
+using OF.Core.Data;
 
-namespace WSPreview.PreviewHandler.Controls
+namespace OFPreview.PreviewHandler.Controls
 {
     [KeyControl(ControlsKey.Source)]
     public partial class SourceViewer : UserControl,IPreviewControl

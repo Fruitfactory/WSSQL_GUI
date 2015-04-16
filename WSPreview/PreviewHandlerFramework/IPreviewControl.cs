@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using WSUI.Core.Data;
+using OF.Core.Data;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerFramework
+namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
     public interface IPreviewControl
     {

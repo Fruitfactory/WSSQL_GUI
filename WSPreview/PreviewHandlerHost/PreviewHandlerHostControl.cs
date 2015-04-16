@@ -9,16 +9,16 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Windows.Threading;
-using WSPreview.PreviewHandler.PInvoke;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
-using WSPreview.PreviewHandler.Service;
-using WSUI.Core.EventArguments;
-using WSUI.Core.Logger;
-using WSPreview.PreviewHandler.Service.Preview;
-using WSUI.Core.Data;
-using WSUI.Core.Interfaces;
+using OFPreview.PreviewHandler.PInvoke;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.Service;
+using OF.Core.EventArguments;
+using OF.Core.Logger;
+using OFPreview.PreviewHandler.Service.Preview;
+using OF.Core.Data;
+using OF.Core.Interfaces;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerHost
+namespace OFPreview.PreviewHandler.PreviewHandlerHost
 {
     /// <summary>
     /// This control is dependent on the managed framework for preview handlers implemented by Stephen Toub
@@ -43,7 +43,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
         private readonly List<Stream> _listOpenStream = new List<Stream>();
         private readonly RegistrationData _dataHandler;
 
-        public event EventHandler<WSUIPreviewCommandArgs> CommandExecuted;
+        public event EventHandler<OFPreviewCommandArgs> CommandExecuted;
 
         public event EventHandler StartLoad;
 
@@ -387,7 +387,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlerHost
             ((IPreviewHandler)_comInstance).DoPreview();
         }
 
-        private void PreviewControlCommandsOnPreviewCommandExecuted(object sender, WSUIPreviewCommandArgs wsuiPreviewCommandArgs)
+        private void PreviewControlCommandsOnPreviewCommandExecuted(object sender, OFPreviewCommandArgs wsuiPreviewCommandArgs)
         {
             var temp = CommandExecuted;
             if (temp != null)

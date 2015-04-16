@@ -1,10 +1,10 @@
 ﻿using System.IO.Packaging;
 using Newtonsoft.Json;
-using WSUI.Core.Enums;
+using OF.Core.Enums;
 
-namespace WSUI.Core.Data.ElasticSearch.Response
+namespace OF.Core.Data.ElasticSearch.Response
 {
-    public class WSUIStatusItem
+    public class OFStatusItem
     {
         
         public string Name { get; set; }

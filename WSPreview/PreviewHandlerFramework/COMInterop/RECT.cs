@@ -6,7 +6,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerFramework
+namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct RECT

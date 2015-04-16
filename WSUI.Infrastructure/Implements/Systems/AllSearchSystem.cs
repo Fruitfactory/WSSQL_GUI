@@ -6,10 +6,10 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-using WSUI.Infrastructure.Implements.Rules;
-using WSUI.Infrastructure.Implements.Systems.Core;
+using OF.Infrastructure.Implements.Rules;
+using OF.Infrastructure.Implements.Systems.Core;
 
-namespace WSUI.Infrastructure.Implements.Systems 
+namespace OF.Infrastructure.Implements.Systems 
 {
 	public class AllSearchSystem : BaseAllEmailSearchSystem
     {

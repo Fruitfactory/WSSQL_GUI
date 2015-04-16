@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using WSUI.Core.Helpers.DetectEncoding.Multilang;
+using OF.Core.Helpers.DetectEncoding.Multilang;
 
-namespace WSUI.Core.Helpers.DetectEncoding
+namespace OF.Core.Helpers.DetectEncoding
 {
     public static class EncodingTools
     {

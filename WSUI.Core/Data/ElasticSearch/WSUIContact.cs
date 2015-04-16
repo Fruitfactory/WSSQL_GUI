@@ -2,10 +2,10 @@
 using Elasticsearch.Net;
 using Nest;
 
-namespace WSUI.Core.Data.ElasticSearch
+namespace OF.Core.Data.ElasticSearch
 {
     [ElasticType(Name = "contact")]
-    public class WSUIContact : WSUIElasticSearchBaseEntity
+    public class OFContact : OFElasticSearchBaseEntity
     {
         public string Firstname { get; set; }
         

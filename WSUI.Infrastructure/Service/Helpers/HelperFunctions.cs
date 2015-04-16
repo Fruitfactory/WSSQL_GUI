@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using WSUI.Core.Extensions;
+using OF.Core.Extensions;
 
-namespace WSUI.Infrastructure.Service.Helpers
+namespace OF.Infrastructure.Service.Helpers
 {
     public static class HelperFunctions
     {

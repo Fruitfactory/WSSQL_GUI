@@ -4,9 +4,9 @@
 
 using System;
 using System.IO;
-using WSUI.Core.Data;
+using OF.Core.Data;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerFramework
+namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
     public abstract class FileBasedPreviewHandler : PreviewHandler, IInitializeWithFile, IInitializeWithSearchObject
     {

@@ -1,16 +1,16 @@
-﻿using WSUI.Core.Enums;
+﻿using OF.Core.Enums;
 
-namespace WSUI.Core.EventArguments
+namespace OF.Core.EventArguments
 {
-    public class WSUIPreviewCommandArgs : System.EventArgs
+    public class OFPreviewCommandArgs : System.EventArgs
     {
-        public WSUIPreviewCommandArgs(WSPreviewCommand cmd, object tag)
+        public OFPreviewCommandArgs(OFPreviewCommand cmd, object tag)
         {
             PreviewCommand = cmd;
             Tag = tag;
         }
 
-        public WSPreviewCommand PreviewCommand { get; private set; }
+        public OFPreviewCommand PreviewCommand { get; private set; }
 
         public object Tag { get; private set; }
     }

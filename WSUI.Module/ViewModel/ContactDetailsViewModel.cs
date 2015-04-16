@@ -9,26 +9,26 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using WSUI.Core.Core.MVVM;
-using WSUI.Core.Data;
-using WSUI.Core.Data.UI;
-using WSUI.Core.Helpers;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Utils.Dialog;
-using WSUI.Infrastructure.Events;
-using WSUI.Infrastructure.Implements.Contact;
-using WSUI.Infrastructure.Interfaces.Search;
-using WSUI.Infrastructure.Payloads;
-using WSUI.Infrastructure.Service;
-using WSUI.Module.Core;
-using WSUI.Module.Enums;
-using WSUI.Module.Interface.Service;
-using WSUI.Module.Interface.View;
-using WSUI.Module.Interface.ViewModel;
-using WSUI.Module.Service;
+using OF.Core.Core.MVVM;
+using OF.Core.Data;
+using OF.Core.Data.UI;
+using OF.Core.Helpers;
+using OF.Core.Interfaces;
+using OF.Core.Utils.Dialog;
+using OF.Infrastructure.Events;
+using OF.Infrastructure.Implements.Contact;
+using OF.Infrastructure.Interfaces.Search;
+using OF.Infrastructure.Payloads;
+using OF.Infrastructure.Service;
+using OF.Module.Core;
+using OF.Module.Enums;
+using OF.Module.Interface.Service;
+using OF.Module.Interface.View;
+using OF.Module.Interface.ViewModel;
+using OF.Module.Service;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
-namespace WSUI.Module.ViewModel
+namespace OF.Module.ViewModel
 {
     public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel, IScrollableViewExtended
     {
@@ -84,7 +84,7 @@ namespace WSUI.Module.ViewModel
 
         private void InitCommands()
         {
-            CreateEmailCommand = new WSUIRelayCommand(CreateEmailExecute);
+            CreateEmailCommand = new OFRelayCommand(CreateEmailExecute);
             MoreCommand = new DelegateCommand<object>(MoreCommandExecute, o => true);
             MainEmailSource = new ObservableCollection<EmailSearchObject>();
             MainFileSource = new ObservableCollection<AttachmentContentSearchObject>();
@@ -722,7 +722,7 @@ namespace WSUI.Module.ViewModel
 
         private void CalculateEmailListBoxHeight(object arg)
         {
-            var data = arg as WSUIExpanderData;
+            var data = arg as OFExpanderData;
             if (data == null)
             {
                 return;

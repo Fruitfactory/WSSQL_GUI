@@ -8,10 +8,10 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using WSUI.Core.Core.AdvancedSearchCriteria;
-using WSUI.Core.Enums;
+using OF.Core.Core.AdvancedSearchCriteria;
+using OF.Core.Enums;
 
-namespace WSUI.Core.Interfaces
+namespace OF.Core.Interfaces
 {
     public interface ISearch
     {

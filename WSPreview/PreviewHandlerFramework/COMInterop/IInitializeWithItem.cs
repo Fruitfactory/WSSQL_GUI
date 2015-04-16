@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Runtime.InteropServices.ComTypes;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerFramework
+namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
 
 

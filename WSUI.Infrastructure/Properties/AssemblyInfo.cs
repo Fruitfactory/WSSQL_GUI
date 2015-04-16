@@ -7,11 +7,11 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 using System.Windows;
 
-[assembly: AssemblyTitle("WSUI.Infrastructure.Infrastructure")]
+[assembly: AssemblyTitle("OF.Infrastructure.Infrastructure")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("FruitFactory")]
-[assembly: AssemblyProduct("WSUI.Infrastructure.Infrastructure")]
+[assembly: AssemblyProduct("OF.Infrastructure.Infrastructure")]
 [assembly: AssemblyCopyright("Copyright © FruitFactory 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

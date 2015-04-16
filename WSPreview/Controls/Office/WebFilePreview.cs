@@ -3,13 +3,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GDIDraw.Service;
-using WSPreview.PreviewHandler.Controls.Office.WebUtils;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
-using WSUI.Core.Data;
-using WSUI.Core.Logger;
+using OFPreview.PreviewHandler.Controls.Office.WebUtils;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
+using OF.Core.Data;
+using OF.Core.Logger;
 using Html = HtmlAgilityPack;
 
-namespace WSPreview.PreviewHandler.Controls.Office
+namespace OFPreview.PreviewHandler.Controls.Office
 {
     [KeyControl(ControlsKey.Web)]
     public class WebFilePreview : ExtWebBrowser, IPreviewControl

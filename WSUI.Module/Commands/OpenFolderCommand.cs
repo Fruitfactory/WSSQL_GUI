@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics;
 using System.IO;
-using WSUI.Core.Enums;
-using WSUI.Core.Logger;
-using WSUI.Infrastructure.Service.Helpers;
-using WSUI.Module.Core;
-using WSUI.Module.Interface.ViewModel;
+using OF.Core.Enums;
+using OF.Core.Logger;
+using OF.Infrastructure.Service.Helpers;
+using OF.Module.Core;
+using OF.Module.Interface.ViewModel;
 
-namespace WSUI.Module.Commands
+namespace OF.Module.Commands
 {
     public class OpenFolderCommand : BaseFilePreviewCommand
     {
@@ -21,7 +21,7 @@ namespace WSUI.Module.Commands
 
         protected override string GetIcon()
         {
-            return @"pack://application:,,,/WSUI.Module;component/Images/openfolder.png";
+            return @"pack://application:,,,/OF.Module;component/Images/openfolder.png";
         }
 
         protected override string GetCaption()

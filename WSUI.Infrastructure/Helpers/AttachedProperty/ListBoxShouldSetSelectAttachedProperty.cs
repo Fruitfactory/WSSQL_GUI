@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace WSUI.Infrastructure.Helpers.AttachedProperty
+namespace OF.Infrastructure.Helpers.AttachedProperty
 {
     public static  class ListBoxShouldSetSelectAttachedProperty
     {

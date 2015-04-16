@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace WSPreview.PreviewHandler.Controls.ImageControl
+namespace OFPreview.PreviewHandler.Controls.ImageControl
 {
     class ZoomPictureBox : ScrollableControl
     {

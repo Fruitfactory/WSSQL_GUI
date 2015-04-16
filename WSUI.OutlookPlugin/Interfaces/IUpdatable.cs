@@ -1,4 +1,4 @@
-﻿namespace WSUIOutlookPlugin.Interfaces
+﻿namespace OFOutlookPlugin.Interfaces
 {
     public interface IUpdatable
     {

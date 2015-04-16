@@ -1,6 +1,6 @@
-﻿using WSUI.Core.Data;
+﻿using OF.Core.Data;
 
-namespace WSUI.Module.Interface.View
+namespace OF.Module.Interface.View
 {
     public interface IContactEmailDetailsView : IContactKindDetailsView<EmailSearchObject>
     {

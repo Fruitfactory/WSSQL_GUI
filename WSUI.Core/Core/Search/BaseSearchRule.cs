@@ -16,16 +16,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Nest;
-using WSUI.Core.Core.AdvancedSearchCriteria;
-using WSUI.Core.Core.ElasticSearch;
-using WSUI.Core.Core.Rules;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Core.Enums;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
-using WSUI.Core.Utils;
+using OF.Core.Core.AdvancedSearchCriteria;
+using OF.Core.Core.ElasticSearch;
+using OF.Core.Core.Rules;
+using OF.Core.Data.ElasticSearch;
+using OF.Core.Enums;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
+using OF.Core.Utils;
 
-namespace WSUI.Core.Core.Search
+namespace OF.Core.Core.Search
 {
     public abstract class BaseSearchRule<T, E> : ISearch, ISearchRule where T : class, ISearchObject, new() where E : class, IElasticSearchObject
     {
@@ -35,7 +35,7 @@ namespace WSUI.Core.Core.Search
         private IQueryReader _reader;
         private volatile bool _isSearching = false;
         private bool _exludeIgnored = false;
-        private WSUIElasticSearchClient _elasticSearchClient;
+        private OFElasticSearchClient _elasticSearchClient;
         private Func<T> _create;
         private int _from = 0;
         private long _total = 0;
@@ -84,7 +84,7 @@ namespace WSUI.Core.Core.Search
             Result = new List<T>();
             Lock = lockObject ?? new object();
             _exludeIgnored = exludeIgnored;
-            _elasticSearchClient = new WSUIElasticSearchClient();
+            _elasticSearchClient = new OFElasticSearchClient();
             _create = New<T>.Instance;
         }
 

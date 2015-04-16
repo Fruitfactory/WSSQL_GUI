@@ -8,17 +8,17 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using GDIDraw.Service;
 using HtmlAgilityPack;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
-using WSUI.Core.Core.ElasticSearch;
-using WSUI.Core.Data;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Core.Enums;
-using WSUI.Core.Extensions;
-using WSUI.Core.Helpers;
-using WSUI.Core.Logger;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
+using OF.Core.Core.ElasticSearch;
+using OF.Core.Data;
+using OF.Core.Data.ElasticSearch;
+using OF.Core.Enums;
+using OF.Core.Extensions;
+using OF.Core.Helpers;
+using OF.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
-namespace WSPreview.PreviewHandler.Service.OutlookPreview
+namespace OFPreview.PreviewHandler.Service.OutlookPreview
 {
     public sealed class OutlookPreviewHelper : IOutlookPreviewHelper
     {
@@ -371,8 +371,8 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
 
         private string GetAttachments(EmailSearchObject searchObj)
         {
-            var esClient = new WSUIElasticSearchClient();
-            var result = esClient.Search<WSUIAttachmentContent>(s => s.Query(d => d.QueryString(qq => qq.Query(searchObj.EntryID))));
+            var esClient = new OFElasticSearchClient();
+            var result = esClient.Search<OFAttachmentContent>(s => s.Query(d => d.QueryString(qq => qq.Query(searchObj.EntryID))));
             if (result.Documents.Any())
             {
                 var tempFolder = TempFileManager.Instance.GenerateTempFolderForObject(searchObj);
@@ -542,14 +542,14 @@ namespace WSPreview.PreviewHandler.Service.OutlookPreview
             return string.Join("; ", list.Where(s => !string.IsNullOrEmpty(s)));
         }
 
-        private string GetRecipientsRow(WSUIRecipient[] ccs)
+        private string GetRecipientsRow(OFRecipient[] ccs)
         {
             if (ccs == null || ccs.Length == 0)
             {
                 return string.Empty;
             }
             var list = new List<string>();
-            foreach (WSUIRecipient recipient in ccs)
+            foreach (OFRecipient recipient in ccs)
             {
                 var clearStr = recipient.Name.ClearString();
                 var emailAddress = recipient.Address;

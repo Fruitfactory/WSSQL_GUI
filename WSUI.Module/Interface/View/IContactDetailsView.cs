@@ -1,6 +1,6 @@
-﻿using WSUI.Module.Interface.ViewModel;
+﻿using OF.Module.Interface.ViewModel;
 
-namespace WSUI.Module.Interface.View
+namespace OF.Module.Interface.View
 {
     public interface IContactDetailsView
     {

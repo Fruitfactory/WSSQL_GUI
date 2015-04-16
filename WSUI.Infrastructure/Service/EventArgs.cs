@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WSUI.Infrastructure.Services
+namespace OF.Infrastructure.Services
 {
     public class EventArgs<T> : EventArgs
     {

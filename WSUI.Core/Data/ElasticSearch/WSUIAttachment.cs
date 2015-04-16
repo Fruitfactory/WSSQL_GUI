@@ -1,9 +1,9 @@
 ﻿using Nest;
 
-namespace WSUI.Core.Data.ElasticSearch
+namespace OF.Core.Data.ElasticSearch
 {
     
-    public class WSUIAttachment : WSUIElasticSearchBaseEntity
+    public class OFAttachment : OFElasticSearchBaseEntity
     {
         public string FileName { get; set; }
 

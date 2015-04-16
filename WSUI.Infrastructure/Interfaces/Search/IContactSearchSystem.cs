@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using WSUI.Core.Interfaces;
+using OF.Core.Interfaces;
 
-namespace WSUI.Infrastructure.Interfaces.Search
+namespace OF.Infrastructure.Interfaces.Search
 {
     public interface IContactSearchSystem
     {

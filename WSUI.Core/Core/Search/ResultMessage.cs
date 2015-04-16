@@ -6,9 +6,9 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-using WSUI.Core.Interfaces;
+using OF.Core.Interfaces;
 
-namespace WSUI.Core.Core.Search
+namespace OF.Core.Core.Search
 {
     public class ResultMessage : IResultMessage
     {

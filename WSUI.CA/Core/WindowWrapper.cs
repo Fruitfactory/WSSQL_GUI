@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace WSUI.CA.Core
+namespace OF.CA.Core
 {
     public class WindowWrapper : IWin32Window
     {

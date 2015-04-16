@@ -10,14 +10,14 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Collections;
 using System.Collections.Generic;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
 using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
-namespace WSPreview.PreviewHandler.PreviewHandlers
+namespace OFPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("MSDN Magazine ZIP Preview Handler", ".zip;.gadget", "{2CE489C3-D409-481D-A06E-749096E8241E}")]
-    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.ZipPreviewHandler")]
+    [ProgId("OFPreview.PreviewHandler.PreviewHandlers.ZipPreviewHandler")]
     [Guid("DC7F27B1-B3F3-4F9D-85EC-8CC5FA18CF2F")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]

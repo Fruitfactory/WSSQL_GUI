@@ -1,9 +1,9 @@
 using System;
-using WSUI.Core.Data;
-using WSUI.Core.Interfaces;
-using WSUI.Module.ViewModel;
+using OF.Core.Data;
+using OF.Core.Interfaces;
+using OF.Module.ViewModel;
 
-namespace WSUI.Module.Interface.View
+namespace OF.Module.Interface.View
 {
     public interface IPreviewView
     {

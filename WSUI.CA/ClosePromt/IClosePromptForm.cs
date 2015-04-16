@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
-using WSUI.CA.Enums;
+using OF.CA.Enums;
 
-namespace WSUI.CA.ClosePromt
+namespace OF.CA.ClosePromt
 {
     public interface IClosePromptForm
     {

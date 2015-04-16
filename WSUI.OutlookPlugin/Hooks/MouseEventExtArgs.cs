@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace WSUIOutlookPlugin.Hooks
+namespace OFOutlookPlugin.Hooks
 {
     /// <summary>
     /// Provides data for the MouseClickExt and MouseMoveExt events. It also provides a property Handled.

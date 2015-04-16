@@ -15,32 +15,32 @@ using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using Transitionals;
-using WSPreview.PreviewHandler.Service.OutlookPreview;
-using WSUI.Core.Core.LimeLM;
-using WSUI.Core.Core.MVVM;
-using WSUI.Core.Data;
-using WSUI.Core.Data.UI;
-using WSUI.Core.Enums;
-using WSUI.Core.Events;
-using WSUI.Core.Extensions;
-using WSUI.Core.Helpers;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
-using WSUI.Core.Utils.Dialog;
-using WSUI.Infrastructure.Events;
-using WSUI.Infrastructure.Payloads;
-using WSUI.Infrastructure.Service.Helpers;
-using WSUI.Infrastructure.Services;
-using WSUI.Module.Core;
-using WSUI.Module.Interface.Service;
-using WSUI.Module.Interface.View;
-using WSUI.Module.Interface.ViewModel;
-using WSUI.Module.Service;
-using WSUI.Module.Service.Dialogs.Message;
-using WSUI.Module.Strategy;
+using OFPreview.PreviewHandler.Service.OutlookPreview;
+using OF.Core.Core.LimeLM;
+using OF.Core.Core.MVVM;
+using OF.Core.Data;
+using OF.Core.Data.UI;
+using OF.Core.Enums;
+using OF.Core.Events;
+using OF.Core.Extensions;
+using OF.Core.Helpers;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
+using OF.Core.Utils.Dialog;
+using OF.Infrastructure.Events;
+using OF.Infrastructure.Payloads;
+using OF.Infrastructure.Service.Helpers;
+using OF.Infrastructure.Services;
+using OF.Module.Core;
+using OF.Module.Interface.Service;
+using OF.Module.Interface.View;
+using OF.Module.Interface.ViewModel;
+using OF.Module.Service;
+using OF.Module.Service.Dialogs.Message;
+using OF.Module.Strategy;
 using Application = System.Windows.Application;
 
-namespace WSUI.Module.ViewModel
+namespace OF.Module.ViewModel
 {
     public class MainViewModel : ViewModelBase, IMainViewModel
     {
@@ -50,7 +50,7 @@ namespace WSUI.Module.ViewModel
 
         #endregion [urls]
 
-        private const string Interface = "WSUI.Module.Interface.ViewModel.IKindItem";
+        private const string Interface = "OF.Module.Interface.ViewModel.IKindItem";
 
         private readonly IUnityContainer _container;
         private readonly IEventAggregator _eventAggregator;
@@ -776,7 +776,7 @@ namespace WSUI.Module.ViewModel
         {
             if (_eventAggregator == null)
                 return;
-            _eventAggregator.GetEvent<WSUIShowFolder>().Publish(folder);
+            _eventAggregator.GetEvent<OFShowFolder>().Publish(folder);
         }
 
         public void ShowContactPreview(object tag, bool useTransaction = true)
@@ -848,7 +848,7 @@ namespace WSUI.Module.ViewModel
         {
             BuyCommand = new DelegateCommand(InternalBuy);
             ActivateCommand = new DelegateCommand(RunInternalActivate);
-            BackCommand = new WSUIRelayCommand(InternalBack, CanInternalBack);
+            BackCommand = new OFRelayCommand(InternalBack, CanInternalBack);
         }
 
         private void InternalBack(object arg)

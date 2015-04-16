@@ -3,18 +3,18 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Windows.Input;
 using System.Windows.Threading;
-using WSUI.Core.Utils.Dialog.Interfaces;
+using OF.Core.Utils.Dialog.Interfaces;
 using Action = System.Action;
 
-namespace WSUI.Core.Utils.Dialog.ViewModel
+namespace OF.Core.Utils.Dialog.ViewModel
 {
-    public abstract class WSUIBaseDialogViewModel : IWSUIViewModel
+    public abstract class OFBaseDialogViewModel : IOFViewModel
     {
-        protected WSUIBaseDialogViewModel(IWSUIView view)
+        protected OFBaseDialogViewModel(IOFView view)
         {
             View = view;
-            OKCommand = new WSUIRelayCommand(OkExecute, CanOkExecute);
-            CancelCommand = new WSUIRelayCommand(CancelExecute, CanCancelExcute);
+            OKCommand = new OFRelayCommand(OkExecute, CanOkExecute);
+            CancelCommand = new OFRelayCommand(CancelExecute, CanCancelExcute);
             Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => this.View.DataContext = this));
         }
 
@@ -35,7 +35,7 @@ namespace WSUI.Core.Utils.Dialog.ViewModel
             get { return FormatTitle(); }
         }
 
-        public IWSUIView View { get; private set; }
+        public IOFView View { get; private set; }
 
         public ICommand OKCommand { get; private set; }
 

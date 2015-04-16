@@ -11,12 +11,12 @@ using System.Collections;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Diagnostics;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace WSPreview.PreviewHandler.PreviewHandlers
+namespace OFPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("MSDN Magazine Resources Preview Handler", ".resources", "{0595438C-7C68-4A9B-B5CD-BF6EBAA6623A}")]
-    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.ResourcesPreviewHandler")]
+    [ProgId("OFPreview.PreviewHandler.PreviewHandlers.ResourcesPreviewHandler")]
     [Guid("7B2D1C25-6DE7-4F16-8C9B-AD65A1EC8FB0")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]

@@ -11,10 +11,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
 
-namespace WSUI.Core.Utils
+namespace OF.Core.Utils
 {
     // this approach really create objets must faster then Activator.CreateInstance
     // for example 10 000 000 objects:

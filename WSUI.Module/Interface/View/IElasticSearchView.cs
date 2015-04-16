@@ -1,7 +1,7 @@
-﻿using WSUI.Core.Interfaces;
-using WSUI.Module.Interface.ViewModel;
+﻿using OF.Core.Interfaces;
+using OF.Module.Interface.ViewModel;
 
-namespace WSUI.Module.Interface.View
+namespace OF.Module.Interface.View
 {
     public interface IElasticSearchView
     {

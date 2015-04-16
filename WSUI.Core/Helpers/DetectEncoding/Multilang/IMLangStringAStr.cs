@@ -1,6 +1,6 @@
 #pragma warning disable 0108
 
-namespace WSUI.Core.Helpers.DetectEncoding.Multilang
+namespace OF.Core.Helpers.DetectEncoding.Multilang
 {
     using System;
     using System.Runtime.CompilerServices;

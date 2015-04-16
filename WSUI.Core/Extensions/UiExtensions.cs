@@ -9,9 +9,9 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using WSUI.Core.Logger;
+using OF.Core.Logger;
 
-namespace WSUI.Core.Extensions
+namespace OF.Core.Extensions
 {
     public static class UiExtensions
     {

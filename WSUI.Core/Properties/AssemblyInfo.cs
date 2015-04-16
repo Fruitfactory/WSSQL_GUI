@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WSUI.Core")]
+[assembly: AssemblyTitle("OF.Core")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("FruitFactory")]
-[assembly: AssemblyProduct("WSUI.Core")]
+[assembly: AssemblyProduct("OF.Core")]
 [assembly: AssemblyCopyright("Copyright © FruitFactory 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

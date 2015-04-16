@@ -1,4 +1,4 @@
-﻿namespace WSUI.CA.EmailValidate
+﻿namespace OF.CA.EmailValidate
 {
     partial class EmailForm
     {

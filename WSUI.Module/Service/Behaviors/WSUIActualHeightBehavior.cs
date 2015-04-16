@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Windows;
 
-namespace WSUI.Module.Service.Behaviors
+namespace OF.Module.Service.Behaviors
 {
-    public class WSUIActualHeightBehavior
+    public class OFActualHeightBehavior
     {
 
         public static readonly DependencyProperty IsObserveProperty = DependencyProperty.RegisterAttached(
-            "IsObserve", typeof (bool), typeof (WSUIActualHeightBehavior), new PropertyMetadata(default(bool), IsObserveChanged));
+            "IsObserve", typeof (bool), typeof (OFActualHeightBehavior), new PropertyMetadata(default(bool), IsObserveChanged));
 
         private static void IsObserveChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
@@ -31,7 +31,7 @@ namespace WSUI.Module.Service.Behaviors
             var frameworkElement = sender as FrameworkElement;
             if (frameworkElement == null)
                 return;
-            frameworkElement.SetValue(WSUIActualHeightBehavior.ActualHeightProperty, frameworkElement.ActualHeight);
+            frameworkElement.SetValue(OFActualHeightBehavior.ActualHeightProperty, frameworkElement.ActualHeight);
         }
 
         private static void ElementOnSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
@@ -39,7 +39,7 @@ namespace WSUI.Module.Service.Behaviors
             var frameworkElement = sender as FrameworkElement;
             if(frameworkElement == null)
                 return;
-            frameworkElement.SetValue(WSUIActualHeightBehavior.ActualHeightProperty,frameworkElement.ActualHeight);
+            frameworkElement.SetValue(OFActualHeightBehavior.ActualHeightProperty,frameworkElement.ActualHeight);
         }
 
         public static void SetIsObserve(DependencyObject element, bool value)
@@ -54,7 +54,7 @@ namespace WSUI.Module.Service.Behaviors
 
 
         public static readonly DependencyProperty ActualHeightProperty = DependencyProperty.RegisterAttached(
-            "ActualHeight", typeof (double), typeof (WSUIActualHeightBehavior), new PropertyMetadata(default(double)));
+            "ActualHeight", typeof (double), typeof (OFActualHeightBehavior), new PropertyMetadata(default(double)));
 
 
         public static void SetActualHeight(DependencyObject element, double value)

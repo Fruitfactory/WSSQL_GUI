@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using WSUI.Core.Core.MVVM;
-using WSUI.Core.Enums;
+using OF.Core.Core.MVVM;
+using OF.Core.Enums;
 
-namespace WSUI.Core.Core.AdvancedSearchCriteria
+namespace OF.Core.Core.AdvancedSearchCriteria
 {
     public abstract class AdvancedSearchCriteria : DataViewModel, IAdvancedSearchCriteria
     {

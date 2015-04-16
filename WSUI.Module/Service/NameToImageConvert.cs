@@ -5,9 +5,9 @@ using System.IO;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using WSUI.Core.Logger;
+using OF.Core.Logger;
 
-namespace WSUI.Module.Service
+namespace OF.Module.Service
 {
     
     public class ImageHelper
@@ -36,29 +36,29 @@ namespace WSUI.Module.Service
         protected void Init()
         {
             _imageSettings = new Dictionary<string, string>();
-            _imageSettings.Add(".doc", @"pack://application:,,,/WSUI.Module;component/Images/document-word.png");
-            _imageSettings.Add(".docx", @"pack://application:,,,/WSUI.Module;component/Images/document-word.png");
-            _imageSettings.Add(".xls", @"pack://application:,,,/WSUI.Module;component/Images/document-excel.png");
-            _imageSettings.Add(".xlsx", @"pack://application:,,,/WSUI.Module;component/Images/document-excel.png");
-            _imageSettings.Add(".pdf", @"pack://application:,,,/WSUI.Module;component/Images/document-pdf.png");
-            _imageSettings.Add(".ppt", @"pack://application:,,,/WSUI.Module;component/Images/document-powerpoint.png");
-            _imageSettings.Add(".pptx", @"pack://application:,,,/WSUI.Module;component/Images/document-powerpoint.png");
-            _imageSettings.Add(".h", @"pack://application:,,,/WSUI.Module;component/Images/cpp.png");
-            _imageSettings.Add(".hpp", @"pack://application:,,,/WSUI.Module;component/Images/cpp.png");
-            _imageSettings.Add(".cpp", @"pack://application:,,,/WSUI.Module;component/Images/cpp.png");
-            _imageSettings.Add(".java",@"pack://application:,,,/WSUI.Module;component/Images/java.png");
-            _imageSettings.Add(".html",@"pack://application:,,,/WSUI.Module;component/Images/html.png");
-            _imageSettings.Add(".xml", @"pack://application:,,,/WSUI.Module;component/Images/xml.png");
-            _imageSettings.Add(".txt", @"pack://application:,,,/WSUI.Module;component/Images/txt.png");
-            _imageSettings.Add(".jpg", @"pack://application:,,,/WSUI.Module;component/Images/picture.png");
-            _imageSettings.Add(".png", @"pack://application:,,,/WSUI.Module;component/Images/picture.png");
-            _imageSettings.Add(".jpeg", @"pack://application:,,,/WSUI.Module;component/Images/picture.png");
-            _imageSettings.Add(".gif", @"pack://application:,,,/WSUI.Module;component/Images/picture.png");
-            _imageSettings.Add(".rtf", @"pack://application:,,,/WSUI.Module;component/Images/document-word.png");
+            _imageSettings.Add(".doc", @"pack://application:,,,/OF.Module;component/Images/document-word.png");
+            _imageSettings.Add(".docx", @"pack://application:,,,/OF.Module;component/Images/document-word.png");
+            _imageSettings.Add(".xls", @"pack://application:,,,/OF.Module;component/Images/document-excel.png");
+            _imageSettings.Add(".xlsx", @"pack://application:,,,/OF.Module;component/Images/document-excel.png");
+            _imageSettings.Add(".pdf", @"pack://application:,,,/OF.Module;component/Images/document-pdf.png");
+            _imageSettings.Add(".ppt", @"pack://application:,,,/OF.Module;component/Images/document-powerpoint.png");
+            _imageSettings.Add(".pptx", @"pack://application:,,,/OF.Module;component/Images/document-powerpoint.png");
+            _imageSettings.Add(".h", @"pack://application:,,,/OF.Module;component/Images/cpp.png");
+            _imageSettings.Add(".hpp", @"pack://application:,,,/OF.Module;component/Images/cpp.png");
+            _imageSettings.Add(".cpp", @"pack://application:,,,/OF.Module;component/Images/cpp.png");
+            _imageSettings.Add(".java",@"pack://application:,,,/OF.Module;component/Images/java.png");
+            _imageSettings.Add(".html",@"pack://application:,,,/OF.Module;component/Images/html.png");
+            _imageSettings.Add(".xml", @"pack://application:,,,/OF.Module;component/Images/xml.png");
+            _imageSettings.Add(".txt", @"pack://application:,,,/OF.Module;component/Images/txt.png");
+            _imageSettings.Add(".jpg", @"pack://application:,,,/OF.Module;component/Images/picture.png");
+            _imageSettings.Add(".png", @"pack://application:,,,/OF.Module;component/Images/picture.png");
+            _imageSettings.Add(".jpeg", @"pack://application:,,,/OF.Module;component/Images/picture.png");
+            _imageSettings.Add(".gif", @"pack://application:,,,/OF.Module;component/Images/picture.png");
+            _imageSettings.Add(".rtf", @"pack://application:,,,/OF.Module;component/Images/document-word.png");
 
 
             _bitmaps = new Dictionary<string, BitmapImage>();
-            _bitmaps.Add(DefaultKey, new BitmapImage(new Uri(@"pack://application:,,,/WSUI.Module;component/Images/document.png")));
+            _bitmaps.Add(DefaultKey, new BitmapImage(new Uri(@"pack://application:,,,/OF.Module;component/Images/document.png")));
         }
 
         public BitmapImage GetImage(string fileext)

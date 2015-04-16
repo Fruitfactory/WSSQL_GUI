@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
-using WSUI.Infrastructure.Service.Rules;
-using WSUI.Infrastructure.Services;
+using OF.Infrastructure.Service.Rules;
+using OF.Infrastructure.Services;
 using System.Threading.Tasks;
 
-namespace WSUI.Module.Service
+namespace OF.Module.Service
 {
     public class ContactSuggestingService
     {

@@ -2,14 +2,14 @@
 using Elasticsearch.Net;
 using Microsoft.Practices.Unity;
 using Nest;
-using WSUI.Core.Data.ElasticSearch.Response;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
+using OF.Core.Data.ElasticSearch.Response;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
 using Exception = System.Exception;
 
-namespace WSUI.Core.Core.ElasticSearch
+namespace OF.Core.Core.ElasticSearch
 {
-    public class WSUIElasticSearchClient : IDisposable, IElasticSearchInitializationIndex
+    public class OFElasticSearchClient : IDisposable, IElasticSearchInitializationIndex
     {
         public static readonly string ElasticSearchHost = "http://localhost:9200";
         public static readonly string DefaultIndexName = "outlookfinder";
@@ -17,18 +17,18 @@ namespace WSUI.Core.Core.ElasticSearch
         private ElasticClient _internalElasticClient;
 
         [InjectionConstructor]
-        public WSUIElasticSearchClient()
+        public OFElasticSearchClient()
             :this(ElasticSearchHost)
         {
         }
 
-        public WSUIElasticSearchClient(string host)
+        public OFElasticSearchClient(string host)
             :this(host,DefaultIndexName)
         {
             
         }
 
-        public WSUIElasticSearchClient(string host, string defaultIndexName)
+        public OFElasticSearchClient(string host, string defaultIndexName)
         {
             Init(host,defaultIndexName);
         }
@@ -78,7 +78,7 @@ namespace WSUI.Core.Core.ElasticSearch
         {
             try
             {
-                Raw.IndexPut("_river", WSUIElasticSearchClient.DefaultIndexName, "_meta", bodyRequest);
+                Raw.IndexPut("_river", OFElasticSearchClient.DefaultIndexName, "_meta", bodyRequest);
             }
             catch (Exception exception)
             {
@@ -87,9 +87,9 @@ namespace WSUI.Core.Core.ElasticSearch
             
         }
 
-        public ElasticsearchResponse<WSUIStatusResponse> GetIndexingProgress()
+        public ElasticsearchResponse<OFStatusResponse> GetIndexingProgress()
         {
-            return Raw.Get<WSUIStatusResponse>("_river", DefaultIndexName, "status");
+            return Raw.Get<OFStatusResponse>("_river", DefaultIndexName, "status");
         } 
 
         public void Dispose()

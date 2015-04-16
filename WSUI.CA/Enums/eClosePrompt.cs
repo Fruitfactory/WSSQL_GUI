@@ -1,4 +1,4 @@
-﻿namespace WSUI.CA.Enums
+﻿namespace OF.CA.Enums
 {
     public enum eClosePrompt
     {

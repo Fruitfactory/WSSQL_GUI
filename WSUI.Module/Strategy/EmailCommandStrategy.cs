@@ -1,10 +1,10 @@
-using WSUI.Core.Enums;
-using WSUI.Module.Commands;
-using WSUI.Module.Core;
-using WSUI.Module.Interface;
-using WSUI.Module.Interface.ViewModel;
+using OF.Core.Enums;
+using OF.Module.Commands;
+using OF.Module.Core;
+using OF.Module.Interface;
+using OF.Module.Interface.ViewModel;
 
-namespace WSUI.Module.Strategy
+namespace OF.Module.Strategy
 {
     public class EmailCommandStrategy : BaseCommandStrategy
     {

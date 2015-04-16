@@ -1,6 +1,6 @@
-﻿namespace WSUI.Core.Utils.Dialog.Interfaces
+﻿namespace OF.Core.Utils.Dialog.Interfaces
 {
-    public interface IWSUIView
+    public interface IOFView
     {
         object DataContext { get; set; }
     }

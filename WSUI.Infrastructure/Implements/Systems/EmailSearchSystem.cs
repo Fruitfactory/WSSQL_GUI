@@ -7,11 +7,11 @@
 ///////////////////////////////////////////////////////////
 
 
-using WSUI.Core.Core.Search;
-using WSUI.Infrastructure.Implements.Rules;
-using WSUI.Infrastructure.Implements.Systems.Core;
+using OF.Core.Core.Search;
+using OF.Infrastructure.Implements.Rules;
+using OF.Infrastructure.Implements.Systems.Core;
 
-namespace WSUI.Infrastructure.Implements.Systems
+namespace OF.Infrastructure.Implements.Systems
 {
     public class EmailSearchSystem : BaseAllEmailSearchSystem
     {

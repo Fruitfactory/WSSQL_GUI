@@ -1,14 +1,14 @@
 ﻿using System.Windows.Controls;
-using WSUI.Core.Utils.Dialog.Interfaces;
+using OF.Core.Utils.Dialog.Interfaces;
 
-namespace WSUI.Core.Utils.Dialog.View
+namespace OF.Core.Utils.Dialog.View
 {
     /// <summary>
-    /// Interaction logic for WSUIEmailView.xaml
+    /// Interaction logic for OFEmailView.xaml
     /// </summary>
-    public partial class WSUIEmailView : UserControl, IWSUIView
+    public partial class OFEmailView : UserControl, IOFView
     {
-        public WSUIEmailView()
+        public OFEmailView()
         {
             InitializeComponent();
         }

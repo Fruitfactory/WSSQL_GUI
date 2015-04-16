@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using WSUI.Infrastructure.MVVM.AdvancedSearch;
+using OF.Infrastructure.MVVM.AdvancedSearch;
 
-namespace WSUI.Module.Service.AdvancedSearch
+namespace OF.Module.Service.AdvancedSearch
 {
     public class AdvancedSearchTemplateSelector : DataTemplateSelector
     {

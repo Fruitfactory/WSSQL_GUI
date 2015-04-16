@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="WSUI.Module.View.KindsView"
+﻿<UserControl x:Class="OF.Module.View.KindsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:localService="clr-namespace:WSUI.Module.Service"
+             xmlns:localService="clr-namespace:OF.Module.Service"
             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                               HorizontalContentAlignment="Stretch">
     <UserControl.Resources>
@@ -24,7 +24,7 @@
 
             <localService:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></localService:BoolToVisibilityConverter>
 
-            <Style x:Key="ActivatingButtonStyle" TargetType="Button" BasedOn="{StaticResource WSUIButtonStyle}">
+            <Style x:Key="ActivatingButtonStyle" TargetType="Button" BasedOn="{StaticResource OFButtonStyle}">
                 <Setter Property="Width" Value="75"></Setter>
                 <Setter Property="Height" Value="22"></Setter>
             </Style>
@@ -72,7 +72,7 @@
                            Foreground="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}">BACK</TextBlock>
             </Grid>
             <Button.Style>
-                <Style BasedOn="{StaticResource WSUIChromelessButtonStyle}" TargetType="Button">
+                <Style BasedOn="{StaticResource OFChromelessButtonStyle}" TargetType="Button">
                     <Setter Property="Foreground" Value="{StaticResource AccentColorBrush}"></Setter>
                     <Style.Triggers>
                         <Trigger Property="Button.IsMouseOver" Value="True">
@@ -94,7 +94,7 @@
 
         <ListBox Grid.Column="1" Grid.Row="0" Style="{StaticResource HorizotalMetroListBox}" ItemsSource="{Binding KindsCollection}" Height="Auto"
                     SelectedValue="{Binding SelectedLazyKind,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsSynchronizedWithCurrentItem="True"
-                    ItemContainerStyle="{StaticResource WSUIMetroListBoxItem}"
+                    ItemContainerStyle="{StaticResource OFMetroListBoxItem}"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
                  VerticalContentAlignment="Center"
@@ -105,7 +105,7 @@
 
         <ListBox Grid.Column="1" Grid.Row="0" Style="{StaticResource HorizotalMetroListBox}" ItemsSource="{Binding ContactUIItems}" Height="Auto"
                  SelectedIndex="{Binding SelectedUIItemIndex,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                    ItemContainerStyle="{StaticResource WSUIMetroListBoxItem}"
+                    ItemContainerStyle="{StaticResource OFMetroListBoxItem}"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
                  VerticalContentAlignment="Center"

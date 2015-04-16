@@ -1,4 +1,4 @@
-﻿namespace WSPreview.PreviewHandler.PreviewHandlerFramework
+﻿namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
     public interface IOutlookPreviewHelper
     {

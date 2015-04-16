@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using WSUI.Module.Service.Dialogs.Interfaces;
+using OF.Module.Service.Dialogs.Interfaces;
 
-namespace WSUI.Module.Service.Dialogs.Message
+namespace OF.Module.Service.Dialogs.Message
 {
     public class MessageModel :  IMessageModel
     {

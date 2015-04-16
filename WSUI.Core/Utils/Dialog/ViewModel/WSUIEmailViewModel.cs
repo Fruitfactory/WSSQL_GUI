@@ -1,10 +1,10 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows.Media;
-using WSUI.Core.Utils.Dialog.Interfaces;
+using OF.Core.Utils.Dialog.Interfaces;
 
-namespace WSUI.Core.Utils.Dialog.ViewModel
+namespace OF.Core.Utils.Dialog.ViewModel
 {
-    public class WSUIEmailViewModel : WSUIBaseDialogViewModel, IWSUIEmailViewModel
+    public class OFEmailViewModel : OFBaseDialogViewModel, IOFEmailViewModel
     {
         #region [needs]
 
@@ -22,7 +22,7 @@ namespace WSUI.Core.Utils.Dialog.ViewModel
 
         #endregion [needs]
 
-        public WSUIEmailViewModel(IWSUIView view)
+        public OFEmailViewModel(IOFView view)
             : base(view)
         {
         }

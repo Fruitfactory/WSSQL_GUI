@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
-using WSUI.Core.Enums;
+using OF.Core.Enums;
 
-namespace WSUI.Module.Interface.Service
+namespace OF.Module.Interface.Service
 {
     public interface ICommandStrategy
     {

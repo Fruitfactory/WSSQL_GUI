@@ -1,6 +1,6 @@
-﻿using WSUI.Control;
+﻿using OF.Control;
 
-namespace WSUIOutlookPlugin.Interfaces
+namespace OFOutlookPlugin.Interfaces
 {
     public interface IMainForm
     {

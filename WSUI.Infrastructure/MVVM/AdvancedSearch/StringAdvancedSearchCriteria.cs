@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
-using WSUI.Core.Core.AdvancedSearchCriteria;
+using OF.Core.Core.AdvancedSearchCriteria;
 
-namespace WSUI.Infrastructure.MVVM.AdvancedSearch
+namespace OF.Infrastructure.MVVM.AdvancedSearch
 {
     public class StringAdvancedSearchCriteria : AdvancedSearchCriteria
     {

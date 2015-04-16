@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Data;
-using WSUI.Core.Extensions;
+using OF.Core.Extensions;
 
-namespace WSUI.Infrastructure.Converters
+namespace OF.Infrastructure.Converters
 {
     [ValueConversion(typeof(string),typeof(string))]
     public class StringToStringConverter : IValueConverter

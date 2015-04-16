@@ -1,6 +1,6 @@
-using WSUI.Module.ViewModel;
+using OF.Module.ViewModel;
 
-namespace WSUI.Module.Interface.View
+namespace OF.Module.Interface.View
 {
     public interface IKindsView
     {

@@ -1,4 +1,4 @@
-namespace WSPreview.PreviewHandler
+namespace OFPreview.PreviewHandler
 {
     partial class PDFViewer
     {
@@ -32,7 +32,7 @@ namespace WSPreview.PreviewHandler
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PDFViewer));
             this.ttpLink = new System.Windows.Forms.ToolTip(this.components);
             this.bgLoadPages = new System.ComponentModel.BackgroundWorker();
-            this.pageViewControl1 = new WSPreview.PreviewHandler.PageViewer();
+            this.pageViewControl1 = new OFPreview.PreviewHandler.PageViewer();
             this.panelButton = new System.Windows.Forms.Panel();
             this.buttonZoomOut = new System.Windows.Forms.Button();
             this.buttonZoomIn = new System.Windows.Forms.Button();
@@ -57,11 +57,11 @@ namespace WSPreview.PreviewHandler
             this.pageViewControl1.Name = "pageViewControl1";
             this.pageViewControl1.PageColor = System.Drawing.Color.White;
             this.pageViewControl1.PageSize = new System.Drawing.Size(0, 0);
-            this.pageViewControl1.PaintMethod = WSPreview.PreviewHandler.PageViewer.DoubleBufferMethod.BuiltInOptimizedDoubleBuffer;
+            this.pageViewControl1.PaintMethod = OFPreview.PreviewHandler.PageViewer.DoubleBufferMethod.BuiltInOptimizedDoubleBuffer;
             this.pageViewControl1.ScrollPosition = new System.Drawing.Point(-10, -10);
-            this.pageViewControl1.NextPage += new WSPreview.PreviewHandler.PageViewer.MovePageHandler(this.doubleBufferControl1_NextPage);
-            this.pageViewControl1.PreviousPage += new WSPreview.PreviewHandler.PageViewer.MovePageHandler(this.doubleBufferControl1_PreviousPage);
-            this.pageViewControl1.PaintControl += new WSPreview.PreviewHandler.PageViewer.PaintControlHandler(this.doubleBufferControl1_PaintControl);
+            this.pageViewControl1.NextPage += new OFPreview.PreviewHandler.PageViewer.MovePageHandler(this.doubleBufferControl1_NextPage);
+            this.pageViewControl1.PreviousPage += new OFPreview.PreviewHandler.PageViewer.MovePageHandler(this.doubleBufferControl1_PreviousPage);
+            this.pageViewControl1.PaintControl += new OFPreview.PreviewHandler.PageViewer.PaintControlHandler(this.doubleBufferControl1_PaintControl);
             // 
             // panelButton
             // 
@@ -78,7 +78,7 @@ namespace WSPreview.PreviewHandler
             // 
             this.buttonZoomOut.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
             resources.ApplyResources(this.buttonZoomOut, "buttonZoomOut");
-            this.buttonZoomOut.Image = global::WSPreview.PreviewHandler.Properties.Resources.ZoomOut;
+            this.buttonZoomOut.Image = global::OFPreview.PreviewHandler.Properties.Resources.ZoomOut;
             this.buttonZoomOut.Name = "buttonZoomOut";
             this.buttonZoomOut.UseVisualStyleBackColor = false;
             this.buttonZoomOut.Click += new System.EventHandler(this.tsbZoomOut_Click);
@@ -87,7 +87,7 @@ namespace WSPreview.PreviewHandler
             // 
             this.buttonZoomIn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
             resources.ApplyResources(this.buttonZoomIn, "buttonZoomIn");
-            this.buttonZoomIn.Image = global::WSPreview.PreviewHandler.Properties.Resources.ZoomIn;
+            this.buttonZoomIn.Image = global::OFPreview.PreviewHandler.Properties.Resources.ZoomIn;
             this.buttonZoomIn.Name = "buttonZoomIn";
             this.buttonZoomIn.UseVisualStyleBackColor = false;
             this.buttonZoomIn.Click += new System.EventHandler(this.tsbZoomIn_Click);
@@ -96,7 +96,7 @@ namespace WSPreview.PreviewHandler
             // 
             this.buttonNext.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
             resources.ApplyResources(this.buttonNext, "buttonNext");
-            this.buttonNext.Image = global::WSPreview.PreviewHandler.Properties.Resources.netshell_1611_1_16x16x32;
+            this.buttonNext.Image = global::OFPreview.PreviewHandler.Properties.Resources.netshell_1611_1_16x16x32;
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.UseVisualStyleBackColor = false;
             this.buttonNext.Click += new System.EventHandler(this.tsbNext_Click);
@@ -112,7 +112,7 @@ namespace WSPreview.PreviewHandler
             // 
             this.buttonPrev.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
             resources.ApplyResources(this.buttonPrev, "buttonPrev");
-            this.buttonPrev.Image = global::WSPreview.PreviewHandler.Properties.Resources.netshell_21611_1_16x16x32;
+            this.buttonPrev.Image = global::OFPreview.PreviewHandler.Properties.Resources.netshell_21611_1_16x16x32;
             this.buttonPrev.Name = "buttonPrev";
             this.buttonPrev.UseVisualStyleBackColor = false;
             this.buttonPrev.Click += new System.EventHandler(this.tsbPrev_Click);

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Documents;
 
-namespace WSUI.Infrastructure.Controls
+namespace OF.Infrastructure.Controls
 {
   /// <summary>
   /// Interaction logic for HightliteHyperlink.xaml

@@ -3,18 +3,18 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interactivity;
-using WSUI.Core.Interfaces;
-using WSUI.Infrastructure.Implements.Systems;
+using OF.Core.Interfaces;
+using OF.Infrastructure.Implements.Systems;
 
-namespace WSUI.Module.Service.Behaviors
+namespace OF.Module.Service.Behaviors
 {
-    public class WSUIListboxSelectOnClickBehavior : Behavior<ListBox>
+    public class OFListboxSelectOnClickBehavior : Behavior<ListBox>
     {
         private bool _suppressChanging = false;
         private object _lastSelected = null;
 
         public static readonly DependencyProperty SelectedObjectProperty = DependencyProperty.RegisterAttached(
-            "SelectedObject", typeof(object), typeof(WSUIListboxSelectOnClickBehavior), new PropertyMetadata(default(object)));
+            "SelectedObject", typeof(object), typeof(OFListboxSelectOnClickBehavior), new PropertyMetadata(default(object)));
 
         public static void SetSelectedObject(DependencyObject element, object value)
         {
@@ -52,14 +52,14 @@ namespace WSUI.Module.Service.Behaviors
                 return;
             if (ReferenceEquals(_lastSelected, AssociatedObject.SelectedItem))
             {
-                AssociatedObject.SetValue(WSUIListboxSelectOnClickBehavior.SelectedObjectProperty, AssociatedObject.SelectedItem);
+                AssociatedObject.SetValue(OFListboxSelectOnClickBehavior.SelectedObjectProperty, AssociatedObject.SelectedItem);
             }
         }
 
         private void AssociatedObjectOnSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedEventArgs)
         {
             _suppressChanging = true;
-            AssociatedObject.SetValue(WSUIListboxSelectOnClickBehavior.SelectedObjectProperty, AssociatedObject.SelectedItem);
+            AssociatedObject.SetValue(OFListboxSelectOnClickBehavior.SelectedObjectProperty, AssociatedObject.SelectedItem);
             _lastSelected = AssociatedObject.SelectedItem;
         }
 

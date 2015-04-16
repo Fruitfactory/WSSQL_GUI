@@ -1,6 +1,6 @@
-﻿namespace WSUI.Core.Data.ElasticSearch
+﻿namespace OF.Core.Data.ElasticSearch
 {
-    public class WSUIStub : WSUIElasticSearchBaseEntity
+    public class OFStub : OFElasticSearchBaseEntity
     {
          
     }

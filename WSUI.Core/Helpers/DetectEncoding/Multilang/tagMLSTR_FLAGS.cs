@@ -1,4 +1,4 @@
-namespace WSUI.Core.Helpers.DetectEncoding.Multilang
+namespace OF.Core.Helpers.DetectEncoding.Multilang
 {
     public enum tagMLSTR_FLAGS
     {

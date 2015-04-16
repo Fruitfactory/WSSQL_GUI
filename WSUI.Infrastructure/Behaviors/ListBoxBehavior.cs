@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interactivity;
 
-namespace WSUI.Infrastructure.Behaviors
+namespace OF.Infrastructure.Behaviors
 {
     public class ListBoxBehavior : Behavior<ListBox>
     {

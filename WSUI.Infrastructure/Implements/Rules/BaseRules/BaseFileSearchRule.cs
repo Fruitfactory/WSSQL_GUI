@@ -9,17 +9,17 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using WSUI.Core.Core.Rules;
-using WSUI.Core.Core.Search;
-using WSUI.Core.Data;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Core.Enums;
-using WSUI.Core.Logger;
-using WSUI.Infrastructure.Service.Helpers;
+using OF.Core.Core.Rules;
+using OF.Core.Core.Search;
+using OF.Core.Data;
+using OF.Core.Data.ElasticSearch;
+using OF.Core.Enums;
+using OF.Core.Logger;
+using OF.Infrastructure.Service.Helpers;
 
-namespace WSUI.Infrastructure.Implements.Rules.BaseRules 
+namespace OF.Infrastructure.Implements.Rules.BaseRules 
 {
-	public class BaseFileSearchRule : BaseSearchRule<FileSearchObject,WSUIStub> 
+	public class BaseFileSearchRule : BaseSearchRule<FileSearchObject,OFStub> 
     {
         protected string WhereTemplate = string.Empty;
 

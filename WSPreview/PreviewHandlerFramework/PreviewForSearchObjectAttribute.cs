@@ -1,7 +1,7 @@
 ﻿using System;
-using WSUI.Core.Enums;
+using OF.Core.Enums;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerFramework
+namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class PreviewForSearchObjectAttribute : Attribute

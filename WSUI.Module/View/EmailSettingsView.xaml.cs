@@ -1,8 +1,8 @@
-﻿using WSUI.Module.Interface;
-using WSUI.Module.Interface.View;
-using WSUI.Module.ViewModel;
+﻿using OF.Module.Interface;
+using OF.Module.Interface.View;
+using OF.Module.ViewModel;
 
-namespace WSUI.Module.View
+namespace OF.Module.View
 {
     /// <summary>
     /// Interaction logic for EmailSettingsView.xaml

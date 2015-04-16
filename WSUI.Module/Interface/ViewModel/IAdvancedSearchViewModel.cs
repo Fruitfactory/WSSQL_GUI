@@ -1,4 +1,4 @@
-﻿namespace WSUI.Module.Interface.ViewModel
+﻿namespace OF.Module.Interface.ViewModel
 {
     public interface IAdvancedSearchViewModel
     {

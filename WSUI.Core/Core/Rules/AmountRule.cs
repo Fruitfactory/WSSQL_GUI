@@ -1,4 +1,4 @@
-﻿namespace WSUI.Core.Core.Rules
+﻿namespace OF.Core.Core.Rules
 {
     public class AmountRule : BaseRule
     {

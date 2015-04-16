@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 
-namespace WSUI.Core.Core.AdvancedSearchCriteria
+namespace OF.Core.Core.AdvancedSearchCriteria
 {
     public abstract class VariantAdvancedSearchCriteria<T> : AdvancedSearchCriteria where T : struct, IConvertible
     {

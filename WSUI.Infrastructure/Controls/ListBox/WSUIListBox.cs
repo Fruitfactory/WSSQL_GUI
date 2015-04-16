@@ -6,13 +6,13 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using WSUI.Core.Data;
-using WSUI.Infrastructure.Helpers.AttachedProperty;
-using WSUI.Core.Extensions;
+using OF.Core.Data;
+using OF.Infrastructure.Helpers.AttachedProperty;
+using OF.Core.Extensions;
 
-namespace WSUI.Infrastructure.Controls.ListBox
+namespace OF.Infrastructure.Controls.ListBox
 {
-    public class WSUIListBox : System.Windows.Controls.ListBox
+    public class OFListBox : System.Windows.Controls.ListBox
     {
 
         private ScrollViewer _scrollHost;
@@ -24,7 +24,7 @@ namespace WSUI.Infrastructure.Controls.ListBox
         #region [dependency property]
 
         public static readonly DependencyProperty CalculateActualHeightCommandProperty = DependencyProperty.Register(
-            "CalculateActualHeightCommand", typeof (ICommand), typeof (WSUIListBox), new PropertyMetadata(default(ICommand)));
+            "CalculateActualHeightCommand", typeof (ICommand), typeof (OFListBox), new PropertyMetadata(default(ICommand)));
 
         public ICommand CalculateActualHeightCommand
         {
@@ -35,7 +35,7 @@ namespace WSUI.Infrastructure.Controls.ListBox
         #endregion
 
 
-        public WSUIListBox()
+        public OFListBox()
         {
             DefaultStyleKey = typeof(System.Windows.Controls.ListBox);
             IsChildUnselectAll = false;
@@ -77,7 +77,7 @@ namespace WSUI.Infrastructure.Controls.ListBox
             base.OnPreviewMouseRightButtonDown(e);
         }
 
-        internal void RaiseCalculationHeight(WSUIExpanderData data)
+        internal void RaiseCalculationHeight(OFExpanderData data)
         {
             this.InvalidateMeasure();
             if (CalculateActualHeightCommand == null)

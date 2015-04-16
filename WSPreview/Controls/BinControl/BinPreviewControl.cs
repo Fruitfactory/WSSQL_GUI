@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace WSPreview.Controls.BinControl
+namespace OFPreview.Controls.BinControl
 {
     //[KeyControl(ControlsKey.Bin)]
     //public class BinPreviewControl : ByteViewer, IPreviewControl

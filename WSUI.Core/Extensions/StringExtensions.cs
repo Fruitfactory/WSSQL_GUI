@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using WSUI.Core.Helpers.DetectEncoding;
+using OF.Core.Helpers.DetectEncoding;
 using System.Text.RegularExpressions;
 
-namespace WSUI.Core.Extensions
+namespace OF.Core.Extensions
 {
     public static class StringExtensions
     {

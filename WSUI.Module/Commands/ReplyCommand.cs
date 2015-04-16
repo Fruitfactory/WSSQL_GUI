@@ -1,17 +1,17 @@
 using Microsoft.Office.Interop.Outlook;
-using WSUI.Core.Data;
-using WSUI.Core.Enums;
-using WSUI.Core.Extensions;
-using WSUI.Core.Helpers;
-using WSUI.Core.Logger;
-using WSUI.Infrastructure.Helpers;
-using WSUI.Infrastructure.Service.Helpers;
-using WSUI.Module.Core;
-using WSUI.Module.Interface;
-using WSUI.Module.Interface.ViewModel;
-using WSUI.Module.Service.Dialogs.Message;
+using OF.Core.Data;
+using OF.Core.Enums;
+using OF.Core.Extensions;
+using OF.Core.Helpers;
+using OF.Core.Logger;
+using OF.Infrastructure.Helpers;
+using OF.Infrastructure.Service.Helpers;
+using OF.Module.Core;
+using OF.Module.Interface;
+using OF.Module.Interface.ViewModel;
+using OF.Module.Service.Dialogs.Message;
 
-namespace WSUI.Module.Commands
+namespace OF.Module.Commands
 {
     public class ReplyCommand : BaseEmailPreviewCommand
     {
@@ -51,7 +51,7 @@ namespace WSUI.Module.Commands
 
         protected override string GetIcon()
         {
-            return @"pack://application:,,,/WSUI.Module;component/Images/reply.png";
+            return @"pack://application:,,,/OF.Module;component/Images/reply.png";
         }
 
         protected override string GetTooltip()

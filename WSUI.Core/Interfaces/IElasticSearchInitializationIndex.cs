@@ -1,8 +1,8 @@
 using Elasticsearch.Net;
 using Nest;
-using WSUI.Core.Data.ElasticSearch.Response;
+using OF.Core.Data.ElasticSearch.Response;
 
-namespace WSUI.Core.Interfaces
+namespace OF.Core.Interfaces
 {
     public interface IElasticSearchInitializationIndex
     {
@@ -10,6 +10,6 @@ namespace WSUI.Core.Interfaces
         IElasticsearchClient Raw { get; }
         IExistsResponse IndexExists(string name);
         void CreateIndex(byte[] bodyRequest);
-        ElasticsearchResponse<WSUIStatusResponse> GetIndexingProgress();
+        ElasticsearchResponse<OFStatusResponse> GetIndexingProgress();
     }
 }

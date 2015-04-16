@@ -1,8 +1,8 @@
-﻿using WSUI.Core.Interfaces;
+﻿using OF.Core.Interfaces;
 
-namespace WSUI.Core.Data.ElasticSearch
+namespace OF.Core.Data.ElasticSearch
 {
-    public class WSUIElasticSearchBaseEntity : IElasticSearchObject
+    public class OFElasticSearchBaseEntity : IElasticSearchObject
     {
         public string EntryID
         {

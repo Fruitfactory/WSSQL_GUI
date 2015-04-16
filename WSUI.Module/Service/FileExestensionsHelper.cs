@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WSUI.Module.Service
+namespace OF.Module.Service
 {
     public class FileExestensionsHelper
     {

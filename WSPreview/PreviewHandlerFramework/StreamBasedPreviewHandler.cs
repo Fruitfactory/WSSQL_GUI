@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerFramework
+namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
     public abstract class StreamBasedPreviewHandler : PreviewHandler, IInitializeWithStream
     {

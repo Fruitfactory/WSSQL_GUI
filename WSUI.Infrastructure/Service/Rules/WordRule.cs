@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WSUI.Infrastructure.Service.Rules
+namespace OF.Infrastructure.Service.Rules
 {
     public class WordRule : BaseRule
     {

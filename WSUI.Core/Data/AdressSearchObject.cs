@@ -6,9 +6,9 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-using WSUI.Core.Core.Attributes;
+using OF.Core.Core.Attributes;
 
-namespace WSUI.Core.Data
+namespace OF.Core.Data
 {
     public class AdressSearchObject : BaseSearchObject
     {

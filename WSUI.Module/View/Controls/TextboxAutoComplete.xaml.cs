@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using MahApps.Metro.Controls;
 
-namespace WSUI.Module.View.Controls
+namespace OF.Module.View.Controls
 {
     /// <summary>
     /// Interaction logic for TextboxAutoComplete.xaml

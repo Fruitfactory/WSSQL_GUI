@@ -2,7 +2,7 @@
 using System.Security.Permissions;
 using System.Windows.Forms;
 
-namespace WSPreview.PreviewHandler.Controls.Office.WebUtils
+namespace OFPreview.PreviewHandler.Controls.Office.WebUtils
 {
     public partial class ExtWebBrowser : WebBrowser
     {

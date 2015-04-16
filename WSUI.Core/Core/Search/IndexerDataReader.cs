@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
 using System.Linq;
-using WSUI.Core.Interfaces;
+using OF.Core.Interfaces;
 
-namespace WSUI.Core.Core.Search
+namespace OF.Core.Core.Search
 {
     public class IndexerDataReader : IIndexerDataReader
     {
@@ -69,7 +69,7 @@ namespace WSUI.Core.Core.Search
                 }
                 catch (Exception ex)
                 {
-                    WSUI.Core.Logger.WSSqlLogger.Instance.LogError("GetDataByReader: {0}", ex.Message);
+                    OF.Core.Logger.WSSqlLogger.Instance.LogError("GetDataByReader: {0}", ex.Message);
                 }
                 finally
                 {

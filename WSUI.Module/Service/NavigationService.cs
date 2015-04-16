@@ -6,14 +6,14 @@ using System.Windows;
 using Microsoft.Practices.Prism.Regions;
 using Transitionals;
 using Transitionals.Transitions;
-using WSUI.Core.Extensions;
-using WSUI.Core.Interfaces;
-using WSUI.Infrastructure;
-using WSUI.Module.Interface.Service;
-using WSUI.Module.Interface.View;
-using WSUI.Module.Interface.ViewModel;
+using OF.Core.Extensions;
+using OF.Core.Interfaces;
+using OF.Infrastructure;
+using OF.Module.Interface.Service;
+using OF.Module.Interface.View;
+using OF.Module.Interface.ViewModel;
 
-namespace WSUI.Module.Service
+namespace OF.Module.Service
 {
     internal class NavigationService : INavigationService
     {

@@ -3,17 +3,17 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
-using WSPreview.PreviewHandler.PreviewHandlerHost;
-using WSUI.Core.Data;
-using WSUI.Core.Enums;
-using WSUI.Core.EventArguments;
-using WSUI.Core.Interfaces;
-using WSUI.Module.Interface;
-using WSUI.Module.Interface.View;
-using WSUI.Module.ViewModel;
-using WSUI.Core.Win32;
+using OFPreview.PreviewHandler.PreviewHandlerHost;
+using OF.Core.Data;
+using OF.Core.Enums;
+using OF.Core.EventArguments;
+using OF.Core.Interfaces;
+using OF.Module.Interface;
+using OF.Module.Interface.View;
+using OF.Module.ViewModel;
+using OF.Core.Win32;
 
-namespace WSUI.Module.View
+namespace OF.Module.View
 {
     /// <summary>
     /// Interaction logic for PreviewView.xaml
@@ -29,14 +29,14 @@ namespace WSUI.Module.View
 
         }
 
-        private void PreviewControlOnCommandExecuted(object sender, WSUIPreviewCommandArgs wsuiPreviewCommandArgs)
+        private void PreviewControlOnCommandExecuted(object sender, OFPreviewCommandArgs wsuiPreviewCommandArgs)
         {
             switch (wsuiPreviewCommandArgs.PreviewCommand)
             {
-                case WSPreviewCommand.ShowFolder:
+                case OFPreviewCommand.ShowFolder:
                     Model.ShowOutlookFolder(wsuiPreviewCommandArgs.Tag as string);
                     break;
-                case WSPreviewCommand.ShowContact:
+                case OFPreviewCommand.ShowContact:
                     Model.ShowContactPreview(wsuiPreviewCommandArgs.Tag);
                     break;
             }

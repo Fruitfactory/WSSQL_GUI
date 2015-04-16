@@ -14,7 +14,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using System.Diagnostics;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerFramework
+namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
     public abstract class PreviewHandler : IPreviewHandler, IPreviewHandlerVisuals, IOleWindow, IObjectWithSite
     {

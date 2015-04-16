@@ -4,9 +4,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interactivity;
-using WSUI.Core.Extensions;
+using OF.Core.Extensions;
 
-namespace WSUI.Infrastructure.Behaviors
+namespace OF.Infrastructure.Behaviors
 {
     public class ExpanderEmailBehavior : Behavior<Expander>
     {

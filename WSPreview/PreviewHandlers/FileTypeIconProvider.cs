@@ -8,9 +8,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WSPreview.PreviewHandler.Properties;
+using OFPreview.PreviewHandler.Properties;
 
-namespace WSPreview.PreviewHandler.PreviewHandlers
+namespace OFPreview.PreviewHandler.PreviewHandlers
 {
     internal sealed class FileTypeIconProvider : IDisposable
     {

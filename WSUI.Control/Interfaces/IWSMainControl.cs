@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WSUI.Control.Interfaces
+namespace OF.Control.Interfaces
 {
     public interface 
         IWSMainControl

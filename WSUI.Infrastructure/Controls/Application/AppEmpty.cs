@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Controls;
 
-namespace WSUI.Infrastructure.Controls.Application
+namespace OF.Infrastructure.Controls.Application
 {
     public class AppEmpty : System.Windows.Application
     {

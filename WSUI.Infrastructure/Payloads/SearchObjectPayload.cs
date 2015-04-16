@@ -1,7 +1,7 @@
-﻿using WSUI.Core.Core.Payload;
-using WSUI.Core.Interfaces;
+﻿using OF.Core.Core.Payload;
+using OF.Core.Interfaces;
 
-namespace WSUI.Infrastructure.Payloads
+namespace OF.Infrastructure.Payloads
 {
     public class SearchObjectPayload : BasePayload<ISearchObject>
     {

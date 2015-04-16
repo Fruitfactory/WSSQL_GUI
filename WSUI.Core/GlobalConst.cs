@@ -1,6 +1,6 @@
-﻿using WSUI.Core.Enums;
+﻿using OF.Core.Enums;
 
-namespace WSUI.Core
+namespace OF.Core
 {
     public static class GlobalConst
     {

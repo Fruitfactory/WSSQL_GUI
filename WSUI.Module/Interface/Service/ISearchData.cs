@@ -1,4 +1,4 @@
-﻿namespace WSUI.Module.Interface.Service
+﻿namespace OF.Module.Interface.Service
 {
     public interface ISearchData
     {

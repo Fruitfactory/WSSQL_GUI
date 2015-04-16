@@ -3,16 +3,16 @@ using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interactivity;
-using WSUI.Infrastructure.Controls.ListBox;
-using WSUI.Infrastructure.Helpers.AttachedProperty;
-using WSUI.Core.Extensions;
+using OF.Infrastructure.Controls.ListBox;
+using OF.Infrastructure.Helpers.AttachedProperty;
+using OF.Core.Extensions;
 
-namespace WSUI.Infrastructure.Behaviors
+namespace OF.Infrastructure.Behaviors
 {
     public class ChildListBoxBehavior : Behavior<ListBox>
     {
         private int _parentIndex = -1;
-        private WSUIListBox Parent { get; set; }
+        private OFListBox Parent { get; set; }
 
         protected override void OnAttached()
         {
@@ -21,7 +21,7 @@ namespace WSUI.Infrastructure.Behaviors
             var listBoxItemParent = AssociatedObject.GetParentCore<ListBoxItem>();
             if (listBoxItemParent == null)
                 return;
-            Parent = listBoxItemParent.GetParent<WSUIListBox>();
+            Parent = listBoxItemParent.GetParent<OFListBox>();
             if (Parent == null)
                 return;
             Parent.ResetSelection += ParentOnSelectionChanged;

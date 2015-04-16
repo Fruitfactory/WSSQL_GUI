@@ -61,7 +61,7 @@ namespace WSGen.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\WSUI.OutlookPlugin\\WSUI.OutlookPluginSetup\\Product.wxs")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\OF.OutlookPlugin\\OF.OutlookPluginSetup\\Product.wxs")]
         public string SetupProjectFile {
             get {
                 return ((string)(this["SetupProjectFile"]));

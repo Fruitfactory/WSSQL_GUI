@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace WSUI.Core.Core.Rules
+namespace OF.Core.Core.Rules
 {
     public abstract class BaseRule : IRule
     {

@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using WSUI.CA.Core;
-using WSUI.CA.Enums;
+using OF.CA.Core;
+using OF.CA.Enums;
 
-namespace WSUI.CA.ClosePromt
+namespace OF.CA.ClosePromt
 {
     public class PromptCloseApplication : CoreSetupApplication
     {

@@ -11,12 +11,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WSUI.Core.Data;
-using WSUI.Infrastructure.Service;
-using WSUI.Module.Interface.View;
-using WSUI.Module.Interface.ViewModel;
+using OF.Core.Data;
+using OF.Infrastructure.Service;
+using OF.Module.Interface.View;
+using OF.Module.Interface.ViewModel;
 
-namespace WSUI.Module.View
+namespace OF.Module.View
 {
     /// <summary>
     /// Interaction logic for ContactEmailDetailsView.xaml

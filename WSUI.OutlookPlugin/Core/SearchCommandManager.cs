@@ -1,11 +1,11 @@
 ﻿using Microsoft.Practices.Prism.Events;
-using WSUI.Core.Logger;
-using WSUIOutlookPlugin.Events;
-using WSUIOutlookPlugin.Interfaces;
+using OF.Core.Logger;
+using OFOutlookPlugin.Events;
+using OFOutlookPlugin.Interfaces;
 
-namespace WSUIOutlookPlugin.Core
+namespace OFOutlookPlugin.Core
 {
-    public abstract class SearchCommandManager : BaseCommandManager, IWSUICommandManager
+    public abstract class SearchCommandManager : BaseCommandManager, IOFCommandManager
     {
 
         public virtual void SetShowHideButtonsEnabling(bool isShowButtonEnable, bool isHideButtonEnable)
@@ -18,7 +18,7 @@ namespace WSUIOutlookPlugin.Core
             var aggregator = GetAggregator();
             if (aggregator == null)
                 return;
-            aggregator.GetEvent<WSUIOpenWindow>().Publish(true);
+            aggregator.GetEvent<OFOpenWindow>().Publish(true);
         }
 
         protected virtual void InternalHidePublish()
@@ -26,7 +26,7 @@ namespace WSUIOutlookPlugin.Core
             var aggregator = GetAggregator();
             if (aggregator == null)
                 return;
-            aggregator.GetEvent<WSUIHideWindow>().Publish(true);
+            aggregator.GetEvent<OFHideWindow>().Publish(true);
         }
 
         protected virtual void InternalSearchPublich(string searchString)
@@ -35,7 +35,7 @@ namespace WSUIOutlookPlugin.Core
             if (aggregator == null)
                 return;
             WSSqlLogger.Instance.LogInfo("Edit Criteria (toolbox):{0}", searchString);
-            aggregator.GetEvent<WSUISearch>().Publish(searchString);
+            aggregator.GetEvent<OFSearch>().Publish(searchString);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace WSUI.CA.ClosePromt
+﻿namespace OF.CA.ClosePromt
 {
     partial class ClosePromptForm
     {

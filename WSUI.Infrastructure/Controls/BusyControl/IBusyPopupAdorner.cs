@@ -1,4 +1,4 @@
-﻿namespace WSUI.Infrastructure.Controls.BusyControl
+﻿namespace OF.Infrastructure.Controls.BusyControl
 {
     public interface IBusyPopupAdorner
     {

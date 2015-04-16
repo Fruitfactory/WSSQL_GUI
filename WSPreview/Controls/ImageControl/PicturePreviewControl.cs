@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using WSPreview.PreviewHandler.Controls.ImageControl.Interface;
-using WSPreview.PreviewHandler.Controls.ImageControl.Service;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
-using WSUI.Core.Data;
+using OFPreview.PreviewHandler.Controls.ImageControl.Interface;
+using OFPreview.PreviewHandler.Controls.ImageControl.Service;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
+using OF.Core.Data;
 
-namespace WSPreview.PreviewHandler.Controls.ImageControl
+namespace OFPreview.PreviewHandler.Controls.ImageControl
 {
     [KeyControl(ControlsKey.Image)]
     public partial class PicturePreviewControl : UserControl, IPreviewControl

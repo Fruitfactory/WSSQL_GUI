@@ -1,6 +1,6 @@
-﻿namespace WSUI.Core.Utils.Dialog.Interfaces
+﻿namespace OF.Core.Utils.Dialog.Interfaces
 {
-    public interface IWSUIEmailViewModel : IWSUIViewModel
+    public interface IOFEmailViewModel : IOFViewModel
     {
         string Email1 { get; set; }
 

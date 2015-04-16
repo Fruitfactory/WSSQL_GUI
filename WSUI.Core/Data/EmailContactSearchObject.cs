@@ -1,7 +1,7 @@
-﻿using WSUI.Core.Core.Attributes;
-using WSUI.Core.Enums;
+﻿using OF.Core.Core.Attributes;
+using OF.Core.Enums;
 
-namespace WSUI.Core.Data
+namespace OF.Core.Data
 {
     public class EmailContactSearchObject : BaseEmailSearchObject
     {

@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using WSUI.Infrastructure.Attributes;
-using WSUI.Module.Interface;
-using WSUI.Module.Interface.Service;
+using OF.Infrastructure.Attributes;
+using OF.Module.Interface;
+using OF.Module.Interface.Service;
 
-namespace WSUI.Module.Service
+namespace OF.Module.Service
 {
     public class ContactHelpers
     {

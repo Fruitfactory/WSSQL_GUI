@@ -1,10 +1,10 @@
 ﻿using System.IO;
-using WSUI.Core.Core;
-using WSUI.Core.Data;
-using WSUI.Core.Enums;
-using WSUI.Core.Helpers;
+using OF.Core.Core;
+using OF.Core.Data;
+using OF.Core.Enums;
+using OF.Core.Helpers;
 
-namespace WSUI.Infrastructure.Service.Helpers
+namespace OF.Infrastructure.Service.Helpers
 {
     public class SearchItemHelper
     {

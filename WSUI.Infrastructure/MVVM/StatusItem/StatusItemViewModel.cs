@@ -1,12 +1,12 @@
-﻿using WSUI.Core.Core.MVVM;
-using WSUI.Core.Data.ElasticSearch.Response;
-using WSUI.Core.Enums;
+﻿using OF.Core.Core.MVVM;
+using OF.Core.Data.ElasticSearch.Response;
+using OF.Core.Enums;
 
-namespace WSUI.Infrastructure.MVVM.StatusItem
+namespace OF.Infrastructure.MVVM.StatusItem
 {
     public class StatusItemViewModel : DataViewModel
     {
-        public StatusItemViewModel(WSUIStatusItem item )
+        public StatusItemViewModel(OFStatusItem item )
         :base(item)
         {
             UpdateValue(item);
@@ -50,7 +50,7 @@ namespace WSUI.Infrastructure.MVVM.StatusItem
 
         public override void Update(object item)
         {
-            var data = item as WSUIStatusItem;
+            var data = item as OFStatusItem;
             if (data == null)
                 return;
 
@@ -62,7 +62,7 @@ namespace WSUI.Infrastructure.MVVM.StatusItem
             UpdateValue(data);
         }
 
-        private void UpdateValue(WSUIStatusItem item)
+        private void UpdateValue(OFStatusItem item)
         {
             if (item.Count == 0)
             {

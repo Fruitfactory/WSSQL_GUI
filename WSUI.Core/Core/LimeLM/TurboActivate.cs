@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace WSUI.Core.Core.LimeLM
+namespace OF.Core.Core.LimeLM
 {
     public static class TurboActivate
     {

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WSUI.Unistall")]
+[assembly: AssemblyTitle("OF.Unistall")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("FruitFactory")]
-[assembly: AssemblyProduct("WSUI.Unistall")]
+[assembly: AssemblyProduct("OF.Unistall")]
 [assembly: AssemblyCopyright("Copyright © FruitFactory 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

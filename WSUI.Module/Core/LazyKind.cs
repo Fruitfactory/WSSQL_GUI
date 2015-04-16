@@ -4,12 +4,12 @@ using System.Diagnostics;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
-using WSUI.Core.Enums;
-using WSUI.Core.Logger;
-using WSUI.Module.Interface;
-using WSUI.Module.Interface.ViewModel;
+using OF.Core.Enums;
+using OF.Core.Logger;
+using OF.Module.Interface;
+using OF.Module.Interface.ViewModel;
 
-namespace WSUI.Module.Core
+namespace OF.Module.Core
 {
     public class LazyKind : ILazyKind, INotifyPropertyChanged
     {

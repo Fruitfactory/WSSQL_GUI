@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WSPreview.PreviewHandler.Controls.Calendar
+namespace OFPreview.PreviewHandler.Controls.Calendar
 {
     internal class ParseAttribute : Attribute
     {

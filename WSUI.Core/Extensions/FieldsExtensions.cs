@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WSUI.Core.Interfaces;
+using OF.Core.Interfaces;
 
-namespace WSUI.Core.Extensions
+namespace OF.Core.Extensions
 {
     public static class FieldsExtensions
     {

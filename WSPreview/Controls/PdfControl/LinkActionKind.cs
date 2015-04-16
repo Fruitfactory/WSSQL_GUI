@@ -1,4 +1,4 @@
-﻿namespace WSPreview.Controls
+﻿namespace OFPreview.Controls
 {
     public enum LinkActionKind
     {

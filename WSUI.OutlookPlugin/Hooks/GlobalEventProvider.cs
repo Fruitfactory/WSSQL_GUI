@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace WSUIOutlookPlugin.Hooks
+namespace OFOutlookPlugin.Hooks
 {
     /// <summary>
     /// This component monitors all mouse activities globally (also outside of the application) 

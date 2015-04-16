@@ -23,7 +23,7 @@
     <ProjectGuid>{F956C79C-37E0-49C1-B243-9543DC0FF34D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WSUI.Unistall</RootNamespace>
+    <RootNamespace>OF.Unistall</RootNamespace>
     <AssemblyName>unistall</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -83,9 +83,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WSUI.Core\WSUI.Core.csproj">
+    <ProjectReference Include="..\WSUI.Core\OF.Core.csproj">
       <Project>{d650f4e9-99fe-46ec-a59d-bf3a99652255}</Project>
-      <Name>WSUI.Core</Name>
+      <Name>OF.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

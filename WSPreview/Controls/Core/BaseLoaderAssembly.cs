@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace WSPreview.Controls.Core
+namespace OFPreview.Controls.Core
 {
     public abstract class BaseLoaderAssembly
     {

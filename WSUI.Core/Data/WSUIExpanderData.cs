@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace WSUI.Core.Data
+namespace OF.Core.Data
 {
-    public class WSUIExpanderData
+    public class OFExpanderData
     {
         public ExpandDirection ExpandDirection { get; set; }
 

@@ -6,7 +6,7 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-namespace WSUI.Core.Enums
+namespace OF.Core.Enums
 {
     public enum TypeResult : int
     {

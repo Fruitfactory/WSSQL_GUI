@@ -1,6 +1,6 @@
-﻿namespace WSUI.Core.Data.ElasticSearch
+﻿namespace OF.Core.Data.ElasticSearch
 {
-    public class WSUIRecipient : WSUIElasticSearchBaseEntity
+    public class OFRecipient : OFElasticSearchBaseEntity
     {
         public string Name { get; set; }
 

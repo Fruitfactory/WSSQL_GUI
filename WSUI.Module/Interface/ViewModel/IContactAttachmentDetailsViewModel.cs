@@ -1,6 +1,6 @@
-﻿using WSUI.Core.Data;
+﻿using OF.Core.Data;
 
-namespace WSUI.Module.Interface.ViewModel
+namespace OF.Module.Interface.ViewModel
 {
     public interface IContactAttachmentDetailsViewModel : IContactKindDetailsViewModel<AttachmentSearchObject>
     {

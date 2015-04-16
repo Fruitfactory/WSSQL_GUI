@@ -2,17 +2,17 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace WSUI.Infrastructure.Controls.HeaderControl
+namespace OF.Infrastructure.Controls.HeaderControl
 {
-    public class WSUIHeaderControl : HeaderedContentControl
+    public class OFHeaderControl : HeaderedContentControl
     {
-        static WSUIHeaderControl()
+        static OFHeaderControl()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(WSUIHeaderControl),new FrameworkPropertyMetadata(typeof(WSUIHeaderControl)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(OFHeaderControl),new FrameworkPropertyMetadata(typeof(OFHeaderControl)));
         }
 
         public static readonly DependencyProperty AdditionalHeaderProperty = DependencyProperty.Register(
-            "AdditionalHeader", typeof (string), typeof (WSUIHeaderControl), new PropertyMetadata(default(string)));
+            "AdditionalHeader", typeof (string), typeof (OFHeaderControl), new PropertyMetadata(default(string)));
 
         public string AdditionalHeader
         {
@@ -21,7 +21,7 @@ namespace WSUI.Infrastructure.Controls.HeaderControl
         }
 
         public static readonly DependencyProperty HeaderFontWeightProperty = DependencyProperty.Register(
-            "HeaderFontWeight", typeof (FontWeight), typeof (WSUIHeaderControl), new PropertyMetadata(default(FontWeight)));
+            "HeaderFontWeight", typeof (FontWeight), typeof (OFHeaderControl), new PropertyMetadata(default(FontWeight)));
 
         public FontWeight HeaderFontWeight
         {

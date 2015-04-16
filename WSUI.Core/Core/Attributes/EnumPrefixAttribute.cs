@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace WSUI.Core.Core.Attributes
+namespace OF.Core.Core.Attributes
 {
     [System.AttributeUsage(AttributeTargets.Field)]
-    public class EnumPrefixAttribute : BaseWSUIAttribute
+    public class EnumPrefixAttribute : BaseOFAttribute
     {
         public EnumPrefixAttribute(string prefix)
         {

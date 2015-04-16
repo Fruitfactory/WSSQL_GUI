@@ -1,15 +1,15 @@
 using System;
 using System.IO;
 using System.Windows;
-using WSUI.Core.Enums;
-using WSUI.Core.Helpers;
-using WSUI.Core.Logger;
-using WSUI.Infrastructure.Service.Helpers;
-using WSUI.Module.Core;
-using WSUI.Module.Interface.ViewModel;
-using WSUI.Module.Service.Dialogs.Message;
+using OF.Core.Enums;
+using OF.Core.Helpers;
+using OF.Core.Logger;
+using OF.Infrastructure.Service.Helpers;
+using OF.Module.Core;
+using OF.Module.Interface.ViewModel;
+using OF.Module.Service.Dialogs.Message;
 
-namespace WSUI.Module.Commands
+namespace OF.Module.Commands
 {
     public class EmailCommand : BaseFilePreviewCommand
     {
@@ -68,7 +68,7 @@ namespace WSUI.Module.Commands
 
         protected override string GetIcon()
         {
-            return @"pack://application:,,,/WSUI.Module;component/Images/send.png";
+            return @"pack://application:,,,/OF.Module;component/Images/send.png";
         }
 
         protected override string GetTooltip()

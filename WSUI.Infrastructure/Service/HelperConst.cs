@@ -1,5 +1,5 @@
 ﻿
-namespace WSUI.Infrastructure.Services
+namespace OF.Infrastructure.Services
 {
     internal class HelperConst
     {

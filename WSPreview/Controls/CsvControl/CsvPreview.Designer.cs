@@ -1,4 +1,4 @@
-﻿namespace WSPreview.PreviewHandler.Controls.CsvControl
+﻿namespace OFPreview.PreviewHandler.Controls.CsvControl
 {
     partial class CsvPreview
     {

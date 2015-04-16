@@ -1,4 +1,4 @@
-﻿namespace WSUI.Core.Data.UI
+﻿namespace OF.Core.Data.UI
 {
     public class UIItem
     {

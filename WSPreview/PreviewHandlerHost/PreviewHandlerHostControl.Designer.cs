@@ -1,4 +1,4 @@
-namespace WSPreview.PreviewHandler.PreviewHandlerHost
+namespace OFPreview.PreviewHandler.PreviewHandlerHost
 {
     partial class PreviewHandlerHostControl
     {

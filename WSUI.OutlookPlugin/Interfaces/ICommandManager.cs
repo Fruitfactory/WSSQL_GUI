@@ -1,6 +1,6 @@
 ﻿using Microsoft.Practices.Prism.Events;
 
-namespace WSUIOutlookPlugin.Interfaces
+namespace OFOutlookPlugin.Interfaces
 {
     public interface ICommandManager
     {

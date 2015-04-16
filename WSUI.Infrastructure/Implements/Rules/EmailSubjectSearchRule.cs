@@ -12,14 +12,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Nest;
-using WSUI.Core.Core.AdvancedSearchCriteria;
-using WSUI.Core.Core.Rules;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Core.Enums;
-using WSUI.Core.Extensions;
-using WSUI.Infrastructure.Implements.Rules.BaseRules;
+using OF.Core.Core.AdvancedSearchCriteria;
+using OF.Core.Core.Rules;
+using OF.Core.Data.ElasticSearch;
+using OF.Core.Enums;
+using OF.Core.Extensions;
+using OF.Infrastructure.Implements.Rules.BaseRules;
 
-namespace WSUI.Infrastructure.Implements.Rules
+namespace OF.Infrastructure.Implements.Rules
 {
     public class EmailSubjectSearchRule : BaseEmailSearchRule
     {
@@ -46,12 +46,12 @@ namespace WSUI.Infrastructure.Implements.Rules
             base.Init();
         }
 
-        protected override Expression<Func<WSUIEmail, string>> GetSearchedProperty()
+        protected override Expression<Func<OFEmail, string>> GetSearchedProperty()
         {
             return e => e.Subject;
         }
 
-        protected override IFieldSort BuildAdvancedFieldSortSortSelector(SortFieldDescriptor<WSUIEmail> sortFieldDescriptor)
+        protected override IFieldSort BuildAdvancedFieldSortSortSelector(SortFieldDescriptor<OFEmail> sortFieldDescriptor)
         {
             if (AdvancedSearchCriterias.IsNull() ||
                AdvancedSearchCriterias.All(c => c.CriteriaType != AdvancedSearchCriteriaType.SortBy))
@@ -70,13 +70,13 @@ namespace WSUI.Infrastructure.Implements.Rules
             }
         }
 
-        protected override QueryContainer BuildAdvancedQuery(QueryDescriptor<WSUIEmail> queryDescriptor)
+        protected override QueryContainer BuildAdvancedQuery(QueryDescriptor<OFEmail> queryDescriptor)
         {
             if (AdvancedSearchCriterias.IsEmpty())
             {
                 return new QueryContainer();
             }
-            var listCriterias = new List<Func<QueryDescriptor<WSUIEmail>, QueryContainer>>();
+            var listCriterias = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
             foreach (var advancedSearchCriteria in AdvancedSearchCriterias)
             {
                 if (advancedSearchCriteria.Value.IsNull() || advancedSearchCriteria.Value.IsStringEmptyOrNull())
@@ -85,7 +85,7 @@ namespace WSUI.Infrastructure.Implements.Rules
                 switch (temp.CriteriaType)
                 {
                     case AdvancedSearchCriteriaType.To:
-                        var listShould = new List<Func<QueryDescriptor<WSUIEmail>, QueryContainer>>();
+                        var listShould = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
                         listShould.Add(d => d.Term("to.address",temp.Value));
                         listShould.Add(d => d.Term("to.name", temp.Value));
 

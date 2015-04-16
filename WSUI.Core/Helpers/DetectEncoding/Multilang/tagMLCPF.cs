@@ -1,6 +1,6 @@
 using System;
 
-namespace WSUI.Core.Helpers.DetectEncoding.Multilang
+namespace OF.Core.Helpers.DetectEncoding.Multilang
 {
     [Flags]
     public enum MLCPF

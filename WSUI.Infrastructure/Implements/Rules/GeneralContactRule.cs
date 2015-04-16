@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using WSUI.Core.Core.Search;
-using WSUI.Core.Data;
-using WSUI.Core.Enums;
-using WSUI.Core.Extensions;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
+using OF.Core.Core.Search;
+using OF.Core.Data;
+using OF.Core.Enums;
+using OF.Core.Extensions;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
 using System.Text.RegularExpressions;
-using WSUI.Core.Data.ElasticSearch;
+using OF.Core.Data.ElasticSearch;
 
-namespace WSUI.Infrastructure.Implements.Rules
+namespace OF.Infrastructure.Implements.Rules
 {
-    public class GeneralContactRule : BaseSearchRule<BaseSearchObject,WSUIEmail>
+    public class GeneralContactRule : BaseSearchRule<BaseSearchObject,OFEmail>
     {
         #region [needs]
 

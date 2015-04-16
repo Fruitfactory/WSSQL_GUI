@@ -16,20 +16,20 @@ using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using Nest;
-using WSUI.Core.Core.ElasticSearch;
-using WSUI.Core.Core.MVVM;
-using WSUI.Core.Enums;
-using WSUI.Core.Extensions;
-using WSUI.Core.Helpers;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
-using WSUI.Core.Utils.Dialog;
-using WSUI.Infrastructure;
-using WSUI.Infrastructure.MVVM.StatusItem;
-using WSUI.Module.Interface.View;
-using WSUI.Module.Interface.ViewModel;
+using OF.Core.Core.ElasticSearch;
+using OF.Core.Core.MVVM;
+using OF.Core.Enums;
+using OF.Core.Extensions;
+using OF.Core.Helpers;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
+using OF.Core.Utils.Dialog;
+using OF.Infrastructure;
+using OF.Infrastructure.MVVM.StatusItem;
+using OF.Module.Interface.View;
+using OF.Module.Interface.ViewModel;
 
-namespace WSUI.Module.ViewModel
+namespace OF.Module.ViewModel
 {
     public class ElasticSearchViewModel : ViewModelBase, IElasticSearchViewModel
     {
@@ -56,10 +56,10 @@ namespace WSUI.Module.ViewModel
         public void Initialize()
         {
             CheckServices();
-            InstallServiceCommand = new WSUIRelayCommand(InstallServiceCommandExecute);
-            RunServiceCommand = new WSUIRelayCommand(RunServiceCommandExecute);
-            CreateIndexCommand = new WSUIRelayCommand(CreateIndexCommandExecute);
-            LetsGoCommand = new WSUIRelayCommand(o => this.Close());
+            InstallServiceCommand = new OFRelayCommand(InstallServiceCommandExecute);
+            RunServiceCommand = new OFRelayCommand(RunServiceCommandExecute);
+            CreateIndexCommand = new OFRelayCommand(CreateIndexCommandExecute);
+            LetsGoCommand = new OFRelayCommand(o => this.Close());
             CreateIndexVisibility = Visibility.Visible;
             ShowProgress = Visibility.Collapsed;
             FinishedStepVisibility = Visibility.Collapsed;
@@ -219,7 +219,7 @@ namespace WSUI.Module.ViewModel
 #endif
             if (IsServiceRunning)
             {
-                var resp = ElasticSearchClient.IndexExists(WSUIElasticSearchClient.DefaultIndexName);
+                var resp = ElasticSearchClient.IndexExists(OFElasticSearchClient.DefaultIndexName);
                 IsIndexExisted = resp.Exists;//false;//
             }
         }

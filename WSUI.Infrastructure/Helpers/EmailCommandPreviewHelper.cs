@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Office.Interop.Outlook;
-using WSUI.Core.Data;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Core.Extensions;
-using WSUI.Core.Helpers;
-using WSUI.Infrastructure.Properties;
+using OF.Core.Data;
+using OF.Core.Data.ElasticSearch;
+using OF.Core.Extensions;
+using OF.Core.Helpers;
+using OF.Infrastructure.Properties;
 
-namespace WSUI.Infrastructure.Helpers
+namespace OF.Infrastructure.Helpers
 {
     public class EmailCommandPreviewHelper
     {
@@ -85,7 +85,7 @@ namespace WSUI.Infrastructure.Helpers
             return temp;
         }
 
-        private IEnumerable<string> GetRecepientString(WSUIRecipient[] arr)
+        private IEnumerable<string> GetRecepientString(OFRecipient[] arr)
         {
             if (arr.IsNull())
             {

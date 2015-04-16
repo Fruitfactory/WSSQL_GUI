@@ -1,8 +1,8 @@
 ﻿using Microsoft.Practices.Prism.Events;
 
-namespace WSUI.Core.Events
+namespace OF.Core.Events
 {
-    public class WSUIShowFolder : CompositePresentationEvent<string>
+    public class OFShowFolder : CompositePresentationEvent<string>
     {
     }
 }

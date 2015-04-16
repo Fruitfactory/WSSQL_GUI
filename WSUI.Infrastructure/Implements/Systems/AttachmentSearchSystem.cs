@@ -9,10 +9,10 @@
 
 
 
-using WSUI.Core.Core.Search;
-using WSUI.Infrastructure.Implements.Rules;
+using OF.Core.Core.Search;
+using OF.Infrastructure.Implements.Rules;
 
-namespace WSUI.Infrastructure.Implements.Systems 
+namespace OF.Infrastructure.Implements.Systems 
 {
 	public class AttachmentSearchSystem : BaseSearchSystem 
     {

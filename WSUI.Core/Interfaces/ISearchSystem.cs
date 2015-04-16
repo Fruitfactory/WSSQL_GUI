@@ -8,9 +8,9 @@
 
 using System;
 using System.Collections.Generic;
-using WSUI.Core.Core.AdvancedSearchCriteria;
+using OF.Core.Core.AdvancedSearchCriteria;
 
-namespace WSUI.Core.Interfaces
+namespace OF.Core.Interfaces
 {
     public interface ISearchSystem
     {

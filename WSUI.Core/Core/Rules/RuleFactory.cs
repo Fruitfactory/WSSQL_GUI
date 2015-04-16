@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WSUI.Core.Core.Rules
+namespace OF.Core.Core.Rules
 {
     public class RuleFactory
     {

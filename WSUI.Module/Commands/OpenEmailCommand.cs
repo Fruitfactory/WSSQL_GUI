@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
-using WSUI.Core.Enums;
-using WSUI.Core.Helpers;
-using WSUI.Core.Logger;
-using WSUI.Infrastructure.Service.Helpers;
-using WSUI.Module.Core;
-using WSUI.Module.Interface;
-using WSUI.Module.Interface.ViewModel;
-using WSUI.Module.Service.Dialogs.Message;
+using OF.Core.Enums;
+using OF.Core.Helpers;
+using OF.Core.Logger;
+using OF.Infrastructure.Service.Helpers;
+using OF.Module.Core;
+using OF.Module.Interface;
+using OF.Module.Interface.ViewModel;
+using OF.Module.Service.Dialogs.Message;
 
-namespace WSUI.Module.Commands
+namespace OF.Module.Commands
 {
     public class OpenEmailCommand :  BaseEmailPreviewCommand
     {
@@ -47,7 +47,7 @@ namespace WSUI.Module.Commands
 
         protected override string GetIcon()
         {
-            return @"pack://application:,,,/WSUI.Module;component/Images/openemail.png";
+            return @"pack://application:,,,/OF.Module;component/Images/openemail.png";
         }
 
         protected override string GetCaption()

@@ -8,12 +8,12 @@
 
 using System;
 using System.Globalization;
-using WSUI.Core.Core.Attributes;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Core.Extensions;
-using WSUI.Core.Helpers;
+using OF.Core.Core.Attributes;
+using OF.Core.Data.ElasticSearch;
+using OF.Core.Extensions;
+using OF.Core.Helpers;
 
-namespace WSUI.Core.Data
+namespace OF.Core.Data
 {
     public class BaseEmailSearchObject : BaseSearchObject
     {
@@ -55,19 +55,19 @@ namespace WSUI.Core.Data
         }
 
 
-        public WSUIRecipient[] To
+        public OFRecipient[] To
         {
             get { return Get(() => To); }
             set { Set(() => To, value);}
         }
 
-        public WSUIRecipient[] Cc
+        public OFRecipient[] Cc
         {
             get { return Get(() => Cc); }
             set { Set(() => Cc, value); }
         }
 
-        public WSUIRecipient[] Bcc
+        public OFRecipient[] Bcc
         {
             get { return Get(() => Bcc); }
             set { Set(() => Bcc, value); }
@@ -97,7 +97,7 @@ namespace WSUI.Core.Data
             set { Set(() => FromName,value);}
         }
 
-        public WSUIAttachment[] Attachments
+        public OFAttachment[] Attachments
         {
             get { return Get(() => Attachments); }
             set { Set(() => Attachments, value); }

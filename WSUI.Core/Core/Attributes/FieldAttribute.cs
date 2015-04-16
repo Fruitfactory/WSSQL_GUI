@@ -6,9 +6,9 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-namespace WSUI.Core.Core.Attributes
+namespace OF.Core.Core.Attributes
 {
-    public class FieldAttribute : BaseWSUIAttribute
+    public class FieldAttribute : BaseOFAttribute
     {
         public string FieldName { get; private set; }
 

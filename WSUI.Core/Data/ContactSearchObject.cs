@@ -9,12 +9,12 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using WSUI.Core.Core.Attributes;
-using WSUI.Core.Core.MVVM;
-using WSUI.Core.Enums;
-using WSUI.Core.Interfaces;
+using OF.Core.Core.Attributes;
+using OF.Core.Core.MVVM;
+using OF.Core.Enums;
+using OF.Core.Interfaces;
 
-namespace WSUI.Core.Data
+namespace OF.Core.Data
 {
     public class ContactSearchObject : BaseSearchObject
     {

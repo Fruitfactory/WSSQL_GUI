@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-namespace WSUI.Infrastructure.Controls.ProgressManager
+namespace OF.Infrastructure.Controls.ProgressManager
 {
     public class ProgressOperation
     {

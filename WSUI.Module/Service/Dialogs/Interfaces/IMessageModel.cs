@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-namespace WSUI.Module.Service.Dialogs.Interfaces
+namespace OF.Module.Service.Dialogs.Interfaces
 {
     public interface IMessageModel
     {

@@ -1,4 +1,4 @@
-﻿namespace WSUI.Module.Core
+﻿namespace OF.Module.Core
 {
     public class KindsConstName
     {

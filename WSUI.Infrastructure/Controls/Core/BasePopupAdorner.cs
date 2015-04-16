@@ -2,10 +2,10 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using WSUI.Core.Win32;
-using WSUI.Infrastructure.Controls.Application;
+using OF.Core.Win32;
+using OF.Infrastructure.Controls.Application;
 
-namespace WSUI.Infrastructure.Controls.Core
+namespace OF.Infrastructure.Controls.Core
 {
     public abstract class BasePopupAdorner : IDisposable
     {

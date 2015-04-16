@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace WSUIOutlookPlugin.Hooks
+namespace OFOutlookPlugin.Hooks
 {
 
     /// <summary>

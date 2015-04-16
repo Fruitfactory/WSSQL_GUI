@@ -1,6 +1,6 @@
-﻿using WSUI.Core.Data;
+﻿using OF.Core.Data;
 
-namespace WSUI.Core.Interfaces
+namespace OF.Core.Interfaces
 {
     internal interface IOutlookHelper
     {

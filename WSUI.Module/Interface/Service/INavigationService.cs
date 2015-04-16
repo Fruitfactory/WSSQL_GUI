@@ -1,8 +1,8 @@
-﻿using WSUI.Core.Interfaces;
-using WSUI.Module.Interface.View;
-using WSUI.Module.Interface.ViewModel;
+﻿using OF.Core.Interfaces;
+using OF.Module.Interface.View;
+using OF.Module.Interface.ViewModel;
 
-namespace WSUI.Module.Interface.Service
+namespace OF.Module.Interface.Service
 {
     internal interface INavigationService
     {

@@ -1,8 +1,8 @@
 ﻿using System.Net.Configuration;
 using System.Windows.Forms;
-using WSUI.CA.Core;
+using OF.CA.Core;
 
-namespace WSUI.CA.EmailValidate
+namespace OF.CA.EmailValidate
 {
     public class EmailValidateApplication : CoreSetupApplication
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using WSPreview.Controls.Core;
-using WSPreview.PreviewHandler.Controls.ImageControl.Interface;
+using OFPreview.Controls.Core;
+using OFPreview.PreviewHandler.Controls.ImageControl.Interface;
 
-namespace WSPreview.PreviewHandler.Controls.ImageControl.Service
+namespace OFPreview.PreviewHandler.Controls.ImageControl.Service
 {
     public class ImagePreviewGenerator : BaseLoaderAssembly, IImagePreviewGenerator
     {

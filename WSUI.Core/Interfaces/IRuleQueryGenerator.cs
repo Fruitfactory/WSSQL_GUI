@@ -7,9 +7,9 @@
 ///////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
-using WSUI.Core.Core.Rules;
+using OF.Core.Core.Rules;
 
-namespace WSUI.Core.Interfaces
+namespace OF.Core.Interfaces
 {
     public interface IRuleQueryGenerator
     {

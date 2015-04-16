@@ -7,20 +7,20 @@ using System.Windows.Input;
 using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
-using WSUI.Core.Core.MVVM;
-using WSUI.Core.Data;
-using WSUI.Core.Extensions;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
-using WSUI.Infrastructure.Events;
-using WSUI.Infrastructure.Payloads;
-using WSUI.Module.Interface.Service;
-using WSUI.Module.Interface.View;
-using WSUI.Module.Interface.ViewModel;
-using WSUI.Module.Service;
-using WSUI.Module.View;
+using OF.Core.Core.MVVM;
+using OF.Core.Data;
+using OF.Core.Extensions;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
+using OF.Infrastructure.Events;
+using OF.Infrastructure.Payloads;
+using OF.Module.Interface.Service;
+using OF.Module.Interface.View;
+using OF.Module.Interface.ViewModel;
+using OF.Module.Service;
+using OF.Module.View;
 
-namespace WSUI.Module.Core
+namespace OF.Module.Core
 {
     internal abstract class ContactKindDetailsViewModelBase<T> : ViewModelBase , IContactKindDetailsViewModel<T> where T : ISearchObject
     {
@@ -135,7 +135,7 @@ namespace WSUI.Module.Core
 
         private void HeightCalculateExecute(object o)
         {
-            var data = o as WSUIExpanderData;
+            var data = o as OFExpanderData;
             if (data.IsNull())
             {
                 return;

@@ -25,7 +25,7 @@ namespace WSUploader.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("h:\\Visual\\WORK\\WSUI\\solution\\ClickTwice\\full\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("h:\\Visual\\WORK\\OF\\solution\\ClickTwice\\full\\")]
         public string LocalFullPath {
             get {
                 return ((string)(this["LocalFullPath"]));
@@ -34,7 +34,7 @@ namespace WSUploader.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("h:\\Visual\\WORK\\WSUI\\solution\\ClickTwice\\trial\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("h:\\Visual\\WORK\\OF\\solution\\ClickTwice\\trial\\")]
         public string LocalTrialPath {
             get {
                 return ((string)(this["LocalTrialPath"]));

@@ -9,18 +9,18 @@ using System.Timers;
 using System.Windows.Threading;
 using System.Xml.Linq;
 using AddinExpress.MSO;
-using WSUI.Core.Helpers;
-using WSUI.Core.Logger;
-using WSUIOutlookPlugin.Interfaces;
+using OF.Core.Helpers;
+using OF.Core.Logger;
+using OFOutlookPlugin.Interfaces;
 using Timer = System.Timers.Timer;
 
-namespace WSUIOutlookPlugin.Core
+namespace OFOutlookPlugin.Core
 {
     public class UpdateHelper : IUpdatable
     {
         #region [const]
 
-        private const string WSUIPluginUpdatetingMutexName = "Global\\WSUIPluginUpdating";
+        private const string OFPluginUpdatetingMutexName = "Global\\OFPluginUpdating";
 
         private const string UpdatedFilename = "OutlookFinderSetup.msi";
         private const string ManifestFilename = "adxloader.dll.manifest";
@@ -98,7 +98,7 @@ namespace WSUIOutlookPlugin.Core
 
         private void Init()
         {
-            _path = Assembly.GetAssembly(typeof(WSUIAddinModule)).Location;
+            _path = Assembly.GetAssembly(typeof(OFAddinModule)).Location;
             _path = _path.Substring(0, _path.LastIndexOf('\\') + 1);
         }
 

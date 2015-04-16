@@ -8,13 +8,13 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Globalization;
-using WSPreview.PreviewHandler;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace WSPreview.PreviewHandler.PreviewHandlers
+namespace OFPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("MSDN Magazine PDF Preview Handler", ".pdf", "{480EE062-3BC0-4311-A18F-CACB7D3FBE74}")]
-    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.PdfPreviewHandler")]
+    [ProgId("OFPreview.PreviewHandler.PreviewHandlers.PdfPreviewHandler")]
     [Guid("092B96A3-5136-40DE-AA8B-13CB54084789")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]

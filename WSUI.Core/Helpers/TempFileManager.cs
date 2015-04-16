@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using WSUI.Core.Core.LimeLM;
-using WSUI.Core.Data;
-using WSUI.Core.Enums;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
+using OF.Core.Core.LimeLM;
+using OF.Core.Data;
+using OF.Core.Enums;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
 
-namespace WSUI.Core.Helpers
+namespace OF.Core.Helpers
 {
     public class TempFileManager
     {

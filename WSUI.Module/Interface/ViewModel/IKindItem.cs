@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using WSUI.Core.Data;
-using WSUI.Core.Interfaces;
-using WSUI.Infrastructure.Services;
-using WSUI.Module.Interface.Service;
+using OF.Core.Data;
+using OF.Core.Interfaces;
+using OF.Infrastructure.Services;
+using OF.Module.Interface.Service;
 
-namespace WSUI.Module.Interface.ViewModel
+namespace OF.Module.Interface.ViewModel
 {
     public interface IKindItem
     {

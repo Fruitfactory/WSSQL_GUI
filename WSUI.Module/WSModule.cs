@@ -3,19 +3,19 @@ using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
-using WSUI.Core.Core.ElasticSearch;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
-using WSUI.Core.Utils;
-using WSUI.Infrastructure;
-using WSUI.Module.Interface.Service;
-using WSUI.Module.Interface.View;
-using WSUI.Module.Interface.ViewModel;
-using WSUI.Module.View;
-using WSUI.Module.ViewModel;
+using OF.Core.Core.ElasticSearch;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
+using OF.Core.Utils;
+using OF.Infrastructure;
+using OF.Module.Interface.Service;
+using OF.Module.Interface.View;
+using OF.Module.Interface.ViewModel;
+using OF.Module.View;
+using OF.Module.ViewModel;
 using Action = System.Action;
 
-namespace WSUI.Module
+namespace OF.Module
 {
     public class WSModule : IModule
     {
@@ -83,7 +83,7 @@ namespace WSUI.Module
             _unityContainer.RegisterType<ISettingsView<AdvancedSearchViewModel>, AdvancedSearchSettingsView>();
             _unityContainer.RegisterType<IDataView<AdvancedSearchViewModel>, AdvancedSearchDataView>();
 
-            _unityContainer.RegisterType<IElasticSearchInitializationIndex, WSUIElasticSearchClient>();
+            _unityContainer.RegisterType<IElasticSearchInitializationIndex, OFElasticSearchClient>();
             _unityContainer.RegisterType<IElasticSearchView, ElasticSearchView>();
             _unityContainer.RegisterType<IElasticSearchViewModel, ElasticSearchViewModel>();
             

@@ -25,7 +25,7 @@ namespace WSADXPublisher.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\WSUI\\solution\\Clicktwice\\full")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\OF\\solution\\Clicktwice\\full")]
         public string publishingLocation {
             get {
                 return ((string)(this["publishingLocation"]));
@@ -43,7 +43,7 @@ namespace WSADXPublisher.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\WSUI\\solution\\WSUI\\Search.ico")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\OF\\solution\\OF\\Search.ico")]
         public string iconFileName {
             get {
                 return ((string)(this["iconFileName"]));
@@ -115,7 +115,7 @@ namespace WSADXPublisher.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\WSUI\\solution\\ROutput\\OutlookFinderSetup.msi")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\OF\\solution\\ROutput\\OutlookFinderSetup.msi")]
         public string installerFile {
             get {
                 return ((string)(this["installerFile"]));
@@ -142,7 +142,7 @@ namespace WSADXPublisher.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\WSUI\\solution\\Clicktwice\\trial")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\OF\\solution\\Clicktwice\\trial")]
         public string publishingLocationTrial {
             get {
                 return ((string)(this["publishingLocationTrial"]));
@@ -160,7 +160,7 @@ namespace WSADXPublisher.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\WSUI\\solution\\Toolkits\\Certificate\\mycert.pfx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Vincent\\Documents\\GitHub\\OF\\solution\\Toolkits\\Certificate\\mycert.pfx")]
         public string certificateFile {
             get {
                 return ((string)(this["certificateFile"]));

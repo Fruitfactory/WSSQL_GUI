@@ -11,13 +11,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using WSUI.Core.Core.AdvancedSearchCriteria;
-using WSUI.Core.Extensions;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
+using OF.Core.Core.AdvancedSearchCriteria;
+using OF.Core.Extensions;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
 using Exception = System.Exception;
 
-namespace WSUI.Core.Core.Search
+namespace OF.Core.Core.Search
 {
     public abstract class BaseSearchSystem : ISearchSystem
     {

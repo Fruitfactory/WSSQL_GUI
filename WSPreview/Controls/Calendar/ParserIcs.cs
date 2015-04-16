@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace WSPreview.PreviewHandler.Controls.Calendar
+namespace OFPreview.PreviewHandler.Controls.Calendar
 {
     static class ParserIcs
     {

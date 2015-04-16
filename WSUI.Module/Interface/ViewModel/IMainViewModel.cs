@@ -4,13 +4,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Transitionals;
-using WSUI.Core.Data;
-using WSUI.Core.Enums;
-using WSUI.Core.Interfaces;
-using WSUI.Module.Interface.Service;
-using WSUI.Module.Service;
+using OF.Core.Data;
+using OF.Core.Enums;
+using OF.Core.Interfaces;
+using OF.Module.Interface.Service;
+using OF.Module.Service;
 
-namespace WSUI.Module.Interface.ViewModel
+namespace OF.Module.Interface.ViewModel
 {
     public interface IMainViewModel
     {

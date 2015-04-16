@@ -1,6 +1,6 @@
-﻿using WSUI.Core.Core.Attributes;
+﻿using OF.Core.Core.Attributes;
 
-namespace WSUI.Core.Enums
+namespace OF.Core.Enums
 {
     public enum AdvancedSearchCriteriaType
     {

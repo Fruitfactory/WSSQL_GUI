@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
-using WSUI.Core.Enums;
+using OF.Core.Enums;
 
-namespace WSUI.Core.Data
+namespace OF.Core.Data
 {
     public class AttachmentContentSearchObject : BaseSearchObject
     {

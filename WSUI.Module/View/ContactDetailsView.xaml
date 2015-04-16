@@ -1,16 +1,16 @@
-﻿<UserControl x:Class="WSUI.Module.View.ContactDetailsView"
+﻿<UserControl x:Class="OF.Module.View.ContactDetailsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:service="clr-namespace:WSUI.Module.Service"
-             xmlns:attachedProperty="clr-namespace:WSUI.Infrastructure.Helpers.AttachedProperty;assembly=WSUI.Infrastructure"
-             xmlns:listBox="clr-namespace:WSUI.Infrastructure.Controls.ListBox;assembly=WSUI.Infrastructure"
-             xmlns:headerControl="clr-namespace:WSUI.Infrastructure.Controls.HeaderControl;assembly=WSUI.Infrastructure"
-             xmlns:behaviors="clr-namespace:WSUI.Module.Service.Behaviors"
-             xmlns:core="clr-namespace:WSUI.Module.Core"
+             xmlns:service="clr-namespace:OF.Module.Service"
+             xmlns:attachedProperty="clr-namespace:OF.Infrastructure.Helpers.AttachedProperty;assembly=OF.Infrastructure"
+             xmlns:listBox="clr-namespace:OF.Infrastructure.Controls.ListBox;assembly=OF.Infrastructure"
+             xmlns:headerControl="clr-namespace:OF.Infrastructure.Controls.HeaderControl;assembly=OF.Infrastructure"
+             xmlns:behaviors="clr-namespace:OF.Module.Service.Behaviors"
+             xmlns:core="clr-namespace:OF.Module.Core"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:behaviors1="clr-namespace:WSUI.Infrastructure.Behaviors;assembly=WSUI.Infrastructure"
-             xmlns:enums="clr-namespace:WSUI.Module.Enums"
+             xmlns:behaviors1="clr-namespace:OF.Infrastructure.Behaviors;assembly=OF.Infrastructure"
+             xmlns:enums="clr-namespace:OF.Module.Enums"
              x:Name="this">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -33,15 +33,15 @@
                 <Setter Property="Margin" Value="5 5 5 0" />
             </Style>
 
-            <Style x:Key="HeaderStyle" TargetType="headerControl:WSUIHeaderControl"
-                   BasedOn="{StaticResource {x:Type headerControl:WSUIHeaderControl}}">
+            <Style x:Key="HeaderStyle" TargetType="headerControl:OFHeaderControl"
+                   BasedOn="{StaticResource {x:Type headerControl:OFHeaderControl}}">
                 <Setter Property="HeaderFontWeight" Value="Normal" />
                 <Setter Property="Foreground" Value="{StaticResource LabelTextBrush}" />
                 <Setter Property="BorderThickness" Value="0 1 0 0" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid behaviors:WSUIActualHeightBehavior.IsObserve="True" behaviors:WSUIActualHeightBehavior.ActualHeight="{Binding ActualHeight,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+    <Grid behaviors:OFActualHeightBehavior.IsObserve="True" behaviors:OFActualHeightBehavior.ActualHeight="{Binding ActualHeight,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -183,7 +183,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <headerControl:WSUIHeaderControl Grid.Row="0"
+                        <headerControl:OFHeaderControl Grid.Row="0"
                                                          Header="Conversations"
                                                          Style="{StaticResource HeaderStyle}"
                                                          Visibility="{Binding IsEmailVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
@@ -194,7 +194,7 @@
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <listBox:WSUIListBox
+                                <listBox:OFListBox
                                     x:Name="WsuiListBox"
                                     Style="{StaticResource SimpleListBoxStyle}"
                                     ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
@@ -208,15 +208,15 @@
                                     HorizontalContentAlignment="Stretch"
                                     CalculateActualHeightCommand="{Binding EmailHeightCalculateCommand}"
                                     ScrollViewer.CanContentScroll="False">
-                                    <listBox:WSUIListBox.ContextMenu>
+                                    <listBox:OFListBox.ContextMenu>
                                         <ContextMenu
                                             ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}" />
-                                    </listBox:WSUIListBox.ContextMenu>
+                                    </listBox:OFListBox.ContextMenu>
                                     <i:Interaction.Behaviors>
                                         <behaviors1:SelectedItemTrackingBehavior
                                             TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                                     </i:Interaction.Behaviors>
-                                </listBox:WSUIListBox>
+                                </listBox:OFListBox>
 
                                 <StackPanel x:Name="MoreEmail" Orientation="Horizontal" HorizontalAlignment="Right"
                                             Grid.Row="1"
@@ -229,9 +229,9 @@
                                     </TextBlock>
                                 </StackPanel>
                             </Grid>
-                        </headerControl:WSUIHeaderControl>
+                        </headerControl:OFHeaderControl>
 
-                        <headerControl:WSUIHeaderControl
+                        <headerControl:OFHeaderControl
                             x:Name="FileHeaderControl"
                             Grid.Row="1"
                             Header="Files"
@@ -248,13 +248,13 @@
                                     x:Name="ListBox"
                                     ItemsSource="{Binding Path=MainFileSource,UpdateSourceTrigger=PropertyChanged}"
                                     ItemTemplateSelector="{StaticResource templateSelector}"
-                                    behaviors:WSUIListboxSelectOnClickBehavior.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                    behaviors:OFListboxSelectOnClickBehavior.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                     HorizontalContentAlignment="Stretch"
                                     ScrollViewer.CanContentScroll="False"
                                     ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                                     ScrollViewer.VerticalScrollBarVisibility="Hidden">
                                     <i:Interaction.Behaviors>
-                                        <behaviors:WSUIListboxSelectOnClickBehavior />
+                                        <behaviors:OFListboxSelectOnClickBehavior />
                                         <behaviors1:ListBoxBehavior />
                                         <behaviors1:SelectedItemTrackingBehavior
                                             TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
@@ -276,7 +276,7 @@
                                     </TextBlock>
                                 </StackPanel>
                             </Grid>
-                        </headerControl:WSUIHeaderControl>
+                        </headerControl:OFHeaderControl>
 
                         <TextBlock TextTrimming="CharacterEllipsis">
                             <TextBlock.Style>
@@ -326,7 +326,7 @@
                                     Height="23" />
                         </Grid>
 
-                        <listBox:WSUIListBox x:Name="listBox"
+                        <listBox:OFListBox x:Name="listBox"
                                              Grid.Row="1"
                                              Style="{StaticResource SimpleListBoxStyle}"
                                              ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}"
@@ -338,14 +338,14 @@
                                              ItemTemplateSelector="{StaticResource templateSelector}"
                                              ScrollViewer.ScrollChanged="ListBox_OnScrollChanged"
                                              HorizontalContentAlignment="Stretch">
-                            <listBox:WSUIListBox.ContextMenu>
+                            <listBox:OFListBox.ContextMenu>
                                 <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}" />
-                            </listBox:WSUIListBox.ContextMenu>
+                            </listBox:OFListBox.ContextMenu>
                             <i:Interaction.Behaviors>
                                 <behaviors1:SelectedItemTrackingBehavior
                                     TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                             </i:Interaction.Behaviors>
-                        </listBox:WSUIListBox>
+                        </listBox:OFListBox>
 
                         <Border Background="#80FFFFFF"
                                 Visibility="{Binding IsEmailBusy,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"

@@ -10,11 +10,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using WSUI.Core.Core.Rules;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Infrastructure.Implements.Rules.BaseRules;
+using OF.Core.Core.Rules;
+using OF.Core.Data.ElasticSearch;
+using OF.Infrastructure.Implements.Rules.BaseRules;
 
-namespace WSUI.Infrastructure.Implements.Rules 
+namespace OF.Infrastructure.Implements.Rules 
 {
 	public class EmailContentSearchRule : BaseEmailSearchRule 
     {
@@ -39,7 +39,7 @@ namespace WSUI.Infrastructure.Implements.Rules
 	        base.Init();
 	    }
 
-	    protected override Expression<Func<WSUIEmail, string>> GetSearchedProperty()
+	    protected override Expression<Func<OFEmail, string>> GetSearchedProperty()
 	    {
 	        return e => e.Analyzedcontent;
 	    }

@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace WSUIOutlookPlugin.Hooks
+namespace OFOutlookPlugin.Hooks
 {
 
     public static partial class HookManager {

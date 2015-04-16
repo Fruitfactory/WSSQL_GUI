@@ -13,16 +13,16 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Windows.Documents;
 using Nest;
-using WSUI.Core.Core.Search;
-using WSUI.Core.Data;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Core.Enums;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
+using OF.Core.Core.Search;
+using OF.Core.Data;
+using OF.Core.Data.ElasticSearch;
+using OF.Core.Enums;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
 
-namespace WSUI.Infrastructure.Implements.Rules.BaseRules
+namespace OF.Infrastructure.Implements.Rules.BaseRules
 {
-    public abstract class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject, WSUIEmail>, IEmailSearchRule
+    public abstract class BaseEmailSearchRule : BaseSearchRule<EmailSearchObject, OFEmail>, IEmailSearchRule
     {
 
         #region [needs]
@@ -54,25 +54,25 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
             base.Reset();
         }
 
-        protected override QueryContainer BuildQuery(QueryDescriptor<WSUIEmail> queryDescriptor)
+        protected override QueryContainer BuildQuery(QueryDescriptor<OFEmail> queryDescriptor)
         {
             var preparedCriterias = GetProcessingSearchCriteria();
             if (preparedCriterias.Count > 1)
             {
                 return queryDescriptor.Bool(descriptor =>
                 {
-                    descriptor.Must(preparedCriterias.Select(preparedCriteria => (Func<QueryDescriptor<WSUIEmail>, QueryContainer>) (descriptor1 => descriptor1.Term(GetSearchedProperty(), preparedCriteria))).ToArray());
+                    descriptor.Must(preparedCriterias.Select(preparedCriteria => (Func<QueryDescriptor<OFEmail>, QueryContainer>) (descriptor1 => descriptor1.Term(GetSearchedProperty(), preparedCriteria))).ToArray());
                 });
             }
             return queryDescriptor.Term(GetSearchedProperty(), Query);
         }
 
-        protected override IFieldSort BuildSortSelector(SortFieldDescriptor<WSUIEmail> sortFieldDescriptor)
+        protected override IFieldSort BuildSortSelector(SortFieldDescriptor<OFEmail> sortFieldDescriptor)
         {
             return sortFieldDescriptor.OnField(e => e.Datereceived).Descending();
         }
 
-        protected abstract Expression<Func<WSUIEmail, string>> GetSearchedProperty();
+        protected abstract Expression<Func<OFEmail, string>> GetSearchedProperty();
 
         protected override void ProcessResult()
         {

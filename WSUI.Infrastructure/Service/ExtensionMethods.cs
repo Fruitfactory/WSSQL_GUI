@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WSUI.Infrastructure.Service
+namespace OF.Infrastructure.Service
 {
     public static class ExtensionMethods
     {

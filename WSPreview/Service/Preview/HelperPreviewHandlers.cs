@@ -6,13 +6,13 @@ using System.Windows.Threading;
 using Microsoft.Office.Interop.Word;
 using Threads = System.Threading;
 using Tasks = System.Threading.Tasks;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Win32;
-using WSUI.Core.Enums;
+using OF.Core.Enums;
 
-namespace WSPreview.PreviewHandler.Service.Preview
+namespace OFPreview.PreviewHandler.Service.Preview
 {
     public class HelperPreviewHandlers
     {
@@ -26,7 +26,7 @@ namespace WSPreview.PreviewHandler.Service.Preview
 
         #region [needs]
 
-        private readonly string InterfaceName = "WSPreview.PreviewHandler.PreviewHandlerFramework.IPreviewControl";
+        private readonly string InterfaceName = "OFPreview.PreviewHandler.PreviewHandlerFramework.IPreviewControl";
 
         private readonly Dictionary<string, Type> _handlersDictionary = null;
         private readonly Dictionary<ControlsKey, Type> _poolPreviewControlsTypes;

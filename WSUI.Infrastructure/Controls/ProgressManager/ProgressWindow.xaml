@@ -1,4 +1,4 @@
-﻿<Window x:Class="WSUI.Infrastructure.Controls.ProgressManager.ProgressWindow"
+﻿<Window x:Class="OF.Infrastructure.Controls.ProgressManager.ProgressWindow"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

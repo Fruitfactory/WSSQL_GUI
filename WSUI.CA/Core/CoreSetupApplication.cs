@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace WSUI.CA.Core
+namespace OF.CA.Core
 {
     public class CoreSetupApplication : IDisposable
     {

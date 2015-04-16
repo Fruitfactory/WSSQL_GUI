@@ -13,18 +13,18 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Nest;
-using WSUI.Core.Core.Rules;
-using WSUI.Core.Core.Search;
-using WSUI.Core.Data;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Core.Enums;
-using WSUI.Core.Logger;
-using WSUI.Core.Utils;
-using WSUI.Infrastructure.Service.Helpers;
+using OF.Core.Core.Rules;
+using OF.Core.Core.Search;
+using OF.Core.Data;
+using OF.Core.Data.ElasticSearch;
+using OF.Core.Enums;
+using OF.Core.Logger;
+using OF.Core.Utils;
+using OF.Infrastructure.Service.Helpers;
 
-namespace WSUI.Infrastructure.Implements.Rules.BaseRules 
+namespace OF.Infrastructure.Implements.Rules.BaseRules 
 {
-	public class BaseAttachmentSearchRule : BaseSearchRule<AttachmentContentSearchObject,WSUIAttachmentContent>
+	public class BaseAttachmentSearchRule : BaseSearchRule<AttachmentContentSearchObject,OFAttachmentContent>
 	{
 
 		public BaseAttachmentSearchRule()
@@ -44,20 +44,20 @@ namespace WSUI.Infrastructure.Implements.Rules.BaseRules
             return "*"; // searching in all property
         }
 
-        protected override QueryContainer BuildQuery(QueryDescriptor<WSUIAttachmentContent> queryDescriptor)
+        protected override QueryContainer BuildQuery(QueryDescriptor<OFAttachmentContent> queryDescriptor)
         {
             var preparedCriterias = GetProcessingSearchCriteria();
             if (preparedCriterias.Count > 1)
             {
                 return queryDescriptor.Bool(descriptor =>
                 {
-                    descriptor.Must(preparedCriterias.Select(preparedCriteria => (Func<QueryDescriptor<WSUIAttachmentContent>, QueryContainer>)(descriptor1 => descriptor1.Term(GetSearchedProperty(), preparedCriteria))).ToArray());
+                    descriptor.Must(preparedCriterias.Select(preparedCriteria => (Func<QueryDescriptor<OFAttachmentContent>, QueryContainer>)(descriptor1 => descriptor1.Term(GetSearchedProperty(), preparedCriteria))).ToArray());
                 });
             }
             return queryDescriptor.Term(GetSearchedProperty(), Query);
         }
 
-        protected virtual Expression<Func<WSUIAttachmentContent, string>> GetSearchedProperty()
+        protected virtual Expression<Func<OFAttachmentContent, string>> GetSearchedProperty()
         {
             return null;
         }

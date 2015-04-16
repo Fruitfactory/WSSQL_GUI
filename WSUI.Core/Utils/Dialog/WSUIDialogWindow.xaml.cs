@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Threading;
-using WSUI.Core.Utils.Dialog.Interfaces;
+using OF.Core.Utils.Dialog.Interfaces;
 
-namespace WSUI.Core.Utils.Dialog
+namespace OF.Core.Utils.Dialog
 {
     /// <summary>
-    /// Interaction logic for WSUIDialogWindow.xaml
+    /// Interaction logic for OFDialogWindow.xaml
     /// </summary>
-    public partial class WSUIDialogWindow : MahApps.Metro.Controls.MetroWindow
+    public partial class OFDialogWindow : MahApps.Metro.Controls.MetroWindow
     {
-        private IWSUIViewModel _viewModel = null;
+        private IOFViewModel _viewModel = null;
 
-        public WSUIDialogWindow(IWSUIViewModel viewModel)
+        public OFDialogWindow(IOFViewModel viewModel)
         {
             _viewModel = viewModel;
             InitializeComponent();

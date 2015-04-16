@@ -7,13 +7,13 @@ using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.Unity;
 using Transitionals.Controls;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
-using WSUI.Module.Interface.View;
-using WSUI.Module.Interface.ViewModel;
-using WSUI.Module.Service;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
+using OF.Module.Interface.View;
+using OF.Module.Interface.ViewModel;
+using OF.Module.Service;
 
-namespace WSUI.Control
+namespace OF.Control
 {
     public class PluginBootStraper : UnityBootstrapper, IPluginBootStraper
     {
@@ -83,7 +83,7 @@ namespace WSUI.Control
             //Stopwatch watch = new Stopwatch();
             //watch.Start();
             var catalog = new ModuleCatalog();
-            catalog.AddModule(typeof(WSUI.Module.WSModule));
+            catalog.AddModule(typeof(OF.Module.WSModule));
             //watch.Stop();
             //WSSqlLogger.Instance.LogInfo(string.Format("CreateModuleCatalog (plugin): {0}ms",watch.ElapsedMilliseconds));
             return catalog;
@@ -94,9 +94,9 @@ namespace WSUI.Control
             //base.InitializeModules();
             //Stopwatch watch = new Stopwatch();
             //watch.Start();
-            IModule module = Container.Resolve<WSUI.Module.WSModule>();
+            IModule module = Container.Resolve<OF.Module.WSModule>();
             module.Initialize();
-            _mainViewModel = Container.Resolve<WSUI.Module.ViewModel.MainViewModel>();
+            _mainViewModel = Container.Resolve<OF.Module.ViewModel.MainViewModel>();
             (this.View as ISidebarView).Model = _mainViewModel;
             //watch.Stop();
             //WSSqlLogger.Instance.LogInfo(string.Format("InitializeModules (plugin): {0}ms",watch.ElapsedMilliseconds));

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using WSUI.Core.Core.LimeLM;
+using OF.Core.Core.LimeLM;
 
-namespace WSUI.CA.EmailValidate
+namespace OF.CA.EmailValidate
 {
     public partial class EmailForm : Form
     {

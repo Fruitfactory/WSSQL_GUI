@@ -4,11 +4,11 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interactivity;
 using System.Windows.Media;
-using WSUI.Core.Data;
-using WSUI.Core.Extensions;
-using WSUI.Core.Logger;
+using OF.Core.Data;
+using OF.Core.Extensions;
+using OF.Core.Logger;
 
-namespace WSUI.Infrastructure.Behaviors
+namespace OF.Infrastructure.Behaviors
 {
     public class SelectedItemTrackingBehavior : Behavior<ListBox>
     {

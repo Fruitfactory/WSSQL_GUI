@@ -9,17 +9,17 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Practices.ObjectBuilder2;
-using WSUI.Core.Core.ElasticSearch;
-using WSUI.Core.Data;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Core.Enums;
-using WSUI.Core.Extensions;
-using WSUI.Core.Helpers.DetectEncoding.Multilang;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
+using OF.Core.Core.ElasticSearch;
+using OF.Core.Data;
+using OF.Core.Data.ElasticSearch;
+using OF.Core.Enums;
+using OF.Core.Extensions;
+using OF.Core.Helpers.DetectEncoding.Multilang;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
-namespace WSUI.Core.Helpers
+namespace OF.Core.Helpers
 {
     public class OutlookHelper : IOutlookHelper, IDisposable
     {
@@ -406,7 +406,7 @@ namespace WSUI.Core.Helpers
         private Outlook.Account FindSenderAccount(EmailSearchObject data)
         {
             Outlook.Account result = null;
-            WSUIRecipient recep = data.To.FirstOrDefault();
+            OFRecipient recep = data.To.FirstOrDefault();
             if (recep.IsNull())
             {
                 return result;
@@ -1007,8 +1007,8 @@ namespace WSUI.Core.Helpers
 
         private IEnumerable<string> GetAttachments(EmailSearchObject searchObj, string tempFolder)
         {
-            var esClient = new WSUIElasticSearchClient();
-            var result = esClient.Search<WSUIAttachmentContent>(s => s.Query(d => d.QueryString(qq => qq.Query(searchObj.EntryID))));
+            var esClient = new OFElasticSearchClient();
+            var result = esClient.Search<OFAttachmentContent>(s => s.Query(d => d.QueryString(qq => qq.Query(searchObj.EntryID))));
             var fileList = new List<string>();
             if (result.Documents.Any())
             {

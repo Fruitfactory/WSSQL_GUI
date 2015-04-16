@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace WSUI.Core.Extensions
+namespace OF.Core.Extensions
 {
     public static class ReflectionExtensions
     {

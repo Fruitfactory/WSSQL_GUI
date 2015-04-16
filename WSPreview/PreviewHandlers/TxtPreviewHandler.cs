@@ -4,12 +4,12 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Globalization;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace WSPreview.PreviewHandler.PreviewHandlers
+namespace OFPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("WSSQL TXT Preview Handler", ".txt1", "{24B7E73C-C49F-488A-86AD-2FA2E3232E06}")]
-    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.TxtPreviewHandler")]
+    [ProgId("OFPreview.PreviewHandler.PreviewHandlers.TxtPreviewHandler")]
     [Guid("D12FC8ED-130D-4D85-9EA0-59AD9C843F63")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]

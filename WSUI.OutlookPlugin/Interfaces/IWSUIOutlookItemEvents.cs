@@ -1,9 +1,9 @@
 ﻿using System;
 using AddinExpress.MSO;
 
-namespace WSUIOutlookPlugin.Interfaces
+namespace OFOutlookPlugin.Interfaces
 {
-    public interface IWSUIOutlookItemEvents : IDisposable
+    public interface IOFOutlookItemEvents : IDisposable
     {
         bool ConnectTo(object olFolder, bool eventClassReleasesComObject);
         bool ConnectTo(object olFolder, bool eventClassReleasesComObject, bool recursive);

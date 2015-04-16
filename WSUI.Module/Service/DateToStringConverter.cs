@@ -2,11 +2,11 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using WSUI.Core.Data;
+using OF.Core.Data;
 using System.Text.RegularExpressions;
-using WSUI.Core.Extensions;
+using OF.Core.Extensions;
 
-namespace WSUI.Module.Service
+namespace OF.Module.Service
 {
     [ValueConversion(typeof(DateTime),typeof(string))]
     public class DateToStringConverter : IValueConverter

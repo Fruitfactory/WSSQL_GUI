@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using WSUI.Core.Data;
-using WSUI.Core.Enums;
+using OF.Core.Data;
+using OF.Core.Enums;
 
-namespace WSUI.Module.Service
+namespace OF.Module.Service
 {
     public class AllFilesDataTemplateSelector : DataTemplateSelector
     {

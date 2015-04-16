@@ -2,23 +2,23 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
-using WSUI.Core.Data;
-using WSUI.Core.Extensions;
-using WSUI.Infrastructure.Controls.ListBox;
+using OF.Core.Data;
+using OF.Core.Extensions;
+using OF.Infrastructure.Controls.ListBox;
 using Size = System.Drawing.Size;
 
-namespace WSUI.Infrastructure.Behaviors
+namespace OF.Infrastructure.Behaviors
 {
     public class ListBoxExpandBehavior : Behavior<Expander>
     {
 
         private bool IsExpanded { get; set; }
         private bool IsCollapsed { get; set; }
-        private WSUIListBox ParentListBox { get; set; }
+        private OFListBox ParentListBox { get; set; }
         protected override void OnAttached()
         {
             base.OnAttached();
-            ParentListBox = AssociatedObject.GetParent<WSUIListBox>();
+            ParentListBox = AssociatedObject.GetParent<OFListBox>();
             AssociatedObject.Expanded += AssociatedObjectOnExpanded;
             AssociatedObject.Collapsed += AssociatedObjectOnCollapsed;
             AssociatedObject.SizeChanged += AssociatedObjectOnSizeChanged;
@@ -31,12 +31,12 @@ namespace WSUI.Infrastructure.Behaviors
             var point = AssociatedObject.TranslatePoint(new Point(0, 0), ParentListBox);
             if (IsExpanded && ParentListBox  != null)
             {
-                ParentListBox.RaiseCalculationHeight(new WSUIExpanderData(){ExpandDirection =  AssociatedObject.ExpandDirection,NewSize = sizeChangedEventArgs.NewSize, OldSize = sizeChangedEventArgs.PreviousSize, Location = point});
+                ParentListBox.RaiseCalculationHeight(new OFExpanderData(){ExpandDirection =  AssociatedObject.ExpandDirection,NewSize = sizeChangedEventArgs.NewSize, OldSize = sizeChangedEventArgs.PreviousSize, Location = point});
                 IsExpanded = false;
             }
             if (IsCollapsed && ParentListBox != null)
             {
-                ParentListBox.RaiseCalculationHeight(new WSUIExpanderData() { ExpandDirection = AssociatedObject.ExpandDirection, NewSize = sizeChangedEventArgs.NewSize, OldSize = sizeChangedEventArgs.PreviousSize, Location = point });
+                ParentListBox.RaiseCalculationHeight(new OFExpanderData() { ExpandDirection = AssociatedObject.ExpandDirection, NewSize = sizeChangedEventArgs.NewSize, OldSize = sizeChangedEventArgs.PreviousSize, Location = point });
                 IsCollapsed = false;
             }
             System.Diagnostics.Debug.WriteLine(AssociatedObject.ExpandDirection.ToString());

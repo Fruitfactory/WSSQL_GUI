@@ -1,10 +1,10 @@
 ﻿using System;
 using Nest;
 
-namespace WSUI.Core.Data.ElasticSearch
+namespace OF.Core.Data.ElasticSearch
 {
     [ElasticType(Name = "email")]
-    public class WSUIEmail : WSUIElasticSearchBaseEntity
+    public class OFEmail : OFElasticSearchBaseEntity
     {
         public string ItemName { get; set; }
 
@@ -42,13 +42,13 @@ namespace WSUI.Core.Data.ElasticSearch
 
         public string FromAddress { get; set; }
 
-        public WSUIRecipient[] To { get; set; }
+        public OFRecipient[] To { get; set; }
 
-        public WSUIRecipient[] Cc { get; set; }
+        public OFRecipient[] Cc { get; set; }
 
-        public WSUIRecipient[] Bcc { get; set; }
+        public OFRecipient[] Bcc { get; set; }
 
-        public WSUIAttachment[] Attachments { get; set; }
+        public OFAttachment[] Attachments { get; set; }
 
         public override string ToString()
         {

@@ -1,10 +1,10 @@
 ﻿using System;
-using WSUI.Core.EventArguments;
+using OF.Core.EventArguments;
 
-namespace WSUI.Core.Interfaces
+namespace OF.Core.Interfaces
 {
     public interface ICommandPreviewControl
     {
-        event EventHandler<WSUIPreviewCommandArgs> PreviewCommandExecuted;
+        event EventHandler<OFPreviewCommandArgs> PreviewCommandExecuted;
     }
 }

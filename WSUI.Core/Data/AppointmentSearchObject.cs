@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Data.Common;
-using WSUI.Core.Enums;
+using OF.Core.Enums;
 
-namespace WSUI.Core.Data
+namespace OF.Core.Data
 {
     public class AppointmentSearchObject : AbstractSearchObject
     {

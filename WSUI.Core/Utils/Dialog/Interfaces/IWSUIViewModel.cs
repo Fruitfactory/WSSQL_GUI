@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Windows.Input;
 
-namespace WSUI.Core.Utils.Dialog.Interfaces
+namespace OF.Core.Utils.Dialog.Interfaces
 {
-    public interface IWSUIViewModel : IDataErrorInfo, INotifyPropertyChanged
+    public interface IOFViewModel : IDataErrorInfo, INotifyPropertyChanged
     {
         string Title { get; }
 
-        IWSUIView View { get; }
+        IOFView View { get; }
 
         ICommand OKCommand { get; }
 

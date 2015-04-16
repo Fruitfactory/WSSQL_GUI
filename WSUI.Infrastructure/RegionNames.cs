@@ -1,5 +1,5 @@
 ﻿
-namespace WSUI.Infrastructure
+namespace OF.Infrastructure
 {
     public class RegionNames
     {

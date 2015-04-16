@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using WSUI.Core.Enums;
-using WSUI.Core.Logger;
+using OF.Core.Enums;
+using OF.Core.Logger;
 
-namespace WSUI.Infrastructure.Converters
+namespace OF.Infrastructure.Converters
 {
     public class AdvancedSearchTypeToStringConverter : IValueConverter
     {

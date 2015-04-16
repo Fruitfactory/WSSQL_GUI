@@ -2,11 +2,11 @@
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
-using WSPreview.PreviewHandler.Service.CsvHelper;
-using WSUI.Core.Data;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.Service.CsvHelper;
+using OF.Core.Data;
 
-namespace WSPreview.PreviewHandler.Controls.CsvControl
+namespace OFPreview.PreviewHandler.Controls.CsvControl
 {
     [KeyControl(ControlsKey.Csv)]
     public partial class CsvPreview : UserControl, IPreviewControl

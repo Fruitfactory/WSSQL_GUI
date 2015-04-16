@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WSUI.Infrastructure.Controls.BusyControl
+namespace OF.Infrastructure.Controls.BusyControl
 {
     /// <summary>
     /// Interaction logic for BusyIndicator.xaml

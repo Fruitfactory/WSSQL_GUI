@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using WSUI.Core.Logger;
+using OF.Core.Logger;
 
 
-namespace WSUI.Infrastructure.Services
+namespace OF.Infrastructure.Services
 {
     public class FileService
     {

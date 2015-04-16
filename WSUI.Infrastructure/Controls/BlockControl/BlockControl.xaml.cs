@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WSUI.Infrastructure.Controls.BlockControl
+namespace OF.Infrastructure.Controls.BlockControl
 {
     /// <summary>
     /// Interaction logic for BlockControl.xaml

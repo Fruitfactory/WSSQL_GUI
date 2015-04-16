@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using WSUI.Infrastructure.Controls.Core;
+using OF.Infrastructure.Controls.Core;
 
-namespace WSUI.Infrastructure.Controls.BusyControl
+namespace OF.Infrastructure.Controls.BusyControl
 {
     public class BusyPopupAdorner : BasePopupAdorner, IBusyPopupAdorner
     {

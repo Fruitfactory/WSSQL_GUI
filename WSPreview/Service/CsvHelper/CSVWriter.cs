@@ -6,7 +6,7 @@ using System.IO;
 using System.Data;
 using System.Reflection;
 
-namespace WSPreview.PreviewHandler.Service.CsvHelper
+namespace OFPreview.PreviewHandler.Service.CsvHelper
 {
     public class CSVWriter : IDisposable
     {

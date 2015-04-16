@@ -1,7 +1,7 @@
-﻿using WSUI.Core.Core.Event;
-using WSUI.Infrastructure.Payloads;
+﻿using OF.Core.Core.Event;
+using OF.Infrastructure.Payloads;
 
-namespace WSUI.Infrastructure.Events
+namespace OF.Infrastructure.Events
 {
     public class SelectedChangedPayloadEvent : BasePayloadEvent<SearchObjectPayload>
     {    

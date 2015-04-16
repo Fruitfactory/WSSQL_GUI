@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Reflection;
-using WSUI.Core.Enums;
+using OF.Core.Enums;
 using Outlook = Microsoft.Office.Interop.Outlook;
-using WSUI.Core.Logger;
+using OF.Core.Logger;
 
-namespace WSUI.Core.Extensions
+namespace OF.Core.Extensions
 {
     public static class OutlookExtensions
     {

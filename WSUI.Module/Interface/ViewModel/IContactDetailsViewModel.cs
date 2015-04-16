@@ -2,11 +2,11 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using WSUI.Core.Data;
-using WSUI.Core.Data.UI;
-using WSUI.Core.Interfaces;
+using OF.Core.Data;
+using OF.Core.Data.UI;
+using OF.Core.Interfaces;
 
-namespace WSUI.Module.Interface.ViewModel
+namespace OF.Module.Interface.ViewModel
 {
     public interface IContactDetailsViewModel : INotifyPropertyChanged
     {

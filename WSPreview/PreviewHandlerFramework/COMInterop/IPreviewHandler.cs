@@ -5,7 +5,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerFramework
+namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]

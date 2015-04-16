@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Threading;
-using WSUI.Core.Logger;
+using OF.Core.Logger;
 
-namespace WSUI.Infrastructure.Controls.ProgressManager
+namespace OF.Infrastructure.Controls.ProgressManager
 {
     /// <summary>
     /// Interaction logic for ProgressWindow.xaml

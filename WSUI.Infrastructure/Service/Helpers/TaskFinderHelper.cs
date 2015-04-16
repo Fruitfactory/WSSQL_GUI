@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace WSUI.Infrastructure.Service.Helpers
+namespace OF.Infrastructure.Service.Helpers
 {
     internal class TaskFinderHelper
     {

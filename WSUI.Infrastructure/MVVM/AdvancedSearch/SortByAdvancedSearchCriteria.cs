@@ -1,8 +1,8 @@
 ﻿using System.Windows.Input;
-using WSUI.Core.Core.AdvancedSearchCriteria;
-using WSUI.Core.Enums;
+using OF.Core.Core.AdvancedSearchCriteria;
+using OF.Core.Enums;
 
-namespace WSUI.Infrastructure.MVVM.AdvancedSearch
+namespace OF.Infrastructure.MVVM.AdvancedSearch
 {
     public class SortByAdvancedSearchCriteria : VariantAdvancedSearchCriteria<AdvancedSearchSortByType>
     {

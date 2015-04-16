@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using WSUI.Core.Enums;
-using WSUI.Core.Helpers;
-using WSUI.Core.Logger;
+using OF.Core.Enums;
+using OF.Core.Helpers;
+using OF.Core.Logger;
 using Action = System.Action;
 using Exception = System.Exception;
 
-namespace WSUI.Core.Core.LimeLM
+namespace OF.Core.Core.LimeLM
 {
     public class TurboLimeActivate
     {

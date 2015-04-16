@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
-using WSPreview.PreviewHandler.Controls.Office;
-using WSUI.Core.Enums;
-using WSUI.Core.EventArguments;
-using WSUI.Core.Interfaces;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.Controls.Office;
+using OF.Core.Enums;
+using OF.Core.EventArguments;
+using OF.Core.Interfaces;
 
-namespace WSPreview.PreviewHandler.PreviewHandlers
+namespace OFPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("WSSQL Office Preview Handler", ".msg", "{CE4CB591-6E33-4CA1-9E0C-BD6F774AFEB1}")]
     [PreviewForSearchObject(TypeSearchItem.Email)]
-    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.OutlookPreviewHandler")]
+    [ProgId("OFPreview.PreviewHandler.PreviewHandlers.OutlookPreviewHandler")]
     [Guid("326A2452-981E-403B-9921-911011E677E6")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]
@@ -75,7 +75,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
                 }
             }
 
-            private void OnPreviewCommandExecuted(object sender, WSUIPreviewCommandArgs wsuiPreviewCommandArgs)
+            private void OnPreviewCommandExecuted(object sender, OFPreviewCommandArgs wsuiPreviewCommandArgs)
             {
                if(_parent == null)
                    return;
@@ -96,7 +96,7 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
             ((OutlookPreviewHandlerControl)_previewControl).PassMessage(action);
         }
 
-        private void RaisePreviewCommandExecuted( WSUIPreviewCommandArgs args)
+        private void RaisePreviewCommandExecuted( OFPreviewCommandArgs args)
         {
             var temp = PreviewCommandExecuted;
             if (temp != null)
@@ -107,6 +107,6 @@ namespace WSPreview.PreviewHandler.PreviewHandlers
 
         public string FolderPath { get; set; }
 
-        public event EventHandler<WSUIPreviewCommandArgs> PreviewCommandExecuted;
+        public event EventHandler<OFPreviewCommandArgs> PreviewCommandExecuted;
     }
 }

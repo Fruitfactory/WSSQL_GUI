@@ -1,7 +1,7 @@
-﻿using WSUI.Core.Enums;
-using WSUI.Core.Interfaces;
+﻿using OF.Core.Enums;
+using OF.Core.Interfaces;
 
-namespace WSUI.Core.Data
+namespace OF.Core.Data
 {
     public class WSAction : IWSAction
     {

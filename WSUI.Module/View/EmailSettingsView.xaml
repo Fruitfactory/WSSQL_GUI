@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="WSUI.Module.View.EmailSettingsView"
+﻿<UserControl x:Class="OF.Module.View.EmailSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                              xmlns:Service="clr-namespace:WSUI.Module.Service"
+                              xmlns:Service="clr-namespace:OF.Module.Service"
                               >
     <UserControl.Resources>
         <ResourceDictionary>

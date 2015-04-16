@@ -1,4 +1,4 @@
-﻿namespace WSUI.Core.Enums
+﻿namespace OF.Core.Enums
 {
     public enum RuleObjectType
     {

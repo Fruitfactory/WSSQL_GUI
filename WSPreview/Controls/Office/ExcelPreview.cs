@@ -1,10 +1,10 @@
 using System;
-using WSUI.Core.Helpers;
+using OF.Core.Helpers;
 using Excel = Microsoft.Office.Interop.Excel;
 using Core = Microsoft.Office.Core;
 using System.Runtime.InteropServices;
 
-namespace WSPreview.PreviewHandler.Controls.Office
+namespace OFPreview.PreviewHandler.Controls.Office
 {
 	public class ExcelPreview : BaseOfficePreview
 	{
@@ -45,7 +45,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
 	        }
 	        catch (Exception ex)
 	        {
-                WSUI.Core.Logger.WSSqlLogger.Instance.LogError(ex.Message);	            
+                OF.Core.Logger.WSSqlLogger.Instance.LogError(ex.Message);	            
 	            
 	        }
 	    }

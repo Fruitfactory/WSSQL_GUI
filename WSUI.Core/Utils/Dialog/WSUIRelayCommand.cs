@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace WSUI.Core.Utils.Dialog
+namespace OF.Core.Utils.Dialog
 {
-    public class WSUIRelayCommand : ICommand
+    public class OFRelayCommand : ICommand
     {
         #region Fields
 
@@ -19,7 +19,7 @@ namespace WSUI.Core.Utils.Dialog
         /// Creates a new command that can always execute.
         /// </summary>
         /// <param name="execute">The execution logic.</param>
-        public WSUIRelayCommand(Action<object> execute)
+        public OFRelayCommand(Action<object> execute)
             : this(execute, null)
         {
         }
@@ -29,7 +29,7 @@ namespace WSUI.Core.Utils.Dialog
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         /// <param name="canExecute">The execution status logic.</param>
-        public WSUIRelayCommand(Action<object> execute, Predicate<object> canExecute)
+        public OFRelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
             if (execute == null)
                 throw new ArgumentNullException("execute");

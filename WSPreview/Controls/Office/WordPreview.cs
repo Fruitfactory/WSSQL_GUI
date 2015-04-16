@@ -4,14 +4,14 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using WSUI.Core.Helpers;
+using OF.Core.Helpers;
 using Word = Microsoft.Office.Interop.Word;
 using Core = Microsoft.Office.Core;
-using WSPreview.PreviewHandler.PInvoke;
+using OFPreview.PreviewHandler.PInvoke;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
-namespace WSPreview.PreviewHandler.Controls.Office
+namespace OFPreview.PreviewHandler.Controls.Office
 {
 	public class WordPreview : BaseOfficePreview
 	{
@@ -55,7 +55,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
 		    }
 		    catch (Exception ex)
 		    {
-		        WSUI.Core.Logger.WSSqlLogger.Instance.LogError(ex.Message);
+		        OF.Core.Logger.WSSqlLogger.Instance.LogError(ex.Message);
 		    }
 		}
     }

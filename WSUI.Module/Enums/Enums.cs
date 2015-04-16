@@ -1,7 +1,7 @@
 ﻿using System;
-using WSUI.Core.Core.Attributes;
+using OF.Core.Core.Attributes;
 
-namespace WSUI.Module.Enums
+namespace OF.Module.Enums
 {
     public enum UiSlideDirection
     {

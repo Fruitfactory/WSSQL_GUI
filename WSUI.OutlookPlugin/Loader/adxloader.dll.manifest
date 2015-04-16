@@ -3,6 +3,6 @@
   <startup useLegacyV2RuntimeActivationPolicy="true">
     <supportedRuntime version="v4.0" />
   </startup>
-  <assemblyIdentity name="WSUI.OutlookPlugin, PublicKeyToken=dfa14d3b5c78db24" />
-  <loaderSettings generateLogFile="true" shadowCopyEnabled="false" privileges="user" configFileName="WSUI.OutlookPlugin.dll.config" />
+  <assemblyIdentity name="OF.OutlookPlugin, PublicKeyToken=dfa14d3b5c78db24" />
+  <loaderSettings generateLogFile="true" shadowCopyEnabled="false" privileges="user" configFileName="OF.OutlookPlugin.dll.config" />
 </configuration>

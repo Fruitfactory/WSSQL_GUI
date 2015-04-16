@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Nest;
-using WSUI.Core.Extensions;
+using OF.Core.Extensions;
 
-namespace WSUI.Core.Core.MVVM
+namespace OF.Core.Core.MVVM
 {
     public abstract class DataViewModel : ViewModelBase
     {

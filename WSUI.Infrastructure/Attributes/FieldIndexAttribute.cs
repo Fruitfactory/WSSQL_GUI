@@ -1,5 +1,5 @@
 ﻿using System;
-namespace WSUI.Infrastructure.Attributes
+namespace OF.Infrastructure.Attributes
 {
     public class FieldIndexAttribute : Attribute
     {

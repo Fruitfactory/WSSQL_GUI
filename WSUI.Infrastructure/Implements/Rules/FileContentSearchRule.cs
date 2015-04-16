@@ -7,9 +7,9 @@
 ///////////////////////////////////////////////////////////
 
 
-using WSUI.Infrastructure.Implements.Rules.BaseRules;
+using OF.Infrastructure.Implements.Rules.BaseRules;
 
-namespace WSUI.Infrastructure.Implements.Rules 
+namespace OF.Infrastructure.Implements.Rules 
 {
 	public class FileContentSearchRule : BaseFileSearchRule 
     {

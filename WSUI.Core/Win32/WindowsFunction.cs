@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 
-namespace WSUI.Core.Win32
+namespace OF.Core.Win32
 {
     public static class WindowsFunction
     {

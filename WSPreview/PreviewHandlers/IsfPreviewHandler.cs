@@ -7,12 +7,12 @@ using System.IO;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Microsoft.Ink;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace WSPreview.PreviewHandler.PreviewHandlers
+namespace OFPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("MSDN Magazine Serialized Ink Preview Handler", ".isf", "{B85299A9-2E8D-4D5F-AE4D-13C1FD6FF999}")]
-    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.IsfPreviewHandler")]
+    [ProgId("OFPreview.PreviewHandler.PreviewHandlers.IsfPreviewHandler")]
     [Guid("8FD7B59B-A960-4D76-A89E-35C359BC123E")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]

@@ -5,13 +5,13 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using WSPreview.PreviewHandler.Controls.ImageControl;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.Controls.ImageControl;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace WSPreview.PreviewHandler.PreviewHandlers
+namespace OFPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("WSSQL Image Preview Handler", ".jpg;.png;.bmp;.psd;.gif;.tiff;.jpeg;.ico;.tga;.wmf;.cur;.dib", "{69D9AF89-B056-433B-8F92-E9A3585E533E}")]
-    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.ImagePreviewHandler")]
+    [ProgId("OFPreview.PreviewHandler.PreviewHandlers.ImagePreviewHandler")]
     [Guid("9251B469-BF27-410E-ABD4-D3F7A47AD7C6")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]

@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace WSUI.Module.Service
+namespace OF.Module.Service
 {
     public static class DoubleClickBehavior
     {

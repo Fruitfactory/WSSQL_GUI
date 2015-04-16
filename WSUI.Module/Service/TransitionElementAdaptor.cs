@@ -4,7 +4,7 @@ using System.Windows;
 using Microsoft.Practices.Prism.Regions;
 using Transitionals.Controls;
 
-namespace WSUI.Module.Service
+namespace OF.Module.Service
 {
     public class TransitionElementAdaptor : RegionAdapterBase<TransitionElement>
     {

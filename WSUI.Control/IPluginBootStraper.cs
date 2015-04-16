@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using Microsoft.Practices.Unity;
-using WSUI.Core.Interfaces;
+using OF.Core.Interfaces;
 
-namespace WSUI.Control
+namespace OF.Control
 {
     public interface IPluginBootStraper
     {

@@ -1,4 +1,4 @@
-﻿namespace WSUI.Core.Core.Payload
+﻿namespace OF.Core.Core.Payload
 {
     public abstract class BasePayload<T>
     {

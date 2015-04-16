@@ -6,19 +6,19 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using mshtml;
-using WSPreview.PreviewHandler.Controls.Office.WebUtils;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
-using WSPreview.PreviewHandler.Service.OutlookPreview;
-using WSUI.Core.Data;
-using WSUI.Core.Enums;
-using WSUI.Core.EventArguments;
-using WSUI.Core.Extensions;
-using WSUI.Core.Helpers;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
+using OFPreview.PreviewHandler.Controls.Office.WebUtils;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.Service.OutlookPreview;
+using OF.Core.Data;
+using OF.Core.Enums;
+using OF.Core.EventArguments;
+using OF.Core.Extensions;
+using OF.Core.Helpers;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
-namespace WSPreview.PreviewHandler.Controls.Office
+namespace OFPreview.PreviewHandler.Controls.Office
 {
     [KeyControl(ControlsKey.Outlook)]
     public partial class OutlookFilePreview : ExtWebBrowser, IPreviewControl, ICommandPreviewControl
@@ -166,7 +166,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
                     break;
 
                 case "uuid":
-                    RaisePreviewCommandExecuted(WSPreviewCommand.ShowFolder, args.Url.LocalPath);
+                    RaisePreviewCommandExecuted(OFPreviewCommand.ShowFolder, args.Url.LocalPath);
                     break;
 
                 case "fax":
@@ -221,14 +221,14 @@ namespace WSPreview.PreviewHandler.Controls.Office
             if (data[1].IsEmail() || data.All(s => s.IsEmail()))
             {
                 var tag = new EmailContactSearchObject() { ContactName = !data[0].IsEmail() ? data[0] : string.Empty, EMail = data[1] };
-                RaisePreviewCommandExecuted(WSPreviewCommand.ShowContact, tag);
+                RaisePreviewCommandExecuted(OFPreviewCommand.ShowContact, tag);
                 return;
             }
             if (!string.IsNullOrEmpty(data[0]) && data[0].Contains(" "))
             {
                 var names = data[0].Split(' ');
                 var tag = new ContactSearchObject() { FirstName = names[0], LastName = names[1] };
-                RaisePreviewCommandExecuted(WSPreviewCommand.ShowContact, tag);
+                RaisePreviewCommandExecuted(OFPreviewCommand.ShowContact, tag);
                 return;
             }
         }
@@ -237,7 +237,7 @@ namespace WSPreview.PreviewHandler.Controls.Office
         {
             var names = info.Split(' ');
             var tag = new ContactSearchObject() { FirstName = names[0], LastName = names[1] };
-            RaisePreviewCommandExecuted(WSPreviewCommand.ShowContact, tag);
+            RaisePreviewCommandExecuted(OFPreviewCommand.ShowContact, tag);
             return;
         }
 
@@ -270,14 +270,14 @@ namespace WSPreview.PreviewHandler.Controls.Office
             return defaultBrowserPath;
         }
 
-        public event EventHandler<WSUIPreviewCommandArgs> PreviewCommandExecuted;
+        public event EventHandler<OFPreviewCommandArgs> PreviewCommandExecuted;
 
-        private void RaisePreviewCommandExecuted(WSPreviewCommand cmd, object tag)
+        private void RaisePreviewCommandExecuted(OFPreviewCommand cmd, object tag)
         {
             var temp = PreviewCommandExecuted;
             if (temp != null)
             {
-                temp(this, new WSUIPreviewCommandArgs(cmd, tag));
+                temp(this, new OFPreviewCommandArgs(cmd, tag));
             }
         }
     }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace WSPreview.PreviewHandler.Controls.Office
+namespace OFPreview.PreviewHandler.Controls.Office
 {
 	public abstract class BaseOfficePreview
 	{

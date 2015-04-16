@@ -1,16 +1,16 @@
-using WSUI.Core.Data;
-using WSUI.Core.Enums;
-using WSUI.Core.Extensions;
-using WSUI.Core.Helpers;
-using WSUI.Core.Logger;
-using WSUI.Infrastructure.Helpers;
-using WSUI.Module.Interface.ViewModel;
+using OF.Core.Data;
+using OF.Core.Enums;
+using OF.Core.Extensions;
+using OF.Core.Helpers;
+using OF.Core.Logger;
+using OF.Infrastructure.Helpers;
+using OF.Module.Interface.ViewModel;
 using Outlook = Microsoft.Office.Interop.Outlook;
-using WSUI.Module.Core;
-using WSUI.Module.Interface;
-using WSUI.Module.Service.Dialogs.Message;
+using OF.Module.Core;
+using OF.Module.Interface;
+using OF.Module.Service.Dialogs.Message;
 
-namespace WSUI.Module.Commands
+namespace OF.Module.Commands
 {
     public class ForwardCommand : BaseEmailPreviewCommand
     {
@@ -52,7 +52,7 @@ namespace WSUI.Module.Commands
 
         protected override string GetIcon()
         {
-            return @"pack://application:,,,/WSUI.Module;component/Images/forward.png";
+            return @"pack://application:,,,/OF.Module;component/Images/forward.png";
         }
 
         protected override string GetTooltip()

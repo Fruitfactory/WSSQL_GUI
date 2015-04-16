@@ -6,7 +6,7 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-namespace WSUI.Core.Data
+namespace OF.Core.Data
 {
     public class FileSearchObject : BaseSearchObject
     {

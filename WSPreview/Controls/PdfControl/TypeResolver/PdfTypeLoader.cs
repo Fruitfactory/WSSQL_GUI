@@ -1,7 +1,7 @@
 ﻿using System;
-using WSPreview.Controls.Core;
+using OFPreview.Controls.Core;
 
-namespace WSPreview.PreviewHandler.TypeResolver
+namespace OFPreview.PreviewHandler.TypeResolver
 {
     public class PdfTypeLoader : BaseLoaderAssembly
     {

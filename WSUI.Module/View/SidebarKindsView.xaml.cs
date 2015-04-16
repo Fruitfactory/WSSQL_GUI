@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WSUI.Module.View
+namespace OF.Module.View
 {
     /// <summary>
     /// Interaction logic for SidebarKindsView.xaml

@@ -9,24 +9,24 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using WSUI.Core.Core.MVVM;
-using WSUI.Core.Data;
-using WSUI.Core.Enums;
-using WSUI.Core.Extensions;
-using WSUI.Core.Helpers;
-using WSUI.Core.Interfaces;
-using WSUI.Core.Logger;
-using WSUI.Infrastructure.Events;
-using WSUI.Infrastructure.Payloads;
-using WSUI.Infrastructure.Service.Helpers;
-using WSUI.Infrastructure.Services;
-using WSUI.Module.Interface.Service;
-using WSUI.Module.Interface.ViewModel;
-using WSUI.Module.Service.Dialogs.Message;
+using OF.Core.Core.MVVM;
+using OF.Core.Data;
+using OF.Core.Enums;
+using OF.Core.Extensions;
+using OF.Core.Helpers;
+using OF.Core.Interfaces;
+using OF.Core.Logger;
+using OF.Infrastructure.Events;
+using OF.Infrastructure.Payloads;
+using OF.Infrastructure.Service.Helpers;
+using OF.Infrastructure.Services;
+using OF.Module.Interface.Service;
+using OF.Module.Interface.ViewModel;
+using OF.Module.Service.Dialogs.Message;
 using Application = System.Windows.Application;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
-namespace WSUI.Module.Core
+namespace OF.Module.Core
 {
     public abstract class KindViewModelBase : ViewModelBase, IKindItem
     {

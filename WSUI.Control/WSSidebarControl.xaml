@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="WSUI.Control.WSSidebarControl"
+﻿<UserControl x:Class="OF.Control.WSSidebarControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:regions="http://www.codeplex.com/CompositeWPF"
-             xmlns:converters="clr-namespace:WSUI.Infrastructure.Converters;assembly=WSUI.Infrastructure"
-             xmlns:service="clr-namespace:WSUI.Module.Service;assembly=WSUI.Module"
+             xmlns:converters="clr-namespace:OF.Infrastructure.Converters;assembly=OF.Infrastructure"
+             xmlns:service="clr-namespace:OF.Module.Service;assembly=OF.Module"
              xmlns:transitionalsControls="clr-namespace:Transitionals.Controls;assembly=Transitionals"
              >
     <UserControl.Resources>
@@ -52,8 +52,8 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/WSUI.Control;Component/Images/logo_64.png" Stretch="Uniform" StretchDirection="Both"></Image>
-                    <Image Grid.Column="1" RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/WSUI.Control;Component/Images/logo_txt.png" Stretch="Uniform" StretchDirection="Both"></Image>
+                    <Image Grid.Column="0" RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/OF.Control;Component/Images/logo_64.png" Stretch="Uniform" StretchDirection="Both"></Image>
+                    <Image Grid.Column="1" RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/OF.Control;Component/Images/logo_txt.png" Stretch="Uniform" StretchDirection="Both"></Image>
 
                     <Button x:Name="CloseButton" Grid.Column="2" Height="22" Padding="1, 1, 1, 1" Width="26" BorderThickness="1, 1, 1, 1" Focusable="True" Click="CloseButton_OnClick" HorizontalAlignment="Right" HorizontalContentAlignment="Center" IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}" IsTabStop="False" MaxHeight="34" RenderSize="34, 30" ToolTip="Close" VerticalAlignment="Top" VerticalContentAlignment="Center">
                         <Grid Background="Transparent" RenderSize="26, 22">

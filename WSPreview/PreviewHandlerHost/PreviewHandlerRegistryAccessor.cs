@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Win32;
 
 
-namespace WSPreview.PreviewHandler.PreviewHandlerHost
+namespace OFPreview.PreviewHandler.PreviewHandlerHost
 {
     /// <summary>
     /// Class used to traverse the registry to read all the file previewer registrations that exist on the system

@@ -1,4 +1,4 @@
-﻿namespace WSPreview.PreviewHandler.Controls.Office
+﻿namespace OFPreview.PreviewHandler.Controls.Office
 {
     partial class OfficeFilePreview
     {
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.webBrowserPreview = new WSPreview.PreviewHandler.Controls.Office.WebUtils.ExtWebBrowser();
+            this.webBrowserPreview = new OFPreview.PreviewHandler.Controls.Office.WebUtils.ExtWebBrowser();
             this.SuspendLayout();
             // 
             // webBrowserPreview

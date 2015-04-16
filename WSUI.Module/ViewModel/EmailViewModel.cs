@@ -9,26 +9,26 @@ using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
-using WSUI.Core;
-using WSUI.Core.Core.Attributes;
-using WSUI.Core.Enums;
-using WSUI.Core.Extensions;
-using WSUI.Core.Helpers;
-using WSUI.Core.Utils.Dialog;
-using WSUI.Infrastructure.Implements.Systems;
-using WSUI.Infrastructure.Service;
-using WSUI.Module.Core;
-using WSUI.Module.Enums;
-using WSUI.Module.Interface;
-using WSUI.Module.Interface.Service;
-using WSUI.Module.Interface.View;
-using WSUI.Module.Service;
-using WSUI.Module.Service.AdvancedSearch;
-using WSUI.Module.Strategy;
+using OF.Core;
+using OF.Core.Core.Attributes;
+using OF.Core.Enums;
+using OF.Core.Extensions;
+using OF.Core.Helpers;
+using OF.Core.Utils.Dialog;
+using OF.Infrastructure.Implements.Systems;
+using OF.Infrastructure.Service;
+using OF.Module.Core;
+using OF.Module.Enums;
+using OF.Module.Interface;
+using OF.Module.Interface.Service;
+using OF.Module.Interface.View;
+using OF.Module.Service;
+using OF.Module.Service.AdvancedSearch;
+using OF.Module.Strategy;
 
-namespace WSUI.Module.ViewModel
+namespace OF.Module.ViewModel
 {
-    [KindNameId(KindsConstName.Email, 2, @"pack://application:,,,/WSUI.Module;Component/Images/Mail-1.png", "M0,4.0800388L0.030031017,4.0800388 12.610706,16.409995 26.621516,30.149985 40.642334,16.409995 53.223011,4.0800388 53.333001,4.0800388 53.333001,39.080039 0,39.080039z M3.1698808,0L26.660885,0 50.161892,0 38.411389,11.791528 26.660885,23.573054 14.920383,11.791528z")]
+    [KindNameId(KindsConstName.Email, 2, @"pack://application:,,,/OF.Module;Component/Images/Mail-1.png", "M0,4.0800388L0.030031017,4.0800388 12.610706,16.409995 26.621516,30.149985 40.642334,16.409995 53.223011,4.0800388 53.333001,4.0800388 53.333001,39.080039 0,39.080039z M3.1698808,0L26.660885,0 50.161892,0 38.411389,11.791528 26.660885,23.573054 14.920383,11.791528z")]
     public class EmailViewModel : KindViewModelBase, IUView<EmailViewModel>, IScrollableView
     {
         

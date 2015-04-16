@@ -1,8 +1,8 @@
-﻿using WSUI.Core.Data;
-using WSUI.Core.Enums;
-using WSUI.Module.Interface.ViewModel;
+﻿using OF.Core.Data;
+using OF.Core.Enums;
+using OF.Module.Interface.ViewModel;
 
-namespace WSUI.Module.Core
+namespace OF.Module.Core
 {
     public class BaseEmailPreviewCommand : BasePreviewCommand
     {

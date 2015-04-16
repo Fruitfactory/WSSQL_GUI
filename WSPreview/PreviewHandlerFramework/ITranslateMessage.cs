@@ -1,6 +1,6 @@
-﻿using WSUI.Core.Interfaces;
+﻿using OF.Core.Interfaces;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerFramework
+namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
     public interface ITranslateMessage
     {

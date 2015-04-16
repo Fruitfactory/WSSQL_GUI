@@ -6,9 +6,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using AddinExpress.OL;
-using WSUI.Core.Logger;
+using OF.Core.Logger;
 
-namespace WSUIOutlookPlugin.Core {
+namespace OFOutlookPlugin.Core {
 public class DllPreloader {
   #region [needs]
 
@@ -61,8 +61,8 @@ public class DllPreloader {
     // add part of dll name which should be loaded during loading plugin
     _listPartNameOfDll.Add("MahApps");
     _listPartNameOfDll.Add("Practices");
-    _listPartNameOfDll.Add("WSUI");
-    _listPartNameOfDll.Add("WSPreview");
+    _listPartNameOfDll.Add("OF");
+    _listPartNameOfDll.Add("OFPreview");
   }
 
   private void DoPreInitialize(object obj )

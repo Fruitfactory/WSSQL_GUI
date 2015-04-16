@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WSUI.Core.Interfaces
+namespace OF.Core.Interfaces
 {
     public interface IFieldCash
     {

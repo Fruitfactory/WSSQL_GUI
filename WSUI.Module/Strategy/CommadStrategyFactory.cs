@@ -1,9 +1,9 @@
-using WSUI.Core.Enums;
-using WSUI.Module.Interface;
-using WSUI.Module.Interface.Service;
-using WSUI.Module.Interface.ViewModel;
+using OF.Core.Enums;
+using OF.Module.Interface;
+using OF.Module.Interface.Service;
+using OF.Module.Interface.ViewModel;
 
-namespace WSUI.Module.Strategy
+namespace OF.Module.Strategy
 {
     public class CommadStrategyFactory
     {

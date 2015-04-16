@@ -1,8 +1,8 @@
 ﻿using System;
 using AddinExpress.OL;
-using WSUI.Core.Enums;
+using OF.Core.Enums;
 
-namespace WSUIOutlookPlugin.Interfaces
+namespace OFOutlookPlugin.Interfaces
 {
     public interface ISidebarForm : IMainForm
     {

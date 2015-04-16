@@ -1,8 +1,8 @@
-﻿namespace WSUI.Core.EventArguments
+﻿namespace OF.Core.EventArguments
 {
-    public class WSUIShowFolderArgs : System.EventArgs
+    public class OFShowFolderArgs : System.EventArgs
     {
-        public WSUIShowFolderArgs(string folder)
+        public OFShowFolderArgs(string folder)
         {
             Folder = folder;
         }

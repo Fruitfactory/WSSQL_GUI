@@ -5,7 +5,7 @@ using System.IO.Compression;
 using System.Net;
 using System.Xml;
 
-namespace WSUI.Core.Core.LimeLM
+namespace OF.Core.Core.LimeLM
 {
     public class LimeLMApi
     {

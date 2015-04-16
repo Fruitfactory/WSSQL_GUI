@@ -8,12 +8,12 @@ using System.Resources;
 using System.Collections;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using WSPreview.PreviewHandler.PreviewHandlerFramework;
+using OFPreview.PreviewHandler.PreviewHandlerFramework;
 
-namespace WSPreview.PreviewHandler.PreviewHandlers
+namespace OFPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("MSDN Magazine RESX Preview Handler", ".resx", "{860E1DCC-0691-41DB-B879-C79242A6AF24}")]
-    [ProgId("WSPreview.PreviewHandler.PreviewHandlers.ResxPreviewHandler")]
+    [ProgId("OFPreview.PreviewHandler.PreviewHandlers.ResxPreviewHandler")]
     [Guid("27145BEA-45DC-4E09-BDC1-7847AEC8AE6B")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComVisible(true)]

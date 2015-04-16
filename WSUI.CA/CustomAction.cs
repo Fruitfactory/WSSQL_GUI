@@ -14,14 +14,14 @@ using System.Xml.Linq;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
-using WSUI.CA.ClosePromt;
-using WSUI.CA.EmailValidate;
-using WSUI.Core.Core.LimeLM;
-using WSUI.Core.Helpers;
+using OF.CA.ClosePromt;
+using OF.CA.EmailValidate;
+using OF.Core.Core.LimeLM;
+using OF.Core.Helpers;
 using Exception = System.Exception;
 using View = Microsoft.Deployment.WindowsInstaller.View;
 
-namespace WSUI.CA
+namespace OF.CA
 {
     public class CustomActions
     {

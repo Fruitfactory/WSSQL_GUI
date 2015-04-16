@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WSPreview.PreviewHandler.PreviewHandlerFramework
+namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
     public class KeyControlAttribute : Attribute
     {

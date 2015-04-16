@@ -1,8 +1,8 @@
-﻿<local:HightliteTextBlockBase x:Class="WSUI.Infrastructure.Controls.HightliteTextBlock"
+﻿<local:HightliteTextBlockBase x:Class="OF.Infrastructure.Controls.HightliteTextBlock"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:WSUI.Infrastructure.Controls"
+             xmlns:local="clr-namespace:OF.Infrastructure.Controls"
 >
     <ContentControl.Resources>
 

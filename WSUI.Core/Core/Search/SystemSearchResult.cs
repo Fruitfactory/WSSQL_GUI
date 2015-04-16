@@ -6,10 +6,10 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-using WSUI.Core.Enums;
-using WSUI.Core.Interfaces;
+using OF.Core.Enums;
+using OF.Core.Interfaces;
 
-namespace WSUI.Core.Core.Search
+namespace OF.Core.Core.Search
 {
     public class SystemSearchResult : ISystemSearchResult
     {

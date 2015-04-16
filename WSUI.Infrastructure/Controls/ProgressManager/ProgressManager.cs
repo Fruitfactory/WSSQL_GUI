@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Threading;
-using WSUI.Core.Logger;
+using OF.Core.Logger;
 
 
-namespace WSUI.Infrastructure.Controls.ProgressManager
+namespace OF.Infrastructure.Controls.ProgressManager
 {
     public class ProgressManager : IProgressManager
     {

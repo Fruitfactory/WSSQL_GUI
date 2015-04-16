@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
-using WSUI.Core.Enums;
+using OF.Core.Enums;
 
-namespace WSUI.Core.Core.MVVM
+namespace OF.Core.Core.MVVM
 {
     public class ViewModelBase : INotifyPropertyChanged, IDisposable
     {

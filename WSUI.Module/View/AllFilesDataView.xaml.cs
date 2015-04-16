@@ -2,13 +2,13 @@
 using System.IO;
 using System.Windows.Controls;
 using System.Windows.Media;
-using WSUI.Infrastructure.Service;
-using WSUI.Module.Interface;
-using WSUI.Module.Interface.View;
-using WSUI.Module.ViewModel;
-using WSUI.Core.Interfaces;
+using OF.Infrastructure.Service;
+using OF.Module.Interface;
+using OF.Module.Interface.View;
+using OF.Module.ViewModel;
+using OF.Core.Interfaces;
 
-namespace WSUI.Module.View
+namespace OF.Module.View
 {
     /// <summary>
     /// Interaction logic for AllFilesDataView.xaml

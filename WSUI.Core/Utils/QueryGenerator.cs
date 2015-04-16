@@ -9,11 +9,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WSUI.Core.Core.Rules;
-using WSUI.Core.Extensions;
-using WSUI.Core.Interfaces;
+using OF.Core.Core.Rules;
+using OF.Core.Extensions;
+using OF.Core.Interfaces;
 
-namespace WSUI.Core.Utils
+namespace OF.Core.Utils
 {
     public class QueryGenerator : IQueryGenerator
     {

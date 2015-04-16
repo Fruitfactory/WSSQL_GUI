@@ -6,7 +6,7 @@ using log4net;
 using log4net.Config;
 using Microsoft.Practices.Prism.Logging;
 
-namespace WSUI.Core.Logger
+namespace OF.Core.Logger
 {
     public class WSSqlLogger : ILoggerFacade
     {
@@ -42,7 +42,7 @@ namespace WSUI.Core.Logger
             if (fi.Exists)
             {
                 var col = XmlConfigurator.Configure(fi);
-                _log = log4net.LogManager.GetLogger("WSUILogger");
+                _log = log4net.LogManager.GetLogger("OFLogger");
             }
         }
 

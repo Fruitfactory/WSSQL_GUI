@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using WSUI.Core.Logger;
+using OF.Core.Logger;
 
-namespace WSUIOutlookPlugin.Hooks
+namespace OFOutlookPlugin.Hooks
 {
     public static partial class HookManager
     {

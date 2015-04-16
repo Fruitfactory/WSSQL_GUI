@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WSUI.Infrastructure.Properties {
+namespace OF.Infrastructure.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace WSUI.Infrastructure.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WSUI.Infrastructure.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OF.Infrastructure.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,8 +61,7 @@ namespace WSUI.Infrastructure.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 
-        ///&lt;html xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot;
+        ///   Looks up a localized string similar to &lt;html xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot;
         ///xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;
         ///xmlns:w=&quot;urn:schemas-microsoft-com:office:word&quot;
         ///xmlns:m=&quot;http://schemas.microsoft.com/office/2004/12/omml&quot;
@@ -71,14 +70,17 @@ namespace WSUI.Infrastructure.Properties {
         ///&lt;head&gt;
         ///&lt;/head&gt;
         ///
-        ///&lt;body bgcolor=&quot;#F2F2F2&quot; lang=EN-US link=blue vlink=purple style=&apos;tab-interval:
-        ///.5in;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%&apos;&gt;
+        ///&lt;body bgcolor=&quot;#F2F2F2&quot; lang=EN-US link=blue vlink=purple &gt;
         ///
         ///&lt;div &gt;
+        ///    &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+        ///    &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+        ///    &lt;p&gt;&amp;nbsp;&lt;/p&gt;
+        ///&lt;div&gt;
         ///
-        ///&lt;p class=MsoNormal&gt;&lt;o:p&gt;&amp;nbsp;&lt;/o:p&gt;&lt;/p&gt;
+        ///&lt;div style=&quot;border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0in 0in 0in&quot;&gt;
         ///
-        ///&lt;p class=MsoNormal&gt;&lt;span style=&apos;font-s [rest of string was truncated]&quot;;.
+        ///&lt;p class=MsoNormal&gt; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string template {
             get {

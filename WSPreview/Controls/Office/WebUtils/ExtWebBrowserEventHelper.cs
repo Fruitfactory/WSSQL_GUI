@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
-namespace WSPreview.PreviewHandler.Controls.Office.WebUtils
+namespace OFPreview.PreviewHandler.Controls.Office.WebUtils
 {
     public partial class ExtWebBrowser
     {

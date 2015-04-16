@@ -4,13 +4,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Nest;
-using WSUI.Core.Core.Rules;
-using WSUI.Core.Data.ElasticSearch;
-using WSUI.Core.Enums;
-using WSUI.Core.Extensions;
-using WSUI.Infrastructure.Implements.Rules.BaseRules;
+using OF.Core.Core.Rules;
+using OF.Core.Data.ElasticSearch;
+using OF.Core.Enums;
+using OF.Core.Extensions;
+using OF.Infrastructure.Implements.Rules.BaseRules;
 
-namespace WSUI.Infrastructure.Implements.Rules
+namespace OF.Infrastructure.Implements.Rules
 {
     public class ContactEmailSearchRule : BaseEmailSearchRule
     {
@@ -48,28 +48,28 @@ namespace WSUI.Infrastructure.Implements.Rules
             _keyWord = arrStr.Length > 2 ? arrStr[2].ToLowerInvariant() : string.Empty;
         }
 
-        protected override Expression<Func<WSUIEmail, string>> GetSearchedProperty()
+        protected override Expression<Func<OFEmail, string>> GetSearchedProperty()
         {
             return null;
         }
 
-        protected override QueryContainer BuildQuery(QueryDescriptor<WSUIEmail> queryDescriptor)
+        protected override QueryContainer BuildQuery(QueryDescriptor<OFEmail> queryDescriptor)
         {
             var emailCriterias = _to.SplitEmail();
             var nameCriteria = _name.SplitString();
             var keywordsCriteria = GetProcessingSearchCriteria(_keyWord);
 
-            var listShould = AddressProperties.Select(property => (Func<QueryDescriptor<WSUIEmail>, QueryContainer>) (descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(emailCriterias.Select(email => (Func<QueryDescriptor<WSUIEmail>, QueryContainer>) (des => des.Term(property.ToString(), email.ToString()))).ToArray())))).ToList();
-            listShould.AddRange(NameProperties.Select(property => (Func<QueryDescriptor<WSUIEmail>, QueryContainer>) (descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(nameCriteria.Select(name => (Func<QueryDescriptor<WSUIEmail>, QueryContainer>) (des => des.Term(property.ToString(), name.ToString()))).ToArray())))));
+            var listShould = AddressProperties.Select(property => (Func<QueryDescriptor<OFEmail>, QueryContainer>) (descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(emailCriterias.Select(email => (Func<QueryDescriptor<OFEmail>, QueryContainer>) (des => des.Term(property.ToString(), email.ToString()))).ToArray())))).ToList();
+            listShould.AddRange(NameProperties.Select(property => (Func<QueryDescriptor<OFEmail>, QueryContainer>) (descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(nameCriteria.Select(name => (Func<QueryDescriptor<OFEmail>, QueryContainer>) (des => des.Term(property.ToString(), name.ToString()))).ToArray())))));
 
             if (!string.IsNullOrEmpty(_keyWord) && keywordsCriteria != null && keywordsCriteria.Count > 0)
             {
 
-                var listKeyWordShould = new List<Func<QueryDescriptor<WSUIEmail>, QueryContainer>>();
-                listKeyWordShould.AddRange(keywordsCriteria.Select((temp => (Func<QueryDescriptor<WSUIEmail>, QueryContainer>)(d => d.Term(e => e.Analyzedcontent, temp)))).ToArray());
-                listKeyWordShould.AddRange(keywordsCriteria.Select((temp => (Func<QueryDescriptor<WSUIEmail>, QueryContainer>)(d => d.Term(e => e.Subject, temp)))).ToArray());
+                var listKeyWordShould = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
+                listKeyWordShould.AddRange(keywordsCriteria.Select((temp => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(d => d.Term(e => e.Analyzedcontent, temp)))).ToArray());
+                listKeyWordShould.AddRange(keywordsCriteria.Select((temp => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(d => d.Term(e => e.Subject, temp)))).ToArray());
 
-                var l = new List<Func<QueryDescriptor<WSUIEmail>, QueryContainer>>();
+                var l = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
                 l.Add(d => d.Bool(s => s.Should(listKeyWordShould.ToArray())));
                 l.Add(d => d.Bool(s => s.Should(listShould.ToArray())));
 

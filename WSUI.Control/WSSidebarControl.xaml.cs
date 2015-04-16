@@ -4,14 +4,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using WSUI.Control.Interfaces;
-using WSUI.Module.Enums;
-using WSUI.Module.Interface;
-using WSUI.Module.Interface.View;
-using WSUI.Module.Interface.ViewModel;
-using WSUI.Module.Service;
+using OF.Control.Interfaces;
+using OF.Module.Enums;
+using OF.Module.Interface;
+using OF.Module.Interface.View;
+using OF.Module.Interface.ViewModel;
+using OF.Module.Service;
 
-namespace WSUI.Control
+namespace OF.Control
 {
     /// <summary>
     /// Interaction logic for WSSidebarControl.xaml

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Practices.Prism.Events;
-using WSUIOutlookPlugin.Events;
-using WSUIOutlookPlugin.Interfaces;
+using OFOutlookPlugin.Events;
+using OFOutlookPlugin.Interfaces;
 
-namespace WSUIOutlookPlugin.Core
+namespace OFOutlookPlugin.Core
 {
     public abstract class BaseCommandManager : ICommandManager
     {

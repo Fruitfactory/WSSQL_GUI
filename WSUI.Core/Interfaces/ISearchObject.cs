@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using WSUI.Core.Enums;
+using OF.Core.Enums;
 
-namespace WSUI.Core.Interfaces
+namespace OF.Core.Interfaces
 {
     public interface ISearchObject
     {

@@ -1,7 +1,7 @@
 ﻿
-namespace WSUIOutlookPlugin.Interfaces
+namespace OFOutlookPlugin.Interfaces
 {
-    public interface IWSUICommandManager
+    public interface IOFCommandManager
     {
         void SetShowHideButtonsEnabling(bool isShowButtonEnable, bool isHideButtonEnable);
     }
