@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>WSUIInfrastructure.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trial|AnyCPU'">
+    <OutputPath>..\Routput\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>..\Routput\WSUI.Infrastructure.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OF.Infrastructure</RootNamespace>
+    <AssemblyName>OF.Infrastructure</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Output\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Routput\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Elasticsearch.Net, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolkits\Elasticsearch.Net.1.3.1\Elasticsearch.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolkits\Log4Net\net40-client\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro">
+      <HintPath>..\Toolkits\MahAppMetro\MahApps.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Nest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolkits\MahAppMetro\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
+    <Compile Include="Helpers\EmailCommandPreviewHelper.cs" />
+    <Compile Include="MVVM\AdvancedSearch\SortByAdvancedSearchCriteria.cs" />
+    <Compile Include="MVVM\AdvancedSearch\StringAdvancedSearchCriteria.cs" />
+    <Compile Include="Attributes\FieldIndexAttribute.cs" />
+    <Compile Include="Behaviors\ChildListBoxBehavior.cs" />
+    <Compile Include="Behaviors\ExpanderEmailBehavior.cs" />
+    <Compile Include="Behaviors\GridListItemBehavior.cs" />
+    <Compile Include="Behaviors\ListBoxBehavior.cs" />
+    <Compile Include="Behaviors\ListBoxExpandBehavior.cs" />
+    <Compile Include="Behaviors\MainListBoxBehavior.cs" />
+    <Compile Include="Behaviors\SelectedItemTrackingBehavior.cs" />
+    <Compile Include="Controls\Application\AppEmpty.cs" />
+    <Compile Include="Controls\BlockControl\BlockControl.xaml.cs">
+      <DependentUpon>BlockControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BlockControl\BlockPopupAdorner.cs" />
+    <Compile Include="Controls\BusyControl\BusyIndicator.xaml.cs">
+      <DependentUpon>BusyIndicator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BusyControl\BusyPopupAdorner.cs" />
+    <Compile Include="Controls\BusyControl\IBusyPopupAdorner.cs" />
+    <Compile Include="Controls\Core\BasePopupAdorner.cs" />
+    <Compile Include="Controls\HeaderControl\WSUIHeaderControl.cs" />
+    <Compile Include="Controls\HightliteHyperlink.xaml.cs">
+      <DependentUpon>HightliteHyperlink.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HightliteTextBlock.xaml.cs">
+      <DependentUpon>HightliteTextBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HightliteTextBlockBase.cs" />
+    <Compile Include="Controls\ListBox\WSUIListBox.cs" />
+    <Compile Include="Controls\ProgressManager\IProgressForm.cs" />
+    <Compile Include="Controls\ProgressManager\IProgressManager.cs" />
+    <Compile Include="Controls\ProgressManager\ProgressManager.cs" />
+    <Compile Include="Controls\ProgressManager\ProgressOperation.cs" />
+    <Compile Include="Controls\ProgressManager\ProgressWindow.xaml.cs">
+      <DependentUpon>ProgressWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\ActivationStatusToButtonVisibilityConverter.cs" />
+    <Compile Include="Converters\ActivationStatusToGridVisibilityConverter.cs" />
+    <Compile Include="Converters\AdvancedSearchTypeToStringConverter.cs" />
+    <Compile Include="Converters\StringToStringConverter.cs" />
+    <Compile Include="Events\SelectedChangedPayloadEvent.cs" />
+    <Compile Include="Helpers\AttachedProperty\ListBoxSelectedObjectAttachedProperty.cs" />
+    <Compile Include="Helpers\AttachedProperty\ListBoxShouldSetSelectAttachedProperty.cs" />
+    <Compile Include="Implements\Contact\BaseContactSearching.cs" />
+    <Compile Include="Implements\Contact\ContactAttachmentSearching.cs" />
+    <Compile Include="Implements\Contact\ContactEmailSearching.cs" />
+    <Compile Include="Implements\Rules\AttachmentContentSearchRule.cs" />
+    <Compile Include="Implements\Rules\AttachmentFilenameSearchRule.cs" />
+    <Compile Include="Implements\Rules\ContactAttachmentSearchRule.cs" />
+    <Compile Include="Implements\Rules\ContactEmailSearchRule.cs" />
+    <Compile Include="Implements\Rules\EmailContactSearchRule.cs" />
+    <Compile Include="Implements\Rules\GeneralContactRule.cs" />
+    <Compile Include="Implements\Systems\AllSearchSystem.cs" />
+    <Compile Include="Implements\Rules\BaseRules\BaseAttachmentSearchRule.cs" />
+    <Compile Include="Implements\Systems\AttachmentSearchSystem.cs" />
+    <Compile Include="Implements\Rules\BaseRules\BaseEmailSearchRule.cs" />
+    <Compile Include="Implements\Rules\BaseRules\BaseFileSearchRule.cs" />
+    <Compile Include="Implements\Rules\ContactSearchRule.cs" />
+    <Compile Include="Implements\Systems\ContactAttachmentSearchSystem.cs" />
+    <Compile Include="Implements\Systems\ContactEmailSearchSystem.cs" />
+    <Compile Include="Implements\Systems\ContactSearchSystem.cs" />
+    <Compile Include="Implements\Rules\EmailContentSearchRule.cs" />
+    <Compile Include="Implements\Systems\Core\BaseAllEmailSearchSystem.cs" />
+    <Compile Include="Implements\Systems\EmailSearchSystem.cs" />
+    <Compile Include="Implements\Rules\EmailSubjectSearchRule.cs" />
+    <Compile Include="Implements\Rules\FileContentSearchRule.cs" />
+    <Compile Include="Implements\Rules\FileFilenameSearchRule.cs" />
+    <Compile Include="Interfaces\Search\IContactSearchSystem.cs" />
+    <Compile Include="MVVM\StatusItem\StatusItemViewModel.cs" />
+    <Compile Include="Payloads\SearchObjectPayload.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RegionNames.cs" />
+    <Compile Include="Service\Dumper\MiniDumper.cs" />
+    <Compile Include="Service\EventArgs.cs" />
+    <Compile Include="Service\ExtensionMethods.cs" />
+    <Compile Include="Service\FileService.cs" />
+    <Compile Include="Service\HelperConst.cs" />
+    <Compile Include="Service\Helpers\HelperFunctions.cs" />
+    <Compile Include="Service\Helpers\SearchItemHelper.cs" />
+    <Compile Include="Service\Helpers\TaskFinderHelper.cs" />
+    <Compile Include="Service\Rules\BaseRule.cs" />
+    <Compile Include="Service\Rules\IRule.cs" />
+    <Compile Include="Service\Rules\QuoteRule.cs" />
+    <Compile Include="Service\Rules\WordRule.cs" />
+    <Compile Include="Service\ScrollData.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WSUI.Core\OF.Core.csproj">
+      <Project>{D650F4E9-99FE-46EC-A59D-BF3A99652255}</Project>
+      <Name>OF.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Controls\BlockControl\BlockControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\BusyControl\BusyIndicator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\HightliteHyperlink.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\HightliteTextBlock.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ProgressManager\ProgressWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WSUIInfrastructure.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Implements\Rules\Helpers\" />
+    <Folder Include="Service\Enums\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Html\template.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

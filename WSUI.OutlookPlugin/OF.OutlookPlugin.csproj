@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6169FA5D-89FA-44D3-9801-CEFE8FC8755D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OFOutlookPlugin</RootNamespace>
+    <AssemblyName>OF.OutlookPlugin</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <StartupObject>
+    </StartupObject>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>WSUI.OutlookPlugin.snk</AssemblyOriginatorKeyFile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Output\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>true</RegisterForComInterop>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\ROutput\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>true</RegisterForComInterop>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trial|AnyCPU'">
+    <OutputPath>..\Routput\</OutputPath>
+    <DefineConstants>TRACE;TRIAL</DefineConstants>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>true</RegisterForComInterop>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>..\ROutput\WSUI.OutlookPlugin.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="AddinExpress.OL.2005, Version=7.1.4050.2005, Culture=neutral, PublicKeyToken=e69a7e0f3592d2b8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Elasticsearch.Net, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Toolkits\Prism\Microsoft.Practices.Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.UnityExtensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Toolkits\Prism\Microsoft.Practices.Prism.UnityExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Toolkits\Prism\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Toolkits\Prism\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Vbe.Interop, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Office\Microsoft.Vbe.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Nest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL" />
+    <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Office\Office.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="AddinExpress.MSO.2005">
+      <HintPath>C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\Bin\AddinExpress.MSO.2005.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Loader\adxloader.dll.manifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <!--<None Include="WSUI.OutlookPlugin.snk" /> -->
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\application-plus-red.png" />
+    <Content Include="Images\gear.png" />
+    <Content Include="Images\logo_64.png" />
+    <Content Include="Images\question.png" />
+    <Content Include="Loader\adxloader.dll" />
+    <Content Include="Loader\adxloader64.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
+    <Compile Include="About\OFAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="About\OFAbout.Designer.cs">
+      <DependentUpon>OFAbout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\DllPreloader.cs" />
+    <Compile Include="Core\Extensions.cs" />
+    <Compile Include="Core\SearchCommandManager.cs" />
+    <Compile Include="Core\UpdateHelper.cs" />
+    <Compile Include="Events\OFHideWindow.cs" />
+    <Compile Include="Events\OFOpenWindow.cs" />
+    <Compile Include="Events\OFSearch.cs" />
+    <Compile Include="Hooks\GlobalEventProvider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Hooks\HookManager.Callbacks.cs" />
+    <Compile Include="Hooks\HookManager.cs" />
+    <Compile Include="Hooks\HookManager.Structures.cs" />
+    <Compile Include="Hooks\HookManager.Windows.cs" />
+    <Compile Include="Hooks\MouseEventExtArgs.cs" />
+    <Compile Include="Interfaces\ICommandManager.cs" />
+    <Compile Include="Interfaces\IMainForm.cs" />
+    <Compile Include="Interfaces\ISidebarForm.cs" />
+    <Compile Include="Interfaces\IUpdatable.cs" />
+    <Compile Include="Interfaces\IWSUICommandManager.cs" />
+    <Compile Include="Core\BaseCommandManager.cs" />
+    <Compile Include="Interfaces\IWSUIOutlookItemEvents.cs" />
+    <Compile Include="Managers\OFAboutCommandManager.cs" />
+    <Compile Include="Managers\OFCommandBarManager.cs" />
+    <Compile Include="Managers\OFRibbonManager.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="OFAddinModule.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="OFSidebar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OFSidebar.Designer.cs">
+      <DependentUpon>OFSidebar.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="About\OFAbout.resx">
+      <DependentUpon>OFAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OFAddinModule.resx">
+      <DependentUpon>OFAddinModule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OFSidebar.resx">
+      <DependentUpon>OFSidebar.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WSPreview\OFPreview.csproj">
+      <Project>{3E9F9F18-B9AD-4DDE-A5D6-F71B75C737D2}</Project>
+      <Name>OFPreview</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WSUI.Control\OF.Control.csproj">
+      <Project>{FC28437E-0008-4A62-B444-37EB9E6B5AE6}</Project>
+      <Name>OF.Control</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WSUI.Core\OF.Core.csproj">
+      <Project>{d650f4e9-99fe-46ec-a59d-bf3a99652255}</Project>
+      <Name>OF.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WSUI.Infrastructure\OF.Infrastructure.csproj">
+      <Project>{0C9D56F2-FC4F-4677-A33E-E3E9E09C30C0}</Project>
+      <Name>OF.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WSUI.Module\OF.Module.csproj">
+      <Project>{EDCE3394-18B5-40A8-AE43-E6A8E23C9A7F}</Project>
+      <Name>OF.Module</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\Controls\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy $(SolutionDir)Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\Microsoft\Microsoft.Ink.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\PDFSharp\PDFLibNet.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\Interop\Excel\Microsoft.Office.Interop.Excel.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\Interop\Word\Microsoft.Office.Interop.Word.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\Interop\Office\Office.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\Interop\Office\Microsoft.Vbe.Interop.dll $(TargetDir) /F /R /Y /I
+
+xcopy $(SolutionDir)Toolkits\GflSdk\lib\GflWrapper.dll $(TargetDir)lib\ /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\GflSdk\lib\libgfl340.dll $(TargetDir)lib\ /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\GflSdk\lib\libgfle340.dll $(TargetDir)lib\ /F /R /Y /I
+
+xcopy $(SolutionDir)Toolkits\GflSdk\lib64\GflWrapper.dll $(TargetDir)lib64\ /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\GflSdk\lib64\libgfl340.dll $(TargetDir)lib64\ /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\GflSdk\lib64\libgfle340.dll $(TargetDir)lib64\ /F /R /Y /I
+
+xcopy $(SolutionDir)Toolkits\PDFSharp\x86\PDFLibNet.dll $(TargetDir)lib\ /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\PDFSharp\x64\PDFLibNet.dll $(TargetDir)lib64\ /F /R /Y /I
+
+xcopy $(SolutionDir)Toolkits\TurboApi\Api\x86\TurboActivate.dll $(TargetDir) /F /R /Y /I
+copy $(SolutionDir)Toolkits\TurboApi\Api\x64\TurboActivate.dll $(TargetDir)\TurboActivate64.dll 
+xcopy $(SolutionDir)Toolkits\TurboApi\Api\x86\TurboActivate.exe $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\TurboApi\Dats\1.0.0\TurboActivate.dat $(TargetDir) /F /R /Y /I
+
+xcopy $(SolutionDir)Toolkits\DDayICal\antlr.runtime.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\DDayICal\DDay.Collections.dll $(TargetDir) /F /R /Y /I
+xcopy $(SolutionDir)Toolkits\DDayICal\DDay.iCal.dll $(TargetDir) /F /R /Y /I
+
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>

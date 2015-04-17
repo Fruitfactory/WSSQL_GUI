@@ -1,0 +1,496 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3E9F9F18-B9AD-4DDE-A5D6-F71B75C737D2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WSPreview.PreviewHandler</RootNamespace>
+    <AssemblyName>OFPreview</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Output\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\ROutput\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>WSUIPreview.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trial|AnyCPU'">
+    <OutputPath>..\Routput\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>..\ROutput\WSPreview.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="antlr.runtime">
+      <HintPath>..\Toolkits\DDayICal\antlr.runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="DDay.Collections">
+      <HintPath>..\Toolkits\DDayICal\DDay.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="DDay.iCal">
+      <HintPath>..\Toolkits\DDayICal\DDay.iCal.dll</HintPath>
+    </Reference>
+    <Reference Include="Elasticsearch.Net, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Output\Elasticsearch.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\Toolkits\AgilityPack\Net40\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit">
+      <HintPath>..\Toolkits\AvalonEdit\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.2.329, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolkits\Log4Net\net40-client\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Ink, Version=1.7.2600.2180, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\Toolkits\Microsoft\Microsoft.Ink.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Microsoft\Microsoft.mshtml.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Excel\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Word\Microsoft.Office.Interop.Word.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Nest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Output\Nest.dll</HintPath>
+    </Reference>
+    <Reference Include="Office, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Toolkits\Interop\Office\Office.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
+    <Compile Include="Controls\BinControl\BinPreviewControl.cs" />
+    <Compile Include="Controls\Calendar\CalendarIcsPreview.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Calendar\CalendarIcsPreview.Designer.cs">
+      <DependentUpon>CalendarIcsPreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Calendar\FileIcsProperty.cs" />
+    <Compile Include="Controls\Calendar\IIcsFileProperty.cs" />
+    <Compile Include="Controls\Calendar\ParseAttribute.cs" />
+    <Compile Include="Controls\Calendar\ParserIcs.cs" />
+    <Compile Include="Controls\Core\BaseLoaderAssembly.cs" />
+    <Compile Include="Controls\CsvControl\CsvPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\CsvControl\CsvPreview.Designer.cs">
+      <DependentUpon>CsvPreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\GDI.cs" />
+    <Compile Include="Controls\ImageControl\Interface\IImagePreviewGenerator.cs" />
+    <Compile Include="Controls\ImageControl\PicturePreviewControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImageControl\PicturePreviewControl.Designer.cs">
+      <DependentUpon>PicturePreviewControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImageControl\Service\ImagePreviewGenerator.cs" />
+    <Compile Include="Controls\ImageControl\ZoomPictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Office\BaseOfficePreview.cs" />
+    <Compile Include="Controls\Office\ExcelPreview.cs" />
+    <Compile Include="Controls\Office\OfficeFilePreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Office\OfficeFilePreview.Designer.cs">
+      <DependentUpon>OfficeFilePreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Office\OfficePreviewFactory.cs" />
+    <Compile Include="Controls\Office\OutlookFilePreview.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Office\OutlookFilePreview.Designer.cs">
+      <DependentUpon>OutlookFilePreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Office\WebFilePreview.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Office\WebUtils\DWebBrowserEvents2.cs" />
+    <Compile Include="Controls\Office\WebUtils\ExtWebBrowser.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Office\WebUtils\ExtWebBrowserEventHelper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Office\WordPreview.cs" />
+    <Compile Include="Controls\PdfControl\LinkActionKind.cs" />
+    <Compile Include="Controls\PdfControl\PageViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PdfControl\PDFViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PdfControl\PDFViewer.designer.cs">
+      <DependentUpon>PDFViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PdfControl\TypeResolver\PdfTypeLoader.cs" />
+    <Compile Include="Controls\RtfControl\RtfPreviewControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RtfControl\RtfPreviewControl.Designer.cs">
+      <DependentUpon>RtfPreviewControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Service\Extensions.cs" />
+    <Compile Include="Controls\SourceControl\SourceViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SourceControl\SourceViewer.Designer.cs">
+      <DependentUpon>SourceViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithSearchObject.cs" />
+    <Compile Include="PreviewHandlerFramework\ControlsKey.cs" />
+    <Compile Include="PreviewHandlerFramework\IOutlookPreviewHelper.cs" />
+    <Compile Include="PreviewHandlerFramework\KeyControlAttribute.cs" />
+    <Compile Include="PreviewHandlerFramework\PreviewForSearchObjectAttribute.cs" />
+    <Compile Include="PreviewHandlers\WebPreviewHandler.cs" />
+    <Compile Include="Service\OutlookPreview\OutlookPreviewHelper.cs" />
+    <Compile Include="Service\Preview\HelperPreviewHandlers.cs" />
+    <Compile Include="PInvoke\WindowAPI.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\COLORREF.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\COMStream.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithFile.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithItem.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IInitializeWithStream.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IObjectWithSite.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IOleWindow.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IPreviewHandler.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IPreviewHandlerFrame.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\IPreviewHandlerVisuals.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\LOGFONT.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\MSG.cs" />
+    <Compile Include="PreviewHandlerFramework\COMInterop\RECT.cs" />
+    <Compile Include="PreviewHandlerFramework\FileBasedPreviewHandler.cs" />
+    <Compile Include="PreviewHandlerFramework\FileBasedPreviewHandlerControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PreviewHandlerFramework\IPreviewControl.cs" />
+    <Compile Include="PreviewHandlerFramework\ISearchWordHighlight.cs" />
+    <Compile Include="PreviewHandlerFramework\ITranslateMessage.cs" />
+    <Compile Include="PreviewHandlerFramework\PreviewHandler.cs" />
+    <Compile Include="PreviewHandlerFramework\PreviewHandlerAttribute.cs" />
+    <Compile Include="PreviewHandlerFramework\PreviewHandlerControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PreviewHandlerFramework\StreamBasedPreviewHandler.cs" />
+    <Compile Include="PreviewHandlerFramework\StreamBasedPreviewHandlerControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PreviewHandlerHost\PreviewHandlerHostControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PreviewHandlerHost\PreviewHandlerHostControl.designer.cs">
+      <DependentUpon>PreviewHandlerHostControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PreviewHandlerHost\PreviewHandlerRegistryAccessor.cs" />
+    <Compile Include="PreviewHandlerHost\StreamWrapper.cs" />
+    <Compile Include="PreviewHandlers\BinPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\CsvPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\FileTypeIconProvider.cs" />
+    <Compile Include="PreviewHandlers\IcsPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\ImagePreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\InternetExplorerPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\IsfPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\MsiPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\OfficePreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\OutlookPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\PdfPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\ResourcesPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\ResxPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\RtfPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\SnkPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\SourcePreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\TxtPreviewHandler.cs" />
+    <Compile Include="PreviewHandlers\ZipPreviewHandler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Service\CsvHelper\CSV.cs" />
+    <Compile Include="Service\CsvHelper\CSVReader.cs" />
+    <Compile Include="Service\CsvHelper\CSVWriter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Controls\Calendar\CalendarIcsPreview.resx">
+      <DependentUpon>CalendarIcsPreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\CsvControl\CsvPreview.resx">
+      <DependentUpon>CsvPreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImageControl\PicturePreviewControl.resx">
+      <DependentUpon>PicturePreviewControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Office\OfficeFilePreview.resx">
+      <DependentUpon>OfficeFilePreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Office\OutlookFilePreview.resx">
+      <DependentUpon>OutlookFilePreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PdfControl\PageViewer.resx">
+      <DependentUpon>PageViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PdfControl\PDFViewer.resx">
+      <DependentUpon>PDFViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\RtfControl\RtfPreviewControl.resx">
+      <DependentUpon>RtfPreviewControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PreviewHandlerHost\PreviewHandlerHostControl.resx">
+      <DependentUpon>PreviewHandlerHostControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Resources\TreeView_XP_Explorer_ParentNode.gif" />
+    <None Include="WSUIPreview.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dmdskres_373_9_16x16x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\netshell_1611_1_16x16x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\netshell_21611_1_16x16x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomIn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomOut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tshadowdown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tshadowdownleft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tshadowdownright.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tshadowright.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tshadowtopright.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\aac.png" />
+    <EmbeddedResource Include="Images\ai.png" />
+    <EmbeddedResource Include="Images\aiff.png" />
+    <EmbeddedResource Include="Images\avi.png" />
+    <EmbeddedResource Include="Images\bmp.png" />
+    <EmbeddedResource Include="Images\c.png" />
+    <EmbeddedResource Include="Images\cpp.png" />
+    <EmbeddedResource Include="Images\css.png" />
+    <EmbeddedResource Include="Images\dat.png" />
+    <EmbeddedResource Include="Images\dmg.png" />
+    <EmbeddedResource Include="Images\doc.png" />
+    <EmbeddedResource Include="Images\docx.png" />
+    <EmbeddedResource Include="Images\dotx.png" />
+    <EmbeddedResource Include="Images\dwg.png" />
+    <EmbeddedResource Include="Images\dxf.png" />
+    <EmbeddedResource Include="Images\eps.png" />
+    <EmbeddedResource Include="Images\exe.png" />
+    <EmbeddedResource Include="Images\flv.png" />
+    <EmbeddedResource Include="Images\gif.png" />
+    <EmbeddedResource Include="Images\h.png" />
+    <EmbeddedResource Include="Images\hpp.png" />
+    <EmbeddedResource Include="Images\html.png" />
+    <EmbeddedResource Include="Images\ics.png" />
+    <EmbeddedResource Include="Images\iso.png" />
+    <EmbeddedResource Include="Images\java.png" />
+    <EmbeddedResource Include="Images\jpg.png" />
+    <EmbeddedResource Include="Images\key.png" />
+    <EmbeddedResource Include="Images\mid.png" />
+    <EmbeddedResource Include="Images\mp3.png" />
+    <EmbeddedResource Include="Images\mp4.png" />
+    <EmbeddedResource Include="Images\mpg.png" />
+    <EmbeddedResource Include="Images\odf.png" />
+    <EmbeddedResource Include="Images\ods.png" />
+    <EmbeddedResource Include="Images\odt.png" />
+    <EmbeddedResource Include="Images\otp.png" />
+    <EmbeddedResource Include="Images\ots.png" />
+    <EmbeddedResource Include="Images\ott.png" />
+    <EmbeddedResource Include="Images\pdf.png" />
+    <EmbeddedResource Include="Images\php.png" />
+    <EmbeddedResource Include="Images\png.png" />
+    <EmbeddedResource Include="Images\ppt.png" />
+    <EmbeddedResource Include="Images\psd.png" />
+    <EmbeddedResource Include="Images\py.png" />
+    <EmbeddedResource Include="Images\qt.png" />
+    <EmbeddedResource Include="Images\rar.png" />
+    <EmbeddedResource Include="Images\rb.png" />
+    <EmbeddedResource Include="Images\rtf.png" />
+    <EmbeddedResource Include="Images\sql.png" />
+    <EmbeddedResource Include="Images\tga.png" />
+    <EmbeddedResource Include="Images\tgz.png" />
+    <EmbeddedResource Include="Images\tiff.png" />
+    <EmbeddedResource Include="Images\txt.png" />
+    <EmbeddedResource Include="Images\wav.png" />
+    <EmbeddedResource Include="Images\xls.png" />
+    <EmbeddedResource Include="Images\xlsx.png" />
+    <EmbeddedResource Include="Images\xml.png" />
+    <EmbeddedResource Include="Images\yml.png" />
+    <EmbeddedResource Include="Images\zip.png" />
+    <EmbeddedResource Include="Images\_blank.png" />
+    <EmbeddedResource Include="Images\_page.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Html\NoPreview.htm" />
+    <EmbeddedResource Include="Images\error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Images\warning.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Html\Error.htm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WSUI.Core\OF.Core.csproj">
+      <Project>{d650f4e9-99fe-46ec-a59d-bf3a99652255}</Project>
+      <Name>OF.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WSUI.Infrastructure\OF.Infrastructure.csproj">
+      <Project>{0c9d56f2-fc4f-4677-a33e-e3e9e09c30c0}</Project>
+      <Name>OF.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
