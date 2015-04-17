@@ -978,6 +978,8 @@ namespace OF.CA
                 var elasticSearchPath = RegistryHelper.Instance.GetElasticSearchpath();
                 if (!string.IsNullOrEmpty(elasticSearchPath))
                 {
+                    UnregisterPlugin(session,elasticSearchPath,javaHome);
+
                     ProcessStartInfo si = new ProcessStartInfo();
                     si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "service.bat");
                     si.Arguments = string.Format(" {0} \"{1}\"", "stop",javaHome);
@@ -1009,6 +1011,7 @@ namespace OF.CA
         private const string PstPluginFilename = "pstriver-1.0-SNAPSHOT.zip";
         private const string PstPluginName = "pstriver";
         private const string InstallArguments = "-i {0} -u file:///{1} \"{2}\"";
+        private const string UnistallArguments = " --remove {0} \"{1}\"";
 
         private static void ExtractPstPlugin(Session session, string path)
         {
@@ -1042,6 +1045,28 @@ namespace OF.CA
                     pInstall.WaitForExit();
                     session.Log("PST plugin was installed.");
                 }
+            }
+            catch (Exception exception)
+            {
+                session.Log(exception.Message);
+            }
+        }
+
+        private static void UnregisterPlugin(Session session, string elasticSearchPath, string javaHome)
+        {
+            try
+            {
+                ProcessStartInfo si = new ProcessStartInfo();
+                si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "removeplugin.bat");
+                si.Arguments = string.Format(UnistallArguments, PstPluginName, javaHome);
+                //si.Verb = "runas";
+                si.WindowStyle = ProcessWindowStyle.Hidden;
+                si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
+                Process pInstall = new Process();
+                pInstall.StartInfo = si;
+                pInstall.Start();
+                pInstall.WaitForExit();
+                session.Log("PST plugin was unistalled.");
             }
             catch (Exception exception)
             {

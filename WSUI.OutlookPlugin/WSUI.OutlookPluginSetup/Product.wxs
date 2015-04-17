@@ -42,6 +42,7 @@
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLIB" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERPLUGINS" />
       <ComponentGroupRef Id="ElasticSearchComponents" />
     </Feature>
     
@@ -150,6 +151,13 @@
             <Component Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" Guid="20AEDE7C-8EA0-4B41-B33A-7DDC77DF9925">
               <RemoveFolder On="both" Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" />
               <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="config" />
+            </Component>
+          </Directory>
+          
+          <Directory Id="ELASTICSEASRCHINSTALLFOLDERPLUGINS" Name="plugins">
+            <Component Id="ELASTICSEASRCHINSTALLFOLDERPLUGINS" Guid="E8C9D655-A35C-40C5-A576-73E400DEF3CA">
+              <RemoveFolder On="both" Id="ELASTICSEASRCHINSTALLFOLDERPLUGINS" />
+              <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="plugins" />
             </Component>
           </Directory>
 
@@ -283,6 +291,7 @@
         <File Id="_elasticsearch_in_sh" Name="elasticsearch.in.sh" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
         <File Id="_plugin_" Name="plugin" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
         <File Id="_plugin_bat" Name="plugin.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
+        <File Id="_removeplugin_bat" Name="removeplugin.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
         <File Id="_service_bat" Name="service.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
       </Component>
 
