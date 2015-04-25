@@ -51,12 +51,12 @@ namespace OF.Control
                 this.InitializeModules();
             }
             //watch.Stop();
-            //WSSqlLogger.Instance.LogInfo(string.Format("Run (plugin): {0}ms", watch.ElapsedMilliseconds));
+            //OFLogger.Instance.LogInfo(string.Format("Run (plugin): {0}ms", watch.ElapsedMilliseconds));
         }
 
         protected override Microsoft.Practices.Prism.Logging.ILoggerFacade CreateLogger()
         {
-            return (ILoggerFacade)WSSqlLogger.Instance;
+            return (ILoggerFacade)OFLogger.Instance;
         }
 
         protected override DependencyObject CreateShell()
@@ -65,7 +65,7 @@ namespace OF.Control
             //watch.Start();
             var shell = Container.Resolve<WSSidebarControl>();
             //watch.Stop();
-            //WSSqlLogger.Instance.LogInfo(string.Format("Create shell (plugin): {0}ms",watch.ElapsedMilliseconds));
+            //OFLogger.Instance.LogInfo(string.Format("Create shell (plugin): {0}ms",watch.ElapsedMilliseconds));
             return shell;
         }
 
@@ -75,7 +75,7 @@ namespace OF.Control
             //watch.Start();
             base.InitializeShell();
             //watch.Stop();
-            //WSSqlLogger.Instance.LogInfo(string.Format("InitializeShell (plugin): {0}ms",watch.ElapsedMilliseconds));
+            //OFLogger.Instance.LogInfo(string.Format("InitializeShell (plugin): {0}ms",watch.ElapsedMilliseconds));
         }
 
         protected override IModuleCatalog CreateModuleCatalog()
@@ -85,7 +85,7 @@ namespace OF.Control
             var catalog = new ModuleCatalog();
             catalog.AddModule(typeof(OF.Module.WSModule));
             //watch.Stop();
-            //WSSqlLogger.Instance.LogInfo(string.Format("CreateModuleCatalog (plugin): {0}ms",watch.ElapsedMilliseconds));
+            //OFLogger.Instance.LogInfo(string.Format("CreateModuleCatalog (plugin): {0}ms",watch.ElapsedMilliseconds));
             return catalog;
         }
 
@@ -99,7 +99,7 @@ namespace OF.Control
             _mainViewModel = Container.Resolve<OF.Module.ViewModel.MainViewModel>();
             (this.View as ISidebarView).Model = _mainViewModel;
             //watch.Stop();
-            //WSSqlLogger.Instance.LogInfo(string.Format("InitializeModules (plugin): {0}ms",watch.ElapsedMilliseconds));
+            //OFLogger.Instance.LogInfo(string.Format("InitializeModules (plugin): {0}ms",watch.ElapsedMilliseconds));
         }
 
         protected override RegionAdapterMappings ConfigureRegionAdapterMappings()

@@ -40,6 +40,7 @@ namespace OF.Module.ViewModel
         private IUnityContainer _unityContainer;
         private IRegionManager _regionManager;
         private Timer _timer;
+        private bool _isFinishing = false;
 
         [Dependency]
         public IElasticSearchInitializationIndex ElasticSearchClient { get; set; }
@@ -63,6 +64,10 @@ namespace OF.Module.ViewModel
             CreateIndexVisibility = Visibility.Visible;
             ShowProgress = Visibility.Collapsed;
             FinishedStepVisibility = Visibility.Collapsed;
+            if (IsIndexExisted)
+            {
+                ElasticSearchClient.WarmUp();
+            }
             
         }
 
@@ -265,7 +270,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             } 
         }
 
@@ -292,7 +297,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -315,21 +320,24 @@ namespace OF.Module.ViewModel
                 CurrentFolder = item.IsNotNull() ? item.Folder : "";
                 CurrentProgress = (sumProcessing / sumAll) * 100.0;
                 
-                if (isFinished)
+                if (isFinished && !_isFinishing)
                 {
+                    _isFinishing = true;
                     _timer.Change(Timeout.Infinite, Timeout.Infinite);
                     IsIndexExisted = true;
                     FinishedStepVisibility = Visibility.Visible;
+                    ElasticSearchClient.CreateWarms();
                     OnIndexingFinished();
+                    _isFinishing = false;
                 }
             }
             catch (WebException w)
             {
-                WSSqlLogger.Instance.LogError("[Web] " + w.Message);
+                OFLogger.Instance.LogError("[Web] " + w.Message);
             }
             catch (Exception e)
             {
-                WSSqlLogger.Instance.LogError(e.Message);
+                OFLogger.Instance.LogError(e.Message);
             }
         }
 

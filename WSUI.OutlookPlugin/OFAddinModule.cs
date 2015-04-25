@@ -142,7 +142,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -559,7 +559,7 @@ namespace OFOutlookPlugin
             try
             {
                 StartWatch();
-                WSSqlLogger.Instance.LogInfo("Plugin is loading...");
+                OFLogger.Instance.LogInfo("Plugin is loading...");
                 outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
                 RegistryHelper.Instance.ResetShutdownNotification();
                 if (System.Windows.Application.Current == null)
@@ -581,7 +581,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -598,7 +598,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -620,7 +620,7 @@ namespace OFOutlookPlugin
                 }
                 catch (Exception ex)
                 {
-                    WSSqlLogger.Instance.LogError(ex.Message);
+                    OFLogger.Instance.LogError(ex.Message);
                 }
             }));
         }
@@ -636,7 +636,7 @@ namespace OFOutlookPlugin
                 _updatable.Update();
             }
             watch.Stop();
-            WSSqlLogger.Instance.LogInfo(string.Format("Check for update: {0}ms", watch.ElapsedMilliseconds));
+            OFLogger.Instance.LogInfo(string.Format("Check for update: {0}ms", watch.ElapsedMilliseconds));
         }
 
         private void RunPluginUI()
@@ -677,17 +677,17 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
         private void LogVersions()
         {
             var currentOFVersion = typeof(OFAddinModule).Assembly.GetName().Version;
-            WSSqlLogger.Instance.LogInfo("OF Version: {0}", currentOFVersion);
-            WSSqlLogger.Instance.LogInfo("OS Version: {0}", Environment.OSVersion);
-            WSSqlLogger.Instance.LogInfo("OS x64 Version: {0}", Environment.Is64BitOperatingSystem);
-            WSSqlLogger.Instance.LogInfo("Outlook x64 Version: {0}", Environment.Is64BitProcess);
+            OFLogger.Instance.LogInfo("OF Version: {0}", currentOFVersion);
+            OFLogger.Instance.LogInfo("OS Version: {0}", Environment.OSVersion);
+            OFLogger.Instance.LogInfo("OS x64 Version: {0}", Environment.Is64BitOperatingSystem);
+            OFLogger.Instance.LogInfo("Outlook x64 Version: {0}", Environment.Is64BitProcess);
 
         }
 
@@ -708,7 +708,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
             return null;
         }
@@ -763,7 +763,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -783,7 +783,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -802,7 +802,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -825,7 +825,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -847,7 +847,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -874,7 +874,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -890,18 +890,18 @@ namespace OFOutlookPlugin
                 this.SendMessage(WM_LOADED, IntPtr.Zero, IntPtr.Zero);
                 OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
                 OutlookHelper.Instance.OutlookApp = OutlookApp;
-                WSSqlLogger.Instance.LogInfo("OF AddinModule Startup Complete...");
+                OFLogger.Instance.LogInfo("OF AddinModule Startup Complete...");
                 StopWatch("OFAddinModule_AddinStartupComplete");
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            WSSqlLogger.Instance.LogError("Domain Unhandled Exception (plugin): {0}", e.ExceptionObject.ToString());
+            OFLogger.Instance.LogError("Domain Unhandled Exception (plugin): {0}", e.ExceptionObject.ToString());
         }
 
         private void CurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs firstChanceExceptionEventArgs)
@@ -910,18 +910,18 @@ namespace OFOutlookPlugin
             {
                 foreach (var item in (firstChanceExceptionEventArgs.Exception as ReflectionTypeLoadException).LoaderExceptions)
                 {
-                    WSSqlLogger.Instance.LogError("Reflection Type Load: {0}", item.Message.ToString());
+                    OFLogger.Instance.LogError("Reflection Type Load: {0}", item.Message.ToString());
                 }
             }
-            WSSqlLogger.Instance.LogError("Domain Exception: {0}", firstChanceExceptionEventArgs.Exception.Message);
-            WSSqlLogger.Instance.LogError("Domain Stacktrace: {0}", firstChanceExceptionEventArgs.Exception.StackTrace);
+            OFLogger.Instance.LogError("Domain Exception: {0}", firstChanceExceptionEventArgs.Exception.Message);
+            OFLogger.Instance.LogError("Domain Stacktrace: {0}", firstChanceExceptionEventArgs.Exception.StackTrace);
         }
 
 
         private void WPFApplicationOnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs dispatcherUnhandledExceptionEventArgs)
         {
-            WSSqlLogger.Instance.LogError("WPF Exception: {0}", dispatcherUnhandledExceptionEventArgs.Exception.Message);
-            WSSqlLogger.Instance.LogError("WPF Stacktrace: {0}", dispatcherUnhandledExceptionEventArgs.Exception.StackTrace);
+            OFLogger.Instance.LogError("WPF Exception: {0}", dispatcherUnhandledExceptionEventArgs.Exception.Message);
+            OFLogger.Instance.LogError("WPF Stacktrace: {0}", dispatcherUnhandledExceptionEventArgs.Exception.StackTrace);
         }
 
         #region [event handlers for ribbon]
@@ -940,7 +940,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -999,12 +999,12 @@ namespace OFOutlookPlugin
                         _officeVersion = "15.0";
                         GlobalConst.CurrentOutlookVersion = OutlookVersions.Otlook2013;
                     }
-                    WSSqlLogger.Instance.LogInfo("Outlook Version: {0}, {1}, {2}", hostVersion, _outlookVersion, _officeVersion);
+                    OFLogger.Instance.LogInfo("Outlook Version: {0}, {1}, {2}", hostVersion, _outlookVersion, _officeVersion);
                 }
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -1021,7 +1021,7 @@ namespace OFOutlookPlugin
             ResetDisabling();
             _wsuiBootStraper.PassAction(new WSAction(WSActionType.Quit, null));
             SetOutlookFolderProperties(string.Empty, string.Empty);
-            WSSqlLogger.Instance.LogInfo("Shutdown...");
+            OFLogger.Instance.LogInfo("Shutdown...");
 
             StopWatch("OutlookFinderEvents_Quit");
         }
@@ -1046,7 +1046,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -1056,7 +1056,7 @@ namespace OFOutlookPlugin
             {
                 if (RegistryHelper.Instance.IsShouldRestoreOutlookFolder())
                 {
-                    WSSqlLogger.Instance.LogInfo("{0}", "OutlookFolder is empty");
+                    OFLogger.Instance.LogInfo("{0}", "OutlookFolder is empty");
                     return;
                 }
 
@@ -1064,21 +1064,21 @@ namespace OFOutlookPlugin
                 Outlook.NameSpace outlookNamespace = OutlookApp.GetNamespace(DefaultNamespace);
                 if (outlookNamespace == null || string.IsNullOrEmpty(id))
                     return;
-                WSSqlLogger.Instance.LogInfo("OutlookFolder ID: {0}", id);
+                OFLogger.Instance.LogInfo("OutlookFolder ID: {0}", id);
                 Outlook.MAPIFolder folder = outlookNamespace.GetFolderFromID(id, Type.Missing);
                 if (folder == null)
                     return;
                 folder.WebViewURL = RegistryHelper.Instance.GetOutlookFolderWebUrl();
                 folder.WebViewOn = true;
 
-                WSSqlLogger.Instance.LogInfo("WebViewURL: {0}", folder.WebViewURL);
+                OFLogger.Instance.LogInfo("WebViewURL: {0}", folder.WebViewURL);
 
                 Marshal.ReleaseComObject(folder);
                 Marshal.ReleaseComObject(outlookNamespace);
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -1097,7 +1097,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -1117,7 +1117,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
             return null;
         }
@@ -1139,14 +1139,14 @@ namespace OFOutlookPlugin
                     }
                     catch (Exception e)
                     {
-                        WSSqlLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
+                        OFLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
                     }
                 }
                 return mapiFolder;
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
             return null;
         }
@@ -1186,7 +1186,7 @@ namespace OFOutlookPlugin
         private void StopWatch(string method)
         {
             _watch.Stop();
-            WSSqlLogger.Instance.LogInfo("--------------- {0} => {1}", method, _watch.ElapsedMilliseconds);
+            OFLogger.Instance.LogInfo("--------------- {0} => {1}", method, _watch.ElapsedMilliseconds);
         }
 
 
@@ -1282,7 +1282,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -1308,7 +1308,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -1333,13 +1333,13 @@ namespace OFOutlookPlugin
                         {
                             registry.DeleteValue(item);
                         }
-                        WSSqlLogger.Instance.LogInfo("Disabled Add-ins: {0}; {1}", item, temp);
+                        OFLogger.Instance.LogInfo("Disabled Add-ins: {0}; {1}", item, temp);
                     }
                 }
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
             finally
             {

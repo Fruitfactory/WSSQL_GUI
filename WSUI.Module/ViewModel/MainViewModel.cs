@@ -169,7 +169,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -190,7 +190,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -231,14 +231,14 @@ namespace OF.Module.ViewModel
             {
                 ActivateStatus = TurboLimeActivate.Instance.State;
 
-                WSSqlLogger.Instance.LogInfo("Activated Status: {0}", ActivateStatus.ToString());
+                OFLogger.Instance.LogInfo("Activated Status: {0}", ActivateStatus.ToString());
                 OnPropertyChanged(() => ActivateStatus);
                 OnPropertyChanged(() => VisibleTrialLabel);
                 OnPropertyChanged(() => DaysLeft);
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -267,7 +267,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -298,7 +298,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -360,7 +360,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -396,7 +396,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
             finally
             {
@@ -419,7 +419,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
             finally
             {
@@ -448,7 +448,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -494,7 +494,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -521,7 +521,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -533,7 +533,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("Buy: {0}", ex.Message);
+                OFLogger.Instance.LogError("Buy: {0}", ex.Message);
             }
         }
 
@@ -546,7 +546,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -566,7 +566,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -671,7 +671,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -693,7 +693,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
 
@@ -835,12 +835,13 @@ namespace OF.Module.ViewModel
                     {
                         _elasticSearchViewModel.Show();
                     }
+                    
                 }
 
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 

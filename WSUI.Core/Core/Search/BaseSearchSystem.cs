@@ -23,13 +23,14 @@ namespace OF.Core.Core.Search
     {
         private Thread _mainSearchThread;
         private IList<ISearch> _listRules;
-        private volatile bool _needStop = false;
+        
         private bool _isAdvancedMode = false;
 
         protected IList<ISystemSearchResult> InternalResult;
         protected volatile bool _IsSearching = false;
         protected readonly object Lock1 = new object();
         protected readonly object Lock2 = new object();
+        protected volatile bool _needStop = false;
 
         protected BaseSearchSystem()
         {
@@ -63,7 +64,7 @@ namespace OF.Core.Core.Search
         public void SetSearchCriteria(string searchCriteris)
         {
             _listRules.ForEach(item => item.SetSearchCriteria(searchCriteris));
-            WSSqlLogger.Instance.LogInfo("Criteria: {0}", searchCriteris);
+            OFLogger.Instance.LogInfo("Criteria: {0}", searchCriteris);
         }
 
         public void SetAdvancedSearchCriterias(IEnumerable<IAdvancedSearchCriteria> advancedSearchCriterias)
@@ -154,7 +155,7 @@ namespace OF.Core.Core.Search
                 var events = IsAdvancedMode ? _listRules.Where(item => item.IncludedInAdvancedMode).Select(item => item.GetEvent()).ToArray() : _listRules.Select(item => item.GetEvent()).ToArray();
                 if (events == null || events.Length == 0)
                 {
-                    WSSqlLogger.Instance.LogInfo("List of Events is empty");
+                    OFLogger.Instance.LogInfo("List of Events is empty");
                     return;
                 }
                 //var watchSearch = new Stopwatch();
@@ -167,13 +168,13 @@ namespace OF.Core.Core.Search
 
                 WaitHandle.WaitAll(events);
                 //watchSearch.Stop();
-                WSSqlLogger.Instance.LogInfo("------------------- searching is DONE!!!!--------------------- ");//,watchSearch.ElapsedMilliseconds
+                OFLogger.Instance.LogInfo("------------------- searching is DONE!!!!--------------------- ");//,watchSearch.ElapsedMilliseconds
 
                 if (_needStop)
                 {
                     RaiseSearchStopped();
                     _IsSearching = false;
-                    WSSqlLogger.Instance.LogError("Searching was stoped");
+                    OFLogger.Instance.LogError("Searching was stoped");
                     return;
                 }
                 ProcessData();
@@ -189,11 +190,11 @@ namespace OF.Core.Core.Search
                     InternalResult.Add(itemResult);
                 }
                 watch.Stop();
-                WSSqlLogger.Instance.LogInfo("BaseSearchSystem: {0}", watch.ElapsedMilliseconds);
+                OFLogger.Instance.LogInfo("BaseSearchSystem: {0}", watch.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("{0}", ex.Message);
+                OFLogger.Instance.LogError("{0}", ex.Message);
             }
             finally
             {

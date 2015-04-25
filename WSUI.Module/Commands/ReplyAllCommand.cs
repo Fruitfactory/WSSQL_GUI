@@ -40,7 +40,7 @@ namespace OF.Module.Commands
             catch (System.Exception ex)
             {
                 MessageBoxService.Instance.Show("Error", "Can't open Outlook item.", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Asterisk);
-                WSSqlLogger.Instance.LogError("ReplyAll Command: " + ex.Message);
+                OFLogger.Instance.LogError("ReplyAll Command: " + ex.Message);
             }
         }
 

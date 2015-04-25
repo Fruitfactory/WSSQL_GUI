@@ -41,7 +41,7 @@ namespace OF.Module.Commands
                 MessageBoxService.Instance.Show("Error",
                                                 string.Format(
                                                     "Error: '{0}'",ex.Message) , MessageBoxButton.OK, MessageBoxImage.Error);
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 

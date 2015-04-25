@@ -116,7 +116,7 @@ namespace OF.Core.Helpers
             dynamic mailItem = GetMailItem(entryID);
             if (mailItem == null)
             {
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Mail not found", itemsearch.ItemUrl));
+                OFLogger.Instance.LogWarning(string.Format("{0}: {1}", "Mail not found", itemsearch.ItemUrl));
                 return null;
             }
             
@@ -199,7 +199,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex )
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
             return result;
         }
@@ -215,7 +215,7 @@ namespace OF.Core.Helpers
             Outlook.Attachment att = GetAttacment(mi, fileNameAttach);
             if (att == null)
             {
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1} - {2}", "Attachment not found", item.ItemName, item.ItemUrl));
+                OFLogger.Instance.LogWarning(string.Format("{0}: {1} - {2}", "Attachment not found", item.ItemName, item.ItemUrl));
                 return null;
             }
             string tempFileName = TempFileManager.Instance.GenerateTempFileName(item);
@@ -229,7 +229,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1} - {2}", "Save error: ", tempFileName, ex.Message));
+                OFLogger.Instance.LogWarning(string.Format("{0}: {1} - {2}", "Save error: ", tempFileName, ex.Message));
                 return null;
             }
             return tempFileName;
@@ -270,7 +270,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
             return string.Empty;
         }
@@ -353,7 +353,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception exception)
             {
-                WSSqlLogger.Instance.LogError(exception.Message);
+                OFLogger.Instance.LogError(exception.Message);
             }
             return null;
         }
@@ -398,7 +398,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception exception)
             {
-                WSSqlLogger.Instance.LogError(exception.Message);
+                OFLogger.Instance.LogError(exception.Message);
             }
             return null;
         }
@@ -528,7 +528,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolderNameList", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolderNameList", ex.Message));
                 return res;
             }
             res.Insert(0, OutlookHelper.AllFolders);
@@ -554,7 +554,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolders", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolders", ex.Message));
                 return res;
             }
             return res;
@@ -572,7 +572,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception e)
             {
-                WSSqlLogger.Instance.LogError(string.Format("LOGOFF: {0}", e.Message));
+                OFLogger.Instance.LogError(string.Format("LOGOFF: {0}", e.Message));
             }
         }
 
@@ -604,7 +604,7 @@ namespace OF.Core.Helpers
             dynamic appointmentItem = GetAppointment(entryID);
             if (appointmentItem == null)
             {
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Appointment not found", itemSearch.ItemUrl));
+                OFLogger.Instance.LogWarning(string.Format("{0}: {1}", "Appointment not found", itemSearch.ItemUrl));
                 return null;
             }
             string tempFile = TempFileManager.Instance.GenerateTempFileName(itemSearch);
@@ -655,13 +655,13 @@ namespace OF.Core.Helpers
                     }
                     catch (Exception ex)
                     {
-                        WSSqlLogger.Instance.LogError("GetContact: {0}",ex.Message);
+                        OFLogger.Instance.LogError("GetContact: {0}",ex.Message);
                     }
                 }
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.Message));
             }
             return ci;
         }
@@ -698,14 +698,14 @@ namespace OF.Core.Helpers
                     }
                     catch (Exception ex)
                     {
-                        WSSqlLogger.Instance.LogError("GetContact: {0}", ex.Message);
+                        OFLogger.Instance.LogError("GetContact: {0}", ex.Message);
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.Message));
             }
             return ci;
         }
@@ -738,7 +738,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetFromProcess", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFromProcess", ex.Message));
                 //System.Windows.MessageBox.Show(String.Format("Get Process: {0}", ex.Message));
             }
 
@@ -758,7 +758,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "CreateOutlookApplication", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "CreateOutlookApplication", ex.Message));
                 //System.Windows.MessageBox.Show(String.Format("Create Process: {0}", ex.Message));
             }
 
@@ -779,7 +779,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetMailItem", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetMailItem", ex.Message));
             }
             return mi;
         }
@@ -804,7 +804,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetAttachment", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetAttachment", ex.Message));
             }
             return att;
         }
@@ -824,7 +824,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetAppointment", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetAppointment", ex.Message));
             }
             return appointItem;
         }
@@ -844,7 +844,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "IsOutlookAlive", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "IsOutlookAlive", ex.Message));
             }
 
             return res;
@@ -855,7 +855,7 @@ namespace OF.Core.Helpers
             Marshal.ReleaseComObject(app);
             app = null;
             app = GetApplication();
-            WSSqlLogger.Instance.LogWarning("Outlook was closed. Create new instance.");
+            OFLogger.Instance.LogWarning("Outlook was closed. Create new instance.");
         }
 
         private void Dispose(bool disposing)
@@ -889,13 +889,13 @@ namespace OF.Core.Helpers
                     }
                     catch (Exception e)
                     {
-                        WSSqlLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
+                        OFLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
                     }
                 }
             }
             catch (Exception e)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetOutlookFolders", e.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetOutlookFolders", e.Message));
             }
         }
 
@@ -914,13 +914,13 @@ namespace OF.Core.Helpers
                     }
                     catch (Exception e)
                     {
-                        WSSqlLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
+                        OFLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
                     }
                 }
             }
             catch (Exception e)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetOutlookFolders", e.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetOutlookFolders", e.Message));
             }
         }
 
@@ -946,7 +946,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.Message));
             }
             return ci;
         }
@@ -1000,7 +1000,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception e)
             {
-                WSSqlLogger.Instance.LogError(e.Message);
+                OFLogger.Instance.LogError(e.Message);
             }
             return result;
         }
@@ -1024,7 +1024,7 @@ namespace OF.Core.Helpers
                     }
                     catch (Exception exception)
                     {
-                        WSSqlLogger.Instance.LogError(exception.Message);
+                        OFLogger.Instance.LogError(exception.Message);
                     }
                 }
             }

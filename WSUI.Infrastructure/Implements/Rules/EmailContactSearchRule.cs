@@ -34,7 +34,7 @@ namespace OF.Infrastructure.Implements.Rules
         public override void Init()
         {
             RuleName = "EmailContact";
-            CountFirstProcess = 150;
+            CountFirstProcess = 100;
             CountSecondProcess = 50;
             base.Init();
         }

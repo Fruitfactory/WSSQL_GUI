@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Windows.Documents;
@@ -56,7 +57,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
 
         protected override QueryContainer BuildQuery(QueryDescriptor<OFEmail> queryDescriptor)
         {
-            var preparedCriterias = GetProcessingSearchCriteria();
+            var preparedCriterias = GetKeywordsList();
             if (preparedCriterias.Count > 1)
             {
                 return queryDescriptor.Bool(descriptor =>
@@ -69,7 +70,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
 
         protected override IFieldSort BuildSortSelector(SortFieldDescriptor<OFEmail> sortFieldDescriptor)
         {
-            return sortFieldDescriptor.OnField(e => e.Datereceived).Descending();
+            return sortFieldDescriptor.OnField(e => e.Datecreated).Descending();
         }
 
         protected abstract Expression<Func<OFEmail, string>> GetSearchedProperty();
@@ -79,7 +80,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             IEnumerable<IGrouping<string, EmailSearchObject>> groped = null;
 
             if (!IsAdvancedMode)
-                groped = Result.OrderByDescending(i => i.DateReceived).GroupBy(e => e.OutlookConversationId);
+                groped = Result.OrderByDescending(i => i.DateCreated).GroupBy(e => e.OutlookConversationId);
             else
                 groped = GetSortedResult(Result);
 
@@ -102,9 +103,9 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             Result.Clear();
             if (result.Count > 0)
             {
-                WSSqlLogger.Instance.LogInfo("{0}: {1}", RuleName, result.Count);
+                OFLogger.Instance.LogInfo("{0}: {1}", RuleName, result.Count);
                 Result = result;
-                LastDate = Result.Last().DateReceived;
+                LastDate = Result.Last().DateCreated;
             }
         }
 
@@ -116,9 +117,9 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             switch (sort)
             {
                 case AdvancedSearchSortByType.NewestToOldest:
-                    return result.OrderByDescending(i => i.DateReceived).GroupBy(e => e.OutlookConversationId);
+                    return result.OrderByDescending(i => i.DateCreated).GroupBy(e => e.OutlookConversationId);
                 case AdvancedSearchSortByType.OldestToNewest:
-                    return result.OrderBy(i => i.DateReceived).GroupBy(e => e.OutlookConversationId);
+                    return result.OrderBy(i => i.DateCreated).GroupBy(e => e.OutlookConversationId);
                 default:
                     return result.GroupBy(e => e.OutlookConversationId);
             }

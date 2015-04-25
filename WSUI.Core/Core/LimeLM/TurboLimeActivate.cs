@@ -81,7 +81,7 @@ namespace OF.Core.Core.LimeLM
                 ActivationState state = ActivationState.Error;
                 if (IsInternetError)
                 {
-                    WSSqlLogger.Instance.LogWarning("Check - Internet connection is available or Lime services (servers) are available.");
+                    OFLogger.Instance.LogWarning("Check - Internet connection is available or Lime services (servers) are available.");
                     return ActivationState.Error; 
                 }
                 if (IsActivated)
@@ -122,12 +122,12 @@ namespace OF.Core.Core.LimeLM
                 if (!string.IsNullOrEmpty(pkeyid))
                 {
                     var result = LimeLMApi.SetDetails(pkeyid, 0, null, new string[] { TimesUsed }, new string[] { c.ToString() });
-                    WSSqlLogger.Instance.LogInfo("Times used: {0}, Result: {1}", c, result);
+                    OFLogger.Instance.LogInfo("Times used: {0}, Result: {1}", c, result);
                 }
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -169,13 +169,13 @@ namespace OF.Core.Core.LimeLM
             {
                 IsGenuineResult gr = TurboActivate.IsGenuine(DaysBetweenCheck, GraceOfInerErr, true);
                 IsInternetError = gr == IsGenuineResult.InternetError;
-                WSSqlLogger.Instance.LogInfo("GenuineResult: {0}", gr);
+                OFLogger.Instance.LogInfo("GenuineResult: {0}", gr);
                 return gr == IsGenuineResult.Genuine || gr == IsGenuineResult.GenuineFeaturesChanged ||
                        IsInternetError;
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("Error occured during checking activation: [{0}]", ex.Message);
+                OFLogger.Instance.LogError("Error occured during checking activation: [{0}]", ex.Message);
                 return false;
             }
         }
@@ -195,7 +195,7 @@ namespace OF.Core.Core.LimeLM
             {
                 string trialExpires = TurboActivate.GetFeatureValue(TrialExpires, null);
                 isTrial = int.Parse(TurboActivate.GetFeatureValue(IsTrialKey, null)) > 0;
-                WSSqlLogger.Instance.LogInfo("Expires date: {0}", trialExpires);
+                OFLogger.Instance.LogInfo("Expires date: {0}", trialExpires);
 
                 if (trialExpires != null)
                 {
@@ -203,7 +203,7 @@ namespace OF.Core.Core.LimeLM
                     // verify the trial hasn't expired
                     bool stillInTrial = TurboActivate.IsDateValid(trialExpires,
                         TurboActivate.TA_DateCheckFlags.TA_HAS_NOT_EXPIRED);
-                    WSSqlLogger.Instance.LogInfo("Is Still in Trial: {0}", stillInTrial);
+                    OFLogger.Instance.LogInfo("Is Still in Trial: {0}", stillInTrial);
                     //DaysRemain = (DateTime.Parse(trialExpires).Date - DateTime.Now.Date).Days;
                     //DaysRemain = DaysRemain <= 0 ? 0 : DaysRemain;
                     isActivated = stillInTrial;
@@ -217,7 +217,7 @@ namespace OF.Core.Core.LimeLM
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("Error occured during checking new activation: [{0}]", ex.Message);
+                OFLogger.Instance.LogError("Error occured during checking new activation: [{0}]", ex.Message);
             }
 
             return new CheckActivationResult(isActivated, isTrial, checkInOldWay);
@@ -234,17 +234,17 @@ namespace OF.Core.Core.LimeLM
 
         private bool CheckTrialPeriod()
         {
-            WSSqlLogger.Instance.LogInfo("UseTrial!!");
+            OFLogger.Instance.LogInfo("UseTrial!!");
             TurboActivate.UseTrial();
             int days = DaysRemain;
-            WSSqlLogger.Instance.LogInfo("DaysRemain = {0}", days);
+            OFLogger.Instance.LogInfo("DaysRemain = {0}", days);
             return days == 0;
         }
 
         private void InternalActivate()
         {
             string path = Path.Combine(Path.GetDirectoryName(typeof(TurboLimeActivate).Assembly.Location), ActivationAppName);
-            WSSqlLogger.Instance.LogInfo("Path Activate: {0}", path);
+            OFLogger.Instance.LogInfo("Path Activate: {0}", path);
             Process activationProcess = new Process()
             {
                 StartInfo =
@@ -278,7 +278,7 @@ namespace OF.Core.Core.LimeLM
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("{0}", ex.Message);
+                OFLogger.Instance.LogError("{0}", ex.Message);
             }
             return false;
         }

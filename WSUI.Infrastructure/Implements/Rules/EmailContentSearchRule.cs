@@ -18,9 +18,6 @@ namespace OF.Infrastructure.Implements.Rules
 {
 	public class EmailContentSearchRule : BaseEmailSearchRule 
     {
-        private string WhereTemplate =
-            "WHERE CONTAINS(System.Kind,'email') AND System.Message.DateReceived < '{0}' AND CONTAINS(*,{1},1033) ORDER BY System.Message.DateReceived DESC";//System.Search.Contents
-
 
 		public EmailContentSearchRule()
 		{

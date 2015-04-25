@@ -40,7 +40,7 @@ namespace OF.Module.Commands
             catch (System.Exception ex)
             {
                 MessageBoxService.Instance.Show("Error", "Can't crete Reply email.", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Asterisk);
-                WSSqlLogger.Instance.LogError("Reply Command: " + ex.Message);
+                OFLogger.Instance.LogError("Reply Command: " + ex.Message);
             }
         }
 

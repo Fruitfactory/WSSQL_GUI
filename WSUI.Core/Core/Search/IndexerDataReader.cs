@@ -69,7 +69,7 @@ namespace OF.Core.Core.Search
                 }
                 catch (Exception ex)
                 {
-                    OF.Core.Logger.WSSqlLogger.Instance.LogError("GetDataByReader: {0}", ex.Message);
+                    OF.Core.Logger.OFLogger.Instance.LogError("GetDataByReader: {0}", ex.Message);
                 }
                 finally
                 {

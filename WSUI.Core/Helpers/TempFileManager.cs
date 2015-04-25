@@ -38,7 +38,7 @@ namespace OF.Core.Helpers
             if (!File.Exists(temp))
             {
                 Directory.CreateDirectory(temp);
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Create folder", temp));
+                OFLogger.Instance.LogWarning(string.Format("{0}: {1}", "Create folder", temp));
             }
         }
 
@@ -119,7 +119,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "Copy file", tempFilename, ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "Copy file", tempFilename, ex.Message));
                 return null;
             }
             return tempFilename;
@@ -140,7 +140,7 @@ namespace OF.Core.Helpers
                     }
                     catch (Exception ex)
                     {
-                        WSSqlLogger.Instance.LogInfo(ex.Message);
+                        OFLogger.Instance.LogInfo(ex.Message);
                     }
                 }
             }
@@ -193,7 +193,7 @@ namespace OF.Core.Helpers
             if (!di.Exists)
             {
                 di.Create();
-                WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "Create folder", di.FullName));
+                OFLogger.Instance.LogWarning(string.Format("{0}: {1}", "Create folder", di.FullName));
             }
             return tempFolder;
         }
@@ -225,7 +225,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "CopyFile", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "CopyFile", ex.Message));
             }
             finally
             {

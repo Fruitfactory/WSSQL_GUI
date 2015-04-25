@@ -35,7 +35,7 @@ namespace OF.Infrastructure.Controls.ProgressManager
             {
                 case ProgressFormCommand.Settings:
                     ProcessSettings(arg);
-                    WSSqlLogger.Instance.LogInfo(arg.ToString());
+                    OFLogger.Instance.LogInfo(arg.ToString());
                     break;
                 case ProgressFormCommand.Activate:
                     ProcessActivate();

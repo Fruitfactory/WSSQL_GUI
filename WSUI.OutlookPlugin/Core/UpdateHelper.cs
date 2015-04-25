@@ -119,11 +119,11 @@ namespace OFOutlookPlugin.Core
 
         public bool CanUpdate()
         {
-            WSSqlLogger.Instance.LogInfo("Module  != null: {0}",Module != null);
+            OFLogger.Instance.LogInfo("Module  != null: {0}",Module != null);
             if (Module != null)
             {
-                WSSqlLogger.Instance.LogInfo("Module.IsMSINetworkDeployed(): {0}", Module.IsMSINetworkDeployed());
-                WSSqlLogger.Instance.LogInfo("Module.IsMSIUpdatable(): {0}", Module.IsMSIUpdatable());    
+                OFLogger.Instance.LogInfo("Module.IsMSINetworkDeployed(): {0}", Module.IsMSINetworkDeployed());
+                OFLogger.Instance.LogInfo("Module.IsMSIUpdatable(): {0}", Module.IsMSIUpdatable());    
             }
             return Module != null && Module.IsMSINetworkDeployed() && Module.IsMSIUpdatable();
         }
@@ -135,11 +135,11 @@ namespace OFOutlookPlugin.Core
                 File.Create(string.Format("{0}{1}", _path, LocFilename)).Close();
                 RegistryHelper.Instance.StartSilentUpdate();
                 RegistryHelper.Instance.SetCallIndexKey(RegistryHelper.CallIndex.First);
-                WSSqlLogger.Instance.LogError("Lock silent update !!!!");
+                OFLogger.Instance.LogError("Lock silent update !!!!");
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("Lock: " + ex.Message);
+                OFLogger.Instance.LogError("Lock: " + ex.Message);
             }
             
         }
@@ -150,11 +150,11 @@ namespace OFOutlookPlugin.Core
             {
             	File.Delete(string.Format("{0}{1}", _path, LocFilename));
                 RegistryHelper.Instance.FinishSilentUpdate();
-                WSSqlLogger.Instance.LogError("Unlock silent update !!!!");
+                OFLogger.Instance.LogError("Unlock silent update !!!!");
             }
             catch (System.Exception ex)
             {
-            	WSSqlLogger.Instance.LogError("Unlock: " + ex.Message);
+            	OFLogger.Instance.LogError("Unlock: " + ex.Message);
             }
         }
 
@@ -180,35 +180,35 @@ namespace OFOutlookPlugin.Core
             SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(Dispatcher.CurrentDispatcher));
             try
             {
-                WSSqlLogger.Instance.LogInfo("Check for updates...");
+                OFLogger.Instance.LogInfo("Check for updates...");
                 string url = Module.CheckForMSIUpdates();
-                WSSqlLogger.Instance.LogInfo("End checking updates...");
-                WSSqlLogger.Instance.LogInfo("Url after checking: " + url);
+                OFLogger.Instance.LogInfo("End checking updates...");
+                OFLogger.Instance.LogInfo("Url after checking: " + url);
                 if (String.IsNullOrEmpty(url))
                 {
                     Unlock();
-                    WSSqlLogger.Instance.LogInfo("No updates...");
+                    OFLogger.Instance.LogInfo("No updates...");
                     return;
                 }
 
                 string filename = url.Substring(0, url.LastIndexOf('/') + 1);
                 filename = filename + UpdatedFilename;
-                WSSqlLogger.Instance.LogInfo(String.Format("File: {0}...", filename));
+                OFLogger.Instance.LogInfo(String.Format("File: {0}...", filename));
                 string shadow = string.Format(ShadowCopyFolder, _path);
                 _instalatonUrl = GetInstalationPath(_path);
-                WSSqlLogger.Instance.LogInfo(string.Format("Instalation Url: {0}...", _instalatonUrl));
+                OFLogger.Instance.LogInfo(string.Format("Instalation Url: {0}...", _instalatonUrl));
                 string temp = GetTempUserPath();
                 CreateTempFolder(string.Format(TempFolderCreate, temp));
                 //CreateTempFolder(shadow);
                 string localmsi = string.Format(TempFolder, temp, UpdatedFilename);
-                WSSqlLogger.Instance.LogInfo(String.Format("Msi local path: {0}...", localmsi));
+                OFLogger.Instance.LogInfo(String.Format("Msi local path: {0}...", localmsi));
                 string localversion = string.Format(TempFolder, temp, VersionFilename);
-                WSSqlLogger.Instance.LogInfo(String.Format("Version local path: {0}...", localversion));
+                OFLogger.Instance.LogInfo(String.Format("Version local path: {0}...", localversion));
                 string urlVersion = _instalatonUrl + VersionFilename;
-                WSSqlLogger.Instance.LogInfo(String.Format("Version Url: {0}...", urlVersion));
+                OFLogger.Instance.LogInfo(String.Format("Version Url: {0}...", urlVersion));
 
                 WebClient webClient = new WebClient();
-                WSSqlLogger.Instance.LogInfo("Download update...");
+                OFLogger.Instance.LogInfo("Download update...");
                 webClient.DownloadFile(filename, localmsi);
                 webClient.DownloadFile(urlVersion, localversion);
 
@@ -216,23 +216,23 @@ namespace OFOutlookPlugin.Core
                 process.StartInfo.FileName = "msiexec.exe";
                 process.StartInfo.Arguments = String.Format(" /i \"{0}\" /qb /norestart /log {1}install.log ", localmsi, _path); //REINSTALL=\"ALL\"
                 process.StartInfo.Verb = "runas";
-                WSSqlLogger.Instance.LogInfo("Installing update...");
+                OFLogger.Instance.LogInfo("Installing update...");
                 process.Start();
                 process.WaitForExit();
                 //Copy(shadow, path);
-                WSSqlLogger.Instance.LogInfo(process.ExitCode == 0
+                OFLogger.Instance.LogInfo(process.ExitCode == 0
                                                  ? "Update is done..."
                                                  : "Something wrong. Check exit code...");
-                WSSqlLogger.Instance.LogInfo(String.Format("Exit code: {0}", process.ExitCode));
+                OFLogger.Instance.LogInfo(String.Format("Exit code: {0}", process.ExitCode));
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(String.Format("Exception during updates: {0}...", ex.Message));
+                OFLogger.Instance.LogInfo(String.Format("Exception during updates: {0}...", ex.Message));
             }
             finally
             {
                 watch.Stop();
-                WSSqlLogger.Instance.LogInfo(String.Format("Silent updated lasts: {0}ms", watch.ElapsedMilliseconds));
+                OFLogger.Instance.LogInfo(String.Format("Silent updated lasts: {0}ms", watch.ElapsedMilliseconds));
             }
         }
 
@@ -288,7 +288,7 @@ namespace OFOutlookPlugin.Core
         {
             if (!IsMsiNodePresent())
             {
-                WSSqlLogger.Instance.LogWarning("MSI node is absent...");
+                OFLogger.Instance.LogWarning("MSI node is absent...");
                 CreateMSINode();
             }
 
@@ -302,8 +302,8 @@ namespace OFOutlookPlugin.Core
             }
             else
             {
-                WSSqlLogger.Instance.LogInfo(string.Format("Can update = {0}", CanUpdate()));
-                WSSqlLogger.Instance.LogInfo("Not updatable...");
+                OFLogger.Instance.LogInfo(string.Format("Can update = {0}", CanUpdate()));
+                OFLogger.Instance.LogInfo("Not updatable...");
             }
         }
 
@@ -336,7 +336,7 @@ namespace OFOutlookPlugin.Core
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("CreateMSINode: {0}",ex.Message);
+                OFLogger.Instance.LogError("CreateMSINode: {0}",ex.Message);
             }
             finally
             {

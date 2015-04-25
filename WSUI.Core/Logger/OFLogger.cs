@@ -8,7 +8,7 @@ using Microsoft.Practices.Prism.Logging;
 
 namespace OF.Core.Logger
 {
-    public class WSSqlLogger : ILoggerFacade
+    public class OFLogger : ILoggerFacade
     {
         private const string Filename = "log4net.config";
 
@@ -27,14 +27,14 @@ namespace OF.Core.Logger
 
         #region fields static
 
-        private static WSSqlLogger _instance = null;
+        private static OFLogger _instance = null;
         private static object _lock = new object();
 
         #endregion fields static
 
-        private WSSqlLogger()
+        private OFLogger()
         {
-            string path = Assembly.GetAssembly(typeof(WSSqlLogger)).Location;
+            string path = Assembly.GetAssembly(typeof(OFLogger)).Location;
             path = path.Substring(0, path.LastIndexOf('\\') + 1);
             path = path + Filename;
             System.Diagnostics.Debug.WriteLine(path);
@@ -46,7 +46,7 @@ namespace OF.Core.Logger
             }
         }
 
-        public static WSSqlLogger Instance
+        public static OFLogger Instance
         {
             get
             {
@@ -54,7 +54,7 @@ namespace OF.Core.Logger
                 {
                     if (_instance == null)
                     {
-                        _instance = new WSSqlLogger();
+                        _instance = new OFLogger();
                     }
                     return _instance;
                 }

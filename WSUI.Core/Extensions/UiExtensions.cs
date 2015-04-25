@@ -220,7 +220,7 @@ namespace OF.Core.Extensions
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
                 oldIndex = -1;
             }
         }

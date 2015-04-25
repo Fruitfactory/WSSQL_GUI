@@ -29,8 +29,6 @@ namespace OF.Infrastructure.Implements.Rules
 	    private void ConstructorInit()
 	    {
 	        Priority = 5;
-	        WhereTemplate =
-                " WHERE scope='file:' AND Contains(System.Kind,' NOT \"folder\"') AND Contains({0}) AND System.DateCreated < '{1}' ORDER BY System.DateCreated DESC";
 	    }
 
 //System.Kind <> 'email' AND System.Kind <> 'folder' AND System.Kind <> 'contact' AND

@@ -44,7 +44,7 @@ namespace OF.Module.Commands
             }
             catch (System.Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "OpenItemFile", fileName, ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "OpenItemFile", fileName, ex.Message));
             }
         }
 

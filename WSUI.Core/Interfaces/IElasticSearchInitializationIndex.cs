@@ -11,5 +11,9 @@ namespace OF.Core.Interfaces
         IExistsResponse IndexExists(string name);
         void CreateIndex(byte[] bodyRequest);
         ElasticsearchResponse<OFStatusResponse> GetIndexingProgress();
+
+        void CreateWarms();
+
+        void WarmUp();
     }
 }

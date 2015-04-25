@@ -58,7 +58,7 @@ namespace OFOutlookPlugin.About
             }
             var strBuilder = new StringBuilder();
             var version = currentAssembly.GetName().Version;
-            WSSqlLogger.Instance.LogInfo("Version: {0}",version);
+            OFLogger.Instance.LogInfo("Version: {0}",version);
             if(version != null)
                 strBuilder.AppendLine(string.Format(VersionTemplate, version.Major,version.Minor,version.Build,version.Revision));
             if (description != null && description.Length > 0)
@@ -89,7 +89,7 @@ namespace OFOutlookPlugin.About
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("Run url: {0}",ex.Message);
+                OFLogger.Instance.LogError("Run url: {0}",ex.Message);
             }
         }
 

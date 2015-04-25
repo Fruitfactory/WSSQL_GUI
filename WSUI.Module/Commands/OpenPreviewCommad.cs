@@ -54,11 +54,11 @@ namespace OF.Module.Commands
                                                 string.Format(
                                                     "File '{0}' is locked by another process.\nClose all programs and try again.",
                                                     Path.GetFileName(fileName)), MessageBoxButton.OK, MessageBoxImage.Error);
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "Error", "Create Email - File Load", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "Error", "Create Email - File Load", ex.Message));
             }
             catch (System.Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "Start error", fileName, ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "Start error", fileName, ex.Message));
             }
         }
 

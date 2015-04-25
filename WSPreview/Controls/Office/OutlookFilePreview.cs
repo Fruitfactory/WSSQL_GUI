@@ -183,12 +183,12 @@ namespace OFPreview.PreviewHandler.Controls.Office
                 }
                 catch (Exception ex)
                 {
-                    WSSqlLogger.Instance.LogError(ex.Message);
+                    OFLogger.Instance.LogError(ex.Message);
                 }
             }
             else
             {
-                WSSqlLogger.Instance.LogInfo("Path is empty. Outlook Preview");
+                OFLogger.Instance.LogInfo("Path is empty. Outlook Preview");
             }
         }
 

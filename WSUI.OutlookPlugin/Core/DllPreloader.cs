@@ -84,13 +84,13 @@ public class DllPreloader {
         var assembleName = AssemblyName.GetAssemblyName(file);
         if ( !assemblies.Any(a => AssemblyName.ReferenceMatchesDefinition(assembleName, a.GetName())))
         {
-          WSSqlLogger.Instance.LogInfo(string.Format("Preload: {0}",file));
+          OFLogger.Instance.LogInfo(string.Format("Preload: {0}",file));
           Assembly.LoadFrom(file);
         }
       }
       catch (Exception ex)
       {
-        WSSqlLogger.Instance.LogError(string.Format("Preload: {0}",ex.Message));
+        OFLogger.Instance.LogError(string.Format("Preload: {0}",ex.Message));
       }
 
     }

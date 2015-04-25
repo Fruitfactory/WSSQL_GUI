@@ -80,7 +80,7 @@ namespace OF.Infrastructure.Controls.ProgressManager
                                                               }
                                                               
                                                               ShowProgressForm();
-                                                              //WSSqlLogger.Instance.LogInfo("Show progress delay > 0 ----------------------------------");
+                                                              //OFLogger.Instance.LogInfo("Show progress delay > 0 ----------------------------------");
                                                           });
 
                 }
@@ -88,7 +88,7 @@ namespace OF.Infrastructure.Controls.ProgressManager
                 {
                     
                     ShowProgressForm();
-                    //WSSqlLogger.Instance.LogInfo(">>>Show progress delay == 0");
+                    //OFLogger.Instance.LogInfo(">>>Show progress delay == 0");
                 }
             }
         }
@@ -120,11 +120,11 @@ namespace OF.Infrastructure.Controls.ProgressManager
                 {
                     _progressForm.ProcessCommand(ProgressFormCommand.Settings, _currentOperation);
                     ((Window) _progressForm).Closed += OnClosedForm;
-                    //WSSqlLogger.Instance.LogInfo("Show dialog");
+                    //OFLogger.Instance.LogInfo("Show dialog");
                 }
                 catch (Exception ex)
                 {
-                    WSSqlLogger.Instance.LogError(string.Format("{0} - {1}","ShowSplash",ex.Message));
+                    OFLogger.Instance.LogError(string.Format("{0} - {1}","ShowSplash",ex.Message));
                 }
             }
             ((Window)_progressForm).ShowDialog();
@@ -135,7 +135,7 @@ namespace OF.Infrastructure.Controls.ProgressManager
         private void OnClosedForm(object sender,EventArgs args)
         {
             ((Window) _progressForm).Dispatcher.BeginInvokeShutdown(DispatcherPriority.Background);
-            WSSqlLogger.Instance.LogInfo(
+            OFLogger.Instance.LogInfo(
                 "Close dialog");
         }
 
@@ -151,7 +151,7 @@ namespace OF.Infrastructure.Controls.ProgressManager
                     _stackOperation.Pop();
                 }
             }
-            WSSqlLogger.Instance.LogInfo("Stop progress");
+            OFLogger.Instance.LogInfo("Stop progress");
             CloseProgressForm();
         }
 

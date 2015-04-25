@@ -49,7 +49,7 @@ namespace OF.Infrastructure.Implements.Rules
 
 	    protected override QueryContainer BuildQuery(QueryDescriptor<OFContact> queryDescriptor)
 	    {
-            var preparedCriterias = GetProcessingSearchCriteria();
+	        var preparedCriterias = GetKeywordsList();
             if (preparedCriterias.Count > 1)
             {
 

@@ -148,7 +148,7 @@ namespace OF.Module.Core
             if (!IsShouldSearch())
             {
                 _canSearch = true;
-                WSSqlLogger.Instance.LogWarning("Please, activate the 'OutlookFinder'");
+                OFLogger.Instance.LogWarning("Please, activate the 'OutlookFinder'");
                 MessageBoxService.Instance.Show("Warning", "Please, activate the 'OutlookFinder'", MessageBoxButton.OK,
                     MessageBoxImage.Asterisk);
                 RunBuyProcess();
@@ -157,13 +157,13 @@ namespace OF.Module.Core
 
             if (_isQueryRun)
             {
-                WSSqlLogger.Instance.LogWarning("Query have already started");
+                OFLogger.Instance.LogWarning("Query have already started");
                 return;
             }
             if (string.IsNullOrEmpty(SearchString))
             {
                 MessageBoxService.Instance.Show("Warning", "Search criteria is empty");
-                WSSqlLogger.Instance.LogWarning("Search criteria is empty");
+                OFLogger.Instance.LogWarning("Search criteria is empty");
                 return;
             }
             SearchSystem.SetSearchCriteria(SearchString);
@@ -410,7 +410,7 @@ namespace OF.Module.Core
             }
             catch (System.Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "OpenItemFile", fileName, ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "OpenItemFile", fileName, ex.Message));
             }
         }
 

@@ -20,7 +20,7 @@ namespace OF.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0} - {1}", "IsDirectory", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "IsDirectory", ex.Message));
                 return true;
             }
         }

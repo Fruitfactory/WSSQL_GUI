@@ -39,6 +39,7 @@ namespace OF.Core.Core.Search
         private Func<T> _create;
         private int _from = 0;
         private long _total = 0;
+        private List<string> _keywords; 
 
         #endregion [needs private]
 
@@ -57,6 +58,7 @@ namespace OF.Core.Core.Search
         protected int CountAdded = 0;
         protected volatile bool NeedStop = false;
         protected volatile object Lock = null;
+        
         
 
         private volatile object _internalLock = new object();
@@ -100,6 +102,7 @@ namespace OF.Core.Core.Search
         public virtual void SetSearchCriteria(string criteria)
         {
             Query = criteria.ToLowerInvariant().Trim();
+            _keywords = GetProcessingSearchCriteria();
         }
 
         public virtual void SetAdvancedSearchCriteria(IEnumerable<IAdvancedSearchCriteria> advancedSearchCriterias)
@@ -132,15 +135,16 @@ namespace OF.Core.Core.Search
                 string query = Query;
                 if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
-                WSSqlLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
+                OFLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
                 
-                Stopwatch watch = new Stopwatch();
-                watch.Start();
 
                 if (_total != 0 && _from >= _total)
                 {
                     return;
                 }
+
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
 
                 ISearchResponse<E> result = null;
 
@@ -155,6 +159,7 @@ namespace OF.Core.Core.Search
                 }
                 else
                 {
+
                     result = NeedSorting
                        ? _elasticSearchClient.Search<E>(s => s
                        .From(_from)
@@ -171,14 +176,25 @@ namespace OF.Core.Core.Search
                 }
                  
                 watch.Stop();
+                OFLogger.Instance.LogInfo("Search Done: {0}ms",watch.ElapsedMilliseconds);
 
                 // additional process
                 if (!NeedStop && result != null && result.Documents.Any())
                 {
                     _total = result.Total;
                     _from +=  result.Documents.Count() == TopQueryResult ? TopQueryResult : result.Documents.Count();
+                    watch = new Stopwatch();
+                    watch.Start();
                     ReadDataFromTable(result.Documents);
+                    watch.Stop();
+                    OFLogger.Instance.LogInfo("Read Data Done: {0}ms", watch.ElapsedMilliseconds);
+
+                    watch = new Stopwatch();
+                    watch.Start();
                     ProcessResult();
+                    watch.Stop();
+                    OFLogger.Instance.LogInfo("Process Result Done: {0}ms", watch.ElapsedMilliseconds);
+
                     _typeResult = TypeResult.Ok;
                     
                 }
@@ -192,7 +208,7 @@ namespace OF.Core.Core.Search
             {
                 _typeResult = TypeResult.Error;
                 _listMessage.Add(new ResultMessage() { Message = ex.Message });
-                WSSqlLogger.Instance.LogError("Search <{0}>: {1}", typeof(T).Name, ex.Message);
+                OFLogger.Instance.LogError("Search <{0}>: {1}", typeof(T).Name, ex.Message);
             }
             finally
             {
@@ -225,9 +241,6 @@ namespace OF.Core.Core.Search
         {
             return default(QueryContainer);
         }
-
-
-
 
         protected virtual DataTable GetDataTable(string query)
         {
@@ -325,6 +338,11 @@ namespace OF.Core.Core.Search
         protected DateTime GetCurrentDateTime()
         {
             return DateTime.Now.AddDays(1);
+        }
+
+        protected IList<string> GetKeywordsList()
+        {
+            return _keywords;
         }
 
         protected string FormatDate(ref DateTime date)

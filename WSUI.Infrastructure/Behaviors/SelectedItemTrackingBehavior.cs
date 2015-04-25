@@ -58,7 +58,7 @@ namespace OF.Infrastructure.Behaviors
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
             
         }

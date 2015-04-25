@@ -46,7 +46,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
 
         protected override QueryContainer BuildQuery(QueryDescriptor<OFAttachmentContent> queryDescriptor)
         {
-            var preparedCriterias = GetProcessingSearchCriteria();
+            var preparedCriterias = GetKeywordsList();
             if (preparedCriterias.Count > 1)
             {
                 return queryDescriptor.Bool(descriptor =>
@@ -89,7 +89,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
 	    {
             var groups = Result.GroupBy(i => new { Name = i.ItemNameDisplay, Size = i.Size });
 	        var result = new List<AttachmentContentSearchObject>();
-            WSSqlLogger.Instance.LogInfo(string.Format("Count attachments: {0}", groups.Count()));
+            OFLogger.Instance.LogInfo(string.Format("Count attachments: {0}", groups.Count()));
             foreach (var group in groups)
             {
                 var item = group.FirstOrDefault();
@@ -103,7 +103,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             Result.Clear();
             if (result.Count > 0)
             {
-                WSSqlLogger.Instance.LogInfo("{0}: {1}",RuleName,result.Count);
+                OFLogger.Instance.LogInfo("{0}: {1}",RuleName,result.Count);
                 Result = result;
                 //LastDate = Result.Min(d => d.DateReceived); // TODO should be re-factored
             }

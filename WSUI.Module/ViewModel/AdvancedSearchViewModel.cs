@@ -178,7 +178,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.Message);
             }
         }
     }

@@ -33,7 +33,7 @@ namespace OFPreview.PreviewHandler.Controls.Office
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("Web: {0}",ex.Message);
+                OFLogger.Instance.LogError("Web: {0}",ex.Message);
             }
         }
 
@@ -101,7 +101,7 @@ namespace OFPreview.PreviewHandler.Controls.Office
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("Web: {0}", ex.Message);
+                OFLogger.Instance.LogError("Web: {0}", ex.Message);
             }
         }
 

@@ -17,7 +17,7 @@ namespace OF.Infrastructure.Converters
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
             return AdvancedSearchCriteriaType.None.ToString();
         }

@@ -72,8 +72,8 @@ namespace OF.Infrastructure.Implements.Rules
 
         protected override void InitCounts()
         {
-            CountFirstProcess = 150;
-            CountSecondProcess = 250;
+            CountFirstProcess = 100;
+            CountSecondProcess = 50;
         }
 
         public override void SetSearchCriteria(string criteria)

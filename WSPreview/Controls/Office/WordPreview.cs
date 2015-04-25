@@ -55,7 +55,7 @@ namespace OFPreview.PreviewHandler.Controls.Office
 		    }
 		    catch (Exception ex)
 		    {
-		        OF.Core.Logger.WSSqlLogger.Instance.LogError(ex.Message);
+		        OF.Core.Logger.OFLogger.Instance.LogError(ex.Message);
 		    }
 		}
     }

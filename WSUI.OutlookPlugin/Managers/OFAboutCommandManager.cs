@@ -40,14 +40,14 @@ namespace OFOutlookPlugin.Managers
                 string helpurl = Properties.Settings.Default.HelpUrl;
                 if (string.IsNullOrEmpty(helpurl))
                 {
-                    WSSqlLogger.Instance.LogError("Run help: {0}", "Help url is empty");
+                    OFLogger.Instance.LogError("Run help: {0}", "Help url is empty");
                     return;
                 }
                 Process.Start(helpurl);
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError("Run help: {0}",ex.Message);
+                OFLogger.Instance.LogError("Run help: {0}",ex.Message);
             }
         }
 

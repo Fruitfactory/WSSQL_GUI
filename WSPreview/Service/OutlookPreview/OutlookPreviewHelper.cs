@@ -187,7 +187,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
 
             return ret;
@@ -204,7 +204,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
 
             return ret;
@@ -390,7 +390,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
                     }
                     catch (Exception exception)
                     {
-                        WSSqlLogger.Instance.LogError(exception.Message);
+                        OFLogger.Instance.LogError(exception.Message);
                     }
                 }
                 return string.Format(AttachmentsRow, urls);

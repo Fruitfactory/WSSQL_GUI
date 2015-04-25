@@ -41,7 +41,7 @@ namespace OF.Module.Commands
             catch (System.Exception ex)
             {
                 MessageBoxService.Instance.Show("Error", "Can't create Forward item.", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Asterisk);
-                WSSqlLogger.Instance.LogError("Forward Command: " + ex.Message);
+                OFLogger.Instance.LogError("Forward Command: " + ex.Message);
             }
         }
 

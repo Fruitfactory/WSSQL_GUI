@@ -97,7 +97,7 @@ namespace OF.Module.Service
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("String: {0}; Exception: {1}", value, ex.Message));
+                OFLogger.Instance.LogError(string.Format("String: {0}; Exception: {1}", value, ex.Message));
                 return ImageHelper.Instance.GetImage(ImageHelper.DefaultKey);
             }
         }

@@ -37,7 +37,7 @@ namespace OF.Module
             var mmv = _unityContainer.Resolve<MainViewModel>();
             mmv.Init();
             watch.Stop();
-            WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "Initialize <mmv.Init()>", watch.ElapsedMilliseconds));
+            OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "Initialize <mmv.Init()>", watch.ElapsedMilliseconds));
             watch = new Stopwatch();
             watch.Start();
             IRegion sidebarRegion = _regionManager.Regions[RegionNames.SidebarStrategyRegion];
@@ -48,7 +48,7 @@ namespace OF.Module
             }
             Task.Factory.StartNew(new Action(() => FieldCash.Instance.Initialize()));
             watch.Stop();
-            WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "Initialize <PreviewView.Init()>", watch.ElapsedMilliseconds));
+            OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "Initialize <PreviewView.Init()>", watch.ElapsedMilliseconds));
         }
 
         private void RegistreInterfaces()
@@ -89,7 +89,7 @@ namespace OF.Module
             
 
             watch.Stop();
-            WSSqlLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));
+            OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));
         }
     }
 }

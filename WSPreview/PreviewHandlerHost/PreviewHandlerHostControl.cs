@@ -145,7 +145,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerHost
                 }
                 catch (Exception ex)
                 {
-                    WSSqlLogger.Instance.LogError(ex.Message);
+                    OFLogger.Instance.LogError(ex.Message);
                 }
                 finally
                 {
@@ -208,7 +208,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerHost
                         webMessage.Visible = true;
                         var str = Regex.Replace(Properties.Resources.NoPreview, "replace", ext);
                         webMessage.DocumentText = str;
-                        WSSqlLogger.Instance.LogWarning(string.Format("{0}: {1}", "No Preview", _filePath));
+                        OFLogger.Instance.LogWarning(string.Format("{0}: {1}", "No Preview", _filePath));
                         return;
                     }
                 }
@@ -223,8 +223,8 @@ namespace OFPreview.PreviewHandler.PreviewHandlerHost
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "WinError", Marshal.GetLastWin32Error()));
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "Error", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0}: {1}", "WinError", Marshal.GetLastWin32Error()));
+                OFLogger.Instance.LogError(string.Format("{0}: {1}", "Error", ex.Message));
                 _comInstance = null;
                 SecondChance();
             }
@@ -315,8 +315,8 @@ namespace OFPreview.PreviewHandler.PreviewHandlerHost
             }
             catch (Exception ex)
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "WinError", Marshal.GetLastWin32Error()));
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "Error", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0}: {1}", "WinError", Marshal.GetLastWin32Error()));
+                OFLogger.Instance.LogError(string.Format("{0}: {1}", "Error", ex.Message));
                 _comInstance = null;
             }
         }
@@ -346,7 +346,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerHost
                     previewControlCommands.PreviewCommandExecuted += PreviewControlCommandsOnPreviewCommandExecuted;
                 }
                 int res = ((IInitializeWithFile)_comInstance).Initialize(_filePath, 0);
-                WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(Initialize)={0}", res));
+                OFLogger.Instance.LogInfo(string.Format("HRESULT(Initialize)={0}", res));
             }
             else if (File.Exists(_filePath))
             {
@@ -370,7 +370,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerHost
             }
             else
             {
-                WSSqlLogger.Instance.LogError(string.Format("{0}: {1}", "File Not Found", _filePath));
+                OFLogger.Instance.LogError(string.Format("{0}: {1}", "File Not Found", _filePath));
                 throw new FileNotFoundException(_filePath);
             }
 
@@ -383,7 +383,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerHost
             r.left = 0;
             r.right = this.Width;
             int wndRes = ((IPreviewHandler)_comInstance).SetWindow(this.Handle, ref r);
-            WSSqlLogger.Instance.LogInfo(string.Format("HRESULT(SetWindow)={0}", wndRes));
+            OFLogger.Instance.LogInfo(string.Format("HRESULT(SetWindow)={0}", wndRes));
             ((IPreviewHandler)_comInstance).DoPreview();
         }
 

@@ -6,8 +6,6 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
-
-using OF.Core.Core.Search;
 using OF.Infrastructure.Implements.Rules;
 using OF.Infrastructure.Implements.Systems.Core;
 
