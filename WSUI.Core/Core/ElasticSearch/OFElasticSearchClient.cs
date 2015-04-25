@@ -15,6 +15,7 @@ namespace OF.Core.Core.ElasticSearch
 {
     public class OFElasticSearchClient : IDisposable, IElasticSearchInitializationIndex
     {
+        private const string Somevalue = "somevalue";
         public static readonly string ElasticSearchHost = "http://localhost:9200";
         public static readonly string DefaultIndexName = "outlookfinder";
 
@@ -104,6 +105,49 @@ namespace OF.Core.Core.ElasticSearch
         {
             try
             {
+                ElasticClient.PutWarmer("warm_contact_1", wd =>
+                    wd.Type<OFContact>().Index(DefaultIndexName)
+                        .Search<OFContact>(s => s.From(0).Size(10).Query(q =>
+                            q.Bool(bd => bd.Should(t => t.Term(c => c.Firstname, Somevalue),
+                                t => t.Term(c => c.Lastname, Somevalue),
+                                t => t.Term(c => c.Emailaddress1, Somevalue),
+                                t => t.Term(c => c.Emailaddress2, Somevalue),
+                                t => t.Term(c => c.Emailaddress3, Somevalue)))))
+                    );
+
+                ElasticClient.PutWarmer("warm_email_1", wd =>
+                    wd.Type<OFEmail>().Index(DefaultIndexName)
+                    .Search<OFEmail>(s => s.From(0).Size(10).Query(q =>
+                        q.Term(e => e.Subject, Somevalue))));
+
+                ElasticClient.PutWarmer("warm_email_2", wd =>
+                                    wd.Type<OFEmail>().Index(DefaultIndexName)
+                                    .Search<OFEmail>(s => s.From(0).Size(10).Query(q =>
+                                        q.Term(e => e.Analyzedcontent, Somevalue))));
+
+                ElasticClient.PutWarmer("warm_email_3", wd =>
+                                    wd.Type<OFEmail>().Index(DefaultIndexName)
+                                    .Search<OFEmail>(s => s.From(0).Size(10).Query( queryDescriptor => queryDescriptor.Bool(bd => bd.Should(
+                                                                                                                                qd => qd.Term("to.name", Somevalue),
+                                                                                                                                qd => qd.Term("to.address", Somevalue),
+                                                                                                                                qd => qd.Term("cc.name", Somevalue),
+                                                                                                                                qd => qd.Term("cc.address", Somevalue),
+                                                                                                                                qd => qd.Term("fromname", Somevalue),
+                                                                                                                                qd => qd.Term("fromaddress", Somevalue)
+                                                                                                                                )))));
+
+                ElasticClient.PutWarmer("warm_attachment_1", wd =>
+                    wd.Type<OFAttachmentContent>().Index(DefaultIndexName)
+                        .Search<OFAttachmentContent>(s => s.From(0).Size(10).Query(q =>
+                            q.Term(a => a.Filename, Somevalue))));
+
+                ElasticClient.PutWarmer("warm_attachment_2", wd =>
+                    wd.Type<OFAttachmentContent>().Index(DefaultIndexName)
+                        .Search<OFAttachmentContent>(s => s.From(0).Size(10).Query(q =>
+                            q.Term(a => a.Analyzedcontent, Somevalue))));
+
+
+
                 ElasticClient.PutWarmer(WARM_NAME_CONTACT, wd =>
                     wd
                    .Type<OFContact>().Index(DefaultIndexName)
