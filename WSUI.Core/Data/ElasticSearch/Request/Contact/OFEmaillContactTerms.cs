@@ -65,4 +65,21 @@ namespace OF.Core.Data.ElasticSearch.Request.Contact
             return "fromaddress";
         }
     }
+
+    public class OFContentTerm : OFBaseDictionaryTerm
+    {
+        protected override string GetKey()
+        {
+            return "analyzedcontent";
+        }
+    }
+
+    public class OFSubjectTerm : OFBaseDictionaryTerm
+    {
+        protected override string GetKey()
+        {
+            return "subject";
+        }
+    }
+
 }

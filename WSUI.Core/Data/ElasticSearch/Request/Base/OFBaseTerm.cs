@@ -1,7 +1,12 @@
-﻿namespace OF.Core.Data.ElasticSearch.Request.Base
+﻿using OF.Core.Interfaces;
+
+namespace OF.Core.Data.ElasticSearch.Request.Base
 {
-    public abstract class OFBaseTerm
+    public class OFBaseTerm : ITerm
     {
-        public abstract void SetValue(object value);
+        public OFBaseTerm()
+        {
+        }
+        public virtual void SetValue(object value){}
     }
 }

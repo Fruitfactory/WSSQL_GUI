@@ -158,8 +158,8 @@ namespace OF.Core.Core.Search
                     OFLogger.Instance.LogInfo("List of Events is empty");
                     return;
                 }
-                //var watchSearch = new Stopwatch();
-                //watchSearch.Start();
+                var watchSearch = new Stopwatch();
+                watchSearch.Start();
 
                 if (IsAdvancedMode)
                     _listRules.Where(item => item.IncludedInAdvancedMode).ForEach(item => item.Search());
@@ -167,8 +167,8 @@ namespace OF.Core.Core.Search
                     _listRules.ForEach(item => item.Search());
 
                 WaitHandle.WaitAll(events);
-                //watchSearch.Stop();
-                OFLogger.Instance.LogInfo("------------------- searching is DONE!!!!--------------------- ");//,watchSearch.ElapsedMilliseconds
+                watchSearch.Stop();
+                OFLogger.Instance.LogInfo("------------------- searching is DONE!!!!--------------------- {0}ms",watchSearch.ElapsedMilliseconds);//
 
                 if (_needStop)
                 {

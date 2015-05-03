@@ -148,54 +148,55 @@ namespace OF.Core.Core.Search
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                ISearchResponse<E> result = null;
+                //ISearchResponse<E> result = null;
 
-                //IRawSearchResult<E> result = null;
+                IRawSearchResult<E> result = null;
 
                 if (IsAdvancedMode)
                 {
-                    result = _elasticSearchClient.Search<E>(s => s
-                        .From(_from)
-                        .Size(TopQueryResult)
-                        .Query(BuildAdvancedQuery)
-                        .Sort(BuildAdvancedFieldSortSortSelector)
-                        );
+                    //result = _elasticSearchClient.Search<E>(s => s
+                    //    .From(_from)
+                    //    .Size(TopQueryResult)
+                    //    .Query(BuildAdvancedQuery)
+                    //    .Sort(BuildAdvancedFieldSortSortSelector)
+                    //    );
                 }
                 else
                 {
 
-                    result = NeedSorting
-                       ? _elasticSearchClient.Search<E>(s => s
-                       .From(_from)
-                       .Size(TopQueryResult)
-                       .Query(BuildQuery)
-                       .Sort(BuildSortSelector)
-                       )
-                       : _elasticSearchClient.Search<E>(s => s
-                       .From(_from)
-                       .Size(TopQueryResult)
-                       .Query(BuildQuery)
-                       )
-                       ;   
-                    //var body = GetSearchBody();
-                    //if (body.IsNotNull())
-                    //{
-                    //    body.from = _from;
-                    //    body.size = TopQueryResult;
-                    //    result = _elasticSearchClient.RawSearch<E>(body);
-                    //}
+                    //result = NeedSorting
+                    //   ? _elasticSearchClient.Search<E>(s => s
+                    //   .From(_from)
+                    //   .Size(TopQueryResult)
+                    //   .Query(BuildQuery)
+                    //   .Sort(BuildSortSelector)
+                    //   )
+                    //   : _elasticSearchClient.Search<E>(s => s
+                    //   .From(_from)
+                    //   .Size(TopQueryResult)
+                    //   .Query(BuildQuery)
+                    //   )
+                    //   ;   
+                    var body = GetSearchBody();
+                    if (body.IsNotNull())
+                    {
+                        body.from = _from;
+                        body.size = TopQueryResult;
+                        result = _elasticSearchClient.RawSearch<E>(body);
+                    }
                 }
 
-                string request = Encoding.UTF8.GetString(result.ConnectionStatus.Request);
+                //string request = Encoding.UTF8.GetString(result.ConnectionStatus.Request);
                 
                 
                 watch.Stop();
-                OFLogger.Instance.LogInfo("Search Done: {0}ms",watch.ElapsedMilliseconds);
+                
                 
 
                 // additional process
                 if (!NeedStop && result != null && result.Documents.Any())
                 {
+                    OFLogger.Instance.LogInfo("Search Done: Server {0}ms, Client {1}ms", result.Took, watch.ElapsedMilliseconds);
                     _total = result.Total;
                     _from +=  result.Documents.Count() == TopQueryResult ? TopQueryResult : result.Documents.Count();
                     watch = new Stopwatch();

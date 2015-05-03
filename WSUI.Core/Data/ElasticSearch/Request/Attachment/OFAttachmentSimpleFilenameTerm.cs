@@ -17,4 +17,13 @@ namespace OF.Core.Data.ElasticSearch.Request.Attachment
             filename.Add("value",value);
         }
     }
+
+
+    public class OFFilenameTerm : OFBaseDictionaryTerm
+    {
+        protected override string GetKey()
+        {
+            return "filename";
+        }
+    }
 }

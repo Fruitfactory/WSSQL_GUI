@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,9 @@ namespace OF.Core.Core.ElasticSearch
         private static readonly String WARM_NAME_CONTACT = "warm_contact";
         private static readonly String WARM_NAME_EMAIL = "warm_email";
         private static readonly String WARM_NAME_ATTACHMENT = "warm_attachment";
+
+        private static readonly int HITS_INDEX = 2;
+        private static readonly int TOTAL_INDEX = 0;
 
         private ElasticClient _internalElasticClient;
 
@@ -81,21 +85,29 @@ namespace OF.Core.Core.ElasticSearch
             {
                 string request = Encoding.UTF8.GetString(bodyBytes);
 
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
+
                 var result = Raw.Search(DefaultIndexName, GetSearchType(typeof(T)), bodyBytes);
+
+                watch.Stop();
+                OFLogger.Instance.LogInfo("Search: {0}ms",watch.ElapsedMilliseconds);
 
                 if (result.Response.Contains("hits"))
                 {
                     var hits = result.Response["hits"] as ElasticsearchDynamicValue;
-                    if (hits.IsNotNull())
+                    if (hits != null)
                     {
-                        var resultHits = hits["hits"] as ElasticsearchDynamicValue;
+                        var resultHits = hits[HITS_INDEX] as ElasticsearchDynamicValue;
                         if (resultHits != null)
                         {
-                            var resultArray = resultHits.Value as Newtonsoft.Json.Linq.JArray;
-                            if (resultArray.IsNotNull())
+                            var resultArray = resultHits.Value as Newtonsoft.Json.Linq.JProperty;
+                            if (resultArray.IsNotNull() && resultArray.Value.IsNotNull())
                             {
+                                watch = new Stopwatch();
+                                watch.Start();
 
-                                foreach (var token in resultArray)
+                                foreach (var token in resultArray.Value)
                                 {
                                     var source = token["_source"];
                                     if (source.IsNull())
@@ -105,11 +117,14 @@ namespace OF.Core.Core.ElasticSearch
                                         continue;
                                     listResult.Add(entry);
                                 }
+                                watch.Stop();
+                                OFLogger.Instance.LogInfo("Deserialization: {0}",watch.ElapsedMilliseconds);
+                                    
 
                             }
                         }
+                        int.TryParse((hits[TOTAL_INDEX].Value as Newtonsoft.Json.Linq.JProperty).Value.ToString(), out total);
                     }
-                    total = hits["total"];
                 }
                 if (result.Response.Contains("took"))
                 {
