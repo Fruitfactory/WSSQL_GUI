@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
+using Elasticsearch.Net.Serialization;
 using Microsoft.Practices.Unity;
 using Nest;
 using OF.Core.Data.ElasticSearch;
@@ -66,6 +69,59 @@ namespace OF.Core.Core.ElasticSearch
             where T : class
         {
             return ElasticClient.Search<T>(searchSelector);
+        }
+
+        public IRawSearchResult<T> RawSearch<T>(object body) where T : class, new()
+        {
+            byte[] bodyBytes = Serializer.Serialize(body, SerializationFormatting.Indented);
+            var listResult = new List<T>();
+            int took = 0;
+            int total = 0;
+            try
+            {
+                string request = Encoding.UTF8.GetString(bodyBytes);
+
+                var result = Raw.Search(DefaultIndexName, GetSearchType(typeof(T)), bodyBytes);
+
+                if (result.Response.Contains("hits"))
+                {
+                    var hits = result.Response["hits"] as ElasticsearchDynamicValue;
+                    if (hits.IsNotNull())
+                    {
+                        var resultHits = hits["hits"] as ElasticsearchDynamicValue;
+                        if (resultHits != null)
+                        {
+                            var resultArray = resultHits.Value as Newtonsoft.Json.Linq.JArray;
+                            if (resultArray.IsNotNull())
+                            {
+
+                                foreach (var token in resultArray)
+                                {
+                                    var source = token["_source"];
+                                    if (source.IsNull())
+                                        continue;
+                                    var entry = source.ToObject<T>();
+                                    if (entry.IsNull())
+                                        continue;
+                                    listResult.Add(entry);
+                                }
+
+                            }
+                        }
+                    }
+                    total = hits["total"];
+                }
+                if (result.Response.Contains("took"))
+                {
+                    int.TryParse(result.Response["took"], out took);
+                }
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.Message);
+            }
+            
+            return new OFRawSearchResponse<T>(took,total,listResult);
         }
 
         public INestSerializer Serializer
@@ -237,6 +293,18 @@ namespace OF.Core.Core.ElasticSearch
                 OFLogger.Instance.LogError(ex.Message);
             }
 
+        }
+
+        private string GetSearchType(Type type)
+        {
+            var attrs = type.GetCustomAttributes(typeof(ElasticTypeAttribute),false);
+            string result = "";
+            if (attrs != null && attrs.Length > 0)
+            {
+                var elasticType = attrs[0] as ElasticTypeAttribute;
+                result = elasticType.Name;
+            }
+            return result;
         }
 
     }

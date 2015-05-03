@@ -6,6 +6,10 @@ namespace OF.Core.Data.ElasticSearch
     [ElasticType(Name = "email")]
     public class OFEmail : OFElasticSearchBaseEntity
     {
+        public OFEmail()
+        {
+            
+        }
         public string ItemName { get; set; }
 
         public string ItemUrl { get; set; }

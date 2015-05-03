@@ -7,6 +7,11 @@ namespace OF.Core.Data.ElasticSearch
     [ElasticType(Name = "contact")]
     public class OFContact : OFElasticSearchBaseEntity
     {
+
+        public OFContact()
+        {
+            
+        }
         public string Firstname { get; set; }
         
         public string Lastname { get; set; }
@@ -76,7 +81,7 @@ namespace OF.Core.Data.ElasticSearch
 
         public string OtherAddress { get; set; }
 
-        public DateTime Birthday { get; set; }
+        public DateTime? Birthday { get; set; }
 
         public string Addresstype { get; set; }
 

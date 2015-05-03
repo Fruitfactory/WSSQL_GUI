@@ -8,6 +8,9 @@ using OF.Core.Core.Rules;
 using OF.Core.Core.Search;
 using OF.Core.Data;
 using OF.Core.Data.ElasticSearch;
+using OF.Core.Data.ElasticSearch.Request;
+using OF.Core.Data.ElasticSearch.Request.Base;
+using OF.Core.Data.ElasticSearch.Request.Contact;
 using OF.Core.Extensions;
 using OF.Core.Logger;
 
@@ -77,6 +80,60 @@ namespace OF.Infrastructure.Implements.Rules
                 ));
 
 
+        }
+
+        protected override OFBody GetSearchBody()
+        {
+            var preparedCriterias = GetKeywordsList();
+
+            var body = new OFBody();
+            var query = new OFQueryBoolShould<OFBaseTerm>();
+            body.query = query;
+            if (preparedCriterias.Count > 1)
+            {
+                foreach (var preparedCriteria in preparedCriterias)
+                {
+                    var tn = new OFToNameTerm();
+                    tn.SetValue(preparedCriteria);
+                    var ta = new OFToAddressTerm();
+                    ta.SetValue(preparedCriteria);
+                    var cn = new OFCcNameTerm();
+                    cn.SetValue(preparedCriteria);
+                    var sa = new OFCcAddressTerm();
+                    sa.SetValue(preparedCriteria);
+                    var fn = new OFFromNameTerm();
+                    fn.SetValue(preparedCriteria);
+                    var fa = new OFFromAddressTerm();
+                    fa.SetValue(preparedCriteria);
+                    query._bool.should.Add(tn);
+                    query._bool.should.Add(ta);
+                    query._bool.should.Add(cn);
+                    query._bool.should.Add(sa);
+                    query._bool.should.Add(fn);
+                    query._bool.should.Add(fa);
+
+                }
+                return body;
+            }
+            var toName = new OFToNameTerm();
+            toName.SetValue(Query);
+            var toAddress = new OFToAddressTerm();
+            toAddress.SetValue(Query);
+            var ccName = new OFCcNameTerm();
+            ccName.SetValue(Query);
+            var ccAddress = new OFCcAddressTerm();
+            ccAddress.SetValue(Query);
+            var fromName = new OFFromNameTerm();
+            fromName.SetValue(Query);
+            var fromAddress = new OFFromAddressTerm();
+            fromAddress.SetValue(Query);
+            query._bool.should.Add(toName);
+            query._bool.should.Add(toAddress);
+            query._bool.should.Add(ccName);
+            query._bool.should.Add(ccAddress);
+            query._bool.should.Add(fromName);
+            query._bool.should.Add(fromAddress);
+            return body;
         }
 
         protected override bool NeedSorting

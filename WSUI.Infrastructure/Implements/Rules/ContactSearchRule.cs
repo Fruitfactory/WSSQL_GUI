@@ -16,6 +16,9 @@ using OF.Core.Core.Rules;
 using OF.Core.Core.Search;
 using OF.Core.Data;
 using OF.Core.Data.ElasticSearch;
+using OF.Core.Data.ElasticSearch.Request;
+using OF.Core.Data.ElasticSearch.Request.Base;
+using OF.Core.Data.ElasticSearch.Request.Contact;
 using OF.Core.Enums;
 
 namespace OF.Infrastructure.Implements.Rules 
@@ -73,6 +76,54 @@ namespace OF.Infrastructure.Implements.Rules
                 qd => qd.Term(c => c.Emailaddress2,Query),
                 qd => qd.Term(c => c.Emailaddress3,Query)
 	            ));
+	    }
+
+	    protected override OFBody GetSearchBody()
+	    {
+            var preparedCriterias = GetKeywordsList();
+
+	        var body = new OFBody();
+            var query = new OFQueryBoolShould<OFBaseTerm>();
+            body.query = query;
+            if (preparedCriterias.Count > 1)
+            {
+                foreach (var preparedCriteria in preparedCriterias)
+                {
+                    var fn = new OFFirstNameTerm();
+                    fn.SetValue(preparedCriteria);
+                    var ln = new OFLastNameTerm();
+                    ln.SetValue(preparedCriteria);
+                    var ea11 = new OFEmailaddress1Term();
+                    ea11.SetValue(preparedCriteria);
+                    var ea22 = new OFEmailaddress2Term();
+                    ea22.SetValue(preparedCriteria);
+                    var ea33 = new OFEmailaddress3Term();
+                    ea33.SetValue(preparedCriteria);
+                    query._bool.should.Add(fn);
+                    query._bool.should.Add(ln);
+                    query._bool.should.Add(ea11);
+                    query._bool.should.Add(ea22);
+                    query._bool.should.Add(ea33);
+                    
+                }
+                return body;
+            }
+            var firstName = new OFFirstNameTerm();
+            firstName.SetValue(Query);
+	        var lastName = new OFLastNameTerm();
+            lastName.SetValue(Query);
+	        var ea1 = new OFEmailaddress1Term();
+            ea1.SetValue(Query);
+            var ea2 = new OFEmailaddress2Term();
+            ea2.SetValue(Query);
+            var ea3 = new OFEmailaddress3Term();
+            ea3.SetValue(Query);
+            query._bool.should.Add(firstName);
+            query._bool.should.Add(lastName);
+            query._bool.should.Add(ea1);
+            query._bool.should.Add(ea2);
+            query._bool.should.Add(ea3);
+	        return body;
 	    }
 	}//end ContactSearchRule
 

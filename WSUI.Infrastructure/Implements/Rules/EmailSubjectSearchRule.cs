@@ -15,6 +15,8 @@ using Nest;
 using OF.Core.Core.AdvancedSearchCriteria;
 using OF.Core.Core.Rules;
 using OF.Core.Data.ElasticSearch;
+using OF.Core.Data.ElasticSearch.Request;
+using OF.Core.Data.ElasticSearch.Request.Email;
 using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Infrastructure.Implements.Rules.BaseRules;
@@ -49,6 +51,27 @@ namespace OF.Infrastructure.Implements.Rules
         protected override Expression<Func<OFEmail, string>> GetSearchedProperty()
         {
             return e => e.Subject;
+        }
+
+
+        protected override OFBody GetSearchBody()
+        {
+            var preparedCriterias = GetKeywordsList();
+            var body = new OFBodySort();
+            body.sort = new OFSortDateCreated();
+            if (preparedCriterias.Count > 1)
+            {
+                var query = new OFQueryBoolMust<OFTerm<OFSimpleSubjectTerm>>();
+                body.query = query;
+                foreach (var preparedCriteria in preparedCriterias)
+                {
+                    var term = new OFTerm<OFSimpleSubjectTerm>(preparedCriteria);
+                    query._bool.must.Add(term);
+                }
+                return body;
+            }
+            body.query = new OFQuerySimpleTerm<OFSimpleSubjectTerm>(Query);
+            return body;
         }
 
         protected override IFieldSort BuildAdvancedFieldSortSortSelector(SortFieldDescriptor<OFEmail> sortFieldDescriptor)

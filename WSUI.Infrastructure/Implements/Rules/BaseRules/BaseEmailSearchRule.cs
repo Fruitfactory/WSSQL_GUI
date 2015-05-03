@@ -17,6 +17,8 @@ using Nest;
 using OF.Core.Core.Search;
 using OF.Core.Data;
 using OF.Core.Data.ElasticSearch;
+using OF.Core.Data.ElasticSearch.Request;
+using OF.Core.Data.ElasticSearch.Request.Email;
 using OF.Core.Enums;
 using OF.Core.Interfaces;
 using OF.Core.Logger;

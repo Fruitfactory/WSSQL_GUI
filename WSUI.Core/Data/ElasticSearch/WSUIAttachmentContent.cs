@@ -5,6 +5,11 @@ namespace OF.Core.Data.ElasticSearch
     [ElasticType(Name = "attachment")]
     public class OFAttachmentContent : OFElasticSearchBaseEntity
     {
+        public OFAttachmentContent()
+        {
+            
+        }
+
         public string Filename { get; set; }
 
         public string Path { get; set; }

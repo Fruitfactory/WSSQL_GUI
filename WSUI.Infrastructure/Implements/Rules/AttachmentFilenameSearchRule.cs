@@ -4,6 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using OF.Core.Data;
 using OF.Core.Data.ElasticSearch;
+using OF.Core.Data.ElasticSearch.Request;
+using OF.Core.Data.ElasticSearch.Request.Attachment;
 using OF.Infrastructure.Implements.Rules.BaseRules;
 
 namespace OF.Infrastructure.Implements.Rules
@@ -42,6 +44,28 @@ namespace OF.Infrastructure.Implements.Rules
             RuleName = "Attachment (Filename)";
             base.Init();
         }
+
+        protected override OFBody GetSearchBody()
+        {
+            var preparedCriterias = GetKeywordsList();
+
+            var body = new OFBody();
+            if (preparedCriterias.Count > 1)
+            {
+                var query = new OFQueryBoolMust<OFTerm<OFAttachmentSimpleFilenameTerm>>();
+                body.query = query;
+                foreach (var preparedCriteria in preparedCriterias)
+                {
+                    var term = new OFTerm<OFAttachmentSimpleFilenameTerm>(preparedCriteria);
+                    query._bool.must.Add(term);
+                }
+                return body;                   
+            }
+
+            body.query = new OFQuerySimpleTerm<OFAttachmentSimpleFilenameTerm>(Query);
+            return body;
+        }
+
 
         protected override IEnumerable<AttachmentSearchObject> GetSortedAttachmentSearchObjects(IEnumerable<AttachmentSearchObject> list)
         {

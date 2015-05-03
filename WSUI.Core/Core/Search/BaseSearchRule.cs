@@ -20,14 +20,16 @@ using OF.Core.Core.AdvancedSearchCriteria;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.Rules;
 using OF.Core.Data.ElasticSearch;
+using OF.Core.Data.ElasticSearch.Request;
 using OF.Core.Enums;
+using OF.Core.Extensions;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 using OF.Core.Utils;
 
 namespace OF.Core.Core.Search
 {
-    public abstract class BaseSearchRule<T, E> : ISearch, ISearchRule where T : class, ISearchObject, new() where E : class, IElasticSearchObject
+    public abstract class BaseSearchRule<T, E> : ISearch, ISearchRule where T : class, ISearchObject, new() where E : class, IElasticSearchObject,new()
     {
         #region [needs private]
 
@@ -148,6 +150,8 @@ namespace OF.Core.Core.Search
 
                 ISearchResponse<E> result = null;
 
+                //IRawSearchResult<E> result = null;
+
                 if (IsAdvancedMode)
                 {
                     result = _elasticSearchClient.Search<E>(s => s
@@ -173,10 +177,21 @@ namespace OF.Core.Core.Search
                        .Query(BuildQuery)
                        )
                        ;   
+                    //var body = GetSearchBody();
+                    //if (body.IsNotNull())
+                    //{
+                    //    body.from = _from;
+                    //    body.size = TopQueryResult;
+                    //    result = _elasticSearchClient.RawSearch<E>(body);
+                    //}
                 }
-                 
+
+                string request = Encoding.UTF8.GetString(result.ConnectionStatus.Request);
+                
+                
                 watch.Stop();
                 OFLogger.Instance.LogInfo("Search Done: {0}ms",watch.ElapsedMilliseconds);
+                
 
                 // additional process
                 if (!NeedStop && result != null && result.Documents.Any())
@@ -242,6 +257,11 @@ namespace OF.Core.Core.Search
             return default(QueryContainer);
         }
 
+        protected virtual OFBody GetSearchBody()
+        {
+            return null;
+        }
+        
         protected virtual DataTable GetDataTable(string query)
         {
             return IndexerDataReader.Instance.GetDataByAdapter(query);
