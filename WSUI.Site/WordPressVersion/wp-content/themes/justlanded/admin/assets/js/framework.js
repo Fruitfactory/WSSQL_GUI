@@ -45,6 +45,13 @@ function slugify(text) {
 jQuery.noConflict();
 
 jQuery(document).ready(function ($) {
+
+	$.minicolors.defaults = $.extend($.minicolors.defaults, {
+		control: 'hue',
+		inline: false,
+		position: 'bottom left'
+	});
+
     // values for unit px
     var unit_values_px = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 29, 32, 35, 36, 37, 38, 40, 42, 45, 48, 50, 52, 54, 56, 58, 60, 61, 62];
     // values for unit em
@@ -330,7 +337,7 @@ jQuery(document).ready(function ($) {
     });
 
     //ShapingRain.com Google Web Fonts Color Selection
-    $('input.of-typography-color').miniColors({
+    $('input.of-typography-color').minicolors({
         change:function (hex, rgba) {
             $(this).change();
         }

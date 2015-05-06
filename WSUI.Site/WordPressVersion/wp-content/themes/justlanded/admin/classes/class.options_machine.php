@@ -120,7 +120,9 @@ class Options_Machine
                             $output .= '<h3 class="heading">' . $value['name'] . ' <span class="explain">' . $value['desc'] . '</span></h3>' . "\n";
                         } else {
                             if ($value['type'] != "news") {
-                                $output .= '<h3 class="heading">' . $value['name'] . '</h3>' . "\n";
+	                            $experimental = "";
+	                            if (isset($value['experimental'])) $experimental = ' <span class="experimental">Experimental</span>';
+                                $output .= '<h3 class="heading">' . $value['name'] . $experimental . '</h3>' . "\n";
                             }
                         }
                     }
@@ -774,16 +776,29 @@ class Options_Machine
 
                 //site default settings profile
                 case 'profile':
+
+					if (isset($value['source']) && $value['source'] == 'blog_default') {
+						$source_profile_default = BLOG_DEFAULT_PROFILE;
+					} else {
+						$source_profile_default = SITE_DEFAULT_PROFILE;
+					}
+
+
                     $of_options_profiles = array();
                     for ($this_profile_count = 1; $this_profile_count <= MAXPROFILES; $this_profile_count++) {
                         $of_options_profiles[$this_profile_count] = "Profile " . $this_profile_count;
                     }
 
                     $x=0;
-					$output .= '<select name="site_default_profile" id="' . $value['id'] . "_" . $x . '">';
+					$output .= '<select name="' . $value['id'] . '" id="' . $value['id'] . "_" . $x . '">';
+
+					if ( isset($value['std']) && $value['std'] == 0) {
+						$output .= '<option  value="0" ' . selected($source_profile_default, 0, false) . ' />Use Site Default Profile</option>';
+					}
+
                     foreach ($of_options_profiles as $option => $name) {
                         if (!isset($value['id']) && isset($value['name'])) $value['id'] = strtolower(str_replace(" ", "", $value['name']));
-                        $output .= '<option  value="' . $option . '" ' . selected(SITE_DEFAULT_PROFILE, $option, false) . ' />' . $name . '</option>';
+                        $output .= '<option  value="' . $option . '" ' . selected($source_profile_default, $option, false) . ' />' . $name . '</option>';
                         $x++;
                     }
 					$output .= '</select>';

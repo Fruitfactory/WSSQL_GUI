@@ -112,6 +112,11 @@ if ($site_default_profile == 0)
 }
 define('SITE_DEFAULT_PROFILE', $site_default_profile);
 
+
+$blog_default_profile = get_option($theme_name.'_default_blog_profile');
+define('BLOG_DEFAULT_PROFILE', $blog_default_profile);
+
+
 /**
  * Required action filters
  */
@@ -229,7 +234,7 @@ require_once ( ADMIN_PATH . 'classes/theme-update-checker.php' );
 
 if (!function_exists('justlanded_update_check')) {
     function justlanded_update_check() {
-        $domain_hash = sha1(home_url());
+        $domain_hash = sha1(get_site_url());
         $license_key = get_option(THEMENAME.'_global_license_key');
         if (!isset($license_key) || $license_key == "") $license_key = "null";
 
@@ -302,7 +307,32 @@ if (defined('OF_ENABLE_UPDATES') && OF_ENABLE_UPDATES == true) {
     }
 }
 
-
+/*
+ * Help for editing landing pages
+ */
+function justlanded_editor_after_title( $post_type ) {
+	if ( isset( $_GET['post'] ) ) {
+		$post_id = $_GET['post'];
+	} else if ( isset( $_POST['post_ID'] ) ) {
+		$post_id = $_POST['post_ID'];
+	} else {
+		return;
+	}
+	$template_file = get_post_meta( $post_id, '_wp_page_template', true );
+	$selected_profile = get_post_meta( $post_id, 'justlanded_meta_box_selectinstance_select', true );
+	if ( $template_file == 'landingpage.php' || $template_file == 'landingpage-nobanner.php' ) {
+		?>
+		<div class="after-title-help postbox" style="margin-top:10px;">
+			<h3>Editing Landing Pages</h3>
+			<div class="inside">
+				<p>This page uses the Landing Page template. Landing Pages in JustLanded can be edited visually using the <a href="<?php echo admin_url('themes.php?page=optionsframework'); ?>">Theme Options</a> panel. By default, any changes to this page's content in the page editor will have no effect.</p>
+				<p>To enable the use of multiple landing pages, profiles are assigned to each landing page. This landing page uses <strong>Profile <?php echo $selected_profile; ?></strong> which you will have to select at the very top of the <a href="<?php echo admin_url('themes.php?page=optionsframework'); ?>">Theme Options</a> page in order to change the appearance and contents of this page.</p>
+			</div><!-- .inside -->
+		</div><!-- .postbox -->
+	<?php
+	}
+}
+add_action( 'edit_form_after_title', 'justlanded_editor_after_title' );
 
 
 /**

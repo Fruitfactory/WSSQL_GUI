@@ -203,10 +203,59 @@ if (!function_exists('of_options')) {
 
 		do_action("justlanded_options_after_home");
 
+		/* --------------- Profiles ------- */
+		$of_options[] = array("name" => "Profiles",
+		                      "type" => "subheading");
+
+		do_action("justlanded_options_before_profiles");
+
+		$of_options[] = array("name" => "Profiles",
+		                      "type" => "sectionheader");
+
+		$of_options[] = array("name" => "Profiles Intro",
+		                      "desc" => "",
+		                      "id" => "introduction_profiles",
+		                      "std" => "Profiles are a unique feature in JustLanded for WordPress. Each profile contains a complete set of theme settings, layout and design options and landing page contents. Each page can use its own profile, the blog can use a different profile. <br />Landing pages are edited by editing the profile associated with a landing page.",
+		                      "icon" => true,
+		                      "type" => "info");
+
+		$of_options[] = array("name" => "Site Default Profile",
+		                      "desc" => "This profile will be used when no specific profile is selected, and for the blog.",
+		                      "descposition" => "heading",
+		                      "id" => "site_default_profile",
+		                      "std" => "1",
+		                      "global" => true,
+		                      "type" => "profile",
+		                      "source" => 'site_default'
+		);
+
+		$of_options[] = array("name" => "Blog Default Profile",
+		                      "desc" => "This profile will be used for the blog, including archives.",
+		                      "descposition" => "heading",
+		                      "id" => "default_blog_profile",
+		                      "std" => "0",
+		                      "global" => true,
+		                      "type" => "profile",
+		                      "source" => 'blog_default'
+		);
+
+		$of_options[] = array("name" => "Profile Allocation Cheat Sheet",
+		                      "desc" => "Quickly identify which profile is used where.",
+		                      "descposition" => "heading",
+		                      "id" => "profile_allocation",
+		                      "type" => "profile_allocation");
+
+
+		do_action("justlanded_options_after_profiles");
+
 
 		/* ----------- Backup Options ---- */
+
 		$of_options[] = array("name" => "Backup and Import",
 							  "type" => "subheading");
+
+		$of_options[] = array("name" => "Backup and Import",
+		                      "type" => "sectionheader");
 
 		do_action("justlanded_options_before_backup");
 
@@ -240,28 +289,6 @@ if (!function_exists('of_options')) {
 
 		do_action("justlanded_options_after_backup");
 
-		/* --------------- Profiles ------- */
-		$of_options[] = array("name" => "Profiles",
-							  "type" => "subheading");
-
-		do_action("justlanded_options_before_profiles");
-
-		$of_options[] = array("name" => "Site Default Profile",
-							  "desc" => "This profile will be used when no specific profile is selected, and for the blog.",
-							  "descposition" => "heading",
-							  "id" => "site_default_profile",
-							  "std" => "1",
-							  "global" => true,
-							  "type" => "profile");
-
-		$of_options[] = array("name" => "Profile Allocation Cheat Sheet",
-							  "desc" => "Quickly identify which profile is used where.",
-							  "descposition" => "heading",
-							  "id" => "profile_allocation",
-							  "type" => "profile_allocation");
-
-
-		do_action("justlanded_options_after_profiles");
 
 
 		/* --------------- Global Settings */
@@ -310,6 +337,14 @@ if (!function_exists('of_options')) {
 							  "storage" => "value",
 							  "options" => $of_menus);
 
+		$of_options[] = array("name" => "Custom Main Menu (Logged in users)",
+		                      "desc" => "Select a custom main menu to be used for this profile, overriding the default menu for logged in users",
+		                      "id" => "menu_custom_main_logged_in",
+		                      "std" => "",
+		                      "type" => "select",
+		                      "storage" => "value",
+		                      "options" => $of_menus);
+
 		$of_options[] = array("name" => "Custom Footer Menu",
 							  "desc" => "Select a custom footer menu to be used for this profile, overriding the default menu",
 							  "id" => "menu_custom_footer",
@@ -317,6 +352,15 @@ if (!function_exists('of_options')) {
 							  "type" => "select",
 							  "storage" => "value",
 							  "options" => $of_menus);
+
+		$of_options[] = array("name" => "Custom Footer Menu (Logged in users)",
+		                      "desc" => "Select a custom footer menu to be used for this profile, overriding the default menu for logged in users",
+		                      "id" => "menu_custom_footer_logged_in",
+		                      "std" => "",
+		                      "type" => "select",
+		                      "storage" => "value",
+		                      "options" => $of_menus);
+
 
 		$of_options[] = array("name" => "Custom Logo",
 							  "desc" => "Upload an image to replace the default logo. (Default: 35 x 40px)",
@@ -330,7 +374,6 @@ if (!function_exists('of_options')) {
 							  "std" => "",
 							  "type" => "text");
 
-		/*
 		$of_options[] = array("name" => "Custom Site Title",
 		                      "desc" => "If this is left empty, the site's default title will be used.",
 		                      "id" => "custom_home_text",
@@ -342,7 +385,6 @@ if (!function_exists('of_options')) {
 		                      "id" => "custom_home_tagline",
 		                      "std" => "",
 		                      "type" => "text");
-		*/
 
 		$of_options[] = array("name" => "Hide main site/page title and tagline?",
 							  "desc" => "Check this if you would like to hide the main site/page title and the tag line. Use this if you'd like a logo-only header.",
@@ -420,6 +462,15 @@ if (!function_exists('of_options')) {
 							  "std" => "",
 							  "type" => "textarea");
 
+		$of_options[] = array("name" => "Enforce display of footer widgets on all pages?",
+		                      "desc" => "Check this box if you would like the footer widgets block to be added to every page using this profile.",
+		                      "id" => "force_footer_widgets",
+		                      "std" => 0,
+		                      "type" => "checkbox",
+		                      "experimental" => 1
+		);
+
+
 		$of_options[] = array("name" => "Blog and Archive",
 							  "type" => "subheading");
 
@@ -479,6 +530,17 @@ if (!function_exists('of_options')) {
 		$of_options[] = array("name" => "Blog Posts on Landing Pages",
 							  "type" => "sectionheader");
 
+		$of_options[] = array("name" => "Blog Content Display Mode",
+		                      "desc" => "Select how you would like to output blog content.",
+		                      "id" => "posts_mode",
+		                      "std" => "excerpt",
+		                      "type" => "select",
+		                      "storage" => "value",
+		                      "options" => array(
+			                      "excerpt"  => "Show excerpts only",
+			                      "full" => "Show full post"
+		                      ));
+
 		$of_options[] = array("name" => "Custom Query Parameters",
 							  "desc" => "This instructs the theme to apply the given parameters to the landing page's Blog Posts block. One parameter per line, format: name=value, i.e. posts_per_page=5; <a href=\"http://codex.wordpress.org/Class_Reference/WP_Query\" target=\"_blank\">see reference</a> for full list of parameters.",
 							  "id" => "posts_query_string",
@@ -512,6 +574,7 @@ if (!function_exists('of_options')) {
 							  "type" => "select",
 							  "storage" => "value",
 							  "options" => $of_pages);
+
 
 		$of_options[] = array("name" => "Built-in Features",
 							  "type" => "subheading");
@@ -642,11 +705,37 @@ if (!function_exists('of_options')) {
 		$of_options[] = array("name" => "Responsiveness",
 							  "type" => "sectionheader");
 
-		$of_options[] = array("name" => "Disable responsiveness? (Experimental)",
+		$of_options[] = array("name" => "Disable responsiveness?",
 							  "desc" => "If this is checked, an alternative stylesheet will be used and the theme will no longer be responsive.",
 							  "id" => "disable_responsiveness",
 							  "std" => 0,
-							  "type" => "checkbox");
+							  "type" => "checkbox",
+							  "experimental" => 1
+		);
+
+		$of_options[] = array("name" => "Page Comments",
+		                      "type" => "sectionheader");
+
+		$of_options[] = array("name" => "Disable page comments globally?",
+		                      "desc" => "If this is checked, the comment form will be hidden from all static pages using this profile.",
+		                      "id" => "disable_comments",
+		                      "std" => 0,
+		                      "type" => "checkbox");
+
+		$of_options[] = array("name" => "Widgets",
+		                      "type" => "sectionheader");
+
+		$of_options[] = array("name" => "Amount of columns for Widgets Row and Footer Widgets",
+		                      "desc" => "Choose whether this link should open in a new window.",
+		                      "id" => "widgets_columns",
+		                      "std" => "4",
+		                      "storage" => "value",
+		                      "options" => array(
+			                      "2" => "2",
+			                      "3"  => "3",
+			                      "4"  => "4 (default)",
+		                      ),
+		                      "type" => "select");
 
 
 		do_action("justlanded_options_after_general");
@@ -1461,19 +1550,36 @@ if (!function_exists('of_options')) {
 
 		$of_options[] = array("name" => "Page Banner",
 							  "type" => "sectionheader",
-							  "desc" => "Full width banner, only displayed on pages using a special page template.",
+							  "desc" => "Separate banner, used on non-landing pages.",
 							  "descposition" => "heading",
 		);
 
-		$of_options[] = array("name" => "Action Buttons",
+		$of_options[] = array("name" => "Page Banner",
 							  "desc" => "",
-							  "id" => "introduction_buttons",
+							  "id" => "introduction_pagebanner",
 							  "std" => "In some circumstances you may want to use a banner on pages that do not use the landing page template. This
             is a plain banner that accepts HTML and supports some of the theme's shortcodes. One unique shortcode, <code>[justlanded_pagetitle]</code>, has been designed for this banner and always outputs a page's title.",
 							  "icon" => true,
 							  "type" => "info");
 
 		do_action("justlanded_options_after_page_banner_section_header");
+
+		$of_options[] = array("name" => "Always show page banner?",
+		                      "desc" => "If this option is checked, the page banner element will be displayed on all pages, except for landing pages, which will default to the actual landing page banner.",
+		                      "id" => "show_page_banner",
+		                      "std" => 0,
+		                      "type" => "checkbox");
+
+		$of_options[] = array("name" => "Use default landing page banner as Page Banner?",
+		                      "desc" => "If this option is checked, the following options will be ignored and the regular landing page banner will be displayed on all pages using this profile. Buttons and overlapping forms will be displayed inline.",
+		                      "id" => "page_banner_default_to_landing",
+		                      "std" => 0,
+		                      "type" => "checkbox",
+		                      "experimental" => 1
+		);
+
+		$of_options[] = array("name" => "Page Banner Content",
+		                      "type" => "sectionheader");
 
 		$of_options[] = array("name" => "Page Banner Content",
 							  "id" => "page_banner",
@@ -1491,13 +1597,6 @@ if (!function_exists('of_options')) {
 							  "options" => $of_pages);
 
 		do_action("justlanded_options_after_page_content_textarea");
-
-		$of_options[] = array("name" => "Always show page banner? (Experimental)",
-							  "desc" => "If this option is checked, the page banner element will be displayed on all pages, except for landing pages.",
-							  "id" => "show_page_banner",
-							  "std" => 0,
-							  "type" => "checkbox");
-
 
 		do_action("justlanded_options_after_banner");
 
@@ -2282,6 +2381,17 @@ if (!function_exists('of_options')) {
 								  "after"  => "after the price",
 							  ));
 
+		$of_options[] = array("name" => "Link Target",
+		                      "desc" => "Choose whether this link should open in a new window.",
+		                      "id" => "pricing_link_target",
+		                      "std" => "_self",
+		                      "storage" => "value",
+		                      "options" => array(
+			                      "_blank" => "Open in new window",
+			                      "_self"  => "Open in same window",
+		                      ),
+		                      "type" => "select");
+
 
 		$of_options[] = array("name" => "Packages",
 							  "desc" => "A list of packages with features and prices. Use the <strong><em>Description</em></strong> field to enter package features, one per line.",
@@ -2346,8 +2456,8 @@ if (!function_exists('of_options')) {
 							  "id" => "introduction_page_content",
 							  "std" => "<h3 style=\"margin: 0 0 10px;\">Page Content</h3>
 					This is the easiest way to add freeform content to your landing page. Simply create a regular WordPress page,
-					add your content and set the page to retrieve the content from here. Make sure that the Page Content Blocks
-					are enabled as well, otherwise they will not be displayed.",
+					add your content, publish the page as 'private' and set a page content block up to retrieve the content from here.
+					Make sure that the Page Content Blocks are enabled under 'Landing Layout' as well, otherwise they will not be displayed.",
 							  "icon" => true,
 							  "type" => "info");
 

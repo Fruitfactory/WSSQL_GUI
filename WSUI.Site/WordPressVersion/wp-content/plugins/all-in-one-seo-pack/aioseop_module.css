@@ -14,15 +14,51 @@
 .aioseop_help_text_link, .aioseop_help_text_link:active {
 	text-align: left;
 	float: left;
-	width: 100%;
 	max-width: 300px;
-	background-repeat: no-repeat;
-	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAABpElEQVR42u3WTU8TURSAYf+CO7407kgKBmkVwR1RS1qjfMQVG01sYimpQltoZ+60IL/cJ6bupmnLTGEzb/LsbjInM7mZ86SoqKioKJdec0KDS7r84oRtHqUl6lwRExhxxy0RAyJ67LPKg7TOOQktqmymnCtxSIeYH7xhoVVICNR4xrTWqDMYe7vINxfoUWHeynSJeEWurdEiYof7VqZPmyVya58RVSZ1TDTW4AVpHRDzgdzqwMQuCAzHIhI2Us6u0oF82iOhTlpHRHT53ykJbdKqMuIdmTsiZpO0Rgx5j+TBDEhIq0TMIZlrEZin7/zhG5MKnJG5axJmrUHEBc+nDDggcz0Cs3RKwhVSpgHz/8S3BJ7OOGCTzJ2QsMm0ImKmVSLmC5nbIaZGXn0iZo/MLXHJb6YVE5hWkx65VSfM8Hvqc4MmVmPIZ3JrmRYDKhmXhRHn5F6JiP4916VduvR5uciFtT92wMoclyJwzRYLrcxP7jijyvqEBbdGm4gmGzxIK3xkSDyWMCRwQ0TgmirLPEq7fKVFhy5tjtn+N1hRUVFR0b36C7aDUPHJvmrWAAAAAElFTkSuQmCC);
 	min-width: 1px;
-	min-height: 22px;
-	padding-top: 10px;
-	border: none;
+	padding-top: 2px;
 	outline: none;
+	color: #888;
+	border: 2px solid #888;
+	border-radius: 33px;
+	width: 22px;
+	height: 20px;
+	display: inline-block;
+	font-family: sans-serif;
+}
+.aioseop_help_text_link span {
+	position: absolute;
+	left: 21px;
+	font-size: 14px;
+}
+.aioseop_help_text_link:before {
+	content: '\a0?';
+	color: #888;
+	font-size: 19px;
+}
+
+.aioseop_help_text_link.aioseop_meta_box_help:before {
+font-size: 14px;
+}
+.aioseop_meta_box_help > label {
+	position: absolute;
+	margin-left: 8px;
+}
+div.aioseop_tip_icon {
+	font-size: 14px;
+	border: 1px solid #888;
+	width: 1em;
+	text-align: center;
+	padding: 0px 4px;
+	border-radius: 12px;
+	box-shadow: 1px 1px 1px #888;
+	-webkit-border-radius: 12px;
+	-moz-border-radius: 12px;
+	-webkit-box-shadow: 1px 1px 1px #888;
+	-moz-box-shadow: 1px 1px 1px #888;
+}
+div.aioseop_tip_icon:before {
+	content: '?';
 }
 .aioseop_help_text_link img {
 	width: 40px;
@@ -30,23 +66,30 @@
 }
 .aioseop_meta_box_help, .aioseop_meta_box_help:active {
 	float: right;
-	background-size: 42%;
-	padding-left: 20px;
-	padding-top: 5px;
-	width: 32px;
+	padding-left: 0px;
+	width: 16px;
+	margin-right: 32px;
+	text-decoration: none;
+	height: 15px;
+	padding-top: 1px;
+	position: relative;
 }
 .aioseop_label {
 	color: #5F5F5F;
 	font-weight: bold;
 	line-height: 19px;
-	padding-left: 50px;
-	padding-right: 10px;
+	padding-left: 20px;
 	display: inline-block;
 	text-align: left;
+	position: absolute;
+	font-family: 'Open Sans', sans-serif;
+	width: 26%;
+	min-width: 120px;
+	max-width: 230px;
 }
 .aioseop_option_div {
 	max-height: 160px;
-	min-height: 34px;
+	min-height: 43px;
 	width: 95%;
 	overflow-y: auto;
 }
@@ -205,10 +248,12 @@
 }
 .aioseop_option_label {
 	float: left;
-	margin: 0px 0 10px 5px;
+	margin: 0px;
 	min-width: 150px;
 	width: 37%;
 	max-width: 270px;
+	padding-top: 3px;
+	padding-bottom: 3px;
 }
 .aioseop_metabox_text h2 {
 	font-size: 14px;
@@ -233,6 +278,12 @@
 	background-color: #EEE;
 	margin: 5px 0 5px 0 !important;
 }
+/*
+.aioseop input[type="button"] {
+	border-radius: 5px;
+	font-size: 15px;
+}
+*/
 .aioseop_settings_left {
 	float: left;
 	padding: 0px;
@@ -262,6 +313,7 @@ body.all-in-one-seo_page_all-in-one-seo-pack-aioseop_feature_manager .aioseop_se
 .aioseop_top #aioseop-list {
 	margin-bottom: 0px;
 }
+
 .aioseop_right_sidebar {
 	float: right;
 	margin-top: 35px;
@@ -272,6 +324,9 @@ body.all-in-one-seo_page_all-in-one-seo-pack-aioseop_feature_manager .aioseop_se
 }
 */
 #aiosp_settings_form .button-primary.hidden {
+	display: none;
+}
+form#edittag div#aiosp_titleatr_wrapper, form#edittag div#aiosp_menulabel_wrapper, form#edittag div#aiosp_sitemap_exclude_wrapper {
 	display: none;
 }
 .All_in_One_SEO_Pack_Feature_Manager > #aiosp_settings_form > #aioseop_top_button {
@@ -360,6 +415,24 @@ div.aioseop_feature#aioseop_opengraph .aioseop_featured_image {
 div.aioseop_feature#aioseop_opengraph .aioseop_featured_image.active {
 	background-image: url(images/SocialMeta-Color-Standard.png);
 }
+div.aioseop_feature#aioseop_robots .aioseop_featured_image {
+	background-image: url(images/Robots-BW-Standard.png);
+}
+div.aioseop_feature#aioseop_robots .aioseop_featured_image.active {
+	background-image: url(images/Robots-Color-Standard.png);
+}
+div.aioseop_feature#aioseop_file_editor .aioseop_featured_image {
+	background-image: url(images/FileEditor-BW-Standard.png);
+}
+div.aioseop_feature#aioseop_file_editor .aioseop_featured_image.active {
+	background-image: url(images/FileEditor-Color-Standard.png);
+}
+div.aioseop_feature#aioseop_importer_exporter .aioseop_featured_image {
+	background-image: url(images/ImporterExporter-BW-Standard.png);
+}
+div.aioseop_feature#aioseop_importer_exporter .aioseop_featured_image.active {
+	background-image: url(images/ImporterExporter-Color-Standard.png);
+}
 div.aioseop_feature#aioseop_performance .aioseop_featured_image {
 	background-image: url(images/Performance-BW-Standard.png);
 }
@@ -372,7 +445,8 @@ div.aioseop_feature#aioseop_coming_soon .aioseop_featured_image {
 div.aioseop_feature#aioseop_coming_soon2 .aioseop_featured_image {
 	background-image: url(images/Default-Color-Standard.png);
 }
-.All_in_One_SEO_Pack_Sitemap > form > .wrap > .form-table {
+.All_in_One_SEO_Pack_Sitemap > form > .wrap > .form-table,
+.All_in_One_SEO_Pack_Video_Sitemap > form > .wrap > .form-table {
 	max-width: 500px;
 	clear: none;
 }
@@ -417,6 +491,18 @@ only screen and (                min-resolution: 1.5dppx) {
 	div.aioseop_feature#aioseop_opengraph .aioseop_featured_image.active {
 		background-image: url(images/SocialMeta-Color-Retina.png);
 	}
+	div.aioseop_feature#aioseop_robots .aioseop_featured_image {
+		background-image: url(images/Robots-BW-Retina.png);
+	}
+	div.aioseop_feature#aioseop_robots .aioseop_featured_image.active {
+		background-image: url(images/Robots-Color-Retina.png);
+	}
+	div.aioseop_feature#aioseop_file_editor .aioseop_featured_image {
+		background-image: url(images/FileEditor-BW-Retina.png);
+	}
+	div.aioseop_feature#aioseop_file_editor .aioseop_featured_image.active {
+		background-image: url(images/FileEditor-Color-Retina.png);
+	}
 	div.aioseop_feature#aioseop_importer_exporter .aioseop_featured_image {
 		background-image: url(images/ImporterExporter-BW-Retina.png);
 	}
@@ -449,11 +535,13 @@ only screen and (                min-resolution: 1.5dppx) {
 }
 .aioseop_wrapper {
 	width: 100%;
+	padding-left: 5px;
 }
 .aioseop_input {
 	clear: left;
 	width: 100%;
 	padding: 5px;
+	display: inline;
 }
 .aioseop_option_input {
 	float: left;
@@ -600,6 +688,7 @@ table.aioseop_table td, table.aioseop_table th {
 .aioseop_settings_left .postbox .inside {
 	padding: 0;
 	margin: 0;
+	clear: right;
 }
 #aiosp_settings_form .aioseop_no_label, .aioseop_no_label {
 	float: left;
@@ -636,14 +725,64 @@ table.aioseop_table td, table.aioseop_table th {
 .aioseop_input input[type="checkbox"], 
 .aioseop_input input[type="radio"] {
 	vertical-align: text-bottom;
-	margin: 15px 0 0 0;
+	margin-top: 8px;
+}
+#aiosp_importer_exporter_import_export_help_wrapper .aioseop_option_div {
+	max-height: initial;
 }
 #aiosp {
 	width: 100%;
 }
+
 .aioseop_input.aioseop_top_label .aioseop_option_input {
 	margin: 0 0 10px 0;
 }
+
+.aiosp_file_editor_settings > .aioseop_textarea_type .aioseop_option_div {
+	max-height: none;
+}
+
+/* Robots.txt styling */
+#aiosp_robots_generator_robotgen_wrapper .aioseop_option_div,
+#aiosp_robots_generator_robothtml_wrapper .aioseop_option_div {
+	max-height: none;
+}
+.aioseop_option_input .widefat td {
+	vertical-align: middle;
+}
+.entry-row.robots.quirks {
+	font-weight: bold;
+	opacity: 1;
+}
+.entry-row.robots {
+	opacity: 0.8;
+}
+.entry-row.robots.invalid {
+	opacity: 1;
+	font-weight: bold;
+}
+.invalid .entry_label {
+	font-weight: bold;
+}
+.column_label, .entry_label {
+}
+.aioseop .aioseop_option_input tbody {
+	background: #FCFCFC;
+}
+.All_in_One_SEO_Pack_Robots .aioseop .aioseop_option_input tbody {
+	background: transparent;
+}
+.entry-row.robots div {
+	height: 20px;
+	vertical-align: middle;
+	width: 90%;
+	margin: 0 0 4px 0;
+}
+.robots img {
+	margin: 0 0 0 2px;
+	opacity: 0.6;
+}
+
 .aioseop_option_docs {
 	width: 98%;
 	display: none;
@@ -666,6 +805,7 @@ table.aioseop_table td, table.aioseop_table th {
 .aioseop_help_text ul {
 	margin: 15px 0 0 20px;
 }
+
 .aioseop_help_text ul li {
 	line-height: 20px;
 	margin: 0;
@@ -724,6 +864,7 @@ table.aioseop_table td, table.aioseop_table th {
 	border: solid 1px #CCC;
 	background-color: rgb( 255, 255, 255 );
 	background-color: rgba( 255, 255, 255, 0.5 );
+	padding-left: 5px;
 }
 .aioseop_loading {
 	background-image: url('images/activity.gif');
@@ -746,6 +887,9 @@ table.aioseop_table td, table.aioseop_table th {
 form#aiosp_settings_form, .aioseop_tabs_div {
 	padding-right: 477px;
 }
+.aioseop_tabs_div {
+	margin-top: 10px;
+}
 /*
 .wrap > h2 {
 	padding-bottom: 14px;
@@ -758,15 +902,6 @@ div.wrap > div#message.error {
 	max-width: 540px;
 }
 */
-#aioseop-hosting {
-	width: 445px;
-}
-#aioseop-hosting.postbox .inside {
-	margin: -3px 0;
-}
-#aioseop-hosting.postbox .inside {
-	padding: 0px;
-}
 #aiosp_settings_form ul.sfwd_debug_settings li strong {
 	display: block;
 	float: left;
@@ -815,9 +950,25 @@ div.sfwd_debug_error {
 #aiosp_performance_status_wrapper .aioseop_option_div {
 	max-height: 420px;
 }
+
 #aioseop_coming_soon, #aioseop_coming_soon2 {
 	padding-top: 40px;
 	text-align: center;
 	height: 258px;
 	font-size: 16px;
 }
+/*
+#aioseop_coming_soon {
+	text-align: center;
+	background-color: rgba(255, 255, 255, 0.5);
+}
+#aioseop_coming_soon p {
+	padding: 0px;
+	margin: 0px;
+	font-size: 16px;
+	font-family: Arial,Helvetica,sans-serif;
+}
+#aioseop_coming_soon img {
+	padding-top: 40%;
+}
+*/

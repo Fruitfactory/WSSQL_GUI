@@ -42,7 +42,7 @@ function wpcf7_checkbox_shortcode_handler( $tag ) {
 	$atts = array();
 
 	$atts['class'] = $tag->get_class_option( $class );
-	$atts['id'] = $tag->get_option( 'id', 'id', true );
+	$atts['id'] = $tag->get_id_option();
 
 	$tabindex = $tag->get_option( 'tabindex', 'int', true );
 
@@ -54,33 +54,47 @@ function wpcf7_checkbox_shortcode_handler( $tag ) {
 	if ( $matches = $tag->get_first_match_option( '/^default:([0-9_]+)$/' ) )
 		$defaults = explode( '_', $matches[1] );
 
-	if ( isset( $_POST[$tag->name] ) )
-		$post = $_POST[$tag->name];
-	else
-		$post = $multiple ? array() : '';
-
-	$is_posted = wpcf7_is_posted();
-
 	$html = '';
 	$count = 0;
 
-	foreach ( (array) $tag->values as $key => $value ) {
+	$values = (array) $tag->values;
+	$labels = (array) $tag->labels;
+
+	if ( $data = (array) $tag->get_data_option() ) {
+		if ( $free_text ) {
+			$values = array_merge(
+				array_slice( $values, 0, -1 ),
+				array_values( $data ),
+				array_slice( $values, -1 ) );
+			$labels = array_merge(
+				array_slice( $labels, 0, -1 ),
+				array_values( $data ),
+				array_slice( $labels, -1 ) );
+		} else {
+			$values = array_merge( $values, array_values( $data ) );
+			$labels = array_merge( $labels, array_values( $data ) );
+		}
+	}
+
+	$hangover = wpcf7_get_hangover( $tag->name, $multiple ? array() : '' );
+
+	foreach ( $values as $key => $value ) {
 		$class = 'wpcf7-list-item';
 
 		$checked = false;
 
-		if ( $is_posted && ! empty( $post ) ) {
-			if ( $multiple && in_array( esc_sql( $value ), (array) $post ) )
-				$checked = true;
-			if ( ! $multiple && $post == esc_sql( $value ) )
-				$checked = true;
+		if ( $hangover ) {
+			if ( $multiple ) {
+				$checked = in_array( esc_sql( $value ), (array) $hangover );
+			} else {
+				$checked = ( $hangover == esc_sql( $value ) );
+			}
 		} else {
-			if ( in_array( $key + 1, (array) $defaults ) )
-				$checked = true;
+			$checked = in_array( $key + 1, (array) $defaults );
 		}
 
-		if ( isset( $tag->labels[$key] ) )
-			$label = $tag->labels[$key];
+		if ( isset( $labels[$key] ) )
+			$label = $labels[$key];
 		else
 			$label = $value;
 
@@ -115,7 +129,7 @@ function wpcf7_checkbox_shortcode_handler( $tag ) {
 			$class .= ' first';
 		}
 
-		if ( count( $tag->values ) == $count ) { // last round
+		if ( count( $values ) == $count ) { // last round
 			$class .= ' last';
 
 			if ( $free_text ) {
@@ -128,7 +142,7 @@ function wpcf7_checkbox_shortcode_handler( $tag ) {
 					'tabindex' => $tabindex ? $tabindex : '' );
 
 				if ( wpcf7_is_posted() && isset( $_POST[$free_text_name] ) ) {
-					$free_text_atts['value'] = stripslashes_deep(
+					$free_text_atts['value'] = wp_unslash(
 						$_POST[$free_text_name] );
 				}
 
@@ -148,7 +162,7 @@ function wpcf7_checkbox_shortcode_handler( $tag ) {
 
 	$html = sprintf(
 		'<span class="wpcf7-form-control-wrap %1$s"><span %2$s>%3$s</span>%4$s</span>',
-		$tag->name, $atts, $html, $validation_error );
+		sanitize_html_class( $tag->name ), $atts, $html, $validation_error );
 
 	return $html;
 }
@@ -173,6 +187,10 @@ function wpcf7_checkbox_validation_filter( $result, $tag ) {
 			$result['valid'] = false;
 			$result['reason'][$name] = wpcf7_get_message( 'invalid_required' );
 		}
+	}
+
+	if ( isset( $result['reason'][$name] ) && $id = $tag->get_id_option() ) {
+		$result['idref'][$name] = $id;
 	}
 
 	return $result;
@@ -208,6 +226,7 @@ function wpcf7_checkbox_posted_data( $posted_data ) {
 			}
 
 			$last = array_pop( $values );
+			$last = html_entity_decode( $last, ENT_QUOTES, 'UTF-8' );
 
 			if ( in_array( $last, $posted_items ) ) {
 				$posted_items = array_diff( $posted_items, array( $last ) );
@@ -247,11 +266,11 @@ function wpcf7_add_tag_generator_checkbox_and_radio() {
 		'wpcf7-tg-pane-radio', 'wpcf7_tg_pane_radio' );
 }
 
-function wpcf7_tg_pane_checkbox( &$contact_form ) {
+function wpcf7_tg_pane_checkbox( $contact_form ) {
 	wpcf7_tg_pane_checkbox_and_radio( 'checkbox' );
 }
 
-function wpcf7_tg_pane_radio( &$contact_form ) {
+function wpcf7_tg_pane_radio( $contact_form ) {
 	wpcf7_tg_pane_checkbox_and_radio( 'radio' );
 }
 

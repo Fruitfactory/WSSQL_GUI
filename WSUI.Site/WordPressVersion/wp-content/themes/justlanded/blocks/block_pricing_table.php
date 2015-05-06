@@ -1,6 +1,8 @@
 <?php
-global $is_landing_page;
+global $is_landing_page, $data;
 global $justlanded_modals;
+$link_target = "_self";
+if (isset($data['pricing_link_target']) && trim($data['pricing_link_target']) != "") $link_target = $data['pricing_link_target'];
 if (isset($data['pricing_packages']) && $data['pricing_packages'] != "")
 {
 ?>
@@ -25,7 +27,7 @@ if (isset($data['pricing_packages']) && $data['pricing_packages'] != "")
              "price" => "0",
              "badge" => "",
              "highlighted" => "no",
-             "button" => null
+             "button" => null,
          );
          $packages = justlanded_parse_shortcode_items($this_content, $defaults);
          if (isset($this_atts['currency'])) $currency = $this_atts['currency'];
@@ -60,10 +62,8 @@ if (isset($data['pricing_packages']) && $data['pricing_packages'] != "")
 			<div class="<?php if ($package['badge'] != "") echo 'badge ' . @$package['badge']; ?>"><span><?php echo @$package['badge']; ?></span></div>
 			<?php endif; ?>
             <div class="pricing_header">
-                <hgroup>
-                    <h4><?php echo do_shortcode(stripslashes(@$package['title'])); ?></h4>
-                    <h5><?php echo do_shortcode(stripslashes(@$package['subtitle'])); ?></h5>
-                </hgroup>
+	            <h4><?php echo do_shortcode(stripslashes(@$package['title'])); ?></h4>
+	            <h5><?php echo do_shortcode(stripslashes(@$package['subtitle'])); ?></h5>
                 <p class="price currency_<?php echo $currency_pos ?>"><?php if ($currency_pos == "before") { ?><span><?php echo $currency; ?></span><?php } ?><?php echo @$package['price']; ?><?php if ($currency_pos == "after") { ?><span><?php echo $currency; ?></span><?php } ?></p>
             </div>
             <?php if (substr_count(@$package['description'], "\n") > 0)
@@ -86,7 +86,7 @@ if (isset($data['pricing_packages']) && $data['pricing_packages'] != "")
                 <?php echo do_shortcode(stripslashes(@$package['description'])); ?>
             </p>
             <?php } ?>
-            <?php if (trim($package['link']) != "") { ?><div class="pricing_footer"><p><a href="<?php echo do_shortcode(stripslashes(@$package['link'])); ?>" class="button_buy_pricing gradient"<?php echo @$package_modal; ?>><?php if (isset($package['button'])) echo stripslashes($package['button']); else echo stripslashes($button); ?></a></p></div><?php } ?>
+            <?php if (trim($package['link']) != "") { ?><div class="pricing_footer"><p><a href="<?php echo do_shortcode(stripslashes(@$package['link'])); ?>" target="<?php echo $link_target; ?>" class="button_buy_pricing gradient"<?php echo @$package_modal; ?>><?php if (isset($package['button'])) echo stripslashes($package['button']); else echo stripslashes($button); ?></a></p></div><?php } ?>
         </div>
         <!--End Pricing Block-->
 

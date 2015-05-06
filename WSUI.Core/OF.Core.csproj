@@ -141,7 +141,11 @@
     <Compile Include="Data\ElasticSearch\Request\OFQuerySimpleTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFSortDateCreated.cs" />
     <Compile Include="Data\ElasticSearch\Request\OFTerm.cs" />
+    <Compile Include="Data\ElasticSearch\Response\OFHitRaw.cs" />
+    <Compile Include="Data\ElasticSearch\Response\OFHitsRaw.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFRawSearchResponse.cs" />
+    <Compile Include="Data\ElasticSearch\Response\OFResponseRaw.cs" />
+    <Compile Include="Data\ElasticSearch\Response\OFShardsRaw.cs" />
     <Compile Include="Data\ElasticSearch\Response\WSUIStatusItem.cs" />
     <Compile Include="Data\ElasticSearch\Response\WSUIStatusResponse.cs" />
     <Compile Include="Interfaces\IElasticSearchInitializationIndex.cs" />

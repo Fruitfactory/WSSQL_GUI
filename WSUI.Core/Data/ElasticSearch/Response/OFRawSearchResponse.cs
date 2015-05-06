@@ -7,7 +7,7 @@ namespace OF.Core.Data.ElasticSearch.Response
     public class OFRawSearchResponse<T> : IRawSearchResult<T> where T : class, new ()
     {
 
-        public OFRawSearchResponse(int took, int total, List<T> documents)
+        public OFRawSearchResponse(int took, int total, IEnumerable<T> documents)
         {
             Total = total;
             Took = took;
@@ -18,6 +18,6 @@ namespace OF.Core.Data.ElasticSearch.Response
 
         public int Took { get; private set; }
 
-        public List<T> Documents { get; private set; }
+        public IEnumerable<T> Documents { get; private set; }
     }
 }

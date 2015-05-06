@@ -35,6 +35,14 @@
 
 }
 
+#of_container h3 span.experimental {
+	background: red;
+	font-size: 10px;
+	color: #fff;
+	padding: 2px 5px;
+	font-weight: bold;
+}
+
 #of_form {
 	background:#1f1f1f;
 	border:1px solid #1f1f1f;
@@ -477,16 +485,18 @@ label.radio, label.multicheck {
 	margin-right:10px
 }
 #of_container .controls .of-color {
+	/*
 	float:left;
-	width: 70px;
-	margin-left:5px; /* font-size:20px; height:34px;*/
-}
-#of_container #content .section-typography .controls {
-	width:570px
+	*/
+	padding-left:28px!important;
+	padding-right:10px;
+	height: 28px!important;
+	width: 100px!important;
+
 }
 
-.of-option-gradient .controls.can_toggle {
-	width:225px!important;
+#of_container #content .section-typography .controls {
+	width:570px
 }
 
 .of-option-shortcodes .controls.can_toggle {
@@ -1158,13 +1168,21 @@ html body * span.clear, html body * div.clear, html body * li.clear, html body *
 
 /*Gradient Colors*/
 
+
 #of_container input[type="text"].miniColors.of-gradient {
-	width:75px;
+	padding-left:28px!important;
+	padding-right:10px;
+	height: 28px!important;
+	width: 100px!important;
 }
 
+/*
 input#banner_gradient_end, input#buttons_gradient_1_end, input#buttons_gradient_1_hover_end, input#buttons_gradient_2_end, input#buttons_gradient_2_hover_end, input#buttons_gradient_middle_end  {
 	margin:0 5px 0 40px;
 }
+*/
+
+
 
 
 /* Special Items */

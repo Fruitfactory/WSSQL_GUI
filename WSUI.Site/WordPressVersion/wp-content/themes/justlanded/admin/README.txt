@@ -1,7 +1,7 @@
 /* -----------------------------------------------------------------------------------
     ShapingRain Options Panel
     Based on the Slightly Modded Options Framework (SMOF) by AQUAGRAPHITE/Syamil MJ
-    All modifications (C) Copyright 2012 by ShapingRain
+    All modifications (C) Copyright 2012-2014 by ShapingRain
     http://www.shapingrain.com
     If you have any questions or need help, please contact support@shapingrain.com
     with your Purchase Code (part of the license certificate you can download

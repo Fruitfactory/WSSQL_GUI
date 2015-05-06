@@ -1,0 +1,4 @@
+[25-Dec-2014 22:43:10 America/New_York] PHP Fatal error:  Call to undefined function plugin_dir_path() in /home/coffxbmx/public_html/wp-content/plugins/all-in-one-seo-pack/all_in_one_seo_pack.php on line 40
+[25-Dec-2014 22:43:59 America/New_York] PHP Fatal error:  Call to undefined function plugin_dir_path() in /home/coffxbmx/public_html/wp-content/plugins/all-in-one-seo-pack/all_in_one_seo_pack.php on line 40
+[25-Dec-2014 22:50:19 America/New_York] PHP Fatal error:  Call to undefined function plugin_dir_path() in /home/coffxbmx/public_html/wp-content/plugins/all-in-one-seo-pack/all_in_one_seo_pack.php on line 40
+[20-Mar-2015 05:04:50 America/New_York] PHP Fatal error:  Call to undefined function plugin_dir_path() in /home/coffxbmx/public_html/wp-content/plugins/all-in-one-seo-pack/all_in_one_seo_pack.php on line 40

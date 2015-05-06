@@ -6,10 +6,8 @@ if (@$data['video_gallery'] != "")
 	<!--Start of Screenshots Gallery-->
 	<?php if (isset($is_landing_page) && $is_landing_page == true) { ?><div class="row"><?php } ?>
 	<section id="section_<?php echo $this_block_type; ?>_<?php echo $this_block_id; ?>" class="section_<?php echo $this_block_type; ?> block">
-		<hgroup>
-			<?php if(isset($this_atts['title'])) echo justlanded_get_headline("h2", $this_atts['title']); else echo justlanded_get_headline("h2", @$data['gallery_headline']); ?>
-			<?php if(isset($this_atts['subtitle'])) echo justlanded_get_headline("h3", $this_atts['subtitle']); else echo justlanded_get_headline("h3", @$data['gallery_sub_headline']); ?>
-		</hgroup>
+		<?php if(isset($this_atts['title'])) echo justlanded_get_headline("h2", $this_atts['title']); else echo justlanded_get_headline("h2", @$data['gallery_headline']); ?>
+		<?php if(isset($this_atts['subtitle'])) echo justlanded_get_headline("h3", $this_atts['subtitle']); else echo justlanded_get_headline("h3", @$data['gallery_sub_headline']); ?>
 		<?php
 
 		if (isset($this_content) && $this_content != null) {

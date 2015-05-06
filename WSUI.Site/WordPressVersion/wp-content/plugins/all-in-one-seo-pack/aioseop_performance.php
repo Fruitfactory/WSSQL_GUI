@@ -229,11 +229,13 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Performance' ) ) {
 					echo "<div class='sfwd_debug_error'>" . __( "Form submission error: verification check failed.", 'all_in_one_seo_pack' ) . "</div>";
 					break;
 				}
-				if ($_REQUEST['sfwd_debug_send_email']) {
-					if (wp_mail($_REQUEST['sfwd_debug_send_email'], sprintf( __( "SFWD Debug Mail From Site %s.", 'all_in_one_seo_pack'), $siteurl), $mail_text ) ) {
-						echo "<div class='sfwd_debug_mail_sent'>" . sprintf( __( "Sent to %s.", 'all_in_one_seo_pack' ), $_REQUEST['sfwd_debug_send_email'] ) . "</div>";
+				$email = '';
+				if ( !empty( $_REQUEST['sfwd_debug_send_email'] ) ) $email = sanitize_email( $_REQUEST['sfwd_debug_send_email'] );
+				if ( $email ) {
+					if ( wp_mail( $email, sprintf( __( "SFWD Debug Mail From Site %s.", 'all_in_one_seo_pack'), $siteurl), $mail_text ) ) {
+						echo "<div class='sfwd_debug_mail_sent'>" . sprintf( __( "Sent to %s.", 'all_in_one_seo_pack' ), $email ) . "</div>";
 					} else {
-						echo "<div class='sfwd_debug_error'>" . sprintf( __( "Failed to send to %s.", 'all_in_one_seo_pack' ),  $_REQUEST['sfwd_debug_send_email'] ) . "</div>";
+						echo "<div class='sfwd_debug_error'>" . sprintf( __( "Failed to send to %s.", 'all_in_one_seo_pack' ),  $email ) . "</div>";
 					}
 				} else {
 					echo "<div class='sfwd_debug_error'>" . __( 'Error: please enter an e-mail address before submitting.', 'all_in_one_seo_pack' ) . "</div>";

@@ -194,7 +194,7 @@
 						{
 							text: 'Delete',
 							onclick: function() {
-								editor.insertContent('[list style="check"][/list]');
+								editor.insertContent('[list style="delete"][/list]');
 							}
 						},
 

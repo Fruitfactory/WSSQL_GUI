@@ -1,2 +1,8 @@
 [22-May-2014 23:27:15 UTC] PHP Warning:  include_once(/home/coffxbmx/public_html/wp-content/themes/justlanded/LimeLM.php) [<a href='function.include-once'>function.include-once</a>]: failed to open stream: No such file or directory in /home/coffxbmx/public_html/wp-content/themes/justlanded/functions.php on line 1447
 [22-May-2014 23:27:15 UTC] PHP Warning:  include_once() [<a href='function.include'>function.include</a>]: Failed opening '/home/coffxbmx/public_html/wp-content/themes/justlanded/LimeLM.php' for inclusion (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/coffxbmx/public_html/wp-content/themes/justlanded/functions.php on line 1447
+[22-Jul-2014 00:51:02 UTC] 2014-07-22 00:51:02 wpMandrill::getCurrentStats (Empty Transient. Getting persistent copy)
+
+[22-Jul-2014 00:51:02 UTC] 2014-07-22 00:51:02 wpMandrill::getCurrentStats (Empty persistent copy. Getting data from Mandrill)
+
+[05-May-2015 17:49:49 UTC] WordPress database error Got error -1 from storage engine for query SELECT t.*, tt.* FROM wp_terms AS t INNER JOIN wp_term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('category') ORDER BY t.name ASC  made by require_once('wp-load.php'), require_once('wp-config.php'), require_once('wp-settings.php'), do_action('init'), call_user_func_array, of_options, get_categories, get_terms
+[05-May-2015 17:49:49 UTC] WordPress database error Got error -1 from storage engine for query SELECT t.*, tt.* FROM wp_terms AS t INNER JOIN wp_term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('nav_menu') AND tt.count > 0 ORDER BY t.name ASC  made by require_once('wp-load.php'), require_once('wp-config.php'), require_once('wp-settings.php'), do_action('init'), call_user_func_array, of_options, get_terms

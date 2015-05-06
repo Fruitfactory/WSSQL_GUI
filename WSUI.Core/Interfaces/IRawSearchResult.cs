@@ -8,7 +8,7 @@ namespace OF.Core.Interfaces
 
         int Took { get; }
 
-        List<T> Documents { get; }
+        IEnumerable<T> Documents { get; }
 
     }
 }

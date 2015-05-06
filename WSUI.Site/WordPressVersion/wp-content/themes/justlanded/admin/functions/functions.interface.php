@@ -103,8 +103,8 @@ function optionsframework_options_page(){
  * @since 1.0.0
  */
 function of_style_only(){
-	wp_enqueue_style('admin-style', ADMIN_DIR . 'assets/css/admin-style.css', array(), THEME_VERSION);
-	wp_enqueue_style('color-picker', ADMIN_DIR . 'assets/css/jquery.miniColors.css', array(), THEME_VERSION);
+	wp_enqueue_style('admin-style', ADMIN_DIR . 'assets/css/admin-style.min.css', array(), THEME_VERSION);
+	wp_enqueue_style('color-picker', ADMIN_DIR . 'assets/css/jquery.minicolors.css', array(), THEME_VERSION);
 }
 
 /**
@@ -121,12 +121,12 @@ function of_load_only()
 	
 	wp_enqueue_script('jquery-ui-core');
 	wp_enqueue_script('jquery-ui-sortable');
-	wp_enqueue_script('jquery-input-mask', ADMIN_DIR .'assets/js/jquery.maskedinput-1.2.2.js', array( 'jquery' ), THEME_VERSION);
-	wp_enqueue_script('tipsy', ADMIN_DIR .'assets/js/jquery.tipsy.js', array( 'jquery' ), THEME_VERSION);
-	wp_enqueue_script('ajaxupload', ADMIN_DIR .'assets/js/ajaxupload.js', array('jquery'), THEME_VERSION);
-	wp_enqueue_script('cookie', ADMIN_DIR . 'assets/js/cookie.js', 'jquery', THEME_VERSION);
-    wp_enqueue_script('miniColors', ADMIN_DIR .'assets/js/jquery.miniColors.min.js', array('jquery'), THEME_VERSION);
-	wp_enqueue_script('smof', ADMIN_DIR .'assets/js/framework.js', array( 'jquery' ), THEME_VERSION);
+	wp_enqueue_script('jquery-input-mask', ADMIN_DIR .'assets/js/jquery.maskedinput.min.js', array( 'jquery' ), THEME_VERSION);
+	wp_enqueue_script('tipsy', ADMIN_DIR .'assets/js/jquery.tipsy.min.js', array( 'jquery' ), THEME_VERSION);
+	wp_enqueue_script('ajaxupload', ADMIN_DIR .'assets/js/ajaxupload.min.js', array('jquery'), THEME_VERSION);
+	wp_enqueue_script('cookie', ADMIN_DIR . 'assets/js/cookie.min.js', 'jquery', THEME_VERSION);
+    wp_enqueue_script('miniColors', ADMIN_DIR .'assets/js/jquery.minicolors.min.js', array('jquery'), THEME_VERSION);
+	wp_enqueue_script('smof', ADMIN_DIR .'assets/js/framework.min.js', array( 'jquery' ), THEME_VERSION);
 }
 
 /**
@@ -143,7 +143,7 @@ function of_admin_head() { ?>
 
 		// COLOR Picker
 		$('.miniColors').each(function(){
-            $(this).miniColors();
+            $(this).minicolors();
 		}); //end color picker
 
 	}); //end doc ready
@@ -410,7 +410,11 @@ function of_ajax_callback()
             update_option(THEMENAME.'_site_default_profile', $data['site_default_profile']);
         }
 
-        foreach ($data as $key => $val) {
+		if (isset($data['default_blog_profile'])) {
+			update_option(THEMENAME.'_default_blog_profile', $data['default_blog_profile']);
+		}
+
+		foreach ($data as $key => $val) {
             if (substr($key, 0, 7) == "global_") {
                 update_option(THEMENAME.'_'.$key, $val);
                 unset($data[$key]);

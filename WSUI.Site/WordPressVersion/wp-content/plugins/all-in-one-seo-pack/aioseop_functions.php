@@ -25,6 +25,15 @@ if ( !function_exists( 'aioseop_activate' ) ) {
 	}
 }
 
+if ( !function_exists( 'aioseop_get_options' ) ) {
+	function aioseop_get_options() {
+		global $aioseop_options;
+		$aioseop_options = get_option( 'aioseop_options' );
+		$aioseop_options = apply_filters( 'aioseop_get_options', $aioseop_options );
+		return $aioseop_options;
+	}
+}
+
 /**
  * Check if settings need to be updated / migrated from old version.
  */
@@ -34,14 +43,26 @@ if ( !function_exists( 'aioseop_update_settings_check' ) ) {
 		if ( ( isset( $_POST['aioseop_migrate_options'] ) )  ||
 			 ( empty( $aioseop_options ) ) )
 			aioseop_mrt_mkarry();
-
 		// WPML has now attached to filters, read settings again so they can be translated
-		$aioseop_options = get_option( 'aioseop_options' );
-		
-		if ( !empty( $aioseop_options['aiosp_archive_noindex'] ) ) { // migrate setting for noindex archives
-			$aioseop_options['aiosp_archive_date_noindex'] = $aioseop_options['aiosp_archive_author_noindex'] = $aioseop_options['aiosp_archive_noindex'];
-			unset( $aioseop_options['aiosp_archive_noindex'] );
-			update_option( 'aioseop_options', $aioseop_options );
+		aioseop_get_options();
+		$update_options = false;
+		if ( !empty( $aioseop_options ) ) {
+			if ( !empty( $aioseop_options['aiosp_archive_noindex'] ) ) { // migrate setting for noindex archives
+				$aioseop_options['aiosp_archive_date_noindex'] = $aioseop_options['aiosp_archive_author_noindex'] = $aioseop_options['aiosp_archive_noindex'];
+				unset( $aioseop_options['aiosp_archive_noindex'] );
+				$update_options = true;
+			}
+			if ( !empty( $aioseop_options['aiosp_archive_title_format'] ) && empty( $aioseop_options['aiosp_date_title_format'] ) ) {
+				$aioseop_options['aiosp_date_title_format'] = $aioseop_options['archive_title_format'];
+				unset( $aioseop_options['aiosp_archive_title_format'] );
+				$update_options = true;
+			}
+			if ( !empty( $aioseop_options['aiosp_archive_title_format'] ) && ( $aioseop_options['aiosp_archive_title_format'] == '%date% | %blog_title%' ) ) {
+				$aioseop_options['aiosp_archive_title_format'] = '%archive_title% | %blog_title%';
+				$update_options = true;
+			}
+			if ( $update_options )
+				update_option( 'aioseop_options', $aioseop_options );				
 		}
 	}
 }
@@ -187,20 +208,29 @@ if ( !function_exists( 'aioseop_ajax_save_meta' ) ) {
 	function aioseop_ajax_save_meta() {
 		if ( !empty( $_POST['_inline_edit'] ) && ( $_POST['_inline_edit'] != 'undefined' ) )
 			check_ajax_referer( 'inlineeditnonce', '_inline_edit' );
-		else
-			check_ajax_referer( 'screen-options-nonce', 'screenoptionnonce' );
 		$post_id = intval( $_POST['post_id'] );
-		$new_meta = $_POST['new_meta'];
+		$new_meta = strip_tags( $_POST['new_meta'] );
 		$target = $_POST['target_meta'];
-		update_post_meta( $post_id, '_aioseop_' . $target, esc_attr( $new_meta ) );
-		$result = get_post_meta( $post_id, '_aioseop_' . $target, true );
-		if( $result != '' ): $label = $result;  
-		else: $label = ''; $result = '<strong><i>' . __( 'No', 'all_in_one_seo_pack' ) . ' ' . $target . '</i></strong>' ; endif;
-		$output = $result . '<a id="' . $target . 'editlink' . $post_id . '" href="javascript:void(0);"'; 
-		$output .= 'onclick=\'aioseop_ajax_edit_meta_form(' . $post_id . ', ' . json_encode( $label ) . ', "' . $target . '");return false;\' title="' . __('Edit') . '">';
+		check_ajax_referer( 'aioseop_meta_' . $target . '_' . $post_id, '_nonce' );
+		$result = '';
+		if ( in_array( $target, Array( 'title', 'description', 'keywords' ) ) && current_user_can( 'edit_post', $post_id ) ) {
+			update_post_meta( $post_id, '_aioseop_' . $target, esc_attr( $new_meta ) );
+			$result = get_post_meta( $post_id, '_aioseop_' . $target, true );
+		} else {
+			die();
+		}
+		if( $result != '' ): 
+			$label = "<label id='aioseop_label_{$target}_{$post_id}'>" . $result . '</label>';  
+		else: 
+			$label = '';
+			$label = "<label id='aioseop_label_{$target}_{$post_id}'></label><strong><i>" . __( 'No', 'all_in_one_seo_pack' ) . ' ' . $target . '</i></strong>';
+		endif;
+		$nonce = wp_create_nonce( "aioseop_meta_{$target}_{$post_id}" );
+		$output = $label . '<a id="' . $target . 'editlink' . $post_id . '" href="javascript:void(0);"'; 
+		$output .= 'onclick=\'aioseop_ajax_edit_meta_form(' . $post_id . ', "' . $target . '", "' . $nonce . '");return false;\' title="' . __('Edit') . '">';
 		$output .= '<img class="aioseop_edit_button" id="aioseop_edit_id" src="' . AIOSEOP_PLUGIN_IMAGES_URL . '/cog_edit.png" /></a>';
-		die( "jQuery('div#aioseop_" . $target . "_" . $post_id . "').fadeOut('fast', function() {
-			  jQuery('div#aioseop_" . $target . "_" . $post_id . "').html('" . addslashes_gpc($output) . "').fadeIn('fast');
+		die( "jQuery('div#aioseop_" . $target . "_" . $post_id . "').fadeOut('fast', function() { var my_label = " . json_encode( $output ) . ";
+			  jQuery('div#aioseop_" . $target . "_" . $post_id . "').html(my_label).fadeIn('fast');
 		});" );
 	}
 }
@@ -226,8 +256,8 @@ if ( !function_exists( 'aioseop_ajax_save_url' ) ) {
 		parse_str( $_POST['options'], $options );
 		foreach( $options as $k => $v ) $_POST[$k] = $v;
 		$_POST['action'] = 'aiosp_update_module';
-		global $aiosp, $aioseop_module_list, $aioseop_modules;
-		aioseop_load_modules( $aioseop_module_list );
+		global $aiosp, $aioseop_modules;
+		aioseop_load_modules();
 		$aiosp->admin_menu();
 		$module = $aioseop_modules->return_module( "All_in_One_SEO_Pack_Sitemap" );
 		$_POST['location'] = null;
@@ -236,7 +266,7 @@ if ( !function_exists( 'aioseop_ajax_save_url' ) ) {
 		$_POST = $module->get_current_options( $_POST, null );
 		$module->handle_settings_updates( null );
 		$options = $module->get_current_options( Array(), null );
-		$output .= $module->display_custom_options( '', Array( 'name' => 'aiosp_sitemap_addl_pages', 'type' => 'custom', 'save' => true, 'value' => $options['aiosp_sitemap_addl_pages'], 'attr' => '' ) );
+		$output = $module->display_custom_options( '', Array( 'name' => 'aiosp_sitemap_addl_pages', 'type' => 'custom', 'save' => true, 'value' => $options['aiosp_sitemap_addl_pages'], 'attr' => '' ) );
 		$output = str_replace( "'", "\'", $output );
 		$output = str_replace( "\n", '\n', $output );
 		die( sprintf( AIOSEOP_AJAX_MSG_TMPL, $output ) );
@@ -249,8 +279,8 @@ if ( !function_exists( 'aioseop_ajax_delete_url' ) ) {
 		$options = Array();
 		$options = esc_attr( $_POST['options'] );
 		$_POST['action'] = 'aiosp_update_module';
-		global $aiosp, $aioseop_module_list, $aioseop_modules;
-		aioseop_load_modules( $aioseop_module_list );
+		global $aiosp, $aioseop_modules;
+		aioseop_load_modules();
 		$aiosp->admin_menu();
 		$module = $aioseop_modules->return_module( "All_in_One_SEO_Pack_Sitemap" );
 		$_POST['location'] = null;
@@ -367,8 +397,8 @@ if (!function_exists('aioseop_ajax_save_settings')) {
 		parse_str( $_POST['options'], $options );
 		$_POST = $options;
 		$_POST['action'] = 'aiosp_update_module';
-		global $aiosp, $aioseop_module_list, $aioseop_modules;
-		aioseop_load_modules( $aioseop_module_list );
+		global $aiosp, $aioseop_modules;
+		aioseop_load_modules();
 		$aiosp->admin_menu();
 		$module = $aioseop_modules->return_module( $_POST['module'] );
 		unset( $_POST['module'] );
@@ -389,8 +419,8 @@ if (!function_exists('aioseop_ajax_get_menu_links')) {
 		parse_str( $_POST['options'], $options );
 		$_POST = $options;
 		$_POST['action'] = 'aiosp_update_module';
-		global $aiosp, $aioseop_module_list, $aioseop_modules;
-		aioseop_load_modules( $aioseop_module_list );
+		global $aiosp, $aioseop_modules;
+		aioseop_load_modules();
 		$aiosp->admin_menu();
 		if ( empty( $_POST['location'] ) ) $_POST['location'] = null;
 		$_POST['Submit'] = 'ajax';
@@ -454,11 +484,15 @@ if ( !function_exists( 'aioseop_mrt_pccolumn' ) ) {
 				<div 	class="aioseop_mpc_admin_meta_options" 
 						id="aioseop_<?php print $target; ?>_<?php echo $id; ?>" 
 						style="float:left;">
-					<?php $content = htmlspecialchars( stripslashes( get_post_meta( $id, "_aioseop_" . $target,	TRUE ) ) ); 
-				if( !empty($content) ): $label = esc_js( $content );  
-				else: $label = ''; $content = '<strong><i>No ' . $target . '</i></strong>' ; endif;
-					print $content . '<a id="' . $target . 'editlink' . $id . '" href="javascript:void(0);" onclick=\'aioseop_ajax_edit_meta_form(' .
-					$id . ', "' . str_replace( Array( '"', '&quot;' ), Array( '\x22', '\x22' ), esc_js( $label ) ) . '", "' . $target . '");return false;\' title="' . __('Edit') . '">';
+					<?php $content = strip_tags( stripslashes( get_post_meta( $id, "_aioseop_" . $target,	TRUE ) ) ); 
+				if( !empty($content) ): 
+					$label = "<label id='aioseop_label_{$target}_{$id}'>" . $content . '</label>';  
+				else: 
+					$label = "<label id='aioseop_label_{$target}_{$id}'></label><strong><i>No " . $target . '</i></strong>';
+				endif;
+					$nonce = wp_create_nonce( "aioseop_meta_{$target}_{$id}" );
+					print $label . '<a id="' . $target . 'editlink' . $id . '" href="javascript:void(0);" onclick=\'aioseop_ajax_edit_meta_form(' .
+					$id . ', "' . $target . '", "' . $nonce . '");return false;\' title="' . __('Edit') . '">';
 						print "<img class='aioseop_edit_button' 
 											id='aioseop_edit_id' 
 											src='" . AIOSEOP_PLUGIN_IMAGES_URL . "cog_edit.png' /></a>";
@@ -567,10 +601,48 @@ if ( !function_exists( 'aioseop_filter_callback' ) ) {
 
 if ( !function_exists( 'aioseop_add_contactmethods' ) ) {
 	function aioseop_add_contactmethods( $contactmethods ) {
-		global $aioseop_options;
+		global $aioseop_options, $aioseop_modules;
 		if ( empty( $aioseop_options['aiosp_google_disable_profile'] ) )
 			$contactmethods['googleplus'] = __( 'Google+', 'all_in_one_seo_pack' );
+		if ( !empty( $aioseop_modules ) && is_object( $aioseop_modules ) ) {
+			$m = $aioseop_modules->return_module( 'All_in_One_SEO_Pack_Opengraph' );
+			if ( ( $m !== false ) && is_object( $m ) ) {
+				if ( $m->option_isset( 'twitter_creator' ) )
+					$contactmethods['twitter'] = __( 'Twitter', 'all_in_one_seo_pack' );
+				if ( $m->option_isset( 'facebook_author' ) )
+					$contactmethods['facebook'] = __( 'Facebook', 'all_in_one_seo_pack' );
+			}
+		}
 		return $contactmethods;
+	}
+}
+
+if ( !function_exists( 'aioseop_localize_script_data' ) ) {
+	function aioseop_localize_script_data() {
+		static $loaded = 0;
+		if ( !$loaded ) {
+			$data = apply_filters( 'aioseop_localize_script_data', Array() );
+			wp_localize_script( 'aioseop-module-script', 'aiosp_data', $data );
+			$loaded = 1;
+		}
+	}
+}
+
+/***
+ * Utility function for inserting elements into associative arrays by key
+ */
+if ( !function_exists( 'aioseop_array_insert_after' ) ) {
+	function aioseop_array_insert_after( $arr, $insertKey, $newValues ) {
+	        $keys = array_keys($arr);
+	        $vals = array_values($arr);
+	        $insertAfter = array_search($insertKey, $keys) + 1;
+	        $keys2 = array_splice($keys, $insertAfter);
+	        $vals2 = array_splice($vals, $insertAfter);
+	        foreach( $newValues as $k => $v ) {
+	                $keys[] = $k;
+	                $vals[] = $v;
+	        }
+	        return array_merge(array_combine($keys, $vals), array_combine($keys2, $vals2));
 	}
 }
 
@@ -608,4 +680,28 @@ if( !function_exists( 'fnmatch' ) ) {
     function fnmatch( $pattern, $string ) {
         return preg_match( "#^" . strtr( preg_quote( $pattern, '#' ), array( '\*' => '.*', '\?' => '.' ) ) . "$#i", $string );
     }
+}
+
+/***
+ * parse_ini_string() doesn't exist pre PHP 5.3
+ */
+if ( !function_exists( 'parse_ini_string' ) ) {
+	function parse_ini_string( $string, $process_sections ) {
+		if ( !class_exists( 'parse_ini_filter' ) ) {
+			/* Define our filter class */
+			class parse_ini_filter extends php_user_filter {
+				static $buf = '';
+				function filter( $in, $out, &$consumed, $closing ) {
+					$bucket = stream_bucket_new( fopen('php://memory', 'wb'), self::$buf );
+					stream_bucket_append( $out, $bucket );
+					return PSFS_PASS_ON;
+				}
+			}
+			/* Register our filter with PHP */
+			if ( !stream_filter_register("parse_ini", "parse_ini_filter") )
+				return false;
+		}
+		parse_ini_filter::$buf = $string;
+		return parse_ini_file( "php://filter/read=parse_ini/resource=php://memory", $process_sections );
+	}
 }

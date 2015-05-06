@@ -201,5 +201,7 @@ function of_get_header_classes_array()
  *
  * @since forever
  */
+
 $data = get_option(OPTIONSPREFIX.SITE_DEFAULT_PROFILE);
+
 do_action('justlanded_after_options'); // custom hook

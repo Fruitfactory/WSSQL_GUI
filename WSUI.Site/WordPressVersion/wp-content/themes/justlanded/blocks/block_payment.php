@@ -2,10 +2,8 @@
 <!--Start of Buy Now-->
 <?php if (isset($is_landing_page) && $is_landing_page == true) { ?><div class="row"><?php } ?>
 <section id="section_<?php echo $this_block_type; ?>_<?php echo $this_block_id; ?>" class="section_<?php echo $this_block_type; ?> block">
-    <hgroup>
-        <?php echo justlanded_get_headline("h2", @$data['payment_headline']); ?>
-        <?php echo justlanded_get_headline("h3", @$data['payment_sub_headline']); ?>
-    </hgroup>
+	<?php echo justlanded_get_headline("h2", @$data['payment_headline']); ?>
+	<?php echo justlanded_get_headline("h3", @$data['payment_sub_headline']); ?>
     <?php include(JUSTLANDED_BLOCKS_DIR . "block_cta_buttons_plain.php"); ?>
     <!--Start of Payment Icons-->
     <div class="payment">

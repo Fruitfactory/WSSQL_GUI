@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Elasticsearch.Net;
 using Elasticsearch.Net.Serialization;
 using Microsoft.Practices.Unity;
 using Nest;
+using Newtonsoft.Json;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Extensions;
@@ -78,58 +80,33 @@ namespace OF.Core.Core.ElasticSearch
         public IRawSearchResult<T> RawSearch<T>(object body) where T : class, new()
         {
             byte[] bodyBytes = Serializer.Serialize(body, SerializationFormatting.Indented);
-            var listResult = new List<T>();
+            IEnumerable<T> listResult = null;
             int took = 0;
             int total = 0;
             try
             {
-                string request = Encoding.UTF8.GetString(bodyBytes);
-
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                var result = Raw.Search(DefaultIndexName, GetSearchType(typeof(T)), bodyBytes);
+                var result = Raw.Search<byte[]>(DefaultIndexName, GetSearchType(typeof(T)), bodyBytes);
 
                 watch.Stop();
-                OFLogger.Instance.LogInfo("Search: {0}ms",watch.ElapsedMilliseconds);
+                OFLogger.Instance.LogInfo("Search (Send request to ES and retrieve response): {0}ms",watch.ElapsedMilliseconds);
 
-                if (result.Response.Contains("hits"))
+                Stopwatch watchParsing = new Stopwatch();
+                watchParsing.Start();
+
+                using (var stream = new MemoryStream(result.Response))
+                using (var reader = new StreamReader(stream))
                 {
-                    var hits = result.Response["hits"] as ElasticsearchDynamicValue;
-                    if (hits != null)
-                    {
-                        var resultHits = hits[HITS_INDEX] as ElasticsearchDynamicValue;
-                        if (resultHits != null)
-                        {
-                            var resultArray = resultHits.Value as Newtonsoft.Json.Linq.JProperty;
-                            if (resultArray.IsNotNull() && resultArray.Value.IsNotNull())
-                            {
-                                watch = new Stopwatch();
-                                watch.Start();
-
-                                foreach (var token in resultArray.Value)
-                                {
-                                    var source = token["_source"];
-                                    if (source.IsNull())
-                                        continue;
-                                    var entry = source.ToObject<T>();
-                                    if (entry.IsNull())
-                                        continue;
-                                    listResult.Add(entry);
-                                }
-                                watch.Stop();
-                                OFLogger.Instance.LogInfo("Deserialization: {0}",watch.ElapsedMilliseconds);
-                                    
-
-                            }
-                        }
-                        int.TryParse((hits[TOTAL_INDEX].Value as Newtonsoft.Json.Linq.JProperty).Value.ToString(), out total);
-                    }
+                    var rawResult = JsonSerializer.Create().Deserialize(reader, typeof(OFResponseRaw<T>)) as OFResponseRaw<T>;
+                    took = (int)rawResult.took;
+                    total = rawResult.hits.total;
+                    listResult = rawResult.hits.hits.Select(h => h._source);
                 }
-                if (result.Response.Contains("took"))
-                {
-                    int.TryParse(result.Response["took"], out took);
-                }
+                watchParsing.Stop();
+                OFLogger.Instance.LogInfo("Parsing dynamic response: {0}ms, Diff: {1}ms", watchParsing.ElapsedMilliseconds, watchParsing.ElapsedMilliseconds - watch.ElapsedMilliseconds);
+
             }
             catch (Exception ex)
             {
