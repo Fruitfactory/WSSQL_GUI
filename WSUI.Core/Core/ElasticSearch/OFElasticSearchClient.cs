@@ -105,7 +105,7 @@ namespace OF.Core.Core.ElasticSearch
                     listResult = rawResult.hits.hits.Select(h => h._source);
                 }
                 watchParsing.Stop();
-                OFLogger.Instance.LogInfo("Parsing dynamic response: {0}ms, Diff: {1}ms", watchParsing.ElapsedMilliseconds, watchParsing.ElapsedMilliseconds - watch.ElapsedMilliseconds);
+                OFLogger.Instance.LogInfo("Parsing dynamic response: {0}ms, Diff: {1}ms", watchParsing.ElapsedMilliseconds, Math.Abs(watchParsing.ElapsedMilliseconds - watch.ElapsedMilliseconds));
 
             }
             catch (Exception ex)
