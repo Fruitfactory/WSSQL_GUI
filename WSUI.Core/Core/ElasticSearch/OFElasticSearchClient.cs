@@ -22,8 +22,8 @@ namespace OF.Core.Core.ElasticSearch
     public class OFElasticSearchClient : IDisposable, IElasticSearchInitializationIndex
     {
         private const string Somevalue = "somevalue";
-        public static readonly string ElasticSearchHost = "http://localhost:9200";
-        public static readonly string DefaultIndexName = "outlookfinder";
+        public static readonly string ElasticSearchHost = "http://127.0.0.1:9200";
+        public static readonly string DefaultInfrastructureName = "outlookfinder";
 
 
         private static readonly String WARM_NAME_CONTACT = "warm_contact";
@@ -32,6 +32,7 @@ namespace OF.Core.Core.ElasticSearch
 
         private static readonly int HITS_INDEX = 2;
         private static readonly int TOTAL_INDEX = 0;
+        private static readonly int WARM_UP_SIZER = 100;
 
         private ElasticClient _internalElasticClient;
 
@@ -42,7 +43,7 @@ namespace OF.Core.Core.ElasticSearch
         }
 
         public OFElasticSearchClient(string host)
-            : this(host, DefaultIndexName)
+            : this(host, DefaultInfrastructureName)
         {
         }
 
@@ -88,7 +89,7 @@ namespace OF.Core.Core.ElasticSearch
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                var result = Raw.Search<byte[]>(DefaultIndexName, GetSearchType(typeof(T)), bodyBytes);
+                var result = Raw.Search<byte[]>(DefaultInfrastructureName, GetSearchType(typeof(T)), bodyBytes);
 
                 watch.Stop();
                 OFLogger.Instance.LogInfo("Search (Send request to ES and retrieve response): {0}ms",watch.ElapsedMilliseconds);
@@ -116,12 +117,12 @@ namespace OF.Core.Core.ElasticSearch
             return new OFRawSearchResponse<T>(took,total,listResult);
         }
 
-        public INestSerializer Serializer
+        private INestSerializer Serializer
         {
             get { return ElasticClient.Serializer; }
         }
 
-        public IElasticsearchClient Raw
+        private IElasticsearchClient Raw
         {
             get { return ElasticClient.Raw; }
         }
@@ -131,11 +132,14 @@ namespace OF.Core.Core.ElasticSearch
             return ElasticClient.IndexExists(name);
         }
 
-        public void CreateIndex(byte[] bodyRequest)
+        public void CreateInfrastructure(IEnumerable<string> listOfFiles)
         {
             try
             {
-                Raw.IndexPut("_river", OFElasticSearchClient.DefaultIndexName, "_meta", bodyRequest);
+                if (CreateIndex())
+                {
+                    CreateRiver(listOfFiles);
+                }
             }
             catch (Exception exception)
             {
@@ -146,7 +150,7 @@ namespace OF.Core.Core.ElasticSearch
 
         public ElasticsearchResponse<OFStatusResponse> GetIndexingProgress()
         {
-            return Raw.Get<OFStatusResponse>("_river", DefaultIndexName, "status");
+            return Raw.Get<OFStatusResponse>("_river", DefaultInfrastructureName, "status");
         }
 
         public void CreateWarms()
@@ -154,8 +158,8 @@ namespace OF.Core.Core.ElasticSearch
             try
             {
                 ElasticClient.PutWarmer("warm_contact_1", wd =>
-                    wd.Type<OFContact>().Index(DefaultIndexName)
-                        .Search<OFContact>(s => s.From(0).Size(10).Query(q =>
+                    wd.Type<OFContact>().Index(DefaultInfrastructureName)
+                        .Search<OFContact>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
                             q.Bool(bd => bd.Should(t => t.Term(c => c.Firstname, Somevalue),
                                 t => t.Term(c => c.Lastname, Somevalue),
                                 t => t.Term(c => c.Emailaddress1, Somevalue),
@@ -164,18 +168,18 @@ namespace OF.Core.Core.ElasticSearch
                     );
 
                 ElasticClient.PutWarmer("warm_email_1", wd =>
-                    wd.Type<OFEmail>().Index(DefaultIndexName)
-                    .Search<OFEmail>(s => s.From(0).Size(10).Query(q =>
+                    wd.Type<OFEmail>().Index(DefaultInfrastructureName)
+                    .Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
                         q.Term(e => e.Subject, Somevalue))));
 
                 ElasticClient.PutWarmer("warm_email_2", wd =>
-                                    wd.Type<OFEmail>().Index(DefaultIndexName)
-                                    .Search<OFEmail>(s => s.From(0).Size(10).Query(q =>
+                                    wd.Type<OFEmail>().Index(DefaultInfrastructureName)
+                                    .Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
                                         q.Term(e => e.Analyzedcontent, Somevalue))));
 
                 ElasticClient.PutWarmer("warm_email_3", wd =>
-                                    wd.Type<OFEmail>().Index(DefaultIndexName)
-                                    .Search<OFEmail>(s => s.From(0).Size(10).Query( queryDescriptor => queryDescriptor.Bool(bd => bd.Should(
+                                    wd.Type<OFEmail>().Index(DefaultInfrastructureName)
+                                    .Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(queryDescriptor => queryDescriptor.Bool(bd => bd.Should(
                                                                                                                                 qd => qd.Term("to.name", Somevalue),
                                                                                                                                 qd => qd.Term("to.address", Somevalue),
                                                                                                                                 qd => qd.Term("cc.name", Somevalue),
@@ -185,30 +189,30 @@ namespace OF.Core.Core.ElasticSearch
                                                                                                                                 )))));
 
                 ElasticClient.PutWarmer("warm_attachment_1", wd =>
-                    wd.Type<OFAttachmentContent>().Index(DefaultIndexName)
-                        .Search<OFAttachmentContent>(s => s.From(0).Size(10).Query(q =>
+                    wd.Type<OFAttachmentContent>().Index(DefaultInfrastructureName)
+                        .Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
                             q.Term(a => a.Filename, Somevalue))));
 
                 ElasticClient.PutWarmer("warm_attachment_2", wd =>
-                    wd.Type<OFAttachmentContent>().Index(DefaultIndexName)
-                        .Search<OFAttachmentContent>(s => s.From(0).Size(10).Query(q =>
+                    wd.Type<OFAttachmentContent>().Index(DefaultInfrastructureName)
+                        .Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
                             q.Term(a => a.Analyzedcontent, Somevalue))));
 
 
 
                 ElasticClient.PutWarmer(WARM_NAME_CONTACT, wd =>
                     wd
-                   .Type<OFContact>().Index(DefaultIndexName)
-                   .Search<OFContact>(s => s.From(0).Size(10)));
+                   .Type<OFContact>().Index(DefaultInfrastructureName)
+                   .Search<OFContact>(s => s.From(0).Size(WARM_UP_SIZER)));
 
                 ElasticClient.PutWarmer(WARM_NAME_EMAIL, wd =>
                    wd
-                       .Type<OFEmail>().Index(DefaultIndexName)
-                       .Search<OFEmail>(s => s.From(0).Size(10)));
+                       .Type<OFEmail>().Index(DefaultInfrastructureName)
+                       .Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER)));
                 ElasticClient.PutWarmer(WARM_NAME_ATTACHMENT, wd =>
                 wd
-                    .Type<OFAttachmentContent>().Index(DefaultIndexName)
-                    .Search<OFAttachmentContent>(s => s.From(0).Size(10)));
+                    .Type<OFAttachmentContent>().Index(DefaultInfrastructureName)
+                    .Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER)));
             }
             catch (Exception ex)
             {
@@ -242,7 +246,7 @@ namespace OF.Core.Core.ElasticSearch
         {
             try
             {
-                var result = ElasticClient.Search<OFContact>(s => s.From(0).Size(10));
+                var result = ElasticClient.Search<OFContact>(s => s.From(0).Size(WARM_UP_SIZER));
                 if (result.IsNotNull() && result.Documents.Any())
                 {
                     OFLogger.Instance.LogInfo("Warm Up Contact: {0} contacts", result.Documents.Count());
@@ -258,7 +262,7 @@ namespace OF.Core.Core.ElasticSearch
         {
             try
             {
-                var result = ElasticClient.Search<OFEmail>(s => s.From(0).Size(10));
+                var result = ElasticClient.Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER));
                 if (result.IsNotNull() && result.Documents.Any())
                 {
                     OFLogger.Instance.LogInfo("Warm Up EMail: {0} emails", result.Documents.Count());
@@ -274,7 +278,7 @@ namespace OF.Core.Core.ElasticSearch
         {
             try
             {
-                var result = ElasticClient.Search<OFAttachmentContent>(s => s.From(0).Size(10));
+                var result = ElasticClient.Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER));
                 if (result.IsNotNull() && result.Documents.Any())
                 {
                     OFLogger.Instance.LogInfo("Warm Up attachment: {0} attachments", result.Documents.Count());
@@ -298,6 +302,38 @@ namespace OF.Core.Core.ElasticSearch
             }
             return result;
         }
+
+        private bool CreateIndex()
+        {
+            var response = ElasticClient.CreateIndex(DefaultInfrastructureName, c => c.NumberOfReplicas(0)
+                .NumberOfShards(1));
+            OFLogger.Instance.LogInfo("Create Index...");
+            OFLogger.Instance.LogInfo("Status: {0}  Success: {1}",response.ConnectionStatus.HttpStatusCode, response.ConnectionStatus.Success);
+
+            return response.ConnectionStatus.HttpStatusCode == 200;
+
+        }
+
+        private void CreateRiver(IEnumerable<string> listOfFiles)
+        {
+            var river = new
+            {
+                type = "pst",
+                pst = new
+                {
+                    update_rate = "1h",
+                    pst_list = listOfFiles,
+                    index_name = DefaultInfrastructureName
+                }
+            };
+            var body = Serializer.Serialize(river, SerializationFormatting.Indented);
+            var response = Raw.IndexPut("_river", OFElasticSearchClient.DefaultInfrastructureName, "_meta", body);
+            OFLogger.Instance.LogInfo("Create River...");
+            OFLogger.Instance.LogInfo("Status: {0}  Success: {1}", response.HttpStatusCode, response.Success);
+
+
+        }
+
 
     }
 }

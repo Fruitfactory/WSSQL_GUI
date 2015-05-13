@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Elasticsearch.Net;
 using Nest;
 using OF.Core.Data.ElasticSearch.Response;
@@ -6,10 +7,8 @@ namespace OF.Core.Interfaces
 {
     public interface IElasticSearchInitializationIndex
     {
-        INestSerializer Serializer { get; }
-        IElasticsearchClient Raw { get; }
         IExistsResponse IndexExists(string name);
-        void CreateIndex(byte[] bodyRequest);
+        void CreateInfrastructure(IEnumerable<string> listOfFiles);
         ElasticsearchResponse<OFStatusResponse> GetIndexingProgress();
 
         void CreateWarms();

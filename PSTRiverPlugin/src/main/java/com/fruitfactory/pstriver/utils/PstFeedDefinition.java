@@ -18,6 +18,7 @@ public class PstFeedDefinition {
 
     public static final String UPDATE_RATE = "update_rate";
     public static final String PST_LIST_PATH = "pst.pst_list";
+    public static final String INDEX_NAME = "pst.index_name";
     private static final String SEPARATOR = ",";
 
     private String _riverName;
@@ -50,7 +51,7 @@ public class PstFeedDefinition {
             int i = 0;
             temp = new String[listData.size()];
             for (String value : listData) {
-                temp[i++] = Strings.trimAllWhitespace(value);
+                temp[i++] = value.trim();
             }
         } else {
             String tempValues = (String) XContentMapValues.extractValue(path, settings);

@@ -77,17 +77,19 @@ public class PstRiver extends AbstractRiverComponent implements River {
     public PstRiver(RiverName riverName, RiverSettings settings, Client client) {
         super(riverName, settings);
         this._client = client;
-        this._indexName = riverName.name();
         this._typeName = PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE;
 
         if (settings.settings().containsKey(PstGlobalConst.PST_PREFIX)) {
             Map<String, Object> feed = (Map<String, Object>) settings.settings().get(PstGlobalConst.PST_PREFIX);
             TimeValue updateRate = XContentMapValues.nodeTimeValue(feed.get(PstFeedDefinition.UPDATE_RATE), TimeValue.timeValueMinutes(60));
+            this._indexName = XContentMapValues.nodeStringValue(feed.get(PstFeedDefinition.INDEX_NAME), riverName.name());
+            logger.info(LOG_TAG + " _indexName" + this._indexName );
 
             String[] pstList = PstFeedDefinition.getListOfPst(settings.settings(), PstFeedDefinition.PST_LIST_PATH);
             _definition = new PstFeedDefinition(riverName.getName(), pstList, updateRate);
         } else {
             _definition = new PstFeedDefinition(riverName.getName(), null, TimeValue.timeValueMinutes(60));
+            this._indexName = riverName.getName();
         }
         logger.warn(LOG_TAG + "River was created...");
     }
@@ -95,6 +97,7 @@ public class PstRiver extends AbstractRiverComponent implements River {
     @Override
     public void start() {
 
+        logger.warn(LOG_TAG + "River is starting...");
         try {
             _client.admin().indices().prepareCreate(_indexName).execute()
                     .actionGet();
@@ -113,6 +116,7 @@ public class PstRiver extends AbstractRiverComponent implements River {
                 return;
             }
         }
+        logger.warn(LOG_TAG + "River is creating mapping...");
         try {
             pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE, PstMetadataTags.buildPstEmailMapping());
             pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_CONTACT, PstMetadataTags.buildPstContactMapping());
@@ -123,44 +127,62 @@ public class PstRiver extends AbstractRiverComponent implements River {
                     e, _indexName);
             return;
         }
+        logger.warn(LOG_TAG + "River has created mapping...");
 
-        // Creating bulk processor
-        this._bulkProcessor = BulkProcessor.builder(this._client, new BulkProcessor.Listener() {
-            @Override
-            public void beforeBulk(long executionId, BulkRequest request) {
-                logger.debug("Going to execute new bulk composed of {} actions", request.numberOfActions());
-            }
+        logger.warn(LOG_TAG + "River is creating BulkProcessor...");
+        try{
+            
+        
+        
+            // Creating bulk processor
+            this._bulkProcessor = BulkProcessor.builder(this._client, new BulkProcessor.Listener() {
+                @Override
+                public void beforeBulk(long executionId, BulkRequest request) {
+                    logger.debug("Going to execute new bulk composed of {} actions", request.numberOfActions());
+                }
 
-            @Override
-            public void afterBulk(long executionId, BulkRequest request, BulkResponse response) {
-                logger.debug("Executed bulk composed of {} actions", request.numberOfActions());
-                if (response.hasFailures()) {
-                    logger.warn("There was failures while executing bulk", response.buildFailureMessage());
-                    if (logger.isDebugEnabled()) {
-                        for (BulkItemResponse item : response.getItems()) {
-                            if (item.isFailed()) {
-                                logger.debug("Error for {}/{}/{} for {} operation: {}", item.getIndex(),
-                                        item.getType(), item.getId(), item.getOpType(), item.getFailureMessage());
+                @Override
+                public void afterBulk(long executionId, BulkRequest request, BulkResponse response) {
+                    logger.debug("Executed bulk composed of {} actions", request.numberOfActions());
+                    if (response.hasFailures()) {
+                        logger.warn("There was failures while executing bulk", response.buildFailureMessage());
+                        if (logger.isDebugEnabled()) {
+                            for (BulkItemResponse item : response.getItems()) {
+                                if (item.isFailed()) {
+                                    logger.debug("Error for {}/{}/{} for {} operation: {}", item.getIndex(),
+                                            item.getType(), item.getId(), item.getOpType(), item.getFailureMessage());
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            @Override
-            public void afterBulk(long executionId, BulkRequest request, Throwable failure) {
-                logger.warn("Error executing bulk", failure);
-            }
-        })
-                .setBulkActions(100)
-                .setConcurrentRequests(1)
-                .setFlushInterval(TimeValue.timeValueSeconds(5))
-                .build();
+                @Override
+                public void afterBulk(long executionId, BulkRequest request, Throwable failure) {
+                    logger.warn("Error executing bulk", failure);
+                }
+            })
+                    .setBulkActions(100)
+                    .setConcurrentRequests(1)
+                    .setFlushInterval(TimeValue.timeValueSeconds(5))
+                    .build();
+        
+        
+        }catch(Exception ex){
+            logger.error(LOG_TAG, ex.getMessage());
+        }
+        logger.warn(LOG_TAG + "River has created BulkProcessor...");        
+        logger.warn(LOG_TAG + "River is creating parse thread...");
 
-        _pstParseThread = EsExecutors.daemonThreadFactory(settings.globalSettings(), "pst_slurper")
-                .newThread(new PstParser(_definition));
-        _pstParseThread.start();
-        logger.warn(LOG_TAG + "PstRiver was started...");
+        try{
+            _pstParseThread = EsExecutors.daemonThreadFactory(settings.globalSettings(), "pst_slurper")
+                    .newThread(new PstParser(_definition));
+            _pstParseThread.start();
+            
+        }catch(Exception ex){
+            logger.error(LOG_TAG, ex.getMessage());
+        }
+        logger.warn(LOG_TAG + "PstRiver has started...");    
     }
 
     @Override
@@ -177,6 +199,7 @@ public class PstRiver extends AbstractRiverComponent implements River {
     }
 
     private boolean isMappingExist(String index, String type) {
+        logger.info(LOG_TAG + " Is mapping exist...");
         ClusterState cs = _client.admin().cluster().prepareState().setIndices(index).execute().actionGet().getState();
         IndexMetaData imd = cs.getMetaData().index(index);
 
@@ -193,20 +216,20 @@ public class PstRiver extends AbstractRiverComponent implements River {
     }
 
     private void pushMapping(String index, String type, XContentBuilder mapping) throws Exception {
-        if (logger.isTraceEnabled()) {
+        //if (logger.isTraceEnabled()) {
             logger.trace("pushMapping(" + index + "," + type + ")");
-        }
+        //}
 
         // If type does not exist, we create it
         boolean mappingExist = isMappingExist(index, type);
         if (!mappingExist) {
-            logger.debug("Mapping [" + index + "]/[" + type + "] doesn't exist. Creating it.");
+            logger.info("Mapping [" + index + "]/[" + type + "] doesn't exist. Creating it.");
             XContentBuilder xcontent = mapping;
             // Read the mapping json file if exists and use it
             if (xcontent != null) {
-                if (logger.isTraceEnabled()) {
-                    logger.trace("Mapping for [" + index + "]/[" + type + "]=" + xcontent.string());
-                }
+                //if (logger.isTraceEnabled()) {
+                    logger.info("Mapping for [" + index + "]/[" + type + "]=" + xcontent.string());
+                //}
                 // Create type and mapping
                 PutMappingResponse response = _client.admin().indices()
                         .preparePutMapping(index)
@@ -216,23 +239,23 @@ public class PstRiver extends AbstractRiverComponent implements River {
                 if (!response.isAcknowledged()) {
                     throw new Exception("Could not define mapping for type [" + index + "]/[" + type + "].");
                 } else {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Mapping definition for [" + index + "]/[" + type + "] succesfully created.");
-                    }
+                    //if (logger.isDebugEnabled()) {
+                        logger.info("Mapping definition for [" + index + "]/[" + type + "] succesfully created.");
+                   // }
                 }
             } else {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("No mapping definition for [" + index + "]/[" + type + "]. Ignoring.");
-                }
+                //if (logger.isDebugEnabled()) {
+                    logger.info("No mapping definition for [" + index + "]/[" + type + "]. Ignoring.");
+                //}
             }
         } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Mapping [" + index + "]/[" + type + "] already exists.");
-            }
+            //if (logger.isDebugEnabled()) {
+                logger.info("Mapping [" + index + "]/[" + type + "] already exists.");
+            //}
         }
-        if (logger.isTraceEnabled()) {
-            logger.trace("/pushMapping(" + index + "," + type + ")");
-        }
+        //if (logger.isTraceEnabled()) {
+            logger.info("/pushMapping(" + index + "," + type + ")");
+        //}
     }
 
     class PstParser implements Runnable {

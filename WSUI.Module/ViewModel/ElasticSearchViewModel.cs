@@ -224,7 +224,7 @@ namespace OF.Module.ViewModel
 #endif
             if (IsServiceRunning)
             {
-                var resp = ElasticSearchClient.IndexExists(OFElasticSearchClient.DefaultIndexName);
+                var resp = ElasticSearchClient.IndexExists(OFElasticSearchClient.DefaultInfrastructureName);
                 IsIndexExisted = resp.Exists;//false;//
             }
         }
@@ -247,8 +247,6 @@ namespace OF.Module.ViewModel
             InitElasticSearch();
             CreateIndexVisibility = Visibility.Collapsed;
             ShowProgress = Visibility.Visible;
-
-            Thread.Sleep(2000);
             //CheckServices();
         }
 
@@ -280,17 +278,8 @@ namespace OF.Module.ViewModel
             {
                 
                 var list = GetOutlookFiles();
-                var index = new
-                {
-                    type = "pst",
-                    pst = new
-                    {
-                        update_rate = "1h",
-                        pst_list = list
-                    }
-                };
-                var body = ElasticSearchClient.Serializer.Serialize(index, SerializationFormatting.Indented);
-                ElasticSearchClient.CreateIndex(body);
+                ElasticSearchClient.CreateInfrastructure(list);
+                Thread.Sleep(1000);
                 _timer = new Timer(TimerProgressCallback,null,1000,2000);
                 OnIndexingStarted();
                 
@@ -347,7 +336,7 @@ namespace OF.Module.ViewModel
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
             if (Directory.Exists(path))
             {
-                var files = Directory.GetFiles(path, "*.pst");//new List<string>() { "F:\\Visual\\iyariki.ya@gmail.com.ost", "F:\\Visual\\iyariki.ya@gmail.com.ost" }; //
+                var files = Directory.GetFiles(path, "*.pst");//new List<string>() { "F:\\Visual\\iyariki.ya@gmail.com.ost" }; //
                 var files1 = Directory.GetFiles(path, "*.ost");
                 var list = new List<string>(files);
                 list.AddRange(files1);
