@@ -7,6 +7,8 @@ package com.fruitfactory.pstriver.rest;
 
 import com.fruitfactory.pstriver.helpers.PstReaderStatus;
 import com.fruitfactory.pstriver.helpers.PstReaderStatusInfo;
+import com.fruitfactory.pstriver.helpers.PstRiverStatus;
+import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +21,10 @@ import org.elasticsearch.common.xcontent.XContentFactory;
  */
 public class PstStatusRepository {
 
+    private final static String PST_RIVER_STATUS = "PST_RIVER_STATUS";
+    
     private static HashMap<String, PstReaderStatusInfo> _repository = new HashMap<String, PstReaderStatusInfo>();
+    private static HashMap<String,PstRiverStatusInfo> _reposirotyRiverStatus = new HashMap<String, PstRiverStatusInfo>();
 
     public static void setStatusInfo(PstReaderStatusInfo statusInfo) {
         synchronized (_repository) {
@@ -52,8 +57,31 @@ public class PstStatusRepository {
             }
         }
     }
-
-    public static XContentBuilder getStatusInfo() throws IOException {
+    
+    public static void setRiverStatus(PstRiverStatusInfo riverStatus){
+        synchronized(_reposirotyRiverStatus){
+            _reposirotyRiverStatus.put(PST_RIVER_STATUS, riverStatus);
+        }
+    }
+    
+    public static XContentBuilder getPstRiverStatusInfo() throws IOException{
+        synchronized(_reposirotyRiverStatus){
+            XContentBuilder status = XContentFactory.jsonBuilder().prettyPrint();
+            status.startObject();
+            if(_reposirotyRiverStatus.containsKey(PST_RIVER_STATUS) && _reposirotyRiverStatus.get(PST_RIVER_STATUS) !=  null){
+                PstRiverStatusInfo riverStatus = _reposirotyRiverStatus.get(PST_RIVER_STATUS);
+                status.field("success",true);
+                status.field("status",riverStatus.getStatus());
+                status.field("lastupdated",riverStatus.getLastDateUpdated());
+            }else{
+                status.field("success",false);
+            }
+            status.endObject();
+            return status;
+        }
+    }
+    
+    public static XContentBuilder getPstReaderStatusInfo() throws IOException {
         synchronized (_repository) {
             XContentBuilder status = XContentFactory.jsonBuilder().prettyPrint();
             status.startObject();

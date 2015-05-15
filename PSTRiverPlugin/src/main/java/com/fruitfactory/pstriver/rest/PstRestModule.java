@@ -38,12 +38,16 @@ public class PstRestModule extends BaseRestHandler {
             processStatusRequest(rc);
             return;
         }
+        if("pstriverstatus".equals(command)){
+            processRiverStatus(rc);
+            return;
+        }
     }
 
     private void processStatusRequest(RestChannel rc) {
         try {
 
-            XContentBuilder status = PstStatusRepository.getStatusInfo();
+            XContentBuilder status = PstStatusRepository.getPstReaderStatusInfo();
             rc.sendResponse(new BytesRestResponse(RestStatus.OK, status));
 
         } catch (IOException e) {
@@ -54,5 +58,17 @@ public class PstRestModule extends BaseRestHandler {
             }
         }
     }
-
+    
+    private void processRiverStatus(RestChannel rc){
+        try{
+            XContentBuilder status = PstStatusRepository.getPstRiverStatusInfo();
+            rc.sendResponse(new BytesRestResponse(RestStatus.OK,status));
+        }catch(IOException ex){
+            try {
+                rc.sendResponse(new BytesRestResponse(rc, ex));
+            } catch (IOException e1) {
+                rc.sendResponse(new BytesRestResponse(RestStatus.INTERNAL_SERVER_ERROR));
+            }
+        }
+    }
 }

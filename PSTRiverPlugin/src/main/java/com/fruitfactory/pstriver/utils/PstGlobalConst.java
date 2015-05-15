@@ -13,4 +13,6 @@ public class PstGlobalConst {
 
     public static final String PST_PREFIX = "pst";
     public static final String LAST_UPDATED_FIELD = "_lastupdated";
+    public static final String RIVER_STATUS = "_riverstatus";
+    
 }
