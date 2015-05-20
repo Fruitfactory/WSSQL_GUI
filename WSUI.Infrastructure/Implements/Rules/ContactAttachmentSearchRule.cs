@@ -166,8 +166,7 @@ namespace OF.Infrastructure.Implements.Rules
                 }    
                 list.Add(mustEmail);
             }
-
-            if (nameCriterias.IsNotNull())
+            else if (nameCriterias.IsNotNull())
             {
                 var mustName = new OFInternalBoolMust<OFBaseTerm>();
                 foreach (var nameCriteria in nameCriterias)

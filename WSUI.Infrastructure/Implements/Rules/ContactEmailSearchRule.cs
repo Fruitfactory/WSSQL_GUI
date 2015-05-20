@@ -177,10 +177,8 @@ namespace OF.Infrastructure.Implements.Rules
                 list.Add(mustTo);
                 list.Add(mustCc);
                 list.Add(mustBCc);
-            }
-
-
-            if (nameCriterias.IsNotNull())
+            } 
+            else if (nameCriterias.IsNotNull())
             {
                 var mustToName = new OFInternalBoolMust<OFBaseTerm>();
                 foreach (var nameCriteria in nameCriterias)
