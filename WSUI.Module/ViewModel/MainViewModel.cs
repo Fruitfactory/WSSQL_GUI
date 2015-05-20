@@ -833,11 +833,13 @@ namespace OF.Module.ViewModel
                         !_elasticSearchViewModel.IsServiceRunning ||
                         !_elasticSearchViewModel.IsIndexExisted)
                     {
-                        _elasticSearchViewModel.Show();
+                        _elasticSearchViewModel.Show(false);
                     }
-                    
+                    else if (_elasticSearchViewModel.IsInitialIndexinginProgress)
+                    {
+                        _elasticSearchViewModel.Show(true);
+                    }
                 }
-
             }
             catch (Exception ex)
             {

@@ -13,7 +13,9 @@ namespace OF.Module.Interface.ViewModel
         bool IsServiceRunning { get; }
         bool IsIndexExisted { get; }
 
-        void Show();
+        bool IsInitialIndexinginProgress { get; }
+
+        void Show(bool showJustProgress);
         void Close();
 
         event EventHandler IndexingStarted;

@@ -14,5 +14,6 @@ namespace OF.Core.Interfaces
         void CreateWarms();
 
         void WarmUp();
+        ElasticsearchResponse<OFRiverStatusInfo> GetRiverStatus();
     }
 }

@@ -18,6 +18,7 @@ using Microsoft.Practices.Unity;
 using Nest;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
+using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Helpers;
@@ -94,7 +95,13 @@ namespace OF.Module.ViewModel
             private set { Set(() => IsIndexExisted,value);}
         }
 
-        public void Show()
+        public bool IsInitialIndexinginProgress
+        {
+            get { return Get(() => IsInitialIndexinginProgress); }
+            private set { Set(() => IsInitialIndexinginProgress, value); }
+        }
+
+        public void Show( bool showJustProgress = false)
         {
             IRegion region = _regionManager.Regions[RegionNames.ElasticSearchRegion];
             if (region == null || region.Views.Contains(View))
@@ -106,6 +113,14 @@ namespace OF.Module.ViewModel
             OnPropertyChanged(() => IsServiceInstalled);
             OnPropertyChanged(() => IsServiceRunning);
             OnPropertyChanged(() => IsIndexExisted);
+            if (showJustProgress)
+            {
+                IsIndexExisted = false;
+                CreateIndexVisibility = Visibility.Collapsed;
+                ShowProgress = Visibility.Visible;
+                FinishedStepVisibility = Visibility.Collapsed;
+                _timer = new Timer(TimerProgressCallback, null, 0, 2000);
+            }
         }
 
         public void Close()
@@ -226,6 +241,9 @@ namespace OF.Module.ViewModel
             {
                 var resp = ElasticSearchClient.IndexExists(OFElasticSearchClient.DefaultInfrastructureName);
                 IsIndexExisted = resp.Exists;//false;//
+                var riverStatusResp = ElasticSearchClient.GetRiverStatus();
+                IsInitialIndexinginProgress = riverStatusResp.Response.IsNotNull() &&
+                                              riverStatusResp.Response.Status == OFRiverStatus.InitialIndexing;
             }
         }
 

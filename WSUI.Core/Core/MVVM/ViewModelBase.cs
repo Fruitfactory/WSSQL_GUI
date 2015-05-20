@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
+using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Enums;
 
 namespace OF.Core.Core.MVVM

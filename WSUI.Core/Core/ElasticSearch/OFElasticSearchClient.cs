@@ -153,6 +153,11 @@ namespace OF.Core.Core.ElasticSearch
             return Raw.Get<OFStatusResponse>("_river", DefaultInfrastructureName, "status");
         }
 
+        public ElasticsearchResponse<OFRiverStatusInfo> GetRiverStatus()
+        {
+            return Raw.Get<OFRiverStatusInfo>("_river", DefaultInfrastructureName, "pstriverstatus");
+        }
+
         public void CreateWarms()
         {
             try
