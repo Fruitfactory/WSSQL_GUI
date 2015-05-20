@@ -65,8 +65,8 @@ namespace OF.Infrastructure.Implements.Rules
             var nameCriteria = _name.SplitString();
             var keywordsCriteria = GetProcessingSearchCriteria(_keyWord);
 
-            var listShould = AddressProperties.Select(property => (Func<QueryDescriptor<OFEmail>, QueryContainer>) (descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(emailCriterias.Select(email => (Func<QueryDescriptor<OFEmail>, QueryContainer>) (des => des.Term(property.ToString(), email.ToString()))).ToArray())))).ToList();
-            listShould.AddRange(NameProperties.Select(property => (Func<QueryDescriptor<OFEmail>, QueryContainer>) (descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(nameCriteria.Select(name => (Func<QueryDescriptor<OFEmail>, QueryContainer>) (des => des.Term(property.ToString(), name.ToString()))).ToArray())))));
+            var listShould = AddressProperties.Select(property => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(emailCriterias.Select(email => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(des => des.Term(property.ToString(), email.ToString()))).ToArray())))).ToList();
+            listShould.AddRange(NameProperties.Select(property => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(nameCriteria.Select(name => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(des => des.Term(property.ToString(), name.ToString()))).ToArray())))));
 
             if (!string.IsNullOrEmpty(_keyWord) && keywordsCriteria != null && keywordsCriteria.Count > 0)
             {
@@ -96,7 +96,7 @@ namespace OF.Infrastructure.Implements.Rules
 
             var body = new OFBodySort();
             body.sort = new OFSortDateCreated();
-            
+
             if (!_keyWord.IsStringEmptyOrNull() && keywordsCriterias.IsNotEmpty())
             {
                 var query = new OFQueryBoolMust<OFInternalBoolShould<object>>();
@@ -144,63 +144,69 @@ namespace OF.Infrastructure.Implements.Rules
             IEnumerable<object> list = GetMustConditions(emailCriterias, nameCriterias);
 
             var should = new OFBoolShould<OFInternalBoolMust<OFBaseTerm>>();
-            list.ForEach(c => should.should.Add((OFInternalBoolMust<OFBaseTerm>) c));
+            list.ForEach(c => should.should.Add((OFInternalBoolMust<OFBaseTerm>)c));
             return should;
         }
 
         private IEnumerable<object> GetMustConditions(string[] emailCriterias, string[] nameCriterias)
         {
-            var mustTo = new OFInternalBoolMust<OFBaseTerm>();
-            foreach (var emailCriteria in emailCriterias)
+            var list = new List<Object>();
+            if (emailCriterias.IsNotNull())
             {
-                var term = new OFToAddressTerm();
-                term.SetValue(emailCriteria);
-                mustTo.AddCondition(term);
+                var mustTo = new OFInternalBoolMust<OFBaseTerm>();
+                foreach (var emailCriteria in emailCriterias)
+                {
+                    var term = new OFToAddressTerm();
+                    term.SetValue(emailCriteria);
+                    mustTo.AddCondition(term);
+                }
+                var mustCc = new OFInternalBoolMust<OFBaseTerm>();
+                foreach (var emailCriteria in emailCriterias)
+                {
+                    var term = new OFCcAddressTerm();
+                    term.SetValue(emailCriteria);
+                    mustCc.AddCondition(term);
+                }
+                var mustBCc = new OFInternalBoolMust<OFBaseTerm>();
+                foreach (var emailCriteria in emailCriterias)
+                {
+                    var term = new OFBccAddressTerm();
+                    term.SetValue(emailCriteria);
+                    mustBCc.AddCondition(term);
+                }
+                list.Add(mustTo);
+                list.Add(mustCc);
+                list.Add(mustBCc);
             }
-            var mustCc = new OFInternalBoolMust<OFBaseTerm>();
-            foreach (var emailCriteria in emailCriterias)
+
+
+            if (nameCriterias.IsNotNull())
             {
-                var term = new OFCcAddressTerm();
-                term.SetValue(emailCriteria);
-                mustCc.AddCondition(term);
+                var mustToName = new OFInternalBoolMust<OFBaseTerm>();
+                foreach (var nameCriteria in nameCriterias)
+                {
+                    var term = new OFToNameTerm();
+                    term.SetValue(nameCriteria);
+                    mustToName.AddCondition(term);
+                }
+                var mustCcName = new OFInternalBoolMust<OFBaseTerm>();
+                foreach (var nameCriteria in nameCriterias)
+                {
+                    var term = new OFCcNameTerm();
+                    term.SetValue(nameCriteria);
+                    mustCcName.AddCondition(term);
+                }
+                var mustBCcName = new OFInternalBoolMust<OFBaseTerm>();
+                foreach (var nameCriteria in nameCriterias)
+                {
+                    var term = new OFBccNameTerm();
+                    term.SetValue(nameCriteria);
+                    mustBCcName.AddCondition(term);
+                }
+                list.Add(mustToName);
+                list.Add(mustCcName);
+                list.Add(mustBCcName);
             }
-            var mustBCc = new OFInternalBoolMust<OFBaseTerm>();
-            foreach (var emailCriteria in emailCriterias)
-            {
-                var term = new OFBccAddressTerm();
-                term.SetValue(emailCriteria);
-                mustBCc.AddCondition(term);
-            }
-            var mustToName = new OFInternalBoolMust<OFBaseTerm>();
-            foreach (var nameCriteria in nameCriterias)
-            {
-                var term = new OFToNameTerm();
-                term.SetValue(nameCriteria);
-                mustToName.AddCondition(term);
-            }
-            var mustCcName = new OFInternalBoolMust<OFBaseTerm>();
-            foreach (var nameCriteria in nameCriterias)
-            {
-                var term = new OFCcNameTerm();
-                term.SetValue(nameCriteria);
-                mustCcName.AddCondition(term);
-            }
-            var mustBCcName = new OFInternalBoolMust<OFBaseTerm>();
-            foreach (var nameCriteria in nameCriterias)
-            {
-                var term = new OFBccNameTerm();
-                term.SetValue(nameCriteria);
-                mustBCcName.AddCondition(term);
-            }
-            var list = new List<Object>()
-            {
-                mustTo,
-                mustCc,
-                mustBCc,
-                mustToName,
-                mustCcName,
-                mustBCcName
-            };
 
             return list;
         }

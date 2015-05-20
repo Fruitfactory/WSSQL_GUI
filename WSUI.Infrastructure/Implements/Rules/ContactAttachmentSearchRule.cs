@@ -153,28 +153,31 @@ namespace OF.Infrastructure.Implements.Rules
 
         private IEnumerable<object> GetMustConditions(string[] emailCriterias, string[] nameCriterias)
         {
-            var mustEmail = new OFInternalBoolMust<OFBaseTerm>();
-            foreach (var emailCriteria in emailCriterias)
+            var list = new List<Object>();
+            if (emailCriterias.IsNotNull())
             {
-                var term = new OFContentTerm();
-                term.SetValue(emailCriteria);
-                mustEmail.AddCondition(term);
-            }
-           
-            var mustName = new OFInternalBoolMust<OFBaseTerm>();
-            foreach (var nameCriteria in nameCriterias)
-            {
-                var term = new OFContentTerm();
-                term.SetValue(nameCriteria);
-                mustName.AddCondition(term);
-            }
-            
-            var list = new List<Object>()
-            {
-                mustEmail,
-                mustName
-            };
+                var mustEmail = new OFInternalBoolMust<OFBaseTerm>();
 
+                foreach (var emailCriteria in emailCriterias)
+                {
+                    var term = new OFContentTerm();
+                    term.SetValue(emailCriteria);
+                    mustEmail.AddCondition(term);
+                }    
+                list.Add(mustEmail);
+            }
+
+            if (nameCriterias.IsNotNull())
+            {
+                var mustName = new OFInternalBoolMust<OFBaseTerm>();
+                foreach (var nameCriteria in nameCriterias)
+                {
+                    var term = new OFContentTerm();
+                    term.SetValue(nameCriteria);
+                    mustName.AddCondition(term);
+                }
+                list.Add(mustName);
+            }
             return list;
         }
 
