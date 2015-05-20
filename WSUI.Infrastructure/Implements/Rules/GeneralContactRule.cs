@@ -128,7 +128,7 @@ namespace OF.Infrastructure.Implements.Rules
                 }
             }
 
-            var resultEmailContact = (_listContactsRules[0] as ISearchRule).GetResults().OperationResult.OfType<EmailContactSearchObject>();
+            var resultEmailContact = (_listContactsRules[1] as ISearchRule).GetResults().OperationResult.OfType<EmailContactSearchObject>();
             if (resultEmailContact != null && resultEmailContact.Any())
             {
                 foreach (var emailContact in resultEmailContact)
