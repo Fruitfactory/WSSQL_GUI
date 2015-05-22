@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Documents;
 using Nest;
 using OF.Core.Core.Rules;
 using OF.Core.Core.Search;
@@ -149,18 +150,15 @@ namespace OF.Infrastructure.Implements.Rules
             foreach (var group in groups)
             {
                 var item = group.First();
-                OFRecipient recepient = GetRecepient(item.FromName, item.FromAddress, arr) ?? GetEmailAddress(item.To, arr) ?? GetEmailAddress(item.Cc, arr);
 
-                if (recepient.IsNull() || string.IsNullOrEmpty(recepient.Address))
+                var listResult = GetEmailAddress(item.To, arr); //GetRecepient(item.FromName, item.FromAddress, arr) ?? 
+                listResult.AddRange(GetEmailAddress(item.Cc, arr));
+                if (!listResult.Any())
                 {
                     continue;
                 }
-
-                _listEmails.Add(recepient.Address);
-                item.EMail = recepient.Address;
-                item.ContactName = recepient.Name;
-                item.AddressType = recepient.Emailaddresstype;
-                result.Add(item);
+                _listEmails.AddRange(listResult.Select(r => r.Address));
+                result.AddRange(listResult.Select(r => new EmailContactSearchObject(){AddressType = r.Emailaddresstype,ContactName = r.Name,EMail = r.Address}));
             }
             if (Result.Any())
             {
@@ -192,20 +190,16 @@ namespace OF.Infrastructure.Implements.Rules
         }
 
         
-        private OFRecipient GetEmailAddress(OFRecipient[] recepients, string[] searchCriteria)
+        private List<OFRecipient> GetEmailAddress(OFRecipient[] recepients, string[] searchCriteria)
         {
             if (recepients == null || recepients.Length == 0)
             {
-                return null;
+                return new List<OFRecipient>();
             }
-            var contact = recepients.FirstOrDefault(n => searchCriteria.All(s => n.Name.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) > -1));
-            if (contact == null)
-            {
-                var emailContact = recepients.FirstOrDefault(n => searchCriteria.All(s => n.Address.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) > -1));
-                return emailContact;
-            }
-            return contact;
+            var result = recepients.Where(n => searchCriteria.All(s => n.Name.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) > -1) 
+                                                      || searchCriteria.All(s => n.Address.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) > -1)).ToList();
+            return result;
         }
-
+        
     }
 }

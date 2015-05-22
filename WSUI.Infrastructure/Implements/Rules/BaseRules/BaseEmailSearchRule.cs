@@ -82,7 +82,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             IEnumerable<IGrouping<string, EmailSearchObject>> groped = null;
 
             if (!IsAdvancedMode)
-                groped = Result.OrderByDescending(i => i.DateCreated).GroupBy(e => e.OutlookConversationId);
+                groped = Result.OrderByDescending(e => e.DateReceived).GroupBy(e => e.OutlookConversationId);
             else
                 groped = GetSortedResult(Result);
 
@@ -107,7 +107,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             {
                 OFLogger.Instance.LogInfo("{0}: {1}", RuleName, result.Count);
                 Result = result;
-                LastDate = Result.Last().DateCreated;
+                LastDate = Result.Last().DateReceived;
             }
         }
 
@@ -119,9 +119,9 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             switch (sort)
             {
                 case AdvancedSearchSortByType.NewestToOldest:
-                    return result.OrderByDescending(i => i.DateCreated).GroupBy(e => e.OutlookConversationId);
+                    return result.OrderByDescending(i => i.DateReceived).GroupBy(e => e.OutlookConversationId);
                 case AdvancedSearchSortByType.OldestToNewest:
-                    return result.OrderBy(i => i.DateCreated).GroupBy(e => e.OutlookConversationId);
+                    return result.OrderBy(i => i.DateReceived).GroupBy(e => e.OutlookConversationId);
                 default:
                     return result.GroupBy(e => e.OutlookConversationId);
             }

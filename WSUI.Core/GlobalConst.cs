@@ -4,7 +4,7 @@ namespace OF.Core
 {
     public static class GlobalConst
     {
-        public const string AdvancedSearchFormat = "{0}:({1}) ";
+        public static readonly string AdvancedSearchFormat = "{0}:({1}) ";
 
 
         private static OutlookVersions currentOutlookVersion = OutlookVersions.None;
@@ -23,5 +23,8 @@ namespace OF.Core
                 }
             }
         }
+
+        public static readonly string ExchangeEmailType = "EX";
+
     }
 }

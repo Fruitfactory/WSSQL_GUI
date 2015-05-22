@@ -10,6 +10,7 @@ using OF.Core.Extensions;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 using System.Text.RegularExpressions;
+using OF.Core;
 using OF.Core.Data.ElasticSearch;
 
 namespace OF.Infrastructure.Implements.Rules
@@ -133,7 +134,7 @@ namespace OF.Infrastructure.Implements.Rules
             {
                 foreach (var emailContact in resultEmailContact)
                 {
-                    if (!IsEmail(emailContact.EMail) || _listExistingEmails.Contains(emailContact.EMail.ToLowerInvariant()))
+                    if ( _listExistingEmails.Contains(emailContact.EMail.ToLowerInvariant()) || (emailContact.AddressType != GlobalConst.ExchangeEmailType &&  !IsEmail(emailContact.EMail))) 
                         continue;
                     Result.Add(emailContact);
                     _listExistingEmails.Add(emailContact.EMail.ToLowerInvariant());
