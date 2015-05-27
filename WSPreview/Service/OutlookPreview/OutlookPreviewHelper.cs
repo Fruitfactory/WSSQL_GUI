@@ -507,7 +507,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             var clearsenderEmail = senderEmailAddress.ClearString();
             page += string.Format(SenderRow, IsEmail(senderEmailAddress) ? GetContactNameWithEmail(GetConvertetString(clearSenderName), clearsenderEmail) : GetContactName(GetConvertetString(clearSenderName)));
             if (email.Cc != null && email.Cc.Length > 0)
-                page += string.Format(CCRow, HighlightSearchString(GetRecipientsRow(email.Cc)));
+                page += string.Format(CCRow, GetRecipientsRow(email.Cc));
             page += string.Format(ToRow, GetRecipientsRow(email.To));
             var folder = GetEmailFolder();
             if (folder != null && !string.IsNullOrEmpty(folder.Item1) && !string.IsNullOrEmpty(folder.Item2))

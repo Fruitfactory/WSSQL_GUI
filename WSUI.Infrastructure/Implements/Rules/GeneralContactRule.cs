@@ -134,7 +134,7 @@ namespace OF.Infrastructure.Implements.Rules
             {
                 foreach (var emailContact in resultEmailContact)
                 {
-                    if ( _listExistingEmails.Contains(emailContact.EMail.ToLowerInvariant()) || (emailContact.AddressType != GlobalConst.ExchangeEmailType &&  !IsEmail(emailContact.EMail))) 
+                    if ( _listExistingEmails.Contains(emailContact.EMail.ToLowerInvariant())) 
                         continue;
                     Result.Add(emailContact);
                     _listExistingEmails.Add(emailContact.EMail.ToLowerInvariant());

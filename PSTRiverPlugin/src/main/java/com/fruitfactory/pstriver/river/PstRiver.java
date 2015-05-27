@@ -265,11 +265,13 @@ public class PstRiver extends AbstractRiverComponent implements River {
 
         private Date _lastUpdatedDate;
         private PstFeedDefinition _def;
-        private List<Thread> _readers;
+        private List<Thread> _threads;
+        private List<PstOutlookFileReader> _pstReaders;
 
         public PstParser(PstFeedDefinition def) {
             _def = def;
-            _readers = new ArrayList<Thread>();
+            _threads = new ArrayList<Thread>();
+            _pstReaders = new ArrayList<PstOutlookFileReader>();
         }
 
         @Override
@@ -301,11 +303,11 @@ public class PstRiver extends AbstractRiverComponent implements River {
                         Thread pstReaderThread = EsExecutors.daemonThreadFactory(settings.globalSettings(), "pst_" + Integer.toString(index))
                                 .newThread(new PstOutlookFileReader(_indexName, file, _lastUpdatedDate, logger, _bulkProcessor));
                         //pstReaderThread.setPriority(Thread.MIN_PRIORITY);
-                        _readers.add(pstReaderThread);
+                        _threads.add(pstReaderThread);
                         pstReaderThread.start();
                         index++;
                     }
-                    for (Thread _reader : _readers) {
+                    for (Thread _reader : _threads) {
                         _reader.join();
                     }
 

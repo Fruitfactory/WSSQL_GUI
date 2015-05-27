@@ -26,6 +26,7 @@ import com.pff.PSTNodeInputStream;
 import com.pff.PSTObject;
 import com.pff.PSTRecipient;
 import com.pff.PSTTimeZone;
+import com.pff.PSTTransportRecipient;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import example.TestGui;
 import java.io.ByteArrayOutputStream;
@@ -242,8 +243,9 @@ public class PstOutlookFileReader implements Runnable {
         }
 
         String subject = message.getSubject();
-        String sender = message.getSentRepresentingName();
-        String senderEmail = message.getSentRepresentingEmailAddress();
+        PSTTransportRecipient  from = message.getFrom();
+        String sender = from != null ? from.getName() : message.getSentRepresentingName();
+        String senderEmail = from != null ? from.getEmailAddress() : message.getSentRepresentingEmailAddress();
         String body = message.getBody();
         String htmlbody = message.getBodyHTML();
         String analyzedContent = _tika.parseToString(new BytesStreamInput(htmlbody.getBytes(),false),new Metadata());
@@ -271,24 +273,16 @@ public class PstOutlookFileReader implements Runnable {
         List<AttachmentHelper> listAttachments = new ArrayList<AttachmentHelper>();
         int count = 0;
         try {
-            count = message.getNumberOfRecipients();
-
-            for (int i = 0; i < count; i++) {
-                PSTRecipient recipient = message.getRecipient(i);
-                Triple<String, String,String> pairRecipient = new Triple<String, String,String>(recipient.getDisplayName(), recipient.getEmailAddress(),recipient.getEmailAddressType());
-                int flag = recipient.getRecipientType();
-                switch (flag) {
-                    case PSTRecipient.MAPI_TO:
-                        listTo.add(pairRecipient);
-                        break;
-                    case PSTRecipient.MAPI_CC:
-                        listCc.add(pairRecipient);
-                        break;
-                    case PSTRecipient.MAPI_BCC:
-                        listBcc.add(pairRecipient);
-                        break;
-                }
-            }
+            
+            List<PSTTransportRecipient> to = message.getTo();
+            listTo = to != null && to.size() > 0 ? getTransportRecipients(to) : getRecipients(message, PSTRecipient.MAPI_TO);
+            
+            List<PSTTransportRecipient> cc = message.getCc();
+            listCc = cc != null && cc.size() > 0 ?  getTransportRecipients(cc) : getRecipients(message, PSTRecipient.MAPI_CC);
+            
+            List<PSTTransportRecipient> bcc = message.getBcc();
+            listBcc = bcc != null && bcc.size() > 0 ? getTransportRecipients(bcc) : getRecipients(message, PSTRecipient.MAPI_BCC);
+            
         } catch (PSTException ex) {
             Logger.getLogger(TestGui.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -376,6 +370,35 @@ public class PstOutlookFileReader implements Runnable {
         esIndex(_indexName, PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
     }
 
+    private List<Triple<String, String,String>> getTransportRecipients(List<PSTTransportRecipient> list) throws PSTException, IOException{
+        
+        List<Triple<String, String,String>> result = new ArrayList<Triple<String, String,String>>();
+        
+        for(PSTTransportRecipient r : list){
+            Triple<String, String,String> pairRecipient = new Triple<String, String,String>(r.getName(), r.getEmailAddress(),"");
+            result.add(pairRecipient);
+        }
+        return result;
+    }
+    
+    private List<Triple<String, String, String>> getRecipients(PSTMessage message, int recipientType) throws PSTException, IOException {
+        int count = message.getNumberOfRecipients();
+        List<Triple<String, String, String>> result = new ArrayList<Triple<String, String, String>>();
+        for (int i = 0; i < count; i++) {
+            try {
+                PSTRecipient recipient = message.getRecipient(i);
+                Triple<String, String, String> pairRecipient = new Triple<String, String, String>(recipient.getDisplayName(), recipient.getEmailAddress(), recipient.getEmailAddressType());
+                int flag = recipient.getRecipientType();
+                if (flag == recipientType) {
+                    result.add(pairRecipient);
+                }
+            } catch (PSTException e) {
+                Logger.getGlobal().log(Level.OFF, e.getMessage());
+            }
+        }
+        return result;
+    }
+    
     private void saveAttachment(PSTAttachment attachment, String emailID) throws IOException, Exception {
         if (attachment == null) {
             return;
