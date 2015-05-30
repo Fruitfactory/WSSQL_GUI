@@ -11,6 +11,7 @@ import com.fruitfactory.pstriver.helpers.PstReaderStatusInfo;
 import com.fruitfactory.pstriver.helpers.Triple;
 import com.fruitfactory.pstriver.rest.PstStatusRepository;
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
+import com.fruitfactory.pstriver.useractivity.IReaderControl;
 import com.fruitfactory.pstriver.utils.PstMetadataTags;
 import com.fruitfactory.pstriver.utils.PstSignTool;
 import com.pff.PSTAppointment;
@@ -55,7 +56,7 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
  *
  * @author Yariki
  */
-public class PstOutlookFileReader implements Runnable {
+public class PstOutlookFileReader extends Thread implements IReaderControl{//implements Runnable
 
     protected ESLogger _logger;
     protected BulkProcessor _bulkProcessor;
@@ -67,15 +68,22 @@ public class PstOutlookFileReader implements Runnable {
     private int _emailCount = 0;
     private String _storeDisplayName;
     private String _storePartId;
+    private PSTFile _pstFile = null;
+    
+    private Object LOCK = new Object();
+    private boolean _paused = false;
     
     private final Tika _tika = new Tika();
 
-    public PstOutlookFileReader(String indexName, String filename, Date lastUpdatedDate, ESLogger _logger, BulkProcessor _bulkProcessor) {
+    public PstOutlookFileReader(String indexName, String filename, Date lastUpdatedDate, ESLogger _logger, BulkProcessor _bulkProcessor, String threadName) {
+        super(threadName);
         this._filename = filename;
         this._lastUpdateDate = lastUpdatedDate;
         this._logger = _logger;
         this._bulkProcessor = _bulkProcessor;
         this._indexName = indexName;
+        setDaemon(true);
+        setPriority(MIN_PRIORITY);
     }
 
     private void esIndex(String index, String type, String id,
@@ -96,19 +104,56 @@ public class PstOutlookFileReader implements Runnable {
 
     public void close() {
         _closed = true;
-    }
-
-    @Override
-    public void run() {
-        try {
-            PSTFile file = new PSTFile(_filename);
-            _logger.info(LOG_TAG + _filename);
-            if(file == null){
-                _logger.error(LOG_TAG + _filename + " coldn't be opened...");
-                return;
+        try{
+            if(_pstFile != null){
+                _pstFile.close();
+                _logger.info("File close...");
             }
+        }catch(Exception ex){
+            _logger.error(LOG_TAG + ex.getMessage());
+        }
+    }
+    
+    @Override
+    public void pauseThread(){
+        synchronized(LOCK){
+            _paused = true;
+            LOCK.notifyAll();
+            _logger.info(LOG_TAG + " Thread #"+ getName() + " was paused...");
+        }
+    }
+    
+    @Override
+    public void resumeThread(){
+        synchronized(LOCK){
+            _paused = false;
+            LOCK.notifyAll();
+            _logger.info(LOG_TAG + " Thread #"+ getName() + " was resumed...");
+        }
+    }
+    
+    @Override
+    public boolean isStopped(){
+        return _closed;
+    }
+    
+    @Override
+    public boolean isPaused(){
+        return _paused;
+    }
+    
+    public boolean init(){
+        boolean result = false;
+        try{
+            _pstFile = new PSTFile(_filename);
+            result = _pstFile != null;
             
-            PSTMessageStore store = file.getMessageStore();
+            _logger.info(LOG_TAG + _filename);
+            if(_pstFile == null){
+                _logger.error(LOG_TAG + _filename + " coldn't be opened...");
+                return false;
+            }
+            PSTMessageStore store = _pstFile.getMessageStore();
             if(store != null){
                 _storeDisplayName = store.getDisplayName(); 
                 _logger.info(_name, _storeDisplayName);
@@ -117,20 +162,32 @@ public class PstOutlookFileReader implements Runnable {
                     _logger.info(_name, _storePartId);
                 }
             }
-            _logger.info("Prepare status info...");
-            prepareStatusInfo(file.getRootFolder());
-            _logger.info("Update status info 1...");
+           
+        }catch(Exception ex){
+            _logger.error(LOG_TAG + ex.getMessage());
+        }
+        return result;
+    }
+    
+    public void prepareStatusInfo() throws PSTException, IOException{
+        if(_pstFile == null){
+            return;
+        }
+        _logger.info("Prepare status info...");
+        prepareStatusInfo(_pstFile.getRootFolder());
+    }
+    
+    @Override
+    public void run() {
+        try {
             PstStatusRepository.setStatus(_name, PstReaderStatus.Busy);
             _logger.info("Process folder...");
-            processFolder(file.getRootFolder());
+            processFolder(_pstFile.getRootFolder());
             _logger.info("Update status folder 2...");
             PstStatusRepository.setStatus(_name, PstReaderStatus.Finished);
-            _logger.info("File close...");
-            file.close();
 
         } catch (Exception e) {
             _logger.error(LOG_TAG + e.getMessage() + " " + e.toString());
-            //PstStatusRepository.setStatus(_name, PstReaderStatus.Finished);
         }
     }
 
@@ -172,9 +229,12 @@ public class PstOutlookFileReader implements Runnable {
             _logger.warn(LOG_TAG + " Folder: " + folderName);
             PstStatusRepository.setProcessFolder(_name, folderName);
 
+            tryToWait();
+            
             if (pstFolder.hasSubfolders()) {
                 Vector<PSTFolder> folders = pstFolder.getSubFolders();
                 for (PSTFolder folder : folders) {
+                    tryToWait();
                     processFolder(folder);
                 }
             }
@@ -217,6 +277,7 @@ public class PstOutlookFileReader implements Runnable {
                     }catch(Exception ex){
                         message = (PSTMessage) pstFolder.getNextChild();
                     }
+                    tryToWait();
                 }
                 PstStatusRepository.setProcessCount(_name, count);
             }
@@ -225,6 +286,18 @@ public class PstOutlookFileReader implements Runnable {
         }
     }
 
+    private void tryToWait(){
+        synchronized(LOCK){
+            if(_paused){
+                try {
+                    LOCK.wait();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(PstOutlookFileReader.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+    
     private void processObject(PSTObject object, String folderName) throws Exception {
         if (object instanceof PSTContact) {
             indexContact((PSTContact) object);

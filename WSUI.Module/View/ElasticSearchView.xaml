@@ -92,7 +92,9 @@
                     Width="175">Run indexing process</Button>
 
             <StackPanel Orientation="Vertical" Margin="0 5 0 5" Visibility="{Binding ShowProgress,UpdateSourceTrigger=PropertyChanged}">
-                <controls:MetroProgressBar Maximum="100" Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}"></controls:MetroProgressBar>
+                <controls:MetroProgressBar 
+                    Maximum="100" 
+                    Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}"></controls:MetroProgressBar>
                 <TextBlock FontSize="12">Indexing Folders.</TextBlock>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontSize="12">Folder:</TextBlock>

@@ -318,25 +318,48 @@ namespace OF.Module.ViewModel
                     return;
                 }
 
-                double sumAll = (double)response.Response.Items.Sum(s => s.Count);
-                double sumProcessing = response.Response.Items.Sum(s => s.Processing);
-                int max = response.Response.Items.Max(i => i.Count);
-                var item = response.Response.Items.FirstOrDefault(s => s.Count == max);
-                bool isFinished = response.Response.Items.All(s => s.Status == PstReaderStatus.Finished);
+                //double sumAll = (double)response.Response.Items.Sum(s => s.Count);
+                //double sumProcessing = response.Response.Items.Sum(s => s.Processing);
+                //int max = response.Response.Items.Max(i => i.Count);
+                //var item = response.Response.Items.FirstOrDefault(s => s.Count == max);
+                //bool isFinished = response.Response.Items.All(s => s.Status == PstReaderStatus.Finished);
 
-                CurrentFolder = item.IsNotNull() ? item.Folder : "";
-                CurrentProgress = (sumProcessing / sumAll) * 100.0;
+                //CurrentFolder = item.IsNotNull() ? item.Folder : "";
+                //CurrentProgress = (sumProcessing / sumAll) * 100.0;
                 
-                if (isFinished && !_isFinishing)
+                //if (isFinished && !_isFinishing)
+                //{
+                //    _isFinishing = true;
+                //    _timer.Change(Timeout.Infinite, Timeout.Infinite);
+                //    IsIndexExisted = true;
+                //    FinishedStepVisibility = Visibility.Visible;
+                //    ElasticSearchClient.CreateWarms();
+                //    OnIndexingFinished();
+                //    _isFinishing = false;
+                //}
+
+                if (response.Response.Items.All(i => i.Status == PstReaderStatus.NonStarted))
                 {
-                    _isFinishing = true;
+                    return;
+                }
+                if (response.Response.Items.All(s => s.Status == PstReaderStatus.Finished))
+                {
                     _timer.Change(Timeout.Infinite, Timeout.Infinite);
                     IsIndexExisted = true;
                     FinishedStepVisibility = Visibility.Visible;
-                    ElasticSearchClient.CreateWarms();
                     OnIndexingFinished();
-                    _isFinishing = false;
+                    return;
                 }
+                if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Busy))
+                {
+                    ShowProgress = Visibility.Visible;
+                    double sumAll = (double)response.Response.Items.Sum(s => s.Count);
+                    double sumProcessing = response.Response.Items.Sum(s => s.Processing);
+                    var busyReader = response.Response.Items.FirstOrDefault(r => r.Status == PstReaderStatus.Busy);
+                    CurrentFolder = busyReader.IsNotNull() ? busyReader.Folder : "";
+                    CurrentProgress = (sumProcessing / sumAll) * 100.0;
+                }
+
             }
             catch (WebException w)
             {

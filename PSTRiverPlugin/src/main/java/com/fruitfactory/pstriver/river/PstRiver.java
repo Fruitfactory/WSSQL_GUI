@@ -9,6 +9,8 @@ import com.fruitfactory.pstriver.helpers.AttachmentHelper;
 import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
 import com.fruitfactory.pstriver.rest.PstStatusRepository;
+import com.fruitfactory.pstriver.useractivity.IReaderControl;
+import com.fruitfactory.pstriver.useractivity.PstUserActivityTracker;
 
 import com.fruitfactory.pstriver.utils.PstFeedDefinition;
 import com.fruitfactory.pstriver.utils.PstGlobalConst;
@@ -265,27 +267,23 @@ public class PstRiver extends AbstractRiverComponent implements River {
 
         private Date _lastUpdatedDate;
         private PstFeedDefinition _def;
-        private List<Thread> _threads;
-        private List<PstOutlookFileReader> _pstReaders;
+        private List<Thread> _readers;
+        
 
         public PstParser(PstFeedDefinition def) {
             _def = def;
-            _threads = new ArrayList<Thread>();
-            _pstReaders = new ArrayList<PstOutlookFileReader>();
+            _readers = new ArrayList<Thread>();
         }
 
         @Override
         public void run() {
             while(true){
-                
-            
                 if (_closed) {
                     logger.warn(LOG_TAG + "River pst was closed...");
                     return;
                 }
                 Date scanDateNew = new Date();
                 try {
-
                     _lastUpdatedDate = getLastDateFromRiver();
                     PstRiverStatus riverStatus = getStatusFromRiver();
                     
@@ -300,24 +298,36 @@ public class PstRiver extends AbstractRiverComponent implements River {
                         if (!Files.exists(Paths.get(file), LinkOption.NOFOLLOW_LINKS)) {
                             continue;
                         }
-                        Thread pstReaderThread = EsExecutors.daemonThreadFactory(settings.globalSettings(), "pst_" + Integer.toString(index))
-                                .newThread(new PstOutlookFileReader(_indexName, file, _lastUpdatedDate, logger, _bulkProcessor));
-                        //pstReaderThread.setPriority(Thread.MIN_PRIORITY);
-                        _threads.add(pstReaderThread);
-                        pstReaderThread.start();
+                        PstOutlookFileReader reader = new PstOutlookFileReader(_indexName, file, _lastUpdatedDate, logger, _bulkProcessor, "pst_" + Integer.toString(index));
+                        reader.init();
+                        reader.prepareStatusInfo();
+                        _readers.add(reader);
                         index++;
                     }
-                    for (Thread _reader : _threads) {
-                        _reader.join();
+                    List<IReaderControl> readerControls = new ArrayList<>();
+                    for(Thread r : _readers){
+                        readerControls.add((IReaderControl)r);
                     }
-
+                    PstUserActivityTracker tracker = new PstUserActivityTracker(readerControls);
+                    tracker.start();
+                    
+                    for(Thread reader : _readers){
+                        reader.start();
+                        reader.join();
+                        ((PstOutlookFileReader)reader).close();
+                    }
+                    tracker.stopTracking();
+                    tracker.join();
+                    readerControls.clear();
 
                 } catch (InterruptedException e) {
                     logger.error(LOG_TAG + e.getMessage() + " " + e.toString());
                 } catch (Exception e) {
                     logger.error(LOG_TAG + e.getMessage()  + " " + e.toString());
                 }
+
                 try {
+                    _readers.clear();
                     updateFsRiver(scanDateNew);
                     updateStatusRiver(PstRiverStatus.StandBy);
                     PstStatusRepository.setRiverStatus(new PstRiverStatusInfo(PstRiverStatus.StandBy, scanDateNew));
