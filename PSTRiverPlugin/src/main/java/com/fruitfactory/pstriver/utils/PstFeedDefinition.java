@@ -17,6 +17,8 @@ import org.elasticsearch.common.xcontent.support.XContentMapValues;
 public class PstFeedDefinition {
 
     public static final String UPDATE_RATE = "update_rate";
+    public static final String ONLINE_TIME = "online_time";
+    public static final String IDLE_TIME = "idle_time";
     public static final String PST_LIST_PATH = "pst.pst_list";
     public static final String INDEX_NAME = "pst.index_name";
     private static final String SEPARATOR = ",";
@@ -24,11 +26,23 @@ public class PstFeedDefinition {
     private String _riverName;
     private String[] _dataArray;
     private TimeValue _updateRate;
+    private TimeValue _onlineTime;
+    private TimeValue _idleTime;
 
-    public PstFeedDefinition(String _riverName, String[] _dataArray, TimeValue _updateRate) {
+    public PstFeedDefinition(String _riverName, String[] _dataArray, TimeValue _updateRate, TimeValue onlineTime, TimeValue idleTime) {
         this._riverName = _riverName;
         this._dataArray = _dataArray;
         this._updateRate = _updateRate;
+        this._onlineTime = onlineTime;
+        this._idleTime = idleTime;
+    }
+
+    public TimeValue getOnlineTime() {
+        return _onlineTime;
+    }
+
+    public TimeValue getIdleTime() {
+        return _idleTime;
     }
 
     public String getRiverName() {

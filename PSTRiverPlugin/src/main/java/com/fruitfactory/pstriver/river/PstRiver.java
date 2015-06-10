@@ -9,7 +9,11 @@ import com.fruitfactory.pstriver.helpers.AttachmentHelper;
 import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
 import com.fruitfactory.pstriver.rest.PstStatusRepository;
+import com.fruitfactory.pstriver.useractivity.IInputHookManage;
 import com.fruitfactory.pstriver.useractivity.IReaderControl;
+import com.fruitfactory.pstriver.useractivity.PstInputHook;
+import com.fruitfactory.pstriver.useractivity.PstLastInputEventTracker;
+import com.fruitfactory.pstriver.useractivity.PstNativeHook;
 import com.fruitfactory.pstriver.useractivity.PstUserActivityTracker;
 
 import com.fruitfactory.pstriver.utils.PstFeedDefinition;
@@ -87,13 +91,15 @@ public class PstRiver extends AbstractRiverComponent implements River {
         if (settings.settings().containsKey(PstGlobalConst.PST_PREFIX)) {
             Map<String, Object> feed = (Map<String, Object>) settings.settings().get(PstGlobalConst.PST_PREFIX);
             TimeValue updateRate = XContentMapValues.nodeTimeValue(feed.get(PstFeedDefinition.UPDATE_RATE), TimeValue.timeValueMinutes(60));
+            TimeValue onlineTime = XContentMapValues.nodeTimeValue(feed.get(PstFeedDefinition.ONLINE_TIME), TimeValue.timeValueMinutes(2));
+            TimeValue idleTime = XContentMapValues.nodeTimeValue(feed.get(PstFeedDefinition.IDLE_TIME), TimeValue.timeValueMinutes(2));
             this._indexName = XContentMapValues.nodeStringValue(feed.get(PstFeedDefinition.INDEX_NAME), riverName.name());
             logger.info(LOG_TAG + " _indexName" + this._indexName );
 
             String[] pstList = PstFeedDefinition.getListOfPst(settings.settings(), PstFeedDefinition.PST_LIST_PATH);
-            _definition = new PstFeedDefinition(riverName.getName(), pstList, updateRate);
+            _definition = new PstFeedDefinition(riverName.getName(), pstList, updateRate,onlineTime,idleTime);
         } else {
-            _definition = new PstFeedDefinition(riverName.getName(), null, TimeValue.timeValueMinutes(60));
+            _definition = new PstFeedDefinition(riverName.getName(), null, TimeValue.timeValueMinutes(60),TimeValue.timeValueMinutes(2),TimeValue.timeValueMinutes(2));
             this._indexName = riverName.getName();
         }
         logger.warn(LOG_TAG + "River was created...");
@@ -268,19 +274,22 @@ public class PstRiver extends AbstractRiverComponent implements River {
         private Date _lastUpdatedDate;
         private PstFeedDefinition _def;
         private List<Thread> _readers;
+        private IInputHookManage _inputHookManage;
         
 
         public PstParser(PstFeedDefinition def) {
             _def = def;
             _readers = new ArrayList<Thread>();
+            _inputHookManage = new PstLastInputEventTracker(logger);
         }
 
         @Override
         public void run() {
+            this._inputHookManage.start();
             while(true){
                 if (_closed) {
                     logger.warn(LOG_TAG + "River pst was closed...");
-                    return;
+                    break;
                 }
                 Date scanDateNew = new Date();
                 try {
@@ -308,8 +317,9 @@ public class PstRiver extends AbstractRiverComponent implements River {
                     for(Thread r : _readers){
                         readerControls.add((IReaderControl)r);
                     }
-                    PstUserActivityTracker tracker = new PstUserActivityTracker(readerControls);
-                    tracker.start();
+                    PstUserActivityTracker tracker = new PstUserActivityTracker(this._inputHookManage,readerControls,(int)_def.getOnlineTime().getSeconds(),(int)_def.getIdleTime().getSeconds(),logger);
+                    tracker.startTracking();
+                    logger.info(LOG_TAG + "User activity tracker was created...");
                     
                     for(Thread reader : _readers){
                         reader.start();
@@ -337,6 +347,7 @@ public class PstRiver extends AbstractRiverComponent implements River {
                 }
 
             }
+            this._inputHookManage.unRegisterHook();
         }
 
         private void esIndex(String index, String type, String id,

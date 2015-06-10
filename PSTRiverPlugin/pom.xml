@@ -11,6 +11,13 @@
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
     <name>Elasticsearch PST River Plugin</name>
+    <repositories>
+        <repository>
+            <id>in-project</id>
+            <name>In Project Repo</name>
+            <url>file://${project.basedir}/libs</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.elasticsearch</groupId>
@@ -33,9 +40,19 @@
             <version>1.7</version>
         </dependency>
         <dependency>
-            <groupId>com.sun.jna</groupId>
+            <groupId>net.java.dev.jna</groupId>
             <artifactId>jna</artifactId>
-            <version>3.0.9</version>
+            <version>4.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>4.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jnativehook</groupId>
+            <artifactId>jnativehook-sdk</artifactId>
+            <version>2.0.1</version>
         </dependency>
     </dependencies>
     

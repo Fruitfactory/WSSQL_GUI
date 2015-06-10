@@ -69,6 +69,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
     private String _storeDisplayName;
     private String _storePartId;
     private PSTFile _pstFile = null;
+    private PstReaderStatus _status;
     
     private Object LOCK = new Object();
     private boolean _paused = false;
@@ -84,6 +85,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         this._indexName = indexName;
         setDaemon(true);
         setPriority(MIN_PRIORITY);
+        
     }
 
     private void esIndex(String index, String type, String id,
@@ -119,7 +121,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         synchronized(LOCK){
             _paused = true;
             LOCK.notifyAll();
-            _logger.info(LOG_TAG + " Thread #"+ getName() + " was paused...");
+            _logger.info(LOG_TAG + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Thread #"+ getName() + " was paused...");
         }
     }
     
@@ -128,7 +130,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         synchronized(LOCK){
             _paused = false;
             LOCK.notifyAll();
-            _logger.info(LOG_TAG + " Thread #"+ getName() + " was resumed...");
+            _logger.info(LOG_TAG + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Thread #"+ getName() + " was resumed...");
         }
     }
     
@@ -180,10 +182,12 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
     @Override
     public void run() {
         try {
+            _status = PstReaderStatus.Busy;
             PstStatusRepository.setStatus(_name, PstReaderStatus.Busy);
             _logger.info("Process folder...");
             processFolder(_pstFile.getRootFolder());
             _logger.info("Update status folder 2...");
+            _status = PstReaderStatus.Finished;
             PstStatusRepository.setStatus(_name, PstReaderStatus.Finished);
 
         } catch (Exception e) {
@@ -202,6 +206,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         Path pathFileName = Paths.get(_filename).getFileName();
         _name = pathFileName.toString();
         PstReaderStatusInfo statusInfo = new PstReaderStatusInfo(_name, _emailCount);
+        _status = PstReaderStatus.NonStarted;
         statusInfo.setStatus(PstReaderStatus.NonStarted);
         PstStatusRepository.setStatusInfo(statusInfo);
     }
@@ -245,6 +250,9 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
                 int tempCount = 0;
                 while (message != null) {
                     try{
+                        
+                        tryToWait();
+                        
                         if (_lastUpdateDate == null) {
                             processObject(message, folderName);
                             message = (PSTMessage) pstFolder.getNextChild();
@@ -277,7 +285,6 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
                     }catch(Exception ex){
                         message = (PSTMessage) pstFolder.getNextChild();
                     }
-                    tryToWait();
                 }
                 PstStatusRepository.setProcessCount(_name, count);
             }
@@ -665,6 +672,11 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
             builder.endObject();
         }
         builder.endArray();
+    }
+
+    @Override
+    public PstReaderStatus getStatus() {
+        return _status;
     }
 
 }

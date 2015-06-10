@@ -5,9 +5,12 @@
  */
 package com.fruitfactory.pstriver.useractivity;
 
+import com.fruitfactory.pstriver.helpers.PstReaderStatus;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.unit.TimeValue;
 
 /**
  *
@@ -20,17 +23,27 @@ public class PstUserActivityTracker extends Thread {
     private int onlineTime;
     private int idleTime;
     private PstWin32IdleTime.State oldState = PstWin32IdleTime.State.UNKNOWN;
+    private ESLogger logger;
+    private IInputHookIdle hookIdleTime;
 
-    public PstUserActivityTracker(List<IReaderControl> readers) {
+    public PstUserActivityTracker(IInputHookIdle hookIdleTime, List<IReaderControl> readers,ESLogger logger) {
         this.readers = readers;
-        onlineTime = 120;
-        idleTime = 180;
+        onlineTime = (int)TimeValue.timeValueMinutes(2).getSeconds();
+        idleTime = (int)TimeValue.timeValueMinutes(2).getSeconds();
+        this.logger = logger;
+        this.hookIdleTime = hookIdleTime;
     }
 
-    public PstUserActivityTracker(List<IReaderControl> readers, int onlineTime, int idleTime) {
+    public PstUserActivityTracker(IInputHookIdle hookIdleTime, List<IReaderControl> readers, int onlineTime, int idleTime,ESLogger logger) {
         this.readers = readers;
         this.onlineTime = onlineTime;
         this.idleTime = idleTime;
+        this.logger = logger;
+        this.hookIdleTime = hookIdleTime;
+    }
+    
+    public  void startTracking(){
+        start();
     }
     
     public void stopTracking(){
@@ -42,20 +55,22 @@ public class PstUserActivityTracker extends Thread {
     public void run() {
         while(!stopped){
             try{
+                PstWin32IdleTime.State state = PstWin32IdleTime.State.UNKNOWN;
+                long idleSec = this.hookIdleTime.getIdleTime() / 1000; // PstWin32IdleTime.getIdleTimeMillisWin32(logger) / 1000;
                 
-                int idleSec = PstWin32IdleTime.getIdleTimeMillisWin32() / 1000;
-                PstWin32IdleTime.State newState = idleSec < onlineTime ? PstWin32IdleTime.State.ONLINE:
-                        idleSec > idleTime ? PstWin32IdleTime.State.AWAY : PstWin32IdleTime.State.IDLE;
-                if(newState != oldState){
-                    oldState = newState;
+                System.out.println(String.format("Idle Sec = %d", idleSec));
+                logger.info("Tracker: " + String.format("Idle Sec = %d", idleSec));
+                PstWin32IdleTime.State newState = idleSec < onlineTime ? PstWin32IdleTime.State.ONLINE: idleSec > idleTime ? PstWin32IdleTime.State.AWAY : PstWin32IdleTime.State.IDLE;
+                if(newState != state){
                     processState(newState);
                 }
                 Thread.sleep(1000);
             }catch(Exception ex){
                 Logger.getGlobal().log(Level.SEVERE, ex.getMessage());
+                logger.error("Tracker: " + ex.getMessage());
             }
         }
-    }
+    } 
     
     private void processState(PstWin32IdleTime.State state){
         if(readers == null || readers.isEmpty()){
@@ -64,16 +79,24 @@ public class PstUserActivityTracker extends Thread {
         switch(state){
             case ONLINE:
                 processOnlineState(readers);
+                System.out.println("Online time!!");
+                logger.info("Tracker: " + "User Online!!" );
                 break;
             case AWAY:
                 processAwayState(readers);
+                System.out.println("Away time!!");
+                logger.info("Tracker: " + "User Away!!" );
+                break;
+            case IDLE:
+                System.out.println("Idle time!!");
+                logger.info("Tracker: " + "User Idle!!" );
                 break;
         }
     }
 
     private void processOnlineState(List<IReaderControl> readers) {
         for(IReaderControl r : readers){
-            if(!r.isPaused() && !r.isStopped()){
+            if(r.getStatus() == PstReaderStatus.Busy && !r.isPaused() && !r.isStopped()){
                 r.pauseThread();
             }
         }
@@ -81,7 +104,7 @@ public class PstUserActivityTracker extends Thread {
 
     private void processAwayState(List<IReaderControl> readers) {
         for(IReaderControl r : readers){
-            if(r.isPaused() && !r.isStopped()){
+            if(r.getStatus() == PstReaderStatus.Busy && r.isPaused() && !r.isStopped()){
                 r.resumeThread();
             }
         }

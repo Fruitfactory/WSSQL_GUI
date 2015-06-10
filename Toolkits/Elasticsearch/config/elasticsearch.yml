@@ -29,7 +29,7 @@
 # Cluster name identifies your cluster for auto-discovery. If you're running
 # multiple clusters on the same network, make sure you're using unique names.
 #
-#cluster.name: elasticsearch
+cluster.name: outlookfinder
 
 
 #################################### Node #####################################
@@ -37,7 +37,7 @@
 # Node names are generated dynamically on startup, so you're relieved
 # from configuring them manually. You can tie this node to a specific name:
 #
-#node.name: "Franz Kafka"
+node.name: "Outlook Finder  ElasticSearch PST River"
 
 # Every node can be configured to allow or deny being eligible as the master,
 # and to allow or deny to store the data.
@@ -383,3 +383,9 @@
 # it unless you need it is recommended (it is disabled by default).
 #
 #http.jsonp.enable: true
+
+# The indices.fielddata.cache.size controls how much heap space is allocated to fielddata. 
+# When you run a query that requires access to new field values, it will load the values into memory and then try to add them to fielddata. 
+# If the resulting fielddata size would exceed the specified size, other values would be evicted in order to make space.
+# By default, this setting is unbounded—Elasticsearch will never evict data from fielddata.
+indices.fielddata.cache.size:  40%

@@ -5,58 +5,19 @@
  */
 package com.fruitfactory.pstriver.useractivity;
 
-import com.sun.jna.Native;
-import com.sun.jna.Structure;
-import com.sun.jna.win32.StdCallLibrary;
-
+import com.sun.jna.*;
+import com.sun.jna.win32.*;
+import com.sun.jna.platform.win32.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.elasticsearch.common.logging.ESLogger;
 /**
  *
  * @author Yariki
  */
 public class PstWin32IdleTime {
-
-    public interface Kernel32 extends StdCallLibrary {
-
-        Kernel32 INSTANCE = (Kernel32) Native.loadLibrary("kernel32", Kernel32.class);
-
-        /**
-         * Retrieves the number of milliseconds that have elapsed since the
-         * system was started.
-         *
-         * @see http://msdn2.microsoft.com/en-us/library/ms724408.aspx
-         * @return number of milliseconds that have elapsed since the system was
-         * started.
-         */
-        public int GetTickCount();
-    };
-
-    public interface User32 extends StdCallLibrary {
-
-        User32 INSTANCE = (User32) Native.loadLibrary("user32", User32.class);
-
-        /**
-         * Contains the time of the last input.
-         *
-         * @see
-         * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputstructures/lastinputinfo.asp
-         */
-        public static class LASTINPUTINFO extends Structure {
-
-            public int cbSize = 8;
-
-/// Tick count of when the last input event was received.
-            public int dwTime;
-        }
-
-        /**
-         * Retrieves the time of the last input event.
-         *
-         * @see
-         * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/getlastinputinfo.asp
-         * @return time of the last input event, in milliseconds
-         */
-        public boolean GetLastInputInfo(LASTINPUTINFO result);
-    };
 
     /**
      * Get the amount of milliseconds that have elapsed since the last input
@@ -64,10 +25,20 @@ public class PstWin32IdleTime {
      *
      * @return idle time in milliseconds
      */
-    public static int getIdleTimeMillisWin32() {
-        User32.LASTINPUTINFO lastInputInfo = new User32.LASTINPUTINFO();
-        User32.INSTANCE.GetLastInputInfo(lastInputInfo);
-        return Kernel32.INSTANCE.GetTickCount() - lastInputInfo.dwTime;
+    public static long getIdleTimeMillisWin32(ESLogger logger) {
+        try{
+            WinUser.LASTINPUTINFO lastInputInfo = new WinUser.LASTINPUTINFO();
+            User32.INSTANCE.GetLastInputInfo(lastInputInfo);
+            int tickCount = Kernel32.INSTANCE.GetTickCount();
+            int dwTime = lastInputInfo.dwTime;
+            
+            logger.info(String.format("TickCount = %d, dwTime = %d", tickCount,dwTime));
+            
+            return tickCount - dwTime;
+        }catch(Exception ex){
+            Logger.getGlobal().log(Level.SEVERE,ex.getMessage());
+        }
+        return 0;
     }
 
     enum State {

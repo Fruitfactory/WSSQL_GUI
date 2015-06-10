@@ -5,21 +5,10 @@
  */
 package com.fruitfactory.pstriver.useractivity;
 
-import com.fruitfactory.pstriver.helpers.PstReaderStatus;
-
 /**
  *
  * @author Yariki
  */
-public interface IReaderControl {
-    boolean isPaused();
-
-    boolean isStopped();
-
-    void pauseThread();
-
-    void resumeThread();
-    
-    PstReaderStatus getStatus();
-    
+public interface IInputHookIdle {
+    int getIdleTime();
 }

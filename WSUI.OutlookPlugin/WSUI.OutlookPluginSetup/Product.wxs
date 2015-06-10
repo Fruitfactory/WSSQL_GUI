@@ -33,6 +33,7 @@
              Absent="disallow"
              TypicalDefault="install"
              AllowAdvertise="no"
+             ConfigurableDirectory="ELASTICSEASRCHINSTALLFOLDER"
              InstallDefault="local"
              >
 

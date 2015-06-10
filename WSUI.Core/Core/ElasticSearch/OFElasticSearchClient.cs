@@ -329,6 +329,8 @@ namespace OF.Core.Core.ElasticSearch
                 pst = new
                 {
                     update_rate = "1h",
+                    online_time = "3m",
+                    idle_time = "3m",
                     pst_list = listOfFiles,
                     index_name = DefaultInfrastructureName
                 }

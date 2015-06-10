@@ -377,7 +377,7 @@ namespace OF.Module.ViewModel
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
             if (Directory.Exists(path))
             {
-                var files = Directory.GetFiles(path, "*.pst");//new List<string>() { "F:\\Visual\\iyariki.ya@gmail.com.ost" }; //
+                var files = Directory.GetFiles(path, "*.pst");//new List<string>() { "F:\\Visual\\WORK\\vincent@metajure.com.ost", "F:\\Visual\\WORK\\vpayette@hotmail.com.ost" }; // 
                 var files1 = Directory.GetFiles(path, "*.ost");
                 var list = new List<string>(files);
                 list.AddRange(files1);
