@@ -13,6 +13,6 @@
 
 
 
-__declspec(dllexport) int GetIdleTime();
+__declspec(dllexport) long GetIdleTime();
 
 // TODO: reference additional headers your program requires here

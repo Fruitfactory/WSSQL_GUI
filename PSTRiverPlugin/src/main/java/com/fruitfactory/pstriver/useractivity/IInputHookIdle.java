@@ -10,5 +10,5 @@ package com.fruitfactory.pstriver.useractivity;
  * @author Yariki
  */
 public interface IInputHookIdle {
-    int getIdleTime();
+    long getIdleTime();
 }

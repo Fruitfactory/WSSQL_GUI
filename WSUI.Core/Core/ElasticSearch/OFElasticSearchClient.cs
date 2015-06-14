@@ -160,6 +160,25 @@ namespace OF.Core.Core.ElasticSearch
             return Raw.Get<OFRiverStatusInfo>("_river", DefaultInfrastructureName, "pstriverstatus");
         }
 
+        public void SetUserActivityTime(int seconds)
+        {
+            try
+            {
+                var idleTime = new
+                {
+                    idle_time = seconds
+                };
+                var body = Serializer.Serialize(idleTime, SerializationFormatting.Indented);
+                var response = Raw.IndexPut("_river", DefaultInfrastructureName, "useractivity", body);
+                OFLogger.Instance.LogInfo("Set User Activity: {0}l Response: Code => {1}; Success => {2}", seconds, response.HttpStatusCode, response.Success);
+            }
+            catch (Exception ex)
+            {   
+                OFLogger.Instance.LogError(ex.Message);
+            }                        
+        } 
+
+
         public void CreateWarms()
         {
             try

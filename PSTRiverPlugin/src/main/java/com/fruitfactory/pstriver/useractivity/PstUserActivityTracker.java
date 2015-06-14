@@ -56,7 +56,7 @@ public class PstUserActivityTracker extends Thread {
         while(!stopped){
             try{
                 PstWin32IdleTime.State state = PstWin32IdleTime.State.UNKNOWN;
-                long idleSec = this.hookIdleTime.getIdleTime() / 1000; // PstWin32IdleTime.getIdleTimeMillisWin32(logger) / 1000;
+                long idleSec = this.hookIdleTime.getIdleTime();// / 1000; // PstWin32IdleTime.getIdleTimeMillisWin32(logger) / 1000;
                 
                 System.out.println(String.format("Idle Sec = %d", idleSec));
                 logger.info("Tracker: " + String.format("Idle Sec = %d", idleSec));

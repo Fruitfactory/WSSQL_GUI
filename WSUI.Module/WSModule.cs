@@ -4,6 +4,7 @@ using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using OF.Core.Core.ElasticSearch;
+using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 using OF.Core.Utils;
@@ -86,6 +87,8 @@ namespace OF.Module
             _unityContainer.RegisterType<IElasticSearchInitializationIndex, OFElasticSearchClient>();
             _unityContainer.RegisterType<IElasticSearchView, ElasticSearchView>();
             _unityContainer.RegisterType<IElasticSearchViewModel, ElasticSearchViewModel>();
+
+            _unityContainer.RegisterType<IUserActivityTracker, OFUserActivityTracker>();
             
 
             watch.Stop();

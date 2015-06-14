@@ -149,6 +149,7 @@
     <Compile Include="Data\ElasticSearch\Response\OFShardsRaw.cs" />
     <Compile Include="Data\ElasticSearch\Response\WSUIStatusItem.cs" />
     <Compile Include="Data\ElasticSearch\Response\WSUIStatusResponse.cs" />
+    <Compile Include="Helpers\OFUserActivityTracker.cs" />
     <Compile Include="Interfaces\IElasticSearchInitializationIndex.cs" />
     <Compile Include="Core\ElasticSearch\OFElasticSearchClient.cs" />
     <Compile Include="Core\Event\BasePayloadEvent.cs" />
@@ -277,6 +278,7 @@
     <Compile Include="Interfaces\ISearchSystem.cs" />
     <Compile Include="Interfaces\ISystemSearchResult.cs" />
     <Compile Include="Interfaces\ITerm.cs" />
+    <Compile Include="Interfaces\IUserActivityTracker.cs" />
     <Compile Include="Interfaces\IWSAction.cs" />
     <Compile Include="Interfaces\IWSUIAttribute.cs" />
     <Compile Include="Logger\OFLogger.cs" />

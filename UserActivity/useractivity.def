@@ -1,0 +1,4 @@
+LIBRARY "UserActivity"
+
+EXPORTS
+   GetIdleTime

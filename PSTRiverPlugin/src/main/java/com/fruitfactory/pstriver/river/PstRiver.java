@@ -11,9 +11,7 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
 import com.fruitfactory.pstriver.rest.PstStatusRepository;
 import com.fruitfactory.pstriver.useractivity.IInputHookManage;
 import com.fruitfactory.pstriver.useractivity.IReaderControl;
-import com.fruitfactory.pstriver.useractivity.PstInputHook;
 import com.fruitfactory.pstriver.useractivity.PstLastInputEventTracker;
-import com.fruitfactory.pstriver.useractivity.PstNativeHook;
 import com.fruitfactory.pstriver.useractivity.PstUserActivityTracker;
 
 import com.fruitfactory.pstriver.utils.PstFeedDefinition;
@@ -94,7 +92,7 @@ public class PstRiver extends AbstractRiverComponent implements River {
             TimeValue onlineTime = XContentMapValues.nodeTimeValue(feed.get(PstFeedDefinition.ONLINE_TIME), TimeValue.timeValueMinutes(2));
             TimeValue idleTime = XContentMapValues.nodeTimeValue(feed.get(PstFeedDefinition.IDLE_TIME), TimeValue.timeValueMinutes(2));
             this._indexName = XContentMapValues.nodeStringValue(feed.get(PstFeedDefinition.INDEX_NAME), riverName.name());
-            logger.info(LOG_TAG + " _indexName" + this._indexName );
+            logger.info(LOG_TAG + " _indexName = " + this._indexName );
 
             String[] pstList = PstFeedDefinition.getListOfPst(settings.settings(), PstFeedDefinition.PST_LIST_PATH);
             _definition = new PstFeedDefinition(riverName.getName(), pstList, updateRate,onlineTime,idleTime);
@@ -103,6 +101,14 @@ public class PstRiver extends AbstractRiverComponent implements River {
             this._indexName = riverName.getName();
         }
         logger.warn(LOG_TAG + "River was created...");
+        String es_home_path = System.getProperty("es.path.home");
+        if(es_home_path != null && !es_home_path.isEmpty()){
+            System.setProperty("jna.library.path", es_home_path + "\\lib\\" );
+        }else{
+            System.setProperty("jna.library.path", "f:\\Visual\\WORK\\elasticsearch\\elasticsearch\\lib\\" );
+        }
+        logger.warn(LOG_TAG + es_home_path);
+        
     }
 
     @Override
@@ -127,6 +133,8 @@ public class PstRiver extends AbstractRiverComponent implements River {
                 return;
             }
         }
+        
+        
         logger.warn(LOG_TAG + "River is creating mapping...");
         try {
             pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE, PstMetadataTags.buildPstEmailMapping());
@@ -317,17 +325,24 @@ public class PstRiver extends AbstractRiverComponent implements River {
                     for(Thread r : _readers){
                         readerControls.add((IReaderControl)r);
                     }
-                    PstUserActivityTracker tracker = new PstUserActivityTracker(this._inputHookManage,readerControls,(int)_def.getOnlineTime().getSeconds(),(int)_def.getIdleTime().getSeconds(),logger);
-                    tracker.startTracking();
-                    logger.info(LOG_TAG + "User activity tracker was created...");
+                    
+                    PstUserActivityTracker tracker =  null;
+                    
+                    if(riverStatus == PstRiverStatus.InitialIndexing){
+                        tracker = new PstUserActivityTracker(this._inputHookManage,readerControls,(int)_def.getOnlineTime().getSeconds(),(int)_def.getIdleTime().getSeconds(),logger);
+                        tracker.startTracking();
+                        logger.info(LOG_TAG + "User activity tracker was created...");
+                    }
                     
                     for(Thread reader : _readers){
                         reader.start();
                         reader.join();
                         ((PstOutlookFileReader)reader).close();
                     }
-                    tracker.stopTracking();
-                    tracker.join();
+                    if(tracker != null){
+                        tracker.stopTracking();
+                        tracker.join();
+                    }
                     readerControls.clear();
 
                 } catch (InterruptedException e) {

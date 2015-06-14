@@ -3,16 +3,20 @@
 
 #include "stdafx.h"
 
-int GetIndldeTime()
+long GetIdleTime()
 {
-	PLASTINPUTINFO plAstInputInfo = new LASTINPUTINFO();
-	if(GetLastInputInfo(plAstInputInfo))
-	{
-		int tickCount = GetTickCount();
-		int result = tickCount - plAstInputInfo->dwTime;
-		delete plAstInputInfo;
-		plAstInputInfo = nullptr;
-		return result;
-	}
-	return -1;
+	LASTINPUTINFO pLastInputInfo = {0};
+	pLastInputInfo.cbSize = sizeof(LASTINPUTINFO);
+	GetLastInputInfo(&pLastInputInfo);
+#ifdef X86
+	long tickCount = GetTickCount();
+	long result = tickCount - pLastInputInfo.dwTime;
+	return result;
+#else
+	ULONGLONG tickCount = GetTickCount64();
+	long result = tickCount - pLastInputInfo.dwTime;
+	return result;
+
+#endif
+	
 }

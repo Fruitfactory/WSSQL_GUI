@@ -25,6 +25,8 @@ public class PstStatusRepository {
     
     private static HashMap<String, PstReaderStatusInfo> _repository = new HashMap<String, PstReaderStatusInfo>();
     private static HashMap<String,PstRiverStatusInfo> _reposirotyRiverStatus = new HashMap<String, PstRiverStatusInfo>();
+    private static int lastUserActivity = 0;
+    private static Object lockUserActivity = new Object();
 
     public static void setStatusInfo(PstReaderStatusInfo statusInfo) {
         synchronized (_repository) {
@@ -103,5 +105,15 @@ public class PstStatusRepository {
             return status;
         }
     }
-
+    
+    public static void setLastUserActivity(String value){
+        synchronized(lockUserActivity){
+            lastUserActivity = Integer.parseInt(value);
+        }
+    }
+    public static int getLastUserActivity(){
+        synchronized(lockUserActivity){
+            return lastUserActivity;
+        }
+    }
 }

@@ -27,6 +27,13 @@ namespace OF.Core.Win32
             public int y = 0;
         }
 
+        public struct LASTINPUTINFO
+        {
+            public uint cbSize;
+
+            public uint dwTime;
+        }
+
         #endregion [struct]
 
         #region [function]
@@ -53,6 +60,16 @@ namespace OF.Core.Win32
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
+        [DllImport("User32.dll")]
+        private static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
+
+        [DllImport("Kernel32.dll")]
+        private static extern uint GetTickCount();
+
+        [DllImport("Kernel32.dll")]
+        private static extern uint GetLastError();
+
+       
         #endregion [function]
 
         public static Point TransformToScreen(Point point, Visual relativeTo)
@@ -84,6 +101,14 @@ namespace OF.Core.Win32
             ClientToScreen(hwndSource.Handle, pointScreenPixels);
             return new Point(pointScreenPixels.x, pointScreenPixels.y);
         }
-
+ 
+        public static uint GetIdleTime()
+        {
+            LASTINPUTINFO lastInPut = new LASTINPUTINFO();
+            lastInPut.cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(lastInPut);
+            GetLastInputInfo(ref lastInPut);
+            var tickCount = GetTickCount();
+            return (tickCount - lastInPut.dwTime);
+        }
     }
 }

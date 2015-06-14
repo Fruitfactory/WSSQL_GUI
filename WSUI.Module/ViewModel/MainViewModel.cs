@@ -73,6 +73,7 @@ namespace OF.Module.ViewModel
         private int _selectedUIItemIndex;
         private IContactDetailsViewModel _contactDetails;
         private IElasticSearchViewModel _elasticSearchViewModel;
+        private IUserActivityTracker _userActivityTracker;
 
         public MainViewModel(IUnityContainer container, IKindsView kindView, IEventAggregator eventAggregator)
         {
@@ -90,7 +91,8 @@ namespace OF.Module.ViewModel
             }
             _token = _eventAggregator.GetEvent<SelectedChangedPayloadEvent>().Subscribe(OnSelectedItemChanged);
             _elasticSearchViewModel = _container.Resolve<IElasticSearchViewModel>();
-            
+            _userActivityTracker = _container.Resolve<IUserActivityTracker>();
+
         }
 
         public IKindsView KindsView { get; protected set; }
@@ -647,6 +649,7 @@ namespace OF.Module.ViewModel
                     break;
 
                 case WSActionType.Quit:
+                    StopUserActivityTracker();
                     Clear();
                     break;
 
@@ -840,6 +843,10 @@ namespace OF.Module.ViewModel
                         _elasticSearchViewModel.Show(true);
                     }
                 }
+                if (_userActivityTracker.IsNotNull())
+                {
+                    _userActivityTracker.Start();
+                }
             }
             catch (Exception ex)
             {
@@ -962,6 +969,13 @@ namespace OF.Module.ViewModel
         private BaseSearchObject GetKindItemTrackedObject()
         {
             return _currentItem != null ? _currentItem.CurrentTrackedObject : null;
+        }
+
+        private void StopUserActivityTracker()
+        {
+            if (_userActivityTracker.IsNull())
+                return;
+            _userActivityTracker.Stop();
         }
 
     }
