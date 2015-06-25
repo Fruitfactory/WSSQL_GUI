@@ -81,16 +81,21 @@ namespace OF.Infrastructure.Implements.Rules
 	    protected override OFBody GetSearchBody()
 	    {
             var preparedCriterias = GetKeywordsList();
-
 	        var body = new OFBody();
-            var query = new OFQueryBoolShould<OFBaseTerm>();
-            body.query = query;
+            
             if (preparedCriterias.Count > 1)
             {
+
+                var queries = new OFQueryBoolConditions();
+                body.query = queries;
                 foreach (var preparedCriteria in preparedCriterias)
                 {
+
+                    var should = new OFQueryBoolShould<OFBaseTerm>();
+
                     var fn = new OFFirstNameTerm();
                     fn.SetValue(preparedCriteria);
+
                     var ln = new OFLastNameTerm();
                     ln.SetValue(preparedCriteria);
                     var ea11 = new OFEmailaddress1Term();
@@ -99,15 +104,21 @@ namespace OF.Infrastructure.Implements.Rules
                     ea22.SetValue(preparedCriteria);
                     var ea33 = new OFEmailaddress3Term();
                     ea33.SetValue(preparedCriteria);
-                    query._bool.should.Add(fn);
-                    query._bool.should.Add(ln);
-                    query._bool.should.Add(ea11);
-                    query._bool.should.Add(ea22);
-                    query._bool.should.Add(ea33);
-                    
+
+                    should._bool.should.Add(fn);
+                    should._bool.should.Add(ln);
+                    should._bool.should.Add(ea11);
+                    should._bool.should.Add(ea22);
+                    should._bool.should.Add(ea33);
+
+                    var must = new OFMustCondition<object>(){Value = should};
+
+                    queries._bool.Add(must);
                 }
                 return body;
             }
+            var query = new OFQueryBoolShould<OFBaseTerm>();
+            body.query = query;
             var firstName = new OFFirstNameTerm();
             firstName.SetValue(Query);
 	        var lastName = new OFLastNameTerm();

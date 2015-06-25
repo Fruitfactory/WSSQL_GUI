@@ -377,6 +377,11 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
                 }
                 AttachmentHelper helper = new AttachmentHelper(attachment.getLongFilename(), attachment.getLongPathname(), attachment.getFilesize(), attachment.getMimeTag());
                 listAttachments.add(helper);
+                
+                if(helper.getFilename().trim().equals("1st and 2nd ship.xls"))
+                {
+                    System.out.print(helper.getFilename());
+                }
 
                 saveAttachment(attachment, entryID);
             }

@@ -88,12 +88,17 @@ namespace OF.Infrastructure.Implements.Rules
             var preparedCriterias = GetKeywordsList();
 
             var body = new OFBody();
-            var query = new OFQueryBoolShould<OFBaseTerm>();
-            body.query = query;
+           
             if (preparedCriterias.Count > 1)
             {
+
+                var queries = new OFQueryBoolConditions();
+                body.query = queries;
+
                 foreach (var preparedCriteria in preparedCriterias)
                 {
+                    var should = new OFQueryBoolShould<OFBaseTerm>();
+
                     var tn = new OFToNameTerm();
                     tn.SetValue(preparedCriteria);
                     var ta = new OFToAddressTerm();
@@ -106,16 +111,24 @@ namespace OF.Infrastructure.Implements.Rules
                     fn.SetValue(preparedCriteria);
                     var fa = new OFFromAddressTerm();
                     fa.SetValue(preparedCriteria);
-                    query._bool.should.Add(tn);
-                    query._bool.should.Add(ta);
-                    query._bool.should.Add(cn);
-                    query._bool.should.Add(sa);
-                    query._bool.should.Add(fn);
-                    query._bool.should.Add(fa);
 
+                    should._bool.should.Add(tn);
+                    should._bool.should.Add(ta);
+                    should._bool.should.Add(cn);
+                    should._bool.should.Add(sa);
+                    should._bool.should.Add(fn);
+                    should._bool.should.Add(fa);
+
+                    var mustCond = new OFMustCondition<object> {Value = should};
+
+                    queries._bool.Add(mustCond);
                 }
                 return body;
             }
+
+            var query = new OFQueryBoolConditions(); //new OFQueryBoolShould<OFBaseTerm>();
+            body.query = query;
+            var should1 = new OFQueryBoolShould<OFBaseTerm>();
             var toName = new OFToNameTerm();
             toName.SetValue(Query);
             var toAddress = new OFToAddressTerm();
@@ -128,12 +141,17 @@ namespace OF.Infrastructure.Implements.Rules
             fromName.SetValue(Query);
             var fromAddress = new OFFromAddressTerm();
             fromAddress.SetValue(Query);
-            query._bool.should.Add(toName);
-            query._bool.should.Add(toAddress);
-            query._bool.should.Add(ccName);
-            query._bool.should.Add(ccAddress);
-            query._bool.should.Add(fromName);
-            query._bool.should.Add(fromAddress);
+            should1._bool.should.Add(toName);
+            should1._bool.should.Add(toAddress);
+            should1._bool.should.Add(ccName);
+            should1._bool.should.Add(ccAddress);
+            should1._bool.should.Add(fromName);
+            should1._bool.should.Add(fromAddress);
+
+            var must = new OFMustCondition<object>(){Value = should1};
+
+            query._bool.Add(must);
+
             return body;
         }
 
@@ -151,8 +169,14 @@ namespace OF.Infrastructure.Implements.Rules
             {
                 var item = group.First();
 
-                var listResult = GetEmailAddress(item.To, arr); //GetRecepient(item.FromName, item.FromAddress, arr) ?? 
+                var listResult = GetEmailAddress(item.To, arr); 
                 listResult.AddRange(GetEmailAddress(item.Cc, arr));
+                var recipient = GetRecepient(item.FromName, item.FromAddress, arr);
+                if (recipient.IsNotNull())
+                {
+                    listResult.Add(recipient);
+                }
+
                 if (!listResult.Any())
                 {
                     continue;
@@ -164,6 +188,7 @@ namespace OF.Infrastructure.Implements.Rules
             {
                 LastDate = Result.Last().DateReceived;
             }
+            result = result.GroupBy(r => r.ContactName).Select(s => s.FirstOrDefault()).ToList();
             Result.Clear();
             if (result.Count > 0)
             {

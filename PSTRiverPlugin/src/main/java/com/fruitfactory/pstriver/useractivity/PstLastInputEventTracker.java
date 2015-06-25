@@ -6,11 +6,6 @@
 package com.fruitfactory.pstriver.useractivity;
 
 import com.fruitfactory.pstriver.rest.PstStatusRepository;
-import com.sun.jna.Native;
-import com.sun.jna.Structure;
-import com.sun.jna.platform.win32.Kernel32;
-import com.sun.jna.platform.win32.WinDef;
-import com.sun.jna.win32.StdCallLibrary;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;

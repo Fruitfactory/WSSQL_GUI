@@ -18,11 +18,16 @@ import org.elasticsearch.common.unit.TimeValue;
  */
 public class PstUserActivityTracker extends Thread {
     
+     enum State {
+
+        UNKNOWN, ONLINE, IDLE, AWAY
+    };
+    
     private volatile boolean stopped = false;
     private List<IReaderControl> readers;
     private int onlineTime;
     private int idleTime;
-    private PstWin32IdleTime.State oldState = PstWin32IdleTime.State.UNKNOWN;
+    private State oldState = State.UNKNOWN;
     private ESLogger logger;
     private IInputHookIdle hookIdleTime;
 
@@ -55,12 +60,12 @@ public class PstUserActivityTracker extends Thread {
     public void run() {
         while(!stopped){
             try{
-                PstWin32IdleTime.State state = PstWin32IdleTime.State.UNKNOWN;
+                State state = State.UNKNOWN;
                 long idleSec = this.hookIdleTime.getIdleTime();// / 1000; // PstWin32IdleTime.getIdleTimeMillisWin32(logger) / 1000;
                 
                 System.out.println(String.format("Idle Sec = %d", idleSec));
                 logger.info("Tracker: " + String.format("Idle Sec = %d", idleSec));
-                PstWin32IdleTime.State newState = idleSec < onlineTime ? PstWin32IdleTime.State.ONLINE: idleSec > idleTime ? PstWin32IdleTime.State.AWAY : PstWin32IdleTime.State.IDLE;
+                State newState = idleSec < onlineTime ? State.ONLINE: idleSec > idleTime ? State.AWAY : State.IDLE;
                 if(newState != state){
                     processState(newState);
                 }
@@ -72,7 +77,7 @@ public class PstUserActivityTracker extends Thread {
         }
     } 
     
-    private void processState(PstWin32IdleTime.State state){
+    private void processState(State state){
         if(readers == null || readers.isEmpty()){
             return;
         }

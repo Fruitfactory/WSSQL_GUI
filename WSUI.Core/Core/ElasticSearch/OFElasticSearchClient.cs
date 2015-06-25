@@ -11,6 +11,7 @@ using Microsoft.Practices.Unity;
 using Nest;
 using Newtonsoft.Json;
 using OF.Core.Data.ElasticSearch;
+using OF.Core.Data.ElasticSearch.Converter;
 using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
@@ -35,6 +36,7 @@ namespace OF.Core.Core.ElasticSearch
         private static readonly int WARM_UP_SIZER = 100;
 
         private ElasticClient _internalElasticClient;
+        private JsonSerializerSettings _settings;
 
         [InjectionConstructor]
         public OFElasticSearchClient()
@@ -59,6 +61,9 @@ namespace OF.Core.Core.ElasticSearch
                 var node = new Uri(host);
                 var settings = new ConnectionSettings(node, defaultIndexName);
                 ElasticClient = new ElasticClient(settings);
+                _settings = new JsonSerializerSettings();
+                _settings.Converters.Add(new OFConditionCollectionConverter());
+                _settings.Formatting = Formatting.Indented;
             }
             catch (Exception ex)
             {
@@ -80,7 +85,8 @@ namespace OF.Core.Core.ElasticSearch
 
         public IRawSearchResult<T> RawSearch<T>(object body) where T : class, new()
         {
-            byte[] bodyBytes = Serializer.Serialize(body, SerializationFormatting.Indented);
+
+            byte[] bodyBytes = Serialize(body);
             IEnumerable<T> listResult = null;
             int took = 0;
             int total = 0;
@@ -360,6 +366,21 @@ namespace OF.Core.Core.ElasticSearch
             OFLogger.Instance.LogInfo("Status: {0}  Success: {1}", response.HttpStatusCode, response.Success);
 
 
+        }
+
+        private byte[] Serialize(object obj)
+        {
+            if (obj.IsNull())
+            {
+                return null;
+            }
+
+            var strResult = JsonConvert.SerializeObject(obj, _settings);
+            if (strResult.IsEmpty())
+            {
+                return null;
+            }
+            return Encoding.UTF8.GetBytes(strResult);
         }
 
 

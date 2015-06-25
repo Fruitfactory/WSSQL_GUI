@@ -5,10 +5,10 @@ namespace OF.Core.Data.ElasticSearch.Request.Base
 {
     public abstract class OFBaseInternalBool<T> where T : class
     {
-         [JsonProperty("bool")]
+        [JsonProperty("bool")]
         public Dictionary<string,List<T>> _bool { get; set; }
 
-         public OFBaseInternalBool()
+        protected OFBaseInternalBool()
         {
             _bool = new Dictionary<string, List<T>>();
         }
