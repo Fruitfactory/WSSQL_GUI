@@ -150,12 +150,14 @@
     <Compile Include="Core\LazyKind.cs" />
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Interface\Service\ICommandStrategy.cs" />
+    <Compile Include="Interface\Service\IElasticSearchRiverSettingsWindow.cs" />
     <Compile Include="Interface\Service\INavigationService.cs" />
     <Compile Include="Interface\ViewModel\IAdvancedSearchViewModel.cs" />
     <Compile Include="Interface\ViewModel\IContactAttachmentDetailsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IContactDetailsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IContactEmailDetailsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IContactKindDetailsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IElasticSearchRiverSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IElasticSearchViewModel.cs" />
     <Compile Include="Interface\View\IAllDataView.cs" />
     <Compile Include="Interface\View\IContactAttachmentDetailsView.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="Interface\View\IDataKindView.cs" />
     <Compile Include="Interface\View\IDataView.cs" />
     <Compile Include="Interface\ViewModel\IKindItem.cs" />
+    <Compile Include="Interface\View\IElasticSearchRiverSettingsView.cs" />
     <Compile Include="Interface\View\IElasticSearchView.cs" />
     <Compile Include="Interface\View\IKindsView.cs" />
     <Compile Include="Interface\ViewModel\ILazyKind.cs" />
@@ -213,6 +216,7 @@
     <Compile Include="ViewModel\AttachmentViewModel.cs" />
     <Compile Include="ViewModel\ContactDetailsViewModel.cs" />
     <Compile Include="ViewModel\ContactViewModel.cs" />
+    <Compile Include="ViewModel\ElasticSearchRiverSettingsViewModel.cs" />
     <Compile Include="ViewModel\ElasticSearchViewModel.cs" />
     <Compile Include="ViewModel\EmailViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -251,6 +255,9 @@
     </Compile>
     <Compile Include="View\Controls\TextboxAutoComplete.xaml.cs">
       <DependentUpon>TextboxAutoComplete.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ElasticSearchRiverSettingsView.xaml.cs">
+      <DependentUpon>ElasticSearchRiverSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ElasticSearchView.xaml.cs">
       <DependentUpon>ElasticSearchView.xaml</DependentUpon>
@@ -350,6 +357,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Controls\TextboxAutoComplete.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ElasticSearchRiverSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

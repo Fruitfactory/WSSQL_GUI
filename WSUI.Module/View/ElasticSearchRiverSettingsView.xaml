@@ -1,0 +1,137 @@
+﻿<UserControl x:Class="OF.Module.View.ElasticSearchRiverSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Service\ResourceTemplate.xaml" />
+                <ResourceDictionary Source="../Service/SearchButtonStyle.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="StackPanel" BasedOn="{StaticResource {x:Type StackPanel}}">
+                <Setter Property="Margin" Value="0 3 0 0"></Setter>
+            </Style>        
+
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <TabControl>
+            
+            <Controls:MetroTabItem Header="Indexing">
+                <GroupBox Header="Schedule">
+                    <StackPanel Orientation="Vertical">
+                        
+                        <Label>Update my entire index:</Label>
+                        
+                        <Grid Margin="15 5 2 5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!--row 0-->
+                            
+                            <RadioButton 
+                                GroupName="Main" 
+                                IsChecked="{Binding EveryNightOrIdle,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                            </RadioButton>
+                            <StackPanel 
+                                Grid.Column="1"
+                                Orientation="Horizontal">
+                                <Label 
+                                >
+                                    Every night and when my computer is idle
+                                </Label>
+                            </StackPanel>
+                            
+                            
+                            
+                            <!--row 1-->
+                            <RadioButton
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                GroupName="Main" 
+                                IsChecked="{Binding OnlyAt,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                            </RadioButton>
+                            <StackPanel 
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Orientation="Horizontal">
+                                <Label>
+                                    Only at:
+                                </Label>
+                                <ComboBox 
+                                    ItemsSource="{Binding HoursSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedItem="{Binding HourOnlyAt,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                          >
+                                </ComboBox>
+                                <ComboBox
+                                    SelectedItem="{Binding HourType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                    Margin="5 0 0 0"
+                                    >
+                                    <ComboBoxItem>AM</ComboBoxItem>
+                                    <ComboBoxItem>PM</ComboBoxItem>
+                                </ComboBox>
+                            </StackPanel>
+                            
+                            <!--row 2-->
+                            <RadioButton
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                GroupName="Main" 
+                                IsChecked="{Binding EveryHours,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                            </RadioButton>
+                            <StackPanel 
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Orientation="Horizontal">
+                                <Label>
+                                    Repeat every:
+                                </Label>
+                                <ComboBox 
+                                    ItemsSource="{Binding HoursSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedItem="{Binding RepeatHours,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                          >
+                                </ComboBox>
+                                <Label>h</Label>
+                            </StackPanel>
+                            
+                            <!--row 3-->
+                            <RadioButton
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                GroupName="Main" 
+                                IsChecked="{Binding Never,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                            </RadioButton>
+                            <StackPanel 
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Orientation="Horizontal">
+                                <Label>
+                                    Never
+                                </Label>
+                            </StackPanel>
+                            
+                        </Grid>
+
+                        <Label>You can always update your mail index by clicking "Index Data" from the OutlookFinder menu</Label>
+
+                    </StackPanel>
+                </GroupBox>
+            </Controls:MetroTabItem>
+            
+        </TabControl>        
+    </Grid>
+</UserControl>

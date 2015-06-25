@@ -2,6 +2,6 @@
 {
     public interface IElasticSearchRiverSettingsViewModel
     {
-         
+        object View { get; }
     }
 }
