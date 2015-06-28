@@ -11,6 +11,7 @@
         Hide,
         Quit,
         ClearText,
-        ShowContact
+        ShowContact,
+        Settings
     }
 }

@@ -103,6 +103,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Output\Nest.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Output\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
@@ -277,6 +281,9 @@
     <Compile Include="View\SidebarKindsView.xaml.cs">
       <DependentUpon>SidebarKindsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Windows\ElasticSearchRiverSettingsWindow.xaml.cs">
+      <DependentUpon>ElasticSearchRiverSettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WSModule.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -388,6 +395,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Windows\ElasticSearchRiverSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\document-excel.png" />
@@ -486,6 +497,7 @@
     <Resource Include="Images\openfolder.png" />
     <Resource Include="Images\picture.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
-using OF.Core.Core.ElasticSearch;
+using OF.Core.ElasticSearch.Clients;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
@@ -13,6 +13,7 @@ using OF.Module.Interface.Service;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
 using OF.Module.View;
+using OF.Module.View.Windows;
 using OF.Module.ViewModel;
 using Action = System.Action;
 
@@ -84,11 +85,19 @@ namespace OF.Module
             _unityContainer.RegisterType<ISettingsView<AdvancedSearchViewModel>, AdvancedSearchSettingsView>();
             _unityContainer.RegisterType<IDataView<AdvancedSearchViewModel>, AdvancedSearchDataView>();
 
-            _unityContainer.RegisterType<IElasticSearchInitializationIndex, OFElasticSearchClient>();
+            _unityContainer.RegisterType<IElasticSearchInitializationIndex, OFElasticInitializingClient>();
+            _unityContainer.RegisterType<IElasticTrackingClient, OFElasticTrackingClient>();
+            _unityContainer.RegisterType<IElasticSearchClient, OFElasticSearchClient>();
+
             _unityContainer.RegisterType<IElasticSearchView, ElasticSearchView>();
             _unityContainer.RegisterType<IElasticSearchViewModel, ElasticSearchViewModel>();
 
             _unityContainer.RegisterType<IUserActivityTracker, OFUserActivityTracker>();
+
+            _unityContainer.RegisterType<IElasticSearchRiverSettingsWindow, ElasticSearchRiverSettingsWindow>();
+            _unityContainer.RegisterType<IElasticSearchRiverSettingsView, ElasticSearchRiverSettingsView>();
+            _unityContainer.RegisterType<IElasticSearchRiverSettingsViewModel, ElasticSearchRiverSettingsViewModel>();
+            _unityContainer.RegisterType<IElasticUpdateSettingsClient, OFElasticUpdateSettingsClient>();
             
 
             watch.Stop();

@@ -239,7 +239,7 @@ namespace OF.Module.ViewModel
 #endif
             if (IsServiceRunning)
             {
-                var resp = ElasticSearchClient.IndexExists(OFElasticSearchClient.DefaultInfrastructureName);
+                var resp = ElasticSearchClient.IndexExists(OFElasticSearchClientBase.DefaultInfrastructureName);
                 IsIndexExisted = resp.Exists;//false;//
                 var riverStatusResp = ElasticSearchClient.GetRiverStatus();
                 IsInitialIndexinginProgress = riverStatusResp.Response.IsNotNull() &&
@@ -317,26 +317,6 @@ namespace OF.Module.ViewModel
                 {
                     return;
                 }
-
-                //double sumAll = (double)response.Response.Items.Sum(s => s.Count);
-                //double sumProcessing = response.Response.Items.Sum(s => s.Processing);
-                //int max = response.Response.Items.Max(i => i.Count);
-                //var item = response.Response.Items.FirstOrDefault(s => s.Count == max);
-                //bool isFinished = response.Response.Items.All(s => s.Status == PstReaderStatus.Finished);
-
-                //CurrentFolder = item.IsNotNull() ? item.Folder : "";
-                //CurrentProgress = (sumProcessing / sumAll) * 100.0;
-                
-                //if (isFinished && !_isFinishing)
-                //{
-                //    _isFinishing = true;
-                //    _timer.Change(Timeout.Infinite, Timeout.Infinite);
-                //    IsIndexExisted = true;
-                //    FinishedStepVisibility = Visibility.Visible;
-                //    ElasticSearchClient.CreateWarms();
-                //    OnIndexingFinished();
-                //    _isFinishing = false;
-                //}
 
                 if (response.Response.Items.All(i => i.Status == PstReaderStatus.NonStarted))
                 {

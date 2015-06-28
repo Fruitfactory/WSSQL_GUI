@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             Background="White"
+             
              mc:Ignorable="d" 
              >
     <UserControl.Resources>
@@ -13,15 +15,19 @@
                 <ResourceDictionary Source="../Service/SearchButtonStyle.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
-            <Style TargetType="StackPanel" BasedOn="{StaticResource {x:Type StackPanel}}">
+            <Style TargetType="StackPanel" >
                 <Setter Property="Margin" Value="0 3 0 0"></Setter>
             </Style>        
 
-
+            
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <TabControl>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="0" >
             
             <Controls:MetroTabItem Header="Indexing">
                 <GroupBox Header="Schedule">
@@ -46,17 +52,15 @@
                             <RadioButton 
                                 GroupName="Main" 
                                 IsChecked="{Binding EveryNightOrIdle,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                            </RadioButton>
-                            <StackPanel 
+                                <StackPanel 
                                 Grid.Column="1"
                                 Orientation="Horizontal">
-                                <Label 
+                                    <Label 
                                 >
-                                    Every night and when my computer is idle
-                                </Label>
-                            </StackPanel>
-                            
-                            
+                                        Every night and when my computer is idle
+                                    </Label>
+                                </StackPanel>
+                            </RadioButton>
                             
                             <!--row 1-->
                             <RadioButton
@@ -64,27 +68,27 @@
                                 Grid.Column="0"
                                 GroupName="Main" 
                                 IsChecked="{Binding OnlyAt,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                            </RadioButton>
-                            <StackPanel 
+                                <StackPanel 
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Orientation="Horizontal">
-                                <Label>
-                                    Only at:
-                                </Label>
-                                <ComboBox 
+                                    <Label>
+                                        Only at:
+                                    </Label>
+                                    <ComboBox 
                                     ItemsSource="{Binding HoursSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                    SelectedItem="{Binding HourOnlyAt,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedValue="{Binding HourOnlyAt,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                           >
-                                </ComboBox>
-                                <ComboBox
-                                    SelectedItem="{Binding HourType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                    </ComboBox>
+                                    <ComboBox
+                                    ItemsSource="{Binding HourTypes,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"    
+                                    SelectedValue="{Binding HourType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                     Margin="5 0 0 0"
                                     >
-                                    <ComboBoxItem>AM</ComboBoxItem>
-                                    <ComboBoxItem>PM</ComboBoxItem>
-                                </ComboBox>
-                            </StackPanel>
+                                    </ComboBox>
+                                </StackPanel>
+                            </RadioButton>
+                            
                             
                             <!--row 2-->
                             <RadioButton
@@ -92,21 +96,22 @@
                                 Grid.Column="0"
                                 GroupName="Main" 
                                 IsChecked="{Binding EveryHours,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                            </RadioButton>
-                            <StackPanel 
+                                <StackPanel 
                                 Grid.Row="2"
                                 Grid.Column="1"
                                 Orientation="Horizontal">
-                                <Label>
-                                    Repeat every:
-                                </Label>
-                                <ComboBox 
+                                    <Label>
+                                        Repeat every:
+                                    </Label>
+                                    <ComboBox 
                                     ItemsSource="{Binding HoursSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                    SelectedItem="{Binding RepeatHours,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedValue="{Binding RepeatHours,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                           >
-                                </ComboBox>
-                                <Label>h</Label>
-                            </StackPanel>
+                                    </ComboBox>
+                                    <Label>h</Label>
+                                </StackPanel>
+                            </RadioButton>
+                            
                             
                             <!--row 3-->
                             <RadioButton
@@ -114,15 +119,16 @@
                                 Grid.Column="0"
                                 GroupName="Main" 
                                 IsChecked="{Binding Never,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                            </RadioButton>
-                            <StackPanel 
+                                <StackPanel 
                                 Grid.Row="3"
                                 Grid.Column="1"
                                 Orientation="Horizontal">
-                                <Label>
-                                    Never
-                                </Label>
-                            </StackPanel>
+                                    <Label>
+                                        Never
+                                    </Label>
+                                </StackPanel>
+                            </RadioButton>
+                            
                             
                         </Grid>
 
@@ -132,6 +138,32 @@
                 </GroupBox>
             </Controls:MetroTabItem>
             
-        </TabControl>        
+        </TabControl>     
+        
+        <Grid
+            Grid.Row="1"
+            HorizontalAlignment="Right">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="75"></ColumnDefinition>
+                <ColumnDefinition Width="75"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            
+            <Label Margin="3">These changes will take effect when you estart your computer.</Label>
+            
+            <Button 
+                Grid.Column="1"
+                Margin="3"
+                Command="{Binding OKCommand}">
+                OK
+            </Button>
+            <Button
+                Grid.Column="2"
+                Margin="3"
+                Command="{Binding CancelCommand}">
+                Cancel
+            </Button>
+        </Grid>
+        
     </Grid>
 </UserControl>

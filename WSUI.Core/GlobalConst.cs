@@ -26,5 +26,7 @@ namespace OF.Core
 
         public static readonly string ExchangeEmailType = "EX";
 
+        public static readonly string SettingsRiverFile = "riversettings";
+
     }
 }

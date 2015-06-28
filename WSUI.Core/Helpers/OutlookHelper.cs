@@ -12,6 +12,7 @@ using Microsoft.Practices.ObjectBuilder2;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Data;
 using OF.Core.Data.ElasticSearch;
+using OF.Core.ElasticSearch.Clients;
 using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Helpers.DetectEncoding.Multilang;

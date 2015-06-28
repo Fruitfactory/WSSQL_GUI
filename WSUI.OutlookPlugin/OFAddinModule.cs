@@ -110,6 +110,8 @@ namespace OFOutlookPlugin
         private ADXRibbonButton btnMainAbout;
         private ADXOutlookAppEvents OutlookFinderEvents;
         private AddinExpress.OL.ADXOlFormsCollectionItem formRightSidebar;
+        private ADXRibbonButton mnuSettings;
+        private ADXRibbonButton mnuMainSettings;
 
         private const string DefaultNamespace = "MAPI";
 
@@ -208,6 +210,8 @@ namespace OFOutlookPlugin
             this.btnMainMenuSeparatotr = new AddinExpress.MSO.ADXRibbonMenuSeparator(this.components);
             this.btnMainAbout = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.OutlookFinderEvents = new AddinExpress.MSO.ADXOutlookAppEvents(this.components);
+            this.mnuSettings = new AddinExpress.MSO.ADXRibbonButton(this.components);
+            this.mnuMainSettings = new AddinExpress.MSO.ADXRibbonButton(this.components);
             // 
             // outlookFormManager
             // 
@@ -306,6 +310,7 @@ namespace OFOutlookPlugin
             // 
             // menuHelp
             // 
+            this.menuHelp.Controls.Add(this.mnuSettings);
             this.menuHelp.Controls.Add(this.btnHelp);
             this.menuHelp.Controls.Add(this.adxRibbonMenuSeparator1);
             this.menuHelp.Controls.Add(this.btnAbout);
@@ -444,6 +449,7 @@ namespace OFOutlookPlugin
             // 
             // mnuMain
             // 
+            this.mnuMain.Controls.Add(this.mnuMainSettings);
             this.mnuMain.Controls.Add(this.btnMainHelp);
             this.mnuMain.Controls.Add(this.btnMainMenuSeparatotr);
             this.mnuMain.Controls.Add(this.btnMainAbout);
@@ -477,6 +483,20 @@ namespace OFOutlookPlugin
             this.OutlookFinderEvents.Quit += new System.EventHandler(this.OutlookFinderEvents_Quit);
             this.OutlookFinderEvents.NewExplorer += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_NewExplorer);
             this.OutlookFinderEvents.ExplorerSelectionChange += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerSelectionChange);
+            // 
+            // mnuSettings
+            // 
+            this.mnuSettings.Caption = "Settings...";
+            this.mnuSettings.Id = "adxRibbonButton_479736670ccc428b8fc2782bc97ca1f1";
+            this.mnuSettings.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.mnuSettings.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            // 
+            // mnuMainSettings
+            // 
+            this.mnuMainSettings.Caption = "Settings...";
+            this.mnuMainSettings.Id = "adxRibbonButton_bde112361dfb425b89e394ed664825cb";
+            this.mnuMainSettings.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.mnuMainSettings.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // OFAddinModule
             // 
@@ -816,7 +836,7 @@ namespace OFOutlookPlugin
                                       : new OFRibbonManager(buttonShow, wsuiButtonSwitch, adxRibbonButtonSearch, adxRibbonEditBoxSearch, wsuiHomeSearch, wsuiButtonSearch);
                 if (!adxMainPluginCommandBar.UseForRibbon)
                 {
-                    _aboutCommandManager = new OFAboutCommandManager(btnHelp, btnAbout, btnMainHelp, btnMainAbout);
+                    _aboutCommandManager = new OFAboutCommandManager(btnHelp, btnAbout, mnuSettings,  btnMainHelp, btnMainAbout,mnuMainSettings);
                 }
                 else if (RegistryHelper.Instance.GetIsPluginUiVisible())
                 {

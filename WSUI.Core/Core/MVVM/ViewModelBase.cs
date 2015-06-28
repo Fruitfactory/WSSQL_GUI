@@ -11,11 +11,13 @@ namespace OF.Core.Core.MVVM
     {
         private IDictionary<string, object> _values;
         protected bool Disposed = false;
+        private bool _hasChanges = false;
 
         public ViewModelBase()
         {
             _values = new Dictionary<string, object>();
             Host = HostType.Unknown;
+            HasChanges = false;
         }
 
         protected virtual void OnPropertyChanged(string property)
@@ -58,6 +60,7 @@ namespace OF.Core.Core.MVVM
             {
                 _values.Add(property, value);
             }
+            HasChanges = true;
             OnPropertyChanged(propertyName);
         }
 
@@ -98,6 +101,17 @@ namespace OF.Core.Core.MVVM
         {
             Disposed = true;
         }
+
+        public bool HasChanges
+        {
+            get { return _hasChanges; }
+            set
+            {
+                _hasChanges = value;
+                OnPropertyChanged("HasChanges");
+            }
+        }
+
 
     }
 }

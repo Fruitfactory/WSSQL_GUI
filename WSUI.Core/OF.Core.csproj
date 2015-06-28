@@ -123,6 +123,7 @@
     <Compile Include="Core\Attributes\FieldAttribute.cs" />
     <Compile Include="Data\ElasticSearch\Converter\OFConditionCollectionConverter.cs" />
     <Compile Include="Data\ElasticSearch\OFQueryBoolConditions.cs" />
+    <Compile Include="Data\ElasticSearch\OFRiverMeta.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleContentTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleFilenameTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseCondition.cs" />
@@ -157,6 +158,14 @@
     <Compile Include="Data\ElasticSearch\Response\OFShardsRaw.cs" />
     <Compile Include="Data\ElasticSearch\Response\WSUIStatusItem.cs" />
     <Compile Include="Data\ElasticSearch\Response\WSUIStatusResponse.cs" />
+    <Compile Include="ElasticSearch\Clients\OFElasticUpdateSettingsClient.cs" />
+    <Compile Include="Helpers\OFObjectJsonSaveReadHelper.cs" />
+    <Compile Include="Interfaces\IElasticTrackingClient.cs" />
+    <Compile Include="Interfaces\IElasticSearchClient.cs" />
+    <Compile Include="ElasticSearch\Clients\OFElasticInitializingClient.cs" />
+    <Compile Include="ElasticSearch\Clients\OFElasticSearchClient.cs" />
+    <Compile Include="ElasticSearch\Clients\OFElasticTrackingClient.cs" />
+    <Compile Include="Enums\RiverSchedule.cs" />
     <Compile Include="Helpers\OFUserActivityTracker.cs" />
     <Compile Include="Interfaces\IElasticSearchInitializationIndex.cs" />
     <Compile Include="Core\ElasticSearch\OFElasticSearchClient.cs" />
@@ -268,6 +277,7 @@
     <Compile Include="Helpers\TempFileManager.cs" />
     <Compile Include="Interfaces\ICommandPreviewControl.cs" />
     <Compile Include="Interfaces\IElasticSearchObject.cs" />
+    <Compile Include="Interfaces\IElasticUpdateSettingsClient.cs" />
     <Compile Include="Interfaces\IEmailSearchRule.cs" />
     <Compile Include="Interfaces\IFieldCash.cs" />
     <Compile Include="Interfaces\IIndexerDataReader.cs" />

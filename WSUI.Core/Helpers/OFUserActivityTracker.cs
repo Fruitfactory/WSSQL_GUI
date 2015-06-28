@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using OF.Core.Core.ElasticSearch;
+using OF.Core.ElasticSearch.Clients;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 using OF.Core.Win32;
@@ -9,13 +10,13 @@ namespace OF.Core.Helpers
 {
     public class OFUserActivityTracker : IUserActivityTracker
     {
-        private OFElasticSearchClient _elasticSearchClient;
+        private OFElasticTrackingClient _elasticSearchClient;
         private Thread _userActivityThread;
         private volatile bool _stop;
 
         public OFUserActivityTracker()
         {
-            _elasticSearchClient = new OFElasticSearchClient();
+            _elasticSearchClient = new OFElasticTrackingClient();
             _userActivityThread = new Thread(UserActivityProcess);
         }
 
@@ -28,7 +29,7 @@ namespace OF.Core.Helpers
         public void Stop()
         {
             _stop = true;
-            _userActivityThread.Join();
+            _userActivityThread.Join(100);
         }
 
         private void UserActivityProcess(object arg)
@@ -37,7 +38,7 @@ namespace OF.Core.Helpers
             {
                 try
                 {
-                    var resp = _elasticSearchClient.IndexExists(OFElasticSearchClient.DefaultInfrastructureName);
+                    var resp = _elasticSearchClient.IndexExists(OFElasticSearchClientBase.DefaultInfrastructureName);
                     if (!resp.Exists)
                     {
                         Thread.Sleep(2000);

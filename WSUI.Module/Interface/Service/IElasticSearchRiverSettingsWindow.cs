@@ -2,6 +2,7 @@
 {
     public interface IElasticSearchRiverSettingsWindow
     {
-         
+        void ShowModal();
+        void Close();
     }
 }

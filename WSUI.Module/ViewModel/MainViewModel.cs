@@ -659,6 +659,10 @@ namespace OF.Module.ViewModel
                 case WSActionType.ShowContact:
                     ShowSenderOfSelectedOutlookEmail(action);
                     break;
+                case WSActionType.Settings:
+                    var wnd = _container.Resolve<IElasticSearchRiverSettingsWindow>();
+                    wnd.ShowModal();
+                    break;
             }
         }
 
