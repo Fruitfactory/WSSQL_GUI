@@ -44,6 +44,13 @@ namespace OF.Module.ViewModel
         }
 
 
+        class NightIdleSettings
+        {
+            [JsonProperty("idle_time")]
+            public int IdleTime { get; set; }
+        }
+
+
         #endregion
 
 
@@ -123,6 +130,12 @@ namespace OF.Module.ViewModel
         }
 
 
+        public int IdleTime
+        {
+            get { return Get(() => IdleTime); }
+            set { Set(() => IdleTime, value); }
+        }
+
         public ICommand OKCommand
         {
             get { return Get(() => OKCommand); }
@@ -199,6 +212,13 @@ namespace OF.Module.ViewModel
                     {
                         case RiverSchedule.EveryNightOrIdle:
                             EveryNightOrIdle = true;
+                            var nightIdleTimeSettings =
+                                JsonConvert.DeserializeObject(_settingsMeta.Pst.Schedule.Settings,
+                                    typeof (NightIdleSettings)) as NightIdleSettings;
+                            if (nightIdleTimeSettings.IsNotNull())
+                            {
+                                IdleTime = nightIdleTimeSettings.IdleTime  / 60;
+                            }
                             break;
                         case RiverSchedule.EveryHours:
                             EveryHours = true;
@@ -268,8 +288,8 @@ namespace OF.Module.ViewModel
 
             if (EveryNightOrIdle)
             {
-                _settingsMeta.Pst.Schedule.ScheduleType = RiverSchedule.EveryNightOrIdle;
-                _settingsMeta.Pst.Schedule.Settings = "{\"night_begins\":\"2009-06-01T00:00:00\"}";
+                _settingsMeta.Pst.Schedule.ScheduleType = RiverSchedule.EveryNightOrIdle; 
+                _settingsMeta.Pst.Schedule.Settings = JsonConvert.SerializeObject(new NightIdleSettings(){IdleTime  = (IdleTime * 60)});
             }
             if (OnlyAt)
             {

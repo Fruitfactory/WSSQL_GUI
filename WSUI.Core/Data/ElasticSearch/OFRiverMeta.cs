@@ -62,7 +62,9 @@ namespace OF.Core.Data.ElasticSearch
         public OFScheduleMeta()
         {
             ScheduleType = RiverSchedule.EveryNightOrIdle;
-            Settings = "{\"night_begins\":\"2009-06-01T00:00:00\"}";
+            var idlesettings = new {idle_time = 120};
+            var set = JsonConvert.SerializeObject(idlesettings);
+            Settings = set;
         }
 
         [JsonProperty("schedule_type")]
