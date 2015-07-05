@@ -121,6 +121,7 @@
     <Compile Include="Core\Attributes\BaseWSUIAttribute.cs" />
     <Compile Include="Core\Attributes\EnumPrefixAttribute.cs" />
     <Compile Include="Core\Attributes\FieldAttribute.cs" />
+    <Compile Include="Core\Rules\OFPriceAnountRule.cs" />
     <Compile Include="Data\ElasticSearch\Converter\OFConditionCollectionConverter.cs" />
     <Compile Include="Data\ElasticSearch\OFQueryBoolConditions.cs" />
     <Compile Include="Data\ElasticSearch\OFRiverMeta.cs" />

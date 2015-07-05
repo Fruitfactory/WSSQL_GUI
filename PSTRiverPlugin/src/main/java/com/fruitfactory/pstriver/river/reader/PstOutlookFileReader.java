@@ -194,6 +194,10 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
             _logger.error(LOG_TAG + e.getMessage() + " " + e.toString());
         }
     }
+    
+    public String getFilename(){
+        return _filename;
+    }
 
     private void prepareStatusInfo(PSTFolder rootFolder) {
         
@@ -322,7 +326,11 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
             return;
         }
 
-        String subject = message.getSubject();
+        String subject = message.getSubject().trim();
+        System.out.println(subject);
+//        if(subject != null && !subject.equals("i-worx test account")){
+//            return
+//        }
         PSTTransportRecipient  from = message.getFrom();
         String sender = from != null ? from.getName() : message.getSentRepresentingName();
         String senderEmail = from != null ? from.getEmailAddress() : message.getSentRepresentingEmailAddress();

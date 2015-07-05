@@ -357,7 +357,19 @@ namespace OF.Module.ViewModel
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
             if (Directory.Exists(path))
             {
-                var files = Directory.GetFiles(path, "*.pst");//new List<string>() { "F:\\Visual\\WORK\\vincent@metajure.com.ost", "F:\\Visual\\WORK\\vpayette@hotmail.com.ost" }; // 
+#if DEBUG
+                var files = new List<string>() { "F:\\Visual\\WORK\\vincent@metajure.com.ost" };// Directory.GetFiles(path, "*.pst"); // new List<string>(){"c:\\Users\\Yariki\\AppData\\Local\\Microsoft\\Outlook\\iyariki.ya@hotmail.com.ost"};    new List<string>() { "F:\\Visual\\WORK\\vincent@metajure.com.ost", "F:\\Visual\\WORK\\vpayette@hotmail.com.ost" }; // 
+                //var files1 = Directory.GetFiles(path, "*.ost");
+                var list = new List<string>(files);
+                //list.AddRange(files1);
+
+                foreach (var file in list)
+                {
+                    System.Diagnostics.Debug.WriteLine(file);
+                }
+                return list;
+#else
+                var files = Directory.GetFiles(path, "*.pst");
                 var files1 = Directory.GetFiles(path, "*.ost");
                 var list = new List<string>(files);
                 list.AddRange(files1);
@@ -367,6 +379,7 @@ namespace OF.Module.ViewModel
                     System.Diagnostics.Debug.WriteLine(file);
                 }
                 return list;
+#endif
             }
             return null;
         }

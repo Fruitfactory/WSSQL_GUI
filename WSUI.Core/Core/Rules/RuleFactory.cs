@@ -28,9 +28,14 @@ namespace OF.Core.Core.Rules
             return CreateRule(typeof (AmountRule));
         }
 
+        public IRule GetPriceRule()
+        {
+            return CreateRule(typeof (OFPriceAnountRule));
+        }
+
         public IList<IRule> GetAllRules()
         {
-            var list = new List<IRule>() { GetQueteRule(), GetWordRule(), GetAmountRule() };
+            var list = new List<IRule>() { GetQueteRule(), GetWordRule(), GetAmountRule(), GetPriceRule() };
             return list.OrderBy(rule => rule.Priority).ToList();
         }
 

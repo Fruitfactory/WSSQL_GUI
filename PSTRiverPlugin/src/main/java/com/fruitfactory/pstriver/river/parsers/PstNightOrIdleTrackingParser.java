@@ -57,9 +57,10 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
         tracker = new PstUserActivityTracker(this._inputHookManage, readerControls, _settings.getIdleTime(), _settings.getIdleTime(), getLogger());
         tracker.startTracking();
         getLogger().info(LOG_TAG + "User activity tracker was created...");
-
+        getLogger().info(LOG_TAG + "Start parsing files...");
         for (Thread reader : readers) {
             reader.start();
+            getLogger().info(((PstOutlookFileReader)reader).getFilename());
         }
         for(Thread reader: readers){
             try {
