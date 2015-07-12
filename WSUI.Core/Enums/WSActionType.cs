@@ -12,6 +12,7 @@
         Quit,
         ClearText,
         ShowContact,
-        Settings
+        Settings,
+        EnableMenu
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.Unity;
+using OF.Core.Enums;
 using Transitionals.Controls;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
@@ -25,7 +26,6 @@ namespace OF.Control
 
         public override void Run(bool runWithDefaultConfiguration)
         {
-            //var watch = new Stopwatch();
             this.Logger = this.CreateLogger();
             this.ModuleCatalog = this.CreateModuleCatalog();
             if (this.ModuleCatalog == null)
@@ -50,8 +50,6 @@ namespace OF.Control
             {
                 this.InitializeModules();
             }
-            //watch.Stop();
-            //OFLogger.Instance.LogInfo(string.Format("Run (plugin): {0}ms", watch.ElapsedMilliseconds));
         }
 
         protected override Microsoft.Practices.Prism.Logging.ILoggerFacade CreateLogger()
@@ -61,45 +59,23 @@ namespace OF.Control
 
         protected override DependencyObject CreateShell()
         {
-            //Stopwatch watch = new Stopwatch();
-            //watch.Start();
             var shell = Container.Resolve<WSSidebarControl>();
-            //watch.Stop();
-            //OFLogger.Instance.LogInfo(string.Format("Create shell (plugin): {0}ms",watch.ElapsedMilliseconds));
             return shell;
-        }
-
-        protected override void InitializeShell()
-        {
-            //Stopwatch watch = new Stopwatch();
-            //watch.Start();
-            base.InitializeShell();
-            //watch.Stop();
-            //OFLogger.Instance.LogInfo(string.Format("InitializeShell (plugin): {0}ms",watch.ElapsedMilliseconds));
         }
 
         protected override IModuleCatalog CreateModuleCatalog()
         {
-            //Stopwatch watch = new Stopwatch();
-            //watch.Start();
             var catalog = new ModuleCatalog();
             catalog.AddModule(typeof(OF.Module.WSModule));
-            //watch.Stop();
-            //OFLogger.Instance.LogInfo(string.Format("CreateModuleCatalog (plugin): {0}ms",watch.ElapsedMilliseconds));
             return catalog;
         }
 
         protected override void InitializeModules()
         {
-            //base.InitializeModules();
-            //Stopwatch watch = new Stopwatch();
-            //watch.Start();
             IModule module = Container.Resolve<OF.Module.WSModule>();
             module.Initialize();
             _mainViewModel = Container.Resolve<OF.Module.ViewModel.MainViewModel>();
             (this.View as ISidebarView).Model = _mainViewModel;
-            //watch.Stop();
-            //OFLogger.Instance.LogInfo(string.Format("InitializeModules (plugin): {0}ms",watch.ElapsedMilliseconds));
         }
 
         protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
@@ -128,5 +104,7 @@ namespace OF.Control
         }
 
         public bool IsMainUiActive { get { return (this.Shell as UserControl).IsFocused; } }
+
+        public bool IsMenuEnabled { get { return _mainViewModel.IsMenuEnabled; } }
     }
 }

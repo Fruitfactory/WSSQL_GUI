@@ -1,4 +1,6 @@
 ﻿using AddinExpress.MSO;
+using Microsoft.Practices.Prism.Events;
+using OF.Core.Events;
 using OF.Core.Logger;
 using OFOutlookPlugin.Core;
 
@@ -30,6 +32,16 @@ namespace OFOutlookPlugin.Managers
             _buttonSwitchView.Enabled = isShowButtonEnable;
         }
 
+        protected override void MenuEnabling(bool obj)
+        {
+            _buttonSwitchView.Enabled = obj;
+            _buttonSwitch.Enabled = obj;
+            _buttonSearch.Enabled = obj;
+            _editCriteria.Enabled = obj;
+            _homeEditCriteria.Enabled = obj;
+            _buttonSearch1.Enabled = obj;
+        }
+
         private void Init()
         {
             _buttonSwitchView.OnClick += ButtonSwitchOnOnClick;
@@ -38,6 +50,7 @@ namespace OFOutlookPlugin.Managers
             _editCriteria.OnChange += HomeEditCriteriaOnOnChange;
             _buttonSearch.OnClick += ButtonSearchOnOnClick;
             _buttonSearch1.OnClick += ButtonMainSearchOnOnClick;
+            MenuEnabling(OFAddinModule.CurrentInstance.BootStraper.IsMenuEnabled);
         }
 
         private void HomeEditCriteriaOnOnChange(object sender, IRibbonControl control, string text)

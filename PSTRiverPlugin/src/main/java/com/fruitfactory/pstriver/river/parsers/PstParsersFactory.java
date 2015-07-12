@@ -30,6 +30,9 @@ public class PstParsersFactory {
     }
     
     public IPstParser getParser(PstRiverSchedule type,PstFeedDefinition def, Client client, BulkProcessor bulkProcessor, RiverName riverName, String indexName, ESLogger logger){
+        
+        logger.info(String.format("Current schedule type %s....", type.toString()));
+        
         switch(type){
             case EveryNightOrIdle:
                 return new PstNightOrIdleTrackingParser(def,client,bulkProcessor,riverName,indexName,logger);

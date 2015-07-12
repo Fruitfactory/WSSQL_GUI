@@ -3,8 +3,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 using AddinExpress.MSO;
+using Microsoft.Practices.Prism.Events;
 using OF.Core.Data;
 using OF.Core.Enums;
+using OF.Core.Events;
 using OF.Core.Logger;
 using OFOutlookPlugin.About;
 using OFOutlookPlugin.Core;
@@ -39,6 +41,13 @@ namespace OFOutlookPlugin.Managers
             _buttonMainHelp.OnClick += ButtonHelpOnOnClick;
             _buttonSettings.OnClick += ButtonSettingsOnOnClick;
             _buttonMainSettings.OnClick += ButtonSettingsOnOnClick;
+            MenuEnabling(OFAddinModule.CurrentInstance.BootStraper.IsMenuEnabled);
+        }
+
+        protected override void MenuEnabling(bool b)
+        {
+            _buttonMainSettings.Enabled = b;
+            _buttonSettings.Enabled = b;
         }
 
         private void ButtonHelpOnOnClick(object sender, IRibbonControl control, bool pressed)

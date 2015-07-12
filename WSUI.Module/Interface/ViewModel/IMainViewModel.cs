@@ -53,6 +53,8 @@ namespace OF.Module.Interface.ViewModel
 
         bool IsPreviewVisible { get; }
 
+        bool IsMenuEnabled { get; }
+
 
     }
 }

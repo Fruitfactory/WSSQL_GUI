@@ -160,6 +160,7 @@
     <Compile Include="Data\ElasticSearch\Response\WSUIStatusItem.cs" />
     <Compile Include="Data\ElasticSearch\Response\WSUIStatusResponse.cs" />
     <Compile Include="ElasticSearch\Clients\OFElasticUpdateSettingsClient.cs" />
+    <Compile Include="Events\OFMenuEnabling.cs" />
     <Compile Include="Helpers\OFObjectJsonSaveReadHelper.cs" />
     <Compile Include="Interfaces\IElasticTrackingClient.cs" />
     <Compile Include="Interfaces\IElasticSearchClient.cs" />

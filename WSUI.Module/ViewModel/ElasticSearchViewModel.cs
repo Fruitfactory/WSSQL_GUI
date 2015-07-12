@@ -20,6 +20,7 @@ using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
 using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Enums;
+using OF.Core.Events;
 using OF.Core.Extensions;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
@@ -244,6 +245,7 @@ namespace OF.Module.ViewModel
                 var riverStatusResp = ElasticSearchClient.GetRiverStatus();
                 IsInitialIndexinginProgress = riverStatusResp.Response.IsNotNull() &&
                                               riverStatusResp.Response.Status == OFRiverStatus.InitialIndexing;
+                _eventAggregator.GetEvent<OFMenuEnabling>().Publish(resp.Exists);
             }
         }
 
@@ -327,6 +329,7 @@ namespace OF.Module.ViewModel
                     _timer.Change(Timeout.Infinite, Timeout.Infinite);
                     IsIndexExisted = true;
                     FinishedStepVisibility = Visibility.Visible;
+                    _eventAggregator.GetEvent<OFMenuEnabling>().Publish(true);
                     OnIndexingFinished();
                     return;
                 }

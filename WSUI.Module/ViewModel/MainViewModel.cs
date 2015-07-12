@@ -824,6 +824,16 @@ namespace OF.Module.ViewModel
             get { return _navigationService != null && _navigationService.IsPreviewVisible; }
         }
 
+        public bool IsMenuEnabled
+        {
+            get
+            {
+                return _elasticSearchViewModel.IsServiceInstalled && _elasticSearchViewModel.IsServiceRunning &&
+                       _elasticSearchViewModel.IsIndexExisted;
+            }
+        }
+
+
         #endregion Implementation of IMainViewModel
 
         public virtual void Init()

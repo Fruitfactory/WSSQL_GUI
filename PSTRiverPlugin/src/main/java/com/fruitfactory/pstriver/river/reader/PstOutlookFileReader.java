@@ -5,10 +5,7 @@
  */
 package com.fruitfactory.pstriver.river.reader;
 
-import com.fruitfactory.pstriver.helpers.AttachmentHelper;
-import com.fruitfactory.pstriver.helpers.PstReaderStatus;
-import com.fruitfactory.pstriver.helpers.PstReaderStatusInfo;
-import com.fruitfactory.pstriver.helpers.Triple;
+import com.fruitfactory.pstriver.helpers.*;
 import com.fruitfactory.pstriver.rest.PstStatusRepository;
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
 import com.fruitfactory.pstriver.useractivity.IReaderControl;
@@ -23,7 +20,6 @@ import com.pff.PSTFile;
 import com.pff.PSTFolder;
 import com.pff.PSTMessage;
 import com.pff.PSTMessageStore;
-import com.pff.PSTNodeInputStream;
 import com.pff.PSTObject;
 import com.pff.PSTRecipient;
 import com.pff.PSTTimeZone;
@@ -70,6 +66,8 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
     private String _storePartId;
     private PSTFile _pstFile = null;
     private PstReaderStatus _status;
+    private List<PstShortEmailData> listShortEmailData;
+    private List<PstShortUser> listUsers;
     
     private Object LOCK = new Object();
     private boolean _paused = false;
@@ -85,7 +83,8 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         this._indexName = indexName;
         setDaemon(true);
         setPriority(MIN_PRIORITY);
-        
+        listShortEmailData = new ArrayList<>();
+        listUsers = new ArrayList<>();
     }
 
     private void esIndex(String index, String type, String id,
@@ -327,13 +326,17 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         }
 
         String subject = message.getSubject().trim();
-        System.out.println(subject);
-//        if(subject != null && !subject.equals("i-worx test account")){
-//            return
+//        if(subject != null && !subject.contains("i-worx test account")){
+//            return;
 //        }
+//        System.out.println(subject);
         PSTTransportRecipient  from = message.getFrom();
         String sender = from != null ? from.getName() : message.getSentRepresentingName();
         String senderEmail = from != null ? from.getEmailAddress() : message.getSentRepresentingEmailAddress();
+
+        if(!PstEmailValidator.isEmail(senderEmail)){
+            senderEmail = getAppropriateEmail(subject,sender);
+        }
         String body = message.getBody();
         String htmlbody = message.getBodyHTML();
         String analyzedContent = _tika.parseToString(new BytesStreamInput(htmlbody.getBytes(),false),new Metadata());
@@ -363,13 +366,13 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         try {
             
             List<PSTTransportRecipient> to = message.getTo();
-            listTo = to != null && to.size() > 0 ? getTransportRecipients(to) : getRecipients(message, PSTRecipient.MAPI_TO);
+            listTo = to != null && to.size() > 0 ? getTransportRecipients(to,subject) : getRecipients(message, PSTRecipient.MAPI_TO,subject);
             
             List<PSTTransportRecipient> cc = message.getCc();
-            listCc = cc != null && cc.size() > 0 ?  getTransportRecipients(cc) : getRecipients(message, PSTRecipient.MAPI_CC);
+            listCc = cc != null && cc.size() > 0 ?  getTransportRecipients(cc,subject) : getRecipients(message, PSTRecipient.MAPI_CC,subject);
             
             List<PSTTransportRecipient> bcc = message.getBcc();
-            listBcc = bcc != null && bcc.size() > 0 ? getTransportRecipients(bcc) : getRecipients(message, PSTRecipient.MAPI_BCC);
+            listBcc = bcc != null && bcc.size() > 0 ? getTransportRecipients(bcc,subject) : getRecipients(message, PSTRecipient.MAPI_BCC,subject);
             
         } catch (PSTException ex) {
             Logger.getLogger(TestGui.class.getName()).log(Level.SEVERE, null, ex);
@@ -386,10 +389,10 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
                 AttachmentHelper helper = new AttachmentHelper(attachment.getLongFilename(), attachment.getLongPathname(), attachment.getFilesize(), attachment.getMimeTag());
                 listAttachments.add(helper);
                 
-                if(helper.getFilename().trim().equals("1st and 2nd ship.xls"))
-                {
-                    System.out.print(helper.getFilename());
-                }
+//                if(helper.getFilename().trim().equals("1st and 2nd ship.xls"))
+//                {
+//                    System.out.print(helper.getFilename());
+//                }
 
                 saveAttachment(attachment, entryID);
             }
@@ -402,6 +405,11 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         if (_logger.isTraceEnabled()) {
             source.prettyPrint();
         }
+
+        PstShortEmailData data = new PstShortEmailData(subject.toLowerCase(),
+                sender.toLowerCase(),
+                senderEmail.toLowerCase(),listTo,listCc,listBcc);
+        listShortEmailData.add(data);
 
         source
                 .field(PstMetadataTags.Email.ITEM_NAME, subject)
@@ -425,17 +433,17 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
                 .field(PstMetadataTags.Email.FROM_ADDRESS, senderEmail)
                 .field(PstMetadataTags.Email.ENTRY_ID, entryID);
 
-        AddArrayOfEmails(source, listTo,
+        addArrayOfEmails(source, listTo,
                 PstMetadataTags.Email.TO,
                 PstMetadataTags.Email.To.NAME,
                 PstMetadataTags.Email.To.ADDRESS,
                 PstMetadataTags.Email.To.EMAIL_ADDRESS_TYPE);
-        AddArrayOfEmails(source, listCc,
+        addArrayOfEmails(source, listCc,
                 PstMetadataTags.Email.CC,
                 PstMetadataTags.Email.Cc.NAME,
                 PstMetadataTags.Email.Cc.ADDRESS,
                 PstMetadataTags.Email.Cc.EMAIL_ADDRESS_TYPE);
-        AddArrayOfEmails(source, listBcc,
+        addArrayOfEmails(source, listBcc,
                 PstMetadataTags.Email.BCC,
                 PstMetadataTags.Email.Bcc.NAME,
                 PstMetadataTags.Email.Bcc.ADDRESS,
@@ -463,33 +471,79 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         esIndex(_indexName, PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
     }
 
-    private List<Triple<String, String,String>> getTransportRecipients(List<PSTTransportRecipient> list) throws PSTException, IOException{
+    private String getAppropriateEmail(String subject, String userName) {
+
+        String sub = subject.toLowerCase();
+        String user = userName.toLowerCase();
+        
+        for(PstShortUser userData : listUsers){
+            if(userData.getUserName().contains(user)){
+                return userData.getEmailAddress();
+            }
+        }
+
+        for (PstShortEmailData data : listShortEmailData) {
+            if (PstStringHelper.pecentageOfTextMatch(data.getSubject(), subject) >= 75) {
+                if ( data.getSenderName().toLowerCase().contains(user) && PstEmailValidator.isEmail(data.getSenderAddress())) {
+                    PstShortUser userData = new PstShortUser(user, data.getSenderAddress());
+                    listUsers.add(userData);
+                    return data.getSenderAddress();
+                }
+                String email = data.getEmail(user);
+                addUser(user, email);
+                return email;
+            }
+        }
+        return "";
+    }
+
+    private List<Triple<String, String,String>> getTransportRecipients(List<PSTTransportRecipient> list, String subject) throws PSTException, IOException{
         
         List<Triple<String, String,String>> result = new ArrayList<Triple<String, String,String>>();
         
         for(PSTTransportRecipient r : list){
-            Triple<String, String,String> pairRecipient = new Triple<String, String,String>(r.getName(), r.getEmailAddress(),"");
+            String emailAddress = r.getEmailAddress();
+            if(!PstEmailValidator.isEmail(emailAddress)){
+                emailAddress = getAppropriateEmail(subject,r.getName());
+            }
+            addUser(r.getName().toLowerCase(),emailAddress);
+            Triple<String, String,String> pairRecipient = new Triple<String, String,String>(r.getName(), emailAddress,"");
             result.add(pairRecipient);
         }
         return result;
     }
     
-    private List<Triple<String, String, String>> getRecipients(PSTMessage message, int recipientType) throws PSTException, IOException {
+    private List<Triple<String, String, String>> getRecipients(PSTMessage message, int recipientType, String subject) throws PSTException, IOException {
         int count = message.getNumberOfRecipients();
         List<Triple<String, String, String>> result = new ArrayList<Triple<String, String, String>>();
         for (int i = 0; i < count; i++) {
             try {
                 PSTRecipient recipient = message.getRecipient(i);
-                Triple<String, String, String> pairRecipient = new Triple<String, String, String>(recipient.getDisplayName(), recipient.getEmailAddress(), recipient.getEmailAddressType());
                 int flag = recipient.getRecipientType();
-                if (flag == recipientType) {
-                    result.add(pairRecipient);
+                if (flag != recipientType) {
+                    continue;
                 }
+                String emailAddress = recipient.getEmailAddress();
+                if(!PstEmailValidator.isEmail(emailAddress)){
+                    emailAddress = getAppropriateEmail(subject,recipient.getDisplayName().toLowerCase());
+                }
+                addUser(recipient.getDisplayName().toLowerCase(),emailAddress);
+                Triple<String, String, String> pairRecipient = new Triple<String, String, String>(recipient.getDisplayName(), emailAddress, recipient.getEmailAddressType());
+                result.add(pairRecipient);
+                
             } catch (PSTException e) {
                 Logger.getGlobal().log(Level.OFF, e.getMessage());
             }
         }
         return result;
+    }
+    
+    private void addUser(String userName, String userEmail){
+        if(userName == null || userEmail == null || userName.isEmpty() || userEmail.isEmpty()){
+            return;
+        }
+        PstShortUser userData = new PstShortUser(userName, userEmail);
+        listUsers.add(userData);
     }
     
     private void saveAttachment(PSTAttachment attachment, String emailID) throws IOException, Exception {
@@ -672,7 +726,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         esIndex(_indexName, PstMetadataTags.INDEX_TYPE_CALENDAR, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
     }
 
-    private void AddArrayOfEmails(XContentBuilder builder, List<Triple<String, String,String>> list, String objectName, String nameTag, String addressTag, String addressTypeTag) throws IOException {
+    private void addArrayOfEmails(XContentBuilder builder, List<Triple<String, String, String>> list, String objectName, String nameTag, String addressTag, String addressTypeTag) throws IOException {
         if (list.isEmpty()) {
             return;
         }

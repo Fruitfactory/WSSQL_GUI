@@ -149,7 +149,7 @@ namespace OF.Core.Helpers
             string result = string.Empty;
             string tempFolder = TempFileManager.Instance.GenerateTempFolderForObject(emailObject);
             MailMessage mail = new MailMessage();
-            mail.From = new MailAddress(emailObject.FromAddress,emailObject.FromName);
+            mail.From = new MailAddress(emailObject.FromAddress, emailObject.FromName); //emailObject.FromAddress
             if (emailObject.To != null)
             {
                 emailObject.To.ForEach(r =>
