@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using OF.Core.Helpers.DetectEncoding;
@@ -100,6 +101,33 @@ namespace OF.Core.Extensions
         {
             return string.IsNullOrEmpty(@this);
         }
+
+
+        public static string HighlightKeyWords(this string text, string[] keywords, string cssClass, bool fullMatch)
+        {
+            if (text == String.Empty || keywords == null || keywords.Length == 0 || cssClass == String.Empty)
+                return text;
+            var words = keywords;
+            if (!fullMatch)
+                return words.Select(word => word.Trim()).Aggregate(text,
+                             (current, pattern) =>
+                             Regex.Replace(current,
+                                             pattern,
+                                               string.Format("<span style=\"background-color:{0}\">{1}</span>",
+                                               cssClass,
+                                               "$0"),
+                                               RegexOptions.IgnoreCase));
+            return words.Select(word => "\\b" + word.Trim() + "\\b")
+                        .Aggregate(text, (current, pattern) =>
+                                  Regex.Replace(current,
+                                  pattern,
+                                    string.Format("<span style=\"background-color:{0}\">{1}</span>",
+                                    cssClass,
+                                    "$0"),
+                                    RegexOptions.IgnoreCase));
+
+        }
+
 
     }
 }

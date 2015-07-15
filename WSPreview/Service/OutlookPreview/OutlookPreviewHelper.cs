@@ -254,22 +254,22 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
         {
             if (string.IsNullOrEmpty(HitString) || string.IsNullOrEmpty(inputString) || inputString.IsHtmlComment() || _itemArray == null)
                 return inputString;
-            string result = inputString;
+            string result = inputString.HighlightKeyWords(_itemArray,"yellow",true);
 
-            foreach (var s in _itemArray)
-            {
-                var temp = Regex.Escape(s.ClearString());
-                Match m = s.IsAmount() ? Regex.Match(result, string.Format(@"{0}", temp), RegexOptions.IgnoreCase) :
-                    Regex.Match(result, string.Format("{0}", temp), RegexOptions.IgnoreCase);//@"\b({0})\b"
+            //foreach (var s in _itemArray)
+            //{
+            //    var temp = Regex.Escape(s.ClearString());
+            //    Match m = s.IsAmount() ? Regex.Match(result, string.Format(@"{0}", temp), RegexOptions.IgnoreCase) :
+            //        Regex.Match(result, string.Format("{0}", temp), RegexOptions.IgnoreCase);//@"\b({0})\b"
 
-                if (m.Success)
-                {
-                    var partBegin = result.Substring(0, m.Index);
-                    var partMath = result.Substring(m.Index, m.Length);
-                    var partEnd = HighlightSearchString(result.Substring(m.Index + m.Length));
-                    result = partBegin + AfterStrongTemplateBegin + partMath + AfterStrongTemplateEnd + partEnd;
-                }
-            }
+            //    if (m.Success)
+            //    {
+            //        var partBegin = result.Substring(0, m.Index);
+            //        var partMath = result.Substring(m.Index, m.Length);
+            //        var partEnd = HighlightSearchString(result.Substring(m.Index + m.Length));
+            //        result = partBegin + AfterStrongTemplateBegin + partMath + AfterStrongTemplateEnd + partEnd;
+            //    }
+            //}
             return result;
         }
 

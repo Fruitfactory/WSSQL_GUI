@@ -347,9 +347,14 @@ namespace OF.Core.Helpers
                     ReopenOutlook(ref _app);
 
                 Outlook.MailItem item = (Outlook.MailItem) this.OutlookApp.CreateItem(Outlook.OlItemType.olMailItem);
-                item.Subject = "RE : " + data.Subject;
+                string subject = data.Subject;
+                if (!subject.ToLowerInvariant().Contains("re:"))
+                {
+                    subject = string.Format("Re: {0}", subject);
+                }
+                item.Subject = subject;
                 item.SendUsingAccount = FindSenderAccount(data);
-                item.To = data.FromAddress;
+                item.To = (new OFRecipient() {Address = data.FromAddress, Name = data.FromName}).ToString();
                 return item;
             }
             catch (Exception exception)
@@ -366,17 +371,20 @@ namespace OF.Core.Helpers
             {
                 throw new NullReferenceException("reply");
             }
+            var listTo = new List<OFRecipient>(){new OFRecipient(){Address = data.FromAddress, Name = data.FromName}};
              if (data.To.IsNotNull())
             {
-                email.To = string.Join(";", data.To.Select(r => r.Address).ToArray());    
+                 listTo.AddRange(data.To);
+                
             }
+            email.To =  string.Join(";", listTo.Select(r => r.ToString()).ToArray());
             if (data.Cc.IsNotNull())
             {
-                email.CC = string.Join(";", data.Cc.Select(r => r.Address).ToArray());    
+                email.CC = string.Join(";", data.Cc.Select(r => r.ToString()).ToArray());
             }
             if (data.Bcc.IsNotNull())
             {
-                email.BCC = string.Join(";", data.Bcc.Select(r => r.Address).ToArray());    
+                email.BCC = string.Join(";", data.Bcc.Select(r => r.ToString()).ToArray());
             }
             return email;
         }
@@ -393,7 +401,12 @@ namespace OF.Core.Helpers
                     ReopenOutlook(ref _app);
 
                 Outlook.MailItem item = (Outlook.MailItem)this.OutlookApp.CreateItem(Outlook.OlItemType.olMailItem);
-                item.Subject = "FW : " + data.Subject;
+                string subject = data.Subject;
+                if (!subject.ToLowerInvariant().Contains("fw:"))
+                {
+                    subject = string.Format("FW: {0}", subject);
+                }
+                item.Subject = subject;
                 item.SendUsingAccount = FindSenderAccount(data);
                 return item;
             }
@@ -407,15 +420,12 @@ namespace OF.Core.Helpers
         private Outlook.Account FindSenderAccount(EmailSearchObject data)
         {
             Outlook.Account result = null;
-            OFRecipient recep = data.To.FirstOrDefault();
-            if (recep.IsNull())
-            {
-                return result;
-            }
+
+            string email = this.OutlookApp.Session.CurrentUser.AddressEntry.GetEmailAddress();
 
             foreach (var result1 in this.OutlookApp.Session.Accounts.OfType<Outlook.Account>())
             {
-                if (result1.SmtpAddress.ToLowerInvariant().IndexOf(recep.Address.ToLowerInvariant()) > -1)
+                if (result1.SmtpAddress.ToLowerInvariant().IndexOf(email.ToLowerInvariant()) > -1)
                 {
                     result = result1;
                     break;
