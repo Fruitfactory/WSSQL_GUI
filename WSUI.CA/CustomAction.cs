@@ -39,6 +39,10 @@ namespace OF.CA
         private const string TempFolder = "{0}\\Update\\{1}";
 
         private const string InstallFolder = "INSTALLFOLDER";
+        private const string ElasticSearchInstallFolder = "ELASTICSEASRCHINSTALLFOLDER";
+
+        private const string ElasticSearchDataFolder = "data";
+
 
         //<msi>
         //    <installationUrl>http://fruitfactory.github.io/WSSQL_GUI/downloads/clicktwice/</installationUrl>
@@ -84,6 +88,8 @@ namespace OF.CA
                     DeleteFile(session, path, filename);
                 }
                 DeleteRootFolder(session, path);
+                
+                DeleteElasticSearchFiles(session,RegistryHelper.Instance.GetElasticSearchpath());
             }
             catch (Exception)
             {
@@ -160,6 +166,40 @@ namespace OF.CA
                 return false;
             }
             return true;
+        }
+
+        private static void DeleteElasticSearchFiles(Session session, string root)
+        {
+            session.Log("Delete ElasticSearch files...");
+            session.Log("ElasticSearch Root => " + root);
+            try
+            {
+                var rootDir = new DirectoryInfo(root);
+                bool dataFolderPresent = rootDir.EnumerateDirectories().Any(d => d.Name.ToLowerInvariant().Equals(ElasticSearchDataFolder));
+                if (dataFolderPresent)
+                {
+                    foreach (var enumerateDirectory in rootDir.EnumerateDirectories())
+                    {
+                        if (enumerateDirectory.Name.ToLowerInvariant().Equals(ElasticSearchDataFolder))
+                            continue;
+                        session.Log("Deleting " + enumerateDirectory.Name + "...");
+                        enumerateDirectory.Delete(true);
+                    }
+                    foreach (var enumerateFile in rootDir.EnumerateFiles())
+                    {
+                        session.Log("Deleting " + enumerateFile.Name + "...");
+                        enumerateFile.Delete();
+                    }
+                }
+                else
+                {
+                    rootDir.Delete(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                session.Log(ex.Message);
+            }
         }
 
         #endregion [private for delete files]

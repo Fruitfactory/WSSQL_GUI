@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.unit.TimeValue;
+import org.joda.time.*;
 
 /**
  *
@@ -20,7 +21,7 @@ public class PstUserActivityTracker extends Thread {
     
      enum State {
 
-        UNKNOWN, ONLINE, IDLE, AWAY
+        UNKNOWN, ONLINE, IDLE, AWAY, NIGHT
     };
     
     private volatile boolean stopped = false;
@@ -30,7 +31,9 @@ public class PstUserActivityTracker extends Thread {
     private State oldState = State.UNKNOWN;
     private ESLogger logger;
     private IInputHookIdle hookIdleTime;
-
+    private LocalTime timeBeginNight = new LocalTime(0,0,0);
+    private LocalTime timeFinishNight = new LocalTime(6,0,0);
+    
     public PstUserActivityTracker(IInputHookIdle hookIdleTime, List<IReaderControl> readers,ESLogger logger) {
         this.readers = readers;
         onlineTime = (int)TimeValue.timeValueMinutes(2).getSeconds();
@@ -65,7 +68,7 @@ public class PstUserActivityTracker extends Thread {
                 
                 System.out.println(String.format("Idle Sec = %d", idleSec));
                 logger.info("Tracker: " + String.format("Idle Sec = %d", idleSec));
-                State newState = idleSec < onlineTime ? State.ONLINE: idleSec > idleTime ? State.AWAY : State.IDLE;
+                State newState = IsHight() ? State.NIGHT : idleSec < onlineTime ? State.ONLINE: idleSec > idleTime ? State.AWAY : State.IDLE;
                 if(newState != state){
                     processState(newState);
                 }
@@ -88,6 +91,7 @@ public class PstUserActivityTracker extends Thread {
                 logger.info("Tracker: " + "User Online!!" );
                 break;
             case AWAY:
+            case NIGHT:
                 processAwayState(readers);
                 System.out.println("Away time!!");
                 logger.info("Tracker: " + "User Away!!" );
@@ -105,6 +109,11 @@ public class PstUserActivityTracker extends Thread {
                 r.pauseThread();
             }
         }
+    }
+    
+    private boolean IsHight(){
+        LocalTime currentTime = (new DateTime()).toLocalTime();
+        return timeBeginNight.getMillisOfDay() < currentTime.getMillisOfDay() && currentTime.getMillisOfDay() < timeFinishNight.getMillisOfDay();
     }
 
     private void processAwayState(List<IReaderControl> readers) {

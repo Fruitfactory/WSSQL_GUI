@@ -113,7 +113,7 @@
   </Product>
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="LocalAppDataFolder">
+      <Directory Id="LocalAppDataFolder" Name="LocalAppDataDir">
         <Directory Id="INSTALLFOLDER" Name="OutlookFinder">
           <Component Id="INSTALLFOLDER" Guid="c7b05686-b33f-4d75-ae82-aa8c069e6a7d">
             <RemoveFolder On="both" Id="INSTALLFOLDER" />
@@ -144,6 +144,7 @@
           <Directory Id="ELASTICSEASRCHINSTALLFOLDERBIN" Name="bin">
             <Component Id="ELASTICSEASRCHINSTALLFOLDERBIN" Guid="7B2ED621-76B5-4FBC-BB23-8E0FADE4BDCC">
               <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERBIN" />
+              <RemoveFile Id="binFile" Name="*.*" On="uninstall" />
               <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="bin" />
             </Component>
           </Directory>
@@ -151,6 +152,7 @@
           <Directory Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" Name="config">
             <Component Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" Guid="20AEDE7C-8EA0-4B41-B33A-7DDC77DF9925">
               <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" />
+              <RemoveFile Id="configFile" Name="*.*" On="uninstall" />
               <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="config" />
             </Component>
           </Directory>
@@ -158,6 +160,7 @@
           <Directory Id="ELASTICSEASRCHINSTALLFOLDERPLUGINS" Name="plugins">
             <Component Id="ELASTICSEASRCHINSTALLFOLDERPLUGINS" Guid="E8C9D655-A35C-40C5-A576-73E400DEF3CA">
               <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERPLUGINS" />
+              <RemoveFile Id="pluginsFile" Name="*.*" On="uninstall" />
               <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="plugins" />
             </Component>
           </Directory>
@@ -165,12 +168,14 @@
           <Directory Id="ELASTICSEASRCHINSTALLFOLDERLIB" Name="lib">
             <Component Id="ELASTICSEASRCHINSTALLFOLDERLIB" Guid="7FA11EB8-B03F-44AB-B620-C8263C37C637">
               <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERLIB" />
+              <RemoveFile Id="libFile" Name="*.*" On="uninstall" />
               <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="lib" />
             </Component>
 
             <Directory Id="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR" Name="sigar">
               <Component Id="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR" Guid="CDA8023C-E724-4843-8F03-587D6CF64C53">
                 <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR" />
+                <RemoveFile Id="sigarFile" Name="*.*" On="uninstall" />
                 <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="sigar" />
               </Component>
             </Directory>
