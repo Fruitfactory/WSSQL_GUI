@@ -334,7 +334,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         String sender = from != null ? from.getName() : message.getSentRepresentingName();
         String senderEmail = from != null ? from.getEmailAddress() : message.getSentRepresentingEmailAddress();
 
-        if(!PstEmailValidator.isEmail(senderEmail)){
+        if(!sender.isEmpty() && !senderEmail.isEmpty() && !PstEmailValidator.isEmail(senderEmail)){
             senderEmail = getAppropriateEmail(subject,sender);
         }
         String body = message.getBody();
@@ -472,7 +472,11 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
     }
 
     private String getAppropriateEmail(String subject, String userName) {
-
+        
+        if(subject.isEmpty() || userName.isEmpty()){
+            return "";
+        }
+        
         String sub = subject.toLowerCase();
         String user = userName.toLowerCase();
         
