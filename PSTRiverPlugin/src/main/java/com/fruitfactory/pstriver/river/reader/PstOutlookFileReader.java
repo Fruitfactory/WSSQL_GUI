@@ -339,7 +339,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         }
         String body = message.getBody();
         String htmlbody = message.getBodyHTML();
-        String analyzedContent = _tika.parseToString(new BytesStreamInput(htmlbody.getBytes(),false),new Metadata());
+        String analyzedContent = _tika.parseToString(new BytesStreamInput(htmlbody.getBytes()),new Metadata());
         String entryID = message.getEntryID();
         boolean hasAttachment = message.hasAttachments();
         Date dateCreated = message.getCreationTime();
@@ -572,7 +572,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
             bufferStream.flush();
             byte[] byteBuffer = bufferStream.toByteArray();
             strBuilder.append(Base64.encode(byteBuffer));
-            parsedContent = _tika.parseToString(new BytesStreamInput(byteBuffer,false), new Metadata());
+            parsedContent = _tika.parseToString(new BytesStreamInput(byteBuffer), new Metadata());
         } catch (Exception ex) {
             _logger.error(LOG_TAG, ex.getMessage());
         }

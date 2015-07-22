@@ -28,7 +28,7 @@ public class PstRestModule extends BaseRestHandler {
 
     @Inject
     public PstRestModule(Settings stngs, Client client, RestController controlller) {
-        super(stngs, client);
+        super(stngs,controlller,client);
         controlller.registerHandler(RestRequest.Method.GET, "_river/{rivername}/{command}", this);
         controlller.registerHandler(RestRequest.Method.PUT, "_river/{rivername}/useractivity", this);
     }
