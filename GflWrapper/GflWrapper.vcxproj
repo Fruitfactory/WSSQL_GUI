@@ -111,6 +111,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PreprocessorDefinitions>_DEBUG;</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)Toolkits\GflSdk\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -119,6 +120,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <Profile>true</Profile>
     </Link>
+    <Bscmake>
+      <PreserveSBR>true</PreserveSBR>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Linq;
 using Microsoft.Win32;
 
 namespace OF.Core.Helpers
@@ -317,6 +318,16 @@ namespace OF.Core.Helpers
             Write(IsPluginUiVisible, visible);
         }
 
+        public bool IsPluginUiVisibleKeyPresent()
+        {
+            return IsKeyPresent(IsPluginUiVisible);
+        }
+
+        public void DeletePluginUiKey()
+        {
+            DeleteKey(IsPluginUiVisible);
+        }
+
         public string GetElasticSearchpath()
         {
             return ReadKey<string>(ElastiSearchPath);
@@ -340,8 +351,7 @@ namespace OF.Core.Helpers
         {
             try
             {
-                RegistryKey temp = _baseRegistry;
-                RegistryKey subKey = temp.CreateSubKey(IsProduct ? ProductSubKey : AddInOutlookSubKey);
+                RegistryKey subKey = GetRegistrySubKey(IsProduct);
                 if (subKey == null)
                     return default(T);
                 var objVal = subKey.GetValue(key.ToLower());
@@ -357,8 +367,7 @@ namespace OF.Core.Helpers
         {
             try
             {
-                RegistryKey temp = _baseRegistry;
-                RegistryKey subKey = temp.CreateSubKey(IsProduct ? ProductSubKey : AddInOutlookSubKey);
+                RegistryKey subKey = GetRegistrySubKey(IsProduct);
                 if (subKey == null)
                     return;
                 if (value is bool)
@@ -373,6 +382,56 @@ namespace OF.Core.Helpers
                 return;
             }
         }
+
+        private bool IsKeyPresent(string key, bool IsProduct = true)
+        {
+            try
+            {
+                RegistryKey subKey = GetRegistrySubKey(IsProduct);
+                if (subKey == null)
+                {
+                    return false;
+                }
+                var values = subKey.GetValueNames();
+                var lowerKey = key.ToLowerInvariant();
+                return values != null && values.Any(v => v.ToLowerInvariant().Equals(lowerKey));
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        private void DeleteKey(string key, bool isProduct = true)
+        {
+            try
+            {
+                RegistryKey subKey = GetRegistrySubKey(isProduct);
+                if (subKey == null)
+                {
+                    return;
+                }
+                subKey.DeleteValue(key.ToLowerInvariant());
+            }
+            catch (Exception)
+            {   
+            }
+        }
+
+        private RegistryKey GetRegistrySubKey(bool IsProduct = true)
+        {
+            try
+            {
+                RegistryKey temp = _baseRegistry;
+                RegistryKey subKey = temp.CreateSubKey(IsProduct ? ProductSubKey : AddInOutlookSubKey);
+                return subKey;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
 
     }
 }

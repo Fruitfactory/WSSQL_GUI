@@ -90,6 +90,8 @@ namespace OF.CA
                 DeleteRootFolder(session, path);
                 
                 DeleteElasticSearchFiles(session,RegistryHelper.Instance.GetElasticSearchpath());
+                DeleteRegistryKeys();
+
             }
             catch (Exception)
             {
@@ -101,10 +103,17 @@ namespace OF.CA
             return ActionResult.Success;
         }
 
+        private static void DeleteRegistryKeys()
+        {
+            if (RegistryHelper.Instance.IsPluginUiVisibleKeyPresent())
+            {
+                RegistryHelper.Instance.DeletePluginUiKey();
+            }
+        }
+
         #endregion [CA ClearFiles]
 
         private static string GetInstallationFolder(Session session)
-
         {
             return session[InstallFolder];
         }
@@ -231,6 +240,7 @@ namespace OF.CA
                             return ActionResult.UserExit;
                 }
                 RegistryHelper.Instance.SetFlagClosedOutlookApplication();
+                DeleteRegistryKeys();
             }
             catch (Exception ex)
             {
