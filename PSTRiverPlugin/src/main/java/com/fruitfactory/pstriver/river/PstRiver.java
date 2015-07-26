@@ -123,24 +123,24 @@ public class PstRiver extends AbstractRiverComponent implements River {
     public void start() {
 
         logger.warn(LOG_TAG + "River is starting...");
-        try {
-            _client.admin().indices().prepareCreate(_indexName).execute()
-                    .actionGet();
-        } catch (Exception e) {
-            if (ExceptionsHelper.unwrapCause(e) instanceof IndexAlreadyExistsException) {
-                // that's fine
-            } else if (ExceptionsHelper.unwrapCause(e) instanceof ClusterBlockException) {
-                // ok, not recovered yet..., lets start indexing and hope we
-                // recover by the first bulk
-                // TODO: a smarter logic can be to register for cluster event
-                // listener here, and only start sampling when the block is
-                // removed...
-            } else {
-                logger.warn("failed to create index [{}], disabling river...",
-                        e, _indexName);
-                return;
-            }
-        }
+//        try {
+//            _client.admin().indices().prepareCreate(_indexName).execute()
+//                    .actionGet();
+//        } catch (Exception e) {
+//            if (ExceptionsHelper.unwrapCause(e) instanceof IndexAlreadyExistsException) {
+//                // that's fine
+//            } else if (ExceptionsHelper.unwrapCause(e) instanceof ClusterBlockException) {
+//                // ok, not recovered yet..., lets start indexing and hope we
+//                // recover by the first bulk
+//                // TODO: a smarter logic can be to register for cluster event
+//                // listener here, and only start sampling when the block is
+//                // removed...
+//            } else {
+//                logger.warn("failed to create index [{}], disabling river...",
+//                        e, _indexName);
+//                return;
+//            }
+//        }
         
         
         logger.warn(LOG_TAG + "River is creating mapping...");
@@ -235,20 +235,22 @@ public class PstRiver extends AbstractRiverComponent implements River {
     }
 
     private boolean isMappingExist(String index, String type) {
-        logger.info(LOG_TAG + " Is mapping exist...");
-        ClusterState cs = _client.admin().cluster().prepareState().setIndices(index).execute().actionGet().getState();
-        IndexMetaData imd = cs.getMetaData().index(index);
-
-        if (imd == null) {
-            return false;
-        }
-
-        MappingMetaData mdd = imd.mapping(type);
-
-        if (mdd != null) {
-            return true;
-        }
-        return false;
+//        logger.info(LOG_TAG + " Is mapping exist...");
+//        ClusterState cs = _client.admin().cluster().prepareState().setIndices(index).execute().actionGet().getState();
+//        IndexMetaData imd = cs.getMetaData().index(index);
+//
+//        if (imd == null) {
+//            return false;
+//        }
+//
+//        MappingMetaData mdd = imd.mapping(type);
+//
+//        if (mdd != null) {
+//            return true;
+//        }
+//        return false;
+        
+        return _client.admin().indices().prepareGetMappings(index).setTypes(type).get().getMappings().isEmpty();
     }
 
     private void pushMapping(String index, String type, XContentBuilder mapping) throws Exception {
@@ -258,7 +260,7 @@ public class PstRiver extends AbstractRiverComponent implements River {
 
         // If type does not exist, we create it
         boolean mappingExist = isMappingExist(index, type);
-        if (!mappingExist) {
+        if (mappingExist) {
             logger.info("Mapping [" + index + "]/[" + type + "] doesn't exist. Creating it.");
             XContentBuilder xcontent = mapping;
             // Read the mapping json file if exists and use it

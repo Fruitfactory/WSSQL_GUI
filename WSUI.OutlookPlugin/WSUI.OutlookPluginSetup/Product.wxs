@@ -291,6 +291,7 @@
         </RegistryKey>
         <File Id="_elasticsearch_" Name="elasticsearch" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
         <File Id="_elasticsearch_bat" Name="elasticsearch.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
+        <File Id="_elasticsearch_in_bat" Name="elasticsearch.in.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
         <File Id="_elasticsearch_service_mgr_exe" Name="elasticsearch-service-mgr.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
         <File Id="_elasticsearch_service_x64_exe" Name="elasticsearch-service-x64.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
         <File Id="_elasticsearch_service_x86_exe" Name="elasticsearch-service-x86.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
@@ -314,27 +315,27 @@
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERLIB]" KeyPath="yes" />
         </RegistryKey>
         <File Id="_antlr_runtime_3_5_jar" Name="antlr-runtime-3.5.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_apache_log4j_extras_1_2_17_jar" Name="apache-log4j-extras-1.2.17.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
         <File Id="_asm_4_1_jar" Name="asm-4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
         <File Id="_asm_commons_4_1_jar" Name="asm-commons-4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_elasticsearch_1_3_6_jar" Name="elasticsearch-1.3.6.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_groovy_all_2_3_2_jar" Name="groovy-all-2.3.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_elasticsearch_1_7_0_jar" Name="elasticsearch-1.7.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_groovy_all_2_4_4_jar" Name="groovy-all-2.4.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
         <File Id="_jna_4_1_0_jar" Name="jna-4.1.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
         <File Id="_jts_1_13_jar" Name="jts-1.13.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
         <File Id="_log4j_1_2_17_jar" Name="log4j-1.2.17.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_analyzers_common_4_9_1_jar" Name="lucene-analyzers-common-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_codecs_4_9_1_jar" Name="lucene-codecs-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_core_4_9_1_jar" Name="lucene-core-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_expressions_4_9_1_jar" Name="lucene-expressions-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_grouping_4_9_1_jar" Name="lucene-grouping-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_highlighter_4_9_1_jar" Name="lucene-highlighter-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_join_4_9_1_jar" Name="lucene-join-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_memory_4_9_1_jar" Name="lucene-memory-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_misc_4_9_1_jar" Name="lucene-misc-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_queries_4_9_1_jar" Name="lucene-queries-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_queryparser_4_9_1_jar" Name="lucene-queryparser-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_sandbox_4_9_1_jar" Name="lucene-sandbox-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_spatial_4_9_1_jar" Name="lucene-spatial-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_suggest_4_9_1_jar" Name="lucene-suggest-4.9.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_analyzers_common_4_10_4_jar" Name="lucene-analyzers-common-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_core_4_10_4_jar" Name="lucene-core-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_expressions_4_10_4_jar" Name="lucene-expressions-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_grouping_4_10_4_jar" Name="lucene-grouping-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_highlighter_4_10_4_jar" Name="lucene-highlighter-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_join_4_10_4_jar" Name="lucene-join-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_memory_4_10_4_jar" Name="lucene-memory-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_misc_4_10_4_jar" Name="lucene-misc-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_queries_4_10_4_jar" Name="lucene-queries-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_queryparser_4_10_4_jar" Name="lucene-queryparser-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_sandbox_4_10_4_jar" Name="lucene-sandbox-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_spatial_4_10_4_jar" Name="lucene-spatial-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_lucene_suggest_4_10_4_jar" Name="lucene-suggest-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
         <File Id="_spatial4j_0_4_1_jar" Name="spatial4j-0.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
       </Component>
 

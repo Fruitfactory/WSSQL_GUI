@@ -36,13 +36,14 @@ public class PstRiverPlugin extends AbstractPlugin {
 
     @Override
     public void processModule(Module module) {
-        if (module instanceof RiversModule) {
-            ((RiversModule) module).registerRiver(PstGlobalConst.PST_PREFIX, PstRiverModule.class);
-        }
 
         if (module instanceof RestModule) {
             ((RestModule) module).addRestAction(PstRestModule.class);
         }
+    }
+    
+    public void onModule(RiversModule module){
+        module.registerRiver(PstGlobalConst.PST_PREFIX, PstRiverModule.class);
     }
 
 }
