@@ -5,6 +5,7 @@
  */
 package com.fruitfactory.pstriver.river.parsers;
 
+import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.river.parsers.core.PstParserBase;
 import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
@@ -39,8 +40,8 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
     private PstNightIdleTimeSettings _settings;
     private IInputHookManage _inputHookManage;
 
-    public PstNightOrIdleTrackingParser(PstFeedDefinition def, Client client, BulkProcessor bulkProcessor, RiverName riverName, String indexName, ESLogger logger) {
-        super(def, client, bulkProcessor, riverName, indexName, logger);
+    public PstNightOrIdleTrackingParser(PstFeedDefinition def, Client client, BulkProcessor bulkProcessor, RiverName riverName, String indexName, ESLogger logger, IPstRiverInitializer riverInitializer) {
+        super(def, client, bulkProcessor, riverName, indexName, logger,riverInitializer);
         _inputHookManage = new PstLastInputEventTracker(logger);
     }
 

@@ -361,10 +361,10 @@ namespace OF.Module.ViewModel
             if (Directory.Exists(path))
             {
 #if DEBUG
-                var files = new List<string>() { "F:\\Visual\\WORK\\vincent@metajure.com.ost" };// Directory.GetFiles(path, "*.pst"); // new List<string>(){"c:\\Users\\Yariki\\AppData\\Local\\Microsoft\\Outlook\\iyariki.ya@hotmail.com.ost"};    new List<string>() { "F:\\Visual\\WORK\\vincent@metajure.com.ost", "F:\\Visual\\WORK\\vpayette@hotmail.com.ost" }; // 
-                //var files1 = Directory.GetFiles(path, "*.ost");
+                var files = Directory.GetFiles(path, "*.pst"); // new List<string>(){"c:\\Users\\Yariki\\AppData\\Local\\Microsoft\\Outlook\\iyariki.ya@hotmail.com.ost"};    new List<string>() { "F:\\Visual\\WORK\\vincent@metajure.com.ost", "F:\\Visual\\WORK\\vpayette@hotmail.com.ost" }; // 
+                var files1 = Directory.GetFiles(path, "*.ost");
                 var list = new List<string>(files);
-                //list.AddRange(files1);
+                list.AddRange(files1);
 
                 foreach (var file in list)
                 {

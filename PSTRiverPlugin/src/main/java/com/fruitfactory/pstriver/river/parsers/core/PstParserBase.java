@@ -5,6 +5,7 @@
  */
 package com.fruitfactory.pstriver.river.parsers.core;
 
+import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.river.parsers.core.IPstParser;
 import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
@@ -51,8 +52,9 @@ public abstract class PstParserBase implements IPstParser {
     private RiverName riverName;
     private String _indexName;
     private PstRiverStatus riverStatus;
+    private IPstRiverInitializer _riverInitializer;
 
-    protected PstParserBase(PstFeedDefinition def, Client client, BulkProcessor bulkProcessor, RiverName riverName, String indexName, ESLogger logger) {
+    protected PstParserBase(PstFeedDefinition def, Client client, BulkProcessor bulkProcessor, RiverName riverName, String indexName, ESLogger logger,IPstRiverInitializer riverInitializer) {
         _def = def;
         _readers = new ArrayList<Thread>();
         this.logger = logger;
@@ -60,6 +62,7 @@ public abstract class PstParserBase implements IPstParser {
         this._bulkProcessor = bulkProcessor;
         this.riverName = riverName;
         this._indexName = indexName;
+        this._riverInitializer = riverInitializer;
         parseSettings();
         
     }
@@ -70,7 +73,11 @@ public abstract class PstParserBase implements IPstParser {
 
     @Override
     public void run() {
-        
+
+        if(this._riverInitializer  != null){
+            this._riverInitializer.init();
+        }
+
         while (true) {
             if (_closed) {
                 logger.warn(LOG_TAG + "River pst was closed...");

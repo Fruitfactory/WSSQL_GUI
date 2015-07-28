@@ -6,6 +6,7 @@
 package com.fruitfactory.pstriver.river.parsers;
 
 import com.fruitfactory.pstriver.helpers.PstRiverStatus;
+import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.river.parsers.core.PstParserBase;
 import com.fruitfactory.pstriver.river.parsers.settings.PstEveryHourPeriodSettings;
 import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
@@ -31,8 +32,8 @@ public class PstRepeatParser extends PstParserBase{
 
     PstEveryHourPeriodSettings _repeatSettings;
 
-    public PstRepeatParser(PstFeedDefinition def, Client client, BulkProcessor bulkProcessor, RiverName riverName, String indexName, ESLogger logger) {
-        super(def, client, bulkProcessor, riverName, indexName, logger);
+    public PstRepeatParser(PstFeedDefinition def, Client client, BulkProcessor bulkProcessor, RiverName riverName, String indexName, ESLogger logger, IPstRiverInitializer riverInitializer) {
+        super(def, client, bulkProcessor, riverName, indexName, logger,riverInitializer);
     }
 
     @Override

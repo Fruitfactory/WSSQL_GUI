@@ -6,6 +6,7 @@
 package com.fruitfactory.pstriver.river.parsers;
 
 import com.fruitfactory.pstriver.helpers.PstRiverStatus;
+import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.river.parsers.core.PstParserBase;
 import com.fruitfactory.pstriver.river.parsers.settings.PstOnlyAtSettings;
 import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
@@ -41,8 +42,8 @@ public class PstOnlyAtParser extends PstParserBase {
     private PstOnlyAtSettings _onlyAtSettings = null;
     private int _hour;
 
-    public PstOnlyAtParser(PstFeedDefinition def, Client client, BulkProcessor bulkProcessor, RiverName riverName, String indexName, ESLogger logger) {
-        super(def, client, bulkProcessor, riverName, indexName, logger);
+    public PstOnlyAtParser(PstFeedDefinition def, Client client, BulkProcessor bulkProcessor, RiverName riverName, String indexName, ESLogger logger, IPstRiverInitializer riverInitializer) {
+        super(def, client, bulkProcessor, riverName, indexName, logger,riverInitializer);
     }
 
     @Override

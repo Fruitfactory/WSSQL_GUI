@@ -5,6 +5,7 @@
  */
 package com.fruitfactory.pstriver.river.parsers;
 
+import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.river.parsers.core.IPstParser;
 import com.fruitfactory.pstriver.helpers.PstRiverSchedule;
 import com.fruitfactory.pstriver.utils.PstFeedDefinition;
@@ -29,17 +30,17 @@ public class PstParsersFactory {
         return _instance;
     }
     
-    public IPstParser getParser(PstRiverSchedule type,PstFeedDefinition def, Client client, BulkProcessor bulkProcessor, RiverName riverName, String indexName, ESLogger logger){
+    public IPstParser getParser(PstRiverSchedule type,PstFeedDefinition def, Client client, BulkProcessor bulkProcessor, RiverName riverName, String indexName, ESLogger logger,  IPstRiverInitializer riverInitializer){
         
         logger.info(String.format("Current schedule type %s....", type.toString()));
         
         switch(type){
             case EveryNightOrIdle:
-                return new PstNightOrIdleTrackingParser(def,client,bulkProcessor,riverName,indexName,logger);
+                return new PstNightOrIdleTrackingParser(def,client,bulkProcessor,riverName,indexName,logger, riverInitializer);
             case OnlyAt:
-                return new PstOnlyAtParser(def, client, bulkProcessor, riverName, indexName, logger);
+                return new PstOnlyAtParser(def, client, bulkProcessor, riverName, indexName, logger,riverInitializer);
             case EveryHours:
-                return new PstRepeatParser(def, client, bulkProcessor, riverName, indexName, logger);
+                return new PstRepeatParser(def, client, bulkProcessor, riverName, indexName, logger,riverInitializer);
             case Never:
                 return null;
         }

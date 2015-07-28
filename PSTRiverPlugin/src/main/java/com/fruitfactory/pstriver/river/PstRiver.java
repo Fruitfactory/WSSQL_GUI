@@ -5,6 +5,7 @@
  */
 package com.fruitfactory.pstriver.river;
 
+import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.river.parsers.core.IPstParser;
 import com.fruitfactory.pstriver.river.parsers.*;
 import com.fruitfactory.pstriver.helpers.AttachmentHelper;
@@ -67,7 +68,7 @@ import org.elasticsearch.river.RiverSettings;
  *
  * @author Yariki
  */
-public class PstRiver extends AbstractRiverComponent implements River {
+public class PstRiver extends AbstractRiverComponent implements River, IPstRiverInitializer {
 
     public static final String LOG_TAG = "PST-RIVER: ";
 
@@ -123,44 +124,9 @@ public class PstRiver extends AbstractRiverComponent implements River {
     public void start() {
 
         logger.warn(LOG_TAG + "River is starting...");
-//        try {
-//            _client.admin().indices().prepareCreate(_indexName).execute()
-//                    .actionGet();
-//        } catch (Exception e) {
-//            if (ExceptionsHelper.unwrapCause(e) instanceof IndexAlreadyExistsException) {
-//                // that's fine
-//            } else if (ExceptionsHelper.unwrapCause(e) instanceof ClusterBlockException) {
-//                // ok, not recovered yet..., lets start indexing and hope we
-//                // recover by the first bulk
-//                // TODO: a smarter logic can be to register for cluster event
-//                // listener here, and only start sampling when the block is
-//                // removed...
-//            } else {
-//                logger.warn("failed to create index [{}], disabling river...",
-//                        e, _indexName);
-//                return;
-//            }
-//        }
         
-        
-        logger.warn(LOG_TAG + "River is creating mapping...");
-        try {
-            pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE, PstMetadataTags.buildPstEmailMapping());
-            pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_CONTACT, PstMetadataTags.buildPstContactMapping());
-            pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_CALENDAR, PstMetadataTags.buildPstAppointmentMapping());
-            pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_ATTACHMENT, PstMetadataTags.buildPstAttachmentMapping());
-        } catch (Exception e) {
-            logger.warn("failed to create mapping for [{}], disabling river...",
-                    e, _indexName);
-            return;
-        }
-        logger.warn(LOG_TAG + "River has created mapping...");
-
         logger.warn(LOG_TAG + "River is creating BulkProcessor...");
         try{
-            
-        
-        
             // Creating bulk processor
             this._bulkProcessor = BulkProcessor.builder(this._client, new BulkProcessor.Listener() {
                 @Override
@@ -202,7 +168,7 @@ public class PstRiver extends AbstractRiverComponent implements River {
         logger.warn(LOG_TAG + "River is creating parse thread...");
 
         try{
-            _parser = PstParsersFactory.getInstance().getParser(_definition.getScheduleSettings().getType(), _definition, _client, _bulkProcessor, riverName, _indexName, logger);
+            _parser = PstParsersFactory.getInstance().getParser(_definition.getScheduleSettings().getType(), _definition, _client, _bulkProcessor, riverName, _indexName, logger,this);
             if(_parser == null){
                 logger.warn(PstGlobalConst.LOG_TAG + "Schedule type is '" + _definition.getScheduleSettings().getType().toString() + "'");
                 return;
@@ -294,5 +260,41 @@ public class PstRiver extends AbstractRiverComponent implements River {
         //if (logger.isTraceEnabled()) {
             logger.info("/pushMapping(" + index + "," + type + ")");
         //}
+    }
+
+    @Override
+    public void init() {
+        try {
+            _client.admin().indices().prepareCreate(_indexName).execute()
+                    .actionGet();
+        } catch (Exception e) {
+            if (ExceptionsHelper.unwrapCause(e) instanceof IndexAlreadyExistsException) {
+                // that's fine
+            } else if (ExceptionsHelper.unwrapCause(e) instanceof ClusterBlockException) {
+                // ok, not recovered yet..., lets start indexing and hope we
+                // recover by the first bulk
+                // TODO: a smarter logic can be to register for cluster event
+                // listener here, and only start sampling when the block is
+                // removed...
+            } else {
+                logger.warn("failed to create index [{}], disabling river...",
+                        e, _indexName);
+                return;
+            }
+        }
+
+
+        logger.warn(LOG_TAG + "River is creating mapping...");
+        try {
+            pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE, PstMetadataTags.buildPstEmailMapping());
+            pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_CONTACT, PstMetadataTags.buildPstContactMapping());
+            pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_CALENDAR, PstMetadataTags.buildPstAppointmentMapping());
+            pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_ATTACHMENT, PstMetadataTags.buildPstAttachmentMapping());
+        } catch (Exception e) {
+            logger.warn("failed to create mapping for [{}], disabling river...",
+                    e, _indexName);
+            return;
+        }
+        logger.warn(LOG_TAG + "River has created mapping...");
     }
 }
