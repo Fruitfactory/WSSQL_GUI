@@ -157,7 +157,7 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
             })
                     .setBulkActions(100)
                     .setConcurrentRequests(1)
-                    .setFlushInterval(TimeValue.timeValueSeconds(5))
+                    .setFlushInterval(TimeValue.timeValueSeconds(2))
                     .build();
         
         
@@ -186,36 +186,21 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
     @Override
     public void close() {
         logger.warn(LOG_TAG + "Closing pst river");
-        _closed = true;
+            _closed = true;
 
-        if(_parser != null){
-            _parser.close();
-            _parser = null;
-        }
-        if (_pstParseThread != null) {
-            _pstParseThread.interrupt();
-        }
-        if (_bulkProcessor != null) {
+            if(_parser != null){
+                _parser.close();
+                _parser = null;
+            }
+            if (_pstParseThread != null) {
+                _pstParseThread.interrupt();
+            }
+            if (_bulkProcessor != null) {
             _bulkProcessor.close();
         }
     }
 
     private boolean isMappingExist(String index, String type) {
-//        logger.info(LOG_TAG + " Is mapping exist...");
-//        ClusterState cs = _client.admin().cluster().prepareState().setIndices(index).execute().actionGet().getState();
-//        IndexMetaData imd = cs.getMetaData().index(index);
-//
-//        if (imd == null) {
-//            return false;
-//        }
-//
-//        MappingMetaData mdd = imd.mapping(type);
-//
-//        if (mdd != null) {
-//            return true;
-//        }
-//        return false;
-        
         return _client.admin().indices().prepareGetMappings(index).setTypes(type).get().getMappings().isEmpty();
     }
 

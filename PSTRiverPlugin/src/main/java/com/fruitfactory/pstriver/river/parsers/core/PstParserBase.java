@@ -6,21 +6,18 @@
 package com.fruitfactory.pstriver.river.parsers.core;
 
 import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
-import com.fruitfactory.pstriver.river.parsers.core.IPstParser;
 import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
 import com.fruitfactory.pstriver.rest.PstStatusRepository;
 import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
-import com.fruitfactory.pstriver.useractivity.IInputHookManage;
-import com.fruitfactory.pstriver.useractivity.IReaderControl;
-import com.fruitfactory.pstriver.useractivity.PstLastInputEventTracker;
-import com.fruitfactory.pstriver.useractivity.PstUserActivityTracker;
+
 import com.fruitfactory.pstriver.utils.PstFeedDefinition;
 import com.fruitfactory.pstriver.utils.PstGlobalConst;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Paths;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +29,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.common.joda.time.DateTime;
 import org.elasticsearch.common.joda.time.format.ISODateTimeFormat;
 import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 import org.elasticsearch.river.RiverName;
@@ -40,7 +38,7 @@ import org.elasticsearch.river.RiverName;
  *
  * @author Yariki
  */
-public abstract class PstParserBase implements IPstParser {
+public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
 
     private Date _lastUpdatedDate;
     private PstFeedDefinition _def;
@@ -53,6 +51,10 @@ public abstract class PstParserBase implements IPstParser {
     private String _indexName;
     private PstRiverStatus riverStatus;
     private IPstRiverInitializer _riverInitializer;
+
+    private int countEmails;
+    private int countAttachments;
+
 
     protected PstParserBase(PstFeedDefinition def, Client client, BulkProcessor bulkProcessor, RiverName riverName, String indexName, ESLogger logger,IPstRiverInitializer riverInitializer) {
         _def = def;
@@ -83,16 +85,18 @@ public abstract class PstParserBase implements IPstParser {
                 logger.warn(LOG_TAG + "River pst was closed...");
                 break;
             }
-            Date scanDateNew = new Date();
             try {
                 _lastUpdatedDate = getLastDateFromRiver();
                 riverStatus = getStatusFromRiver();
 
+                countEmails = getLastCountIndexedCountOfEmails();
+                countAttachments = getLastCountIndexedOfAttachments();
+
                 if (riverStatus != PstRiverStatus.InitialIndexing) {
                     riverStatus = PstRiverStatus.Busy;
                 }
-                updateStatusRiver(riverStatus);
-                PstStatusRepository.setRiverStatus(new PstRiverStatusInfo(riverStatus, _lastUpdatedDate));
+                setRiverStatus(riverStatus);
+                
                 String[] psts = _def.getDataArray();
                 int index = 1;
                 for (String file : psts) {
@@ -106,13 +110,30 @@ public abstract class PstParserBase implements IPstParser {
                     index++;
                 }
 
-                onProcess(_readers);
+                int delayTimeOut = onProcess(_readers);
+
+                for (Thread thr : _readers){
+                    PstOutlookFileReader reader = (PstOutlookFileReader)thr;
+                    if(reader == null){
+                        continue;
+                    }
+                    countEmails += reader.getCountOfIndexedEmails();
+                    countAttachments += reader.getCountOfIndexedAttachments();
+                }
 
                 try {
+                    _lastUpdatedDate = new Date();
                     _readers.clear();
-                    updateFsRiver(scanDateNew);
-                    updateStatusRiver(PstRiverStatus.StandBy);
-                    PstStatusRepository.setRiverStatus(new PstRiverStatusInfo(PstRiverStatus.StandBy, scanDateNew));
+                    updateLastDateRiver(_lastUpdatedDate);
+                    setLastCountIndexedOfEmails(countEmails);
+                    setLastCountIndexedOfAttachments(countAttachments);
+                    
+                    setRiverStatus(PstRiverStatus.StandBy);
+                    
+                    if(delayTimeOut > 0){
+                        Thread.sleep(TimeValue.timeValueHours(delayTimeOut).millis());
+                    }
+
                 } catch (Exception ex) {
                     logger.error(LOG_TAG + ex.getMessage() + " " + ex.toString());
                 }
@@ -127,14 +148,25 @@ public abstract class PstParserBase implements IPstParser {
        
     }
 
-    protected abstract void onProcess(List<Thread> readers) throws Exception;
+    public void setStatus(PstRiverStatus riverStatus){
+        setRiverStatus(riverStatus);
+    }
+
+    public PstRiverStatus getStatus(){
+        return this.riverStatus;
+    }
+
+    protected abstract int onProcess(List<Thread> readers) throws Exception;
     
     protected PstRiverStatus getRiverStatus(){
-        return riverStatus;
+        return this.riverStatus;
     }
     
     protected void setRiverStatus(PstRiverStatus status){
-        riverStatus = status;
+        this.riverStatus = status;
+        updateStatusRiver(this.riverStatus);
+        PstStatusRepository.setRiverStatus(new PstRiverStatusInfo(riverStatus, _lastUpdatedDate,countEmails,countAttachments));
+
     }
     
     protected ESLogger getLogger(){
@@ -143,6 +175,14 @@ public abstract class PstParserBase implements IPstParser {
     
     protected PstFeedDefinition getDefinition(){
         return _def;
+    }
+
+    protected void flush(){
+        try{
+            _bulkProcessor.flush();
+        }catch(Exception ex){
+            logger.error(ex.getMessage());
+        }
     }
     
     private void esIndex(String index, String type, String id,
@@ -206,29 +246,67 @@ public abstract class PstParserBase implements IPstParser {
         return lastDate;
     }
 
-    private void updateFsRiver(Date scanDate)
-            throws Exception {
+    private void updateLastDateRiver(Date scanDate){
         // We store the lastupdate date and some stats
-        scanDate = new DateTime(scanDate).secondOfDay().roundFloorCopy().minusSeconds(2).toDate();
 
-        XContentBuilder xb = jsonBuilder()
-                .startObject()
-                .startObject(PstGlobalConst.PST_PREFIX)
-                .field("feedname", riverName.getName())
-                .field("lastdate", scanDate)
-                .endObject()
-                .endObject();
-        esIndex("_river", riverName.name(), PstGlobalConst.LAST_UPDATED_FIELD, xb);
+        try{
+            scanDate = new DateTime(scanDate).secondOfDay().roundFloorCopy().minusSeconds(2).toDate();
+
+            XContentBuilder xb = jsonBuilder()
+                    .startObject()
+                    .startObject(PstGlobalConst.PST_PREFIX)
+                    .field("feedname", riverName.getName())
+                    .field("lastdate", scanDate)
+                    .endObject()
+                    .endObject();
+            esIndex("_river", riverName.name(), PstGlobalConst.LAST_UPDATED_FIELD, xb);
+
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+
     }
 
     @SuppressWarnings("unchecked")
     private PstRiverStatus getStatusFromRiver() {
         PstRiverStatus riverStatus = PstRiverStatus.None;
+
+        Object value = getSavedValue(null,PstGlobalConst.RIVER_STATUS,"riverstatus");
+        if(value == null){
+            return PstRiverStatus.InitialIndexing;
+        }
+        return PstRiverStatus.valueOf(value.toString());
+    }
+
+    protected void updateStatusRiver(PstRiverStatus riverStatus) {
+        setSavedValue(PstGlobalConst.RIVER_STATUS,"riverstatus",riverStatus);
+    }
+
+    protected int getLastCountIndexedCountOfEmails(){
+        int countEmails = Integer.parseInt(getSavedValue(0,PstGlobalConst.COUNT_INDEXED_EMAIL,"indexedemails").toString());
+        return countEmails;
+    }
+
+    protected void setLastCountIndexedOfEmails(int count){
+        setSavedValue(PstGlobalConst.COUNT_INDEXED_EMAIL,"indexedemails",count);
+    }
+
+    protected int getLastCountIndexedOfAttachments(){
+        int count = Integer.parseInt(getSavedValue(0,PstGlobalConst.COUNT_INDEXED_ATTACHMENT,"indexedattachments").toString());
+        return count;
+    }
+
+    protected void setLastCountIndexedOfAttachments(int count){
+        setSavedValue(PstGlobalConst.COUNT_INDEXED_ATTACHMENT,"indexedattachments",count);
+    }
+
+    private Object getSavedValue(Object defaultValue,String id, String fieldName){
+        Object value = defaultValue;
         try {
-                // Do something
+            // Do something
             // If the river is being closed, we return
             if (_closed) {
-                return riverStatus;
+                return value;
             }
 
             _client.admin().indices().prepareRefresh("_river").execute()
@@ -236,45 +314,45 @@ public abstract class PstParserBase implements IPstParser {
 
             // If the river is being closed, we return
             if (_closed) {
-                return riverStatus;
+                return value;
             }
             GetResponse lastSeqGetResponse = _client
                     .prepareGet("_river", riverName.name(),
-                            PstGlobalConst.RIVER_STATUS).execute().actionGet();
+                            id).execute().actionGet();
             if (lastSeqGetResponse.isExists()) {
                 Map<String, Object> fsState = (Map<String, Object>) lastSeqGetResponse
                         .getSourceAsMap().get(PstGlobalConst.PST_PREFIX);
 
                 if (fsState != null) {
-                    Object status = fsState.get("riverstatus");
-                    if (status != null) {
-                        riverStatus = (PstRiverStatus) status;
-                    }
+                    value = fsState.get(fieldName);
                 }
             } else {
                 // First call
                 if (logger.isDebugEnabled()) {
                     logger.debug("{} doesn't exist", PstGlobalConst.RIVER_STATUS);
                 }
-                riverStatus = PstRiverStatus.InitialIndexing;
             }
         } catch (Exception e) {
             logger.warn("failed to get _lastupdate, throttling....", e);
         }
-        return riverStatus;
+        return value;
     }
 
-    protected void updateStatusRiver(PstRiverStatus riverStatus)
-            throws Exception {
+    private void setSavedValue(String id, String fieldName, Object value){
+        try {
+            XContentBuilder xb = jsonBuilder()
+                    .startObject()
+                    .startObject(PstGlobalConst.PST_PREFIX)
+                    .field("feedname", riverName.getName())
+                    .field(fieldName, value)
+                    .endObject()
+                    .endObject();
+            esIndex("_river", riverName.name(), id, xb);
 
-        XContentBuilder xb = jsonBuilder()
-                .startObject()
-                .startObject(PstGlobalConst.PST_PREFIX)
-                .field("feedname", riverName.getName())
-                .field("riverstatus", riverStatus)
-                .endObject()
-                .endObject();
-        esIndex("_river", riverName.name(), PstGlobalConst.RIVER_STATUS, xb);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+        }
+
     }
 
     protected void parseSettings(){

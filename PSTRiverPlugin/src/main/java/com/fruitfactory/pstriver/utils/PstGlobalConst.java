@@ -14,6 +14,8 @@ public class PstGlobalConst {
     public static final String PST_PREFIX = "pst";
     public static final String LAST_UPDATED_FIELD = "_lastupdated";
     public static final String RIVER_STATUS = "_riverstatus";
+    public static final String COUNT_INDEXED_EMAIL = "_countOfIndexedEmails";
+    public static final String COUNT_INDEXED_ATTACHMENT = "_countOfIndexedAttachments";
     public static final String LOG_TAG = "PST-RIVER: ";
     
 }

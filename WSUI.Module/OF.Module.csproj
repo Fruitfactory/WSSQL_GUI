@@ -103,9 +103,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Output\Nest.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Output\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\Toolkits\Newtonsoft.Json.6.0.1\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -161,6 +161,7 @@
     <Compile Include="Interface\ViewModel\IContactDetailsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IContactEmailDetailsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IContactKindDetailsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IElasticSearchMonitoringViewModel.cs" />
     <Compile Include="Interface\ViewModel\IElasticSearchRiverSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IElasticSearchViewModel.cs" />
     <Compile Include="Interface\View\IAllDataView.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Interface\View\IDataKindView.cs" />
     <Compile Include="Interface\View\IDataView.cs" />
     <Compile Include="Interface\ViewModel\IKindItem.cs" />
+    <Compile Include="Interface\View\IElasticSearchMonitoringView.cs" />
     <Compile Include="Interface\View\IElasticSearchRiverSettingsView.cs" />
     <Compile Include="Interface\View\IElasticSearchView.cs" />
     <Compile Include="Interface\View\IKindsView.cs" />
@@ -220,6 +222,7 @@
     <Compile Include="ViewModel\AttachmentViewModel.cs" />
     <Compile Include="ViewModel\ContactDetailsViewModel.cs" />
     <Compile Include="ViewModel\ContactViewModel.cs" />
+    <Compile Include="ViewModel\ElasticSearchMonitoringViewModel.cs" />
     <Compile Include="ViewModel\ElasticSearchRiverSettingsViewModel.cs" />
     <Compile Include="ViewModel\ElasticSearchViewModel.cs" />
     <Compile Include="ViewModel\EmailViewModel.cs" />
@@ -259,6 +262,9 @@
     </Compile>
     <Compile Include="View\Controls\TextboxAutoComplete.xaml.cs">
       <DependentUpon>TextboxAutoComplete.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ElasticSearchMonitoringView.xaml.cs">
+      <DependentUpon>ElasticSearchMonitoringView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ElasticSearchRiverSettingsView.xaml.cs">
       <DependentUpon>ElasticSearchRiverSettingsView.xaml</DependentUpon>
@@ -364,6 +370,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Controls\TextboxAutoComplete.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ElasticSearchMonitoringView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

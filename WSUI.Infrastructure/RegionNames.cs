@@ -14,5 +14,7 @@ namespace OF.Infrastructure
         public const string SidebarPreviewRegion = "SidebarPreviewRegion";
 
         public const string ElasticSearchRegion = "ElasticSearchRegion";
+
+        public const string ElasticSearchMonitoring = "ElasticSearchMonitoring";
     }
 }

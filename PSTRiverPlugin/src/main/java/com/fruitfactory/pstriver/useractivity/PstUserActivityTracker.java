@@ -9,6 +9,9 @@ import com.fruitfactory.pstriver.helpers.PstReaderStatus;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.fruitfactory.pstriver.helpers.PstRiverStatus;
+import com.fruitfactory.pstriver.river.parsers.core.IPstStatusTracker;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.unit.TimeValue;
 import org.joda.time.*;
@@ -33,21 +36,25 @@ public class PstUserActivityTracker extends Thread {
     private IInputHookIdle hookIdleTime;
     private LocalTime timeBeginNight = new LocalTime(0,0,0);
     private LocalTime timeFinishNight = new LocalTime(6,0,0);
+
+    private IPstStatusTracker statusTracker;
     
-    public PstUserActivityTracker(IInputHookIdle hookIdleTime, List<IReaderControl> readers,ESLogger logger) {
+    public PstUserActivityTracker(IInputHookIdle hookIdleTime,IPstStatusTracker statusTracker,  List<IReaderControl> readers,ESLogger logger) {
         this.readers = readers;
         onlineTime = (int)TimeValue.timeValueMinutes(2).getSeconds();
         idleTime = (int)TimeValue.timeValueMinutes(2).getSeconds();
         this.logger = logger;
         this.hookIdleTime = hookIdleTime;
+        this.statusTracker = statusTracker;
     }
 
-    public PstUserActivityTracker(IInputHookIdle hookIdleTime, List<IReaderControl> readers, int onlineTime, int idleTime,ESLogger logger) {
+    public PstUserActivityTracker(IInputHookIdle hookIdleTime, IPstStatusTracker statusTracker, List<IReaderControl> readers, int onlineTime, int idleTime,ESLogger logger) {
         this.readers = readers;
         this.onlineTime = onlineTime;
         this.idleTime = idleTime;
         this.logger = logger;
         this.hookIdleTime = hookIdleTime;
+        this.statusTracker = statusTracker;
     }
     
     public  void startTracking(){
@@ -109,6 +116,7 @@ public class PstUserActivityTracker extends Thread {
                 r.pauseThread();
             }
         }
+        statusTracker.setStatus(PstRiverStatus.StandBy);
     }
     
     private boolean IsHight(){
@@ -122,6 +130,7 @@ public class PstUserActivityTracker extends Thread {
                 r.resumeThread();
             }
         }
+        statusTracker.setStatus(PstRiverStatus.Busy);
     }
     
 }

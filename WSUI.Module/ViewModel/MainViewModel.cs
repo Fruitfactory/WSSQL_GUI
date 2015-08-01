@@ -91,9 +91,12 @@ namespace OF.Module.ViewModel
             }
             _token = _eventAggregator.GetEvent<SelectedChangedPayloadEvent>().Subscribe(OnSelectedItemChanged);
             _elasticSearchViewModel = _container.Resolve<IElasticSearchViewModel>();
+            _elasticSearchViewModel.IndexingFinished += ElasticSearchViewModelOnIndexingFinished;
             _userActivityTracker = _container.Resolve<IUserActivityTracker>();
-
+            Monitoring = _container.Resolve<IElasticSearchMonitoringViewModel>();
         }
+
+        public IElasticSearchMonitoringViewModel Monitoring { get; private set; }
 
         public IKindsView KindsView { get; protected set; }
 
@@ -856,6 +859,10 @@ namespace OF.Module.ViewModel
                     {
                         _elasticSearchViewModel.Show(true);
                     }
+                    else
+                    {
+                        Monitoring.Start();
+                    }
                 }
                 if (_userActivityTracker.IsNotNull())
                 {
@@ -991,6 +998,15 @@ namespace OF.Module.ViewModel
                 return;
             _userActivityTracker.Stop();
         }
+
+        private void ElasticSearchViewModelOnIndexingFinished(object sender, EventArgs eventArgs)
+        {
+            if (Monitoring.IsNotNull())
+            {
+                Monitoring.Start();
+            }
+        }
+
 
     }
 }

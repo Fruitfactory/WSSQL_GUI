@@ -75,6 +75,8 @@ public class PstStatusRepository {
                 status.field("success",true);
                 status.field("status",riverStatus.getStatus());
                 status.field("lastupdated",riverStatus.getLastDateUpdated());
+                status.field("emailcount",riverStatus.getCountEmails());
+                status.field("attachmentcount",riverStatus.getCountAttachments());
             }else{
                 status.field("success",false);
             }

@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="OF.Module.View.ElasticSearchMonitoringView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:service="clr-namespace:OF.Module.Service"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <service:RiverStatusToColorBrushConverter x:Key="RiverStatusToColorBrushConverter" />
+        <service:DateToStringConverter x:Key="DateToStringConverter" WithTime="True"></service:DateToStringConverter>
+        <service:NumericToStringConverter x:Key="NumericToStringConverter"></service:NumericToStringConverter>
+        
+        <Style TargetType="StackPanel">
+            <Setter Property="Margin" Value="3 1 1 1"></Setter>
+        </Style>
+        
+        <Style x:Key="LabelTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="Width" Value="75"></Setter>
+            <Setter Property="Margin" Value="0 0 2 0"></Setter>
+        </Style>
+        
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="0"
+                    Grid.Column="0">
+            <TextBlock Style="{StaticResource LabelTextBlockStyle}">Status:</TextBlock>
+            <TextBlock Text="{Binding StatusText,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
+                       Foreground="{Binding Status,Converter={StaticResource RiverStatusToColorBrushConverter}}"></TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="1"
+                    Grid.Column="0">
+            <TextBlock Style="{StaticResource LabelTextBlockStyle}">Last Updated:</TextBlock>
+            <TextBlock Text="{Binding LastUpdated,Mode=OneWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource DateToStringConverter}}"></TextBlock>
+        </StackPanel>
+
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="0"
+                    Grid.Column="1">
+            <TextBlock Style="{StaticResource LabelTextBlockStyle}">Emails:</TextBlock>
+            <TextBlock Text="{Binding EmailCount,Mode=OneWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NumericToStringConverter}}" 
+                       ></TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="1"
+                    Grid.Column="1">
+            <TextBlock Style="{StaticResource LabelTextBlockStyle}">Attachments:</TextBlock>
+            <TextBlock Text="{Binding AttachmentCount,Mode=OneWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NumericToStringConverter}}"></TextBlock>
+        </StackPanel>
+
+
+
+
+    </Grid>
+</UserControl>

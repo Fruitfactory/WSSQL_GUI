@@ -47,9 +47,9 @@ public class PstOnlyAtParser extends PstParserBase {
     }
 
     @Override
-    protected void onProcess(List<Thread> readers) throws Exception {
-
-        updateStatusRiver(PstRiverStatus.StandBy);
+    protected int onProcess(List<Thread> readers) throws Exception {
+        
+        setRiverStatus(PstRiverStatus.StandBy);
 
         while(true){
             DateTime date = new DateTime();
@@ -58,18 +58,23 @@ public class PstOnlyAtParser extends PstParserBase {
             if(hour == _hour && minutes == 0){
                 break;
             }
+            Thread.sleep(1250);
         }
 
-        updateStatusRiver(PstRiverStatus.Busy);
+        setRiverStatus(PstRiverStatus.Busy);
+        
         for (Thread reader : readers){
             try {
                 reader.start();
                 reader.join();
+                flush();
                 ((PstOutlookFileReader) reader).close();
             } catch (InterruptedException ex) {
                 getLogger().error(Level.SEVERE.toString() +  ex.getMessage());
             }
         }
+        
+        return 0;
     }
 
 

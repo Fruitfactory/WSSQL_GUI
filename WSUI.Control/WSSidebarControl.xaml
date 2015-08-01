@@ -41,6 +41,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -108,7 +109,11 @@
                                 </transitionalsControls:TransitionElement>
                 </Grid>
                 
-                <ContentControl Grid.Row="1" Grid.RowSpan="3" Margin="4" regions:RegionManager.RegionName="ElasticSearchRegion"></ContentControl>
+                
+                <ContentControl Grid.Row="4" Margin="2" regions:RegionManager.RegionName="ElasticSearchMonitoring"></ContentControl>
+                
+                
+                <ContentControl Grid.Row="1" Grid.RowSpan="4" Margin="4" regions:RegionManager.RegionName="ElasticSearchRegion"></ContentControl>
                 
                 
             </Grid>

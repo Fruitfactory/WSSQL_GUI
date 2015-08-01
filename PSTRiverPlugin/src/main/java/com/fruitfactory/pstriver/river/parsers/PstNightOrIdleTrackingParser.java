@@ -46,7 +46,7 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
     }
 
     @Override
-    protected void onProcess(List<Thread> readers) throws InterruptedException, Exception {
+    protected int onProcess(List<Thread> readers) throws InterruptedException, Exception {
 
         List<IReaderControl> readerControls = new ArrayList<>();
         for (Thread r : readers) {
@@ -55,7 +55,7 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
 
         PstUserActivityTracker tracker = null;
 
-        tracker = new PstUserActivityTracker(this._inputHookManage, readerControls, _settings.getIdleTime(), _settings.getIdleTime(), getLogger());
+        tracker = new PstUserActivityTracker(this._inputHookManage,this, readerControls, _settings.getIdleTime(), _settings.getIdleTime(), getLogger());
         tracker.startTracking();
         getLogger().info(LOG_TAG + "User activity tracker was created...");
         getLogger().info(LOG_TAG + "Start parsing files...");
@@ -82,9 +82,7 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
             }
         }
         readerControls.clear();
-        updateStatusRiver(PstRiverStatus.StandBy);
-        TimeValue time = TimeValue.timeValueHours(1);
-        Thread.sleep(time.millis());
+        return 1;
     }
 
     @Override

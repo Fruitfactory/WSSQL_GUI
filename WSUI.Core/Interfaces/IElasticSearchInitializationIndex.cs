@@ -5,7 +5,7 @@ using OF.Core.Data.ElasticSearch.Response;
 
 namespace OF.Core.Interfaces
 {
-    public interface IElasticSearchInitializationIndex
+    public interface IElasticSearchInitializationIndex : IElasticSearchRiverStatus
     {
         IExistsResponse IndexExists(string name);
         void CreateInfrastructure(IEnumerable<string> listOfFiles);
@@ -14,6 +14,6 @@ namespace OF.Core.Interfaces
         void CreateWarms();
 
         void WarmUp();
-        ElasticsearchResponse<OFRiverStatusInfo> GetRiverStatus();
+       
     }
 }

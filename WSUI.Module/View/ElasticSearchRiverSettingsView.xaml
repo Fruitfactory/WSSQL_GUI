@@ -30,11 +30,22 @@
         <TabControl Grid.Row="0" >
             
             <Controls:MetroTabItem Header="Indexing">
-                <GroupBox Header="Schedule">
-                    <StackPanel Orientation="Vertical">
-                        
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="5 0">
+                        <Rectangle Fill="#CC119EDA"></Rectangle>
+                        <Label Foreground="White">
+                            Schedule
+                        </Label>
+                    </Grid>
+
+                    <StackPanel Grid.Row="1" Orientation="Vertical">
+
                         <Label>Update my entire index:</Label>
-                        
+
                         <Grid Margin="15 5 2 5">
                             <Grid.RowDefinitions>
                                 <RowDefinition></RowDefinition>
@@ -46,9 +57,9 @@
                                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            
+
                             <!--row 0-->
-                            
+
                             <RadioButton 
                                 GroupName="Main" 
                                 IsChecked="{Binding EveryNightOrIdle,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
@@ -57,16 +68,17 @@
                                 Orientation="Horizontal">
                                     <Label>
                                         Every night and when my computer is idle. Idle Time-out:
-                                    </Label> <!--Every night and-->
+                                    </Label>
+                                    <!--Every night and-->
                                     <Controls:NumericUpDown Value="{Binding IdleTime,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                        Minimum="1"
+                                        Minimum="0"
                                         Maximum="120"
                                         Delay="500"
                                         Speedup="true" />
-                                    <Label>m.</Label>
+                                    <Label>minute(s).</Label>
                                 </StackPanel>
                             </RadioButton>
-                            
+
                             <!--row 1-->
                             <RadioButton
                                 Grid.Row="1"
@@ -93,8 +105,8 @@
                                     </ComboBox>
                                 </StackPanel>
                             </RadioButton>
-                            
-                            
+
+
                             <!--row 2-->
                             <RadioButton
                                 Grid.Row="2"
@@ -116,8 +128,8 @@
                                     <Label>h</Label>
                                 </StackPanel>
                             </RadioButton>
-                            
-                            
+
+
                             <!--row 3-->
                             <RadioButton
                                 Grid.Row="3"
@@ -133,14 +145,16 @@
                                     </Label>
                                 </StackPanel>
                             </RadioButton>
-                            
-                            
+
+
                         </Grid>
 
                         <!--<Label>You can always update your mail index by clicking "Index Data" from the OutlookFinder menu</Label>-->
 
                     </StackPanel>
-                </GroupBox>
+
+                </Grid>
+                
             </Controls:MetroTabItem>
             
         </TabControl>     

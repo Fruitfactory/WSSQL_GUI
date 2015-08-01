@@ -37,21 +37,20 @@ public class PstRepeatParser extends PstParserBase{
     }
 
     @Override
-    protected void onProcess(List<Thread> readers) throws Exception {
-        updateStatusRiver(PstRiverStatus.Busy);
-
+    protected int onProcess(List<Thread> readers) throws Exception {
+        setRiverStatus(PstRiverStatus.Busy);
+        
         for(Thread reader : readers){
             try{
                 reader.start();
                 reader.join();
+                flush();
                 ((PstOutlookFileReader)reader).close();
             }catch(Exception ex){
                 getLogger().error(PstGlobalConst.PST_PREFIX + " " + ex.getMessage() );
             }
         }
-        updateStatusRiver(PstRiverStatus.StandBy);
-        TimeValue time = TimeValue.timeValueHours(_repeatSettings != null ? _repeatSettings.getHourPeriod() : DEFAULT_PERIOD);
-        Thread.sleep(time.millis());
+        return _repeatSettings.getHourPeriod();
     }
 
     @Override

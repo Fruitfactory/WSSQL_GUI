@@ -66,8 +66,14 @@ namespace OF.Module.ViewModel
         public bool EveryNightOrIdle
         {
             get { return Get(() => EveryNightOrIdle); }
-            set { Set(() => EveryNightOrIdle, value); }
+            set
+            {
+                Set(() => EveryNightOrIdle, value);
+                OnEveryNightOrIdleChanged(value);
+            }
         }
+
+        
 
         public bool OnlyAt
         {
@@ -199,6 +205,15 @@ namespace OF.Module.ViewModel
                 RepeatHours = 1;
             }
         }
+        
+        private void OnEveryNightOrIdleChanged(bool value)
+        {
+            if(IdleTime == default(int))
+            {
+                IdleTime = 1;
+            }
+        }
+
 
         private void ReadSettings()
         {

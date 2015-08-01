@@ -68,7 +68,10 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
     private PstReaderStatus _status;
     private List<PstShortEmailData> listShortEmailData;
     private List<PstShortUser> listUsers;
-    
+
+    private int _countOfIndexedEmails;
+    private int _countOfIndexedAttachments;
+
     private Object LOCK = new Object();
     private boolean _paused = false;
     
@@ -196,6 +199,14 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
     
     public String getFilename(){
         return _filename;
+    }
+
+    public int getCountOfIndexedEmails() {
+        return _countOfIndexedEmails;
+    }
+
+    public int getCountOfIndexedAttachments() {
+        return _countOfIndexedAttachments;
     }
 
     private void prepareStatusInfo(PSTFolder rootFolder) {
@@ -469,6 +480,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         source.endObject();
 
         esIndex(_indexName, PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
+        _countOfIndexedEmails++;
     }
 
     private String getAppropriateEmail(String subject, String userName) {
@@ -594,6 +606,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
                 .field(PstMetadataTags.Attachment.ENTRYID, entryid);
         source.endObject();
         esIndex(_indexName, PstMetadataTags.INDEX_TYPE_ATTACHMENT, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
+        _countOfIndexedAttachments++;
     }
 
     private void indexContact(PSTContact contact) throws IOException, Exception {

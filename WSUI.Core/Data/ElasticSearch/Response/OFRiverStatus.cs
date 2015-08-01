@@ -18,5 +18,9 @@ namespace OF.Core.Data.ElasticSearch.Response
 
         public DateTime Lastupdated { get; set; }
 
+        public int Emailcount { get; set; }
+
+        public int Attachmentcount { get; set; }
+
     }
 }

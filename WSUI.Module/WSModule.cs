@@ -88,6 +88,8 @@ namespace OF.Module
             _unityContainer.RegisterType<IElasticSearchInitializationIndex, OFElasticInitializingClient>();
             _unityContainer.RegisterType<IElasticTrackingClient, OFElasticTrackingClient>();
             _unityContainer.RegisterType<IElasticSearchClient, OFElasticSearchClient>();
+            _unityContainer.RegisterType<IElasticSearchRiverStatus, OFElasticRiverStatus>();           
+           
 
             _unityContainer.RegisterType<IElasticSearchView, ElasticSearchView>();
             _unityContainer.RegisterType<IElasticSearchViewModel, ElasticSearchViewModel>();
@@ -98,6 +100,9 @@ namespace OF.Module
             _unityContainer.RegisterType<IElasticSearchRiverSettingsView, ElasticSearchRiverSettingsView>();
             _unityContainer.RegisterType<IElasticSearchRiverSettingsViewModel, ElasticSearchRiverSettingsViewModel>();
             _unityContainer.RegisterType<IElasticUpdateSettingsClient, OFElasticUpdateSettingsClient>();
+
+            _unityContainer.RegisterType<IElasticSearchMonitoringView, ElasticSearchMonitoringView>();
+            _unityContainer.RegisterType<IElasticSearchMonitoringViewModel, ElasticSearchMonitoringViewModel>();
             
 
             watch.Stop();
