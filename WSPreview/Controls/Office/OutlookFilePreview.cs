@@ -188,7 +188,7 @@ namespace OFPreview.PreviewHandler.Controls.Office
             }
             else
             {
-                OFLogger.Instance.LogInfo("Path is empty. Outlook Preview");
+                OFLogger.Instance.LogDebug("Path is empty. Outlook Preview");
             }
         }
 

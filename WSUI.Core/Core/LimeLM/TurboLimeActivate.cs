@@ -122,7 +122,7 @@ namespace OF.Core.Core.LimeLM
                 if (!string.IsNullOrEmpty(pkeyid))
                 {
                     var result = LimeLMApi.SetDetails(pkeyid, 0, null, new string[] { TimesUsed }, new string[] { c.ToString() });
-                    OFLogger.Instance.LogInfo("Times used: {0}, Result: {1}", c, result);
+                    OFLogger.Instance.LogDebug("Times used: {0}, Result: {1}", c, result);
                 }
             }
             catch (Exception ex)
@@ -169,7 +169,7 @@ namespace OF.Core.Core.LimeLM
             {
                 IsGenuineResult gr = TurboActivate.IsGenuine(DaysBetweenCheck, GraceOfInerErr, true);
                 IsInternetError = gr == IsGenuineResult.InternetError;
-                OFLogger.Instance.LogInfo("GenuineResult: {0}", gr);
+                OFLogger.Instance.LogDebug("GenuineResult: {0}", gr);
                 return gr == IsGenuineResult.Genuine || gr == IsGenuineResult.GenuineFeaturesChanged ||
                        IsInternetError;
             }
@@ -195,7 +195,7 @@ namespace OF.Core.Core.LimeLM
             {
                 string trialExpires = TurboActivate.GetFeatureValue(TrialExpires, null);
                 isTrial = int.Parse(TurboActivate.GetFeatureValue(IsTrialKey, null)) > 0;
-                OFLogger.Instance.LogInfo("Expires date: {0}", trialExpires);
+                OFLogger.Instance.LogDebug("Expires date: {0}", trialExpires);
 
                 if (trialExpires != null)
                 {
@@ -203,7 +203,7 @@ namespace OF.Core.Core.LimeLM
                     // verify the trial hasn't expired
                     bool stillInTrial = TurboActivate.IsDateValid(trialExpires,
                         TurboActivate.TA_DateCheckFlags.TA_HAS_NOT_EXPIRED);
-                    OFLogger.Instance.LogInfo("Is Still in Trial: {0}", stillInTrial);
+                    OFLogger.Instance.LogDebug("Is Still in Trial: {0}", stillInTrial);
                     //DaysRemain = (DateTime.Parse(trialExpires).Date - DateTime.Now.Date).Days;
                     //DaysRemain = DaysRemain <= 0 ? 0 : DaysRemain;
                     isActivated = stillInTrial;
@@ -244,7 +244,7 @@ namespace OF.Core.Core.LimeLM
         private void InternalActivate()
         {
             string path = Path.Combine(Path.GetDirectoryName(typeof(TurboLimeActivate).Assembly.Location), ActivationAppName);
-            OFLogger.Instance.LogInfo("Path Activate: {0}", path);
+            OFLogger.Instance.LogDebug("Path Activate: {0}", path);
             Process activationProcess = new Process()
             {
                 StartInfo =

@@ -34,7 +34,7 @@ namespace OFOutlookPlugin.Core
             var aggregator = GetAggregator();
             if (aggregator == null)
                 return;
-            OFLogger.Instance.LogInfo("Edit Criteria (toolbox):{0}", searchString);
+            OFLogger.Instance.LogDebug("Edit Criteria (toolbox):{0}", searchString);
             aggregator.GetEvent<OFSearch>().Publish(searchString);
         }
     }

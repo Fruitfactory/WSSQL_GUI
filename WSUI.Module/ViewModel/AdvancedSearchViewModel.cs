@@ -178,7 +178,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
     }

@@ -84,7 +84,7 @@ public class DllPreloader {
         var assembleName = AssemblyName.GetAssemblyName(file);
         if ( !assemblies.Any(a => AssemblyName.ReferenceMatchesDefinition(assembleName, a.GetName())))
         {
-          OFLogger.Instance.LogInfo(string.Format("Preload: {0}",file));
+          OFLogger.Instance.LogDebug(string.Format("Preload: {0}",file));
           Assembly.LoadFrom(file);
         }
       }

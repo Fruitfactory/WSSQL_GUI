@@ -38,7 +38,7 @@ namespace OF.Core.Helpers
             if (!File.Exists(temp))
             {
                 Directory.CreateDirectory(temp);
-                OFLogger.Instance.LogWarning(string.Format("{0}: {1}", "Create folder", temp));
+                OFLogger.Instance.LogDebug(string.Format("{0}: {1}", "Create folder", temp));
             }
         }
 
@@ -140,7 +140,7 @@ namespace OF.Core.Helpers
                     }
                     catch (Exception ex)
                     {
-                        OFLogger.Instance.LogInfo(ex.Message);
+                        OFLogger.Instance.LogError(ex.Message);
                     }
                 }
             }
@@ -193,7 +193,7 @@ namespace OF.Core.Helpers
             if (!di.Exists)
             {
                 di.Create();
-                OFLogger.Instance.LogWarning(string.Format("{0}: {1}", "Create folder", di.FullName));
+                OFLogger.Instance.LogDebug(string.Format("{0}: {1}", "Create folder", di.FullName));
             }
             return tempFolder;
         }

@@ -579,7 +579,7 @@ namespace OFOutlookPlugin
             try
             {
                 StartWatch();
-                OFLogger.Instance.LogInfo("Plugin is loading...");
+                OFLogger.Instance.LogDebug("Plugin is loading...");
                 outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
                 RegistryHelper.Instance.ResetShutdownNotification();
                 if (System.Windows.Application.Current == null)
@@ -921,7 +921,7 @@ namespace OFOutlookPlugin
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            OFLogger.Instance.LogError("Domain Unhandled Exception (plugin): {0}", e.ExceptionObject.ToString());
+            OFLogger.Instance.LogDebug("Domain Unhandled Exception (plugin): {0}", e.ExceptionObject.ToString());
         }
 
         private void CurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs firstChanceExceptionEventArgs)
@@ -933,15 +933,15 @@ namespace OFOutlookPlugin
                     OFLogger.Instance.LogError("Reflection Type Load: {0}", item.Message.ToString());
                 }
             }
-            OFLogger.Instance.LogError("Domain Exception: {0}", firstChanceExceptionEventArgs.Exception.Message);
-            OFLogger.Instance.LogError("Domain Stacktrace: {0}", firstChanceExceptionEventArgs.Exception.StackTrace);
+            OFLogger.Instance.LogDebug("Domain Exception: {0}", firstChanceExceptionEventArgs.Exception.Message);
+            OFLogger.Instance.LogDebug("Domain Stacktrace: {0}", firstChanceExceptionEventArgs.Exception.StackTrace);
         }
 
 
         private void WPFApplicationOnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs dispatcherUnhandledExceptionEventArgs)
         {
-            OFLogger.Instance.LogError("WPF Exception: {0}", dispatcherUnhandledExceptionEventArgs.Exception.Message);
-            OFLogger.Instance.LogError("WPF Stacktrace: {0}", dispatcherUnhandledExceptionEventArgs.Exception.StackTrace);
+            OFLogger.Instance.LogDebug("WPF Exception: {0}", dispatcherUnhandledExceptionEventArgs.Exception.Message);
+            OFLogger.Instance.LogDebug("WPF Stacktrace: {0}", dispatcherUnhandledExceptionEventArgs.Exception.StackTrace);
         }
 
         #region [event handlers for ribbon]
@@ -1076,7 +1076,7 @@ namespace OFOutlookPlugin
             {
                 if (RegistryHelper.Instance.IsShouldRestoreOutlookFolder())
                 {
-                    OFLogger.Instance.LogInfo("{0}", "OutlookFolder is empty");
+                    OFLogger.Instance.LogDebug("{0}", "OutlookFolder is empty");
                     return;
                 }
 
@@ -1084,14 +1084,14 @@ namespace OFOutlookPlugin
                 Outlook.NameSpace outlookNamespace = OutlookApp.GetNamespace(DefaultNamespace);
                 if (outlookNamespace == null || string.IsNullOrEmpty(id))
                     return;
-                OFLogger.Instance.LogInfo("OutlookFolder ID: {0}", id);
+                OFLogger.Instance.LogDebug("OutlookFolder ID: {0}", id);
                 Outlook.MAPIFolder folder = outlookNamespace.GetFolderFromID(id, Type.Missing);
                 if (folder == null)
                     return;
                 folder.WebViewURL = RegistryHelper.Instance.GetOutlookFolderWebUrl();
                 folder.WebViewOn = true;
 
-                OFLogger.Instance.LogInfo("WebViewURL: {0}", folder.WebViewURL);
+                OFLogger.Instance.LogDebug("WebViewURL: {0}", folder.WebViewURL);
 
                 Marshal.ReleaseComObject(folder);
                 Marshal.ReleaseComObject(outlookNamespace);
@@ -1206,7 +1206,7 @@ namespace OFOutlookPlugin
         private void StopWatch(string method)
         {
             _watch.Stop();
-            OFLogger.Instance.LogInfo("--------------- {0} => {1}", method, _watch.ElapsedMilliseconds);
+            OFLogger.Instance.LogDebug("--------------- {0} => {1}", method, _watch.ElapsedMilliseconds);
         }
 
 
@@ -1353,7 +1353,7 @@ namespace OFOutlookPlugin
                         {
                             registry.DeleteValue(item);
                         }
-                        OFLogger.Instance.LogInfo("Disabled Add-ins: {0}; {1}", item, temp);
+                        OFLogger.Instance.LogDebug("Disabled Add-ins: {0}; {1}", item, temp);
                     }
                 }
             }

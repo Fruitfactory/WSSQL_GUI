@@ -135,7 +135,7 @@ namespace OF.Infrastructure.Controls.ProgressManager
         private void OnClosedForm(object sender,EventArgs args)
         {
             ((Window) _progressForm).Dispatcher.BeginInvokeShutdown(DispatcherPriority.Background);
-            OFLogger.Instance.LogInfo(
+            OFLogger.Instance.LogDebug(
                 "Close dialog");
         }
 
@@ -151,7 +151,7 @@ namespace OF.Infrastructure.Controls.ProgressManager
                     _stackOperation.Pop();
                 }
             }
-            OFLogger.Instance.LogInfo("Stop progress");
+            OFLogger.Instance.LogDebug("Stop progress");
             CloseProgressForm();
         }
 

@@ -18,11 +18,13 @@ namespace OF.Core.Logger
 
         #endregion fields
 
+        [Flags]
         private enum LevelLogging
         {
-            Info,
-            Warning,
-            Error
+            Info = 0x01,
+            Warning = 0x02,
+            Error = 0x04,
+            Debug = 0x08,
         }
 
         #region fields static
@@ -52,11 +54,7 @@ namespace OF.Core.Logger
             {
                 lock (_lock)
                 {
-                    if (_instance == null)
-                    {
-                        _instance = new OFLogger();
-                    }
-                    return _instance;
+                    return _instance ?? (_instance = new OFLogger());
                 }
             }
         }
@@ -68,9 +66,9 @@ namespace OF.Core.Logger
             StackTrace stackTrace = new StackTrace();
             StackFrame stackFrame = stackTrace.GetFrame(1);
             MethodBase methodBase = stackFrame.GetMethod();
-            string tempMessage = string.Format("{0}: {1}", methodBase.Name, message);    
+            string tempMessage = string.Format("{0}: {1}", methodBase.Name, message);
             WriteLog(LevelLogging.Error, tempMessage);
-#if DEBUG 
+#if DEBUG
             System.Diagnostics.Debug.WriteLine(tempMessage);
 #endif
         }
@@ -125,14 +123,31 @@ namespace OF.Core.Logger
 #endif
         }
 
+        public void LogDebug(string message)
+        {
+            WriteLog(LevelLogging.Debug, message);
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine(message);
+#endif
+        }
+
+        public void LogDebug(string format, params object[] args)
+        {
+            string message = string.Format(format, args);
+            LogDebug(message);
+        }
+
+
+
         #endregion public
 
         #region private
 
         private void WriteLog(LevelLogging level, string message)
         {
-            if (_log == null)
+            if (_log == null || !IsEnabledLogLevel(level))
                 return;
+
             switch (level)
             {
                 case LevelLogging.Info:
@@ -146,21 +161,26 @@ namespace OF.Core.Logger
                 case LevelLogging.Error:
                     _log.Error(message);
                     break;
-
-                default:
+                case LevelLogging.Debug:
+                    _log.Debug(message);
                     break;
             }
+        }
+
+        private bool IsEnabledLogLevel(LevelLogging level)
+        {
+#if DEBUG
+            const int EnabledLevels = 15;
+#else
+            const int EnabledLevels = 5;
+#endif
+            return level == (LevelLogging)((int)level & EnabledLevels);
         }
 
         #endregion private
 
         public void Log(string message, Category category, Priority priority)
         {
-            //if (_watch != null && _watch.IsRunning)
-            //{
-            //    _watch.Stop();
-            //    WriteLog(LevelLogging.Warning, string.Format("Last Elapsed: {0}ms", _watch.ElapsedMilliseconds));
-            //}
 
             switch (category)
             {

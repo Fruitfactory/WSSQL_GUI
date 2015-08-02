@@ -45,7 +45,7 @@ namespace OF.Core.ElasticSearch.Clients
                 var result = Raw.Search<byte[]>(DefaultInfrastructureName, GetSearchType(typeof(T)), bodyBytes);
 
                 watch.Stop();
-                OFLogger.Instance.LogInfo("Search (Send request to ES and retrieve response): {0}ms", watch.ElapsedMilliseconds);
+                OFLogger.Instance.LogDebug("Search (Send request to ES and retrieve response): {0}ms", watch.ElapsedMilliseconds);
 
                 Stopwatch watchParsing = new Stopwatch();
                 watchParsing.Start();
@@ -59,7 +59,7 @@ namespace OF.Core.ElasticSearch.Clients
                     listResult = rawResult.hits.hits.Select(h => h._source);
                 }
                 watchParsing.Stop();
-                OFLogger.Instance.LogInfo("Parsing dynamic response: {0}ms, Diff: {1}ms", watchParsing.ElapsedMilliseconds, Math.Abs(watchParsing.ElapsedMilliseconds - watch.ElapsedMilliseconds));
+                OFLogger.Instance.LogDebug("Parsing dynamic response: {0}ms, Diff: {1}ms", watchParsing.ElapsedMilliseconds, Math.Abs(watchParsing.ElapsedMilliseconds - watch.ElapsedMilliseconds));
 
             }
             catch (Exception ex)

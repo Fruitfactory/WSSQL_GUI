@@ -119,7 +119,7 @@ namespace OF.Module.Core
             if (_kindItem is INotifyPropertyChanged)
                 (_kindItem as INotifyPropertyChanged).PropertyChanged += OnPropertyChanged;
             watch.Stop();
-            OFLogger.Instance.LogInfo(String.Format("Resolve '{0}' takes {1}ms",_typeKind.FullName,watch.ElapsedMilliseconds));
+            OFLogger.Instance.LogDebug(String.Format("Resolve '{0}' takes {1}ms",_typeKind.FullName,watch.ElapsedMilliseconds));
         }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)

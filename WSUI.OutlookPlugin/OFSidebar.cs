@@ -20,7 +20,7 @@ namespace OFOutlookPlugin
         {
             InitializeComponent();
             ADXAfterFormHide += OnAdxAfterFormHide;
-            OFLogger.Instance.LogInfo("Create OFSidebar");
+            OFLogger.Instance.LogDebug("Create OFSidebar");
         }
 
         private void OnAdxAfterFormHide(object sender, ADXAfterFormHideEventArgs e)
@@ -52,7 +52,7 @@ namespace OFOutlookPlugin
         {
             if (bootStraper == null)
             {
-                OFLogger.Instance.LogWarning("Bootstraper eqaul 'NULL'.");
+                OFLogger.Instance.LogDebug("Bootstraper eqaul 'NULL'.");
                 return;
             }
             _wsuiBootStraper = bootStraper;

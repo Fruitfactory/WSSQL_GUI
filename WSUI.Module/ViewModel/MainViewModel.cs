@@ -174,7 +174,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -195,7 +195,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -236,14 +236,14 @@ namespace OF.Module.ViewModel
             {
                 ActivateStatus = TurboLimeActivate.Instance.State;
 
-                OFLogger.Instance.LogInfo("Activated Status: {0}", ActivateStatus.ToString());
+                OFLogger.Instance.LogDebug("Activated Status: {0}", ActivateStatus.ToString());
                 OnPropertyChanged(() => ActivateStatus);
                 OnPropertyChanged(() => VisibleTrialLabel);
                 OnPropertyChanged(() => DaysLeft);
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -272,7 +272,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -303,7 +303,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -365,7 +365,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -401,7 +401,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
             finally
             {
@@ -424,7 +424,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
             finally
             {
@@ -453,7 +453,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -499,7 +499,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -526,7 +526,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -551,7 +551,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -571,7 +571,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -681,7 +681,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -703,7 +703,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 

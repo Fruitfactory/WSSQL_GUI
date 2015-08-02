@@ -64,7 +64,7 @@ namespace OF.Core.Core.Search
         public void SetSearchCriteria(string searchCriteris)
         {
             _listRules.ForEach(item => item.SetSearchCriteria(searchCriteris));
-            OFLogger.Instance.LogInfo("Criteria: {0}", searchCriteris);
+            OFLogger.Instance.LogDebug("Criteria: {0}", searchCriteris);
         }
 
         public void SetAdvancedSearchCriterias(IEnumerable<IAdvancedSearchCriteria> advancedSearchCriterias)
@@ -155,7 +155,7 @@ namespace OF.Core.Core.Search
                 var events = IsAdvancedMode ? _listRules.Where(item => item.IncludedInAdvancedMode).Select(item => item.GetEvent()).ToArray() : _listRules.Select(item => item.GetEvent()).ToArray();
                 if (events == null || events.Length == 0)
                 {
-                    OFLogger.Instance.LogInfo("List of Events is empty");
+                    OFLogger.Instance.LogDebug("List of Events is empty");
                     return;
                 }
                 var watchSearch = new Stopwatch();
@@ -168,7 +168,7 @@ namespace OF.Core.Core.Search
 
                 WaitHandle.WaitAll(events);
                 watchSearch.Stop();
-                OFLogger.Instance.LogInfo("------------------- searching is DONE!!!!--------------------- {0}ms",watchSearch.ElapsedMilliseconds);//
+                OFLogger.Instance.LogDebug("------------------- searching is DONE!!!!--------------------- {0}ms",watchSearch.ElapsedMilliseconds);//
 
                 if (_needStop)
                 {
@@ -190,7 +190,7 @@ namespace OF.Core.Core.Search
                     InternalResult.Add(itemResult);
                 }
                 watch.Stop();
-                OFLogger.Instance.LogInfo("BaseSearchSystem: {0}", watch.ElapsedMilliseconds);
+                OFLogger.Instance.LogDebug("BaseSearchSystem: {0}", watch.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {

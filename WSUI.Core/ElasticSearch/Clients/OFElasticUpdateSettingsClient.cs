@@ -22,8 +22,8 @@ namespace OF.Core.ElasticSearch.Clients
 
             OFObjectJsonSaveReadHelper.Instance.Save(settings, GlobalConst.SettingsRiverFile);
 
-            OFLogger.Instance.LogInfo("Update River...");
-            OFLogger.Instance.LogInfo("Status: {0}  Success: {1}", response.HttpStatusCode, response.Success);
+            OFLogger.Instance.LogDebug("Update River...");
+            OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.HttpStatusCode, response.Success);
         }
 
     }

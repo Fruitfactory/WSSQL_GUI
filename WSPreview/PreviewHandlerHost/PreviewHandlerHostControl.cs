@@ -208,7 +208,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerHost
                         webMessage.Visible = true;
                         var str = Regex.Replace(Properties.Resources.NoPreview, "replace", ext);
                         webMessage.DocumentText = str;
-                        OFLogger.Instance.LogWarning(string.Format("{0}: {1}", "No Preview", _filePath));
+                        OFLogger.Instance.LogDebug(string.Format("{0}: {1}", "No Preview", _filePath));
                         return;
                     }
                 }
@@ -346,7 +346,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerHost
                     previewControlCommands.PreviewCommandExecuted += PreviewControlCommandsOnPreviewCommandExecuted;
                 }
                 int res = ((IInitializeWithFile)_comInstance).Initialize(_filePath, 0);
-                OFLogger.Instance.LogInfo(string.Format("HRESULT(Initialize)={0}", res));
+                OFLogger.Instance.LogDebug(string.Format("HRESULT(Initialize)={0}", res));
             }
             else if (File.Exists(_filePath))
             {
@@ -383,7 +383,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerHost
             r.left = 0;
             r.right = this.Width;
             int wndRes = ((IPreviewHandler)_comInstance).SetWindow(this.Handle, ref r);
-            OFLogger.Instance.LogInfo(string.Format("HRESULT(SetWindow)={0}", wndRes));
+            OFLogger.Instance.LogDebug(string.Format("HRESULT(SetWindow)={0}", wndRes));
             ((IPreviewHandler)_comInstance).DoPreview();
         }
 

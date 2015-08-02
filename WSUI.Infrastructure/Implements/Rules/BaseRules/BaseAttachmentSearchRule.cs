@@ -89,7 +89,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
 	    {
             var groups = Result.GroupBy(i => new { Name = i.ItemNameDisplay, Size = i.Size });
 	        var result = new List<AttachmentContentSearchObject>();
-            OFLogger.Instance.LogInfo(string.Format("Count attachments: {0}", groups.Count()));
+            OFLogger.Instance.LogDebug(string.Format("Count attachments: {0}", groups.Count()));
             foreach (var group in groups)
             {
                 var item = group.FirstOrDefault();
@@ -103,7 +103,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             Result.Clear();
             if (result.Count > 0)
             {
-                OFLogger.Instance.LogInfo("{0}: {1}",RuleName,result.Count);
+                OFLogger.Instance.LogDebug("{0}: {1}",RuleName,result.Count);
                 Result = result;
                 //LastDate = Result.Min(d => d.DateReceived); // TODO should be re-factored
             }

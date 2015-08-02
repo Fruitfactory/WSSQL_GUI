@@ -119,11 +119,11 @@ namespace OFOutlookPlugin.Core
 
         public bool CanUpdate()
         {
-            OFLogger.Instance.LogInfo("Module  != null: {0}",Module != null);
+            OFLogger.Instance.LogDebug("Module  != null: {0}",Module != null);
             if (Module != null)
             {
-                OFLogger.Instance.LogInfo("Module.IsMSINetworkDeployed(): {0}", Module.IsMSINetworkDeployed());
-                OFLogger.Instance.LogInfo("Module.IsMSIUpdatable(): {0}", Module.IsMSIUpdatable());    
+                OFLogger.Instance.LogDebug("Module.IsMSINetworkDeployed(): {0}", Module.IsMSINetworkDeployed());
+                OFLogger.Instance.LogDebug("Module.IsMSIUpdatable(): {0}", Module.IsMSIUpdatable());    
             }
             return Module != null && Module.IsMSINetworkDeployed() && Module.IsMSIUpdatable();
         }
@@ -180,35 +180,35 @@ namespace OFOutlookPlugin.Core
             SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(Dispatcher.CurrentDispatcher));
             try
             {
-                OFLogger.Instance.LogInfo("Check for updates...");
+                OFLogger.Instance.LogDebug("Check for updates...");
                 string url = Module.CheckForMSIUpdates();
-                OFLogger.Instance.LogInfo("End checking updates...");
-                OFLogger.Instance.LogInfo("Url after checking: " + url);
+                OFLogger.Instance.LogDebug("End checking updates...");
+                OFLogger.Instance.LogDebug("Url after checking: " + url);
                 if (String.IsNullOrEmpty(url))
                 {
                     Unlock();
-                    OFLogger.Instance.LogInfo("No updates...");
+                    OFLogger.Instance.LogDebug("No updates...");
                     return;
                 }
 
                 string filename = url.Substring(0, url.LastIndexOf('/') + 1);
                 filename = filename + UpdatedFilename;
-                OFLogger.Instance.LogInfo(String.Format("File: {0}...", filename));
+                OFLogger.Instance.LogDebug(String.Format("File: {0}...", filename));
                 string shadow = string.Format(ShadowCopyFolder, _path);
                 _instalatonUrl = GetInstalationPath(_path);
-                OFLogger.Instance.LogInfo(string.Format("Instalation Url: {0}...", _instalatonUrl));
+                OFLogger.Instance.LogDebug(string.Format("Instalation Url: {0}...", _instalatonUrl));
                 string temp = GetTempUserPath();
                 CreateTempFolder(string.Format(TempFolderCreate, temp));
                 //CreateTempFolder(shadow);
                 string localmsi = string.Format(TempFolder, temp, UpdatedFilename);
-                OFLogger.Instance.LogInfo(String.Format("Msi local path: {0}...", localmsi));
+                OFLogger.Instance.LogDebug(String.Format("Msi local path: {0}...", localmsi));
                 string localversion = string.Format(TempFolder, temp, VersionFilename);
-                OFLogger.Instance.LogInfo(String.Format("Version local path: {0}...", localversion));
+                OFLogger.Instance.LogDebug(String.Format("Version local path: {0}...", localversion));
                 string urlVersion = _instalatonUrl + VersionFilename;
-                OFLogger.Instance.LogInfo(String.Format("Version Url: {0}...", urlVersion));
+                OFLogger.Instance.LogDebug(String.Format("Version Url: {0}...", urlVersion));
 
                 WebClient webClient = new WebClient();
-                OFLogger.Instance.LogInfo("Download update...");
+                OFLogger.Instance.LogDebug("Download update...");
                 webClient.DownloadFile(filename, localmsi);
                 webClient.DownloadFile(urlVersion, localversion);
 
@@ -216,23 +216,23 @@ namespace OFOutlookPlugin.Core
                 process.StartInfo.FileName = "msiexec.exe";
                 process.StartInfo.Arguments = String.Format(" /i \"{0}\" /qb /norestart /log {1}install.log ", localmsi, _path); //REINSTALL=\"ALL\"
                 process.StartInfo.Verb = "runas";
-                OFLogger.Instance.LogInfo("Installing update...");
+                OFLogger.Instance.LogDebug("Installing update...");
                 process.Start();
                 process.WaitForExit();
                 //Copy(shadow, path);
-                OFLogger.Instance.LogInfo(process.ExitCode == 0
+                OFLogger.Instance.LogDebug(process.ExitCode == 0
                                                  ? "Update is done..."
                                                  : "Something wrong. Check exit code...");
-                OFLogger.Instance.LogInfo(String.Format("Exit code: {0}", process.ExitCode));
+                OFLogger.Instance.LogDebug(String.Format("Exit code: {0}", process.ExitCode));
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(String.Format("Exception during updates: {0}...", ex.Message));
+                OFLogger.Instance.LogError(String.Format("Exception during updates: {0}...", ex.Message));
             }
             finally
             {
                 watch.Stop();
-                OFLogger.Instance.LogInfo(String.Format("Silent updated lasts: {0}ms", watch.ElapsedMilliseconds));
+                OFLogger.Instance.LogDebug(String.Format("Silent updated lasts: {0}ms", watch.ElapsedMilliseconds));
             }
         }
 
@@ -302,7 +302,7 @@ namespace OFOutlookPlugin.Core
             }
             else
             {
-                OFLogger.Instance.LogInfo(string.Format("Can update = {0}", CanUpdate()));
+                OFLogger.Instance.LogDebug(string.Format("Can update = {0}", CanUpdate()));
                 OFLogger.Instance.LogInfo("Not updatable...");
             }
         }

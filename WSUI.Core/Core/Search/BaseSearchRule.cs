@@ -138,7 +138,7 @@ namespace OF.Core.Core.Search
                 string query = Query;
                 if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
-                OFLogger.Instance.LogInfo("Query<{0}>: {1}", typeof(T).Name, query);
+                OFLogger.Instance.LogDebug("Query<{0}>: {1}", typeof(T).Name, query);
                 
 
                 if (_total != 0 && _from >= _total)
@@ -197,20 +197,20 @@ namespace OF.Core.Core.Search
                 // additional process
                 if (!NeedStop && result != null && result.Documents.Any())
                 {
-                    OFLogger.Instance.LogInfo("Search Done: Server {0}ms, Client {1}ms", result.Took, watch.ElapsedMilliseconds);
+                    OFLogger.Instance.LogDebug("Search Done: Server {0}ms, Client {1}ms", result.Took, watch.ElapsedMilliseconds);
                     _total = result.Total;
                     _from +=  result.Documents.Count() == TopQueryResult ? TopQueryResult : result.Documents.Count();
                     watch = new Stopwatch();
                     watch.Start();
                     ReadDataFromTable(result.Documents);
                     watch.Stop();
-                    OFLogger.Instance.LogInfo("Read Data Done: {0}ms", watch.ElapsedMilliseconds);
+                    OFLogger.Instance.LogDebug("Read Data Done: {0}ms", watch.ElapsedMilliseconds);
 
                     watch = new Stopwatch();
                     watch.Start();
                     ProcessResult();
                     watch.Stop();
-                    OFLogger.Instance.LogInfo("Process Result Done: {0}ms", watch.ElapsedMilliseconds);
+                    OFLogger.Instance.LogDebug("Process Result Done: {0}ms", watch.ElapsedMilliseconds);
 
                     _typeResult = TypeResult.Ok;
                     

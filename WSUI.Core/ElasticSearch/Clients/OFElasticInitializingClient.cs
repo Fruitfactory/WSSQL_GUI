@@ -151,7 +151,7 @@ namespace OF.Core.ElasticSearch.Clients
                 var result = ElasticClient.Search<OFContact>(s => s.From(0).Size(WARM_UP_SIZER));
                 if (result.IsNotNull() && result.Documents.Any())
                 {
-                    OFLogger.Instance.LogInfo("Warm Up Contact: {0} contacts", result.Documents.Count());
+                    OFLogger.Instance.LogDebug("Warm Up Contact: {0} contacts", result.Documents.Count());
                 }
             }
             catch (Exception ex)
@@ -167,7 +167,7 @@ namespace OF.Core.ElasticSearch.Clients
                 var result = ElasticClient.Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER));
                 if (result.IsNotNull() && result.Documents.Any())
                 {
-                    OFLogger.Instance.LogInfo("Warm Up EMail: {0} emails", result.Documents.Count());
+                    OFLogger.Instance.LogDebug("Warm Up EMail: {0} emails", result.Documents.Count());
                 }
             }
             catch (Exception ex)
@@ -183,7 +183,7 @@ namespace OF.Core.ElasticSearch.Clients
                 var result = ElasticClient.Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER));
                 if (result.IsNotNull() && result.Documents.Any())
                 {
-                    OFLogger.Instance.LogInfo("Warm Up attachment: {0} attachments", result.Documents.Count());
+                    OFLogger.Instance.LogDebug("Warm Up attachment: {0} attachments", result.Documents.Count());
                 }
             }
             catch (Exception ex)
@@ -197,8 +197,8 @@ namespace OF.Core.ElasticSearch.Clients
         {
             var response = ElasticClient.CreateIndex(DefaultInfrastructureName, c => c.NumberOfReplicas(0)
                 .NumberOfShards(1));
-            OFLogger.Instance.LogInfo("Create Index...");
-            OFLogger.Instance.LogInfo("Status: {0}  Success: {1}", response.ConnectionStatus.HttpStatusCode, response.ConnectionStatus.Success);
+            OFLogger.Instance.LogDebug("Create Index...");
+            OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.ConnectionStatus.HttpStatusCode, response.ConnectionStatus.Success);
 
             return response.ConnectionStatus.HttpStatusCode == 200;
 
@@ -213,8 +213,8 @@ namespace OF.Core.ElasticSearch.Clients
 
             OFObjectJsonSaveReadHelper.Instance.Save(riverMeta, GlobalConst.SettingsRiverFile);
 
-            OFLogger.Instance.LogInfo("Create River...");
-            OFLogger.Instance.LogInfo("Status: {0}  Success: {1}", response.HttpStatusCode, response.Success);
+            OFLogger.Instance.LogDebug("Create River...");
+            OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.HttpStatusCode, response.Success);
         }
 
     }
