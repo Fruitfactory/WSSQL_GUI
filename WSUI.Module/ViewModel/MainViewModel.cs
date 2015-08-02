@@ -663,7 +663,7 @@ namespace OF.Module.ViewModel
                     ShowSenderOfSelectedOutlookEmail(action);
                     break;
                 case WSActionType.Settings:
-                    var wnd = _container.Resolve<IElasticSearchRiverSettingsWindow>();
+                    var wnd = _container.Resolve<IMainSettingsWindow>();
                     wnd.ShowModal();
                     break;
             }

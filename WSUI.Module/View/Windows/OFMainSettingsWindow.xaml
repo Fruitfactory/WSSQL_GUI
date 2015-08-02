@@ -1,4 +1,4 @@
-﻿<Controls:MetroWindow x:Class="OF.Module.View.Windows.ElasticSearchRiverSettingsWindow"
+﻿<Controls:MetroWindow x:Class="OF.Module.View.Windows.OFMainSettingsWindow"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,11 +11,14 @@
             ShowMinButton="False"
             ShowMaxRestoreButton="False"
             WindowState="Normal"
-            SizeToContent="WidthAndHeight"
             WindowTransitionsEnabled="True"
             WindowStartupLocation="CenterScreen"
             GlowBrush="{DynamicResource AccentColorBrush}"
-            NonActiveGlowBrush="Red">
+            NonActiveGlowBrush="Red"
+                      Width="550"
+                      Height="350"
+                     
+                      >
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -26,8 +29,11 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro.Resources;component/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-
+            
+            <Style TargetType="StackPanel" >
+                <Setter Property="Margin" Value="0 3 0 0"></Setter>
+            </Style>
+            
         </ResourceDictionary>
     </Window.Resources>
     <Grid>

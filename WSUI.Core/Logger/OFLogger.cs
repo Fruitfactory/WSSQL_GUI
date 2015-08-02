@@ -5,12 +5,15 @@ using System.Reflection;
 using log4net;
 using log4net.Config;
 using Microsoft.Practices.Prism.Logging;
+using OF.Core.Helpers;
 
 namespace OF.Core.Logger
 {
     public class OFLogger : ILoggerFacade
     {
         private const string Filename = "log4net.config";
+
+        private static readonly int DefaultLogginfLevels = 5;
 
         #region fields
 
@@ -19,7 +22,7 @@ namespace OF.Core.Logger
         #endregion fields
 
         [Flags]
-        private enum LevelLogging
+        public enum LevelLogging
         {
             Info = 0x01,
             Warning = 0x02,
@@ -45,6 +48,11 @@ namespace OF.Core.Logger
             {
                 var col = XmlConfigurator.Configure(fi);
                 _log = log4net.LogManager.GetLogger("OFLogger");
+            }
+            int levels = RegistryHelper.Instance.GetLoggingSettings();
+            if (levels == default(int))
+            {
+                RegistryHelper.Instance.SetLoggingsettings(DefaultLogginfLevels);
             }
         }
 
@@ -169,12 +177,8 @@ namespace OF.Core.Logger
 
         private bool IsEnabledLogLevel(LevelLogging level)
         {
-#if DEBUG
-            const int EnabledLevels = 15;
-#else
-            const int EnabledLevels = 5;
-#endif
-            return level == (LevelLogging)((int)level & EnabledLevels);
+            int levels = RegistryHelper.Instance.GetLoggingSettings();
+            return level == (LevelLogging)((int)level & levels);
         }
 
         #endregion private

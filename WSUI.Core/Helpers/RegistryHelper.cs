@@ -29,6 +29,7 @@ namespace OF.Core.Helpers
         private const string PKeyId = "Id";
         private const string IsPluginUiVisible = "IsPluginUiVisible";
         private const string ElastiSearchPath = "ElasticSearchPath";
+        private const string LoggingSettings = "Logging";
 
         private const string AddInOutlookSubKey = @"Software\Microsoft\Office\Outlook\Addins\OFOutlookPlugin.AddinModule";
         private const string RequireShutdownNotificationKey = "RequireShutdownNotification";
@@ -337,6 +338,17 @@ namespace OF.Core.Helpers
         {
             Write(ElastiSearchPath,path);
         }
+
+        public void SetLoggingsettings(int value)
+        {
+            Write(LoggingSettings,value);
+        }
+
+        public int GetLoggingSettings()
+        {
+            return ReadKey<int>(LoggingSettings);
+        }
+
 
         #region [restore outlook folders]
 

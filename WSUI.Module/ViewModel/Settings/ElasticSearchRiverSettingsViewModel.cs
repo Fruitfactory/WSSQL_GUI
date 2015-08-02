@@ -17,7 +17,7 @@ using OF.Core.Utils.Dialog;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
 
-namespace OF.Module.ViewModel
+namespace OF.Module.ViewModel.Settings
 {
     public class ElasticSearchRiverSettingsViewModel : ViewModelBase, IElasticSearchRiverSettingsViewModel
     {
@@ -97,8 +97,6 @@ namespace OF.Module.ViewModel
             }
         }
 
-        
-
         public bool Never
         {
             get { return Get(() => Never); }
@@ -142,16 +140,9 @@ namespace OF.Module.ViewModel
             set { Set(() => IdleTime, value); }
         }
 
-        public ICommand OKCommand
+        public void ApplySettings()
         {
-            get { return Get(() => OKCommand); }
-            private set { Set(() => OKCommand, value); }
-        }
-
-        public ICommand CancelCommand
-        {
-            get { return Get(() => CancelCommand); }
-            private set { Set(() => CancelCommand, value); }
+            Save();
         }
 
         public object View
@@ -167,9 +158,6 @@ namespace OF.Module.ViewModel
             }
         }
 
-        public event EventHandler Close;
-
-
         public void Initialize()
         {
             HoursSource = new ObservableCollection<int>()
@@ -177,10 +165,11 @@ namespace OF.Module.ViewModel
                 1,2,3,4,5,6,7,8,9,10,11,12
             };
             HourTypes = new ObservableCollection<string>(){"AM","PM"};
-            OKCommand = new OFRelayCommand(OkCommandExecute, OkCommandCanExecute);
-            CancelCommand = new OFRelayCommand(CancelCommandExecute);
             ReadSettings();
+            HasChanges = false;
         }
+
+        public bool HasDetailsChanges { get { return HasChanges; } }
 
         #endregion
 
@@ -266,32 +255,6 @@ namespace OF.Module.ViewModel
             {
                 OFLogger.Instance.LogError(ex.Message);                
             }
-        }
-
-        private void CloseRaise()
-        {
-            EventHandler temp = Close;
-            if (temp.IsNotNull())
-            {
-                Close(this, EventArgs.Empty);
-            }
-        }
-
-
-        private void OkCommandExecute(object arg)
-        {
-            Save();
-            CloseRaise();
-        }
-
-        private bool OkCommandCanExecute(object arg)
-        {
-            return HasChanges;
-        }
-
-        private void CancelCommandExecute(object arg)
-        {
-            CloseRaise();
         }
 
         private void Save()

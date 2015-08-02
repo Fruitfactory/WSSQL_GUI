@@ -13,8 +13,10 @@ using OF.Module.Interface.Service;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
 using OF.Module.View;
+using OF.Module.View.Settings;
 using OF.Module.View.Windows;
 using OF.Module.ViewModel;
+using OF.Module.ViewModel.Settings;
 using Action = System.Action;
 
 namespace OF.Module
@@ -96,13 +98,18 @@ namespace OF.Module
 
             _unityContainer.RegisterType<IUserActivityTracker, OFUserActivityTracker>();
 
-            _unityContainer.RegisterType<IElasticSearchRiverSettingsWindow, ElasticSearchRiverSettingsWindow>();
+            _unityContainer.RegisterType<IMainSettingsWindow, OFMainSettingsWindow>();
             _unityContainer.RegisterType<IElasticSearchRiverSettingsView, ElasticSearchRiverSettingsView>();
             _unityContainer.RegisterType<IElasticSearchRiverSettingsViewModel, ElasticSearchRiverSettingsViewModel>();
             _unityContainer.RegisterType<IElasticUpdateSettingsClient, OFElasticUpdateSettingsClient>();
 
             _unityContainer.RegisterType<IElasticSearchMonitoringView, ElasticSearchMonitoringView>();
             _unityContainer.RegisterType<IElasticSearchMonitoringViewModel, ElasticSearchMonitoringViewModel>();
+
+            _unityContainer.RegisterType <IMainSettingsViewModel,OFMainSettingsViewModel>();
+            _unityContainer.RegisterType<IMainSettingsView, OFMainSettingsView>();
+            _unityContainer.RegisterType<ILoggingSettingsViewModel, OFLoggingSettingsViewModel>();
+            _unityContainer.RegisterType<ILoggingSettingsView, OFLoggingSettingsView>();
             
 
             watch.Stop();

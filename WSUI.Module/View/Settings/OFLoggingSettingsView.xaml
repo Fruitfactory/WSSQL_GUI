@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="OF.Module.View.Settings.OFLoggingSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Service/ResourceTemplate.xaml" />
+                <ResourceDictionary Source="../../Service\SearchButtonStyle.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="StackPanel" >
+                <Setter Property="Margin" Value="0 3 0 0"></Setter>
+            </Style>
+
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="5 0">
+            <Rectangle Fill="#CC119EDA"></Rectangle>
+            <Label Foreground="White">
+                Levels
+            </Label>
+        </Grid>
+
+        <StackPanel Grid.Row="1" Orientation="Vertical">
+            
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <CheckBox x:Name="Info" 
+                      Grid.Row="0"
+                      IsChecked="{Binding Info,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                      Margin="3">
+                    Info</CheckBox>
+
+                <CheckBox x:Name="Warning" 
+                      Grid.Row="1"
+                      IsChecked="{Binding Warning,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          Margin="3">Warning</CheckBox>
+
+                <CheckBox x:Name="Error" 
+                      Grid.Row="2"
+                      IsChecked="{Binding Error,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          Margin="3">Error</CheckBox>
+
+                <CheckBox x:Name="Debug" 
+                      Grid.Row="3"
+                      IsChecked="{Binding Debug,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          Margin="3">Debug</CheckBox>
+
+            </Grid>
+            
+            
+
+
+        </StackPanel>
+        
+    </Grid>
+
+</UserControl>

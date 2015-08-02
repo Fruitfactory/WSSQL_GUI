@@ -14,23 +14,23 @@ using System.Windows.Shapes;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
 
-namespace OF.Module.View
+namespace OF.Module.View.Settings
 {
     /// <summary>
-    /// Interaction logic for ElasticSearchRiverSettingsView.xaml
+    /// Interaction logic for OFLoggingSettingsView.xaml
     /// </summary>
-    public partial class ElasticSearchRiverSettingsView : UserControl, IElasticSearchRiverSettingsView
+    public partial class OFLoggingSettingsView : UserControl, ILoggingSettingsView
     {
-        public ElasticSearchRiverSettingsView()
+        public OFLoggingSettingsView()
         {
             InitializeComponent();
         }
 
-        public IElasticSearchRiverSettingsViewModel Model
+        public ILoggingSettingsViewModel Model
         {
-            get 
-            { 
-                return DataContext as IElasticSearchRiverSettingsViewModel;
+            get
+            {
+                return DataContext as ILoggingSettingsViewModel;
             }
             set { DataContext = value; }
         }

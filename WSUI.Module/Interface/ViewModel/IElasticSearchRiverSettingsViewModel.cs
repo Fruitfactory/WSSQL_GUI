@@ -2,12 +2,8 @@
 
 namespace OF.Module.Interface.ViewModel
 {
-    public interface IElasticSearchRiverSettingsViewModel
+    public interface IElasticSearchRiverSettingsViewModel : IDetailsSettingsViewModel
     {
-        object View { get; }
-
-        event EventHandler Close;
-
-        void Initialize();
+        
     }
 }

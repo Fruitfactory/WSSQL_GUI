@@ -18,17 +18,17 @@ using OF.Module.Interface.ViewModel;
 namespace OF.Module.View.Windows
 {
     /// <summary>
-    /// Interaction logic for ElasticSearchRiverSettingsWindow.xaml
+    /// Interaction logic for OFMainSettingsWindow.xaml
     /// </summary>
-    public partial class ElasticSearchRiverSettingsWindow : IElasticSearchRiverSettingsWindow
+    public partial class OFMainSettingsWindow : IMainSettingsWindow
     {
         private IUnityContainer _unityContainer;
 
-        public ElasticSearchRiverSettingsWindow(IUnityContainer unityContainer)
+        public OFMainSettingsWindow(IUnityContainer unityContainer)
         {
             InitializeComponent();
             _unityContainer = unityContainer;
-            var model = _unityContainer.Resolve<IElasticSearchRiverSettingsViewModel>();
+            var model = _unityContainer.Resolve<IMainSettingsViewModel>();
             DataContext = model;
             model.Close += ModelOnClose;
         }
@@ -36,9 +36,9 @@ namespace OF.Module.View.Windows
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            if (DataContext is IElasticSearchRiverSettingsViewModel)
+            if (DataContext is IMainSettingsViewModel)
             {
-                (DataContext as IElasticSearchRiverSettingsViewModel).Initialize();
+                (DataContext as IMainSettingsViewModel).Initialize();
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace OF.Module.Interface.Service
 {
-    public interface IElasticSearchRiverSettingsWindow
+    public interface IMainSettingsWindow
     {
         void ShowModal();
         void Close();
