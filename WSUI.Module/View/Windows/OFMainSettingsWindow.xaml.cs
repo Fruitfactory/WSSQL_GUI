@@ -30,20 +30,16 @@ namespace OF.Module.View.Windows
             _unityContainer = unityContainer;
             var model = _unityContainer.Resolve<IMainSettingsViewModel>();
             DataContext = model;
+            model.Initialize();
             model.Close += ModelOnClose;
-        }
-
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            if (DataContext is IMainSettingsViewModel)
-            {
-                (DataContext as IMainSettingsViewModel).Initialize();
-            }
         }
 
         private void ModelOnClose(object sender, EventArgs eventArgs)
         {
+            if (DataContext is IMainSettingsViewModel)
+            {
+                (DataContext as IMainSettingsViewModel).Close -= ModelOnClose;
+            }
             Close();
         }
 

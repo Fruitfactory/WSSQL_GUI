@@ -5,6 +5,7 @@ using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using OF.Core;
+using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.ElasticSearch.Clients;
@@ -210,6 +211,10 @@ namespace OF.Module.ViewModel.Settings
             {
                 _settingsMeta =
                     OFObjectJsonSaveReadHelper.Instance.Read<OFRiverMeta>(GlobalConst.SettingsRiverFile);
+                if (_settingsMeta.IsNull())
+                {
+                    _settingsMeta = new OFRiverMeta(OutlookHelper.GetOutlookFiles(),OFElasticSearchClientBase.DefaultInfrastructureName);
+                }
                 if (_settingsMeta.IsNotNull())
                 {
                     switch (_settingsMeta.Pst.Schedule.ScheduleType)

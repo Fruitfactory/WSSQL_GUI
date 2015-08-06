@@ -101,6 +101,13 @@
     <Compile Include="Core\WindowWrapper.cs" />
     <Compile Include="Core\CoreSetupApplication.cs" />
     <Compile Include="CustomAction.cs" />
+    <Compile Include="DeleteDataPromt\DeleteDataFolderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeleteDataPromt\DeleteDataFolderForm.Designer.cs">
+      <DependentUpon>DeleteDataFolderForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DeleteDataPromt\DeleteDataPromtApplication.cs" />
     <Compile Include="EmailValidate\EmailForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +122,9 @@
   <ItemGroup>
     <EmbeddedResource Include="ClosePromt\ClosePromptForm.resx">
       <DependentUpon>ClosePromptForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeleteDataPromt\DeleteDataFolderForm.resx">
+      <DependentUpon>DeleteDataFolderForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EmailValidate\EmailForm.resx">
       <DependentUpon>EmailForm.cs</DependentUpon>

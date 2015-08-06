@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Nest;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.ElasticSearch.Clients;
 using OF.Core.Interfaces;
@@ -34,11 +35,13 @@ namespace OF.Core.Helpers
 
         private void UserActivityProcess(object arg)
         {
+            IIndexExistsRequest request = new IndexExistsRequest(OFElasticSearchClientBase.DefaultInfrastructureName);
+
             while (!_stop)
             {
                 try
                 {
-                    var resp = _elasticSearchClient.IndexExists(OFElasticSearchClientBase.DefaultInfrastructureName);
+                    var resp = _elasticSearchClient.IndexExists(request);
                     if (!resp.Exists)
                     {
                         Thread.Sleep(2000);

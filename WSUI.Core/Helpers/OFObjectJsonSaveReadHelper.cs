@@ -23,21 +23,14 @@ namespace OF.Core.Helpers
         }
 
         #endregion
-
-        public bool Save(object obj)
-        {
-            return Save(obj, obj.GetType().Name);
-        }
-
+        
         public bool Save(object obj, string filename)
         {
             bool result = false;
             try
             {
                 var str = JsonConvert.SerializeObject(obj);
-                StreamWriter writer = File.CreateText(string.Format("{0}//{1}.json",AppDomain.CurrentDomain.BaseDirectory,filename));
-                writer.Write(str);
-                writer.Close();
+                OFIsolatedStorageHelper.Instance.SaveElasticSearchSettings(str);
                 result = true;
             }
             catch (Exception ex)
@@ -56,18 +49,11 @@ namespace OF.Core.Helpers
         {
             try
             {
-                StreamReader reader =
-                    File.OpenText(string.Format("{0}//{1}.json", AppDomain.CurrentDomain.BaseDirectory, filename));
-                if (reader.IsNull())
-                {
-                    return default(T);
-                }
-                var strObject = reader.ReadLine();
+                var strObject = OFIsolatedStorageHelper.Instance.GetElasticSearchSettings();
                 if (strObject.IsEmpty())
                 {
                     return default(T);
                 }
-
                 return JsonConvert.DeserializeObject(strObject,typeof(T)) as T;
             }
             catch (Exception ex)

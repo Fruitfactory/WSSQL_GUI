@@ -15,6 +15,7 @@ using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 using OF.CA.ClosePromt;
+using OF.CA.DeleteDataPromt;
 using OF.CA.EmailValidate;
 using OF.Core.Core.LimeLM;
 using OF.Core.Helpers;
@@ -190,7 +191,14 @@ namespace OF.CA
                     foreach (var enumerateDirectory in rootDir.EnumerateDirectories())
                     {
                         if (enumerateDirectory.Name.ToLowerInvariant().Equals(ElasticSearchDataFolder))
-                            continue;
+                        {
+                            using (var form = new DeleteDataPromtApplication(session["ProductName"]))
+                            {
+                                var result = form.PromtDeleteFolder();
+                                if(!result)
+                                    continue;
+                            }
+                        }
                         session.Log("Deleting " + enumerateDirectory.Name + "...");
                         enumerateDirectory.Delete(true);
                     }

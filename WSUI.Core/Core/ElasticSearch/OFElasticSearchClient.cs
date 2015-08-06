@@ -83,6 +83,12 @@ namespace OF.Core.Core.ElasticSearch
             return ElasticClient.IndexExists(name);
         }
 
+        public IExistsResponse IndexExists(IIndexExistsRequest indexExists)
+        {
+            return ElasticClient.IndexExists(indexExists);
+        }
+
+
         public void Dispose()
         {
             if (ElasticClient != null)

@@ -297,7 +297,7 @@ namespace OF.Module.ViewModel
             try
             {
                 
-                var list = GetOutlookFiles();
+                var list = OutlookHelper.GetOutlookFiles();
                 ElasticSearchClient.CreateInfrastructure(list);
                 Thread.Sleep(1000);
                 _timer = new Timer(TimerProgressCallback,null,1000,2000);
@@ -354,38 +354,7 @@ namespace OF.Module.ViewModel
             }
         }
 
-        private IEnumerable<string> GetOutlookFiles()
-        {
-            string path = string.Format("{0}\\Microsoft\\Outlook",
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
-            if (Directory.Exists(path))
-            {
-#if DEBUG
-                var files = new List<string>() { "F:\\Visual\\WORK\\vincent@metajure.com.ost" }; // Directory.GetFiles(path, "*.pst"); // new List<string>(){"c:\\Users\\Yariki\\AppData\\Local\\Microsoft\\Outlook\\iyariki.ya@hotmail.com.ost"};    new List<string>() { "F:\\Visual\\WORK\\vincent@metajure.com.ost", "F:\\Visual\\WORK\\vpayette@hotmail.com.ost" }; // 
-                //var files1 = Directory.GetFiles(path, "*.ost");
-                var list = new List<string>(files);
-                //list.AddRange(files1);
-
-                foreach (var file in list)
-                {
-                    System.Diagnostics.Debug.WriteLine(file);
-                }
-                return list;
-#else
-                var files = Directory.GetFiles(path, "*.pst");
-                var files1 = Directory.GetFiles(path, "*.ost");
-                var list = new List<string>(files);
-                list.AddRange(files1);
-
-                foreach (var file in list)
-                {
-                    System.Diagnostics.Debug.WriteLine(file);
-                }
-                return list;
-#endif
-            }
-            return null;
-        }
+       
 
 
         #endregion

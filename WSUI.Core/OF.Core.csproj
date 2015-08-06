@@ -162,6 +162,7 @@
     <Compile Include="ElasticSearch\Clients\OFElasticRiverStatus.cs" />
     <Compile Include="ElasticSearch\Clients\OFElasticUpdateSettingsClient.cs" />
     <Compile Include="Events\OFMenuEnabling.cs" />
+    <Compile Include="Helpers\OFIsolatedStorageHelper.cs" />
     <Compile Include="Helpers\OFObjectJsonSaveReadHelper.cs" />
     <Compile Include="Interfaces\IElasticSearchRiverStatus.cs" />
     <Compile Include="Interfaces\IElasticTrackingClient.cs" />
