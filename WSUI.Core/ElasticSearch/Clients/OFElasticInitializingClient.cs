@@ -61,7 +61,15 @@ namespace OF.Core.ElasticSearch.Clients
             return Raw.Get<OFRiverStatusInfo>("_river", DefaultInfrastructureName, "pstriverstatus");
         }
 
+        public IndexStatus GetIndexStatus(string indexName)
+        {
+            throw new NotImplementedException();
+        }
 
+        public long GetTypeCount<T>() where T : class
+        {
+            throw new NotImplementedException();
+        }
 
 
         public void CreateWarms()

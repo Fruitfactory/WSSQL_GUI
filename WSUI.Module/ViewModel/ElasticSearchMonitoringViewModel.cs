@@ -4,7 +4,9 @@ using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
+using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
+using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
@@ -56,13 +58,13 @@ namespace OF.Module.ViewModel
             set { Set(() => LastUpdated, value); }
         }
 
-        public int EmailCount
+        public long EmailCount
         {
             get { return Get(() => EmailCount); }
             set { Set(() => EmailCount, value); }
         }
 
-        public int AttachmentCount
+        public long AttachmentCount
         {
             get { return Get(() => AttachmentCount); }
             set { Set(() => AttachmentCount, value); }
@@ -110,6 +112,8 @@ namespace OF.Module.ViewModel
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
             var response = _riverStatusClient.GetRiverStatus();
+            var emailCount = _riverStatusClient.GetTypeCount<OFEmail>();
+            var attachmentCount = _riverStatusClient.GetTypeCount<OFAttachmentContent>();
             if (response.IsNull() || !response.Success)
             {
                 return;
@@ -123,8 +127,9 @@ namespace OF.Module.ViewModel
             Status = result.Status;
             StatusText = Status == OFRiverStatus.Busy || Status == OFRiverStatus.InitialIndexing ? UPDATING : READY;
             LastUpdated = result.Lastupdated;
-            EmailCount = result.Emailcount;
-            AttachmentCount = result.Attachmentcount;
+            EmailCount = emailCount;
+            AttachmentCount = attachmentCount;
+
         }
 
         public void Stop()
