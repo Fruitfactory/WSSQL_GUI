@@ -337,10 +337,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         }
 
         String subject = message.getSubject().trim();
-//        if(subject != null && !subject.contains("i-worx test account")){
-//            return;
-//        }
-//        System.out.println(subject);
+
         PSTTransportRecipient  from = message.getFrom();
         String sender = from != null ? from.getName() : message.getSentRepresentingName();
         String senderEmail = from != null ? from.getEmailAddress() : message.getSentRepresentingEmailAddress();
@@ -399,11 +396,6 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
                 }
                 AttachmentHelper helper = new AttachmentHelper(attachment.getLongFilename(), attachment.getLongPathname(), attachment.getFilesize(), attachment.getMimeTag());
                 listAttachments.add(helper);
-                
-//                if(helper.getFilename().trim().equals("1st and 2nd ship.xls"))
-//                {
-//                    System.out.print(helper.getFilename());
-//                }
 
                 saveAttachment(attachment, entryID);
             }
@@ -465,15 +457,15 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
             for (AttachmentHelper listAttachment : listAttachments) {
                 source.startObject();
                 source.field(PstMetadataTags.Email.Attachments.FILENAME,
-                        listAttachment.getFilename());
-                source.field(PstMetadataTags.Email.Attachments.PATH,
-                        listAttachment.getPath());
-                source.field(PstMetadataTags.Email.Attachments.SIZE,
-                        listAttachment.getSize());
-                source.field(PstMetadataTags.Email.Attachments.MIME_TAG,
-                        listAttachment.getMimetype());
-                source.endObject();
-            }
+                    listAttachment.getFilename());
+            source.field(PstMetadataTags.Email.Attachments.PATH,
+                    listAttachment.getPath());
+            source.field(PstMetadataTags.Email.Attachments.SIZE,
+                    listAttachment.getSize());
+            source.field(PstMetadataTags.Email.Attachments.MIME_TAG,
+                    listAttachment.getMimetype());
+            source.endObject();
+        }
             source.endArray();
         }
 
@@ -586,7 +578,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
             strBuilder.append(Base64.encode(byteBuffer));
             parsedContent = _tika.parseToString(new BytesStreamInput(byteBuffer), new Metadata());
         } catch (Exception ex) {
-            _logger.error(LOG_TAG, ex.getMessage());
+            _logger.error(LOG_TAG + ex.getMessage());
         }
 
         XContentBuilder source = jsonBuilder().startObject();

@@ -30,7 +30,9 @@ using OF.Core.Utils;
 
 namespace OF.Core.Core.Search
 {
-    public abstract class BaseSearchRule<T, E> : ISearch, ISearchRule where T : class, ISearchObject, new() where E : class, IElasticSearchObject,new()
+    public abstract class BaseSearchRule<T, E> : ISearch, ISearchRule
+        where T : class, ISearchObject, new()
+        where E : class, IElasticSearchObject, new()
     {
         #region [needs private]
 
@@ -42,7 +44,7 @@ namespace OF.Core.Core.Search
         private Func<T> _create;
         private int _from = 0;
         private long _total = 0;
-        private List<string> _keywords; 
+        private List<string> _keywords;
 
         #endregion [needs private]
 
@@ -52,7 +54,7 @@ namespace OF.Core.Core.Search
         protected IList<T> Result;
         protected bool NeedInterrup;
         protected DateTime LastDate;
-        protected IEnumerable<IAdvancedSearchCriteria> AdvancedSearchCriterias; 
+        protected IEnumerable<IAdvancedSearchCriteria> AdvancedSearchCriterias;
         protected string Query;
         protected AutoResetEvent Event;
         protected int TopQueryResult = 100;
@@ -61,8 +63,8 @@ namespace OF.Core.Core.Search
         protected int CountAdded = 0;
         protected volatile bool NeedStop = false;
         protected volatile object Lock = null;
-        
-        
+
+
 
         private volatile object _internalLock = new object();
 
@@ -80,7 +82,7 @@ namespace OF.Core.Core.Search
         protected BaseSearchRule()
             : this(null, false)
         {
-          
+
         }
 
         protected BaseSearchRule(object lockObject, bool exludeIgnored)
@@ -139,7 +141,7 @@ namespace OF.Core.Core.Search
                 if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
                 OFLogger.Instance.LogDebug("Query<{0}>: {1}", typeof(T).Name, query);
-                
+
 
                 if (_total != 0 && _from >= _total)
                 {
@@ -149,57 +151,26 @@ namespace OF.Core.Core.Search
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                //ISearchResponse<E> result = null;
-
                 IRawSearchResult<E> result = null;
 
-                if (IsAdvancedMode)
+                var body = GetSearchBody();
+                if (body.IsNotNull())
                 {
-                    //result = _elasticSearchClient.Search<E>(s => s
-                    //    .From(_from)
-                    //    .Size(TopQueryResult)
-                    //    .Query(BuildAdvancedQuery)
-                    //    .Sort(BuildAdvancedFieldSortSortSelector)
-                    //    );
-                }
-                else
-                {
-
-                    //result = NeedSorting
-                    //   ? _elasticSearchClient.Search<E>(s => s
-                    //   .From(_from)
-                    //   .Size(TopQueryResult)
-                    //   .Query(BuildQuery)
-                    //   .Sort(BuildSortSelector)
-                    //   )
-                    //   : _elasticSearchClient.Search<E>(s => s
-                    //   .From(_from)
-                    //   .Size(TopQueryResult)
-                    //   .Query(BuildQuery)
-                    //   )
-                    //   ;   
-                    var body = GetSearchBody();
-                    if (body.IsNotNull())
-                    {
-                        body.from = _from;
-                        body.size = TopQueryResult;
-                        result = _elasticSearchClient.RawSearch<E>(body);
-                    }
+                    body.from = _from;
+                    body.size = TopQueryResult;
+                    result = _elasticSearchClient.RawSearch<E>(body);
                 }
 
-                //string request = Encoding.UTF8.GetString(result.ConnectionStatus.Request);
-                
-                
                 watch.Stop();
-                
-                
+
+
 
                 // additional process
                 if (!NeedStop && result != null && result.Documents.Any())
                 {
                     OFLogger.Instance.LogDebug("Search Done: Server {0}ms, Client {1}ms", result.Took, watch.ElapsedMilliseconds);
                     _total = result.Total;
-                    _from +=  result.Documents.Count() == TopQueryResult ? TopQueryResult : result.Documents.Count();
+                    _from += result.Documents.Count() == TopQueryResult ? TopQueryResult : result.Documents.Count();
                     watch = new Stopwatch();
                     watch.Start();
                     ReadDataFromTable(result.Documents);
@@ -213,7 +184,7 @@ namespace OF.Core.Core.Search
                     OFLogger.Instance.LogDebug("Process Result Done: {0}ms", watch.ElapsedMilliseconds);
 
                     _typeResult = TypeResult.Ok;
-                    
+
                 }
                 else
                 {
@@ -251,7 +222,7 @@ namespace OF.Core.Core.Search
 
         protected virtual QueryContainer BuildQuery(QueryDescriptor<E> queryDescriptor)
         {
-            return default (QueryContainer);
+            return default(QueryContainer);
         }
 
         protected virtual QueryContainer BuildAdvancedQuery(QueryDescriptor<E> queryDescriptor)
@@ -263,7 +234,7 @@ namespace OF.Core.Core.Search
         {
             return null;
         }
-        
+
         protected virtual DataTable GetDataTable(string query)
         {
             return IndexerDataReader.Instance.GetDataByAdapter(query);
@@ -287,7 +258,7 @@ namespace OF.Core.Core.Search
             lock (_internalLock)
             {
                 Result.Add(result);
-                ProcessCountAdded();    
+                ProcessCountAdded();
             }
         }
 
@@ -372,10 +343,15 @@ namespace OF.Core.Core.Search
             return date.ToString("yyyy/MM/dd hh:mm:ss").Replace('.', '/');
         }
 
+        protected string FormatCriteria(string criteria)
+        {
+            return string.Format("{0}*", criteria);
+        }
+
         protected List<string> GetProcessingSearchCriteria(string keyword = "")
         {
             IList<IRule> listRuleCriteriasRules = RuleFactory.Instance.GetAllRules();
-            var tempCriteria =  string.IsNullOrEmpty(keyword) ? Query : keyword;
+            var tempCriteria = string.IsNullOrEmpty(keyword) ? Query : keyword;
             var listW = new List<string>();
 
             foreach (var rule in listRuleCriteriasRules.OrderBy(i => i.Priority))

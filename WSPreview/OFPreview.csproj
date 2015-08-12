@@ -8,7 +8,7 @@
     <ProjectGuid>{3E9F9F18-B9AD-4DDE-A5D6-F71B75C737D2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WSPreview.PreviewHandler</RootNamespace>
+    <RootNamespace>OFPreview.PreviewHandler</RootNamespace>
     <AssemblyName>OFPreview</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

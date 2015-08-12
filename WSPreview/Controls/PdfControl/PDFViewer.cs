@@ -13,6 +13,7 @@ using OFPreview.PreviewHandler.PreviewHandlerFramework;
 using System.Management;
 using OFPreview.PreviewHandler.TypeResolver;
 using OF.Core.Data;
+using OF.Core.Extensions;
 
 namespace OFPreview.PreviewHandler
 {
@@ -432,11 +433,11 @@ namespace OFPreview.PreviewHandler
                
         
 
-        void RenderNotifyFinished(int page, bool isCurrent)
+        public void RenderNotifyFinished(int page, bool isCurrent)
         {
            
         }
-        void _pdfDoc_RenderNotifyFinished(int page, bool bSuccesss)
+        public void _pdfDoc_RenderNotifyFinished(int page, bool bSuccesss)
         {
             Invoke(new RenderNotifyInvoker(RenderNotifyFinished), page, bSuccesss);
         }
@@ -511,12 +512,12 @@ namespace OFPreview.PreviewHandler
             }
         }
 
-        void _pdfDoc_PDFLoadBegin()
+        public void _pdfDoc_PDFLoadBegin()
         {
             Resize -= new EventHandler(frmPDFViewer_Resize);
         }
 
-        void _pdfDoc_PDFLoadCompeted()
+        public void _pdfDoc_PDFLoadCompeted()
         {
             Resize += new EventHandler(frmPDFViewer_Resize);
             UpdateParamsUI();
@@ -792,15 +793,19 @@ namespace OFPreview.PreviewHandler
         private void ApplyDynamicEvents(object o, string eventname, string methodname, bool isAdd = true)
         {
             EventInfo ei = o.GetType().GetEvent(eventname);
-            MethodInfo mi = GetType().GetMethod(methodname, BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic);
-            Delegate del = Delegate.CreateDelegate(ei.EventHandlerType, null, mi);
-            if (isAdd)
+            var type = this.GetType();
+            MethodInfo mi = type.GetMethod(methodname, BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance);
+            if (ei.IsNotNull() && mi.IsNotNull())
             {
-                ei.AddEventHandler(o, del);
-            }
-            else
-            {
-                ei.RemoveEventHandler(o,del);
+                Delegate del = Delegate.CreateDelegate(ei.EventHandlerType, null, mi);
+                if (isAdd)
+                {
+                    ei.AddEventHandler(o, del);
+                }
+                else
+                {
+                    ei.RemoveEventHandler(o, del);
+                }    
             }
         }
     }

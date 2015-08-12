@@ -127,11 +127,13 @@
     <Compile Include="Data\ElasticSearch\OFRiverMeta.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleContentTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleFilenameTerm.cs" />
+    <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleFilenameWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseCondition.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseDictionaryTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseInternalBool.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseInternalConditions.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseTerm.cs" />
+    <Compile Include="Data\ElasticSearch\Request\Base\OFBaseWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Request\Contact\OFContactTerms.cs" />
     <Compile Include="Data\ElasticSearch\Request\Contact\OFEmaillContactTerms.cs" />
     <Compile Include="Data\ElasticSearch\Request\OFBoolMust.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Data\ElasticSearch\Request\Email\OFSortDateCreated.cs" />
     <Compile Include="Data\ElasticSearch\Request\OFShouldCondition.cs" />
     <Compile Include="Data\ElasticSearch\Request\OFTerm.cs" />
+    <Compile Include="Data\ElasticSearch\Request\OFWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFHitRaw.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFHitsRaw.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFRawSearchResponse.cs" />
@@ -302,6 +305,7 @@
     <Compile Include="Interfaces\ISystemSearchResult.cs" />
     <Compile Include="Interfaces\ITerm.cs" />
     <Compile Include="Interfaces\IUserActivityTracker.cs" />
+    <Compile Include="Interfaces\IWildcard.cs" />
     <Compile Include="Interfaces\IWSAction.cs" />
     <Compile Include="Interfaces\IWSUIAttribute.cs" />
     <Compile Include="Logger\OFLogger.cs" />

@@ -52,17 +52,17 @@ namespace OF.Infrastructure.Implements.Rules
             var body = new OFBody();
             if (preparedCriterias.Count > 1)
             {
-                var query = new OFQueryBoolMust<OFTerm<OFAttachmentSimpleFilenameTerm>>();
+                var query = new OFQueryBoolMust<OFWildcard<OFAttachmentSimpleFilenameWildcard>>();
                 body.query = query;
                 foreach (var preparedCriteria in preparedCriterias)
                 {
-                    var term = new OFTerm<OFAttachmentSimpleFilenameTerm>(preparedCriteria);
+                    var term = new OFWildcard<OFAttachmentSimpleFilenameWildcard>(preparedCriteria);
                     query._bool.must.Add(term);
                 }
                 return body;                   
             }
 
-            body.query = new OFQuerySimpleTerm<OFAttachmentSimpleFilenameTerm>(Query);
+            body.query = new OFWildcard<OFAttachmentSimpleFilenameWildcard>(Query);
             return body;
         }
 
