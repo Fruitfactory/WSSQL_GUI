@@ -24,8 +24,8 @@ namespace OF.Core.ElasticSearch.Clients
                     idle_time = seconds
                 };
                 var body = Serializer.Serialize(idleTime, SerializationFormatting.Indented);
-                var response = Raw.IndexPut("_river", DefaultInfrastructureName, "useractivity", body);
-                //OFLogger.Instance.LogDebug("Set User Activity: {0}l Response: Code => {1}; Success => {2}", seconds, response.HttpStatusCode, response.Success);
+                Raw.IndexPut("_river", DefaultInfrastructureName, "useractivity", body);
+                
             }
             catch (Exception ex)
             {

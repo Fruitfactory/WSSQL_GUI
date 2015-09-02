@@ -6,9 +6,9 @@
 package com.fruitfactory.pstriver.river.reader;
 
 import com.fruitfactory.pstriver.helpers.*;
-import com.fruitfactory.pstriver.rest.PstStatusRepository;
+import com.fruitfactory.pstriver.rest.PstRESTRepository;
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
-import com.fruitfactory.pstriver.useractivity.IReaderControl;
+
 import com.fruitfactory.pstriver.utils.PstMetadataTags;
 import com.fruitfactory.pstriver.utils.PstSignTool;
 import com.pff.PSTAppointment;
@@ -32,6 +32,8 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +41,9 @@ import java.util.UUID;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
 import org.elasticsearch.action.bulk.BulkProcessor;
@@ -52,11 +57,8 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
  *
  * @author Yariki
  */
-public class PstOutlookFileReader extends Thread implements IReaderControl{//implements Runnable
+public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Runnable
 
-    protected ESLogger _logger;
-    protected BulkProcessor _bulkProcessor;
-    private boolean _closed = false;
     private String _filename;
     private Date _lastUpdateDate;
     private String _indexName;
@@ -65,45 +67,30 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
     private String _storeDisplayName;
     private String _storePartId;
     private PSTFile _pstFile = null;
-    private PstReaderStatus _status;
     private List<PstShortEmailData> listShortEmailData;
     private List<PstShortUser> listUsers;
+
+    private final String PATTERN = "^(image)(\\d{3})\\.(\\w{3,4})$";
+    private final Pattern regexPattern = Pattern.compile(PATTERN);
+
+    private DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
     private int _countOfIndexedEmails;
     private int _countOfIndexedAttachments;
 
-    private Object LOCK = new Object();
-    private boolean _paused = false;
-    
     private final Tika _tika = new Tika();
 
+    private final int MaxSize = 65536;
+
     public PstOutlookFileReader(String indexName, String filename, Date lastUpdatedDate, ESLogger _logger, BulkProcessor _bulkProcessor, String threadName) {
-        super(threadName);
+        super(threadName, _logger, _bulkProcessor);
         this._filename = filename;
         this._lastUpdateDate = lastUpdatedDate;
-        this._logger = _logger;
-        this._bulkProcessor = _bulkProcessor;
         this._indexName = indexName;
         setDaemon(true);
         setPriority(MIN_PRIORITY);
         listShortEmailData = new ArrayList<>();
         listUsers = new ArrayList<>();
-    }
-
-    private void esIndex(String index, String type, String id,
-            XContentBuilder xb) throws Exception {
-        if (_logger.isDebugEnabled()) {
-            _logger.debug("Indexing in ES " + index + ", " + type + ", " + id);
-        }
-        if (_logger.isTraceEnabled()) {
-            _logger.trace("JSon indexed : {}", xb.string());
-        }
-
-        if (!_closed) {
-            _bulkProcessor.add(new IndexRequest(index, type, id).source(xb));
-        } else {
-            _logger.warn("trying to add new file while closing river. Document [{}]/[{}]/[{}] has been ignored", index, type, id);
-        }
     }
 
     public void close() {
@@ -117,35 +104,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
             _logger.error(LOG_TAG + ex.getMessage());
         }
     }
-    
-    @Override
-    public void pauseThread(){
-        synchronized(LOCK){
-            _paused = true;
-            LOCK.notifyAll();
-            _logger.info(LOG_TAG + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Thread #"+ getName() + " was paused...");
-        }
-    }
-    
-    @Override
-    public void resumeThread(){
-        synchronized(LOCK){
-            _paused = false;
-            LOCK.notifyAll();
-            _logger.info(LOG_TAG + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Thread #"+ getName() + " was resumed...");
-        }
-    }
-    
-    @Override
-    public boolean isStopped(){
-        return _closed;
-    }
-    
-    @Override
-    public boolean isPaused(){
-        return _paused;
-    }
-    
+
     public boolean init(){
         boolean result = false;
         try{
@@ -185,12 +144,12 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
     public void run() {
         try {
             _status = PstReaderStatus.Busy;
-            PstStatusRepository.setStatus(_name, PstReaderStatus.Busy);
+            PstRESTRepository.setStatus(_name, PstReaderStatus.Busy);
             _logger.info("Process folder...");
             processFolder(_pstFile.getRootFolder());
             _logger.info("Update status folder 2...");
             _status = PstReaderStatus.Finished;
-            PstStatusRepository.setStatus(_name, PstReaderStatus.Finished);
+            PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
 
         } catch (Exception e) {
             _logger.error(LOG_TAG + e.getMessage() + " " + e.toString());
@@ -222,7 +181,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         PstReaderStatusInfo statusInfo = new PstReaderStatusInfo(_name, _emailCount);
         _status = PstReaderStatus.NonStarted;
         statusInfo.setStatus(PstReaderStatus.NonStarted);
-        PstStatusRepository.setStatusInfo(statusInfo);
+        PstRESTRepository.setStatusInfo(statusInfo);
     }
 
     private void countItems(PSTFolder rootFolder) {
@@ -246,7 +205,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
             String folderName = pstFolder.getDisplayName();
 
             _logger.warn(LOG_TAG + " Folder: " + folderName);
-            PstStatusRepository.setProcessFolder(_name, folderName);
+            PstRESTRepository.setProcessFolder(_name, folderName);
 
             tryToWait();
             
@@ -272,7 +231,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
                             message = (PSTMessage) pstFolder.getNextChild();
                             tempCount++;
                             if(tempCount >= 100){
-                                PstStatusRepository.setProcessCount(_name, tempCount);
+                                PstRESTRepository.setProcessCount(_name, tempCount);
                                 count = count - tempCount;
                                 tempCount = 0;
                             }
@@ -290,7 +249,7 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
                             message = (PSTMessage) pstFolder.getNextChild();
                             tempCount++;
                             if(tempCount >= 100){
-                                PstStatusRepository.setProcessCount(_name, tempCount);
+                                PstRESTRepository.setProcessCount(_name, tempCount);
                                 count = count - tempCount;
                                 tempCount = 0;
                             }
@@ -300,25 +259,13 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
                         message = (PSTMessage) pstFolder.getNextChild();
                     }
                 }
-                PstStatusRepository.setProcessCount(_name, count);
+                PstRESTRepository.setProcessCount(_name, count);
             }
         } catch (Exception e) {
             _logger.error(LOG_TAG + e.getMessage());
         }
     }
 
-    private void tryToWait(){
-        synchronized(LOCK){
-            if(_paused){
-                try {
-                    LOCK.wait();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(PstOutlookFileReader.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-    }
-    
     private void processObject(PSTObject object, String folderName) throws Exception {
         if (object instanceof PSTContact) {
             indexContact((PSTContact) object);
@@ -347,12 +294,14 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         }
         String body = message.getBody();
         String htmlbody = message.getBodyHTML();
-        String analyzedContent = _tika.parseToString(new BytesStreamInput(htmlbody.getBytes()),new Metadata());
-        String entryID = message.getEntryID();
+        String analyzedContent = _tika.parseToString(new BytesStreamInput(htmlbody.getBytes()), new Metadata());
         boolean hasAttachment = message.hasAttachments();
         Date dateCreated = message.getCreationTime();
         Date dateReceived = message.getMessageDeliveryTime();
         long size = message.getMessageSize();
+        int hash = PstStringHelper.hashCode(subject) + PstStringHelper.hashCode(df.format(dateReceived)) + PstStringHelper.hashCode(senderEmail);
+        String entryID = Integer.toString(hash);
+        System.out.println(String.format("Subject => %s ReceivedTime => %s Sender => %s Id => %s", subject, df.format(dateReceived), senderEmail,entryID));
         
         UUID id = null;
         String conversationIndex = "";
@@ -391,13 +340,16 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
             int countAttachments = message.getNumberOfAttachments();
             for (int i = 0; i < countAttachments; i++) {
                 PSTAttachment attachment = message.getAttachment(i);
-                if (attachment == null) {
+                if (attachment == null || shouldSkipAttachment(attachment)) {
                     continue;
                 }
                 AttachmentHelper helper = new AttachmentHelper(attachment.getLongFilename(), attachment.getLongPathname(), attachment.getFilesize(), attachment.getMimeTag());
                 listAttachments.add(helper);
 
-                saveAttachment(attachment, entryID);
+                if(attachment.getSize() < MaxSize){
+                    saveAttachment(attachment,entryID);
+                }
+                _countOfIndexedAttachments++;
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -473,6 +425,17 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
 
         esIndex(_indexName, PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
         _countOfIndexedEmails++;
+    }
+
+    private boolean shouldSkipAttachment(PSTAttachment attachment) {
+        String filename = attachment.getLongFilename();
+        Matcher m = regexPattern.matcher(filename);
+
+        if(m.matches() && attachment.getSize() >= MaxSize){
+            System.out.println(String.format("--- Skip: %s",filename));
+            return true;
+        }
+        return false;
     }
 
     private String getAppropriateEmail(String subject, String userName) {
@@ -598,7 +561,6 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
                 .field(PstMetadataTags.Attachment.ENTRYID, entryid);
         source.endObject();
         esIndex(_indexName, PstMetadataTags.INDEX_TYPE_ATTACHMENT, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
-        _countOfIndexedAttachments++;
     }
 
     private void indexContact(PSTContact contact) throws IOException, Exception {
@@ -750,9 +712,6 @@ public class PstOutlookFileReader extends Thread implements IReaderControl{//imp
         builder.endArray();
     }
 
-    @Override
-    public PstReaderStatus getStatus() {
-        return _status;
-    }
+
 
 }

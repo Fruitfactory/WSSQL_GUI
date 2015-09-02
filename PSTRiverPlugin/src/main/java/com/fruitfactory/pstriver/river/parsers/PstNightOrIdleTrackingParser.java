@@ -11,6 +11,7 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
 
 import com.fruitfactory.pstriver.river.parsers.settings.PstNightIdleTimeSettings;
+import com.fruitfactory.pstriver.river.reader.PstOutlookAttachmentReader;
 import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
 import com.fruitfactory.pstriver.useractivity.IInputHookManage;
 import com.fruitfactory.pstriver.useractivity.IReaderControl;
@@ -52,13 +53,18 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
         for (Thread r : readers) {
             readerControls.add((IReaderControl) r);
         }
+        PstOutlookAttachmentReader attachmentReader = getAttachmentReader();
+        if(attachmentReader != null){
+            readerControls.add((IReaderControl)attachmentReader);
+        }
 
         PstUserActivityTracker tracker = null;
-
+        setRiverStatus(PstRiverStatus.Busy);
         tracker = new PstUserActivityTracker(this._inputHookManage,this, readerControls, _settings.getIdleTime(), _settings.getIdleTime(), getLogger());
         tracker.startTracking();
         getLogger().info(LOG_TAG + "User activity tracker was created...");
         getLogger().info(LOG_TAG + "Start parsing files...");
+        attachmentReader.start();
         for (Thread reader : readers) {
             reader.start();
             getLogger().info(((PstOutlookFileReader)reader).getFilename());
@@ -70,6 +76,7 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
                 getLogger().error(Level.SEVERE.toString() +  ex.getMessage());
             }
         }
+        attachmentReader.join();
         for(Thread reader: readers){
             ((PstOutlookFileReader) reader).close();
         }

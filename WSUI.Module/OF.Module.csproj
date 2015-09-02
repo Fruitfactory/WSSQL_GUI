@@ -153,6 +153,7 @@
     <Compile Include="Core\KindViewModelBase.cs" />
     <Compile Include="Core\LazyKind.cs" />
     <Compile Include="Enums\Enums.cs" />
+    <Compile Include="Interface\Service\IAttachmentReader.cs" />
     <Compile Include="Interface\Service\ICommandStrategy.cs" />
     <Compile Include="Interface\Service\IMainSettingsWindow.cs" />
     <Compile Include="Interface\Service\INavigationService.cs" />
@@ -212,6 +213,7 @@
     <Compile Include="Service\GridLengthAnimation.cs" />
     <Compile Include="Service\HelperConst.cs" />
     <Compile Include="Service\ContactSuggestingService.cs" />
+    <Compile Include="Service\Index\OFAttachmentReader.cs" />
     <Compile Include="Service\KeyDownBehavior.cs" />
     <Compile Include="Service\MainWindowInfo.cs" />
     <Compile Include="Service\NameToImageConvert.cs" />

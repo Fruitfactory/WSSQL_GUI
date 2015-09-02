@@ -373,7 +373,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
         private string GetAttachments(EmailSearchObject searchObj)
         {
             var esClient = new OFElasticSearchClient();
-            var result = esClient.Search<OFAttachmentContent>(s => s.Query(d => d.QueryString(qq => qq.Query(searchObj.EntryID))));
+            var result = esClient.Search<OFAttachmentContent>(s => s.Query(c => c.Match(descriptor => descriptor.OnField("emailid").Query(searchObj.EntryID))));
             if (result.Documents.Any())
             {
                 var tempFolder = TempFileManager.Instance.GenerateTempFolderForObject(searchObj);

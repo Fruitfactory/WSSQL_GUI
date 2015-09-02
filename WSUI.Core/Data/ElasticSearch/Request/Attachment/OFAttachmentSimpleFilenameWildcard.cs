@@ -13,7 +13,7 @@ namespace OF.Core.Data.ElasticSearch.Request.Attachment
 
         public override void SetValue(object value)
         {
-            filename = string.Format("{0}*", value);
+            filename = string.Format("*{0}*", value);
         }
     }
 }

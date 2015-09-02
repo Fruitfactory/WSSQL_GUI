@@ -11,7 +11,11 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
+
+import com.fruitfactory.pstriver.rest.data.PstAttachmentContainer;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
@@ -19,14 +23,16 @@ import org.elasticsearch.common.xcontent.XContentFactory;
  *
  * @author Yariki
  */
-public class PstStatusRepository {
+public class PstRESTRepository {
 
     private final static String PST_RIVER_STATUS = "PST_RIVER_STATUS";
     
     private static HashMap<String, PstReaderStatusInfo> _repository = new HashMap<String, PstReaderStatusInfo>();
     private static HashMap<String,PstRiverStatusInfo> _reposirotyRiverStatus = new HashMap<String, PstRiverStatusInfo>();
+    private static Queue<PstAttachmentContainer> _attachmentContainers = new LinkedList<PstAttachmentContainer>();
     private static int lastUserActivity = 0;
     private static Object lockUserActivity = new Object();
+
 
     public static void setStatusInfo(PstReaderStatusInfo statusInfo) {
         synchronized (_repository) {
@@ -118,4 +124,19 @@ public class PstStatusRepository {
             return lastUserActivity;
         }
     }
+
+    public static void putAttachmentContainer(PstAttachmentContainer container){
+        synchronized (_attachmentContainers){
+            _attachmentContainers.offer(container);
+        }
+    }
+
+    public static PstAttachmentContainer getAttachmentContainer(){
+        PstAttachmentContainer result = null;
+        synchronized (_attachmentContainers){
+            result = _attachmentContainers.poll();
+        }
+        return result;
+    }
+
 }

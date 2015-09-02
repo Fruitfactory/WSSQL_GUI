@@ -73,12 +73,12 @@ public class PstUserActivityTracker extends Thread {
                 State state = State.UNKNOWN;
                 long idleSec = this.hookIdleTime.getIdleTime();// / 1000; // PstWin32IdleTime.getIdleTimeMillisWin32(logger) / 1000;
                 
-                System.out.println(String.format("Idle Sec = %d", idleSec));
-                logger.info("Tracker: " + String.format("Idle Sec = %d", idleSec));
                 State newState = IsHight() ? State.NIGHT : idleSec < onlineTime ? State.ONLINE: idleSec > idleTime ? State.AWAY : State.IDLE;
-                if(newState != state){
+                if(newState != oldState){
                     processState(newState);
                 }
+                System.out.println(String.format("Time = %s, State = %s", idleSec, newState));
+                oldState = newState;
                 Thread.sleep(1000);
             }catch(Exception ex){
                 Logger.getGlobal().log(Level.SEVERE, ex.getMessage());
@@ -94,18 +94,12 @@ public class PstUserActivityTracker extends Thread {
         switch(state){
             case ONLINE:
                 processOnlineState(readers);
-                System.out.println("Online time!!");
-                logger.info("Tracker: " + "User Online!!" );
                 break;
             case AWAY:
             case NIGHT:
                 processAwayState(readers);
-                System.out.println("Away time!!");
-                logger.info("Tracker: " + "User Away!!" );
                 break;
             case IDLE:
-                System.out.println("Idle time!!");
-                logger.info("Tracker: " + "User Idle!!" );
                 break;
         }
     }

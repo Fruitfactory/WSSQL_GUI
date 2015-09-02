@@ -5,11 +5,7 @@
  */
 package com.fruitfactory.pstriver.useractivity;
 
-import com.fruitfactory.pstriver.rest.PstStatusRepository;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.fruitfactory.pstriver.rest.PstRESTRepository;
 import org.elasticsearch.common.logging.ESLogger;
 
 /**
@@ -36,7 +32,7 @@ public class PstLastInputEventTracker implements IInputHookManage {
     
     @Override
     public long getIdleTime() {
-        int idleTime = PstStatusRepository.getLastUserActivity();
+        int idleTime = PstRESTRepository.getLastUserActivity();
         return idleTime;
     }
     

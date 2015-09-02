@@ -163,8 +163,8 @@ public class PstMetadataTags {
         addNotAnalyzedString(mapping, Attachment.MIME_TAG);
         addAnalyzedString(mapping, Attachment.ANALYZED_CONTENT);
         addBinary(mapping, Attachment.CONTENT);
-        addNotAnalyzedString(mapping, Attachment.EMAIL_ID);
-        addNotAnalyzedString(mapping, Attachment.ENTRYID);
+        addAnalyzedString(mapping, Attachment.EMAIL_ID);
+        addAnalyzedString(mapping, Attachment.ENTRYID);
         mapping.endObject();
         mapping.endObject();
         mapping.endObject();

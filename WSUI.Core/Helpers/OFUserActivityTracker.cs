@@ -30,7 +30,7 @@ namespace OF.Core.Helpers
         public void Stop()
         {
             _stop = true;
-            _userActivityThread.Join(100);
+            _userActivityThread.Join();
         }
 
         private void UserActivityProcess(object arg)

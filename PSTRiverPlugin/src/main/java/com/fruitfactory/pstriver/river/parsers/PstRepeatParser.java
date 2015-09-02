@@ -9,6 +9,7 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.river.parsers.core.PstParserBase;
 import com.fruitfactory.pstriver.river.parsers.settings.PstEveryHourPeriodSettings;
+import com.fruitfactory.pstriver.river.reader.PstOutlookAttachmentReader;
 import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
 import com.fruitfactory.pstriver.utils.PstFeedDefinition;
 import java.util.List;
@@ -39,7 +40,8 @@ public class PstRepeatParser extends PstParserBase{
     @Override
     protected int onProcess(List<Thread> readers) throws Exception {
         setRiverStatus(PstRiverStatus.Busy);
-        
+        PstOutlookAttachmentReader attachmentReader = getAttachmentReader();
+        attachmentReader.start();
         for(Thread reader : readers){
             try{
                 reader.start();
@@ -50,6 +52,7 @@ public class PstRepeatParser extends PstParserBase{
                 getLogger().error(PstGlobalConst.PST_PREFIX + " " + ex.getMessage() );
             }
         }
+        attachmentReader.join(1500);
         return _repeatSettings.getHourPeriod();
     }
 

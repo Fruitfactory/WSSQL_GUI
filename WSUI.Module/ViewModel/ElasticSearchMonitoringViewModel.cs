@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
+using Microsoft.Practices.Unity;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
 using OF.Core.Data.ElasticSearch;
@@ -11,6 +12,7 @@ using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
 using OF.Infrastructure;
+using OF.Module.Interface.Service;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
 using Timer = System.Timers.Timer;
@@ -25,15 +27,24 @@ namespace OF.Module.ViewModel
 
         private IElasticSearchRiverStatus _riverStatusClient;
         private IEventAggregator _eventAggregator;
+        private IUnityContainer _unityContainer;
         private IRegionManager _regionManager;
+        private IAttachmentReader _attachmentReader;
+
+        private readonly  object _lock = new object();
 
         private Timer _timer;
 
-        public ElasticSearchMonitoringViewModel(IElasticSearchRiverStatus riverStatusClient, IEventAggregator eventAggregator, IRegionManager regionManager, IElasticSearchMonitoringView view)
+        public ElasticSearchMonitoringViewModel(IElasticSearchRiverStatus riverStatusClient, 
+            IEventAggregator eventAggregator, 
+            IRegionManager regionManager,
+            IUnityContainer unityContainer,
+            IElasticSearchMonitoringView view)
         {
             _riverStatusClient = riverStatusClient;
             _eventAggregator = eventAggregator;
             _regionManager = regionManager;
+            _unityContainer = unityContainer;
             View = view;
             view.Model = this;
         }
@@ -129,7 +140,24 @@ namespace OF.Module.ViewModel
             LastUpdated = result.Lastupdated;
             EmailCount = emailCount;
             AttachmentCount = attachmentCount;
+            AttachmentMonitoring();
+        }
 
+        private void AttachmentMonitoring()
+        {
+            lock (_lock)
+            {
+                if (Status == OFRiverStatus.Busy && _attachmentReader.IsNull())
+                {
+                    _attachmentReader = _unityContainer.Resolve<IAttachmentReader>();
+                    _attachmentReader.Start(LastUpdated);
+                }
+                else if (Status == OFRiverStatus.StandBy && _attachmentReader.IsNotNull())
+                {
+                    _attachmentReader.Stop();
+                    _attachmentReader = null;
+                }    
+            }
         }
 
         public void Stop()

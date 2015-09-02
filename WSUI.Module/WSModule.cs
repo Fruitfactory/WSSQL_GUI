@@ -12,6 +12,7 @@ using OF.Infrastructure;
 using OF.Module.Interface.Service;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
+using OF.Module.Service.Index;
 using OF.Module.View;
 using OF.Module.View.Settings;
 using OF.Module.View.Windows;
@@ -110,6 +111,9 @@ namespace OF.Module
             _unityContainer.RegisterType<IMainSettingsView, OFMainSettingsView>();
             _unityContainer.RegisterType<ILoggingSettingsViewModel, OFLoggingSettingsViewModel>();
             _unityContainer.RegisterType<ILoggingSettingsView, OFLoggingSettingsView>();
+
+            _unityContainer.RegisterType<IElasticSearchIndexAttachmentClient, OFElasticSeachIndexAttachmentClient>();
+            _unityContainer.RegisterType<IAttachmentReader,OFAttachmentReader>();
             
 
             watch.Stop();

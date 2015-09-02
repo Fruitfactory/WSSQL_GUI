@@ -128,6 +128,21 @@ namespace OF.Core.Extensions
 
         }
 
+        public static int GetIternalHashCode(this string str)
+        {
+            int h = 0;
+            if (h == 0 && str.Length > 0)
+            {
+                char[] val = str.ToCharArray();
+
+                for (int i = 0; i < str.Length; i++)
+                {
+                    h = 31 * h + val[i];
+                }
+            }
+            return h;
+        }
+
 
     }
 }

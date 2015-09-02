@@ -26,5 +26,5 @@ public class PstEveryHourPeriodSettings {
     public void setHourPeriod(int hourPeriod) {
         this.hourPeriod = hourPeriod;
     }
-    
+
 }

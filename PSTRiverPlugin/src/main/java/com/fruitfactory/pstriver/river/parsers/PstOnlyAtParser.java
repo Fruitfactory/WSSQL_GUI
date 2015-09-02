@@ -9,6 +9,7 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.river.parsers.core.PstParserBase;
 import com.fruitfactory.pstriver.river.parsers.settings.PstOnlyAtSettings;
+import com.fruitfactory.pstriver.river.reader.PstOutlookAttachmentReader;
 import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
 import com.fruitfactory.pstriver.utils.PstFeedDefinition;
 import com.fruitfactory.pstriver.utils.PstGlobalConst;
@@ -62,7 +63,8 @@ public class PstOnlyAtParser extends PstParserBase {
         }
 
         setRiverStatus(PstRiverStatus.Busy);
-        
+        PstOutlookAttachmentReader attachmentReader = getAttachmentReader();
+        attachmentReader.start();
         for (Thread reader : readers){
             try {
                 reader.start();
@@ -73,6 +75,8 @@ public class PstOnlyAtParser extends PstParserBase {
                 getLogger().error(Level.SEVERE.toString() +  ex.getMessage());
             }
         }
+
+        attachmentReader.join(1500);
         
         return 0;
     }

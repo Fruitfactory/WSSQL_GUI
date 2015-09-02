@@ -16,12 +16,12 @@ namespace OF.Core.Data.ElasticSearch
 
         public long Size { get; set; }
 
-        public string MimeTag { get; set; }
+        public string Mimetag { get; set; }
 
         public string Content { get; set; }
 
         public string Analyzedcontent { get; set; }
 
-        public string EmailId { get; set; }
+        public string Emailid { get; set; }
     }
 }

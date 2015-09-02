@@ -28,6 +28,7 @@ using OF.Core.Logger;
 using OF.Core.Utils.Dialog;
 using OF.Infrastructure;
 using OF.Infrastructure.MVVM.StatusItem;
+using OF.Module.Interface.Service;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
 
@@ -41,6 +42,7 @@ namespace OF.Module.ViewModel
         private IEventAggregator _eventAggregator;
         private IUnityContainer _unityContainer;
         private IRegionManager _regionManager;
+        private IAttachmentReader _attachmentReader;
         private Timer _timer;
         private bool _isFinishing = false;
 
@@ -302,12 +304,18 @@ namespace OF.Module.ViewModel
                 Thread.Sleep(1000);
                 _timer = new Timer(TimerProgressCallback,null,1000,2000);
                 OnIndexingStarted();
-                
+                StartReadingAttachment();
             }
             catch (Exception ex)
             {
                 OFLogger.Instance.LogError(ex.Message);
             }
+        }
+
+        private void StartReadingAttachment()
+        {
+            _attachmentReader = _unityContainer.Resolve<IAttachmentReader>();
+            _attachmentReader.Start(null);
         }
 
         private void TimerProgressCallback(object state)
@@ -324,7 +332,7 @@ namespace OF.Module.ViewModel
                 {
                     return;
                 }
-                if (response.Response.Items.All(s => s.Status == PstReaderStatus.Finished))
+                if (response.Response.Items.All(s => s.Status == PstReaderStatus.Finished) && _attachmentReader.IsNotNull() && _attachmentReader.Status == PstReaderStatus.Finished)
                 {
                     _timer.Change(Timeout.Infinite, Timeout.Infinite);
                     IsIndexExisted = true;
@@ -333,7 +341,7 @@ namespace OF.Module.ViewModel
                     OnIndexingFinished();
                     return;
                 }
-                if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Busy))
+                if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Busy) && _attachmentReader.IsNotNull() && _attachmentReader.Status == PstReaderStatus.Busy)
                 {
                     ShowProgress = Visibility.Visible;
                     double sumAll = (double)response.Response.Items.Sum(s => s.Count);
