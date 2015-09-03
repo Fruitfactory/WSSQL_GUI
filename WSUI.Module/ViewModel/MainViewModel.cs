@@ -654,6 +654,7 @@ namespace OF.Module.ViewModel
                 case WSActionType.Quit:
                     StopUserActivityTracker();
                     Clear();
+                    NotifyServerPluginShutdown();
                     break;
 
                 case WSActionType.ClearText:
@@ -843,6 +844,7 @@ namespace OF.Module.ViewModel
         {
             try
             {
+                NotifyServerPluginRunning();
                 Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
                 OutlookPreviewHelper.Instance.PreviewHostType = HostType.Plugin;
                 InitializeCommands();
@@ -1005,6 +1007,29 @@ namespace OF.Module.ViewModel
             {
                 Monitoring.Start();
             }
+            NotifyServerPluginRunning();
+        }
+
+
+        private void NotifyServerPluginRunning()
+        {
+            var ofPluginStatus = _container.Resolve<IElasticSearchOFPluginStatusClient>();
+            if (ofPluginStatus.IsNull())
+            {
+                return;
+            }
+            ofPluginStatus.OFPluginStatus(OFPluginStatus.Running);
+        }
+
+        private void NotifyServerPluginShutdown()
+        {
+            var ofPluginStatus = _container.Resolve<IElasticSearchOFPluginStatusClient>();
+            if (ofPluginStatus.IsNull())
+            {
+                return;
+            }
+            ofPluginStatus.OFPluginStatus(OFPluginStatus.Shotdown);
+            
         }
 
 

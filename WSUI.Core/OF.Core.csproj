@@ -124,6 +124,7 @@
     <Compile Include="Core\Rules\OFPriceAnountRule.cs" />
     <Compile Include="Data\ElasticSearch\Converter\OFConditionCollectionConverter.cs" />
     <Compile Include="Data\ElasticSearch\OFAttachmentIndexingContainer.cs" />
+    <Compile Include="Data\ElasticSearch\OFPluginStatusContainer.cs" />
     <Compile Include="Data\ElasticSearch\OFQueryBoolConditions.cs" />
     <Compile Include="Data\ElasticSearch\OFRiverMeta.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleContentTerm.cs" />
@@ -165,12 +166,15 @@
     <Compile Include="Data\ElasticSearch\Response\WSUIStatusResponse.cs" />
     <Compile Include="ElasticSearch\Clients\OFElasticRiverStatus.cs" />
     <Compile Include="ElasticSearch\Clients\OFElasticSeachIndexAttachmentClient.cs" />
+    <Compile Include="ElasticSearch\Clients\OFElasticSearchOFPluginStatusClient.cs" />
     <Compile Include="ElasticSearch\Clients\OFElasticUpdateSettingsClient.cs" />
     <Compile Include="Enums\AttachmentIndexProcess.cs" />
+    <Compile Include="Enums\OFPluginStatus.cs" />
     <Compile Include="Events\OFMenuEnabling.cs" />
     <Compile Include="Helpers\OFIsolatedStorageHelper.cs" />
     <Compile Include="Helpers\OFObjectJsonSaveReadHelper.cs" />
     <Compile Include="Interfaces\IElasticSearchIndexAttachmentClient.cs" />
+    <Compile Include="Interfaces\IElasticSearchOFPluginStatusClient.cs" />
     <Compile Include="Interfaces\IElasticSearchRiverStatus.cs" />
     <Compile Include="Interfaces\IElasticTrackingClient.cs" />
     <Compile Include="Interfaces\IElasticSearchClient.cs" />

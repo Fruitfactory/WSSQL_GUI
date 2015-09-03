@@ -50,6 +50,12 @@ public class PstOutlookAttachmentReader extends PstBaseOutlookIndexer {
     @Override
     public void run() {
         try {
+
+            if(!PstRESTRepository.gettIsOFPluginRunning()){
+                _status = PstReaderStatus.Finished;
+                PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
+                return;
+            }
             _status = PstReaderStatus.Busy;
             PstRESTRepository.setStatus(_name, PstReaderStatus.Busy);
             while(true){

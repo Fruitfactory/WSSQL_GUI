@@ -14,6 +14,7 @@ namespace OF.Core.ElasticSearch.Clients
         public OFElasticRiverStatus()
         {   
         }
+
         public ElasticsearchResponse<OFRiverStatusInfo> GetRiverStatus()
         {
             return Raw.Get<OFRiverStatusInfo>("_river", DefaultInfrastructureName, "pstriverstatus");

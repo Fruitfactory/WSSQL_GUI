@@ -114,8 +114,9 @@ namespace OF.Module
 
             _unityContainer.RegisterType<IElasticSearchIndexAttachmentClient, OFElasticSeachIndexAttachmentClient>();
             _unityContainer.RegisterType<IAttachmentReader,OFAttachmentReader>();
-            
 
+            _unityContainer.RegisterType<IElasticSearchOFPluginStatusClient, OFElasticSearchOFPluginStatusClient>();
+            
             watch.Stop();
             OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));
         }

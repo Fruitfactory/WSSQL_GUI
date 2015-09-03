@@ -31,7 +31,10 @@ public class PstRESTRepository {
     private static HashMap<String,PstRiverStatusInfo> _reposirotyRiverStatus = new HashMap<String, PstRiverStatusInfo>();
     private static Queue<PstAttachmentContainer> _attachmentContainers = new LinkedList<PstAttachmentContainer>();
     private static int lastUserActivity = 0;
+    private static boolean isOFPluginRunning = false;
+
     private static Object lockUserActivity = new Object();
+    private static Object lockOFPluginRunning = new Object();
 
 
     public static void setStatusInfo(PstReaderStatusInfo statusInfo) {
@@ -135,6 +138,20 @@ public class PstRESTRepository {
         PstAttachmentContainer result = null;
         synchronized (_attachmentContainers){
             result = _attachmentContainers.poll();
+        }
+        return result;
+    }
+
+    public static void setIsOFPluginRunning(boolean status){
+        synchronized (lockOFPluginRunning){
+            isOFPluginRunning = status;
+        }
+    }
+
+    public static boolean gettIsOFPluginRunning(){
+        boolean result =  false;
+        synchronized (lockOFPluginRunning){
+            result = isOFPluginRunning;
         }
         return result;
     }

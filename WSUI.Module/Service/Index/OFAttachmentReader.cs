@@ -16,7 +16,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 namespace OF.Module.Service.Index
 {
     public class OFAttachmentReader : ViewModelBase, IAttachmentReader
-    {
+    { 
         private string AttachSchema = "http://schemas.microsoft.com/mapi/proptag/0x37010102";
         private Thread _thread;
         private CancellationTokenSource _cancellationSource;

@@ -8,6 +8,8 @@ package com.fruitfactory.pstriver.rest;
 import java.io.IOException;
 
 import com.fruitfactory.pstriver.rest.data.PstAttachmentContainer;
+import com.fruitfactory.pstriver.rest.data.PstOFPluginStatus;
+import com.fruitfactory.pstriver.rest.data.PstOFPluginStatusContainer;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
@@ -35,12 +37,15 @@ public class PstRestModule extends BaseRestHandler {
         controller.registerHandler(RestRequest.Method.GET, "_river/{rivername}/{command}", this);
         controller.registerHandler(RestRequest.Method.PUT, "_river/{rivername}/useractivity", this);
         controller.registerHandler(RestRequest.Method.PUT, "_river/{rivername}/indexattachment", this);
+        controller.registerHandler(RestRequest.Method.PUT,"_river/{rivername}/client",this);
     }
 
     @Override
     protected void handleRequest(RestRequest rr, RestChannel rc, Client client) throws Exception {
 
         String command = rr.param("command");
+
+        System.out.println(String.format("RawPath: %s", rr.rawPath()));
 
         if ("status".equals(command)) {
             processStatusRequest(rc);
@@ -55,7 +60,11 @@ public class PstRestModule extends BaseRestHandler {
             return;
         }
         if(rr.rawPath().contains("indexattachment")){
-            processIndexingAttachment(rr,rc);
+            processIndexingAttachment(rr, rc);
+            return;
+        }
+        if(rr.rawPath().contains("client")){
+            processOFPluginStatus(rr,rc);
             return;
         }
     }
@@ -112,7 +121,7 @@ public class PstRestModule extends BaseRestHandler {
         try {
             String content = rr.content().toUtf8();
             Gson gson = new GsonBuilder().create();
-            PstAttachmentContainer container =  gson.fromJson(content,PstAttachmentContainer.class);
+            PstAttachmentContainer container =  gson.fromJson(content, PstAttachmentContainer.class);
             PstRESTRepository.putAttachmentContainer(container);
             rc.sendResponse(new BytesRestResponse(RestStatus.OK));
         } catch (Exception e) {
@@ -123,5 +132,23 @@ public class PstRestModule extends BaseRestHandler {
             }
         }
     }
+
+    private void processOFPluginStatus(RestRequest rr, RestChannel rc){
+        try {
+            String content = rr.content().toUtf8();
+            Gson gson = new GsonBuilder().create();
+            PstOFPluginStatusContainer container =  gson.fromJson(content, PstOFPluginStatusContainer.class);
+            boolean status = PstOFPluginStatus.getValue(container.getStatus()) == PstOFPluginStatus.Running;
+            PstRESTRepository.setIsOFPluginRunning(status);
+            rc.sendResponse(new BytesRestResponse(RestStatus.OK));
+        } catch (Exception e) {
+            try {
+                rc.sendResponse(new BytesRestResponse(rc, e));
+            } catch (IOException e1) {
+                rc.sendResponse(new BytesRestResponse(RestStatus.INTERNAL_SERVER_ERROR));
+            }
+        }
+    }
+
     
 }

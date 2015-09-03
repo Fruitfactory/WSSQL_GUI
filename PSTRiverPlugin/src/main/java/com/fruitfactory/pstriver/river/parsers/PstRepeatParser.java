@@ -52,7 +52,7 @@ public class PstRepeatParser extends PstParserBase{
                 getLogger().error(PstGlobalConst.PST_PREFIX + " " + ex.getMessage() );
             }
         }
-        attachmentReader.join(1500);
+        attachmentReader.join();
         return _repeatSettings.getHourPeriod();
     }
 
