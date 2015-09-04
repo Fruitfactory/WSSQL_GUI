@@ -8,7 +8,7 @@ using OF.Core.Interfaces;
 
 namespace OF.Core.ElasticSearch.Clients
 {
-    public class OFElasticRiverStatus: OFElasticSearchClientBase,IElasticSearchRiverStatus
+    public class OFElasticRiverStatus : OFElasticSearchClientBase,IElasticSearchRiverStatus
     {
 
         public OFElasticRiverStatus()

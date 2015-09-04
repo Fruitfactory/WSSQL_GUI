@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.Practices.Unity;
 using OF.Core.Core.MVVM;
@@ -92,29 +94,21 @@ namespace OF.Module.Service.Index
                             }
                             try
                             {
-                                string senderEmail = result.SenderEmailAddress.IsNotNull() ? result.SenderEmailAddress : result.GetSenderSMTPAddress();
-                                if (senderEmail.IsEmpty())
+                                byte[] contentBytes = GetContentByProperty(attachment);
+                                if (contentBytes.IsNotNull())
                                 {
-                                    OFLogger.Instance.LogError("---- Attachment empty => {0}", attachment.FileName);
-                                    continue;
+                                    AddAttachment(attachmentContents,result,attachment,contentBytes);
                                 }
-
-
-                                Outlook.PropertyAccessor pacc = attachment.PropertyAccessor;
-                                byte[] filebyte = (byte[]) pacc.GetProperty(AttachSchema);
-                                OFAttachmentContent indexAttach = new OFAttachmentContent();
-                                indexAttach.Size = attachment.Size;
-
-                                int hash = result.Subject.GetIternalHashCode() +
-                                           result.ReceivedTime.ToString(DateFormat).GetIternalHashCode() +
-                                           senderEmail.GetIternalHashCode();
-                                indexAttach.Emailid = hash.ToString();
-                                System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} Sender => {2} Id => {3}", result.Subject, result.ReceivedTime.ToString(DateFormat), result.SenderEmailAddress, hash.ToString());
-                                OFLogger.Instance.LogError("---- Attachment => {0}", attachment.FileName);
-                                indexAttach.Filename = attachment.FileName;
-                                indexAttach.Content = Convert.ToBase64String(filebyte);
-                                attachmentContents.Add(indexAttach);
-
+                            }
+                            catch (COMException comEx)
+                            {
+                                OFLogger.Instance.LogError("----COM Attachment Failed => {0}", attachment.FileName);
+                                OFLogger.Instance.LogError(comEx.Message);
+                                byte[] conBytes = GetContentByTempFile(attachment);
+                                if (conBytes.IsNotNull())
+                                {
+                                    AddAttachment(attachmentContents,result,attachment,conBytes);
+                                }
                             }
                             catch(Exception ex)
                             {
@@ -144,6 +138,54 @@ namespace OF.Module.Service.Index
                 System.Diagnostics.Debug.WriteLine("!!!!!!!! Exit From Attachment Reader");
             }
         }
+
+
+        private byte[] GetContentByProperty(Outlook.Attachment attachment)
+        {
+            Outlook.PropertyAccessor pacc = attachment.PropertyAccessor;
+            byte[] filebyte = (byte[])pacc.GetProperty(AttachSchema);
+            return filebyte;
+        }
+
+        private byte[] GetContentByTempFile(Outlook.Attachment attachment)
+        {
+            byte[] buffer = null;
+            try
+            {
+                attachment.SaveAsFile(attachment.FileName);
+                buffer = File.ReadAllBytes(attachment.FileName);
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.Message);
+            }
+            finally
+            {
+                if (File.Exists(attachment.FileName))
+                {
+                    File.Delete(attachment.FileName);
+                }
+            }
+            return buffer;
+        }
+
+        private void AddAttachment(List<OFAttachmentContent> attachments,Outlook.MailItem email, Outlook.Attachment attachment, byte[] content)
+        {
+            OFAttachmentContent indexAttach = new OFAttachmentContent();
+            indexAttach.Size = attachment.Size;
+
+            int hash = email.Subject.GetIternalHashCode() +
+                       email.ReceivedTime.ToString(DateFormat).GetIternalHashCode();
+            indexAttach.Emailid = hash.ToString();
+            System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} Id => {2}",
+                email.Subject, email.ReceivedTime.ToString(DateFormat),
+                hash.ToString());
+            OFLogger.Instance.LogError("---- Attachment => {0}", attachment.FileName);
+            indexAttach.Filename = attachment.FileName;
+            indexAttach.Content = Convert.ToBase64String(content);
+            attachments.Add(indexAttach);
+        }
+
 
 
         private void SendAttachments(IEnumerable<OFAttachmentContent> attachments, AttachmentIndexProcess process)

@@ -299,9 +299,9 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
         Date dateCreated = message.getCreationTime();
         Date dateReceived = message.getMessageDeliveryTime();
         long size = message.getMessageSize();
-        int hash = PstStringHelper.hashCode(subject) + PstStringHelper.hashCode(df.format(dateReceived)) + PstStringHelper.hashCode(senderEmail);
+        int hash = PstStringHelper.hashCode(subject) + PstStringHelper.hashCode(df.format(dateReceived));
         String entryID = Integer.toString(hash);
-        System.out.println(String.format("Subject => %s ReceivedTime => %s Sender => %s Id => %s", subject, df.format(dateReceived), senderEmail,entryID));
+        System.out.println(String.format("Subject => %s ReceivedTime => %s Id => %s", subject, df.format(dateReceived), senderEmail,entryID));
         
         UUID id = null;
         String conversationIndex = "";
