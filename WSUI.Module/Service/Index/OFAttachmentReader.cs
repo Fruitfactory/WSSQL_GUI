@@ -90,21 +90,38 @@ namespace OF.Module.Service.Index
                             {
                                 continue;
                             }
+                            try
+                            {
+                                string senderEmail = result.SenderEmailAddress.IsNotNull() ? result.SenderEmailAddress : result.GetSenderSMTPAddress();
+                                if (senderEmail.IsEmpty())
+                                {
+                                    OFLogger.Instance.LogError("---- Attachment empty => {0}", attachment.FileName);
+                                    continue;
+                                }
 
-                            Outlook.PropertyAccessor pacc = attachment.PropertyAccessor;
-                            byte[] filebyte = (byte[]) pacc.GetProperty(AttachSchema);
-                            OFAttachmentContent indexAttach = new OFAttachmentContent();
-                            indexAttach.Size = attachment.Size;
 
-                            int hash = result.Subject.GetIternalHashCode() +
-                                       result.ReceivedTime.ToString(DateFormat).GetIternalHashCode() +
-                                       result.SenderEmailAddress.GetIternalHashCode();
-                            indexAttach.Emailid = hash.ToString();
-                            System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} Sender => {2} Id => {3}", result.Subject, result.ReceivedTime.ToString(DateFormat), result.SenderEmailAddress, hash.ToString());
-                            OFLogger.Instance.LogError("---- Attachment => {0}", attachment.FileName);
-                            indexAttach.Filename = attachment.FileName;
-                            indexAttach.Content = Convert.ToBase64String(filebyte);
-                            attachmentContents.Add(indexAttach);
+                                Outlook.PropertyAccessor pacc = attachment.PropertyAccessor;
+                                byte[] filebyte = (byte[]) pacc.GetProperty(AttachSchema);
+                                OFAttachmentContent indexAttach = new OFAttachmentContent();
+                                indexAttach.Size = attachment.Size;
+
+                                int hash = result.Subject.GetIternalHashCode() +
+                                           result.ReceivedTime.ToString(DateFormat).GetIternalHashCode() +
+                                           senderEmail.GetIternalHashCode();
+                                indexAttach.Emailid = hash.ToString();
+                                System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} Sender => {2} Id => {3}", result.Subject, result.ReceivedTime.ToString(DateFormat), result.SenderEmailAddress, hash.ToString());
+                                OFLogger.Instance.LogError("---- Attachment => {0}", attachment.FileName);
+                                indexAttach.Filename = attachment.FileName;
+                                indexAttach.Content = Convert.ToBase64String(filebyte);
+                                attachmentContents.Add(indexAttach);
+
+                            }
+                            catch(Exception ex)
+                            {
+                                OFLogger.Instance.LogError("---- Attachment Failed => {0}", attachment.FileName);
+                                OFLogger.Instance.LogError("---- Type Failed => {0}", ex.GetType().Name);
+                                OFLogger.Instance.LogError(ex.Message);               
+                            }
                         }
                         SendAttachments(attachmentContents,AttachmentIndexProcess.Chunk);
                         CheckCancellation();
