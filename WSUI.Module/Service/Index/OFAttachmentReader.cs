@@ -102,8 +102,9 @@ namespace OF.Module.Service.Index
                             }
                             catch (COMException comEx)
                             {
-                                OFLogger.Instance.LogError("----COM Attachment Failed => {0}", attachment.FileName);
+                                OFLogger.Instance.LogError("!!!!! COM Attachment Failed => {0}", attachment.FileName);
                                 OFLogger.Instance.LogError(comEx.Message);
+                                OFLogger.Instance.LogDebug("!!!!! Filename: {0}",attachment.FileName);
                                 byte[] conBytes = GetContentByTempFile(attachment);
                                 if (conBytes.IsNotNull())
                                 {
