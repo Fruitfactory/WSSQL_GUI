@@ -171,6 +171,7 @@
     <Compile Include="Enums\AttachmentIndexProcess.cs" />
     <Compile Include="Enums\OFPluginStatus.cs" />
     <Compile Include="Events\OFMenuEnabling.cs" />
+    <Compile Include="Extensions\EmailExtensions.cs" />
     <Compile Include="Helpers\OFIsolatedStorageHelper.cs" />
     <Compile Include="Helpers\OFObjectJsonSaveReadHelper.cs" />
     <Compile Include="Interfaces\IElasticSearchIndexAttachmentClient.cs" />
