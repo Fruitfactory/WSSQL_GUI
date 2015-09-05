@@ -20,6 +20,7 @@ namespace OF.Module.Service.Index
     public class OFAttachmentReader : ViewModelBase, IAttachmentReader
     { 
         private string AttachSchema = "http://schemas.microsoft.com/mapi/proptag/0x37010102";
+        private string TransportHeaderSchema = "http://schemas.microsoft.com/mapi/proptag/0x007D001F";
         private Thread _thread;
         private CancellationTokenSource _cancellationSource;
         private CancellationToken _cancellationToken;
@@ -174,16 +175,19 @@ namespace OF.Module.Service.Index
         {
             OFAttachmentContent indexAttach = new OFAttachmentContent();
             indexAttach.Size = attachment.Size;
-
             int hash = email.Subject.GetIternalHashCode() +
                        email.ReceivedTime.ToString(DateFormat).GetIternalHashCode();
-            indexAttach.Emailid = hash.ToString();
-            System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} Id => {2}",
+            var messageId = email.Headers("Message-ID");
+            indexAttach.Emailid = messageId.Any() ? messageId.FirstOrDefault() : string.Empty;
+            
+            System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} Id => {2} TransportMessaageId => {3}",
                 email.Subject, email.ReceivedTime.ToString(DateFormat),
-                hash.ToString());
+                hash.ToString(), messageId.Any() ? messageId.FirstOrDefault() : "n/a");
             OFLogger.Instance.LogError("---- Attachment => {0}", attachment.FileName);
             indexAttach.Filename = attachment.FileName;
             indexAttach.Content = Convert.ToBase64String(content);
+
+
             attachments.Add(indexAttach);
         }
 

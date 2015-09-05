@@ -301,8 +301,11 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
         long size = message.getMessageSize();
         int hash = PstStringHelper.hashCode(subject) + PstStringHelper.hashCode(df.format(dateReceived));
         String entryID = Integer.toString(hash);
-        System.out.println(String.format("Subject => %s ReceivedTime => %s Id => %s", subject, df.format(dateReceived), senderEmail,entryID));
-        
+
+        String messageId = message.getTransporttMessageId();
+
+        System.out.println(String.format("Subject => %s ReceivedTime => %s Id => %s TransportMessageID => %s", subject, df.format(dateReceived), entryID,messageId));
+
         UUID id = null;
         String conversationIndex = "";
         String outlookConversationId = "";
@@ -347,7 +350,7 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
                 listAttachments.add(helper);
 
                 if(attachment.getSize() < MaxSize){
-                    saveAttachment(attachment,entryID);
+                    saveAttachment(attachment,messageId);
                 }
                 _countOfIndexedAttachments++;
             }
@@ -386,7 +389,7 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
                 .field(PstMetadataTags.Email.HAS_ATTACHMENTS, Boolean.toString(hasAttachment))
                 .field(PstMetadataTags.Email.FROM_NAME, sender)
                 .field(PstMetadataTags.Email.FROM_ADDRESS, senderEmail)
-                .field(PstMetadataTags.Email.ENTRY_ID, entryID);
+                .field(PstMetadataTags.Email.ENTRY_ID, messageId);
 
         addArrayOfEmails(source, listTo,
                 PstMetadataTags.Email.TO,
