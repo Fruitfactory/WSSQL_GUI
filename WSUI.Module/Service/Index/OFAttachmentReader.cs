@@ -175,14 +175,14 @@ namespace OF.Module.Service.Index
         {
             OFAttachmentContent indexAttach = new OFAttachmentContent();
             indexAttach.Size = attachment.Size;
-            int hash = email.Subject.GetIternalHashCode() +
-                       email.ReceivedTime.ToString(DateFormat).GetIternalHashCode();
+            //int hash = email.Subject.GetIternalHashCode() +
+            //           email.ReceivedTime.ToString(DateFormat).GetIternalHashCode();
             var messageId = email.Headers("Message-ID");
             indexAttach.Emailid = messageId.Any() ? messageId.FirstOrDefault() : string.Empty;
             
-            System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} Id => {2} TransportMessaageId => {3}",
+            System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} TransportMessaageId => {2}",
                 email.Subject, email.ReceivedTime.ToString(DateFormat),
-                hash.ToString(), messageId.Any() ? messageId.FirstOrDefault() : "n/a");
+                messageId.Any() ? messageId.FirstOrDefault() : "n/a");
             OFLogger.Instance.LogError("---- Attachment => {0}", attachment.FileName);
             indexAttach.Filename = attachment.FileName;
             indexAttach.Content = Convert.ToBase64String(content);
