@@ -36,6 +36,7 @@ namespace OF.Core.Enums
         None,
         NonStarted,
         Busy,
-        Finished
+        Finished,
+        Suspended
     }
 }

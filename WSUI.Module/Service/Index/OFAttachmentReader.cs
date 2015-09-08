@@ -26,6 +26,8 @@ namespace OF.Module.Service.Index
         private CancellationToken _cancellationToken;
         private IElasticSearchIndexAttachmentClient _indexAttachmentClient;
         private DateTime? _lastUpdated;
+        private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
+
 
         private static readonly string DateFormat = "MM/dd/yyyy HH:mm:ss";
         private static int MaxSize = 65536;
@@ -45,6 +47,13 @@ namespace OF.Module.Service.Index
             private set { Set(() => Status, value); }
         }
 
+        public bool IsSuspended
+        {
+            get { return Get(() => IsSuspended); }
+            private set { Set(() => IsSuspended,value);}
+        }
+
+
         public void Start(DateTime? lastUpdated)
         {
             if (_thread == null)
@@ -61,6 +70,19 @@ namespace OF.Module.Service.Index
             _cancellationSource.Cancel();
             _thread.Join();
             Status = PstReaderStatus.Finished;
+        }
+
+        public void Suspend()
+        {
+            IsSuspended = true;
+            OFLogger.Instance.LogDebug("Reader Attachment has been Suspended");
+        }
+
+        public void Resume()
+        {
+            _eventPause.Set();
+            IsSuspended = false;
+            OFLogger.Instance.LogDebug("Reader Attachment has been Resumed");
         }
 
         private void ProcessAttachment(object arg)
@@ -84,11 +106,11 @@ namespace OF.Module.Service.Index
                         {
                             continue;
                         }
-
+                        TryToWait();
                         List<OFAttachmentContent> attachmentContents = new List<OFAttachmentContent>();
                         foreach (var attachment in result.Attachments.OfType<Outlook.Attachment>())
                         {
-                           
+
                             if (attachment.Size < MaxSize)
                             {
                                 continue;
@@ -98,7 +120,7 @@ namespace OF.Module.Service.Index
                                 byte[] contentBytes = GetContentByProperty(attachment);
                                 if (contentBytes.IsNotNull())
                                 {
-                                    AddAttachment(attachmentContents,result,attachment,contentBytes);
+                                    AddAttachment(attachmentContents, result, attachment, contentBytes);
                                 }
                             }
                             catch (COMException comEx)
@@ -109,25 +131,30 @@ namespace OF.Module.Service.Index
                                 byte[] conBytes = GetContentByTempFile(attachment);
                                 if (conBytes.IsNotNull())
                                 {
-                                    AddAttachment(attachmentContents,result,attachment,conBytes);
+                                    AddAttachment(attachmentContents, result, attachment, conBytes);
                                 }
                             }
-                            catch(Exception ex)
+                            catch (Exception ex)
                             {
                                 OFLogger.Instance.LogError("---- Attachment Failed => {0}", attachment.FileName);
                                 OFLogger.Instance.LogError("---- Type Failed => {0}", ex.GetType().Name);
-                                OFLogger.Instance.LogError(ex.Message);               
+                                OFLogger.Instance.LogError(ex.Message);
                             }
                         }
-                        SendAttachments(attachmentContents,AttachmentIndexProcess.Chunk);
                         CheckCancellation();
+                        TryToWait();
+                        if (attachmentContents.Count > 0)
+                        {
+                            SendAttachments(attachmentContents, AttachmentIndexProcess.Chunk);
+                        }
+
                     }
                     CheckCancellation();
                 }
             }
             catch (AggregateException ex)
             {
-                OFLogger.Instance.LogError("Canceled: {0}",ex.Message);
+                OFLogger.Instance.LogError("Canceled: {0}", ex.Message);
             }
             catch (Exception common)
             {
@@ -138,6 +165,14 @@ namespace OF.Module.Service.Index
                 SendAttachments(null, AttachmentIndexProcess.End);
                 Status = PstReaderStatus.Finished;
                 System.Diagnostics.Debug.WriteLine("!!!!!!!! Exit From Attachment Reader");
+            }
+        }
+
+        private void TryToWait()
+        {
+            if (IsSuspended)
+            {
+                _eventPause.WaitOne();
             }
         }
 
@@ -183,7 +218,7 @@ namespace OF.Module.Service.Index
             System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} TransportMessaageId => {2}",
                 email.Subject, email.ReceivedTime.ToString(DateFormat),
                 messageId.Any() ? messageId.FirstOrDefault() : "n/a");
-            OFLogger.Instance.LogError("---- Attachment => {0}", attachment.FileName);
+            OFLogger.Instance.LogDebug("---- Attachment => {0}", attachment.FileName);
             indexAttach.Filename = attachment.FileName;
             indexAttach.Content = Convert.ToBase64String(content);
 

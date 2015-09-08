@@ -1,6 +1,7 @@
 package com.fruitfactory.pstriver.river.reader;
 
 import com.fruitfactory.pstriver.helpers.PstReaderStatus;
+import com.fruitfactory.pstriver.rest.PstRESTRepository;
 import com.fruitfactory.pstriver.useractivity.IReaderControl;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.index.IndexRequest;
@@ -15,7 +16,7 @@ import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
 /**
  * Created by Yariki on 8/26/2015.
  */
-public class PstBaseOutlookIndexer extends Thread  implements IReaderControl {
+public abstract class PstBaseOutlookIndexer extends Thread  implements IReaderControl {
     protected ESLogger _logger;
     protected boolean _closed = false;
     protected PstReaderStatus _status;
@@ -32,6 +33,7 @@ public class PstBaseOutlookIndexer extends Thread  implements IReaderControl {
     public void pauseThread(){
         synchronized(LOCK){
             _paused = true;
+            PstRESTRepository.setStatus(getReaderName(),PstReaderStatus.Suspended);
             LOCK.notifyAll();
             _logger.info(LOG_TAG + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Thread #"+ getName() + " was paused...");
         }
@@ -40,6 +42,7 @@ public class PstBaseOutlookIndexer extends Thread  implements IReaderControl {
     public void resumeThread(){
         synchronized(LOCK){
             _paused = false;
+            PstRESTRepository.setStatus(getReaderName(),PstReaderStatus.Busy);
             LOCK.notifyAll();
             _logger.info(LOG_TAG + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Thread #"+ getName() + " was resumed...");
         }
@@ -69,6 +72,8 @@ public class PstBaseOutlookIndexer extends Thread  implements IReaderControl {
     public PstReaderStatus getStatus() {
         return _status;
     }
+
+    protected abstract String getReaderName();
 
     protected void esIndex(String index, String type, String id,
                            XContentBuilder xb) throws Exception {

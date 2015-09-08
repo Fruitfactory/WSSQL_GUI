@@ -8,5 +8,12 @@ namespace OF.Module.Interface.Service
         PstReaderStatus Status { get; }
         void Start(DateTime? lastUpdate);
         void Stop();
+
+        void Suspend();
+
+        void Resume();
+
+        bool IsSuspended { get; }
+
     }
 }

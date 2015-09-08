@@ -139,7 +139,12 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
         _logger.info("Prepare status info...");
         prepareStatusInfo(_pstFile.getRootFolder());
     }
-    
+
+    @Override
+    protected String getReaderName() {
+        return _name;
+    }
+
     @Override
     public void run() {
         try {
@@ -302,7 +307,7 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
         //int hash = PstStringHelper.hashCode(subject) + PstStringHelper.hashCode(df.format(dateReceived));
         //String entryID = Integer.toString(hash);
 
-        String messageId = message.getTransporttMessageId();
+        String messageId = message.getTransportMessageId();
 
         System.out.println(String.format("Subject => %s ReceivedTime => %s TransportMessageID => %s", subject, df.format(dateReceived), messageId));
 

@@ -298,13 +298,11 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                
                 var list = OutlookHelper.GetOutlookFiles();
                 ElasticSearchClient.CreateInfrastructure(list);
                 Thread.Sleep(1000);
                 _timer = new Timer(TimerProgressCallback,null,1000,2000);
                 OnIndexingStarted();
-                StartReadingAttachment();
             }
             catch (Exception ex)
             {
@@ -341,14 +339,26 @@ namespace OF.Module.ViewModel
                     OnIndexingFinished();
                     return;
                 }
-                if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Busy) && _attachmentReader.IsNotNull() && _attachmentReader.Status == PstReaderStatus.Busy)
+                if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Busy))
                 {
+                    if (_attachmentReader.IsNull())
+                    {
+                        StartReadingAttachment();
+                    }
+                    else if (_attachmentReader.IsNotNull() && _attachmentReader.IsSuspended)
+                    {
+                        _attachmentReader.Resume();
+                    } 
                     ShowProgress = Visibility.Visible;
                     double sumAll = (double)response.Response.Items.Sum(s => s.Count);
                     double sumProcessing = response.Response.Items.Sum(s => s.Processing);
                     var busyReader = response.Response.Items.FirstOrDefault(r => r.Status == PstReaderStatus.Busy);
                     CurrentFolder = busyReader.IsNotNull() ? busyReader.Folder : "";
                     CurrentProgress = (sumProcessing / sumAll) * 100.0;
+                }
+                if (response.Response.Items.All(i => i.Status == PstReaderStatus.Suspended) && _attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended)
+                {
+                    _attachmentReader.Suspend();
                 }
 
             }
