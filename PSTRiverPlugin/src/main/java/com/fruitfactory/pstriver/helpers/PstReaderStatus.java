@@ -14,5 +14,6 @@ public enum PstReaderStatus {
     None,
     NonStarted,
     Busy,
-    Finished
+    Finished,
+    Suspended
 }

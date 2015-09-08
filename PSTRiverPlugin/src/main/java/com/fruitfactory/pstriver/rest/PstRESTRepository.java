@@ -7,15 +7,15 @@ package com.fruitfactory.pstriver.rest;
 
 import com.fruitfactory.pstriver.helpers.PstReaderStatus;
 import com.fruitfactory.pstriver.helpers.PstReaderStatusInfo;
-import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 
+import com.fruitfactory.pstriver.interfaces.IPstAttachmentProcessor;
 import com.fruitfactory.pstriver.rest.data.PstAttachmentContainer;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
@@ -29,12 +29,16 @@ public class PstRESTRepository {
     
     private static HashMap<String, PstReaderStatusInfo> _repository = new HashMap<String, PstReaderStatusInfo>();
     private static HashMap<String,PstRiverStatusInfo> _reposirotyRiverStatus = new HashMap<String, PstRiverStatusInfo>();
-    private static Queue<PstAttachmentContainer> _attachmentContainers = new LinkedList<PstAttachmentContainer>();
     private static int lastUserActivity = 0;
     private static boolean isOFPluginRunning = false;
 
     private static Object lockUserActivity = new Object();
     private static Object lockOFPluginRunning = new Object();
+
+    private static final ESLogger logger = Loggers.getLogger(PstRESTRepository.class);
+
+    private static IPstAttachmentProcessor _pstAttachmentProcessor;
+    private static final Object _attachmentLock = new Object();
 
 
     public static void setStatusInfo(PstReaderStatusInfo statusInfo) {
@@ -129,17 +133,26 @@ public class PstRESTRepository {
     }
 
     public static void putAttachmentContainer(PstAttachmentContainer container){
-        synchronized (_attachmentContainers){
-            _attachmentContainers.offer(container);
+        if(_pstAttachmentProcessor == null){
+            return;
+        }
+        synchronized (_attachmentLock){
+            log(String.format("!!! Process Attachment: %d",container.attachments != null ? container.attachments.size() : 0));
+            _pstAttachmentProcessor.processAttachment(container);
         }
     }
 
-    public static PstAttachmentContainer getAttachmentContainer(){
-        PstAttachmentContainer result = null;
-        synchronized (_attachmentContainers){
-            result = _attachmentContainers.poll();
+    public static void setAttachmentProcessor(IPstAttachmentProcessor attachmentProcessor){
+
+        synchronized (_attachmentLock){
+            _pstAttachmentProcessor = attachmentProcessor;
         }
-        return result;
+    }
+
+    public static void clearAttachmentProcess(){
+        synchronized (_attachmentLock){
+            _pstAttachmentProcessor = null;
+        }
     }
 
     public static void setIsOFPluginRunning(boolean status){
@@ -155,5 +168,12 @@ public class PstRESTRepository {
         }
         return result;
     }
+
+    private static void log(String message){
+        if(logger != null){
+            logger.info(message);
+        }
+    }
+
 
 }

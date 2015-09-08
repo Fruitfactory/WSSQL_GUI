@@ -68,10 +68,16 @@ namespace OF.Core.Data.ElasticSearch
             var set = JsonConvert.SerializeObject(idlesettings);
             Settings = set;
 #else
-            ScheduleType = RiverSchedule.EveryNightOrIdle;
-            var idlesettings = new {idle_time = 120};
+            //ScheduleType = RiverSchedule.EveryNightOrIdle;
+            //var idlesettings = new {idle_time = 120};
+            //var set = JsonConvert.SerializeObject(idlesettings);
+            //Settings = set;
+
+            ScheduleType = RiverSchedule.EveryHours;
+            var idlesettings = new { hour_period = 1 };
             var set = JsonConvert.SerializeObject(idlesettings);
             Settings = set;
+
 #endif
 
         }

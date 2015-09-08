@@ -1,6 +1,7 @@
 package com.fruitfactory.pstriver.river.reader;
 
 import com.fruitfactory.pstriver.helpers.PstReaderStatus;
+import com.fruitfactory.pstriver.interfaces.IPstAttachmentProcessor;
 import com.fruitfactory.pstriver.rest.PstRESTRepository;
 import com.fruitfactory.pstriver.rest.data.PstAttachmentContainer;
 import com.fruitfactory.pstriver.rest.data.PstAttachmentContent;
@@ -28,12 +29,15 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 /**
  * Created by Yariki on 8/26/2015.
  */
-public class PstOutlookAttachmentReader extends PstBaseOutlookIndexer {
+public class PstOutlookAttachmentReader extends PstBaseOutlookIndexer implements IPstAttachmentProcessor {
+
 
 
     private Date _lastUpdateDate;
     private String _indexName;
     private String _name;
+
+    private final Object _lock = new Object();
 
     private final Tika _tika = new Tika();
 
@@ -45,38 +49,62 @@ public class PstOutlookAttachmentReader extends PstBaseOutlookIndexer {
         setDaemon(true);
         setPriority(MIN_PRIORITY);
         _name = "attachment";
+        _status = PstReaderStatus.None;
+    }
+
+    @Override
+    protected String getReaderName() {
+        return _name;
     }
 
     @Override
     public void run() {
         try {
-
             if(!PstRESTRepository.gettIsOFPluginRunning()){
                 _status = PstReaderStatus.Finished;
                 PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
                 return;
             }
+            PstRESTRepository.setAttachmentProcessor(this);
             _status = PstReaderStatus.Busy;
             PstRESTRepository.setStatus(_name, PstReaderStatus.Busy);
             while(true){
                 tryToWait();
-                PstAttachmentContainer container = PstRESTRepository.getAttachmentContainer();
-                if(container == null){
-                    continue;
+                synchronized (_lock){
+                    if(_status == PstReaderStatus.Finished){
+                        break;
+                    }
                 }
-                if(PstAttachmentIndexProcess.getValue(container.getProcess()) == PstAttachmentIndexProcess.End){
-                    _logger.info("!!!!!!!! Exit From Attachment Reader");
-                    break;
-                }
-                for(PstAttachmentContent content : container.getAttachments()){
-                    saveAttachment(content);
-                }
+                Thread.sleep(100);
             }
-            _status = PstReaderStatus.Finished;
-            PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
-
         }catch (Exception e){
             _logger.error(e.getMessage());
+        }finally {
+            _logger.info("!!!!!!!! Exit From Attachment Reader");
+            PstRESTRepository.clearAttachmentProcess();
+            PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
+        }
+
+    }
+
+    @Override
+    public void processAttachment(PstAttachmentContainer attachmentContainer) {
+
+        if(PstAttachmentIndexProcess.getValue(attachmentContainer.getProcess()) == PstAttachmentIndexProcess.End){
+            synchronized (_lock){
+                _status = PstReaderStatus.Finished;
+            }
+            return;
+        }
+        if(attachmentContainer.getAttachments().size() == 0){
+            return;
+        }
+        try {
+            for(PstAttachmentContent content : attachmentContainer.getAttachments()){
+                saveAttachment(content);
+            }
+        }catch(Exception ex){
+            _logger.error(ex.getMessage());
         }
     }
 

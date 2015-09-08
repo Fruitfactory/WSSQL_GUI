@@ -139,7 +139,12 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
         _logger.info("Prepare status info...");
         prepareStatusInfo(_pstFile.getRootFolder());
     }
-    
+
+    @Override
+    protected String getReaderName() {
+        return _name;
+    }
+
     @Override
     public void run() {
         try {
