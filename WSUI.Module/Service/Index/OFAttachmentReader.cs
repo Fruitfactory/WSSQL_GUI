@@ -28,9 +28,11 @@ namespace OF.Module.Service.Index
         private DateTime? _lastUpdated;
         private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
 
+        private static readonly long ContentMaxSize = 5*1024*1024;
+
 
         private static readonly string DateFormat = "MM/dd/yyyy HH:mm:ss";
-        private static int MaxSize = 65536;
+        private static int PageMaxSize = 65536;
 
         [InjectionConstructor]
         public OFAttachmentReader(IUnityContainer unityContainer)
@@ -111,27 +113,22 @@ namespace OF.Module.Service.Index
                         foreach (var attachment in result.Attachments.OfType<Outlook.Attachment>())
                         {
 
-                            if (attachment.Size < MaxSize)
+                            if (attachment.Size < PageMaxSize)
                             {
                                 continue;
                             }
                             try
                             {
-                                byte[] contentBytes = GetContentByProperty(attachment);
-                                if (contentBytes.IsNotNull())
-                                {
-                                    AddAttachment(attachmentContents, result, attachment, contentBytes);
-                                }
+                                byte[] contentBytes = !attachment.FileName.IsVideoFile() && attachment.Size < ContentMaxSize  ? GetContentByProperty(attachment) : null;
+                                AddAttachment(attachmentContents, result, attachment, contentBytes);
                             }
                             catch (COMException comEx)
                             {
                                 OFLogger.Instance.LogError("----COM Attachment Failed => {0}", attachment.FileName);
                                 OFLogger.Instance.LogError(comEx.Message);
-                                byte[] conBytes = GetContentByTempFile(attachment);
-                                if (conBytes.IsNotNull())
-                                {
-                                    AddAttachment(attachmentContents, result, attachment, conBytes);
-                                }
+
+                                byte[] conBytes = !attachment.FileName.IsVideoFile() && attachment.Size < ContentMaxSize ? GetContentByTempFile(attachment) : null;
+                                AddAttachment(attachmentContents, result, attachment, conBytes);
                             }
                             catch (Exception ex)
                             {
@@ -180,7 +177,7 @@ namespace OF.Module.Service.Index
         {
             Outlook.PropertyAccessor pacc = attachment.PropertyAccessor;
             byte[] filebyte = (byte[])pacc.GetProperty(AttachSchema);
-            return filebyte;
+            return  filebyte;
         }
 
         private byte[] GetContentByTempFile(Outlook.Attachment attachment)
@@ -202,25 +199,30 @@ namespace OF.Module.Service.Index
                     File.Delete(attachment.FileName);
                 }
             }
-            return buffer;
+            return  buffer;
         }
 
         private void AddAttachment(List<OFAttachmentContent> attachments,Outlook.MailItem email, Outlook.Attachment attachment, byte[] content)
         {
             OFAttachmentContent indexAttach = new OFAttachmentContent();
             indexAttach.Size = attachment.Size;
-            //int hash = email.Subject.GetIternalHashCode() +
-            //           email.ReceivedTime.ToString(DateFormat).GetIternalHashCode();
             var messageId = email.Headers("Message-ID");
             indexAttach.Emailid = messageId.Any() ? messageId.FirstOrDefault() : string.Empty;
+            indexAttach.Outlookemailid = email.EntryID;
             
             System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} TransportMessaageId => {2}",
                 email.Subject, email.ReceivedTime.ToString(DateFormat),
                 messageId.Any() ? messageId.FirstOrDefault() : "n/a");
             OFLogger.Instance.LogDebug("---- Attachment => {0}", attachment.FileName);
             indexAttach.Filename = attachment.FileName;
-            indexAttach.Content = Convert.ToBase64String(content);
-
+            if (content != null)
+            {
+                indexAttach.Content = Convert.ToBase64String(content);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine(string.Format("--- Skip Attachment (by size): {0}",email.Subject));
+            }
 
             attachments.Add(indexAttach);
         }
