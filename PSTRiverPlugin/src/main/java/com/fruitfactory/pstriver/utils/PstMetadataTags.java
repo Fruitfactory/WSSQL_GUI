@@ -94,6 +94,7 @@ public class PstMetadataTags {
         public static final String CONTENT = "content";
         public static final String EMAIL_ID = "emailid";
         public static final String ENTRYID = "entryid";
+        public static final String OUTLOOK_EMAIL_ID = "outlookemailid";
     }
 
     public static XContentBuilder buildPstEmailMapping() throws IOException {
@@ -165,6 +166,7 @@ public class PstMetadataTags {
         addBinary(mapping, Attachment.CONTENT);
         addNotAnalyzedString(mapping, Attachment.EMAIL_ID);
         addNotAnalyzedString(mapping, Attachment.ENTRYID);
+        addNotAnalyzedString(mapping, Attachment.OUTLOOK_EMAIL_ID);
         mapping.endObject();
         mapping.endObject();
         mapping.endObject();

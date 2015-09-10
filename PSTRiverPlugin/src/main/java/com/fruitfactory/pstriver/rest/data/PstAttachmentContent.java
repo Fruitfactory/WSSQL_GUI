@@ -31,6 +31,9 @@ public class PstAttachmentContent {
     @SerializedName("emailid")
     public String emailid;
 
+    @SerializedName("outlookemailid")
+    public String outlookemailid;
+
     public PstAttachmentContent() {
     }
 
@@ -96,5 +99,13 @@ public class PstAttachmentContent {
 
     public void setEmailid(String emailid) {
         this.emailid = emailid;
+    }
+
+    public String getOutlookemailid() {
+        return outlookemailid;
+    }
+
+    public void setOutlookemailid(String outlookemailid) {
+        this.outlookemailid = outlookemailid;
     }
 }

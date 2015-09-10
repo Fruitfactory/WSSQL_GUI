@@ -23,5 +23,7 @@ namespace OF.Core.Data.ElasticSearch
         public string Analyzedcontent { get; set; }
 
         public string Emailid { get; set; }
+
+        public string Outlookemailid { get; set; }
     }
 }
