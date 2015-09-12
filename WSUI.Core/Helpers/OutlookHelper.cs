@@ -263,15 +263,37 @@ namespace OF.Core.Helpers
             if (string.IsNullOrEmpty(folder))
                 return string.Empty;
             string filename = string.Format("{0}\\{1}", folder, attachment.Filename);
-            try
+
+
+            if (!string.IsNullOrEmpty(attachment.Content))
             {
-                byte[] content = Convert.FromBase64String(attachment.Content);
-                File.WriteAllBytes(filename, content);
-                return filename;
+                try
+                {
+                    byte[] content = Convert.FromBase64String(attachment.Content);
+                    File.WriteAllBytes(filename, content);
+                    return filename;
+                }
+                catch (Exception ex)
+                {
+                    OFLogger.Instance.LogError(ex.Message);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                OFLogger.Instance.LogError(ex.Message);
+                try
+                {
+                    var email = OutlookHelper.Instance.GetEmailItem(attachment.Outlookemailid);
+                    var att = OutlookHelper.Instance.GetAttacment(email, attachment.Filename) as Outlook.Attachment;
+                    if (att.IsNotNull())
+                    {
+                        att.SaveAsFile(filename);
+                        return filename;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    OFLogger.Instance.LogError(ex.Message);
+                }
             }
             return string.Empty;
         }
@@ -323,6 +345,15 @@ namespace OF.Core.Helpers
                 ReopenOutlook(ref _app);
             var newMail = (Microsoft.Office.Interop.Outlook.MailItem) this.OutlookApp.CreateItemFromTemplate(filename);
             return newMail;
+        }
+
+        public dynamic GetEmailItem(string entryId)
+        {
+            if (string.IsNullOrEmpty(entryId))
+            {
+                return null;
+            }
+            return GetMailItem(entryId);
         }
 
         public dynamic GetEmailItem(BaseSearchObject data)
@@ -754,6 +785,31 @@ namespace OF.Core.Helpers
             return null;
         }
 
+        public Outlook.Attachment GetAttacment(dynamic mail, string filename)
+        {
+            Outlook.Attachment att = null;
+            if (mail == null)
+                return null;
+            try
+            {
+                if (mail.Attachments.Count == 0)
+                    return null;
+                foreach (Outlook.Attachment attach in mail.Attachments)
+                {
+                    if (attach.FileName == filename)
+                    {
+                        att = attach;
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetAttachment", ex.Message));
+            }
+            return att;
+        }
+
         #endregion public
 
         #region private
@@ -828,30 +884,7 @@ namespace OF.Core.Helpers
             return mi;
         }
 
-        private Outlook.Attachment GetAttacment(dynamic mail, string filename)
-        {
-            Outlook.Attachment att = null;
-            if (mail == null)
-                return null;
-            try
-            {
-                if (mail.Attachments.Count == 0)
-                    return null;
-                foreach (Outlook.Attachment attach in mail.Attachments)
-                {
-                    if (attach.FileName == filename)
-                    {
-                        att = attach;
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetAttachment", ex.Message));
-            }
-            return att;
-        }
+        
 
         private dynamic GetAppointment(string id)
         {

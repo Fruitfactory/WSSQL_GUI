@@ -65,5 +65,11 @@ namespace OF.Core.Data
             set { Set(() => EmailId, value); }
         }
 
+        public string Outlookemailid
+        {
+            get { return Get(() => Outlookemailid); }
+            set { Set(() => Outlookemailid, value); }
+        }
+
     }
 }
