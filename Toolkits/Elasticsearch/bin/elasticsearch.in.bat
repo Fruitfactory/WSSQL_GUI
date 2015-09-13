@@ -5,20 +5,6 @@ set SCRIPT_DIR=%~dp0
 for %%I in ("%SCRIPT_DIR%..") do set ES_HOME=%%~dpfI
 
 
-REM ***** JAVA options *****
-
-if "%ES_MIN_MEM%" == "" (
-set ES_MIN_MEM=256m
-)
-
-if "%ES_MAX_MEM%" == "" (
-set ES_MAX_MEM=1g
-)
-
-if NOT "%ES_HEAP_SIZE%" == "" (
-set ES_MIN_MEM=%ES_HEAP_SIZE%
-set ES_MAX_MEM=%ES_HEAP_SIZE%
-)
 
 REM min and max heap sizes should be set to the same value to avoid
 REM stop-the-world GC pauses during resize, and so that we can lock the
