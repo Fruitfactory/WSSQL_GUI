@@ -204,7 +204,7 @@ namespace OF.Core.ElasticSearch.Clients
         private bool CreateIndex()
         {
             var response = ElasticClient.CreateIndex(DefaultInfrastructureName, c => c.NumberOfReplicas(0)
-                .NumberOfShards(0));
+                .NumberOfShards(1));
             OFLogger.Instance.LogDebug("Create Index...");
             OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.ConnectionStatus.HttpStatusCode, response.ConnectionStatus.Success);
 
