@@ -546,8 +546,12 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
             }
             bufferStream.flush();
             byte[] byteBuffer = bufferStream.toByteArray();
+
             strBuilder.append(Base64.encode(byteBuffer));
-            parsedContent = _tika.parseToString(new BytesStreamInput(byteBuffer), new Metadata());
+
+            if(PstStringHelper.isFileAllowed(filename)){
+                parsedContent = _tika.parseToString(new BytesStreamInput(byteBuffer), new Metadata());
+            }
         } catch (Exception ex) {
             _logger.error(LOG_TAG + ex.getMessage());
         }

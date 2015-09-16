@@ -63,10 +63,19 @@ namespace OF.Core.Data.ElasticSearch
         {
 
 #if DEBUG
-            ScheduleType = RiverSchedule.EveryHours;
-            var idlesettings = new { hour_period = 1 };
+           // user tracking
+
+            ScheduleType = RiverSchedule.EveryNightOrIdle;
+            var idlesettings = new { idle_time = 60 };
             var set = JsonConvert.SerializeObject(idlesettings);
             Settings = set;
+
+            //period
+
+            //ScheduleType = RiverSchedule.EveryHours;
+            //var idlesettings = new { hour_period = 1 };
+            //var set = JsonConvert.SerializeObject(idlesettings);
+            //Settings = set;
 #else
             // user tracking
 

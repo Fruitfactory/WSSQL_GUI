@@ -46,6 +46,9 @@ namespace OF.Module.ViewModel
         private Timer _timer;
         private bool _isFinishing = false;
 
+        private readonly object _lock = new object();
+
+
         [Dependency]
         public IElasticSearchInitializationIndex ElasticSearchClient { get; set; }
 
@@ -312,6 +315,7 @@ namespace OF.Module.ViewModel
 
         private void StartReadingAttachment()
         {
+            OFLogger.Instance.LogDebug("Create Attachment Reader...");
             _attachmentReader = _unityContainer.Resolve<IAttachmentReader>();
             _attachmentReader.Start(null);
         }
@@ -341,14 +345,18 @@ namespace OF.Module.ViewModel
                 }
                 if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Busy))
                 {
-                    if (_attachmentReader.IsNull())
+                    lock (_lock)
                     {
-                        StartReadingAttachment();
+                        if (_attachmentReader.IsNull())
+                        {
+                            StartReadingAttachment();
+                        }
+                        else if (_attachmentReader.IsNotNull() && _attachmentReader.IsSuspended)
+                        {
+                            _attachmentReader.Resume();
+                        }    
                     }
-                    else if (_attachmentReader.IsNotNull() && _attachmentReader.IsSuspended)
-                    {
-                        _attachmentReader.Resume();
-                    } 
+                     
                     ShowProgress = Visibility.Visible;
                     double sumAll = (double)response.Response.Items.Sum(s => s.Count);
                     double sumProcessing = response.Response.Items.Sum(s => s.Processing);
@@ -356,9 +364,12 @@ namespace OF.Module.ViewModel
                     CurrentFolder = busyReader.IsNotNull() ? busyReader.Folder : "";
                     CurrentProgress = (sumProcessing / sumAll) * 100.0;
                 }
-                if (response.Response.Items.All(i => i.Status == PstReaderStatus.Suspended) && _attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended)
+                lock (_lock)
                 {
-                    _attachmentReader.Suspend();
+                    if (response.Response.Items.All(i => i.Status == PstReaderStatus.Suspended || i.Status == PstReaderStatus.Finished) && _attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended)
+                    {
+                        _attachmentReader.Suspend();
+                    }    
                 }
 
             }

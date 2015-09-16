@@ -5,14 +5,21 @@
  */
 package com.fruitfactory.pstriver.helpers;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
  * @author Yariki
  */
 public class PstStringHelper {
-    
+
+    private static List<String> AllowedExtensions = Arrays.asList("DOC", "DOCX", "XLS", "XLSX", "PPT", "PPTX", "PDF", "TXT", "LOG" );
+
+
     public static int pecentageOfTextMatch(String text1, String text2){
         int percentage = 0;
         text1 = text1.trim().replaceAll("\\s+", " ");
@@ -30,6 +37,11 @@ public class PstStringHelper {
             }
         }
         return h;
+    }
+
+    public static boolean isFileAllowed(String filename){
+        String ext = FilenameUtils.getExtension(filename).toUpperCase();
+        return AllowedExtensions.indexOf(ext) > -1;
     }
     
 }

@@ -119,7 +119,7 @@ namespace OF.Module.Service.Index
                             }
                             try
                             {
-                                byte[] contentBytes = !attachment.FileName.IsVideoFile() && attachment.Size < ContentMaxSize  ? GetContentByProperty(attachment) : null;
+                                byte[] contentBytes = attachment.FileName.IsFileAllowed() ? GetContentByProperty(attachment) : null;
                                 AddAttachment(attachmentContents, result, attachment, contentBytes);
                             }
                             catch (COMException comEx)
@@ -127,7 +127,7 @@ namespace OF.Module.Service.Index
                                 OFLogger.Instance.LogError("----COM Attachment Failed => {0}", attachment.FileName);
                                 OFLogger.Instance.LogError(comEx.Message);
 
-                                byte[] conBytes = !attachment.FileName.IsVideoFile() && attachment.Size < ContentMaxSize ? GetContentByTempFile(attachment) : null;
+                                byte[] conBytes = attachment.FileName.IsFileAllowed() ? GetContentByTempFile(attachment) : null;
                                 AddAttachment(attachmentContents, result, attachment, conBytes);
                             }
                             catch (Exception ex)
@@ -138,7 +138,6 @@ namespace OF.Module.Service.Index
                             }
                         }
                         CheckCancellation();
-                        TryToWait();
                         if (attachmentContents.Count > 0)
                         {
                             SendAttachments(attachmentContents, AttachmentIndexProcess.Chunk);
@@ -213,6 +212,7 @@ namespace OF.Module.Service.Index
             System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} TransportMessaageId => {2}",
                 email.Subject, email.ReceivedTime.ToString(DateFormat),
                 messageId.Any() ? messageId.FirstOrDefault() : "n/a");
+
             OFLogger.Instance.LogDebug("---- Attachment => {0}", attachment.FileName);
             indexAttach.Filename = attachment.FileName;
             if (content != null)
