@@ -77,6 +77,7 @@ namespace OF.Module.Service.Index
         public void Suspend()
         {
             IsSuspended = true;
+            Status = PstReaderStatus.Suspended;
             OFLogger.Instance.LogDebug("Reader Attachment has been Suspended");
         }
 
@@ -84,6 +85,7 @@ namespace OF.Module.Service.Index
         {
             _eventPause.Set();
             IsSuspended = false;
+            Status = PstReaderStatus.Busy;
             OFLogger.Instance.LogDebug("Reader Attachment has been Resumed");
         }
 
@@ -91,6 +93,7 @@ namespace OF.Module.Service.Index
         {
             try
             {
+                Status = PstReaderStatus.Busy;
                 var folderList = OutlookHelper.Instance.GetFolders().OfType<Outlook.MAPIFolder>();
                 if (!folderList.Any())
                 {
@@ -117,6 +120,7 @@ namespace OF.Module.Service.Index
                             {
                                 continue;
                             }
+                            TryToWait();
                             try
                             {
                                 byte[] contentBytes = attachment.FileName.IsFileAllowed() ? GetContentByProperty(attachment) : null;
@@ -138,6 +142,7 @@ namespace OF.Module.Service.Index
                             }
                         }
                         CheckCancellation();
+                        TryToWait();
                         if (attachmentContents.Count > 0)
                         {
                             SendAttachments(attachmentContents, AttachmentIndexProcess.Chunk);
@@ -221,7 +226,7 @@ namespace OF.Module.Service.Index
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine(string.Format("--- Skip Attachment (by size): {0}",email.Subject));
+                System.Diagnostics.Debug.WriteLine(string.Format("--- Skip Attachment (not allowed for indexing): {0}",email.Subject));
             }
 
             attachments.Add(indexAttach);

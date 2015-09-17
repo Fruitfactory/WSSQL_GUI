@@ -343,6 +343,13 @@ namespace OF.Module.ViewModel
                     OnIndexingFinished();
                     return;
                 }
+
+                if (response.Response.Items.All(i => i.Status == PstReaderStatus.Finished) &&
+                    _attachmentReader.IsNotNull() && _attachmentReader.IsSuspended &&
+                    _attachmentReader.Status != PstReaderStatus.Finished)
+                {
+                    _attachmentReader.Resume();
+                }
                 if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Busy))
                 {
                     lock (_lock)
@@ -351,7 +358,7 @@ namespace OF.Module.ViewModel
                         {
                             StartReadingAttachment();
                         }
-                        else if (_attachmentReader.IsNotNull() && _attachmentReader.IsSuspended)
+                        else if (_attachmentReader.IsNotNull() && _attachmentReader.IsSuspended && _attachmentReader.Status != PstReaderStatus.Finished)
                         {
                             _attachmentReader.Resume();
                         }    
@@ -366,7 +373,7 @@ namespace OF.Module.ViewModel
                 }
                 lock (_lock)
                 {
-                    if (response.Response.Items.All(i => i.Status == PstReaderStatus.Suspended || i.Status == PstReaderStatus.Finished) && _attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended)
+                    if (response.Response.Items.All(i => i.Status == PstReaderStatus.Suspended || i.Status == PstReaderStatus.Finished) && _attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended && _attachmentReader.Status != PstReaderStatus.Finished)
                     {
                         _attachmentReader.Suspend();
                     }    
