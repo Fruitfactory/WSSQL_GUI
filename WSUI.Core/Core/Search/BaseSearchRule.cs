@@ -151,29 +151,54 @@ namespace OF.Core.Core.Search
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                IRawSearchResult<E> result = null;
+                IEnumerable<E> Documents = null;
+                long total = 0;
+                int took = 0;
 
-                var body = GetSearchBody();
-                if (body.IsNotNull())
+                if (IsAdvancedMode)
                 {
-                    body.from = _from;
-                    body.size = TopQueryResult;
-                    result = _elasticSearchClient.RawSearch<E>(body);
+                    ISearchResponse<E> resultAdvance = _elasticSearchClient.ElasticClient.Search<E>(s => s
+                        .From(_from)
+                        .Size(TopQueryResult)
+                        .Query(BuildAdvancedQuery)
+                        .Sort(BuildAdvancedFieldSortSortSelector)
+                        );
+                    if (resultAdvance.IsNotNull())
+                    {
+                        Documents = resultAdvance.Documents;
+                        total = resultAdvance.Total;
+                    }
+
+                }
+                else
+                {
+                    IRawSearchResult<E> result = null;
+                    var body = GetSearchBody();
+                    if (body.IsNotNull())
+                    {
+                        body.from = _from;
+                        body.size = TopQueryResult;
+                        result = _elasticSearchClient.RawSearch<E>(body);
+                        if (result.IsNotNull())
+                        {
+                            Documents = result.Documents;
+                            took = result.Took;
+                            total = result.Total;
+                        }
+                    }    
                 }
 
                 watch.Stop();
 
-
-
                 // additional process
-                if (!NeedStop && result != null && result.Documents.Any())
+                if (!NeedStop && Documents.Any())
                 {
-                    OFLogger.Instance.LogDebug("Search Done: Server {0}ms, Client {1}ms", result.Took, watch.ElapsedMilliseconds);
-                    _total = result.Total;
-                    _from += result.Documents.Count() == TopQueryResult ? TopQueryResult : result.Documents.Count();
+                    OFLogger.Instance.LogDebug("Search Done: Server {0}ms, Client {1}ms", took, watch.ElapsedMilliseconds);
+                    _total = total;
+                    _from += Documents.Count() == TopQueryResult ? TopQueryResult : Documents.Count();
                     watch = new Stopwatch();
                     watch.Start();
-                    ReadDataFromTable(result.Documents);
+                    ReadDataFromTable(Documents);
                     watch.Stop();
                     OFLogger.Instance.LogDebug("Read Data Done: {0}ms", watch.ElapsedMilliseconds);
 
