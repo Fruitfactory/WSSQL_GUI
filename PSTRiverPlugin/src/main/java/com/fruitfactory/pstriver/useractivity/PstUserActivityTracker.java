@@ -77,7 +77,8 @@ public class PstUserActivityTracker extends Thread {
                 if(newState != oldState){
                     processState(newState);
                 }
-                System.out.println(String.format("Time = %s, State = %s", idleSec, newState));
+                //System.out.println(String.format("Time = %s, State = %s", idleSec, newState));
+                logger.info(String.format("Time = %s, State = %s", idleSec, newState));
                 oldState = newState;
                 Thread.sleep(1000);
             }catch(Exception ex){

@@ -10,7 +10,9 @@ import com.fruitfactory.pstriver.helpers.PstReaderStatusInfo;
 import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 import com.fruitfactory.pstriver.interfaces.IPstAttachmentProcessor;
 import com.fruitfactory.pstriver.rest.data.PstAttachmentContainer;
@@ -29,6 +31,7 @@ public class PstRESTRepository {
     
     private static HashMap<String, PstReaderStatusInfo> _repository = new HashMap<String, PstReaderStatusInfo>();
     private static HashMap<String,PstRiverStatusInfo> _reposirotyRiverStatus = new HashMap<String, PstRiverStatusInfo>();
+    private static Queue<PstAttachmentContainer> _attachmentContainers = new LinkedList<PstAttachmentContainer>();
     private static int lastUserActivity = 0;
     private static boolean isOFPluginRunning = false;
 
@@ -133,26 +136,18 @@ public class PstRESTRepository {
     }
 
     public static void putAttachmentContainer(PstAttachmentContainer container){
-        if(_pstAttachmentProcessor == null){
-            return;
-        }
         synchronized (_attachmentLock){
-            log(String.format("!!! Process Attachment: %d",container.attachments != null ? container.attachments.size() : 0));
-            _pstAttachmentProcessor.processAttachment(container);
+            _attachmentContainers.offer(container);
+            log(String.format("Queue count: %d",_attachmentContainers.size()));
         }
     }
 
-    public static void setAttachmentProcessor(IPstAttachmentProcessor attachmentProcessor){
-
+    public static PstAttachmentContainer getAttachmentContainer(){
+        PstAttachmentContainer result = null;
         synchronized (_attachmentLock){
-            _pstAttachmentProcessor = attachmentProcessor;
+            result = _attachmentContainers.poll();
         }
-    }
-
-    public static void clearAttachmentProcess(){
-        synchronized (_attachmentLock){
-            _pstAttachmentProcessor = null;
-        }
+        return result;
     }
 
     public static void setIsOFPluginRunning(boolean status){

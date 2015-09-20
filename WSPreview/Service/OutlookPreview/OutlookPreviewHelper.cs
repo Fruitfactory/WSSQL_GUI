@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using GDIDraw.Service;
 using HtmlAgilityPack;
+using Nest;
 using OFPreview.PreviewHandler.PreviewHandlerFramework;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Data;
@@ -378,27 +379,81 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             {
                 var tempFolder = TempFileManager.Instance.GenerateTempFolderForObject(searchObj);
                 var urls = string.Empty;
-                foreach (var attachment in result.Documents)
-                {
-                    try
-                    {
-                        byte[] content = Convert.FromBase64String(attachment.Content);
-                        var filename = string.Format("{0}/{1}", tempFolder, attachment.Filename);
-                        File.WriteAllBytes(filename, content);
-                        if (!string.IsNullOrEmpty(filename))
-                            urls += string.Format(LinkTemplate, attachment.Filename, filename, HighlightSearchString(attachment.Filename));
 
-                    }
-                    catch (Exception exception)
-                    {
-                        OFLogger.Instance.LogError(exception.Message);
-                    }
+                if (searchObj.Attachments.IsNotNull())
+                {
+                    urls = SaveEmailAttachments(searchObj, result, tempFolder);
                 }
+                else
+                {
+                    urls = SaveFoundAttachments(result, tempFolder);                    
+                }
+                
                 return string.Format(AttachmentsRow, urls);
             }
             return string.Empty;
         }
 
+        private string SaveFoundAttachments(ISearchResponse<OFAttachmentContent> result, string tempFolder)
+        {
+            string urls = "";
+            foreach (var ofAttachmentContent in result.Documents)
+            {
+                urls += SaveAttachment(ofAttachmentContent, tempFolder);
+            }
+            return urls;
+        }
+
+        private string SaveEmailAttachments(EmailSearchObject searchObj, ISearchResponse<OFAttachmentContent> result, string tempFolder)
+        {
+            string urls = "";
+            foreach (var ofAttachment in searchObj.Attachments)
+            {
+                var attachment =
+                    result.Documents.FirstOrDefault(
+                        a =>
+                            string.Equals(a.Filename.ToUpperInvariant(),
+                                ofAttachment.FileName.ToUpperInvariant()));
+                if (attachment.IsNull())
+                {
+                    continue;
+                }
+                urls += SaveAttachment(attachment, tempFolder);
+            }
+            return urls;
+        }
+
+
+        private string SaveAttachment(OFAttachmentContent attachment,string tempFolder)
+        {
+            try
+            {
+                var filename = string.Format("{0}/{1}", tempFolder, attachment.Filename);
+                if (attachment.Content.IsStringEmptyOrNull() && !attachment.Outlookemailid.IsStringEmptyOrNull())
+                {
+                    Outlook.MailItem email = OutlookHelper.Instance.GetEmailItem(attachment.Outlookemailid);
+                    Outlook.Attachment att = OutlookHelper.Instance.GetAttacment(email, attachment.Filename);
+                    if (att.IsNull())
+                    {
+                        return String.Empty;
+                    }
+                    att.SaveAsFile(filename);
+                }
+                else
+                {
+                    byte[] content = Convert.FromBase64String(attachment.Content);
+                    File.WriteAllBytes(filename, content);
+                }
+                if (!string.IsNullOrEmpty(filename))
+                    return string.Format(LinkTemplate, attachment.Filename, filename, HighlightSearchString(attachment.Filename));
+
+            }
+            catch (Exception exception)
+            {
+                OFLogger.Instance.LogError(exception.Message);
+            }
+            return string.Empty;
+        }
 
 
         public string GetPathForEmail(Uri url, string filename)

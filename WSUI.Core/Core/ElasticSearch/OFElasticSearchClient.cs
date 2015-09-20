@@ -62,7 +62,7 @@ namespace OF.Core.Core.ElasticSearch
             }
         }
 
-        protected ElasticClient ElasticClient
+        public ElasticClient ElasticClient
         {
             get { return _internalElasticClient; }
             set { _internalElasticClient = value; }

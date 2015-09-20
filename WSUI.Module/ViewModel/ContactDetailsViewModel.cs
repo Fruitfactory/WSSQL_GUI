@@ -12,6 +12,7 @@ using System.Windows.Input;
 using OF.Core.Core.MVVM;
 using OF.Core.Data;
 using OF.Core.Data.UI;
+using OF.Core.Extensions;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Utils.Dialog;
@@ -463,7 +464,7 @@ namespace OF.Module.ViewModel
             FirstName = dataObject.FirstName;
             LastName = dataObject.LastName;
             string name = "";
-            Emails = new List<string> { dataObject.EmailAddress1, dataObject.EmailAddress2, dataObject.EmailAddress3 };
+            Emails = (new List<string> { dataObject.EmailAddress1, dataObject.EmailAddress2, dataObject.EmailAddress3 }).Distinct().Where(s => !string.IsNullOrEmpty(s));
             FotoFilepath = OutlookHelper.Instance.GetContactFotoTempFileName(dataObject);
             BusinessTelephone = dataObject.BusinessTelephone;
             HomeTelephone = dataObject.HomeTelephone;

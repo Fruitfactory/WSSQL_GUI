@@ -60,31 +60,37 @@ public class PstOutlookAttachmentReader extends PstBaseOutlookIndexer implements
     @Override
     public void run() {
         try {
+
             if(!PstRESTRepository.gettIsOFPluginRunning()){
                 _status = PstReaderStatus.Finished;
                 PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
                 return;
             }
-            PstRESTRepository.setAttachmentProcessor(this);
             _status = PstReaderStatus.Busy;
             PstRESTRepository.setStatus(_name, PstReaderStatus.Busy);
             while(true){
                 tryToWait();
-                synchronized (_lock){
-                    if(_status == PstReaderStatus.Finished){
-                        break;
-                    }
+                PstAttachmentContainer container = PstRESTRepository.getAttachmentContainer();
+                if(container == null){
+                    continue;
                 }
-                Thread.sleep(100);
+                if(PstAttachmentIndexProcess.getValue(container.getProcess()) == PstAttachmentIndexProcess.End){
+                    break;
+                }
+                for(PstAttachmentContent content : container.getAttachments()){
+                    saveAttachment(content);
+                }
             }
+            _status = PstReaderStatus.Finished;
+            PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
+
         }catch (Exception e){
             _logger.error(e.getMessage());
         }finally {
             _logger.info("!!!!!!!! Exit From Attachment Reader");
-            PstRESTRepository.clearAttachmentProcess();
+            _status = PstReaderStatus.Finished;
             PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
         }
-
     }
 
     @Override
@@ -112,37 +118,45 @@ public class PstOutlookAttachmentReader extends PstBaseOutlookIndexer implements
         if (attachment == null) {
             return;
         }
-        String filename = attachment.getFilename();
-        String pathname = attachment.getPath();
-        long size = attachment.getSize();
-        String mime = attachment.getMimetag();
-        String entryid = attachment.getEntryid();
-        StringBuilder strBuilder = new StringBuilder();
 
-        String parsedContent = "";
+        try{
+            String filename = attachment.getFilename();
+            String pathname = attachment.getPath();
+            long size = attachment.getSize();
+            String mime = attachment.getMimetag();
+            String entryid = attachment.getEntryid();
+            StringBuilder strBuilder = new StringBuilder();
 
-        byte[] byteBuffer = Base64.decode(attachment.getContent());
-        parsedContent = _tika.parseToString(new BytesStreamInput(byteBuffer), new Metadata());
+            String parsedContent = "";
 
-        XContentBuilder source = jsonBuilder().startObject();
+            if(attachment.getContent() != null){
+                byte[] byteBuffer = Base64.decode(attachment.getContent());
+                parsedContent = _tika.parseToString(new BytesStreamInput(byteBuffer), new Metadata());
+            }
 
-        if (_logger.isTraceEnabled()) {
-            source.prettyPrint();
+            XContentBuilder source = jsonBuilder().startObject();
+
+            if (_logger.isTraceEnabled()) {
+                source.prettyPrint();
+            }
+            _logger.info(String.format("---- AttachmentFile => %s",filename));
+            source
+                    .field(PstMetadataTags.Attachment.FILENAME, filename)
+                    .field(PstMetadataTags.Attachment.PATH, pathname)
+                    .field(PstMetadataTags.Attachment.SIZE, size)
+                    .field(PstMetadataTags.Attachment.MIME_TAG, mime)
+                    .field(PstMetadataTags.Attachment.ANALYZED_CONTENT,parsedContent)
+                    .field(PstMetadataTags.Attachment.CONTENT, attachment.getContent())
+                    .field(PstMetadataTags.Attachment.EMAIL_ID, attachment.getEmailid())
+                    .field(PstMetadataTags.Attachment.ENTRYID, entryid)
+                    .field(PstMetadataTags.Attachment.OUTLOOK_EMAIL_ID,attachment.getOutlookemailid());
+
+            source.endObject();
+            esIndex(_indexName, PstMetadataTags.INDEX_TYPE_ATTACHMENT, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
+        }catch(Exception ex){
+            _logger.error(ex.getMessage());
         }
-        _logger.info(String.format("---- AttachmentFile => %s",filename));
-        source
-                .field(PstMetadataTags.Attachment.FILENAME, filename)
-                .field(PstMetadataTags.Attachment.PATH, pathname)
-                .field(PstMetadataTags.Attachment.SIZE, size)
-                .field(PstMetadataTags.Attachment.MIME_TAG, mime)
-                .field(PstMetadataTags.Attachment.ANALYZED_CONTENT,parsedContent)
-                .field(PstMetadataTags.Attachment.CONTENT, attachment.getContent())
-                .field(PstMetadataTags.Attachment.EMAIL_ID, attachment.getEmailid())
-                .field(PstMetadataTags.Attachment.ENTRYID, entryid)
-                .field(PstMetadataTags.Attachment.OUTLOOK_EMAIL_ID,attachment.getOutlookemailid());
 
-        source.endObject();
-        esIndex(_indexName, PstMetadataTags.INDEX_TYPE_ATTACHMENT, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
     }
 
 }

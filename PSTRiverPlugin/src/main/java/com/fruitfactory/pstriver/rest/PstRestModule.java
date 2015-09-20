@@ -45,7 +45,7 @@ public class PstRestModule extends BaseRestHandler {
 
         String command = rr.param("command");
 
-        System.out.println(String.format("RawPath: %s", rr.rawPath()));
+        //System.out.println(String.format("RawPath: %s", rr.rawPath()));
 
         if ("status".equals(command)) {
             processStatusRequest(rc);

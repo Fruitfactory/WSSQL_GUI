@@ -34,7 +34,6 @@ public abstract class PstBaseOutlookIndexer extends Thread  implements IReaderCo
         synchronized(LOCK){
             _paused = true;
             PstRESTRepository.setStatus(getReaderName(),PstReaderStatus.Suspended);
-            LOCK.notifyAll();
             _logger.info(LOG_TAG + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Thread #"+ getName() + " was paused...");
         }
     }
