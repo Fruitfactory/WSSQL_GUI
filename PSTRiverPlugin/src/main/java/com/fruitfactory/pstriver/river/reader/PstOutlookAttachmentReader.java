@@ -57,40 +57,97 @@ public class PstOutlookAttachmentReader extends PstBaseOutlookIndexer implements
         return _name;
     }
 
+
+    // from queue
+
+//    @Override
+//    public void run() {
+//        try {
+//
+//            if(!PstRESTRepository.gettIsOFPluginRunning()){
+//                _status = PstReaderStatus.Finished;
+//                PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
+//                return;
+//            }
+//            _status = PstReaderStatus.Busy;
+//            PstRESTRepository.setStatus(_name, PstReaderStatus.Busy);
+//            while(true){
+//                tryToWait();
+//                PstAttachmentContainer container = PstRESTRepository.getAttachmentContainer();
+//                if(container == null){
+//                    continue;
+//                }
+//                if(PstAttachmentIndexProcess.getValue(container.getProcess()) == PstAttachmentIndexProcess.End){
+//                    break;
+//                }
+//                for(PstAttachmentContent content : container.getAttachments()){
+//                    saveAttachment(content);
+//                }
+//            }
+//            _status = PstReaderStatus.Finished;
+//            PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
+//
+//        }catch (Exception e){
+//            _logger.error(e.getMessage());
+//        }finally {
+//            _logger.info("!!!!!!!! Exit From Attachment Reader");
+//            _status = PstReaderStatus.Finished;
+//            PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
+//        }
+//    }
+//
+//    @Override
+//    public void processAttachment(PstAttachmentContainer attachmentContainer) {
+//
+//        if(PstAttachmentIndexProcess.getValue(attachmentContainer.getProcess()) == PstAttachmentIndexProcess.End){
+//            synchronized (_lock){
+//                _status = PstReaderStatus.Finished;
+//            }
+//            return;
+//        }
+//        if(attachmentContainer.getAttachments().size() == 0){
+//            return;
+//        }
+//        try {
+//            for(PstAttachmentContent content : attachmentContainer.getAttachments()){
+//                saveAttachment(content);
+//            }
+//        }catch(Exception ex){
+//            _logger.error(ex.getMessage());
+//        }
+//    }
+
+    // one by one
+
+
     @Override
     public void run() {
         try {
-
             if(!PstRESTRepository.gettIsOFPluginRunning()){
                 _status = PstReaderStatus.Finished;
                 PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
                 return;
             }
+            PstRESTRepository.setAttachmentProcessor(this);
             _status = PstReaderStatus.Busy;
             PstRESTRepository.setStatus(_name, PstReaderStatus.Busy);
             while(true){
                 tryToWait();
-                PstAttachmentContainer container = PstRESTRepository.getAttachmentContainer();
-                if(container == null){
-                    continue;
+                synchronized (_lock){
+                    if(_status == PstReaderStatus.Finished){
+                        break;
+                    }
                 }
-                if(PstAttachmentIndexProcess.getValue(container.getProcess()) == PstAttachmentIndexProcess.End){
-                    break;
-                }
-                for(PstAttachmentContent content : container.getAttachments()){
-                    saveAttachment(content);
-                }
+                Thread.sleep(100);
             }
-            _status = PstReaderStatus.Finished;
-            PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
-
         }catch (Exception e){
             _logger.error(e.getMessage());
         }finally {
             _logger.info("!!!!!!!! Exit From Attachment Reader");
-            _status = PstReaderStatus.Finished;
+            PstRESTRepository.clearAttachmentProcess();
             PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
         }
+
     }
 
     @Override
@@ -113,6 +170,9 @@ public class PstOutlookAttachmentReader extends PstBaseOutlookIndexer implements
             _logger.error(ex.getMessage());
         }
     }
+
+
+
 
     private void saveAttachment(PstAttachmentContent attachment) throws IOException, Exception {
         if (attachment == null) {
@@ -139,7 +199,7 @@ public class PstOutlookAttachmentReader extends PstBaseOutlookIndexer implements
             if (_logger.isTraceEnabled()) {
                 source.prettyPrint();
             }
-            _logger.info(String.format("---- AttachmentFile => %s",filename));
+            _logger.info(String.format("---- AttachmentFile => %s; Size => %d",filename, size / 1048576));
             source
                     .field(PstMetadataTags.Attachment.FILENAME, filename)
                     .field(PstMetadataTags.Attachment.PATH, pathname)

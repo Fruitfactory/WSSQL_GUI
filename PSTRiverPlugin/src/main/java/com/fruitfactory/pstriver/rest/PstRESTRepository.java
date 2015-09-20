@@ -136,19 +136,44 @@ public class PstRESTRepository {
     }
 
     public static void putAttachmentContainer(PstAttachmentContainer container){
+        if(_pstAttachmentProcessor == null){
+            return;
+        }
         synchronized (_attachmentLock){
-            _attachmentContainers.offer(container);
-            log(String.format("Queue count: %d",_attachmentContainers.size()));
+            log(String.format("!!! Process Attachment: %d",container.attachments != null ? container.attachments.size() : 0));
+            _pstAttachmentProcessor.processAttachment(container);
         }
     }
 
-    public static PstAttachmentContainer getAttachmentContainer(){
-        PstAttachmentContainer result = null;
+    public static void setAttachmentProcessor(IPstAttachmentProcessor attachmentProcessor){
+
         synchronized (_attachmentLock){
-            result = _attachmentContainers.poll();
+            _pstAttachmentProcessor = attachmentProcessor;
         }
-        return result;
     }
+
+    public static void clearAttachmentProcess(){
+        synchronized (_attachmentLock){
+            _pstAttachmentProcessor = null;
+        }
+    }
+
+
+
+//    public static void putAttachmentContainer(PstAttachmentContainer container){
+//        synchronized (_attachmentLock){
+//            _attachmentContainers.offer(container);
+//            log(String.format("Queue count: %d",_attachmentContainers.size()));
+//        }
+//    }
+//
+//    public static PstAttachmentContainer getAttachmentContainer(){
+//        PstAttachmentContainer result = null;
+//        synchronized (_attachmentLock){
+//            result = _attachmentContainers.poll();
+//        }
+//        return result;
+//    }
 
     public static void setIsOFPluginRunning(boolean status){
         synchronized (lockOFPluginRunning){
