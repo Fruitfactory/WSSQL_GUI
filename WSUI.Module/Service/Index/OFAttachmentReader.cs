@@ -91,6 +91,7 @@ namespace OF.Module.Service.Index
         {
             try
             {
+                Status = PstReaderStatus.Busy;
                 var folderList = OutlookHelper.Instance.GetFolders().OfType<Outlook.MAPIFolder>();
                 if (!folderList.Any())
                 {
@@ -117,31 +118,19 @@ namespace OF.Module.Service.Index
                             {
                                 continue;
                             }
+                            TryToWait();
                             try
                             {
-                                byte[] contentBytes = !attachment.FileName.IsVideoFile() && attachment.Size < ContentMaxSize  ? GetContentByProperty(attachment) : null;
+                                byte[] contentBytes = attachment.FileName.IsFileAllowed() ? GetContentByProperty(attachment) : null;
                                 AddAttachment(attachmentContents, result, attachment, contentBytes);
                             }
                             catch (COMException comEx)
                             {
-                                OFLogger.Instance.LogError("!!!!! COM Attachment Failed => {0}", attachment.FileName);
+                                OFLogger.Instance.LogError("----COM Attachment Failed => {0}", attachment.FileName);
                                 OFLogger.Instance.LogError(comEx.Message);
-<<<<<<< .mine
-                                OFLogger.Instance.LogDebug("!!!!! Filename: {0}",attachment.FileName);
-=======
 
->>>>>>> .theirs
-                                byte[] conBytes = !attachment.FileName.IsVideoFile() && attachment.Size < ContentMaxSize ? GetContentByTempFile(attachment) : null;
+                                byte[] conBytes = attachment.FileName.IsFileAllowed() ? GetContentByTempFile(attachment) : null;
                                 AddAttachment(attachmentContents, result, attachment, conBytes);
-<<<<<<< .mine
-                                {
-                                    AddAttachment(attachmentContents, result, attachment, conBytes);
-                                }
-=======
-
-
-
->>>>>>> .theirs
                             }
                             catch (Exception ex)
                             {
