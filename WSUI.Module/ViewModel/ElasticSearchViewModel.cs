@@ -373,7 +373,7 @@ namespace OF.Module.ViewModel
                 }
                 lock (_lock)
                 {
-                    if (response.Response.Items.All(i => i.Status == PstReaderStatus.Suspended || i.Status == PstReaderStatus.Finished) && _attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended && _attachmentReader.Status != PstReaderStatus.Finished)
+                    if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Suspended ) && _attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended && _attachmentReader.Status != PstReaderStatus.Finished)
                     {
                         _attachmentReader.Suspend();
                     }    

@@ -5,6 +5,6 @@ namespace OF.Core.Interfaces
 {
     public interface IElasticSearchIndexAttachmentClient
     {
-        void SendAttachmentToIndex(OFAttachmentIndexingContainer attachmentContainer);
+        bool SendAttachmentToIndex(OFAttachmentIndexingContainer attachmentContainer);
     }
 }

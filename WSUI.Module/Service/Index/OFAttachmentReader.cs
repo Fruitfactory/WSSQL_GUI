@@ -77,7 +77,6 @@ namespace OF.Module.Service.Index
         public void Suspend()
         {
             IsSuspended = true;
-            Status = PstReaderStatus.Suspended;
             OFLogger.Instance.LogDebug("Reader Attachment has been Suspended");
         }
 
@@ -85,7 +84,6 @@ namespace OF.Module.Service.Index
         {
             _eventPause.Set();
             IsSuspended = false;
-            Status = PstReaderStatus.Busy;
             OFLogger.Instance.LogDebug("Reader Attachment has been Resumed");
         }
 
@@ -217,7 +215,6 @@ namespace OF.Module.Service.Index
             System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} TransportMessaageId => {2}",
                 email.Subject, email.ReceivedTime.ToString(DateFormat),
                 messageId.Any() ? messageId.FirstOrDefault() : "n/a");
-
             OFLogger.Instance.LogDebug("---- Attachment => {0}", attachment.FileName);
             indexAttach.Filename = attachment.FileName;
             if (content != null)
@@ -226,7 +223,7 @@ namespace OF.Module.Service.Index
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine(string.Format("--- Skip Attachment (not allowed for indexing): {0}",email.Subject));
+                System.Diagnostics.Debug.WriteLine(string.Format("--- Skip Attachment (by size): {0}",email.Subject));
             }
 
             attachments.Add(indexAttach);

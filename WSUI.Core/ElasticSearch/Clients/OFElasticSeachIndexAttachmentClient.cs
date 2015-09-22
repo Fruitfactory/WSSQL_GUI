@@ -18,17 +18,19 @@ namespace OF.Core.ElasticSearch.Clients
             
         }
 
-        public void SendAttachmentToIndex(OFAttachmentIndexingContainer attachmentContainer)
+        public bool SendAttachmentToIndex(OFAttachmentIndexingContainer attachmentContainer)
         {
             try
             {
                 var attachmentsList = Serializer.Serialize(attachmentContainer, SerializationFormatting.Indented);
-                Raw.IndexPut("_river", DefaultInfrastructureName, "indexattachment", attachmentsList);
+                var response = Raw.IndexPut("_river", DefaultInfrastructureName, "indexattachment", attachmentsList);
+                return response.HttpStatusCode == 200;
             }
             catch (Exception ex)
             {
                 OFLogger.Instance.LogError(ex.Message);
             }
+            return false;
         }
     }
 }
