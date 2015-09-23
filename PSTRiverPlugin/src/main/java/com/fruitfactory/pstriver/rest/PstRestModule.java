@@ -38,6 +38,7 @@ public class PstRestModule extends BaseRestHandler {
         controller.registerHandler(RestRequest.Method.PUT, "_river/{rivername}/useractivity", this);
         controller.registerHandler(RestRequest.Method.PUT, "_river/{rivername}/indexattachment", this);
         controller.registerHandler(RestRequest.Method.PUT,"_river/{rivername}/client",this);
+        controller.registerHandler(RestRequest.Method.PUT,"_river/{rivername}/force",this);
     }
 
     @Override
@@ -65,6 +66,10 @@ public class PstRestModule extends BaseRestHandler {
         }
         if(rr.rawPath().contains("client")){
             processOFPluginStatus(rr,rc);
+            return;
+        }
+        if(rr.rawPath().contains("force")){
+            processForce(rr,rc);
             return;
         }
     }
@@ -140,6 +145,19 @@ public class PstRestModule extends BaseRestHandler {
             PstOFPluginStatusContainer container =  gson.fromJson(content, PstOFPluginStatusContainer.class);
             boolean status = PstOFPluginStatus.getValue(container.getStatus()) == PstOFPluginStatus.Running;
             PstRESTRepository.setIsOFPluginRunning(status);
+            rc.sendResponse(new BytesRestResponse(RestStatus.OK));
+        } catch (Exception e) {
+            try {
+                rc.sendResponse(new BytesRestResponse(rc, e));
+            } catch (IOException e1) {
+                rc.sendResponse(new BytesRestResponse(RestStatus.INTERNAL_SERVER_ERROR));
+            }
+        }
+    }
+
+    private void processForce(RestRequest rr, RestChannel rc){
+        try {
+            PstRESTRepository.forceIndexing();
             rc.sendResponse(new BytesRestResponse(RestStatus.OK));
         } catch (Exception e) {
             try {

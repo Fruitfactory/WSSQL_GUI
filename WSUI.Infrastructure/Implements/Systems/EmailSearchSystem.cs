@@ -6,6 +6,7 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
+using Microsoft.Practices.Unity;
 using OF.Infrastructure.Implements.Rules;
 using OF.Infrastructure.Implements.Systems.Core;
 
@@ -17,11 +18,11 @@ namespace OF.Infrastructure.Implements.Systems
         {
 		}
 
-	    public override void Init()
+        public override void Init(IUnityContainer container)
 	    {
-            AddRule(new EmailSubjectSearchRule());
-            AddRule(new EmailContentSearchRule());
-	        base.Init();
+            AddRule(new EmailSubjectSearchRule(container));
+            AddRule(new EmailContentSearchRule(container));
+	        base.Init(container);
 	    }
 
 

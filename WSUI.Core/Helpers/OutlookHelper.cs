@@ -3,19 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using Microsoft.Practices.ObjectBuilder2;
-using OF.Core.Core.ElasticSearch;
 using OF.Core.Data;
 using OF.Core.Data.ElasticSearch;
-using OF.Core.ElasticSearch.Clients;
 using OF.Core.Enums;
 using OF.Core.Extensions;
-using OF.Core.Helpers.DetectEncoding.Multilang;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 using Outlook = Microsoft.Office.Interop.Outlook;
@@ -38,9 +31,6 @@ namespace OF.Core.Helpers
         private const int IDLENGHT = 24;
 
         public const string AllFolders = "All folders";
-
-        public const string MAIL_EXT = "eml";
-        public const string MAIL_FILTER = "*." + MAIL_EXT;
 
         #region fields
 
@@ -134,76 +124,7 @@ namespace OF.Core.Helpers
             return tempFilename;
         }
 
-        public string GetEmailEmlFilename(EmailSearchObject emailObject)
-        {
-            if (emailObject.IsNull())
-            {
-                return string.Empty;
-            }
-
-            if (TempFileManager.Instance.IsEmlFileExistForEmailObject(emailObject))
-            {
-                return TempFileManager.Instance.GetExistEmlFileForEmailObject(emailObject);
-            }
-            
-            string result = string.Empty;
-            string tempFolder = TempFileManager.Instance.GenerateTempFolderForObject(emailObject);
-            MailMessage mail = new MailMessage();
-            mail.From = new MailAddress(emailObject.FromAddress, emailObject.FromName); //emailObject.FromAddress
-            if (emailObject.To != null)
-            {
-                emailObject.To.ForEach(r =>
-                {
-                    if (r.Address.IsEmail())
-                        mail.To.Add(new MailAddress(r.Address, r.Name));
-                });
-            }
-            if (emailObject.Cc != null)
-            {
-                emailObject.Cc.ForEach(r =>
-                {
-                    if (r.Address.IsEmail())
-                        mail.CC.Add(new MailAddress(r.Address, r.Name));
-                });
-            }
-            if (emailObject.Bcc != null)
-            {
-                emailObject.Bcc.ForEach(r =>
-                {
-                    if (r.Address.IsEmail())
-                        mail.Bcc.Add(new MailAddress(r.Address, r.Name));
-                });
-            }
-
-            if (!string.IsNullOrEmpty(emailObject.Content))
-            {
-                mail.Body = emailObject.Content;
-            }
-            else
-            {
-                mail.Body = emailObject.HtmlContent;
-                mail.IsBodyHtml = true;
-            }
-            mail.Subject = emailObject.Subject;
-            if (emailObject.Attachments != null)
-            {
-                var fileList = GetAttachments(emailObject, tempFolder);
-                foreach (var filename in fileList)
-                {
-                    mail.Attachments.Add(new Attachment(filename));
-                }
-            }
-            try
-            {
-                result = SaveToEML(mail,tempFolder);
-                TempFileManager.Instance.SetEmlFileForEmailObject(emailObject,result);
-            }
-            catch (Exception ex )
-            {
-                OFLogger.Instance.LogError(ex.Message);
-            }
-            return result;
-        }
+        
 
         public string GetAttachmentTempFileName(BaseSearchObject item)
         {
@@ -1057,56 +978,9 @@ namespace OF.Core.Helpers
             return InternalHostType == HostType.Application;
         }
 
-        private string SaveToEML(MailMessage msg, string tempFolder)
-        {
-            string result = string.Empty;
-            using (var client = new SmtpClient())
-            {
-                client.UseDefaultCredentials = true;
-                client.DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory;
-                client.PickupDirectoryLocation = tempFolder;
-                client.Send(msg);
-            }
-            try
-            {
-                result = Directory.GetFiles(tempFolder, MAIL_FILTER).Single();
-                string filename = Path.Combine(tempFolder, Path.GetFileNameWithoutExtension(Path.GetTempFileName()) + "." + MAIL_EXT);
-                File.Copy(result, filename);
-                File.Delete(result);
-                result = filename;
-            }
-            catch (Exception e)
-            {
-                OFLogger.Instance.LogError(e.Message);
-            }
-            return result;
-        }
+        
 
-        private IEnumerable<string> GetAttachments(EmailSearchObject searchObj, string tempFolder)
-        {
-            var esClient = new OFElasticSearchClient();
-            var result = esClient.Search<OFAttachmentContent>(s => s.Query(d => d.QueryString(qq => qq.Query(searchObj.EntryID))));
-            var fileList = new List<string>();
-            if (result.Documents.Any())
-            {
-                foreach (var attachment in result.Documents)
-                {
-                    try
-                    {
-                        byte[] content = Convert.FromBase64String(attachment.Content);
-                        var filename = string.Format("{0}/{1}", tempFolder, attachment.Filename);
-                        File.WriteAllBytes(filename, content);
-                        fileList.Add(filename);
-
-                    }
-                    catch (Exception exception)
-                    {
-                        OFLogger.Instance.LogError(exception.Message);
-                    }
-                }
-            }
-            return fileList;
-        }
+        
 
         #endregion private
     }

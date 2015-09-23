@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.Practices.Unity;
 using Nest;
 using OF.Core.Core.AdvancedSearchCriteria;
 using OF.Core.Core.Rules;
@@ -26,13 +27,14 @@ namespace OF.Infrastructure.Implements.Rules
     public class EmailSubjectSearchRule : BaseEmailSearchRule
     {
 
-        public EmailSubjectSearchRule()
+        public EmailSubjectSearchRule(IUnityContainer container)
+            :this(null,container)
         {
             Priority = 2;
         }
 
-        public EmailSubjectSearchRule(object lockObject)
-            : base(lockObject)
+        public EmailSubjectSearchRule(object lockObject, IUnityContainer container)
+            : base(lockObject,container)
         {
             Priority = 2;
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Documents;
+using Microsoft.Practices.Unity;
 using Nest;
 using OF.Core.Core.Rules;
 using OF.Core.Core.Search;
@@ -22,15 +23,16 @@ namespace OF.Infrastructure.Implements.Rules
         
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
 
-        private readonly List<string> _listEmails = new List<string>(); 
+        private readonly List<string> _listEmails = new List<string>();
 
-        public EmailContactSearchRule()
+        public EmailContactSearchRule(IUnityContainer container)
+            :this(null,container)
         {
             Priority = 0;
         }
 
-        public EmailContactSearchRule(object lockObject)
-        :base(lockObject,false)
+        public EmailContactSearchRule(object lockObject, IUnityContainer container)
+        :base(lockObject,false,container)
         {
             Priority = 0;
         }

@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Practices.Unity;
 using OF.Core.Core.Rules;
 using OF.Core.Core.Search;
 using OF.Core.Data;
@@ -23,13 +24,14 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
     {
         protected string WhereTemplate = string.Empty;
 
-		public BaseFileSearchRule()
+        public BaseFileSearchRule(IUnityContainer container)
+            :this(null,container)
         {
 
         }
 
-        public BaseFileSearchRule(object lockObject)
-            :base(lockObject,false)
+        public BaseFileSearchRule(object lockObject, IUnityContainer container)
+            :base(lockObject,false,container)
         {
 
         }

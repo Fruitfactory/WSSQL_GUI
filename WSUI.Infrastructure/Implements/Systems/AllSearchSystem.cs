@@ -6,6 +6,7 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
+using Microsoft.Practices.Unity;
 using OF.Infrastructure.Implements.Rules;
 using OF.Infrastructure.Implements.Systems.Core;
 
@@ -19,14 +20,14 @@ namespace OF.Infrastructure.Implements.Systems
 
 		}
 
-	    public override void Init()
+        public override void Init(IUnityContainer container)
 	    {
-            AddRule(new GeneralContactRule(100, 0, Lock1));
-            AddRule(new EmailSubjectSearchRule(Lock1));
-            AddRule(new EmailContentSearchRule(Lock1));
-            AddRule(new AttachmentFilenameSearchRule(Lock1));
-            AddRule(new AttachmentContentSearchRule(Lock1));
-	        base.Init();
+            AddRule(new GeneralContactRule(100, 0, Lock1,container));
+            AddRule(new EmailSubjectSearchRule(Lock1,container));
+            AddRule(new EmailContentSearchRule(Lock1,container));
+            AddRule(new AttachmentFilenameSearchRule(Lock1,container));
+            AddRule(new AttachmentContentSearchRule(Lock1,container));
+	        base.Init(container);
 	    }
 
 

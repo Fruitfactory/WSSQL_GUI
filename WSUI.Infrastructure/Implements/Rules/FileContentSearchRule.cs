@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////
 
 
+using Microsoft.Practices.Unity;
 using OF.Infrastructure.Implements.Rules.BaseRules;
 
 namespace OF.Infrastructure.Implements.Rules 
@@ -14,13 +15,14 @@ namespace OF.Infrastructure.Implements.Rules
 	public class FileContentSearchRule : BaseFileSearchRule 
     {
 
-		public FileContentSearchRule()
+        public FileContentSearchRule(IUnityContainer container)
+            :this(null,container)
 		{
 		    ConstructorInit();
 		}
 
-        public FileContentSearchRule(object lockObject)
-            :base(lockObject)
+        public FileContentSearchRule(object lockObject, IUnityContainer container)
+            :base(lockObject,container)
         {
             ConstructorInit();
         }

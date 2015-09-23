@@ -68,6 +68,7 @@ namespace OF.Module.ViewModel
             RunServiceCommand = new OFRelayCommand(RunServiceCommandExecute);
             CreateIndexCommand = new OFRelayCommand(CreateIndexCommandExecute);
             LetsGoCommand = new OFRelayCommand(o => this.Close());
+            ForceCommand = new OFRelayCommand(ForceCommandExecute);
             CreateIndexVisibility = Visibility.Visible;
             ShowProgress = Visibility.Collapsed;
             FinishedStepVisibility = Visibility.Collapsed;
@@ -105,6 +106,12 @@ namespace OF.Module.ViewModel
         {
             get { return Get(() => IsInitialIndexinginProgress); }
             private set { Set(() => IsInitialIndexinginProgress, value); }
+        }
+
+        public bool IsBusy
+        {
+            get { return Get(() => IsBusy); }
+            private set { Set(() => IsBusy, value); }
         }
 
         public void Show( bool showJustProgress = false)
@@ -204,6 +211,12 @@ namespace OF.Module.ViewModel
             set { Set(() => LetsGoCommand, value); }
         }
 
+        public ICommand ForceCommand
+        {
+            get { return Get(() => ForceCommand); }
+            set { Set(() => ForceCommand, value); }
+        }
+
 
         #endregion
 
@@ -273,6 +286,16 @@ namespace OF.Module.ViewModel
             CreateIndexVisibility = Visibility.Collapsed;
             ShowProgress = Visibility.Visible;
             //CheckServices();
+        }
+
+        private void ForceCommandExecute(object arg)
+        {
+            var forceClient = _unityContainer.Resolve<IElasticSearchForceClient>();
+            if (forceClient.IsNull())
+            {
+                return;
+            }
+            forceClient.Force();
         }
 
         private void ExecuteCommandForService(string command)
@@ -363,7 +386,7 @@ namespace OF.Module.ViewModel
                             _attachmentReader.Resume();
                         }    
                     }
-                     
+                    IsBusy = true;
                     ShowProgress = Visibility.Visible;
                     double sumAll = (double)response.Response.Items.Sum(s => s.Count);
                     double sumProcessing = response.Response.Items.Sum(s => s.Processing);
@@ -373,9 +396,14 @@ namespace OF.Module.ViewModel
                 }
                 lock (_lock)
                 {
-                    if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Suspended ) && _attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended && _attachmentReader.Status != PstReaderStatus.Finished)
+                    if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Suspended ))
                     {
-                        _attachmentReader.Suspend();
+                        if (_attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended &&
+                            _attachmentReader.Status != PstReaderStatus.Finished)
+                        {
+                            _attachmentReader.Suspend();
+                        }
+                        IsBusy = false;
                     }    
                 }
 

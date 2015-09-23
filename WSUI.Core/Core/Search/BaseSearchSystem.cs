@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using Microsoft.Practices.Unity;
 using OF.Core.Core.AdvancedSearchCriteria;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
@@ -45,7 +46,7 @@ namespace OF.Core.Core.Search
         }
 
 
-        public virtual void Init()
+        public virtual void Init(IUnityContainer container)
         {
             _IsSearching = false;
             _listRules.ForEach(item => item.Init());

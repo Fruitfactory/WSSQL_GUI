@@ -7,8 +7,7 @@
 ///////////////////////////////////////////////////////////
 
 
-
-
+using Microsoft.Practices.Unity;
 using OF.Core.Core.Search;
 using OF.Infrastructure.Implements.Rules;
 
@@ -22,11 +21,11 @@ namespace OF.Infrastructure.Implements.Systems
 
 		}
 
-	    public override void Init()
+        public override void Init(IUnityContainer container)
 	    {
-            AddRule(new AttachmentFilenameSearchRule());
-            AddRule(new AttachmentContentSearchRule());
-	        base.Init();
+            AddRule(new AttachmentFilenameSearchRule(container));
+            AddRule(new AttachmentContentSearchRule(container));
+	        base.Init(container);
 	    }
     }//end AttachmentSearchSystem
 

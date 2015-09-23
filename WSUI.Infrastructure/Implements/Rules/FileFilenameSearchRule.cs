@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Practices.Unity;
 using OF.Core.Data;
 using OF.Infrastructure.Implements.Rules.BaseRules;
 
@@ -18,13 +19,14 @@ namespace OF.Infrastructure.Implements.Rules
 	public class FileFilenameSearchRule : BaseFileSearchRule
 	{
 
-		public FileFilenameSearchRule()
+        public FileFilenameSearchRule(IUnityContainer container)
+            :this(null,container)
 		{
 		    ConstructorInit();
 		}
 
-        public FileFilenameSearchRule(object lockObject)
-            :base(lockObject)
+        public FileFilenameSearchRule(object lockObject, IUnityContainer container)
+            :base(lockObject,container)
         {
             ConstructorInit();
         }

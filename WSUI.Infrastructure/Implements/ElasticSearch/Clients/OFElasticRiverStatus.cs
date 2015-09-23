@@ -1,12 +1,11 @@
 ﻿using Elasticsearch.Net;
 using Nest;
 using OF.Core.Core.ElasticSearch;
-using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
 
-namespace OF.Core.ElasticSearch.Clients
+namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
     public class OFElasticRiverStatus : OFElasticSearchClientBase,IElasticSearchRiverStatus
     {

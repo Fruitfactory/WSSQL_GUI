@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Practices.Unity;
 using Nest;
 using OF.Core.Core.Rules;
 using OF.Core.Core.Search;
@@ -25,13 +26,14 @@ namespace OF.Infrastructure.Implements.Rules
 {
 	public class ContactSearchRule : BaseSearchRule<ContactSearchObject,OFContact>
 	{
-        public ContactSearchRule()
+        public ContactSearchRule(IUnityContainer container)
+            :this(null,container)
 		{
 		    Priority = 1;
 		}
-        
-        public ContactSearchRule(object lockObject)
-        :base(lockObject,false)
+
+        public ContactSearchRule(object lockObject, IUnityContainer container)
+        :base(lockObject,false,container)
         {
             Priority = 1;
         }

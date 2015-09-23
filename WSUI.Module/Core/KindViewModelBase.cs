@@ -206,7 +206,7 @@ namespace OF.Module.Core
         {
             if (SearchSystem != null)
             {
-                SearchSystem.Init();
+                SearchSystem.Init(Container);
                 SearchSystem.SearchStarted += SearchSystemOnSearchStarted;
                 SearchSystem.SearchFinished += SearchSystemOnSearchFinished;
                 SearchSystem.SearchStoped += SearchSystemOnSearchStoped;

@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Microsoft.Practices.Unity;
 using OF.Core.Core.Rules;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Request;
@@ -21,13 +22,14 @@ namespace OF.Infrastructure.Implements.Rules
 	public class EmailContentSearchRule : BaseEmailSearchRule 
     {
 
-		public EmailContentSearchRule()
+        public EmailContentSearchRule(IUnityContainer container)
+            :this(null,container)
 		{
 		    Priority = 3;
 		}
 
-        public EmailContentSearchRule(object lockObject)
-        :base(lockObject)
+        public EmailContentSearchRule(object lockObject, IUnityContainer container)
+        :base(lockObject,container)
         {
             Priority = 3;
         }

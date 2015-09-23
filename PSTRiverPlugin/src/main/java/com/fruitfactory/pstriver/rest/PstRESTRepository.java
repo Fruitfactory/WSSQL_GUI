@@ -32,11 +32,15 @@ public class PstRESTRepository {
     private static HashMap<String, PstReaderStatusInfo> _repository = new HashMap<String, PstReaderStatusInfo>();
     private static HashMap<String,PstRiverStatusInfo> _reposirotyRiverStatus = new HashMap<String, PstRiverStatusInfo>();
     private static Queue<PstAttachmentContainer> _attachmentContainers = new LinkedList<PstAttachmentContainer>();
+    private static boolean forceIndexing;
+
+
     private static int lastUserActivity = 0;
     private static boolean isOFPluginRunning = false;
 
     private static Object lockUserActivity = new Object();
     private static Object lockOFPluginRunning = new Object();
+    private static Object lockForceIndexing = new Object();
 
     private static final ESLogger logger = Loggers.getLogger(PstRESTRepository.class);
 
@@ -192,6 +196,26 @@ public class PstRESTRepository {
     private static void log(String message){
         if(logger != null){
             logger.info(message);
+        }
+    }
+
+    public static void forceIndexing(){
+        synchronized (lockForceIndexing){
+            forceIndexing = true;
+        }
+    }
+
+    public static boolean isForce(){
+        boolean temp = false;
+        synchronized (lockForceIndexing){
+            temp = forceIndexing;
+        }
+        return temp;
+    }
+
+    public static void resetForcingIndexing(){
+        synchronized (lockForceIndexing){
+            forceIndexing = false;
         }
     }
 

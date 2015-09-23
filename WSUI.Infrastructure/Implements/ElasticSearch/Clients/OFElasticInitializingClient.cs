@@ -6,6 +6,7 @@ using Elasticsearch.Net;
 using Elasticsearch.Net.Serialization;
 using Microsoft.Practices.Unity;
 using Nest;
+using OF.Core;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
@@ -14,7 +15,7 @@ using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 
-namespace OF.Core.ElasticSearch.Clients
+namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
     public class OFElasticInitializingClient : OFElasticSearchClientBase, IElasticSearchInitializationIndex
     {

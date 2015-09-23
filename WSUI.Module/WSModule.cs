@@ -3,12 +3,13 @@ using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
-using OF.Core.ElasticSearch.Clients;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 using OF.Core.Utils;
 using OF.Infrastructure;
+using OF.Infrastructure.Implements.ElasticSearch.Clients;
+using OF.Infrastructure.Service.Helpers;
 using OF.Module.Interface.Service;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
@@ -116,6 +117,7 @@ namespace OF.Module
             _unityContainer.RegisterType<IAttachmentReader,OFAttachmentReader>();
 
             _unityContainer.RegisterType<IElasticSearchOFPluginStatusClient, OFElasticSearchOFPluginStatusClient>();
+            _unityContainer.RegisterType<IElasticSearchForceClient, OFElasticSearchForceClient>();
             
             watch.Stop();
             OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));

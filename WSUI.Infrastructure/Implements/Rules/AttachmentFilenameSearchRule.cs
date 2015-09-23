@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.Practices.Unity;
 using OF.Core.Data;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Request;
@@ -12,14 +13,14 @@ namespace OF.Infrastructure.Implements.Rules
 {
     public class AttachmentFilenameSearchRule : BaseAttachmentSearchRule
     {
-        public AttachmentFilenameSearchRule()
-            : base()
+        public AttachmentFilenameSearchRule(IUnityContainer container)
+            : base(container)
         {
             CreateInit();
         }
 
-        public AttachmentFilenameSearchRule(object lockObject)
-            : base(lockObject)
+        public AttachmentFilenameSearchRule(object lockObject, IUnityContainer container)
+            : base(lockObject,container)
         {
             CreateInit();
         }

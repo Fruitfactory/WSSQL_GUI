@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:enums="clr-namespace:OF.Core.Enums;assembly=OF.Core"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:service="clr-namespace:OF.Module.Service"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -12,6 +13,10 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Service/ResourceTemplate.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+            
+            <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></service:BoolToVisibilityConverter>
+            <service:BoolToVisibilityConverter x:Key="InvertBoolToVisibilityConverter" IsInvert="True"></service:BoolToVisibilityConverter>
+            
 
             <Style TargetType="TextBlock">
                 <Setter Property="Margin" Value="5"></Setter>
@@ -95,7 +100,12 @@
                 <controls:MetroProgressBar 
                     Maximum="100" 
                     Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}"></controls:MetroProgressBar>
-                <TextBlock FontSize="12">Indexing Folders.</TextBlock>
+                <TextBlock FontSize="12" Foreground="ForestGreen" Visibility="{Binding IsBusy,Mode=OneWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">Indexing Folders.</TextBlock>
+                <StackPanel Orientation="Vertical" Visibility="{Binding IsBusy,Mode=OneWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource InvertBoolToVisibilityConverter}}">
+                    <TextBlock FontSize="12" Foreground="OrangeRed" TextWrapping="Wrap">Indexing paused due to user activity. Do you want to force indexing?</TextBlock>
+                    <Button Command="{Binding ForceCommand}" Width="75">Force</Button>
+                </StackPanel>
+                
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontSize="12">Folder:</TextBlock>
                     <TextBlock FontSize="12" Text="{Binding CurrentFolder,UpdateSourceTrigger=PropertyChanged}"></TextBlock>

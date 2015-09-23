@@ -15,13 +15,13 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Practices.Unity;
 using Nest;
 using OF.Core.Core.AdvancedSearchCriteria;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.Rules;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Request;
-using OF.Core.ElasticSearch.Clients;
 using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
@@ -40,11 +40,12 @@ namespace OF.Core.Core.Search
         private IQueryReader _reader;
         private volatile bool _isSearching = false;
         private bool _exludeIgnored = false;
-        private OFElasticSearchClient _elasticSearchClient;
+        private IElasticSearchClient _elasticSearchClient;
         private Func<T> _create;
         private int _from = 0;
         private long _total = 0;
         private List<string> _keywords;
+        private IUnityContainer _unityContainer;
 
         #endregion [needs private]
 
@@ -79,19 +80,20 @@ namespace OF.Core.Core.Search
 
         #endregion [needs protected]
 
-        protected BaseSearchRule()
-            : this(null, false)
+        protected BaseSearchRule(IUnityContainer unityContainer)
+            : this(null, false,unityContainer)
         {
 
         }
 
-        protected BaseSearchRule(object lockObject, bool exludeIgnored)
+        protected BaseSearchRule(object lockObject, bool exludeIgnored, IUnityContainer unityContainer)
         {
             Event = new AutoResetEvent(false);
             Result = new List<T>();
             Lock = lockObject ?? new object();
             _exludeIgnored = exludeIgnored;
-            _elasticSearchClient = new OFElasticSearchClient();
+            _unityContainer = unityContainer;
+            _elasticSearchClient = _unityContainer.Resolve<IElasticSearchClient>();
             _create = New<T>.Instance;
         }
 

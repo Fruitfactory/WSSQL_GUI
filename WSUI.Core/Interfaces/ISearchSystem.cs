@@ -8,13 +8,14 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.Practices.Unity;
 using OF.Core.Core.AdvancedSearchCriteria;
 
 namespace OF.Core.Interfaces
 {
     public interface ISearchSystem
     {
-        void Init();
+        void Init(IUnityContainer container);
 
         void Reset();
 

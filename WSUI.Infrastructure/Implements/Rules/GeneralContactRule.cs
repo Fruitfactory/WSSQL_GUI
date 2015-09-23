@@ -10,6 +10,7 @@ using OF.Core.Extensions;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 using System.Text.RegularExpressions;
+using Microsoft.Practices.Unity;
 using OF.Core;
 using OF.Core.Data.ElasticSearch;
 
@@ -27,30 +28,30 @@ namespace OF.Infrastructure.Implements.Rules
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
         #endregion
 
-        public GeneralContactRule(int firstTime, int secondTime)
-            :this(firstTime,secondTime,null)
+        public GeneralContactRule(int firstTime, int secondTime, IUnityContainer container)
+            :this(firstTime,secondTime,null,container)
         {
         }
 
-        public GeneralContactRule(int firstTime, int secondTime,object lockExternal)
-            :base(lockExternal,false)
+        public GeneralContactRule(int firstTime, int secondTime, object lockExternal, IUnityContainer container)
+            :base(lockExternal,false,container)
         {
-            ConstructorInit();
+            ConstructorInit(container);
             _first = firstTime;
             _second = secondTime;
         }
 
-        public GeneralContactRule(object lockObject)
-            :base(lockObject,false)
+        public GeneralContactRule(object lockObject, IUnityContainer container)
+            :base(lockObject,false,container)
         {
-            ConstructorInit();
+            ConstructorInit(container);
         }
 
-        private void ConstructorInit()
+        private void ConstructorInit(IUnityContainer container)
         {
             Priority = 0;
-            _listContactsRules.Add(new ContactSearchRule(Lock));
-            _listContactsRules.Add(new EmailContactSearchRule(Lock));
+            _listContactsRules.Add(new ContactSearchRule(Lock,container));
+            _listContactsRules.Add(new EmailContactSearchRule(Lock,container));
             _listExistingEmails = new List<string>();
         }
 

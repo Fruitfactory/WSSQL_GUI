@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.Practices.Unity;
 using OF.Core.Core.MVVM;
 using OF.Core.Data;
 using OF.Core.Data.UI;
@@ -42,6 +43,7 @@ namespace OF.Module.ViewModel
 
         private IMainViewModel _mainViewModel;
         private IEventAggregator _eventAggregator;
+        private IUnityContainer _unityContainer;
 
         private IContactSearchSystem _contactEmailSearching;
         private IContactSearchSystem _contactAttachmentSearching;
@@ -64,9 +66,10 @@ namespace OF.Module.ViewModel
         private readonly object Lock = new object();
 
 
-        public ContactDetailsViewModel(IEventAggregator eventAggregator, IContactDetailsView contactDetailsView, IMainViewModel mainViewModel)
+        public ContactDetailsViewModel(IEventAggregator eventAggregator, IUnityContainer unityContainer, IContactDetailsView contactDetailsView, IMainViewModel mainViewModel)
         {
             _eventAggregator = eventAggregator;
+            _unityContainer = unityContainer;
             _mainViewModel = mainViewModel;
             View = contactDetailsView;
             contactDetailsView.Model = this;
@@ -361,12 +364,12 @@ namespace OF.Module.ViewModel
         private void InitializeSearchSystem()
         {
             _contactEmailSearching = new ContactEmailSearching(Lock);
-            _contactEmailSearching.Initialize();
+            _contactEmailSearching.Initialize(_unityContainer);
             _contactEmailSearching.PreviewSearchingFinished += ContactEmailSearchingOnPreviewSearchingFinished;
             _contactEmailSearching.MainSearchingFinished += ContactEmailSearchingOnMainSearchingFinished;
 
             _contactAttachmentSearching = new ContactAttachmentSearching(Lock);
-            _contactAttachmentSearching.Initialize();
+            _contactAttachmentSearching.Initialize(_unityContainer);
             _contactAttachmentSearching.PreviewSearchingFinished += ContactAttachmentSearchingOnPreviewSearchingFinished;
             _contactAttachmentSearching.MainSearchingFinished += ContactAttachmentSearchingOnMainSearchingFinished;
         }

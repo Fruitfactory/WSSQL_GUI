@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
+using Microsoft.Practices.Unity;
 using OF.Core.Core.MVVM;
 using OF.Core.Data;
 using OF.Core.Extensions;
@@ -32,6 +33,7 @@ namespace OF.Module.Core
 
         private IMainViewModel _mainViewModel;
         private IEventAggregator _eventAggregator;
+        private IUnityContainer _unityContainer;
         private ISearchSystem _searchSystem;
         private ISearchObject _selectedObject;
         private bool _isInitialized;
@@ -45,10 +47,11 @@ namespace OF.Module.Core
 
         #region [ctor]
 
-        protected ContactKindDetailsViewModelBase(IEventAggregator eventAggregator, IMainViewModel mainViewModel, IContactDetailsView mainContactDetailsView, IContactKindDetailsView<T> view)
+        protected ContactKindDetailsViewModelBase(IEventAggregator eventAggregator, IUnityContainer unityContainer, IMainViewModel mainViewModel, IContactDetailsView mainContactDetailsView, IContactKindDetailsView<T> view)
         {
             _mainViewModel = mainViewModel;
             _eventAggregator = eventAggregator;
+            _unityContainer = unityContainer;
             _mainContactDetailsView = mainContactDetailsView;
             View = view;
             view.Model = this;
@@ -109,7 +112,7 @@ namespace OF.Module.Core
             {
                 InitCommands();
                 _searchSystem = CreateSearchSystem();
-                _searchSystem.Init();
+                _searchSystem.Init(_unityContainer);
                 _searchSystem.SearchFinished += SearchSystemOnSearchFinished;
                 _scrollBehavior = new ScrollBehavior { LimitReaction = 85 };
                 _scrollBehavior.SearchGo += ScrollBehaviorOnSearchGo;

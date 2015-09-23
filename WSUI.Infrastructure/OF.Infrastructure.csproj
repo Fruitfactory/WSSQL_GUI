@@ -90,7 +90,15 @@
       <HintPath>..\Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolkits\Prism\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
     <Reference Include="Nest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolkits\Newtonsoft.Json.6.0.1\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -114,6 +122,14 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Helpers\EmailCommandPreviewHelper.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFElasticInitializingClient.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFElasticRiverStatus.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFElasticSeachIndexAttachmentClient.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchClient.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchForceClient.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchOFPluginStatusClient.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFElasticTrackingClient.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFElasticUpdateSettingsClient.cs" />
     <Compile Include="MVVM\AdvancedSearch\SortByAdvancedSearchCriteria.cs" />
     <Compile Include="MVVM\AdvancedSearch\StringAdvancedSearchCriteria.cs" />
     <Compile Include="Attributes\FieldIndexAttribute.cs" />
@@ -198,6 +214,8 @@
     <Compile Include="Service\FileService.cs" />
     <Compile Include="Service\HelperConst.cs" />
     <Compile Include="Service\Helpers\HelperFunctions.cs" />
+    <Compile Include="Service\Helpers\OFEmailHelper.cs" />
+    <Compile Include="Service\Helpers\OFUserActivityTracker.cs" />
     <Compile Include="Service\Helpers\SearchItemHelper.cs" />
     <Compile Include="Service\Helpers\TaskFinderHelper.cs" />
     <Compile Include="Service\Rules\BaseRule.cs" />

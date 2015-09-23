@@ -4,7 +4,7 @@ using OF.Core.Data.ElasticSearch;
 using OF.Core.Enums;
 using OF.Core.Interfaces;
 
-namespace OF.Core.ElasticSearch.Clients
+namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
     public class OFElasticSearchOFPluginStatusClient : OFElasticSearchClientBase, IElasticSearchOFPluginStatusClient
     {

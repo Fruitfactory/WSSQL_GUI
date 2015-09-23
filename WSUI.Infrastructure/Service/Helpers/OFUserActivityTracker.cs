@@ -2,12 +2,12 @@
 using System.Threading;
 using Nest;
 using OF.Core.Core.ElasticSearch;
-using OF.Core.ElasticSearch.Clients;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 using OF.Core.Win32;
+using OF.Infrastructure.Implements.ElasticSearch.Clients;
 
-namespace OF.Core.Helpers
+namespace OF.Infrastructure.Service.Helpers
 {
     public class OFUserActivityTracker : IUserActivityTracker
     {

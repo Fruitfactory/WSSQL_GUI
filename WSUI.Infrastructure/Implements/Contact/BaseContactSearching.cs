@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Practices.Unity;
 using OF.Core.Interfaces;
 using OF.Infrastructure.Interfaces.Search;
 
@@ -35,10 +36,10 @@ namespace OF.Infrastructure.Implements.Contact
             }
         }
 
-        public void Initialize()
+        public void Initialize(IUnityContainer container)
         {
-            _previewSystem = GetPreviewSystem();
-            _mainSystem = GetMainSystem();
+            _previewSystem = GetPreviewSystem(container);
+            _mainSystem = GetMainSystem(container);
             _previewSystem.SearchFinished += PreviewSystemOnSearchFinished;
             _mainSystem.SearchFinished += MainSystemOnSearchFinished;
         }
@@ -53,8 +54,8 @@ namespace OF.Infrastructure.Implements.Contact
             _mainSystem.Reset();
         }
 
-        protected abstract ISearchSystem GetPreviewSystem();
-        protected abstract ISearchSystem GetMainSystem();
+        protected abstract ISearchSystem GetPreviewSystem(IUnityContainer container);
+        protected abstract ISearchSystem GetMainSystem(IUnityContainer container);
 
         public event EventHandler PreviewSearchingFinished;
         public event EventHandler MainSearchingFinished;

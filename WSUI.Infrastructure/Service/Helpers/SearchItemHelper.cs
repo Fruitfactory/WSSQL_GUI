@@ -57,7 +57,7 @@ namespace OF.Infrastructure.Service.Helpers
             switch(item.TypeItem)
             {
                 case TypeSearchItem.Email:
-                    return OutlookHelper.Instance.GetEmailEmlFilename(item as EmailSearchObject); 
+                    return OFEmailHelper.Instance.GetEmailEmlFilename(item as EmailSearchObject); 
                 case TypeSearchItem.Attachment:
                     return OutlookHelper.Instance.GetAttachmentTempFile(item as AttachmentContentSearchObject);
                 case TypeSearchItem.Calendar:

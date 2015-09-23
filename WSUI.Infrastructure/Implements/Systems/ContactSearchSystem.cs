@@ -7,8 +7,7 @@
 ///////////////////////////////////////////////////////////
 
 
-
-
+using Microsoft.Practices.Unity;
 using OF.Core.Core.Search;
 using OF.Infrastructure.Implements.Rules;
 
@@ -22,10 +21,10 @@ namespace OF.Infrastructure.Implements.Systems
             
 		}
 
-	    public override void Init()
+        public override void Init(IUnityContainer container)
 	    {
-            AddRule(new GeneralContactRule(750,75));
-	        base.Init();
+            AddRule(new GeneralContactRule(750,75,container));
+	        base.Init(container);
 	    }
     }//end ContactSearchSystem
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using Microsoft.Practices.Unity;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Request;
 using OF.Core.Data.ElasticSearch.Request.Attachment;
@@ -9,12 +10,14 @@ namespace OF.Infrastructure.Implements.Rules
 {
     public class AttachmentContentSearchRule : BaseAttachmentSearchRule
     {
-        public AttachmentContentSearchRule():base()
+        public AttachmentContentSearchRule(IUnityContainer container)
+            : base(container)
         {
             CreateInit();
         }
 
-        public AttachmentContentSearchRule(object locObject):base(locObject)
+        public AttachmentContentSearchRule(object locObject, IUnityContainer container)
+            : base(locObject,container)
         {
             CreateInit();
         }

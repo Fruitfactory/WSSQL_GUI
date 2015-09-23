@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Microsoft.Practices.Unity;
 using Nest;
 using OF.Core.Core.Rules;
 using OF.Core.Core.Search;
@@ -27,14 +28,14 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
 	public class BaseAttachmentSearchRule : BaseSearchRule<AttachmentContentSearchObject,OFAttachmentContent>
 	{
 
-		public BaseAttachmentSearchRule()
-            :base(null,true)
+		public BaseAttachmentSearchRule(IUnityContainer container)
+            :base(null,true,container)
 		{
 		    
 		}
 
-        public BaseAttachmentSearchRule(object lockOject)
-            :base(lockOject,true)
+        public BaseAttachmentSearchRule(object lockOject, IUnityContainer container)
+            :base(lockOject,true,container)
         {
             
         }

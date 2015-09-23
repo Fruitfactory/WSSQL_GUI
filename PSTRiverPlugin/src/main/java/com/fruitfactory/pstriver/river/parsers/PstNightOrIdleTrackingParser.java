@@ -6,6 +6,7 @@
 package com.fruitfactory.pstriver.river.parsers;
 
 import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
+import com.fruitfactory.pstriver.rest.PstRESTRepository;
 import com.fruitfactory.pstriver.river.parsers.core.PstParserBase;
 import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
@@ -50,40 +51,39 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
     protected int onProcess(List<Thread> readers) throws InterruptedException, Exception {
 
         List<IReaderControl> readerControls = new ArrayList<>();
-        for (Thread r : readers) {
-            readerControls.add((IReaderControl) r);
-        }
         PstOutlookAttachmentReader attachmentReader = getAttachmentReader();
         if(attachmentReader != null){
             readerControls.add((IReaderControl)attachmentReader);
         }
         getLogger().info(LOG_TAG + "Reader Controls: " + readerControls.size());
-        PstUserActivityTracker tracker = null;
+
         setRiverStatus(PstRiverStatus.Busy);
-        tracker = new PstUserActivityTracker(this._inputHookManage,this, readerControls, _settings.getIdleTime(), _settings.getIdleTime(), getLogger());
+
+        PstUserActivityTracker tracker = new PstUserActivityTracker(this._inputHookManage,this, null, _settings.getIdleTime(), _settings.getIdleTime(), getLogger());
         tracker.startTracking();
+
         getLogger().info(LOG_TAG + "User activity tracker was created...");
         getLogger().info(LOG_TAG + "Start parsing files...");
+
         attachmentReader.start();
+
         for (Thread reader : readers) {
+            readerControls.add((IReaderControl)reader);
+            tracker.setReaders(readerControls);
             reader.start();
             getLogger().info(((PstOutlookFileReader)reader).getFilename());
-        }
-        for(Thread reader: readers){
-            try {
-                reader.join();
-            } catch (InterruptedException ex) {
-                getLogger().error(Level.SEVERE.toString() +  ex.getMessage());
-            }
-        }
-        attachmentReader.join();
-        for(Thread reader: readers){
+            reader.join();
+            readerControls.remove(reader);
             ((PstOutlookFileReader) reader).close();
         }
+
+        attachmentReader.join();
+
         if (tracker != null) {
             try {
                 tracker.stopTracking();
                 tracker.join();
+                PstRESTRepository.resetForcingIndexing();
             } catch (InterruptedException ex) {
                 getLogger().error(Level.SEVERE.toString() +  ex.getMessage());
             }

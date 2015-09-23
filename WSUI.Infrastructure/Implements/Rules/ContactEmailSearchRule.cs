@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Microsoft.Office.Interop.Outlook;
+using Microsoft.Practices.Unity;
 using Nest;
 using OF.Core.Core.Rules;
 using OF.Core.Data.ElasticSearch;
@@ -31,13 +32,13 @@ namespace OF.Infrastructure.Implements.Rules
 
         #region [ctor]
 
-        public ContactEmailSearchRule()
-            : base()
+        public ContactEmailSearchRule(IUnityContainer container)
+            : base(container)
         {
         }
 
-        public ContactEmailSearchRule(object lockObject)
-            : base(lockObject)
+        public ContactEmailSearchRule(object lockObject, IUnityContainer container)
+            : base(lockObject,container)
         {
         }
 

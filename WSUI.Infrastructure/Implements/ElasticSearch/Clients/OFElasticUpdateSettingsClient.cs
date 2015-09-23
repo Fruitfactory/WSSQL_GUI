@@ -1,4 +1,5 @@
 ﻿using Elasticsearch.Net.Serialization;
+using OF.Core;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Extensions;
@@ -6,7 +7,7 @@ using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 
-namespace OF.Core.ElasticSearch.Clients
+namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
     public class OFElasticUpdateSettingsClient : OFElasticSearchClientBase, IElasticUpdateSettingsClient
     {

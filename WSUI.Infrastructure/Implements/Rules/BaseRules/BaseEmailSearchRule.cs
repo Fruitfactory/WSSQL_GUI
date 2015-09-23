@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Windows.Documents;
+using Microsoft.Practices.Unity;
 using Nest;
 using OF.Core.Core.Search;
 using OF.Core.Data;
@@ -34,12 +35,13 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
 
         #endregion
 
-        public BaseEmailSearchRule()
+        public BaseEmailSearchRule(IUnityContainer container)
+            :this(null,container)
         {
         }
 
-        public BaseEmailSearchRule(object lockObject)
-            : base(lockObject, false)
+        public BaseEmailSearchRule(object lockObject, IUnityContainer container)
+            : base(lockObject, false,container)
         {
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.Practices.Unity;
 using OF.Core.Interfaces;
 
 namespace OF.Infrastructure.Interfaces.Search
@@ -21,7 +22,7 @@ namespace OF.Infrastructure.Interfaces.Search
 
         void StartMainSearch();
 
-        void Initialize();
+        void Initialize(IUnityContainer container);
 
         void ResetPreviewSystem();
 
