@@ -14,11 +14,12 @@ using System.Management;
 using OFPreview.PreviewHandler.TypeResolver;
 using OF.Core.Data;
 using OF.Core.Extensions;
+using OF.Core.Logger;
 
 namespace OFPreview.PreviewHandler
 {
     [KeyControl(ControlsKey.Pdf)]
-    public partial class PDFViewer : UserControl,IPreviewControl
+    public partial class PDFViewer : UserControl, IPreviewControl
     {
 
         public enum LinkActionKind
@@ -38,7 +39,7 @@ namespace OFPreview.PreviewHandler
         static extern int GetForegroundWindow();
 
         public static PDFViewer Instance;
-        
+
         #region Mouse Scrolling/Navigation Private Fields
         public enum CursorStatus
         {
@@ -55,39 +56,41 @@ namespace OFPreview.PreviewHandler
 
         Point _bMouseCapturedStart = Point.Empty;
         bool _bMouseCaptured = false;
-       
+
         #endregion
 
         dynamic _pdfDoc = null;
         public PDFViewer()
         {
             InitializeComponent();
-            pageViewControl1.PageSize = new Size(pageViewControl1.Width,(int)( pageViewControl1.Width*11/8.5));
+            pageViewControl1.PageSize = new Size(pageViewControl1.Width, (int)(pageViewControl1.Width * 11 / 8.5));
             pageViewControl1.Visible = true;
             Instance = this;
+            this.Resize += frmPDFViewer_Resize;
         }
 
         public void LoadFile(string filename)
         {
-            Clear();
-            _pdfDoc = PdfTypeLoader.Instance.GetPdfWrapper();
-            //_pdfDoc.RenderNotifyFinished += new RenderNotifyFinishedHandler(_pdfDoc_RenderNotifyFinished);
-            ApplyDynamicEvents(_pdfDoc, "RenderNotifyFinished", "_pdfDoc_RenderNotifyFinished");
-            //_pdfDoc.PDFLoadCompeted += new PDFLoadCompletedHandler(_pdfDoc_PDFLoadCompeted);
-            ApplyDynamicEvents(_pdfDoc, "PDFLoadCompeted", "_pdfDoc_PDFLoadCompeted");
-            //_pdfDoc.PDFLoadBegin += new PDFLoadBeginHandler(_pdfDoc_PDFLoadBegin);
-            ApplyDynamicEvents(_pdfDoc, "PDFLoadBegin", "_pdfDoc_PDFLoadBegin");
-            int ts = Environment.TickCount;
-            bool res = false;
-            if (res = LoadFile(filename, _pdfDoc))
+            try
             {
-                _pdfDoc.CurrentPage = 1;
-                _pdfDoc.FitToWidth(pageViewControl1.Handle);
-                _pdfDoc.RenderPage(pageViewControl1.Handle);
+                Clear();
+                _pdfDoc = PdfTypeLoader.Instance.GetPdfWrapper();
+                int ts = Environment.TickCount;
+                bool res = false;
+                if (res = LoadFile(filename, _pdfDoc))
+                {
 
-                Render();
 
-                dynamic pg = _pdfDoc.Pages[1];
+                    _pdfDoc.NextPage();
+                    _pdfDoc.PreviousPage();
+                    _pdfDoc.RenderPage(pageViewControl1.Handle);
+                    Render();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.Message);
             }
         }
 
@@ -97,7 +100,7 @@ namespace OFPreview.PreviewHandler
 
         public void LoadObject(BaseSearchObject obj)
         {
-            
+
         }
 
         public void Clear()
@@ -156,7 +159,7 @@ namespace OFPreview.PreviewHandler
                         else
                         {
                             pos = pageViewControl1.PointUserToPage(pos);
-                            if (!_pdfDoc.IsBusy && _pdfDoc.Pages.Count>0 && 
+                            if (!_pdfDoc.IsBusy && _pdfDoc.Pages.Count > 0 &&
                                 _pdfDoc.Pages[_pdfDoc.CurrentPage].HasText(pos.X, pos.Y))
                             {
                                 /*if (_pdfDoc.Pages[_pdfDoc.CurrentPage].ImagesCount > 0)
@@ -169,7 +172,7 @@ namespace OFPreview.PreviewHandler
                                 img.Save("C:\\image_extracted_1.jpg");
                                 img = _pdfDoc.Pages[_pdfDoc.CurrentPage].GetImage(2);
                                 img.Save("C:\\image_extracted_2.jpg");*/
-                                
+
                                 pageViewControl1.Cursor = Cursors.IBeam;
                             }
                             else
@@ -217,21 +220,21 @@ namespace OFPreview.PreviewHandler
                 switch (getCursorStatus(e))
                 {
                     case CursorStatus.Move:
-                        
+
                         break;
                     case CursorStatus.Zoom:
                         if (!_pointCurrent.Equals(EmptyPoint))
                         {
-                            if (e.Button == MouseButtons.Left && _pdfDoc!=null)
+                            if (e.Button == MouseButtons.Left && _pdfDoc != null)
                                 _pdfDoc.ZoomIN();
-                            else if (e.Button == MouseButtons.Right && _pdfDoc!=null)
+                            else if (e.Button == MouseButtons.Right && _pdfDoc != null)
                                 _pdfDoc.ZoomOut();
                         }
                         else
                         {
                             //Zoom on rectangle
-                            
-                        }    
+
+                        }
                         break;
                 }
                 pageViewControl1.Cursor = Cursors.Default;
@@ -248,12 +251,12 @@ namespace OFPreview.PreviewHandler
                 dynamic link = SearchLink(e.Location);
                 if (link != null)
                 {
-                    var linkKind = (LinkActionKind) link.Action.Kind;
+                    var linkKind = (LinkActionKind)link.Action.Kind;
                     switch (linkKind)
                     {
                         case LinkActionKind.actionGoTo:
 
-                            dynamic plgo =link.Action;
+                            dynamic plgo = link.Action;
                             if (plgo.Destination != null)
                             {
                                 _pdfDoc.CurrentPage = plgo.Destination.Page;
@@ -267,7 +270,7 @@ namespace OFPreview.PreviewHandler
                             }
                             else if (plgo.DestinationName != null)
                             {
-                                
+
                             }
                             break;
                         case LinkActionKind.actionURI:
@@ -291,7 +294,7 @@ namespace OFPreview.PreviewHandler
             }
         }
 
-    
+
         #endregion
 
         void frmPDFViewer_Resize(object sender, EventArgs e)
@@ -302,7 +305,7 @@ namespace OFPreview.PreviewHandler
                 Render();
             }
         }
-        
+
         private void Render()
         {
             pageViewControl1.PageSize = new Size(_pdfDoc.PageWidth, _pdfDoc.PageHeight);
@@ -319,11 +322,7 @@ namespace OFPreview.PreviewHandler
                     p.Width = pageViewControl1.ClientSize.Width;
                     _pdfDoc.FitToWidth(p.Handle);
                 }
-                //_pdfDoc.RenderFinished -= new RenderFinishedHandler(_pdfDoc_RenderFinished);
-                ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished", false);
-                //_pdfDoc.RenderFinished += new RenderFinishedHandler(_pdfDoc_RenderFinished);
-                ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished");
-                _pdfDoc.RenderPageThread(pageViewControl1.Handle,true);
+                _pdfDoc.RenderPageThread(pageViewControl1.Handle, true);
             }
         }
 
@@ -336,15 +335,11 @@ namespace OFPreview.PreviewHandler
                     p.Width = pageViewControl1.ClientSize.Height;
                     _pdfDoc.FitToHeight(p.Handle);
                 }
-                //_pdfDoc.RenderFinished -= new RenderFinishedHandler(_pdfDoc_RenderFinished);
-                ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished", false);
-                //_pdfDoc.RenderFinished += new RenderFinishedHandler(_pdfDoc_RenderFinished);
-                ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished");
                 _pdfDoc.RenderPageThread(pageViewControl1.Handle, false);
             }
         }
 
-      
+
 
         private void txtPage_KeyDown(object sender, KeyEventArgs e)
         {
@@ -358,7 +353,7 @@ namespace OFPreview.PreviewHandler
             //            if (page > 0 && page <= _pdfDoc.PageCount)
             //            {
             //                _pdfDoc.CurrentPage = page;
-                                
+
             //                _pdfDoc.RenderPage(pageViewControl1.Handle);
             //                Render();
             //            }
@@ -366,7 +361,7 @@ namespace OFPreview.PreviewHandler
             //                page = -1;
             //        }
             //    }
-                
+
             //}
             //catch (Exception ex)
             //{
@@ -378,15 +373,23 @@ namespace OFPreview.PreviewHandler
         {
             if (!PdfOK())
                 return;
-            
+
             if (_pdfDoc != null)
             {
-                _pdfDoc.NextPage();
-                _pdfDoc.RenderPage(pageViewControl1.Handle);
-                Render();
-                    
+                try
+                {
+                    _pdfDoc.NextPage();
+                    _pdfDoc.RenderPage(pageViewControl1.Handle);
+                    Render();
+
+                }
+                catch (Exception ex)
+                {
+                    OFLogger.Instance.LogError(ex.Message);
+                }
+
             }
-            
+
         }
 
         private void tsbPrev_Click(object sender, EventArgs e)
@@ -396,12 +399,17 @@ namespace OFPreview.PreviewHandler
 
             if (_pdfDoc != null && !IsDisposed)
             {
-                _pdfDoc.PreviousPage();
-
-                _pdfDoc.RenderPage(pageViewControl1.Handle);
-                Render();
+                try
+                {
+                    _pdfDoc.PreviousPage();
+                    _pdfDoc.RenderPage(pageViewControl1.Handle);
+                    Render();
+                }
+                catch (Exception ex)
+                {
+                    OFLogger.Instance.LogError(ex.Message);
+                }
             }
-            
         }
 
         private void tsbOpen_Click(object sender, EventArgs e)
@@ -414,7 +422,7 @@ namespace OFPreview.PreviewHandler
                 {
                     LoadFile(dlg.FileName);
                 }
-                
+
             }
             catch (System.IO.IOException ex)
             {
@@ -430,12 +438,12 @@ namespace OFPreview.PreviewHandler
             }
         }
 
-               
-        
+
+
 
         public void RenderNotifyFinished(int page, bool isCurrent)
         {
-           
+
         }
         public void _pdfDoc_RenderNotifyFinished(int page, bool bSuccesss)
         {
@@ -450,34 +458,23 @@ namespace OFPreview.PreviewHandler
                 _pdfDoc = null;
             }
             _pdfDoc = PdfTypeLoader.Instance.GetPdfWrapper();
-            //_pdfDoc.RenderNotifyFinished += new RenderNotifyFinishedHandler(_pdfDoc_RenderNotifyFinished);
-            ApplyDynamicEvents(_pdfDoc, "RenderNotifyFinished", "_pdfDoc_RenderNotifyFinished");
-            //_pdfDoc.PDFLoadCompeted += new PDFLoadCompletedHandler(_pdfDoc_PDFLoadCompeted);
-            ApplyDynamicEvents(_pdfDoc, "PDFLoadCompeted", "_pdfDoc_PDFLoadCompeted");
-            //_pdfDoc.PDFLoadBegin += new PDFLoadBeginHandler(_pdfDoc_PDFLoadBegin);
-            ApplyDynamicEvents(_pdfDoc, "PDFLoadBegin", "_pdfDoc_PDFLoadBegin");
 
             try
             {
-                if (fs != null)
-                {
-                    fs.Close();
-                    fs = null;
-                }
                 bool bRet = _pdfDoc.LoadPDF(fileStream);
                 return bRet;
             }
             catch (System.Security.SecurityException)
             {
-               return false;
+                return false;
             }
-                            
+
         }
         public bool ShowStream(System.IO.Stream fileStream)
         {
             if (LoadStream(fileStream))
             {
-                
+
                 _pdfDoc.CurrentPage = 1;
                 _pdfDoc.FitToWidth(pageViewControl1.Handle);
                 _pdfDoc.RenderPage(pageViewControl1.Handle);
@@ -485,44 +482,26 @@ namespace OFPreview.PreviewHandler
                 Render();
 
                 dynamic pg = _pdfDoc.Pages[1];
-                
+
                 return true;
             }
             return false;
         }
 
-        System.IO.FileStream fs = null;
         private bool LoadFile(string filename, dynamic pdfDoc)
         {
             try
             {
-                if (fs != null)
-                {
-                    fs.Close();
-                    fs = null;
-                }
-                bool bRet =  pdfDoc.LoadPDF(filename);               
-                return bRet;                
+                bool bRet = pdfDoc.LoadPDF(filename);
+                return bRet;
             }
             catch (System.Security.SecurityException)
             {
-                
+
                 return false;
-                
+
             }
         }
-
-        public void _pdfDoc_PDFLoadBegin()
-        {
-            Resize -= new EventHandler(frmPDFViewer_Resize);
-        }
-
-        public void _pdfDoc_PDFLoadCompeted()
-        {
-            Resize += new EventHandler(frmPDFViewer_Resize);
-            UpdateParamsUI();
-        }
-
         private void ScrolltoTop(int y)
         {
             Point dr = this.pageViewControl1.ScrollPosition;
@@ -531,49 +510,41 @@ namespace OFPreview.PreviewHandler
             pageViewControl1.ScrollPosition = dr;
         }
 
-      
+
         private void tsbZoomIn_Click(object sender, EventArgs e)
         {
             try
             {
-                
+
                 if (_pdfDoc != null)
                 {
                     _pdfDoc.ZoomIN();
-                    //_pdfDoc.RenderFinished -= new RenderFinishedHandler(_pdfDoc_RenderFinished);
-                    ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished", false);
-                    //_pdfDoc.RenderFinished += new RenderFinishedHandler(_pdfDoc_RenderFinished);
-                    ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished");
                     _pdfDoc.RenderPageThread(pageViewControl1.Handle, false);
                     Render();
                 }
-                
+
             }
             catch (Exception) { }
-            
+
         }
 
         void _pdfDoc_RenderFinished()
         {
-           
+
         }
 
         private void tsbZoomOut_Click(object sender, EventArgs e)
         {
             try
             {
-                
+
                 if (_pdfDoc != null)
                 {
                     _pdfDoc.ZoomOut();
-                    //_pdfDoc.RenderFinished -= new RenderFinishedHandler(_pdfDoc_RenderFinished);
-                    ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished", false);
-                    //_pdfDoc.RenderFinished += new RenderFinishedHandler(_pdfDoc_RenderFinished);
-                    ApplyDynamicEvents(_pdfDoc, "RenderFinished", "_pdfDoc_RenderFinished");
                     _pdfDoc.RenderPageThread(pageViewControl1.Handle, false);
                     Render();
                 }
-                
+
             }
             catch (Exception) { }
         }
@@ -583,7 +554,7 @@ namespace OFPreview.PreviewHandler
         Point _lastPoint = new Point(-1, -1);
         private void DrawRubberFrame()
         {
-            
+
             if (!_lastPoint.Equals(EmptyPoint) ||
                 (_bMouseCaptured && !_pointCurrent.Equals(EmptyPoint))
             )
@@ -594,7 +565,7 @@ namespace OFPreview.PreviewHandler
                 }
             _lastPoint = _pointCurrent;
             DrawRubberFrame(_pointStart, _pointCurrent);
-        
+
         }
         private void ReleaseRubberFrame()
         {
@@ -648,13 +619,13 @@ namespace OFPreview.PreviewHandler
 
         }
 
-     
-        private void doubleBufferControl1_PaintControl(object sender,Rectangle view, Point location, Graphics g)
+
+        private void doubleBufferControl1_PaintControl(object sender, Rectangle view, Point location, Graphics g)
         {
-            
+
             if (_pdfDoc != null)
             {
-                Size sF= new Size(view.Right,view.Bottom);
+                Size sF = new Size(view.Right, view.Bottom);
                 Rectangle r = new Rectangle(location, sF);
                 _pdfDoc.ClientBounds = r;
                 _pdfDoc.CurrentX = view.X;
@@ -700,55 +671,55 @@ namespace OFPreview.PreviewHandler
         {
             //try
             {
-                
-                    if (_pdfDoc.CurrentPage < _pdfDoc.PageCount)
-                    {
-                        
-                        _pdfDoc.NextPage();
-                        _pdfDoc.RenderPage(pageViewControl1.Handle);
-                        Render();
-                        return true;
-                    }
-                
+
+                if (_pdfDoc.CurrentPage < _pdfDoc.PageCount)
+                {
+
+                    _pdfDoc.NextPage();
+                    _pdfDoc.RenderPage(pageViewControl1.Handle);
+                    Render();
+                    return true;
+                }
+
             }
-          /*  catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }*/
+            /*  catch (Exception ex)
+              {
+                  MessageBox.Show(ex.ToString());
+              }*/
             return false;
         }
 
         private bool doubleBufferControl1_PreviousPage(object sender)
         {
-           // try
+            // try
             {
-                
-                    if (_pdfDoc.CurrentPage > 1)
-                    {
-                        _pdfDoc.PreviousPage();
-                        
-                        _pdfDoc.RenderPage(pageViewControl1.Handle);
-                        Render();
-                        return true;
-                    }
-                
+
+                if (_pdfDoc.CurrentPage > 1)
+                {
+                    _pdfDoc.PreviousPage();
+
+                    _pdfDoc.RenderPage(pageViewControl1.Handle);
+                    Render();
+                    return true;
+                }
+
             }
-           /* catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }*/
+            /* catch (Exception ex)
+             {
+                 MessageBox.Show(ex.ToString());
+             }*/
             return false;
         }
 
-     
+
 
         private void UpdateParamsUI()
         {
-            
-        }
-     
 
-        
+        }
+
+
+
 
 
         private void tsImagesUpdate_Click(object sender, EventArgs e)
@@ -757,17 +728,17 @@ namespace OFPreview.PreviewHandler
                 return;
         }
 
- 
+
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
             if (!PdfOK())
                 return;
             dynamic page = _pdfDoc.Pages[_pdfDoc.CurrentPage];
             var list = page.WordList;
-            
+
         }
 
-       
+
         private void toolStripButton3_Click_1(object sender, EventArgs e)
         {
             FitWidth();
@@ -805,12 +776,12 @@ namespace OFPreview.PreviewHandler
                 else
                 {
                     ei.RemoveEventHandler(o, del);
-                }    
+                }
             }
         }
     }
 
-    
+
 
 
     public delegate int SearchPdfHandler(object sender, SearchArgs e);
@@ -837,6 +808,6 @@ namespace OFPreview.PreviewHandler
         }
     }
 
-    
+
 
 }

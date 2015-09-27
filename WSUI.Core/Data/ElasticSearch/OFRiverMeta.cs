@@ -80,7 +80,7 @@ namespace OF.Core.Data.ElasticSearch
             // user tracking
 
             ScheduleType = RiverSchedule.EveryNightOrIdle;
-            var idlesettings = new { idle_time = 120 };
+            var idlesettings = new { idle_time = 300 };
             var set = JsonConvert.SerializeObject(idlesettings);
             Settings = set;
 
