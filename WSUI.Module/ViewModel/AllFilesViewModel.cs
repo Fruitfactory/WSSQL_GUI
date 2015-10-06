@@ -169,7 +169,8 @@ namespace OF.Module.ViewModel
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 IList<ISystemSearchResult> result = SearchSystem.GetResult();
-                if (result.All(i => !i.Result.Any()))
+                ProcessError(result);
+                if (result.All(i => !i.Result.OperationResult.Any()))
                 {
                     DataSource.Clear();
                     IsDataExist = false;
@@ -190,7 +191,7 @@ namespace OF.Module.ViewModel
             var files = result.Where(r => r.ObjectType == RuleObjectType.File);
             if (files.Any())
             {
-                var fileAll = files.SelectMany(c => c.Result);
+                var fileAll = files.SelectMany(c => c.Result.OperationResult);
                 var avaibleHeightAndCount = GetAvaibleHeightAndCount(FileValue, AvaregeOneRowItemHeight);
                 IsFileMoreVisible = fileAll.Count() > avaibleHeightAndCount.Item2 - 1;
                 FileHeader = IsFileMoreVisible ? string.Format("({0})", fileAll.Count()) : string.Empty;
@@ -204,7 +205,7 @@ namespace OF.Module.ViewModel
             var emails = result.Where(r => r.ObjectType == RuleObjectType.Email);
             if (emails.Any())
             {
-                var emailAll = emails.SelectMany(c => c.Result);
+                var emailAll = emails.SelectMany(c => c.Result.OperationResult);
                 var avaibleHeightAndCount = GetAvaibleHeightAndCount(EmailValue, AvaregeTwoRowItemHeight);
                 IsEmailMoreVisible = emailAll.Count() > avaibleHeightAndCount.Item2;
                 EmailHeader = IsEmailMoreVisible ? string.Format("({0})", emailAll.Count()) : string.Empty;
@@ -218,7 +219,7 @@ namespace OF.Module.ViewModel
             var contacts = result.Where(r => r.ObjectType == RuleObjectType.Contact);
             if (contacts.Any())
             {
-                var contactAll = contacts.SelectMany(c => c.Result);
+                var contactAll = contacts.SelectMany(c => c.Result.OperationResult);
                 IsContactMoreVisible = contactAll.Count() > ContactMaxCount;
                 ContactHeader = IsContactMoreVisible ? string.Format("({0})", contactAll.Count()) : string.Empty;
                 CollectionExtensions.AddRange(ContactSource, contactAll.Take(ContactMaxCount));

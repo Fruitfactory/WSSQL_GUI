@@ -141,6 +141,9 @@ namespace OF.Infrastructure.Implements.Rules
                     _listExistingEmails.Add(emailContact.EMail.ToLowerInvariant());
                 }
             }
+            SetTypeResult(_listContactsRules.OfType<ISearchRule>().Any(r => r.GetResults().Type == TypeResult.Error) ? TypeResult.Error : TypeResult.Ok);
+            _listContactsRules.OfType<ISearchRule>().SelectMany(r => r.GetResults().Messages.Select(m => m.Message)).ForEach(AddMessage);
+
         }
 
         private bool IsContainsSearchCriterias(string emailAddress, string[] arrQuery)

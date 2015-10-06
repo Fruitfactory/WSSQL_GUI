@@ -142,7 +142,7 @@ namespace OF.Core.Core.Search
                 string query = Query;
                 if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
-                OFLogger.Instance.LogDebug("Query<{0}>: {1}", typeof(T).Name, query);
+                OFLogger.Instance.LogDebug("Query<{0}>: {1}", typeof (T).Name, query);
 
 
                 if (_total != 0 && _from >= _total)
@@ -187,7 +187,7 @@ namespace OF.Core.Core.Search
                             took = result.Took;
                             total = result.Total;
                         }
-                    }    
+                    }
                 }
 
                 watch.Stop();
@@ -195,7 +195,8 @@ namespace OF.Core.Core.Search
                 // additional process
                 if (!NeedStop && Documents.Any())
                 {
-                    OFLogger.Instance.LogDebug("Search Done: Server {0}ms, Client {1}ms", took, watch.ElapsedMilliseconds);
+                    OFLogger.Instance.LogDebug("Search Done: Server {0}ms, Client {1}ms", took,
+                        watch.ElapsedMilliseconds);
                     _total = total;
                     _from += Documents.Count() == TopQueryResult ? TopQueryResult : Documents.Count();
                     watch = new Stopwatch();
@@ -215,14 +216,20 @@ namespace OF.Core.Core.Search
                 }
                 else
                 {
-                    _typeResult = TypeResult.Error;
-                    _listMessage.Add(new ResultMessage() { Message = "Rule was stoped" });
+                    _typeResult = TypeResult.None;
+                    _listMessage.Add(new ResultMessage() {Message = "Rule was stoped"});
                 }
+            }
+            catch (OutOfMemoryException mex)
+            {
+                _typeResult = TypeResult.Error;
+                _listMessage.Add(new ResultMessage() { Message = "Please, check the memory usage on ElasticSearch side. See log for details." });
+                OFLogger.Instance.LogError("Search <{0}>: {1}", typeof(T).Name, mex.Message);
             }
             catch (Exception ex)
             {
                 _typeResult = TypeResult.Error;
-                _listMessage.Add(new ResultMessage() { Message = ex.Message });
+                _listMessage.Add(new ResultMessage() { Message = "An error was occured during searching.Please, see log." });
                 OFLogger.Instance.LogError("Search <{0}>: {1}", typeof(T).Name, ex.Message);
             }
             finally
@@ -394,6 +401,19 @@ namespace OF.Core.Core.Search
             _typeResult = TypeResult.None;
             _listMessage.Clear();
             Result.Clear();
+        }
+
+        protected void SetTypeResult(TypeResult type)
+        {
+            _typeResult = type;
+        }
+
+        protected void AddMessage(string message)
+        {
+            if (_listMessage != null)
+            {
+                _listMessage.Add(new ResultMessage(){Message = message});
+            }
         }
 
     }//end BaseSearchRule

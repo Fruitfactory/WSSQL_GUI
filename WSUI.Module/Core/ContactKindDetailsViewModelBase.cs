@@ -185,7 +185,7 @@ namespace OF.Module.Core
                 return;
             foreach (var systemSearchResult in result)
             {
-                CollectionExtensions.AddRange(ItemSource, systemSearchResult.Result.OfType<T>());
+                CollectionExtensions.AddRange(ItemSource, systemSearchResult.Result.OperationResult.OfType<T>());
             }
             if (!_isInitialized && ItemSource.Any())
             {

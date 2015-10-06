@@ -187,7 +187,7 @@ namespace OF.Core.Core.Search
                     var result = (item as ISearchRule).GetResults();
                     if (result == null)
                         continue;
-                    var itemResult = new SystemSearchResult(item.Priority, result.OperationResult, item.ObjectType);
+                    var itemResult = new SystemSearchResult(item.Priority, result, item.ObjectType);
                     InternalResult.Add(itemResult);
                 }
                 watch.Stop();

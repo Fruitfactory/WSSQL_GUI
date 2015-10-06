@@ -184,10 +184,11 @@
                     </Style.Triggers>
                 </Style>
             </TextBlock.Style>
-            <Run>No data exists for current criteria - </Run>
-            <Run>"</Run>
+            <Run>Search for </Run>
+            <Run>'</Run>
             <Run FontWeight="Bold" Text="{Binding SearchString}"></Run>
-            <Run>"</Run>
+            <Run>'</Run>
+            <Run>  returned no matches. Try different keywords.</Run>
         </TextBlock>
 
     </Grid>

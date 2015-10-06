@@ -13,7 +13,7 @@ namespace OF.Core.Core.Search
 {
     public class SystemSearchResult : ISystemSearchResult
     {
-        public SystemSearchResult(int priority, System.Collections.Generic.IList<ISearchObject> result,
+        public SystemSearchResult(int priority, ISearchResult result,
             RuleObjectType objectType)
         {
             Priority = priority;
@@ -27,7 +27,7 @@ namespace OF.Core.Core.Search
             private set;
         }
 
-        public System.Collections.Generic.IList<ISearchObject> Result
+        public ISearchResult Result
         {
             get;
             private set;

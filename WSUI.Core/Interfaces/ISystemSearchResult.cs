@@ -15,7 +15,7 @@ namespace OF.Core.Interfaces
     {
         int Priority { get; }
 
-        IList<ISearchObject> Result { get; }
+        ISearchResult Result { get; }
 
         RuleObjectType ObjectType { get; }
     }//end ISystemSearchResult

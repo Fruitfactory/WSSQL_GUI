@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using OF.Core.Core.MVVM;
@@ -97,7 +98,10 @@ namespace OF.Module.Core
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 var result = SearchSystem.GetResult();
-                if (result.All(i => i.Result.Count == 0) && ShowMessageNoMatches)
+
+                ProcessError(result);
+
+                if (result.All(i => i.Result.OperationResult.Count == 0) && ShowMessageNoMatches)
                 {
                     DataSource.Clear();
                     var message = new FileSearchObject()
@@ -111,7 +115,7 @@ namespace OF.Module.Core
                 {
                     result.OrderBy(i => i.Priority).ForEach(it =>
                     {
-                        foreach (var systemSearchResult in it.Result)
+                        foreach (var systemSearchResult in it.Result.OperationResult)
                         {
                             DataSource.Add(systemSearchResult as BaseSearchObject);
                         }
@@ -119,6 +123,29 @@ namespace OF.Module.Core
                 }
                 ShowMessageNoMatches = false;
             }), null);
+        }
+
+        protected void ProcessError(IList<ISystemSearchResult> result)
+        {
+            if (result.All(r => r.Result.Type != TypeResult.Error))
+            {
+                return;
+            }
+
+            var index = 1;
+            var message = new StringBuilder();
+
+            foreach (var systemSearchResult in result.Where(r => r.Result.Type == TypeResult.Error))
+            {
+                message.AppendFormat("{0}. {1}\n", index,
+                    string.Join(";\n", systemSearchResult.Result.Messages.Select(m => m.Message)));
+                index++;
+            }
+            if (message.Length == 0)
+            {
+                return;
+            }
+            MessageBoxService.Instance.Show("Messages", message.ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         protected virtual void OnError(bool res)

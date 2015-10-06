@@ -7,7 +7,7 @@
              
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" mc:Ignorable="d" 
              WindowStyle="ToolWindow" WindowState="Normal" ResizeMode="NoResize"
-                      MinWidth="400" MinHeight="100" MaxWidth="450" MaxHeight="150"
+                      MinWidth="400" MinHeight="100" SizeToContent="WidthAndHeight"
                       Title="{Binding Title}" 
                       WindowStartupLocation="CenterScreen"         
                       GlowBrush="{DynamicResource AccentColorBrush}"

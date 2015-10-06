@@ -401,7 +401,7 @@ namespace OF.Module.ViewModel
                 return;
             foreach (var systemSearchResult in result)
             {
-                CollectionExtensions.AddRange(ItemsSource, systemSearchResult.Result.OfType<AttachmentContentSearchObject>());
+                CollectionExtensions.AddRange(ItemsSource, systemSearchResult.Result.OperationResult.OfType<AttachmentContentSearchObject>());
             }
             OnPropertyChanged(() => ItemsSource);
         }
@@ -414,7 +414,7 @@ namespace OF.Module.ViewModel
             List<AttachmentContentSearchObject> items = new List<AttachmentContentSearchObject>();
             foreach (var systemSearchResult in result)
             {
-                items.AddRange(systemSearchResult.Result.OfType<AttachmentContentSearchObject>());
+                items.AddRange(systemSearchResult.Result.OperationResult.OfType<AttachmentContentSearchObject>());
             }
             if (!_isFilesInitialized && items.Any())
             {
@@ -434,7 +434,7 @@ namespace OF.Module.ViewModel
                 return;
             foreach (var systemSearchResult in result)
             {
-                CollectionExtensions.AddRange(EmailsSource, systemSearchResult.Result.OfType<EmailSearchObject>());
+                CollectionExtensions.AddRange(EmailsSource, systemSearchResult.Result.OperationResult.OfType<EmailSearchObject>());
             }
             OnPropertyChanged(() => EmailsSource);
         }
@@ -447,7 +447,7 @@ namespace OF.Module.ViewModel
             List<EmailSearchObject> items = new List<EmailSearchObject>();
             foreach (var systemSearchResult in result)
             {
-                items.AddRange(systemSearchResult.Result.OfType<EmailSearchObject>());
+                items.AddRange(systemSearchResult.Result.OperationResult.OfType<EmailSearchObject>());
             }
             if (!_isEmailsInitialized && items.Any())
             {
