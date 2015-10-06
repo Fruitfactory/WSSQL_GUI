@@ -95,6 +95,7 @@ public class PstMetadataTags {
         public static final String EMAIL_ID = "emailid";
         public static final String ENTRYID = "entryid";
         public static final String OUTLOOK_EMAIL_ID = "outlookemailid";
+        public static final String CREATED_DATE = "datecreated";
     }
 
     public static XContentBuilder buildPstEmailMapping() throws IOException {

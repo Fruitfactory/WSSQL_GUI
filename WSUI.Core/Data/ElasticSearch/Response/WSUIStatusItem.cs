@@ -16,5 +16,7 @@ namespace OF.Core.Data.ElasticSearch.Response
         public PstReaderStatus Status { get; set; }
 
         public string Folder { get; set; }
+
+        public int Attachment { get; set; }
     }
 }

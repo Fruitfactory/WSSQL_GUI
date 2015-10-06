@@ -125,7 +125,7 @@ public class PstRestModule extends BaseRestHandler {
     private void processIndexingAttachment(RestRequest rr, RestChannel rc){
         try {
             String content = rr.content().toUtf8();
-            Gson gson = new GsonBuilder().create();
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").create();
             PstAttachmentContainer container =  gson.fromJson(content, PstAttachmentContainer.class);
             PstRESTRepository.putAttachmentContainer(container);
             rc.sendResponse(new BytesRestResponse(RestStatus.OK));

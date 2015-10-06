@@ -11,7 +11,7 @@ using OF.Core.Extensions;
 
 namespace OF.Module.Service
 {
-    [ValueConversion(typeof(DateTime), typeof(string))]
+    [ValueConversion(typeof(DateTime?), typeof(string))]
     public class DateToStringConverter : IValueConverter
     {
 
@@ -21,7 +21,8 @@ namespace OF.Module.Service
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string result = !WithTime ? ((DateTime)value).ToLocalTime().ToShortDateString() : ((DateTime)value).ToLocalTime().ToString("g");
+            DateTime? val = (DateTime?) value;
+            string result = !WithTime ? val.HasValue ? val.Value.ToLocalTime().ToShortDateString() : "" :  val.HasValue ? val.Value.ToLocalTime().ToString("g") : "";
             return result;
         }
 

@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Configuration;
 using OFPreview.PreviewHandler.PreviewHandlerFramework;
 using System.Management;
+using System.Windows.Threading;
 using OFPreview.PreviewHandler.TypeResolver;
 using OF.Core.Data;
 using OF.Core.Extensions;
@@ -71,6 +72,7 @@ namespace OFPreview.PreviewHandler
 
         public void LoadFile(string filename)
         {
+            OFLogger.Instance.LogError("Check");
             try
             {
                 Clear();
@@ -79,13 +81,12 @@ namespace OFPreview.PreviewHandler
                 bool res = false;
                 if (res = LoadFile(filename, _pdfDoc))
                 {
-
-
+                    
                     _pdfDoc.NextPage();
+
                     _pdfDoc.PreviousPage();
                     _pdfDoc.RenderPage(pageViewControl1.Handle);
                     Render();
-
                 }
             }
             catch (Exception ex)
@@ -105,6 +106,7 @@ namespace OFPreview.PreviewHandler
 
         public void Clear()
         {
+            OFLogger.Instance.LogError("Check");
             if (_pdfDoc != null)
             {
                 _pdfDoc.Dispose();
@@ -115,6 +117,7 @@ namespace OFPreview.PreviewHandler
         #region Mouse Scrolling
         private CursorStatus getCursorStatus(MouseEventArgs e)
         {
+            OFLogger.Instance.LogError("Check");
             if (e.Button == MouseButtons.Middle)
             {
                 return CursorStatus.Move;
@@ -130,6 +133,7 @@ namespace OFPreview.PreviewHandler
         }
         private bool MouseInPage(Point p)
         {
+            OFLogger.Instance.LogError("Check");
             if (IsActive)
             {
                 return pageViewControl1.MouseInPage(p);
@@ -299,6 +303,7 @@ namespace OFPreview.PreviewHandler
 
         void frmPDFViewer_Resize(object sender, EventArgs e)
         {
+            OFLogger.Instance.LogError("Check");
             if (_pdfDoc != null)
             {
                 FitWidth();
@@ -308,13 +313,16 @@ namespace OFPreview.PreviewHandler
 
         private void Render()
         {
+            OFLogger.Instance.LogError("Check");
             pageViewControl1.PageSize = new Size(_pdfDoc.PageWidth, _pdfDoc.PageHeight);
             labelPage.Text = string.Format("{0}/{1}", _pdfDoc.CurrentPage, _pdfDoc.PageCount);
             pageViewControl1.Refresh();
+            Invalidate();
         }
 
         private void FitWidth()
         {
+            OFLogger.Instance.LogError("Check");
             if (_pdfDoc != null && _pdfDoc.CurrentPage > 0)
             {
                 using (PictureBox p = new PictureBox())
@@ -371,6 +379,7 @@ namespace OFPreview.PreviewHandler
 
         private void tsbNext_Click(object sender, EventArgs e)
         {
+            OFLogger.Instance.LogError("Check");
             if (!PdfOK())
                 return;
 
@@ -394,6 +403,7 @@ namespace OFPreview.PreviewHandler
 
         private void tsbPrev_Click(object sender, EventArgs e)
         {
+            OFLogger.Instance.LogError("Check");
             if (!PdfOK())
                 return;
 
@@ -411,47 +421,10 @@ namespace OFPreview.PreviewHandler
                 }
             }
         }
-
-        private void tsbOpen_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                OpenFileDialog dlg = new OpenFileDialog();
-                dlg.Filter = "Portable Document Format (*.pdf)|*.pdf";
-                if (dlg.ShowDialog() == DialogResult.OK)
-                {
-                    LoadFile(dlg.FileName);
-                }
-
-            }
-            catch (System.IO.IOException ex)
-            {
-                MessageBox.Show(ex.Message, "IOException");
-            }
-            catch (System.Security.SecurityException ex)
-            {
-                MessageBox.Show(ex.Message, "SecurityException");
-            }
-            catch (System.IO.InvalidDataException ex)
-            {
-                MessageBox.Show(ex.Message, "InvalidDataException");
-            }
-        }
-
-
-
-
-        public void RenderNotifyFinished(int page, bool isCurrent)
-        {
-
-        }
-        public void _pdfDoc_RenderNotifyFinished(int page, bool bSuccesss)
-        {
-            Invoke(new RenderNotifyInvoker(RenderNotifyFinished), page, bSuccesss);
-        }
-
+      
         public bool LoadStream(System.IO.Stream fileStream)
         {
+            OFLogger.Instance.LogError("Check");
             if (_pdfDoc != null)
             {
                 _pdfDoc.Dispose();
@@ -472,6 +445,7 @@ namespace OFPreview.PreviewHandler
         }
         public bool ShowStream(System.IO.Stream fileStream)
         {
+            OFLogger.Instance.LogError("Check");
             if (LoadStream(fileStream))
             {
 
@@ -490,6 +464,7 @@ namespace OFPreview.PreviewHandler
 
         private bool LoadFile(string filename, dynamic pdfDoc)
         {
+            OFLogger.Instance.LogError("Check");
             try
             {
                 bool bRet = pdfDoc.LoadPDF(filename);
@@ -504,6 +479,7 @@ namespace OFPreview.PreviewHandler
         }
         private void ScrolltoTop(int y)
         {
+            OFLogger.Instance.LogError("Check");
             Point dr = this.pageViewControl1.ScrollPosition;
             if (_pdfDoc.PageHeight > pageViewControl1.Height)
                 dr.Y = y;
@@ -513,6 +489,7 @@ namespace OFPreview.PreviewHandler
 
         private void tsbZoomIn_Click(object sender, EventArgs e)
         {
+            OFLogger.Instance.LogError("Check");
             try
             {
 
@@ -535,6 +512,7 @@ namespace OFPreview.PreviewHandler
 
         private void tsbZoomOut_Click(object sender, EventArgs e)
         {
+            OFLogger.Instance.LogError("Check");
             try
             {
 
@@ -622,7 +600,7 @@ namespace OFPreview.PreviewHandler
 
         private void doubleBufferControl1_PaintControl(object sender, Rectangle view, Point location, Graphics g)
         {
-
+            OFLogger.Instance.LogError("Check");
             if (_pdfDoc != null)
             {
                 Size sF = new Size(view.Right, view.Bottom);
@@ -632,6 +610,9 @@ namespace OFPreview.PreviewHandler
                 _pdfDoc.CurrentY = view.Y;
                 _pdfDoc.DrawPageHDC(g.GetHdc());
                 g.ReleaseHdc();
+                //_pdfDoc.RenderPage(pageViewControl1.Handle);
+                //Render();
+                //Invalidate();
 
                 /*
                 Size sF = new Size(view.Right, view.Bottom);
@@ -669,7 +650,12 @@ namespace OFPreview.PreviewHandler
 
         private bool doubleBufferControl1_NextPage(object sender)
         {
-            //try
+            OFLogger.Instance.LogError("Check");
+            if (_pdfDoc == null)
+            {
+                return false;
+            }
+            try
             {
 
                 if (_pdfDoc.CurrentPage < _pdfDoc.PageCount)
@@ -682,16 +668,21 @@ namespace OFPreview.PreviewHandler
                 }
 
             }
-            /*  catch (Exception ex)
-              {
-                  MessageBox.Show(ex.ToString());
-              }*/
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.Message);
+            }
             return false;
         }
 
         private bool doubleBufferControl1_PreviousPage(object sender)
         {
-            // try
+            OFLogger.Instance.LogError("Check");
+            if (_pdfDoc == null)
+            {
+                return false;
+            }
+            try
             {
 
                 if (_pdfDoc.CurrentPage > 1)
@@ -704,58 +695,16 @@ namespace OFPreview.PreviewHandler
                 }
 
             }
-            /* catch (Exception ex)
+             catch (Exception ex)
              {
-                 MessageBox.Show(ex.ToString());
-             }*/
+                 OFLogger.Instance.LogError(ex.Message);
+             }
             return false;
-        }
-
-
-
-        private void UpdateParamsUI()
-        {
-
-        }
-
-
-
-
-
-        private void tsImagesUpdate_Click(object sender, EventArgs e)
-        {
-            if (!PdfOK())
-                return;
-        }
-
-
-        private void toolStripButton4_Click(object sender, EventArgs e)
-        {
-            if (!PdfOK())
-                return;
-            dynamic page = _pdfDoc.Pages[_pdfDoc.CurrentPage];
-            var list = page.WordList;
-
-        }
-
-
-        private void toolStripButton3_Click_1(object sender, EventArgs e)
-        {
-            FitWidth();
-        }
-
-        private void frmPDFViewer_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (_pdfDoc != null)
-            {
-                _pdfDoc.Dispose();
-                _pdfDoc = null;
-            }
-            GC.Collect();
         }
 
         bool PdfOK()
         {
+            OFLogger.Instance.LogError("Check");
             if (_pdfDoc != null && _pdfDoc.PageCount > 0)
                 return true;
             return false;

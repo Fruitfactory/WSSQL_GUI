@@ -15,5 +15,7 @@ namespace OF.Module.Interface.Service
 
         bool IsSuspended { get; }
 
+        int Count { get; }
+
     }
 }

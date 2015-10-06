@@ -186,7 +186,7 @@ namespace OF.Core.Helpers
             string filename = string.Format("{0}\\{1}", folder, attachment.Filename);
 
 
-            if (!string.IsNullOrEmpty(attachment.Content))
+            if (!string.IsNullOrEmpty(attachment.Content) && string.IsNullOrEmpty(attachment.Outlookemailid))
             {
                 try
                 {

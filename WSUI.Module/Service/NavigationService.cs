@@ -39,8 +39,8 @@ namespace OF.Module.Service
         public NavigationService(IRegionManager regionManager)
         {
             _regionManager = regionManager;
-            _moveToLeftTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.22)), StartPoint = new Point(1.0, 0.0) };
-            _moveToRightTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.22)) };
+            _moveToLeftTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.15)), StartPoint = new Point(1.0, 0.0) };
+            _moveToRightTransition = new TranslateTransition() { Duration = new Duration(TimeSpan.FromSeconds(0.15)) };
             _stackViews = new Stack<INavigationView>();
         }
 

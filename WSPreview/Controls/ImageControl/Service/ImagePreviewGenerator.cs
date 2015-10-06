@@ -47,12 +47,16 @@ namespace OFPreview.PreviewHandler.Controls.ImageControl.Service
 
         private ImagePreviewGenerator()
         {
-            AssemblyName = AssemblyWrapperName;
         }
 
         #endregion
 
         #region Implementation of IImagePreviewGenerator
+
+        protected override string GetAssemblyName()
+        {
+            return AssemblyWrapperName;
+        }
 
         public void SetFileName(string filename)
         {

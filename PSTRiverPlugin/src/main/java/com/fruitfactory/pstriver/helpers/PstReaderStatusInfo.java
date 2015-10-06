@@ -14,6 +14,7 @@ public class PstReaderStatusInfo {
     private String _name;
     private int _count;
     private int _proccedCount;
+    private int _proccedAttachmentCount;
     private PstReaderStatus _status;
     private String _folderName;
 
@@ -61,5 +62,14 @@ public class PstReaderStatusInfo {
     public void setProccedCount(int _proccedCount) {
         this._proccedCount = _proccedCount;
     }
+
+    public int getProccedAttachmentCount() {
+        return _proccedAttachmentCount;
+    }
+
+    public void setProccedAttachmentCount(int _proccedAttachmentCount) {
+        this._proccedAttachmentCount = _proccedAttachmentCount;
+    }
+
 
 }

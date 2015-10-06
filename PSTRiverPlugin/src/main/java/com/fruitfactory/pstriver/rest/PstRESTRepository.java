@@ -63,6 +63,15 @@ public class PstRESTRepository {
         }
     }
 
+    public static void setProcessAttachmentCount(String name, int count){
+        synchronized (_repository) {
+            if (_repository.containsKey(name)) {
+                PstReaderStatusInfo statusInfo = _repository.get(name);
+                statusInfo.setProccedAttachmentCount(count);
+            }
+        }
+    }
+
     public static void setProcessFolder(String name, String folder){
         synchronized(_repository){
             if(_repository.containsKey(name)){
@@ -118,6 +127,7 @@ public class PstRESTRepository {
                 status.field("name", key);
                 status.field("count", value.getCount());
                 status.field("processing", value.getProccedCount());
+                status.field("attachment",value.getProccedAttachmentCount());
                 status.field("status", value.getStatus());
                 status.field("folder",value.getFolderName());
                 status.endObject();

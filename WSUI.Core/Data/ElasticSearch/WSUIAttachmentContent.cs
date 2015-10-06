@@ -1,4 +1,5 @@
-﻿using Nest;
+﻿using System;
+using Nest;
 
 namespace OF.Core.Data.ElasticSearch
 {
@@ -25,5 +26,7 @@ namespace OF.Core.Data.ElasticSearch
         public string Emailid { get; set; }
 
         public string Outlookemailid { get; set; }
+
+        public DateTime? Datecreated { get; set; }
     }
 }

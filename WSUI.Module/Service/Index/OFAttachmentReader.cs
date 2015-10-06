@@ -55,6 +55,8 @@ namespace OF.Module.Service.Index
             private set { Set(() => IsSuspended,value);}
         }
 
+        public int Count { get; private set; }
+
 
         public void Start(DateTime? lastUpdated)
         {
@@ -211,6 +213,7 @@ namespace OF.Module.Service.Index
             var messageId = email.Headers("Message-ID");
             indexAttach.Emailid = messageId.Any() ? messageId.FirstOrDefault() : string.Empty;
             indexAttach.Outlookemailid = email.EntryID;
+            indexAttach.Datecreated = email.CreationTime;
             
             System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} TransportMessaageId => {2}",
                 email.Subject, email.ReceivedTime.ToString(DateFormat),
@@ -237,6 +240,7 @@ namespace OF.Module.Service.Index
             {
                 OFAttachmentIndexingContainer container = new OFAttachmentIndexingContainer() { Attachments = attachments, Process = process };
                 _indexAttachmentClient.SendAttachmentToIndex(container);
+                Count += attachments.IsNotNull() ? attachments.Count() : 0;
             }
         }
 

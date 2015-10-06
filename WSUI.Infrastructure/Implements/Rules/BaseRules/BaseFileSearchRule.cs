@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////
 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Practices.Unity;
@@ -65,7 +66,8 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
 	        {
                 OFLogger.Instance.LogDebug("{0}: {1}",RuleName,result.Count);   
 	            Result = result;
-	            LastDate = Result.Last().DateCreated;
+                var temp = Result.Last().DateCreated;
+	            LastDate = temp.HasValue ? temp.Value : DateTime.Today;
 	        }
 	    }
 

@@ -39,7 +39,7 @@ namespace OF.Core.Data
 
         public string[] Kind { get; set; }
 
-        public DateTime DateCreated
+        public DateTime? DateCreated
         {
             get { return Get(() => DateCreated); }
             set { Set(() => DateCreated, value); }

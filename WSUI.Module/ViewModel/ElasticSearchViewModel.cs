@@ -182,6 +182,12 @@ namespace OF.Module.ViewModel
             set { Set(() => CurrentProgress, value); }
         }
 
+        public string CountEmailsAttachments
+        {
+            get { return Get(() => CountEmailsAttachments); }
+            set { Set(() => CountEmailsAttachments, value); }
+        }
+
         #endregion
 
         #region [commands]
@@ -390,9 +396,11 @@ namespace OF.Module.ViewModel
                     ShowProgress = Visibility.Visible;
                     double sumAll = (double)response.Response.Items.Sum(s => s.Count);
                     double sumProcessing = response.Response.Items.Sum(s => s.Processing);
+                    double sumAttachments = response.Response.Items.Sum(s => s.Attachment) + _attachmentReader.Count;
                     var busyReader = response.Response.Items.FirstOrDefault(r => r.Status == PstReaderStatus.Busy);
                     CurrentFolder = busyReader.IsNotNull() ? busyReader.Folder : "";
                     CurrentProgress = (sumProcessing / sumAll) * 100.0;
+                    CountEmailsAttachments = string.Format("{0} / {1}", sumProcessing, sumAttachments);
                 }
                 lock (_lock)
                 {

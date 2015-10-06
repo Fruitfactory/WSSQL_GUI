@@ -2,6 +2,8 @@ package com.fruitfactory.pstriver.rest.data;
 
 import com.carrotsearch.ant.tasks.junit4.dependencies.com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 /**
  * Created by Yariki on 8/26/2015.
  */
@@ -33,6 +35,9 @@ public class PstAttachmentContent {
 
     @SerializedName("outlookemailid")
     public String outlookemailid;
+
+    @SerializedName("datecreated")
+    public Date datecreated;
 
     public PstAttachmentContent() {
     }
@@ -107,5 +112,13 @@ public class PstAttachmentContent {
 
     public void setOutlookemailid(String outlookemailid) {
         this.outlookemailid = outlookemailid;
+    }
+
+    public Date getDatecreated() {
+        return datecreated;
+    }
+
+    public void setDatecreated(Date datecreated) {
+        this.datecreated = datecreated;
     }
 }

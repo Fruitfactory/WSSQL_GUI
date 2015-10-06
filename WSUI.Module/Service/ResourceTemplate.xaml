@@ -425,8 +425,8 @@
                 <Grid.ToolTip>
                    <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Date received: "></TextBlock>
-                            <TextBlock Text="{Binding Path=DateReceived,Converter={StaticResource dateConverter}}"></TextBlock>
+                            <TextBlock Text="Date created: "></TextBlock>
+                            <TextBlock Text="{Binding Path=DateCreated,Converter={StaticResource dateConverter}}"></TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Name: "></TextBlock>

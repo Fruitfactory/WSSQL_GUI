@@ -355,9 +355,8 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
                 listAttachments.add(helper);
 
                 if(attachment.getSize() < MaxSize){
-                    saveAttachment(attachment,messageId);
+                    saveAttachment(attachment,messageId,message.getCreationTime());
                 }
-                _countOfIndexedAttachments++;
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -525,7 +524,7 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
         listUsers.add(userData);
     }
     
-    private void saveAttachment(PSTAttachment attachment, String emailID) throws IOException, Exception {
+    private void saveAttachment(PSTAttachment attachment, String emailID,  Date dateCreated) throws IOException, Exception {
         if (attachment == null) {
             return;
         }
@@ -570,9 +569,13 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
                 .field(PstMetadataTags.Attachment.ANALYZED_CONTENT,parsedContent)
                 .field(PstMetadataTags.Attachment.CONTENT, strBuilder.toString())
                 .field(PstMetadataTags.Attachment.EMAIL_ID, emailID)
+                .field(PstMetadataTags.Attachment.CREATED_DATE,dateCreated)
                 .field(PstMetadataTags.Attachment.ENTRYID, entryid);
         source.endObject();
         esIndex(_indexName, PstMetadataTags.INDEX_TYPE_ATTACHMENT, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
+
+        _countOfIndexedAttachments++;
+        PstRESTRepository.setProcessAttachmentCount(_name,_countOfIndexedAttachments);
     }
 
     private void indexContact(PSTContact contact) throws IOException, Exception {

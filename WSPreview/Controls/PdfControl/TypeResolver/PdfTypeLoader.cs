@@ -15,7 +15,6 @@ namespace OFPreview.PreviewHandler.TypeResolver
 
         private PdfTypeLoader()
         {
-            AssemblyName = PdfAssemblyName;
         }
 
         #endregion
@@ -35,6 +34,11 @@ namespace OFPreview.PreviewHandler.TypeResolver
         }
 
         #endregion
+
+        protected override string GetAssemblyName()
+        {
+            return PdfAssemblyName;
+        }
 
         protected override void Init()
         {

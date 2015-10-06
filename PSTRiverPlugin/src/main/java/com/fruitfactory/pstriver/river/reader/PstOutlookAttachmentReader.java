@@ -209,7 +209,8 @@ public class PstOutlookAttachmentReader extends PstBaseOutlookIndexer implements
                     .field(PstMetadataTags.Attachment.CONTENT, attachment.getContent())
                     .field(PstMetadataTags.Attachment.EMAIL_ID, attachment.getEmailid())
                     .field(PstMetadataTags.Attachment.ENTRYID, entryid)
-                    .field(PstMetadataTags.Attachment.OUTLOOK_EMAIL_ID,attachment.getOutlookemailid());
+                    .field(PstMetadataTags.Attachment.CREATED_DATE,attachment.getDatecreated())
+                    .field(PstMetadataTags.Attachment.OUTLOOK_EMAIL_ID, attachment.getOutlookemailid());
 
             source.endObject();
             esIndex(_indexName, PstMetadataTags.INDEX_TYPE_ATTACHMENT, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);

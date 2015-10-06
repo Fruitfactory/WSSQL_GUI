@@ -107,8 +107,22 @@
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="12">Folder:</TextBlock>
-                    <TextBlock FontSize="12" Text="{Binding CurrentFolder,UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                    
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <StackPanel  Orientation="Horizontal" Grid.Row="0">
+                            <TextBlock FontSize="12">Folder:</TextBlock>
+                            <TextBlock FontSize="12" Text="{Binding CurrentFolder,UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Grid.Row="1">
+                            <TextBlock FontSize="12">Emails/Attachments get indexed:</TextBlock>
+                            <TextBlock FontSize="12" Text="{Binding CountEmailsAttachments,UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                        </StackPanel>
+                    </Grid>
                 </StackPanel>
             </StackPanel>
             

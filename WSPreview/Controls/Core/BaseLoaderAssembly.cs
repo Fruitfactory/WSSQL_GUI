@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using OF.Core.Logger;
 
 namespace OFPreview.Controls.Core
 {
@@ -15,9 +16,6 @@ namespace OFPreview.Controls.Core
         #region [fields]
         protected Assembly _assembly = null;
 
-        protected string AssemblyName = "";
-
-
         #endregion
 
 
@@ -30,6 +28,8 @@ namespace OFPreview.Controls.Core
 
         #endregion
 
+        protected abstract string GetAssemblyName();
+
         protected virtual void Init()
         {
             _assembly = Environment.Is64BitProcess ? LoadAssembly(Lib64) : LoadAssembly(Lib);
@@ -39,7 +39,8 @@ namespace OFPreview.Controls.Core
         {
             string loc = Assembly.GetExecutingAssembly().Location;
             loc = loc.Substring(0, loc.LastIndexOf("\\"));
-            loc = string.Format("{0}{1}{2}", loc, folder, AssemblyName);
+            loc = string.Format("{0}{1}{2}", loc, folder, GetAssemblyName());
+            OFLogger.Instance.LogDebug(string.Format("Assembly path: {0}",loc));
             Assembly dll = Assembly.LoadFrom(loc);
             return dll;
         }
