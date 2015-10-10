@@ -128,9 +128,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WSPreview\OFPreview.csproj">
+    <ProjectReference Include="..\WSPreview\OF.Preview.csproj">
       <Project>{3E9F9F18-B9AD-4DDE-A5D6-F71B75C737D2}</Project>
-      <Name>OFPreview</Name>
+      <Name>OF.Preview</Name>
     </ProjectReference>
     <ProjectReference Include="..\WSUI.Core\OF.Core.csproj">
       <Project>{D650F4E9-99FE-46EC-A59D-BF3A99652255}</Project>

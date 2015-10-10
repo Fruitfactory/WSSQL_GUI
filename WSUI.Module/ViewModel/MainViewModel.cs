@@ -128,7 +128,7 @@ namespace OF.Module.ViewModel
             }
         }
 
-        public ObservableCollection<IWSCommand> Commands
+        public ObservableCollection<IOFCommand> Commands
         {
             get { return _currentStrategy != null ? _currentStrategy.Commands : null; }
         }

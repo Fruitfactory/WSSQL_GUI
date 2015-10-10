@@ -9,11 +9,11 @@ namespace OF.Module.Core
     public abstract class BaseCommandStrategy : ICommandStrategy
     {
         protected IMainViewModel _MainViewModel;
-        protected ObservableCollection<IWSCommand> _listCommand;
+        protected ObservableCollection<IOFCommand> _listCommand;
 
         protected BaseCommandStrategy()
         {
-            _listCommand = new ObservableCollection<IWSCommand>();
+            _listCommand = new ObservableCollection<IOFCommand>();
         }
 
         protected BaseCommandStrategy(IMainViewModel mainViewModel)
@@ -34,7 +34,7 @@ namespace OF.Module.Core
             OnInit();
         }
 
-        public ObservableCollection<IWSCommand> Commands { get { return _listCommand; } }
+        public ObservableCollection<IOFCommand> Commands { get { return _listCommand; } }
         public TypeSearchItem Type { get; protected set; }
 
         #endregion

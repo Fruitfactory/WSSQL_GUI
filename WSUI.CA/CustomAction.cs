@@ -935,7 +935,7 @@ namespace OF.CA
         {
             try
             {
-                var isExistJavaHome = Environment.GetEnvironmentVariables().OfType<DictionaryEntry>().Any(e => e.Key.ToString().ToLowerInvariant() == JavaHomeVar.ToLowerInvariant());
+                var isExistJavaHome = Environment.GetEnvironmentVariables().OfType<DictionaryEntry>().Any(e => e.Key.ToString().ToUpperInvariant() == JavaHomeVar.ToUpperInvariant());
                 if (isExistJavaHome)
                 {
                     session.Log(string.Format("JAVA_HOME is exist"));
@@ -984,22 +984,21 @@ namespace OF.CA
                         session.Log("File not Exits: " + si.FileName);
                         return ActionResult.Success;
                     }
-
+                    session.Log("JAVA_HOME = " + javaHome);
+                    session.Log("ElasticSearch Path = " + elasticSearchPath);
                     si.Arguments = string.Format(" {0} \"{1}\"","install", javaHome);
                     //si.Verb = "runas";
                     si.WindowStyle = ProcessWindowStyle.Hidden;
                     si.WorkingDirectory = string.Format("{0}{1}",elasticSearchPath, "\\bin");
-                    Process pInstall = new Process();
-                    pInstall.StartInfo = si;
+                    Process pInstall = new Process {StartInfo = si};
                     pInstall.Start();
                     pInstall.WaitForExit();
-                    session.Log("Install Elastis Search: install service");
+                    session.Log("Install Elastic Search: install service");
 
                     RegisterPlugin(session, elasticSearchPath, javaHome);
 
                     si.Arguments = string.Format(" {0} \"{1}\"", "start", javaHome);
-                    Process pStart = new Process();
-                    pStart.StartInfo = si;
+                    Process pStart = new Process {StartInfo = si};
                     pStart.Start();
                     pStart.WaitForExit();
                     session.Log("Install Elastis Search: run service");
@@ -1046,13 +1045,11 @@ namespace OF.CA
                     si.WindowStyle = ProcessWindowStyle.Hidden;
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
 
-                    Process pInstall = new Process();
-                    pInstall.StartInfo = si;
+                    Process pInstall = new Process {StartInfo = si};
                     pInstall.Start();
                     pInstall.WaitForExit();
                     si.Arguments = string.Format(" {0} \"{1}\"", "remove", javaHome);
-                    Process pStart = new Process();
-                    pStart.StartInfo = si;
+                    Process pStart = new Process {StartInfo = si};
                     pStart.Start();
                     pStart.WaitForExit();
                 }

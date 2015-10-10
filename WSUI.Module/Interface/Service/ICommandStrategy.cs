@@ -7,7 +7,7 @@ namespace OF.Module.Interface.Service
     {
         void Init();
 
-        ObservableCollection<IWSCommand> Commands
+        ObservableCollection<IOFCommand> Commands
         {
             get;
         }

@@ -2,7 +2,7 @@ using System.Windows.Input;
 
 namespace OF.Module.Interface.Service
 {
-    public interface IWSCommand : ICommand
+    public interface IOFCommand : ICommand
     {
         string Icon
         {

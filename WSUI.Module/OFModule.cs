@@ -23,12 +23,12 @@ using Action = System.Action;
 
 namespace OF.Module
 {
-    public class WSModule : IModule
+    public class OFModule : IModule
     {
         private readonly IRegionManager _regionManager;
         private readonly IUnityContainer _unityContainer;
 
-        public WSModule(IUnityContainer container, IRegionManager region)
+        public OFModule(IUnityContainer container, IRegionManager region)
         {
             _regionManager = region;
             _unityContainer = container;

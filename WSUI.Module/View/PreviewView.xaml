@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:preview="clr-namespace:OFPreview.PreviewHandler.PreviewHandlerHost;assembly=OFPreview"
+             xmlns:previewHandlerHost="clr-namespace:OFPreview.PreviewHandler.PreviewHandlerHost;assembly=OF.Preview"
              mc:Ignorable="d"
              >
     <UserControl.Resources>
@@ -76,8 +76,8 @@
         </ItemsControl>
 
         <WindowsFormsHost Grid.Row="1" x:Name="Host">
-            <preview:PreviewHandlerHostControl x:Name="_previewControl" Visible="True">
-            </preview:PreviewHandlerHostControl>
+            <previewHandlerHost:PreviewHandlerHostControl x:Name="_previewControl" Visible="True">
+            </previewHandlerHost:PreviewHandlerHostControl>
         </WindowsFormsHost>
     </Grid>
 </UserControl>

@@ -108,7 +108,7 @@
     <Property Id="JAVA_CURRENT_VERSION">
       <RegistrySearch Id="JRE_CURRENT_VERSION_REGSEARCH" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Name="CurrentVersion" Type="raw" Win64="yes" />
     </Property>
-    <Condition Message="Java Runtime Environment (32 Bit) is not installed or outdated. Please install Oracle JRE 1.7 or later."><![CDATA[Installed OR (JAVA_CURRENT_VERSION >= "1.7")]]></Condition>
+    <Condition Message="Java Runtime Environment (32 Bit) is not installed or outdated. Please install Oracle JRE 1.8 or later."><![CDATA[Installed OR (JAVA_CURRENT_VERSION >= "1.8")]]></Condition>
     
   </Product>
   <Fragment>
@@ -223,7 +223,7 @@
         <File Id="_AddinExpress_OL_2005_dll" Name="AddinExpress.OL.2005.dll" Source="C:\Program Files (x86)\Add-in Express\Add-in Express for .NET\Bin\" />
         <File Id="_Extensibility_dll" Name="Extensibility.dll" Source="C:\Windows\assembly\GAC\Extensibility\7.0.3300.0__b03f5f7f11d50a3a\" />
         <File Id="_Microsoft_Office_Interop_Outlook_dll" Name="Microsoft.Office.Interop.Outlook.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
-        <File Id="_OFPreview_dll" Name="OFPreview.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        <File Id="_OF_Preview_dll" Name="OF.Preview.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_OF_Control_dll" Name="OF.Control.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_ICSharpCode_SharpZipLib_dll" Name="ICSharpCode.SharpZipLib.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_log4net_config" Name="log4net.config" Source="$(var.OF.OutlookPlugin.TargetDir)" />

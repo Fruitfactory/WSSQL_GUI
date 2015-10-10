@@ -8,7 +8,7 @@ using OF.Module.Interface.ViewModel;
 
 namespace OF.Module.Core
 {
-    public abstract class BasePreviewCommand : IWSCommand
+    public abstract class BasePreviewCommand : IOFCommand
     {
         protected IMainViewModel MainViewModel;
 

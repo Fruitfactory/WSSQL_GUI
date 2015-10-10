@@ -231,9 +231,9 @@
     <Compile Include="Enums\TypeSearchItem.cs" />
     <Compile Include="Enums\WSActionType.cs" />
     <Compile Include="Enums\WSPreviewCommand.cs" />
-    <Compile Include="EventArguments\WSUIPreviewCommandArgs.cs" />
-    <Compile Include="EventArguments\WSUIShowFolderArgs.cs" />
-    <Compile Include="Events\WSUIShowFolder.cs" />
+    <Compile Include="EventArguments\OFPreviewCommandArgs.cs" />
+    <Compile Include="EventArguments\OFShowFolderArgs.cs" />
+    <Compile Include="Events\OFShowFolder.cs" />
     <Compile Include="Extensions\CommonExtensions.cs" />
     <Compile Include="Extensions\FieldsExtensions.cs" />
     <Compile Include="Extensions\OutlookExtensions.cs" />
@@ -313,18 +313,18 @@
     <Compile Include="Interfaces\IWSUIAttribute.cs" />
     <Compile Include="Logger\OFLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\Dialog\Interfaces\IWSUIEmailViewModel.cs" />
-    <Compile Include="Utils\Dialog\Interfaces\IWSUIView.cs" />
-    <Compile Include="Utils\Dialog\Interfaces\IWSUIViewModel.cs" />
-    <Compile Include="Utils\Dialog\ViewModel\WSUIBaseDialogViewModel.cs" />
-    <Compile Include="Utils\Dialog\ViewModel\WSUIEmailViewModel.cs" />
-    <Compile Include="Utils\Dialog\View\WSUIEmailView.xaml.cs">
-      <DependentUpon>WSUIEmailView.xaml</DependentUpon>
+    <Compile Include="Utils\Dialog\Interfaces\IOFEmailViewModel.cs" />
+    <Compile Include="Utils\Dialog\Interfaces\IOFView.cs" />
+    <Compile Include="Utils\Dialog\Interfaces\IOFViewModel.cs" />
+    <Compile Include="Utils\Dialog\ViewModel\OFBaseDialogViewModel.cs" />
+    <Compile Include="Utils\Dialog\ViewModel\OFmailViewModel.cs" />
+    <Compile Include="Utils\Dialog\View\OFEmailView.xaml.cs">
+      <DependentUpon>OFEmailView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Dialog\WSUIDialogWindow.xaml.cs">
-      <DependentUpon>WSUIDialogWindow.xaml</DependentUpon>
+    <Compile Include="Utils\Dialog\OFDialogWindow.xaml.cs">
+      <DependentUpon>OFDialogWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Dialog\WSUIRelayCommand.cs" />
+    <Compile Include="Utils\Dialog\OFRelayCommand.cs" />
     <Compile Include="Utils\FieldCash.cs" />
     <Compile Include="Utils\QueryGenerator.cs" />
     <Compile Include="Utils\QueryReader.cs" />
@@ -340,11 +340,11 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Utils\Dialog\View\WSUIEmailView.xaml">
+    <Page Include="Utils\Dialog\View\OFEmailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Utils\Dialog\WSUIDialogWindow.xaml">
+    <Page Include="Utils\Dialog\OFDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

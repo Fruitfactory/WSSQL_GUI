@@ -20,7 +20,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>WSUIInfrastructure.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>OFInfrastructure.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trial|AnyCPU'">
     <OutputPath>..\Routput\</OutputPath>
@@ -151,7 +151,7 @@
     <Compile Include="Controls\BusyControl\BusyPopupAdorner.cs" />
     <Compile Include="Controls\BusyControl\IBusyPopupAdorner.cs" />
     <Compile Include="Controls\Core\BasePopupAdorner.cs" />
-    <Compile Include="Controls\HeaderControl\WSUIHeaderControl.cs" />
+    <Compile Include="Controls\HeaderControl\OFHeaderControl.cs" />
     <Compile Include="Controls\HightliteHyperlink.xaml.cs">
       <DependentUpon>HightliteHyperlink.xaml</DependentUpon>
     </Compile>
@@ -159,7 +159,7 @@
       <DependentUpon>HightliteTextBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\HightliteTextBlockBase.cs" />
-    <Compile Include="Controls\ListBox\WSUIListBox.cs" />
+    <Compile Include="Controls\ListBox\OFListBox.cs" />
     <Compile Include="Controls\ProgressManager\IProgressForm.cs" />
     <Compile Include="Controls\ProgressManager\IProgressManager.cs" />
     <Compile Include="Controls\ProgressManager\ProgressManager.cs" />
@@ -257,7 +257,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="WSUIInfrastructure.snk" />
+    <None Include="OFInfrastructure.snk" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Implements\Rules\Helpers\" />

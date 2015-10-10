@@ -66,13 +66,13 @@ namespace OF.Control
         protected override IModuleCatalog CreateModuleCatalog()
         {
             var catalog = new ModuleCatalog();
-            catalog.AddModule(typeof(OF.Module.WSModule));
+            catalog.AddModule(typeof(OF.Module.OFModule));
             return catalog;
         }
 
         protected override void InitializeModules()
         {
-            IModule module = Container.Resolve<OF.Module.WSModule>();
+            IModule module = Container.Resolve<OF.Module.OFModule>();
             module.Initialize();
             _mainViewModel = Container.Resolve<OF.Module.ViewModel.MainViewModel>();
             (this.View as ISidebarView).Model = _mainViewModel;

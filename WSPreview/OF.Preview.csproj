@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OFPreview.PreviewHandler</RootNamespace>
-    <AssemblyName>OFPreview</AssemblyName>
+    <AssemblyName>OF.Preview</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -56,7 +56,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>WSUIPreview.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>OFPreview.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trial|AnyCPU'">
     <OutputPath>..\Routput\</OutputPath>
@@ -343,7 +343,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Resources\TreeView_XP_Explorer_ParentNode.gif" />
-    <None Include="WSUIPreview.snk" />
+    <None Include="OFPreview.snk" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\dmdskres_373_9_16x16x32.png" />
