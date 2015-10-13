@@ -19,7 +19,7 @@ using Timer = System.Timers.Timer;
 
 namespace OF.Module.ViewModel
 {
-    public class ElasticSearchMonitoringViewModel : ViewModelBase, IElasticSearchMonitoringViewModel
+    public class ElasticSearchMonitoringViewModel : OFViewModelBase, IElasticSearchMonitoringViewModel
     {
 
         private static string UPDATING = "Updating...";

@@ -17,7 +17,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace OF.Module.Service.Index
 {
-    public class OFAttachmentReader : ViewModelBase, IAttachmentReader
+    public class OFAttachmentReader : OFViewModelBase, IAttachmentReader
     { 
         private string AttachSchema = "http://schemas.microsoft.com/mapi/proptag/0x37010102";
         private string TransportHeaderSchema = "http://schemas.microsoft.com/mapi/proptag/0x007D001F";
@@ -94,7 +94,7 @@ namespace OF.Module.Service.Index
             try
             {
                 Status = PstReaderStatus.Busy;
-                var folderList = OutlookHelper.Instance.GetFolders().OfType<Outlook.MAPIFolder>();
+                var folderList = OFOutlookHelper.Instance.GetFolders().OfType<Outlook.MAPIFolder>();
                 if (!folderList.Any())
                 {
                     return;
@@ -145,7 +145,7 @@ namespace OF.Module.Service.Index
                         TryToWait();
                         if (attachmentContents.Count > 0)
                         {
-                            SendAttachments(attachmentContents, AttachmentIndexProcess.Chunk);
+                            SendAttachments(attachmentContents, OFAttachmentIndexProcess.Chunk);
                         }
 
                     }
@@ -162,7 +162,7 @@ namespace OF.Module.Service.Index
             }
             finally
             {
-                SendAttachments(null, AttachmentIndexProcess.End);
+                SendAttachments(null, OFAttachmentIndexProcess.End);
                 Status = PstReaderStatus.Finished;
                 System.Diagnostics.Debug.WriteLine("!!!!!!!! Exit From Attachment Reader");
             }
@@ -234,7 +234,7 @@ namespace OF.Module.Service.Index
 
 
 
-        private void SendAttachments(IEnumerable<OFAttachmentContent> attachments, AttachmentIndexProcess process)
+        private void SendAttachments(IEnumerable<OFAttachmentContent> attachments, OFAttachmentIndexProcess process)
         {
             if (_indexAttachmentClient.IsNotNull())
             {

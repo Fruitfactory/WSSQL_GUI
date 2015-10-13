@@ -62,7 +62,7 @@ namespace OFOutlookPlugin
             {
                 wpfSidebarHost.Child = null;
                 wpfSidebarHost.Child = el;
-                if (!RegistryHelper.Instance.GetIsPluginUiVisible())
+                if (!OFRegistryHelper.Instance.GetIsPluginUiVisible())
                 {
                     Hide();
                     OFAddinModule.CurrentInstance.IsMainUIVisible = false;
@@ -84,9 +84,9 @@ namespace OFOutlookPlugin
             throw new NotImplementedException();
         }
 
-        public void SendAction(WSActionType actionType)
+        public void SendAction(OFActionType actionType)
         {
-            _wsuiBootStraper.PassAction(new WSAction(actionType, null));
+            _wsuiBootStraper.PassAction(new OFAction(actionType, null));
         }
 
     }

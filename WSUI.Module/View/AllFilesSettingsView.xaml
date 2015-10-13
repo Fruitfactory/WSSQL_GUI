@@ -28,7 +28,7 @@
                 Controls:TextBoxHelper.CustomTextButtonContent="{StaticResource AdvancedSearchButtonContent}"
                 Controls:TextBoxHelper.CustomTextButtonCommand="{Binding ShowAdvancedSearchCommand}"
                 Controls:TextBoxHelper.CustomTextButtonTooltip="{StaticResource AdvancedSearchTooltip}"
-                Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
+                Service:OFKeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
                 IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"
                 VerticalAlignment="Center"    
                 VerticalContentAlignment="Center"

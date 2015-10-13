@@ -30,20 +30,20 @@ namespace OF.Infrastructure.Service.Helpers
         #endregion
 
 
-        public string GetEmailEmlFilename(EmailSearchObject emailObject)
+        public string GetEmailEmlFilename(OFEmailSearchObject emailObject)
         {
             if (emailObject.IsNull())
             {
                 return String.Empty;
             }
 
-            if (TempFileManager.Instance.IsEmlFileExistForEmailObject(emailObject))
+            if (OFTempFileManager.Instance.IsEmlFileExistForEmailObject(emailObject))
             {
-                return TempFileManager.Instance.GetExistEmlFileForEmailObject(emailObject);
+                return OFTempFileManager.Instance.GetExistEmlFileForEmailObject(emailObject);
             }
 
             string result = String.Empty;
-            string tempFolder = TempFileManager.Instance.GenerateTempFolderForObject(emailObject);
+            string tempFolder = OFTempFileManager.Instance.GenerateTempFolderForObject(emailObject);
             MailMessage mail = new MailMessage();
             mail.From = new MailAddress(emailObject.FromAddress, emailObject.FromName); //emailObject.FromAddress
             if (emailObject.To != null)
@@ -92,7 +92,7 @@ namespace OF.Infrastructure.Service.Helpers
             try
             {
                 result = SaveToEML(mail, tempFolder);
-                TempFileManager.Instance.SetEmlFileForEmailObject(emailObject, result);
+                OFTempFileManager.Instance.SetEmlFileForEmailObject(emailObject, result);
             }
             catch (Exception ex)
             {
@@ -103,7 +103,7 @@ namespace OF.Infrastructure.Service.Helpers
 
 
 
-        private IEnumerable<string> GetAttachments(EmailSearchObject searchObj, string tempFolder)
+        private IEnumerable<string> GetAttachments(OFEmailSearchObject searchObj, string tempFolder)
         {
             var esClient = new OFElasticSearchClient();
             var result = esClient.Search<OFAttachmentContent>(s => s.Query(d => d.QueryString(qq => qq.Query(searchObj.EntryID))));

@@ -32,7 +32,7 @@ namespace OF.Module.View
             var scrollViewer = VisualTreeHelper.GetChild(listBox, 0) as ScrollViewer;
             if (scrollViewer == null) return;
 
-            var scrollChanged = new ScrollData
+            var scrollChanged = new OFScrollData
             {
                 ScrollableHeight = scrollViewer.ScrollableHeight,
                 VerticalOffset = e.VerticalOffset

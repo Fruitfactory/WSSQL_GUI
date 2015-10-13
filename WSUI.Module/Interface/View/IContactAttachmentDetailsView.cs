@@ -3,7 +3,7 @@ using OF.Core.Data;
 
 namespace OF.Module.Interface.View
 {
-    public interface IContactAttachmentDetailsView : IContactKindDetailsView<AttachmentSearchObject>
+    public interface IContactAttachmentDetailsView : IContactKindDetailsView<OFAttachmentSearchObject>
     {
          
     }

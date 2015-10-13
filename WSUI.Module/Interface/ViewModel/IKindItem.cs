@@ -47,9 +47,9 @@ namespace OF.Module.Interface.ViewModel
             set;
         }
 
-        BaseSearchObject Current { get; set; }
+        OFBaseSearchObject Current { get; set; }
 
-        BaseSearchObject CurrentTrackedObject { get; set; }
+        OFBaseSearchObject CurrentTrackedObject { get; set; }
 
         ObservableCollection<ISearchObject> DataSource
         {
@@ -72,7 +72,7 @@ namespace OF.Module.Interface.ViewModel
 
         event EventHandler<EventArgs<bool>> Error;
 
-        event EventHandler<EventArgs<BaseSearchObject>> CurrentItemChanged;
+        event EventHandler<EventArgs<OFBaseSearchObject>> CurrentItemChanged;
 
         event EventHandler Choose;
 

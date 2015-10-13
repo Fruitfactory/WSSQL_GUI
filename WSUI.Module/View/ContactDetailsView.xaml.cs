@@ -68,7 +68,7 @@ namespace OF.Module.View
                 return;
             var scrollViewer = VisualTreeHelper.GetChild(listBox, 0) as ScrollViewer;
             if (scrollViewer == null) return;
-            var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
+            var scrollChanged = new OFScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
             (DataContext as IScrollableView).ScrollChangeCommand.Execute(scrollChanged);
         }
 
@@ -78,7 +78,7 @@ namespace OF.Module.View
                 return;
             var scrollViewer = FileListBox.GetListBoxScrollViewer();
             if (scrollViewer == null) return;
-            var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
+            var scrollChanged = new OFScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
             (DataContext as IScrollableViewExtended).ScrollChangedCommand2.Execute(scrollChanged);
         }
     }

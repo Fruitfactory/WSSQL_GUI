@@ -6,20 +6,20 @@ using OF.Module.Interface.ViewModel;
 
 namespace OF.Module.Strategy
 {
-    public class FileCommandStrategy : BaseCommandStrategy
+    public class FileCommandStrategy : OFBaseCommandStrategy
     {
         public FileCommandStrategy(IMainViewModel mainViewModel)
             :base(mainViewModel)
         {
-            Type = TypeSearchItem.File | TypeSearchItem.Attachment;
+            Type = OFTypeSearchItem.File | OFTypeSearchItem.Attachment;
         }
 
         protected override void OnInit()
         {
             base.OnInit();
-            _listCommand.Add(new OpenPreviewCommad(_MainViewModel));
-            _listCommand.Add(new EmailCommand(_MainViewModel));
-            _listCommand.Add(new OpenFolderCommand(_MainViewModel));
+            _listCommand.Add(new OFOpenPreviewCommad(_MainViewModel));
+            _listCommand.Add(new OFEmailCommand(_MainViewModel));
+            _listCommand.Add(new OFOpenFolderCommand(_MainViewModel));
         }
     }
 }

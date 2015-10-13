@@ -82,7 +82,7 @@ namespace OF.Control
         {
             RegionAdapterMappings mappings = base.ConfigureRegionAdapterMappings();
             mappings.RegisterMapping(typeof(TransitionElement),
-                Container.Resolve<TransitionElementAdaptor>());
+                Container.Resolve<OFTransitionElementAdaptor>());
             return mappings;
         }
 

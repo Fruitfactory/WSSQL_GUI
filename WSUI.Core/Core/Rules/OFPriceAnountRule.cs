@@ -1,6 +1,6 @@
 ﻿namespace OF.Core.Core.Rules
 {
-    public class OFPriceAnountRule : BaseRule
+    public class OFPriceAnountRule : OFBaseRule
     {
         public override void InitRule()
         {

@@ -30,7 +30,7 @@ namespace OFPreview.PreviewHandler.Service.Preview
 
         private readonly Dictionary<string, Type> _handlersDictionary = null;
         private readonly Dictionary<ControlsKey, Type> _poolPreviewControlsTypes;
-        private readonly Dictionary<TypeSearchItem, Type> _handlersForObject;
+        private readonly Dictionary<OFTypeSearchItem, Type> _handlersForObject;
         private readonly static Lazy<HelperPreviewHandlers>  _instance = new Lazy<HelperPreviewHandlers>(() =>
                                                                                                     {
                                                                                                         var inst = new HelperPreviewHandlers ();
@@ -45,7 +45,7 @@ namespace OFPreview.PreviewHandler.Service.Preview
         {   
             _handlersDictionary = new Dictionary<string, Type>();
             _poolPreviewControlsTypes = new Dictionary<ControlsKey, Type>();
-            _handlersForObject = new Dictionary<TypeSearchItem, Type>();
+            _handlersForObject = new Dictionary<OFTypeSearchItem, Type>();
         }
 
         #endregion
@@ -60,7 +60,7 @@ namespace OFPreview.PreviewHandler.Service.Preview
             get { return _handlersDictionary; }
         }
 
-        public Dictionary<TypeSearchItem, Type> HandlersForSearchObjectDictionary
+        public Dictionary<OFTypeSearchItem, Type> HandlersForSearchObjectDictionary
         {
             get { return _handlersForObject;}
         }
@@ -74,7 +74,7 @@ namespace OFPreview.PreviewHandler.Service.Preview
             return handler;
         }
 
-        public PreviewHandlerFramework.PreviewHandler GetReadyHandlerForSearchObject(TypeSearchItem typeItem)
+        public PreviewHandlerFramework.PreviewHandler GetReadyHandlerForSearchObject(OFTypeSearchItem typeItem)
         {
             var type = HandlersForSearchObjectDictionary.ContainsKey(typeItem)
                 ? HandlersForSearchObjectDictionary[typeItem]

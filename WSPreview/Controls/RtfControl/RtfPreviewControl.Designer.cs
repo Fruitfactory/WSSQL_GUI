@@ -56,7 +56,7 @@ namespace OFPreview.PreviewHandler.Controls.RtfControl
         #endregion
 
         private System.Windows.Forms.RichTextBox rtfPreview;
-        public void LoadObject(BaseSearchObject obj)
+        public void LoadObject(OFBaseSearchObject obj)
         {
             
         }

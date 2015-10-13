@@ -99,7 +99,7 @@ namespace OFPreview.PreviewHandler
         {
         }
 
-        public void LoadObject(BaseSearchObject obj)
+        public void LoadObject(OFBaseSearchObject obj)
         {
 
         }

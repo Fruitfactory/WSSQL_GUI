@@ -59,7 +59,7 @@
                           ><!--SelectedItem="{Binding Path=Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"-->
 
                                 <i:Interaction.Behaviors>
-                                    <behaviors:ListBoxBehavior></behaviors:ListBoxBehavior>
+                                    <behaviors:OFListBoxBehavior></behaviors:OFListBoxBehavior>
                                 </i:Interaction.Behaviors>
                             </ListBox>
                         </StackPanel>
@@ -67,7 +67,7 @@
                 </Expander>
             </DataTemplate>
 
-            <service:ContactDataTemplateSelector x:Key="contactTemplateSelector"  
+            <service:OFContactDataTemplateSelector x:Key="contactTemplateSelector"  
                                                 EmailTemplate="{StaticResource ResourceKey=EmailTemplate}"
                                                 ContactTemplate="{StaticResource ResourceKey=UserTemplate}" 
                                                 NoneTemplate="{StaticResource ResourceKey=NoneTemplate}"/>
@@ -80,11 +80,11 @@
                  SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
                  ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
-                 service:DoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
+                 service:OFDoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
                  HorizontalContentAlignment="Stretch"
                  >
             <i:Interaction.Behaviors>
-                <behaviors:ListBoxBehavior></behaviors:ListBoxBehavior>
+                <behaviors:OFListBoxBehavior></behaviors:OFListBoxBehavior>
             </i:Interaction.Behaviors>
         </ListBox>
     </Grid>

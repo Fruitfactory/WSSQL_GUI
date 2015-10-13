@@ -14,7 +14,7 @@ namespace OF.Module.Interface.View
         }
 
         bool SetPreviewFile(string filename);
-        bool SetPreviewObject(BaseSearchObject searchObject);
+        bool SetPreviewObject(OFBaseSearchObject searchObject);
         void SetSearchPattern(string pattern);
         void SetFullFolderPath(string path);
         void ClearPreview();

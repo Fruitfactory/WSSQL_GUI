@@ -28,8 +28,8 @@ using OF.Module.Strategy;
 
 namespace OF.Module.ViewModel
 {
-    [KindNameId(KindsConstName.Email, 2, @"pack://application:,,,/OF.Module;Component/Images/Mail-1.png", "M0,4.0800388L0.030031017,4.0800388 12.610706,16.409995 26.621516,30.149985 40.642334,16.409995 53.223011,4.0800388 53.333001,4.0800388 53.333001,39.080039 0,39.080039z M3.1698808,0L26.660885,0 50.161892,0 38.411389,11.791528 26.660885,23.573054 14.920383,11.791528z")]
-    public class EmailViewModel : KindViewModelBase, IUView<EmailViewModel>, IScrollableView
+    [KindNameId(OFKindsConstName.Email, 2, @"pack://application:,,,/OF.Module;Component/Images/Mail-1.png", "M0,4.0800388L0.030031017,4.0800388 12.610706,16.409995 26.621516,30.149985 40.642334,16.409995 53.223011,4.0800388 53.333001,4.0800388 53.333001,39.080039 0,39.080039z M3.1698808,0L26.660885,0 50.161892,0 38.411389,11.791528 26.660885,23.573054 14.920383,11.791528z")]
+    public class EmailViewModel : OFKindViewModelBase, IUView<EmailViewModel>, IScrollableView
     {
         
 
@@ -45,9 +45,9 @@ namespace OF.Module.ViewModel
             _name = "Email";
             UIName = _name;
             _prefix = "Email";
-            Folder = OutlookHelper.AllFolders;
+            Folder = OFOutlookHelper.AllFolders;
             TopQueryResult = 50;
-            SearchSystem = new EmailSearchSystem();
+            SearchSystem = new OFEmailSearchSystem();
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
         }
 
@@ -64,7 +64,7 @@ namespace OF.Module.ViewModel
         protected override void OnInit()
         {
             base.OnInit();
-            ScrollBehavior = new ScrollBehavior {CountFirstProcess = 300, CountSecondProcess = 100, LimitReaction = 85};
+            ScrollBehavior = new OFScrollBehavior {CountFirstProcess = 300, CountSecondProcess = 100, LimitReaction = 85};
             ScrollBehavior.SearchGo += OnScrollNeedSearch;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
         }
@@ -86,7 +86,7 @@ namespace OF.Module.ViewModel
 
         private void OnScroll(object args)
         {
-            var scrollArgs = args as ScrollData;
+            var scrollArgs = args as OFScrollData;
             if (scrollArgs != null && ScrollBehavior != null)
             {
                 ScrollBehavior.NeedSearch(scrollArgs);

@@ -133,8 +133,8 @@ namespace OFOutlookPlugin.Core
             try
             {
                 File.Create(string.Format("{0}{1}", _path, LocFilename)).Close();
-                RegistryHelper.Instance.StartSilentUpdate();
-                RegistryHelper.Instance.SetCallIndexKey(RegistryHelper.CallIndex.First);
+                OFRegistryHelper.Instance.StartSilentUpdate();
+                OFRegistryHelper.Instance.SetCallIndexKey(OFRegistryHelper.CallIndex.First);
                 OFLogger.Instance.LogError("Lock silent update !!!!");
             }
             catch (Exception ex)
@@ -149,7 +149,7 @@ namespace OFOutlookPlugin.Core
             try
             {
             	File.Delete(string.Format("{0}{1}", _path, LocFilename));
-                RegistryHelper.Instance.FinishSilentUpdate();
+                OFRegistryHelper.Instance.FinishSilentUpdate();
                 OFLogger.Instance.LogError("Unlock silent update !!!!");
             }
             catch (System.Exception ex)

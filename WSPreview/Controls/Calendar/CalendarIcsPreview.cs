@@ -78,7 +78,7 @@ namespace OFPreview.PreviewHandler.Controls.Calendar
         {
         }
 
-        public void LoadObject(BaseSearchObject obj)
+        public void LoadObject(OFBaseSearchObject obj)
         {
             throw new NotImplementedException();
         }

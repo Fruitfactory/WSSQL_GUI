@@ -76,7 +76,7 @@ namespace OFOutlookPlugin.Managers
 
         private void ButtonSettingsOnOnClick(object sender, IRibbonControl control, bool pressed)
         {
-            OFAddinModule.CurrentInstance.BootStraper.PassAction(new WSAction(WSActionType.Settings, null));
+            OFAddinModule.CurrentInstance.BootStraper.PassAction(new OFAction(OFActionType.Settings, null));
         }
     }
 }

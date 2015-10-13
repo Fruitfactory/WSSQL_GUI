@@ -23,7 +23,7 @@
             </Grid.ColumnDefinitions>
             <TextBox  
                Text="{Binding Path=SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
+                Service:OFKeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
                 IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}"
                  Controls:TextBoxHelper.CustomTextButton="True"
                 Controls:TextBoxHelper.CustomTextButtonContent="{StaticResource AdvancedSearchButtonContent}"

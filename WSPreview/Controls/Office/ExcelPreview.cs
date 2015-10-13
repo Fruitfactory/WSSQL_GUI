@@ -37,7 +37,7 @@ namespace OFPreview.PreviewHandler.Controls.Office
                 object readOnly = (object)false;
                 Excel.Workbook wB = _app.Workbooks.Open(filename, mis, readOnly, mis, mis, mis, mis, mis, mis, mis,
                     mis, mis, mis, mis, mis);
-                Filename = TempFileManager.Instance.GenerateHtmlTempFileName(Guid.NewGuid());
+                Filename = OFTempFileManager.Instance.GenerateHtmlTempFileName(Guid.NewGuid());
                 object newFilename = (object)Filename;
                 wB.SaveAs(newFilename, Microsoft.Office.Interop.Excel.XlFileFormat.xlHtml,
                     mis, mis, mis, mis, Excel.XlSaveAsAccessMode.xlExclusive, mis, mis, mis,

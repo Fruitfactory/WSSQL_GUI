@@ -22,14 +22,14 @@ namespace OF.Module.View
     /// <summary>
     /// Interaction logic for ContactFileDetailasView.xaml
     /// </summary>
-    public partial class ContactFileDetailsView : IContactKindDetailsView<AttachmentSearchObject>
+    public partial class ContactFileDetailsView : IContactKindDetailsView<OFAttachmentSearchObject>
     {
         public ContactFileDetailsView()
         {
             InitializeComponent();
         }
 
-        public IContactKindDetailsViewModel<AttachmentSearchObject> Model { get; set; }
+        public IContactKindDetailsViewModel<OFAttachmentSearchObject> Model { get; set; }
 
         private void ListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
@@ -37,7 +37,7 @@ namespace OF.Module.View
                 return;
             var scrollViewer = FileListBox.GetListBoxScrollViewer();
             if (scrollViewer == null) return;
-            var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
+            var scrollChanged = new OFScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
             (DataContext as IScrollableViewExtended).ScrollChangedCommand2.Execute(scrollChanged);
         }
     }

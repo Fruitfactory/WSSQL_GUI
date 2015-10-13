@@ -30,7 +30,7 @@ namespace OFPreview.PreviewHandler.Controls.CsvControl
             dataGridCsv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
-        public void LoadObject(BaseSearchObject obj)
+        public void LoadObject(OFBaseSearchObject obj)
         {
             
         }

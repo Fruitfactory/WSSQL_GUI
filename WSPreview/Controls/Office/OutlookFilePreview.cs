@@ -85,16 +85,16 @@ namespace OFPreview.PreviewHandler.Controls.Office
             DocumentText = page;
         }
 
-        public void LoadObject(BaseSearchObject obj)
+        public void LoadObject(OFBaseSearchObject obj)
         {
             //
             string page = string.Empty;
 
-            if (obj is EmailSearchObject)
+            if (obj is OFEmailSearchObject)
             {
                 _searchObject = obj;
                 
-                page = OutlookPreviewHelper.Instance.GetPreviewForEmail(obj as EmailSearchObject);
+                page = OutlookPreviewHelper.Instance.GetPreviewForEmail(obj as OFEmailSearchObject);
             }
 
             DocumentText = page;
@@ -161,7 +161,7 @@ namespace OFPreview.PreviewHandler.Controls.Office
                     }
                     if (_searchObject != null && args.Url.LocalPath != "blank")
                     {
-                        path = string.Format("{0}\\{1}", TempFileManager.Instance.GenerateTempFolderForObject(_searchObject),args.Url.LocalPath);
+                        path = string.Format("{0}\\{1}", OFTempFileManager.Instance.GenerateTempFolderForObject(_searchObject),args.Url.LocalPath);
                     }
                     break;
 
@@ -220,14 +220,14 @@ namespace OFPreview.PreviewHandler.Controls.Office
 
             if (data[1].IsEmail() || data.All(s => s.IsEmail()))
             {
-                var tag = new EmailContactSearchObject() { ContactName = !data[0].IsEmail() ? data[0] : string.Empty, EMail = data[1] };
+                var tag = new OFEmailContactSearchObject() { ContactName = !data[0].IsEmail() ? data[0] : string.Empty, EMail = data[1] };
                 RaisePreviewCommandExecuted(OFPreviewCommand.ShowContact, tag);
                 return;
             }
             if (!string.IsNullOrEmpty(data[0]) && data[0].Contains(" "))
             {
                 var names = data[0].Split(' ');
-                var tag = new ContactSearchObject() { FirstName = names[0], LastName = names[1] };
+                var tag = new OFContactSearchObject() { FirstName = names[0], LastName = names[1] };
                 RaisePreviewCommandExecuted(OFPreviewCommand.ShowContact, tag);
                 return;
             }
@@ -236,7 +236,7 @@ namespace OFPreview.PreviewHandler.Controls.Office
         private void ProcessHalfContactInformation(string info)
         {
             var names = info.Split(' ');
-            var tag = new ContactSearchObject() { FirstName = names[0], LastName = names[1] };
+            var tag = new OFContactSearchObject() { FirstName = names[0], LastName = names[1] };
             RaisePreviewCommandExecuted(OFPreviewCommand.ShowContact, tag);
             return;
         }

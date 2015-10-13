@@ -1,0 +1,94 @@
+﻿<local:OFHightliteTextBlockBase x:Class="OF.Infrastructure.Controls.OFHightliteTextBlock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:OF.Infrastructure.Controls"
+>
+    <ContentControl.Resources>
+
+        <Style x:Key="{x:Type TextBoxBase}" BasedOn="{x:Null}" TargetType="{x:Type TextBoxBase}">
+            <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OFHightliteTextBlockBase}},Path=ForegroundColor}" />
+            <Setter Property="FontStyle" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OFHightliteTextBlockBase}},Path=FontStyleLabel}" />
+            <Setter Property="FontSize" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OFHightliteTextBlockBase}},Path=FontSizeLabel}" />
+            <Setter Property="FontWeight" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OFHightliteTextBlockBase}},Path=FontWeightLabel}"></Setter>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="AllowDrop" Value="true" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+            <Setter Property="TextDecorations" Value="Underline" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Foreground" Value="Red" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="true">
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="WsUiRichTextBoxStyle" TargetType="{x:Type RichTextBox}">
+            <Style.Resources>
+                <Style x:Key="{x:Type FlowDocument}" TargetType="{x:Type FlowDocument}">
+                    <Setter Property="OverridesDefaultStyle" Value="true" />
+                </Style>
+                <Style x:Key="{x:Type Hyperlink}" BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="{x:Type Hyperlink}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" Value="Blue" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Style.Resources>
+            <Setter Property="MinWidth" Value="10" />
+            <Setter Property="IsReadOnly" Value="True"></Setter>
+            <Style.BasedOn>
+                <StaticResource ResourceKey="{x:Type TextBoxBase}" />
+            </Style.BasedOn>
+        </Style>
+
+    </ContentControl.Resources>
+    <Grid>
+        <!--<RichTextBox Style="{StaticResource WsUiRichTextBoxStyle}">
+            <RichTextBox.Document>
+                <FlowDocument PageWidth="1000">
+                    <Paragraph x:Name="textBlock"></Paragraph>
+                </FlowDocument>
+            </RichTextBox.Document>
+        </RichTextBox>-->
+
+        <TextBlock TextTrimming="CharacterEllipsis"  x:Name="textBlock"   
+                   
+                        FontSize="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OFHightliteTextBlockBase}},Path=FontSizeLabel}"
+                        FontStyle="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OFHightliteTextBlockBase}},Path=FontStyleLabel}" 
+                        FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OFHightliteTextBlockBase}},Path=FontWeightLabel}"
+                        Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OFHightliteTextBlockBase}},Path=ForegroundColor}"
+                    />
+
+    </Grid>
+</local:OFHightliteTextBlockBase>

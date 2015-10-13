@@ -52,7 +52,7 @@ namespace OF.Module
                 sidebarRegion.Add(mmv.KindsView);
                 sidebarRegion = null;
             }
-            Task.Factory.StartNew(new Action(() => FieldCash.Instance.Initialize()));
+            Task.Factory.StartNew(new Action(() => OFFieldCash.Instance.Initialize()));
             watch.Stop();
             OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "Initialize <PreviewView.Init()>", watch.ElapsedMilliseconds));
         }
@@ -82,7 +82,7 @@ namespace OF.Module
             _unityContainer.RegisterType<ISettingsView<AttachmentViewModel>, AttachmentSettingsView>();
             _unityContainer.RegisterType<IDataView<AttachmentViewModel>, AttachmentDataView>();
 
-            _unityContainer.RegisterType<INavigationService, Service.NavigationService>();
+            _unityContainer.RegisterType<INavigationService, Service.OFNavigationService>();
             _unityContainer.RegisterType<IContactDetailsView, ContactDetailsView>();
             _unityContainer.RegisterType<IContactDetailsViewModel, ContactDetailsViewModel>();
 

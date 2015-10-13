@@ -9,7 +9,7 @@ using OF.Module.Interface.ViewModel;
 
 namespace OF.Module.ViewModel.Settings
 {
-    public class OFLoggingSettingsViewModel : ViewModelBase,ILoggingSettingsViewModel
+    public class OFLoggingSettingsViewModel : OFViewModelBase,ILoggingSettingsViewModel
     {
 
         private IEventAggregator _eventAggregator;
@@ -90,12 +90,12 @@ namespace OF.Module.ViewModel.Settings
                 settings = settings | (int)OFLogger.LevelLogging.Debug;
             }
 
-            RegistryHelper.Instance.SetLoggingsettings(settings);
+            OFRegistryHelper.Instance.SetLoggingsettings(settings);
         }
 
         public void Initialize()
         {
-            int settings = RegistryHelper.Instance.GetLoggingSettings();
+            int settings = OFRegistryHelper.Instance.GetLoggingSettings();
             Info = OFLogger.LevelLogging.Info == (OFLogger.LevelLogging) ((int) OFLogger.LevelLogging.Info & settings);
             Warning = OFLogger.LevelLogging.Warning == (OFLogger.LevelLogging)((int)OFLogger.LevelLogging.Warning & settings);
             Error = OFLogger.LevelLogging.Error == (OFLogger.LevelLogging)((int)OFLogger.LevelLogging.Error & settings);

@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <service:RiverStatusToColorBrushConverter x:Key="RiverStatusToColorBrushConverter" />
-        <service:DateToStringConverter x:Key="DateToStringConverter" WithTime="True"></service:DateToStringConverter>
+        <service:OFDateToStringConverter x:Key="DateToStringConverter" WithTime="True"></service:OFDateToStringConverter>
         <service:NumericToStringConverter x:Key="NumericToStringConverter"></service:NumericToStringConverter>
         
         <Style TargetType="StackPanel">

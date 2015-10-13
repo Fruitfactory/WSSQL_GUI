@@ -32,17 +32,17 @@
                         Background="Transparent"            
                         ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
                         ItemTemplateSelector="{StaticResource templateSelector}"
-                        attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                        attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
+                        attachedProperty:OFListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        attachedProperty:OFListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
                         ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
-                        service:DoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
+                        service:OFDoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
                         HorizontalContentAlignment="Stretch"
                       >
             <listBox:OFListBox.ContextMenu>
                 <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
             </listBox:OFListBox.ContextMenu>
             <i:Interaction.Behaviors>
-                <behaviors:SelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors:SelectedItemTrackingBehavior>
+                <behaviors:OFSelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors:OFSelectedItemTrackingBehavior>
             </i:Interaction.Behaviors>
         </listBox:OFListBox>
     </Grid>

@@ -7,7 +7,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerFramework
     {
         void LoadFile(string filename);
         void LoadFile(Stream stream);
-        void LoadObject(BaseSearchObject obj);
+        void LoadObject(OFBaseSearchObject obj);
         void Clear();
     }
 }

@@ -79,7 +79,7 @@ namespace OF.Core.Data.ElasticSearch
 #else
             // user tracking
 
-            ScheduleType = RiverSchedule.EveryNightOrIdle;
+            ScheduleType = OFRiverSchedule.EveryNightOrIdle;
             var idlesettings = new { idle_time = 300 };
             var set = JsonConvert.SerializeObject(idlesettings);
             Settings = set;
@@ -96,7 +96,7 @@ namespace OF.Core.Data.ElasticSearch
         }
 
         [JsonProperty("schedule_type")]
-        public RiverSchedule ScheduleType { get; set; }
+        public OFRiverSchedule ScheduleType { get; set; }
 
         [JsonProperty("settings")]
         public string Settings { get; set; }

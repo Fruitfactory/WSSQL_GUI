@@ -58,9 +58,9 @@ namespace OF.Infrastructure.Controls.ListBox
             if(e.AddedItems != null && e.AddedItems.Count > 0)
                 base.OnSelectionChanged(e);
             RaiseResetSelection();
-            if (ReferenceEquals(this, e.Source) && ListBoxShouldSetSelectAttachedProperty.GetShouldSetSelect(this) && SelectedItem != null)
+            if (ReferenceEquals(this, e.Source) && OFListBoxShouldSetSelectAttachedProperty.GetShouldSetSelect(this) && SelectedItem != null)
             {
-                ListBoxSelectedObjectAttachedProperty.SetSelectedObject(this, SelectedItem);
+                OFListBoxSelectedObjectAttachedProperty.SetSelectedObject(this, SelectedItem);
             }
         }
 

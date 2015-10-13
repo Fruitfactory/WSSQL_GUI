@@ -39,7 +39,7 @@
                 Controls:TextBoxHelper.CustomTextButtonTooltip="{StaticResource AdvancedSearchTooltip}"
                 VerticalAlignment="Center"    
                 VerticalContentAlignment="Center"
-                Service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
+                Service:OFKeyDownBehavior.KeyDown="{Binding KeyDownCommand}" 
                 Grid.Column="0" Height="32"
                         IsEnabled="{Binding Path=Enabled,UpdateSourceTrigger=PropertyChanged}" 
                      IsReadOnly="{Binding ElementName=AdvancedToggleButton,Path=IsChecked}"/>

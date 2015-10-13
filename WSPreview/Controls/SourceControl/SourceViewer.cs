@@ -48,7 +48,7 @@ namespace OFPreview.PreviewHandler.Controls
         {
         }
 
-        public void LoadObject(BaseSearchObject obj)
+        public void LoadObject(OFBaseSearchObject obj)
         {
             
         }

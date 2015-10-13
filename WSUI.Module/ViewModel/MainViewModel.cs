@@ -42,7 +42,7 @@ using Application = System.Windows.Application;
 
 namespace OF.Module.ViewModel
 {
-    public class MainViewModel : ViewModelBase, IMainViewModel
+    public class MainViewModel : OFViewModelBase, IMainViewModel
     {
         #region [urls]
 
@@ -55,10 +55,10 @@ namespace OF.Module.ViewModel
         private readonly IUnityContainer _container;
         private readonly IEventAggregator _eventAggregator;
 
-        private BaseSearchObject _currentData;
+        private OFBaseSearchObject _currentData;
         private IKindItem _currentItem;
         private bool _enabled = true;
-        private List<LazyKind> _listItems;
+        private List<OFLazyKind> _listItems;
         private ILazyKind _selectedLazyKind;
         private Visibility _dataVisibility;
         private Visibility _backButtonVisibility;
@@ -67,8 +67,8 @@ namespace OF.Module.ViewModel
         private INavigationService _navigationService;
         private SubscriptionToken _token;
 
-        private Dictionary<TypeSearchItem, ICommandStrategy> _commandStrategies;
-        private Dictionary<TypeSearchItem, IEnumerable<MenuItem>> _menuItems;
+        private Dictionary<OFTypeSearchItem, ICommandStrategy> _commandStrategies;
+        private Dictionary<OFTypeSearchItem, IEnumerable<MenuItem>> _menuItems;
         private ICommandStrategy _currentStrategy;
         private int _selectedUIItemIndex;
         private IContactDetailsViewModel _contactDetails;
@@ -81,15 +81,15 @@ namespace OF.Module.ViewModel
             _eventAggregator = eventAggregator;
             KindsView = kindView;
             kindView.Model = this;
-            MainDataSource = new List<BaseSearchObject>();
-            Host = ReferenceEquals(Application.Current.MainWindow, null) ? HostType.Plugin : HostType.Application;
+            MainDataSource = new List<OFBaseSearchObject>();
+            Host = ReferenceEquals(Application.Current.MainWindow, null) ? OFHostType.Plugin : OFHostType.Application;
             DataVisibility = Visibility.Visible;
             _navigationService = _container.Resolve<INavigationService>();
             if (_navigationService != null)
             {
                 _navigationService.SetMainViewModel(this);
             }
-            _token = _eventAggregator.GetEvent<SelectedChangedPayloadEvent>().Subscribe(OnSelectedItemChanged);
+            _token = _eventAggregator.GetEvent<OFSelectedChangedPayloadEvent>().Subscribe(OnSelectedItemChanged);
             _elasticSearchViewModel = _container.Resolve<IElasticSearchViewModel>();
             _elasticSearchViewModel.IndexingFinished += ElasticSearchViewModelOnIndexingFinished;
             _userActivityTracker = _container.Resolve<IUserActivityTracker>();
@@ -100,9 +100,9 @@ namespace OF.Module.ViewModel
 
         public IKindsView KindsView { get; protected set; }
 
-        public ObservableCollection<LazyKind> KindsCollection { get; protected set; }
+        public ObservableCollection<OFLazyKind> KindsCollection { get; protected set; }
 
-        public ObservableCollection<UIItem> ContactUIItems { get; private set; }
+        public ObservableCollection<OFUIItem> ContactUIItems { get; private set; }
 
         public int SelectedUIItemIndex
         {
@@ -154,8 +154,8 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                _listItems = new List<LazyKind>();
-                KindsCollection = new ObservableCollection<LazyKind>();
+                _listItems = new List<OFLazyKind>();
+                KindsCollection = new ObservableCollection<OFLazyKind>();
                 GetAllKinds();
                 if (_listItems.Count > 0)
                 {
@@ -182,13 +182,13 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                _commandStrategies = new Dictionary<TypeSearchItem, ICommandStrategy>();
-                _commandStrategies.Add(TypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(TypeSearchItem.Email, this));
-                ICommandStrategy fileAttach = CommadStrategyFactory.CreateStrategy(TypeSearchItem.FileAll, this);
-                _commandStrategies.Add(TypeSearchItem.File, fileAttach);
-                _commandStrategies.Add(TypeSearchItem.Attachment, fileAttach);
-                _commandStrategies.Add(TypeSearchItem.Picture, fileAttach);
-                _commandStrategies.Add(TypeSearchItem.FileAll, fileAttach);
+                _commandStrategies = new Dictionary<OFTypeSearchItem, ICommandStrategy>();
+                _commandStrategies.Add(OFTypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(OFTypeSearchItem.Email, this));
+                ICommandStrategy fileAttach = CommadStrategyFactory.CreateStrategy(OFTypeSearchItem.FileAll, this);
+                _commandStrategies.Add(OFTypeSearchItem.File, fileAttach);
+                _commandStrategies.Add(OFTypeSearchItem.Attachment, fileAttach);
+                _commandStrategies.Add(OFTypeSearchItem.Picture, fileAttach);
+                _commandStrategies.Add(OFTypeSearchItem.FileAll, fileAttach);
 
                 InitMenuItems(_commandStrategies);
 
@@ -199,33 +199,33 @@ namespace OF.Module.ViewModel
             }
         }
 
-        private void InitMenuItems(Dictionary<TypeSearchItem, ICommandStrategy> commandStrategies)
+        private void InitMenuItems(Dictionary<OFTypeSearchItem, ICommandStrategy> commandStrategies)
         {
             if (commandStrategies == null || !commandStrategies.Any())
                 return;
-            _menuItems = new Dictionary<TypeSearchItem, IEnumerable<MenuItem>>();
-            if (commandStrategies.ContainsKey(TypeSearchItem.Email))
+            _menuItems = new Dictionary<OFTypeSearchItem, IEnumerable<MenuItem>>();
+            if (commandStrategies.ContainsKey(OFTypeSearchItem.Email))
             {
-                var list = commandStrategies[TypeSearchItem.Email].Commands.Select(wsCommand => new MenuItem()
+                var list = commandStrategies[OFTypeSearchItem.Email].Commands.Select(wsCommand => new MenuItem()
                 {
                     Command = wsCommand,
                     Header = wsCommand.Caption,
                     Icon = new Image() { Source = new BitmapImage(new Uri(wsCommand.Icon)) }
                 }).ToList();
-                _menuItems.Add(TypeSearchItem.Email, list);
+                _menuItems.Add(OFTypeSearchItem.Email, list);
             }
-            if (commandStrategies.ContainsKey(TypeSearchItem.File))
+            if (commandStrategies.ContainsKey(OFTypeSearchItem.File))
             {
-                var list = commandStrategies[TypeSearchItem.File].Commands.Select(wsCommand => new MenuItem()
+                var list = commandStrategies[OFTypeSearchItem.File].Commands.Select(wsCommand => new MenuItem()
                 {
                     Command = wsCommand,
                     Header = wsCommand.Caption,
                     Icon = new Image() { Source = new BitmapImage(new Uri(wsCommand.Icon)) }
                 }).ToList();
-                _menuItems.Add(TypeSearchItem.File, list);
-                _menuItems.Add(TypeSearchItem.Attachment, list);
-                _menuItems.Add(TypeSearchItem.Picture, list);
-                _menuItems.Add(TypeSearchItem.FileAll, list);
+                _menuItems.Add(OFTypeSearchItem.File, list);
+                _menuItems.Add(OFTypeSearchItem.Attachment, list);
+                _menuItems.Add(OFTypeSearchItem.Picture, list);
+                _menuItems.Add(OFTypeSearchItem.FileAll, list);
 
             }
         }
@@ -258,13 +258,13 @@ namespace OF.Module.ViewModel
 #if !TRIAL
                     //case ActivationState.Trial:
 #endif
-                    case ActivationState.TrialEnded:
-                    case ActivationState.NonActivated:
+                    case OFActivationState.TrialEnded:
+                    case OFActivationState.NonActivated:
                         RunInternalActivate();
                         break;
 
-                    case ActivationState.Trial:
-                    case ActivationState.Activated:
+                    case OFActivationState.Trial:
+                    case OFActivationState.Activated:
 
                         break;
                 }
@@ -288,7 +288,7 @@ namespace OF.Module.ViewModel
                 IEnumerable<Type> types = this.GetType().Assembly.GetTypes().Where(t => !t.IsAbstract && t.IsClass && t.GetInterface(Interface, true) != null);
                 foreach (Type type in types)
                 {
-                    var kind = new LazyKind(_container, type, this, null, OnPropertyChanged);
+                    var kind = new OFLazyKind(_container, type, this, null, OnPropertyChanged);
                     kind.Initialize();
                     _listItems.Add(kind);
                 }
@@ -329,15 +329,15 @@ namespace OF.Module.ViewModel
             _currentItem.Error += OnError;
         }
 
-        private void OnSelectedItemChanged(SearchObjectPayload searchObjectPayload)
+        private void OnSelectedItemChanged(OFSearchObjectPayload searchObjectPayload)
         {
-            _currentData = searchObjectPayload.Data as BaseSearchObject;
-            if (_currentData == null || _currentData.TypeItem == TypeSearchItem.None)
+            _currentData = searchObjectPayload.Data as OFBaseSearchObject;
+            if (_currentData == null || _currentData.TypeItem == OFTypeSearchItem.None)
                 return;
             ShowPreview(Current);
         }
 
-        private void ShowPreview(BaseSearchObject data, bool useTransaction = true)
+        private void ShowPreview(OFBaseSearchObject data, bool useTransaction = true)
         {
             if (data == null)
             {
@@ -350,7 +350,7 @@ namespace OF.Module.ViewModel
 
                 switch (data.TypeItem)
                 {
-                    case TypeSearchItem.Contact:
+                    case OFTypeSearchItem.Contact:
                         Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => ShowPreviewForPreviewObject(data,useTransaction)),
                             null);
                         break;
@@ -385,15 +385,15 @@ namespace OF.Module.ViewModel
                     : string.Empty);
                 switch(_currentData.TypeItem)
                 {
-                    case TypeSearchItem.Email:
-                        if (_currentData.TypeItem == TypeSearchItem.Email)
+                    case OFTypeSearchItem.Email:
+                        if (_currentData.TypeItem == OFTypeSearchItem.Email)
                         {
-                            previewView.SetFullFolderPath(SearchItemHelper.GetFullFolderPath(_currentData));
+                            previewView.SetFullFolderPath(OFSearchItemHelper.GetFullFolderPath(_currentData));
                         }
                         previewView.SetPreviewObject(_currentData);
                         break;
                     default:
-                        string filename = SearchItemHelper.GetFileName(_currentData);
+                        string filename = OFSearchItemHelper.GetFileName(_currentData);
                         previewView.SetPreviewFile(filename);    
                         break;
                 }
@@ -411,7 +411,7 @@ namespace OF.Module.ViewModel
             }
         }
 
-        private void ShowPreviewForPreviewObject(BaseSearchObject previewData, bool useTransaction = true)
+        private void ShowPreviewForPreviewObject(OFBaseSearchObject previewData, bool useTransaction = true)
         {
             if (previewData == null)
                 return;
@@ -565,7 +565,7 @@ namespace OF.Module.ViewModel
                 }
                 else
                 {
-                    MessageBoxService.Instance.Show("Warning", "Something wrong during Deactivate", MessageBoxButton.OK,
+                    OFMessageBoxService.Instance.Show("Warning", "Something wrong during Deactivate", MessageBoxButton.OK,
                         MessageBoxImage.Warning);
                 }
             }
@@ -582,7 +582,7 @@ namespace OF.Module.ViewModel
                 if (k.Kind != null)
                     k.Kind.SearchString = string.Empty;
             });
-            SelectKind(KindsConstName.Everything);
+            SelectKind(OFKindsConstName.Everything);
         }
 
         #endregion private
@@ -605,13 +605,13 @@ namespace OF.Module.ViewModel
 
         public event EventHandler Complete;
 
-        public event EventHandler<SlideDirectionEventArgs> Slide;
+        public event EventHandler<OFSlideDirectionEventArgs> Slide;
 
-        public List<BaseSearchObject> MainDataSource { get; protected set; }
+        public List<OFBaseSearchObject> MainDataSource { get; protected set; }
 
         public void Clear()
         {
-            TempFileManager.Instance.ClearTempFolder();
+            OFTempFileManager.Instance.ClearTempFolder();
         }
 
         public void SelectKind(string name)
@@ -619,7 +619,7 @@ namespace OF.Module.ViewModel
             if (string.IsNullOrEmpty(name))
                 return;
 
-            LazyKind lazyKind = _listItems.Find(lk => lk.UIName == name);
+            OFLazyKind lazyKind = _listItems.Find(lk => lk.UIName == name);
             if (lazyKind != null)
             {
                 SelectedLazyKind = lazyKind;
@@ -630,40 +630,40 @@ namespace OF.Module.ViewModel
         {
             switch (action.Action)
             {
-                case WSActionType.Copy:
-                case WSActionType.Cut:
-                case WSActionType.Paste:
-                case WSActionType.ShowContextMenu:
+                case OFActionType.Copy:
+                case OFActionType.Cut:
+                case OFActionType.Paste:
+                case OFActionType.ShowContextMenu:
                     if (_navigationService.IsPreviewVisible)
                     {
                         _navigationService.PreviewView.PassActionForPreview(action);
                     }
                     break;
 
-                case WSActionType.Search:
+                case OFActionType.Search:
                     RunSearchFromExternal(action);
                     break;
 
-                case WSActionType.Show:
+                case OFActionType.Show:
                     CheckStateAndShowActivatedForm();
                     break;
 
-                case WSActionType.Hide:
+                case OFActionType.Hide:
                     break;
 
-                case WSActionType.Quit:
+                case OFActionType.Quit:
                     StopUserActivityTracker();
                     Clear();
                     NotifyServerPluginShutdown();
                     break;
 
-                case WSActionType.ClearText:
+                case OFActionType.ClearText:
                     ClearTextCriteriaForAllKinds();
                     break;
-                case WSActionType.ShowContact:
+                case OFActionType.ShowContact:
                     ShowSenderOfSelectedOutlookEmail(action);
                     break;
-                case WSActionType.Settings:
+                case OFActionType.Settings:
                     var wnd = _container.Resolve<IMainSettingsWindow>();
                     wnd.ShowModal();
                     break;
@@ -716,7 +716,7 @@ namespace OF.Module.ViewModel
             }
         }
 
-        public ActivationState ActivateStatus { get; private set; }
+        public OFActivationState ActivateStatus { get; private set; }
 
         public ICommand BuyCommand { get; private set; }
 
@@ -744,7 +744,7 @@ namespace OF.Module.ViewModel
             get
             {
 #if !TRIAL
-                return ActivateStatus == ActivationState.Activated ? Visibility.Collapsed : Visibility.Visible; //return Visibility.Collapsed;
+                return ActivateStatus == OFActivationState.Activated ? Visibility.Collapsed : Visibility.Visible; //return Visibility.Collapsed;
 #else
       return ActivateStatus == ActivationState.Activated ? Visibility.Collapsed : Visibility.Visible;
 #endif
@@ -792,7 +792,7 @@ namespace OF.Module.ViewModel
 
         public void ShowContactPreview(object tag, bool useTransaction = true)
         {
-            ShowPreview(tag as BaseSearchObject,useTransaction);
+            ShowPreview(tag as OFBaseSearchObject,useTransaction);
         }
 
         public void ShowAdvancedSearch(object tag)
@@ -803,24 +803,24 @@ namespace OF.Module.ViewModel
             SelectKind(advancedSearch.UIName);
         }
 
-        public BaseSearchObject Current
+        public OFBaseSearchObject Current
         {
             get { return _currentData; }
         }
 
-        public BaseSearchObject CurrentTracked
+        public OFBaseSearchObject CurrentTracked
         {
             get { return GetContactDetailsTrackedObject() ?? GetKindItemTrackedObject(); }
         }
 
         public IEnumerable<MenuItem> EmailsMenuItems
         {
-            get { return _menuItems[TypeSearchItem.Email]; }
+            get { return _menuItems[OFTypeSearchItem.Email]; }
         }
 
         public IEnumerable<MenuItem> FileMenuItems
         {
-            get { return _menuItems[TypeSearchItem.File]; }
+            get { return _menuItems[OFTypeSearchItem.File]; }
         }
 
         public bool IsPreviewVisible
@@ -846,7 +846,7 @@ namespace OF.Module.ViewModel
             {
                 NotifyServerPluginRunning();
                 Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
-                OutlookPreviewHelper.Instance.PreviewHostType = HostType.Plugin;
+                OutlookPreviewHelper.Instance.PreviewHostType = OFHostType.Plugin;
                 InitializeCommands();
                 if (_elasticSearchViewModel.IsNotNull())
                 {
@@ -909,7 +909,7 @@ namespace OF.Module.ViewModel
             if (view is IContactDetailsView)
             {
                 var contacDetailsModel = (view as IContactDetailsView).Model;
-                ContactUIItems = new ObservableCollection<UIItem>(contacDetailsModel.ContactUIItemCollection);
+                ContactUIItems = new ObservableCollection<OFUIItem>(contacDetailsModel.ContactUIItemCollection);
                 contacDetailsModel.PropertyChanged += OnContactDetailsPropertyChanged;
                 SelectedUIItemIndex = 0;
                 OnPropertyChanged(() => ContactUIItems);
@@ -932,7 +932,7 @@ namespace OF.Module.ViewModel
             if (_navigationService.IsContactDetailsVisible)
             {
                 var contacDetailsModel = _navigationService.ContactDetailsViewModel;
-                ContactUIItems = new ObservableCollection<UIItem>(contacDetailsModel.ContactUIItemCollection);
+                ContactUIItems = new ObservableCollection<OFUIItem>(contacDetailsModel.ContactUIItemCollection);
                 //SelectedUIItemIndex = 0; // TODO: cause the reseting contact details to first tab.
                 OnPropertyChanged(() => ContactUIItems);
                 OnPropertyChanged(() => SelectedUIItemIndex);
@@ -975,7 +975,7 @@ namespace OF.Module.ViewModel
         {
         }
 
-        private void ChooseStrategy(BaseSearchObject current)
+        private void ChooseStrategy(OFBaseSearchObject current)
         {
             if (current == null)
                 return;
@@ -984,12 +984,12 @@ namespace OF.Module.ViewModel
             OnPropertyChanged(() => Commands);
         }
 
-        private BaseSearchObject GetContactDetailsTrackedObject()
+        private OFBaseSearchObject GetContactDetailsTrackedObject()
         {
-            return _navigationService.IsContactDetailsVisible ? _navigationService.ContactDetailsViewModel.TrackedElement as BaseSearchObject : null;
+            return _navigationService.IsContactDetailsVisible ? _navigationService.ContactDetailsViewModel.TrackedElement as OFBaseSearchObject : null;
         }
 
-        private BaseSearchObject GetKindItemTrackedObject()
+        private OFBaseSearchObject GetKindItemTrackedObject()
         {
             return _currentItem != null ? _currentItem.CurrentTrackedObject : null;
         }

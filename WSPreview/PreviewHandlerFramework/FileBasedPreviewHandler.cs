@@ -11,7 +11,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerFramework
     public abstract class FileBasedPreviewHandler : PreviewHandler, IInitializeWithFile, IInitializeWithSearchObject
     {
         private string _filePath;
-        private BaseSearchObject _searchObject;
+        private OFBaseSearchObject _searchObject;
 
         int IInitializeWithFile.Initialize(string pszFilePath, uint grfMode)
         {
@@ -33,7 +33,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerFramework
             }
         }
 
-        public int Initialize(BaseSearchObject obj)
+        public int Initialize(OFBaseSearchObject obj)
         {
             _searchObject = obj;
             return 0;

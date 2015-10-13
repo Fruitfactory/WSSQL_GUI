@@ -4,6 +4,6 @@ namespace OFPreview.PreviewHandler.PreviewHandlerFramework
 {
     public interface IInitializeWithSearchObject
     {
-        int Initialize(BaseSearchObject obj); 
+        int Initialize(OFBaseSearchObject obj); 
     }
 }

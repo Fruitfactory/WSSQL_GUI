@@ -7,18 +7,18 @@ namespace OF.Module.Strategy
 {
     public class CommadStrategyFactory
     {
-        public static ICommandStrategy CreateStrategy(TypeSearchItem type, IMainViewModel mainViewModel)
+        public static ICommandStrategy CreateStrategy(OFTypeSearchItem type, IMainViewModel mainViewModel)
         {
             ICommandStrategy strategy = null;
             switch (type)
             {
-                case TypeSearchItem.Email:
+                case OFTypeSearchItem.Email:
                     strategy = new EmailCommandStrategy(mainViewModel);
                     break;
-                case TypeSearchItem.File:
-                case TypeSearchItem.Attachment:
-                case TypeSearchItem.FileAll:
-                case TypeSearchItem.Picture:
+                case OFTypeSearchItem.File:
+                case OFTypeSearchItem.Attachment:
+                case OFTypeSearchItem.FileAll:
+                case OFTypeSearchItem.Picture:
                     strategy = new FileCommandStrategy(mainViewModel);
                     break;
             }

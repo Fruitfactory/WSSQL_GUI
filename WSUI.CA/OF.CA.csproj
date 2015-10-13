@@ -87,8 +87,8 @@
     <Compile Include="..\WSUI.Core\Core\LimeLM\TurboActivate.cs">
       <Link>LimeLM\TurboActivate.cs</Link>
     </Compile>
-    <Compile Include="..\WSUI.Core\Helpers\RegistryHelper.cs">
-      <Link>RegistryHelper.cs</Link>
+    <Compile Include="..\WSUI.Core\Helpers\OFRegistryHelper.cs">
+      <Link>OFRegistryHelper.cs</Link>
     </Compile>
     <Compile Include="ClosePromt\ClosePromptForm.cs">
       <SubType>Form</SubType>

@@ -136,22 +136,22 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
-    <Compile Include="Commands\EmailCommand.cs" />
-    <Compile Include="Commands\ForwardCommand.cs" />
-    <Compile Include="Commands\OpenEmailCommand.cs" />
-    <Compile Include="Commands\OpenFolderCommand.cs" />
-    <Compile Include="Commands\OpenPreviewCommad.cs" />
-    <Compile Include="Commands\ReplyAllCommand.cs" />
-    <Compile Include="Commands\ReplyCommand.cs" />
-    <Compile Include="Core\BaseCommandStrategy.cs" />
-    <Compile Include="Core\BaseEmailPreviewCommand.cs" />
-    <Compile Include="Core\BaseFilePreviewCommand.cs" />
-    <Compile Include="Core\BasePreviewCommand.cs" />
-    <Compile Include="Core\ContactKindDetailsViewModelBase.cs" />
-    <Compile Include="Core\KindNameAttribute.cs" />
-    <Compile Include="Core\KindsConstName.cs" />
-    <Compile Include="Core\KindViewModelBase.cs" />
-    <Compile Include="Core\LazyKind.cs" />
+    <Compile Include="Commands\OFEmailCommand.cs" />
+    <Compile Include="Commands\OFForwardCommand.cs" />
+    <Compile Include="Commands\OFOpenEmailCommand.cs" />
+    <Compile Include="Commands\OFOpenFolderCommand.cs" />
+    <Compile Include="Commands\OFOpenPreviewCommad.cs" />
+    <Compile Include="Commands\OFReplyAllCommand.cs" />
+    <Compile Include="Commands\OFReplyCommand.cs" />
+    <Compile Include="Core\OFBaseCommandStrategy.cs" />
+    <Compile Include="Core\OFBaseEmailPreviewCommand.cs" />
+    <Compile Include="Core\OFBaseFilePreviewCommand.cs" />
+    <Compile Include="Core\OFBasePreviewCommand.cs" />
+    <Compile Include="Core\OFContactKindDetailsViewModelBase.cs" />
+    <Compile Include="Core\OFKindNameAttribute.cs" />
+    <Compile Include="Core\OFKindsConstName.cs" />
+    <Compile Include="Core\OFKindViewModelBase.cs" />
+    <Compile Include="Core\OFLazyKind.cs" />
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Interface\Service\IAttachmentReader.cs" />
     <Compile Include="Interface\Service\ICommandStrategy.cs" />
@@ -194,33 +194,33 @@
     <Compile Include="Interface\View\IUIView.cs" />
     <Compile Include="Interface\Service\IOFCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\AdvancedSearch\AdvancedSearchTemplateSelector.cs" />
-    <Compile Include="Service\AllFilesDataTemplateSelector.cs" />
+    <Compile Include="Service\AdvancedSearch\OFAdvancedSearchTemplateSelector.cs" />
+    <Compile Include="Service\OFAllFilesDataTemplateSelector.cs" />
     <Compile Include="Service\Behaviors\OFActualHeightBehavior.cs" />
     <Compile Include="Service\Behaviors\OFListboxSelectOnClickBehavior.cs" />
-    <Compile Include="Service\ContactDataTemplateSelector.cs" />
-    <Compile Include="Service\ContactHelpers.cs" />
-    <Compile Include="Service\DateToStringConverter.cs" />
+    <Compile Include="Service\OFContactDataTemplateSelector.cs" />
+    <Compile Include="Service\OFContactHelpers.cs" />
+    <Compile Include="Service\OFDateToStringConverter.cs" />
     <Compile Include="Service\Dialogs\Interfaces\IMessageModel.cs" />
-    <Compile Include="Service\Dialogs\Message\MessageBoxService.cs" />
-    <Compile Include="Service\Dialogs\Message\MessageImageToPictureConvert.cs" />
-    <Compile Include="Service\Dialogs\Message\MessageModel.cs" />
-    <Compile Include="Service\Dialogs\Message\MessageView.xaml.cs">
-      <DependentUpon>MessageView.xaml</DependentUpon>
+    <Compile Include="Service\Dialogs\Message\OFMessageBoxService.cs" />
+    <Compile Include="Service\Dialogs\Message\OFMessageImageToPictureConvert.cs" />
+    <Compile Include="Service\Dialogs\Message\OFMessageModel.cs" />
+    <Compile Include="Service\Dialogs\Message\OFMessageView.xaml.cs">
+      <DependentUpon>OFMessageView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Service\DoubleClickBehavior.cs" />
-    <Compile Include="Service\FileExestensionsHelper.cs" />
-    <Compile Include="Service\GridLengthAnimation.cs" />
-    <Compile Include="Service\HelperConst.cs" />
-    <Compile Include="Service\ContactSuggestingService.cs" />
+    <Compile Include="Service\OFDoubleClickBehavior.cs" />
+    <Compile Include="Service\OFFileExestensionsHelper.cs" />
+    <Compile Include="Service\OFGridLengthAnimation.cs" />
+    <Compile Include="Service\OFHelperConst.cs" />
+    <Compile Include="Service\OFContactSuggestingService.cs" />
     <Compile Include="Service\Index\OFAttachmentReader.cs" />
-    <Compile Include="Service\KeyDownBehavior.cs" />
-    <Compile Include="Service\MainWindowInfo.cs" />
-    <Compile Include="Service\NameToImageConvert.cs" />
-    <Compile Include="Service\NavigationService.cs" />
-    <Compile Include="Service\ScrollBehavior.cs" />
-    <Compile Include="Service\SlideDirectionEventArgs.cs" />
-    <Compile Include="Service\TransitionElementAdaptor.cs" />
+    <Compile Include="Service\OFKeyDownBehavior.cs" />
+    <Compile Include="Service\OFMainWindowInfo.cs" />
+    <Compile Include="Service\OFNameToImageConvert.cs" />
+    <Compile Include="Service\OFNavigationService.cs" />
+    <Compile Include="Service\OFScrollBehavior.cs" />
+    <Compile Include="Service\OFSlideDirectionEventArgs.cs" />
+    <Compile Include="Service\OFTransitionElementAdaptor.cs" />
     <Compile Include="Strategy\CommadStrategyFactory.cs" />
     <Compile Include="Strategy\EmailCommandStrategy.cs" />
     <Compile Include="Strategy\FileCommandStrategy.cs" />
@@ -328,7 +328,7 @@
     <Resource Include="Images\previous.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Service\Dialogs\Message\MessageView.xaml">
+    <Page Include="Service\Dialogs\Message\OFMessageView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

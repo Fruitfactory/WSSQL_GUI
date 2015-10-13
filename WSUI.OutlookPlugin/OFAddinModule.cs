@@ -65,7 +65,7 @@ namespace OFOutlookPlugin
 
         #region [const]
 
-        public const string ProgIdDefault = RegistryHelper.ProgIdKey;
+        public const string ProgIdDefault = OFRegistryHelper.ProgIdKey;
 
         private const string ADXHTMLFileName = "ADXOlFormGeneral.html";
         private const int WM_USER = 0x0400;
@@ -581,10 +581,10 @@ namespace OFOutlookPlugin
                 StartWatch();
                 OFLogger.Instance.LogDebug("Plugin is loading...");
                 outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
-                RegistryHelper.Instance.ResetShutdownNotification();
+                OFRegistryHelper.Instance.ResetShutdownNotification();
                 if (System.Windows.Application.Current == null)
                 {
-                    new AppEmpty();
+                    new OFAppEmpty();
                     if (System.Windows.Application.Current != null)
                     {
                         // to avoid Application was shutdown exception (WALLBASH)
@@ -624,7 +624,7 @@ namespace OFOutlookPlugin
 
         private void HideSidebarDuringSwitching()
         {
-            var app = (AppEmpty)System.Windows.Application.Current;
+            var app = (OFAppEmpty)System.Windows.Application.Current;
             if (app.IsNull())
                 return;
 
@@ -668,7 +668,7 @@ namespace OFOutlookPlugin
                 _wsuiBootStraper = new PluginBootStraper();
                 _wsuiBootStraper.Run();
                 _eventAggregator = _wsuiBootStraper.Container.Resolve<IEventAggregator>();
-                ((AppEmpty)System.Windows.Application.Current).MainControl = (System.Windows.Controls.UserControl)_wsuiBootStraper.View;
+                ((OFAppEmpty)System.Windows.Application.Current).MainControl = (System.Windows.Controls.UserControl)_wsuiBootStraper.View;
                 if (_wsuiBootStraper.View is IWSMainControl)
                 {
                     (_wsuiBootStraper.View as IWSMainControl).Close += (o, e) =>
@@ -775,9 +775,9 @@ namespace OFOutlookPlugin
                 if (_sidebarForm != null && !_sidebarForm.IsDisposed)
                 {
                     _sidebarForm.Show();
-                    _wsuiBootStraper.PassAction(new WSAction(WSActionType.Show, null));
+                    _wsuiBootStraper.PassAction(new OFAction(OFActionType.Show, null));
                     IsMainUIVisible = true;
-                    RegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
+                    OFRegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
                 }
                 StopWatch("ShowUi");
             }
@@ -797,7 +797,7 @@ namespace OFOutlookPlugin
                 {
                     _sidebarForm.Hide();
                     IsMainUIVisible = false;
-                    RegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
+                    OFRegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
                 }
                 StopWatch("HideUi");
             }
@@ -838,7 +838,7 @@ namespace OFOutlookPlugin
                 {
                     _aboutCommandManager = new OFAboutCommandManager(btnHelp, btnAbout, mnuSettings,  btnMainHelp, btnMainAbout,mnuMainSettings);
                 }
-                else if (RegistryHelper.Instance.GetIsPluginUiVisible())
+                else if (OFRegistryHelper.Instance.GetIsPluginUiVisible())
                 {
                     _commandManager.SetShowHideButtonsEnabling(false, true);
                 }
@@ -909,7 +909,7 @@ namespace OFOutlookPlugin
                 //CheckUpdate(); // TODO: just for testing
                 this.SendMessage(WM_LOADED, IntPtr.Zero, IntPtr.Zero);
                 OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
-                OutlookHelper.Instance.OutlookApp = OutlookApp;
+                OFOutlookHelper.Instance.OutlookApp = OutlookApp;
                 OFLogger.Instance.LogInfo("OF AddinModule Startup Complete...");
                 StopWatch("OFAddinModule_AddinStartupComplete");
             }
@@ -956,7 +956,7 @@ namespace OFOutlookPlugin
                 {
                     ShowMainUiAfterSearchAction();
                 }
-                _wsuiBootStraper.PassAction(new WSAction(WSActionType.Search, text));
+                _wsuiBootStraper.PassAction(new OFAction(OFActionType.Search, text));
             }
             catch (Exception ex)
             {
@@ -1034,12 +1034,12 @@ namespace OFOutlookPlugin
 
             FinalizeComponents();
 
-            RegistryHelper.Instance.ResetLoadingAddinMode();
-            RegistryHelper.Instance.ResetAdxStartMode();
+            OFRegistryHelper.Instance.ResetLoadingAddinMode();
+            OFRegistryHelper.Instance.ResetAdxStartMode();
             ResetLoadingTime();
             ResetAddIn();
             ResetDisabling();
-            _wsuiBootStraper.PassAction(new WSAction(WSActionType.Quit, null));
+            _wsuiBootStraper.PassAction(new OFAction(OFActionType.Quit, null));
             SetOutlookFolderProperties(string.Empty, string.Empty);
             OFLogger.Instance.LogInfo("Shutdown...");
 
@@ -1060,9 +1060,9 @@ namespace OFOutlookPlugin
             try
             {
                 if (!string.IsNullOrEmpty(folderName))
-                    RegistryHelper.Instance.SetOutlookFolderName(folderName);
+                    OFRegistryHelper.Instance.SetOutlookFolderName(folderName);
                 if (!string.IsNullOrEmpty(folderWebUrl))
-                    RegistryHelper.Instance.SetOutlookFolderWebUrl(folderWebUrl);
+                    OFRegistryHelper.Instance.SetOutlookFolderWebUrl(folderWebUrl);
             }
             catch (Exception ex)
             {
@@ -1074,13 +1074,13 @@ namespace OFOutlookPlugin
         {
             try
             {
-                if (RegistryHelper.Instance.IsShouldRestoreOutlookFolder())
+                if (OFRegistryHelper.Instance.IsShouldRestoreOutlookFolder())
                 {
                     OFLogger.Instance.LogDebug("{0}", "OutlookFolder is empty");
                     return;
                 }
 
-                string id = RegistryHelper.Instance.GetOutllokFolderName();
+                string id = OFRegistryHelper.Instance.GetOutllokFolderName();
                 Outlook.NameSpace outlookNamespace = OutlookApp.GetNamespace(DefaultNamespace);
                 if (outlookNamespace == null || string.IsNullOrEmpty(id))
                     return;
@@ -1088,7 +1088,7 @@ namespace OFOutlookPlugin
                 Outlook.MAPIFolder folder = outlookNamespace.GetFolderFromID(id, Type.Missing);
                 if (folder == null)
                     return;
-                folder.WebViewURL = RegistryHelper.Instance.GetOutlookFolderWebUrl();
+                folder.WebViewURL = OFRegistryHelper.Instance.GetOutlookFolderWebUrl();
                 folder.WebViewOn = true;
 
                 OFLogger.Instance.LogDebug("WebViewURL: {0}", folder.WebViewURL);
@@ -1112,7 +1112,7 @@ namespace OFOutlookPlugin
                     return;
                 if (e.Ctrl && e.VirtualKey == (int)Keys.C)
                 {
-                    _sidebarForm.SendAction(WSActionType.Copy);
+                    _sidebarForm.SendAction(OFActionType.Copy);
                 }
             }
             catch (Exception ex)

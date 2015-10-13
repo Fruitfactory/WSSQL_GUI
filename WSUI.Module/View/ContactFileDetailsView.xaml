@@ -30,7 +30,7 @@
                                 Text="{Binding Path=SearchAttachmentString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                 Controls:TextBoxHelper.Watermark="Enter Search Context for Attachment"
                                 Controls:TextBoxHelper.ClearTextButton="True"
-                                service:KeyDownBehavior.KeyDown="{Binding KeyDownCommand}"
+                                service:OFKeyDownBehavior.KeyDown="{Binding KeyDownCommand}"
                                 VerticalAlignment="Center"
                                 VerticalContentAlignment="Center"
                                 Grid.Column="0"
@@ -51,8 +51,8 @@
                                  HorizontalContentAlignment="Stretch"
                                  ScrollViewer.ScrollChanged="ListBox_ScrollChanged">
             <i:Interaction.Behaviors>
-                <behaviors1:ListBoxBehavior />
-                <behaviors1:SelectedItemTrackingBehavior
+                <behaviors1:OFListBoxBehavior />
+                <behaviors1:OFSelectedItemTrackingBehavior
                                     TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
             </i:Interaction.Behaviors>
             <ListBox.ContextMenu>

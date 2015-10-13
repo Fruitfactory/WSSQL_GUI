@@ -4,15 +4,15 @@ namespace OF.Core.Enums
 {
     public enum AdvancedSearchCriteriaType
     {
-        [EnumPrefix("none")]
+        [OFEnumPrefix("none")]
         None,
-        [EnumPrefix("to")]
+        [OFEnumPrefix("to")]
         To,
-        [EnumPrefix("folder")]
+        [OFEnumPrefix("folder")]
         Folder,
-        [EnumPrefix("body")]
+        [OFEnumPrefix("body")]
         Body,
-        [EnumPrefix("sortby")]
+        [OFEnumPrefix("sortby")]
         SortBy
     }
 

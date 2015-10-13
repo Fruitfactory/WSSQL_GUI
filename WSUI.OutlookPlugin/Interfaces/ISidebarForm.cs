@@ -9,7 +9,7 @@ namespace OFOutlookPlugin.Interfaces
         void Hide();
         void Show();
         void Minimize();
-        void SendAction(WSActionType actionType);
+        void SendAction(OFActionType actionType);
         bool IsDisposed { get;}
     }
 }

@@ -7,6 +7,6 @@ namespace OF.Core.Data.ElasticSearch
     {
         public IEnumerable<OFAttachmentContent> Attachments { get; set; }
 
-        public AttachmentIndexProcess Process { get; set; }
+        public OFAttachmentIndexProcess Process { get; set; }
     }
 }

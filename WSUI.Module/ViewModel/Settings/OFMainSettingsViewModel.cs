@@ -12,7 +12,7 @@ using OF.Module.Interface.ViewModel;
 
 namespace OF.Module.ViewModel.Settings
 {
-    public class OFMainSettingsViewModel : ViewModelBase, IMainSettingsViewModel
+    public class OFMainSettingsViewModel : OFViewModelBase, IMainSettingsViewModel
     {
         private IUnityContainer _unityContainer;
         private IEventAggregator _eventAggregator;

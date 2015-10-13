@@ -74,22 +74,22 @@ namespace OF.Core.Core.LimeLM
             get { return TurboActivate.TrialDaysRemaining(); }
         }
 
-        public ActivationState State
+        public OFActivationState State
         {
             get
             {
-                ActivationState state = ActivationState.Error;
+                OFActivationState state = OFActivationState.Error;
                 if (IsInternetError)
                 {
                     OFLogger.Instance.LogWarning("Check - Internet connection is available or Lime services (servers) are available.");
-                    return ActivationState.Error; 
+                    return OFActivationState.Error; 
                 }
                 if (IsActivated)
-                    return ActivationState.Activated;
+                    return OFActivationState.Activated;
                 if (!IsTrialPeriodEnded)
-                    return ActivationState.Trial;
+                    return OFActivationState.Trial;
                 if (IsTrialPeriodEnded && !IsActivated)
-                    return ActivationState.NonActivated;
+                    return OFActivationState.NonActivated;
                 return state;
             }
         }
@@ -117,7 +117,7 @@ namespace OF.Core.Core.LimeLM
                 string sCount = TurboActivate.GetFeatureValue(TimesUsed);
                 int iCount;
                 int.TryParse(sCount, out iCount);
-                string pkeyid = RegistryHelper.Instance.GetPKeyId();
+                string pkeyid = OFRegistryHelper.Instance.GetPKeyId();
                 int c = iCount + 1;
                 if (!string.IsNullOrEmpty(pkeyid))
                 {

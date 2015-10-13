@@ -22,9 +22,9 @@
             </ResourceDictionary.MergedDictionaries>
 
 
-            <converters:AdvancedSearchTypeToStringConverter x:Key="AdvancedSearchTypeToStringConverter"></converters:AdvancedSearchTypeToStringConverter>
+            <converters:OFAdvancedSearchTypeToStringConverter x:Key="AdvancedSearchTypeToStringConverter"></converters:OFAdvancedSearchTypeToStringConverter>
             
-            <DataTemplate x:Key="StringDataTemplate" DataType="advancedSearch2:StringAdvancedSearchCriteria" >
+            <DataTemplate x:Key="StringDataTemplate" DataType="advancedSearch2:OFStringAdvancedSearchCriteria" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="75"></ColumnDefinition>
@@ -34,12 +34,12 @@
                     <TextBlock Grid.Column="0" Text="{Binding CriteriaType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource AdvancedSearchTypeToStringConverter}}"
                                Margin="10 5 0 0"></TextBlock>
 
-                    <TextBox Grid.Column="1" Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" service:KeyDownBehavior.KeyDown="{Binding Path=DataContext.KeyDownCommand,ElementName=this}" ></TextBox>
+                    <TextBox Grid.Column="1" Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" service:OFKeyDownBehavior.KeyDown="{Binding Path=DataContext.KeyDownCommand,ElementName=this}" ></TextBox>
 
                 </Grid>
             </DataTemplate>
 
-            <DataTemplate x:Key="SortDataTemplate" DataType="advancedSearch2:SortByAdvancedSearchCriteria" >
+            <DataTemplate x:Key="SortDataTemplate" DataType="advancedSearch2:OFSortByAdvancedSearchCriteria" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="75"></ColumnDefinition>
@@ -49,14 +49,14 @@
                     <TextBlock Grid.Column="0" Text="{Binding CriteriaType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource AdvancedSearchTypeToStringConverter}}"  
                                Margin="10 5 0 0"></TextBlock>
                     <ComboBox Grid.Column="1" SelectedValue="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding VariantSource}"
-                              service:KeyDownBehavior.KeyDown="{Binding Path=DataContext.KeyDownCommand,ElementName=this}" ></ComboBox>
+                              service:OFKeyDownBehavior.KeyDown="{Binding Path=DataContext.KeyDownCommand,ElementName=this}" ></ComboBox>
                 </Grid>
             </DataTemplate>
 
-            <advancedSearch:AdvancedSearchTemplateSelector x:Key="AdvancedSearchTemplateSelector"
+            <advancedSearch:OFAdvancedSearchTemplateSelector x:Key="AdvancedSearchTemplateSelector"
                                                            StringTemplate="{StaticResource StringDataTemplate}"
                                                            SortByTemplate="{StaticResource SortDataTemplate}"
-                                                           ></advancedSearch:AdvancedSearchTemplateSelector>
+                                                           ></advancedSearch:OFAdvancedSearchTemplateSelector>
             
             
         </ResourceDictionary>
@@ -83,17 +83,17 @@
                         Background="Transparent"            
                         ItemsSource="{Binding DataSource,UpdateSourceTrigger=PropertyChanged}"
                         ItemTemplateSelector="{StaticResource templateSelector}"
-                        attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                        attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
+                        attachedProperty:OFListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        attachedProperty:OFListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
                         ScrollViewer.ScrollChanged="ListBox_OnScrollChanged"
-                        service:DoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
+                        service:OFDoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
                         HorizontalContentAlignment="Stretch"
                       >
             <listBox:OFListBox.ContextMenu>
                 <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
             </listBox:OFListBox.ContextMenu>
             <i:Interaction.Behaviors>
-                <behaviors:SelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors:SelectedItemTrackingBehavior>
+                <behaviors:OFSelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors:OFSelectedItemTrackingBehavior>
             </i:Interaction.Behaviors>
         </listBox:OFListBox>
     </Grid>

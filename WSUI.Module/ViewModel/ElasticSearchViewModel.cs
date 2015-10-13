@@ -34,7 +34,7 @@ using OF.Module.Interface.ViewModel;
 
 namespace OF.Module.ViewModel
 {
-    public class ElasticSearchViewModel : ViewModelBase, IElasticSearchViewModel
+    public class ElasticSearchViewModel : OFViewModelBase, IElasticSearchViewModel
     {
 
         private const string ElasticSearchService = "elasticsearch";
@@ -306,7 +306,7 @@ namespace OF.Module.ViewModel
 
         private void ExecuteCommandForService(string command)
         {
-            string path = RegistryHelper.Instance.GetElasticSearchpath();
+            string path = OFRegistryHelper.Instance.GetElasticSearchpath();
             if (path.IsEmpty() || command.IsEmpty())
                 return;
             const string serviceinstallcommand = "service.bat";
@@ -330,7 +330,7 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                var list = OutlookHelper.GetOutlookFiles();
+                var list = OFOutlookHelper.GetOutlookFiles();
                 ElasticSearchClient.CreateInfrastructure(list);
                 Thread.Sleep(1000);
                 _timer = new Timer(TimerProgressCallback,null,1000,2000);

@@ -5,7 +5,7 @@ namespace OF.Core.Interfaces
 {
     public interface IWSAction
     {
-        WSActionType Action { get; }
+        OFActionType Action { get; }
 
         Object Data { get; }
     }

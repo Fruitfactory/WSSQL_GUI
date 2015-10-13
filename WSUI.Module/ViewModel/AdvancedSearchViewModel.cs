@@ -27,8 +27,8 @@ using OF.Infrastructure.MVVM.AdvancedSearch;
 
 namespace OF.Module.ViewModel
 {
-    [KindNameId(KindsConstName.AdvancedSearch, -1, @"", "", false)]
-    public class AdvancedSearchViewModel : KindViewModelBase, IUView<AdvancedSearchViewModel>, IAdvancedSearchViewModel, IScrollableView
+    [KindNameId(OFKindsConstName.AdvancedSearch, -1, @"", "", false)]
+    public class AdvancedSearchViewModel : OFKindViewModelBase, IUView<AdvancedSearchViewModel>, IAdvancedSearchViewModel, IScrollableView
     {
         private readonly Dictionary<AdvancedSearchCriteriaType, string> _prefixes = new Dictionary<AdvancedSearchCriteriaType, string>();
         private bool _isAdvancedMode = false;
@@ -41,7 +41,7 @@ namespace OF.Module.ViewModel
             SettingsView.Model = this;
             DataView.Model = this;
             CriteriaSource = new ObservableCollection<IAdvancedSearchCriteria>();
-            SearchSystem = new EmailSearchSystem();
+            SearchSystem = new OFEmailSearchSystem();
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
             InitPrefixes();
             InitCriterias();
@@ -71,7 +71,7 @@ namespace OF.Module.ViewModel
         {
             base.OnInit();
             SearchSystem.IsAdvancedMode = true;
-            ScrollBehavior = new ScrollBehavior { CountFirstProcess = 150, CountSecondProcess = 100, LimitReaction = 85 };
+            ScrollBehavior = new OFScrollBehavior { CountFirstProcess = 150, CountSecondProcess = 100, LimitReaction = 85 };
             ScrollBehavior.SearchGo += OnScrollNeedSearch;
             TopQueryResult = ScrollBehavior.CountFirstProcess;
             SearchSystem.SetProcessingRecordCount(ScrollBehavior.CountFirstProcess,ScrollBehavior.CountSecondProcess);
@@ -94,7 +94,7 @@ namespace OF.Module.ViewModel
 
         private void OnScroll(object args)
         {
-            var scrollArgs = args as ScrollData;
+            var scrollArgs = args as OFScrollData;
             if (scrollArgs != null && ScrollBehavior != null)
             {
                 ScrollBehavior.NeedSearch(scrollArgs);
@@ -103,7 +103,7 @@ namespace OF.Module.ViewModel
 
         private void AddCriteriaToList(AdvancedSearchCriteriaType type)
         {
-            var criteria = new StringAdvancedSearchCriteria(null, null) { CriteriaType = type };
+            var criteria = new OFStringAdvancedSearchCriteria(null, null) { CriteriaType = type };
             criteria.PropertyChanged += CriteriaOnPropertyChanged;
             CriteriaSource.Add(criteria);
         }
@@ -113,7 +113,7 @@ namespace OF.Module.ViewModel
             AddCriteriaToList(AdvancedSearchCriteriaType.To);
             AddCriteriaToList(AdvancedSearchCriteriaType.Body);
             AddCriteriaToList(AdvancedSearchCriteriaType.Folder);
-            var criteria = new SortByAdvancedSearchCriteria(null, null);
+            var criteria = new OFSortByAdvancedSearchCriteria(null, null);
             criteria.Value = AdvancedSearchSortByType.Relevance;
             criteria.PropertyChanged += CriteriaOnPropertyChanged;
             CriteriaSource.Add(criteria);
@@ -128,7 +128,7 @@ namespace OF.Module.ViewModel
                 var mi = type.GetMember(value.ToString());
                 if (mi.IsNull() || !mi.Any())
                     continue;
-                var attr = mi.First().GetCustomAttributes(typeof(EnumPrefixAttribute), false).OfType<EnumPrefixAttribute>();
+                var attr = mi.First().GetCustomAttributes(typeof(OFEnumPrefixAttribute), false).OfType<OFEnumPrefixAttribute>();
                 if (attr.IsNull() || !attr.Any())
                     continue;
                 _prefixes.Add((AdvancedSearchCriteriaType)value, attr.First().Prefix);
@@ -161,7 +161,7 @@ namespace OF.Module.ViewModel
         {
             if(Parent.IsNull())
                 return;
-            Parent.SelectKind(KindsConstName.Everything);
+            Parent.SelectKind(OFKindsConstName.Everything);
         }
 
         protected override void SetInternalSearchCriteria(string searchCriteria)

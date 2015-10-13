@@ -46,7 +46,7 @@ namespace OFPreview.PreviewHandler.Controls.Office
 		        Word.Document doc = _app.Documents.Open(ref fileName, ref m, ref readOnly,
 		            ref m, ref m, ref m, ref m, ref m, ref m, ref m,
 		            ref m, ref m, ref m, ref m, ref m, ref m);
-		        Filename = TempFileManager.Instance.GenerateHtmlTempFileName(Guid.NewGuid());
+		        Filename = OFTempFileManager.Instance.GenerateHtmlTempFileName(Guid.NewGuid());
 		        object newFilename = (object) Filename;
 		        object format = (object) Word.WdSaveFormat.wdFormatHTML;
 		        doc.SaveAs(ref newFilename, ref format,

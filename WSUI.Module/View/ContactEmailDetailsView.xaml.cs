@@ -21,14 +21,14 @@ namespace OF.Module.View
     /// <summary>
     /// Interaction logic for ContactEmailDetailsView.xaml
     /// </summary>
-    public partial class ContactEmailDetailsView : IContactKindDetailsView<EmailSearchObject>
+    public partial class ContactEmailDetailsView : IContactKindDetailsView<OFEmailSearchObject>
     {
         public ContactEmailDetailsView()
         {
             InitializeComponent();
         }
 
-        public IContactKindDetailsViewModel<EmailSearchObject> Model { get; set; }
+        public IContactKindDetailsViewModel<OFEmailSearchObject> Model { get; set; }
 
         private void ListBox_OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
@@ -36,7 +36,7 @@ namespace OF.Module.View
                 return;
             var scrollViewer = VisualTreeHelper.GetChild(listBox, 0) as ScrollViewer;
             if (scrollViewer == null) return;
-            var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
+            var scrollChanged = new OFScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
             (DataContext as IScrollableView).ScrollChangeCommand.Execute(scrollChanged);
         }
     }

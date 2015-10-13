@@ -42,7 +42,7 @@ namespace OFPreview.PreviewHandler.Controls.Office
            
         }
 
-        public void LoadObject(BaseSearchObject obj)
+        public void LoadObject(OFBaseSearchObject obj)
         {
             
         }

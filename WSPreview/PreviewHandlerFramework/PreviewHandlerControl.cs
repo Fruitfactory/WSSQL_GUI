@@ -57,7 +57,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerFramework
             }
         }
 
-        public virtual void Load(BaseSearchObject obj)
+        public virtual void Load(OFBaseSearchObject obj)
         {
             try
             {

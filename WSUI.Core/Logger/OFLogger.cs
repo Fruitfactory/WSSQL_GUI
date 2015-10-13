@@ -49,10 +49,10 @@ namespace OF.Core.Logger
                 var col = XmlConfigurator.Configure(fi);
                 _log = log4net.LogManager.GetLogger("OFLogger");
             }
-            int levels = RegistryHelper.Instance.GetLoggingSettings();
+            int levels = OFRegistryHelper.Instance.GetLoggingSettings();
             if (levels == default(int))
             {
-                RegistryHelper.Instance.SetLoggingsettings(DefaultLogginfLevels);
+                OFRegistryHelper.Instance.SetLoggingsettings(DefaultLogginfLevels);
             }
         }
 
@@ -177,7 +177,7 @@ namespace OF.Core.Logger
 
         private bool IsEnabledLogLevel(LevelLogging level)
         {
-            int levels = RegistryHelper.Instance.GetLoggingSettings();
+            int levels = OFRegistryHelper.Instance.GetLoggingSettings();
             return level == (LevelLogging)((int)level & levels);
         }
 

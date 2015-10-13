@@ -32,7 +32,7 @@ namespace OF.Module.View
                 return;
             var scrollViewer = listBox.GetListBoxScrollViewer();
             if (scrollViewer == null) return;
-            var scrollChanged = new ScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
+            var scrollChanged = new OFScrollData() { ScrollableHeight = scrollViewer.ScrollableHeight, VerticalOffset = e.VerticalOffset };
             (DataContext as IScrollableView).ScrollChangeCommand.Execute(scrollChanged);
         }
     }

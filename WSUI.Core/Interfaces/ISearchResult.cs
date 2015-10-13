@@ -13,7 +13,7 @@ namespace OF.Core.Interfaces
 {
     public interface ISearchResult
     {
-        TypeResult Type { get; }
+        OFTypeResult Type { get; }
 
         IList<IResultMessage> Messages { get; }
 

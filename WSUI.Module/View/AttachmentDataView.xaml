@@ -21,11 +21,11 @@
                  ItemTemplateSelector="{StaticResource templateSelector}"
                  SelectedItem="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  ScrollViewer.ScrollChanged="ListBox_ScrollChanged_1"
-                 service:DoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
+                 service:OFDoubleClickBehavior.DoubleClickHandler="{Binding DoubleClickCommand}"
                  HorizontalContentAlignment="Stretch">
             <i:Interaction.Behaviors>
-                <behaviors:ListBoxBehavior></behaviors:ListBoxBehavior>
-                <behaviors:SelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors:SelectedItemTrackingBehavior>
+                <behaviors:OFListBoxBehavior></behaviors:OFListBoxBehavior>
+                <behaviors:OFSelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviors:OFSelectedItemTrackingBehavior>
             </i:Interaction.Behaviors>
             <ListBox.ContextMenu>
                 <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>

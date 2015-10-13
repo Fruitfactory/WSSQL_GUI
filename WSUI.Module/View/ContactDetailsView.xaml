@@ -201,8 +201,8 @@
                                     BorderBrush="Transparent"
                                     Background="Transparent"
                                     ItemsSource="{Binding Path=MainEmailSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                    attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                    attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
+                                    attachedProperty:OFListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                    attachedProperty:OFListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
                                     ItemTemplateSelector="{StaticResource templateSelector}"
                                     IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
                                     HorizontalContentAlignment="Stretch"
@@ -213,7 +213,7 @@
                                             ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}" />
                                     </listBox:OFListBox.ContextMenu>
                                     <i:Interaction.Behaviors>
-                                        <behaviors1:SelectedItemTrackingBehavior
+                                        <behaviors1:OFSelectedItemTrackingBehavior
                                             TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                                     </i:Interaction.Behaviors>
                                 </listBox:OFListBox>
@@ -255,8 +255,8 @@
                                     ScrollViewer.VerticalScrollBarVisibility="Hidden">
                                     <i:Interaction.Behaviors>
                                         <behaviors:OFListboxSelectOnClickBehavior />
-                                        <behaviors1:ListBoxBehavior />
-                                        <behaviors1:SelectedItemTrackingBehavior
+                                        <behaviors1:OFListBoxBehavior />
+                                        <behaviors1:OFSelectedItemTrackingBehavior
                                             TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                                     </i:Interaction.Behaviors>
                                     <ListBox.ContextMenu>
@@ -313,7 +313,7 @@
                                 Text="{Binding Path=SearchEmailString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                 Controls:TextBoxHelper.Watermark="Enter Search Context for Contact"
                                 Controls:TextBoxHelper.ClearTextButton="True"
-                                service:KeyDownBehavior.KeyDown="{Binding EmailContextKeyDownCommand}"
+                                service:OFKeyDownBehavior.KeyDown="{Binding EmailContextKeyDownCommand}"
                                 VerticalAlignment="Center"
                                 VerticalContentAlignment="Center"
                                 Grid.Column="0"
@@ -333,8 +333,8 @@
                                              BorderBrush="Transparent"
                                              Background="Transparent"
                                              ItemsSource="{Binding Path=EmailsSource,UpdateSourceTrigger=PropertyChanged}"
-                                             attachedProperty:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                             attachedProperty:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
+                                             attachedProperty:OFListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding SelectedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                             attachedProperty:OFListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
                                              ItemTemplateSelector="{StaticResource templateSelector}"
                                              ScrollViewer.ScrollChanged="ListBox_OnScrollChanged"
                                              HorizontalContentAlignment="Stretch">
@@ -342,7 +342,7 @@
                                 <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}" />
                             </listBox:OFListBox.ContextMenu>
                             <i:Interaction.Behaviors>
-                                <behaviors1:SelectedItemTrackingBehavior
+                                <behaviors1:OFSelectedItemTrackingBehavior
                                     TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                             </i:Interaction.Behaviors>
                         </listBox:OFListBox>
@@ -376,7 +376,7 @@
                                 Text="{Binding Path=SearchAttachmentString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                 Controls:TextBoxHelper.Watermark="Enter Search Context for Attachment"
                                 Controls:TextBoxHelper.ClearTextButton="True"
-                                service:KeyDownBehavior.KeyDown="{Binding AttachmentContextKeyDownCommand}"
+                                service:OFKeyDownBehavior.KeyDown="{Binding AttachmentContextKeyDownCommand}"
                                 VerticalAlignment="Center"
                                 VerticalContentAlignment="Center"
                                 Grid.Column="0"
@@ -397,8 +397,8 @@
                                  HorizontalContentAlignment="Stretch"
                                  ScrollViewer.ScrollChanged="ListBox_ScrollChanged">
                             <i:Interaction.Behaviors>
-                                <behaviors1:ListBoxBehavior />
-                                <behaviors1:SelectedItemTrackingBehavior
+                                <behaviors1:OFListBoxBehavior />
+                                <behaviors1:OFSelectedItemTrackingBehavior
                                     TrackedItem="{Binding TrackedElement,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                             </i:Interaction.Behaviors>
                             <ListBox.ContextMenu>

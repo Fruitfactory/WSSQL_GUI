@@ -75,7 +75,7 @@ namespace OF.Module.View
             return true;
         }
 
-        public bool SetPreviewObject(BaseSearchObject searchObject)
+        public bool SetPreviewObject(OFBaseSearchObject searchObject)
         {
             if (_previewControl == null)
                 return false;

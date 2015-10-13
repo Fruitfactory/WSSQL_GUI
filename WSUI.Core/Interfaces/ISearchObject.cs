@@ -11,7 +11,7 @@ namespace OF.Core.Interfaces
         string ItemName { get; set; }
         string EntryID { get; set; }
 
-        TypeSearchItem TypeItem { get; set; }
+        OFTypeSearchItem TypeItem { get; set; }
 
         IEnumerable<ISearchObject> Items { get; }
 

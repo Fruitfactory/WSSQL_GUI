@@ -107,7 +107,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
 
         private OutlookPreviewHelper()
         {
-            PreviewHostType = HostType.Unknown;
+            PreviewHostType = OFHostType.Unknown;
         }
 
         #endregion [ctor]
@@ -138,7 +138,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
 
         #region [host type]
 
-        public HostType PreviewHostType { get; set; }
+        public OFHostType PreviewHostType { get; set; }
 
         #endregion [host type]
 
@@ -148,7 +148,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
         {
             get
             {
-                if (PreviewHostType == HostType.Application && _outlook == null)
+                if (PreviewHostType == OFHostType.Application && _outlook == null)
                     _outlook = GetApplication();
                 return _outlook;
             }
@@ -156,7 +156,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             {
                 _outlook = value;
                 _IsExistProcess = true;
-                PreviewHostType = HostType.Plugin;
+                PreviewHostType = OFHostType.Plugin;
             }
         }
 
@@ -371,13 +371,13 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             return null;
         }
 
-        private string GetAttachments(EmailSearchObject searchObj)
+        private string GetAttachments(OFEmailSearchObject searchObj)
         {
             var esClient = new OFElasticSearchClient();
             var result = esClient.Search<OFAttachmentContent>(s => s.Query(c => c.Match(descriptor => descriptor.OnField("emailid").Query(searchObj.EntryID))));
             if (result.Documents.Any())
             {
-                var tempFolder = TempFileManager.Instance.GenerateTempFolderForObject(searchObj);
+                var tempFolder = OFTempFileManager.Instance.GenerateTempFolderForObject(searchObj);
                 var urls = string.Empty;
 
                 if (searchObj.Attachments.IsNotNull())
@@ -404,7 +404,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             return urls;
         }
 
-        private string SaveEmailAttachments(EmailSearchObject searchObj, ISearchResponse<OFAttachmentContent> result, string tempFolder)
+        private string SaveEmailAttachments(OFEmailSearchObject searchObj, ISearchResponse<OFAttachmentContent> result, string tempFolder)
         {
             string urls = "";
             foreach (var ofAttachment in searchObj.Attachments)
@@ -431,8 +431,8 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
                 var filename = string.Format("{0}/{1}", tempFolder, attachment.Filename);
                 if (attachment.Content.IsStringEmptyOrNull() && !attachment.Outlookemailid.IsStringEmptyOrNull())
                 {
-                    Outlook.MailItem email = OutlookHelper.Instance.GetEmailItem(attachment.Outlookemailid);
-                    Outlook.Attachment att = OutlookHelper.Instance.GetAttacment(email, attachment.Filename);
+                    Outlook.MailItem email = OFOutlookHelper.Instance.GetEmailItem(attachment.Outlookemailid);
+                    Outlook.Attachment att = OFOutlookHelper.Instance.GetAttacment(email, attachment.Filename);
                     if (att.IsNull())
                     {
                         return String.Empty;
@@ -555,7 +555,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             return page;
         }
 
-        public string GetPreviewForEmail(EmailSearchObject email)
+        public string GetPreviewForEmail(OFEmailSearchObject email)
         {
             string page = GetBeginingOfPreview(email);
             var senderEmailAddress = email.FromAddress;

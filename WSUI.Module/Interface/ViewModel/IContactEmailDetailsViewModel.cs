@@ -2,7 +2,7 @@
 
 namespace OF.Module.Interface.ViewModel
 {
-    public interface IContactEmailDetailsViewModel : IContactKindDetailsViewModel<EmailSearchObject>
+    public interface IContactEmailDetailsViewModel : IContactKindDetailsViewModel<OFEmailSearchObject>
     {
          
     }

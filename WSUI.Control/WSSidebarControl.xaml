@@ -19,8 +19,8 @@
 
             </ResourceDictionary.MergedDictionaries>
 
-            <converters:ActivationStatusToGridVisibilityConverter x:Key="GridVisibility"></converters:ActivationStatusToGridVisibilityConverter>
-            <converters:ActivationStatusToButtonVisibilityConverter x:Key="ButtonVisibility"></converters:ActivationStatusToButtonVisibilityConverter>
+            <converters:OFActivationStatusToGridVisibilityConverter x:Key="GridVisibility"></converters:OFActivationStatusToGridVisibilityConverter>
+            <converters:OFActivationStatusToButtonVisibilityConverter x:Key="ButtonVisibility"></converters:OFActivationStatusToButtonVisibilityConverter>
 
             <SolidColorBrush x:Key="RedColorBrush" Color="Red"></SolidColorBrush>
             <SolidColorBrush x:Key="DarkRedColorBrush" Color="DarkRed"></SolidColorBrush>

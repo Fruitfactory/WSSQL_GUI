@@ -4,8 +4,8 @@ namespace OF.Core.Interfaces
 {
     internal interface IOutlookHelper
     {
-        string GetEMailTempFileName(BaseSearchObject itemsearch);
+        string GetEMailTempFileName(OFBaseSearchObject itemsearch);
 
-        string GetAttachmentTempFileName(BaseSearchObject itemsearch);
+        string GetAttachmentTempFileName(OFBaseSearchObject itemsearch);
     }
 }

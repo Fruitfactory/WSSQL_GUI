@@ -2,7 +2,7 @@
 
 namespace OF.Module.Interface.View
 {
-    public interface IContactEmailDetailsView : IContactKindDetailsView<EmailSearchObject>
+    public interface IContactEmailDetailsView : IContactKindDetailsView<OFEmailSearchObject>
     {
          
     }

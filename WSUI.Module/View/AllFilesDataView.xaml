@@ -68,7 +68,7 @@
                          >
                     <i:Interaction.Behaviors>
                         <behaviors:OFListboxSelectOnClickBehavior></behaviors:OFListboxSelectOnClickBehavior>
-                        <behaviorsInfra:ListBoxBehavior></behaviorsInfra:ListBoxBehavior>
+                        <behaviorsInfra:OFListBoxBehavior></behaviorsInfra:OFListBoxBehavior>
                     </i:Interaction.Behaviors>
                 </ListBox>
 
@@ -77,7 +77,7 @@
                             Visibility="{Binding IsContactMoreVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">
                     <TextBlock>
                         <Hyperlink Command="{Binding MoreCommand}"
-                                   CommandParameter="{x:Static core:KindsConstName.People}">
+                                   CommandParameter="{x:Static core:OFKindsConstName.People}">
                             more >>
                         </Hyperlink>
                     </TextBlock>
@@ -100,8 +100,8 @@
                                      BorderBrush="Transparent"
                                      Background="Transparent"
                                      ItemsSource="{Binding Path=DataSource,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                     attch:ListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                     attch:ListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
+                                     attch:OFListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                     attch:OFListBoxShouldSetSelectAttachedProperty.ShouldSetSelect="True"
                                      ItemTemplateSelector="{StaticResource templateSelector}"
                                      IsEnabled="{Binding Enabled,UpdateSourceTrigger=PropertyChanged}"
                                      HorizontalContentAlignment="Stretch" 
@@ -111,7 +111,7 @@
                         <ContextMenu ItemsSource="{Binding EmailMenuItems,UpdateSourceTrigger=PropertyChanged}"  ></ContextMenu>
                     </listBox:OFListBox.ContextMenu>
                     <i:Interaction.Behaviors>
-                        <behaviorsInfra:SelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviorsInfra:SelectedItemTrackingBehavior>
+                        <behaviorsInfra:OFSelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviorsInfra:OFSelectedItemTrackingBehavior>
                     </i:Interaction.Behaviors>
                 </listBox:OFListBox>
 
@@ -120,7 +120,7 @@
                             Visibility="{Binding IsEmailMoreVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">
                     <TextBlock>
                         <Hyperlink Command="{Binding MoreCommand}"
-                                   CommandParameter="{x:Static core:KindsConstName.Email}">
+                                   CommandParameter="{x:Static core:OFKindsConstName.Email}">
                             more >>
                         </Hyperlink>
                     </TextBlock>
@@ -144,7 +144,7 @@
                 
                 <ListBox x:Name="FileListBox" ItemsSource="{Binding Path=FileSource,UpdateSourceTrigger=PropertyChanged}"
                             ItemTemplateSelector="{StaticResource templateSelector}"
-                            behaviors:OFListboxSelectOnClickBehavior.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            attch:OFListBoxSelectedObjectAttachedProperty.SelectedObject="{Binding Current,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                             HorizontalContentAlignment="Stretch" 
                             ScrollViewer.CanContentScroll="False"
                             ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
@@ -152,8 +152,8 @@
                          >
                     <i:Interaction.Behaviors>
                         <behaviors:OFListboxSelectOnClickBehavior></behaviors:OFListboxSelectOnClickBehavior>
-                        <behaviorsInfra:ListBoxBehavior></behaviorsInfra:ListBoxBehavior>
-                        <behaviorsInfra:SelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviorsInfra:SelectedItemTrackingBehavior>
+                        <behaviorsInfra:OFListBoxBehavior></behaviorsInfra:OFListBoxBehavior>
+                        <behaviorsInfra:OFSelectedItemTrackingBehavior TrackedItem="{Binding CurrentTrackedObject,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></behaviorsInfra:OFSelectedItemTrackingBehavior>
                     </i:Interaction.Behaviors>
                     <ListBox.ContextMenu>
                         <ContextMenu ItemsSource="{Binding FileMenuItems,UpdateSourceTrigger=PropertyChanged}"></ContextMenu>
@@ -164,7 +164,7 @@
                             Grid.Row="1"
                             Visibility="{Binding IsFileMoreVisible,Converter={StaticResource BoolToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">
                     <TextBlock>
-                        <Hyperlink Command="{Binding MoreCommand}" CommandParameter="{x:Static core:KindsConstName.Attachments}">
+                        <Hyperlink Command="{Binding MoreCommand}" CommandParameter="{x:Static core:OFKindsConstName.Attachments}">
                             more >>
                         </Hyperlink>
                     </TextBlock>

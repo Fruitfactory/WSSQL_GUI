@@ -10,7 +10,7 @@ using OF.Core.Interfaces;
 namespace OFPreview.PreviewHandler.PreviewHandlers
 {
     [PreviewHandler("WSSQL Office Preview Handler", ".msg", "{CE4CB591-6E33-4CA1-9E0C-BD6F774AFEB1}")]
-    [PreviewForSearchObject(TypeSearchItem.Email)]
+    [PreviewForSearchObject(OFTypeSearchItem.Email)]
     [ProgId("OFPreview.PreviewHandler.PreviewHandlers.OutlookPreviewHandler")]
     [Guid("326A2452-981E-403B-9921-911011E677E6")]
     [ClassInterface(ClassInterfaceType.None)]
@@ -57,7 +57,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlers
             {
                 switch (action.Action)
                 {
-                    case WSActionType.Copy:
+                    case OFActionType.Copy:
                         _preview.CopySelectedText();
                         break;
                 }

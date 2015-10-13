@@ -121,7 +121,7 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
-    <Compile Include="Helpers\EmailCommandPreviewHelper.cs" />
+    <Compile Include="Helpers\OFEmailCommandPreviewHelper.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticInitializingClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticRiverStatus.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSeachIndexAttachmentClient.cs" />
@@ -130,77 +130,77 @@
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchOFPluginStatusClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticTrackingClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticUpdateSettingsClient.cs" />
-    <Compile Include="MVVM\AdvancedSearch\SortByAdvancedSearchCriteria.cs" />
-    <Compile Include="MVVM\AdvancedSearch\StringAdvancedSearchCriteria.cs" />
-    <Compile Include="Attributes\FieldIndexAttribute.cs" />
-    <Compile Include="Behaviors\ChildListBoxBehavior.cs" />
-    <Compile Include="Behaviors\ExpanderEmailBehavior.cs" />
-    <Compile Include="Behaviors\GridListItemBehavior.cs" />
-    <Compile Include="Behaviors\ListBoxBehavior.cs" />
-    <Compile Include="Behaviors\ListBoxExpandBehavior.cs" />
-    <Compile Include="Behaviors\MainListBoxBehavior.cs" />
-    <Compile Include="Behaviors\SelectedItemTrackingBehavior.cs" />
-    <Compile Include="Controls\Application\AppEmpty.cs" />
-    <Compile Include="Controls\BlockControl\BlockControl.xaml.cs">
-      <DependentUpon>BlockControl.xaml</DependentUpon>
+    <Compile Include="MVVM\AdvancedSearch\OFSortByAdvancedSearchCriteria.cs" />
+    <Compile Include="MVVM\AdvancedSearch\OFStringAdvancedSearchCriteria.cs" />
+    <Compile Include="Attributes\OFFieldIndexAttribute.cs" />
+    <Compile Include="Behaviors\OFChildListBoxBehavior.cs" />
+    <Compile Include="Behaviors\OFExpanderEmailBehavior.cs" />
+    <Compile Include="Behaviors\OFGridListItemBehavior.cs" />
+    <Compile Include="Behaviors\OFListBoxBehavior.cs" />
+    <Compile Include="Behaviors\OFListBoxExpandBehavior.cs" />
+    <Compile Include="Behaviors\OFMainListBoxBehavior.cs" />
+    <Compile Include="Behaviors\OFSelectedItemTrackingBehavior.cs" />
+    <Compile Include="Controls\Application\OFAppEmpty.cs" />
+    <Compile Include="Controls\BlockControl\OFBlockControl.xaml.cs">
+      <DependentUpon>OFBlockControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\BlockControl\BlockPopupAdorner.cs" />
-    <Compile Include="Controls\BusyControl\BusyIndicator.xaml.cs">
-      <DependentUpon>BusyIndicator.xaml</DependentUpon>
+    <Compile Include="Controls\BlockControl\OFBlockPopupAdorner.cs" />
+    <Compile Include="Controls\BusyControl\OFBusyIndicator.xaml.cs">
+      <DependentUpon>OFBusyIndicator.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\BusyControl\BusyPopupAdorner.cs" />
+    <Compile Include="Controls\BusyControl\OFBusyPopupAdorner.cs" />
     <Compile Include="Controls\BusyControl\IBusyPopupAdorner.cs" />
-    <Compile Include="Controls\Core\BasePopupAdorner.cs" />
+    <Compile Include="Controls\Core\OFBasePopupAdorner.cs" />
     <Compile Include="Controls\HeaderControl\OFHeaderControl.cs" />
-    <Compile Include="Controls\HightliteHyperlink.xaml.cs">
-      <DependentUpon>HightliteHyperlink.xaml</DependentUpon>
+    <Compile Include="Controls\OFHightliteHyperlink.xaml.cs">
+      <DependentUpon>OFHightliteHyperlink.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\HightliteTextBlock.xaml.cs">
-      <DependentUpon>HightliteTextBlock.xaml</DependentUpon>
+    <Compile Include="Controls\OFHightliteTextBlock.xaml.cs">
+      <DependentUpon>OFHightliteTextBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\HightliteTextBlockBase.cs" />
+    <Compile Include="Controls\OFHightliteTextBlockBase.cs" />
     <Compile Include="Controls\ListBox\OFListBox.cs" />
     <Compile Include="Controls\ProgressManager\IProgressForm.cs" />
     <Compile Include="Controls\ProgressManager\IProgressManager.cs" />
-    <Compile Include="Controls\ProgressManager\ProgressManager.cs" />
-    <Compile Include="Controls\ProgressManager\ProgressOperation.cs" />
-    <Compile Include="Controls\ProgressManager\ProgressWindow.xaml.cs">
-      <DependentUpon>ProgressWindow.xaml</DependentUpon>
+    <Compile Include="Controls\ProgressManager\OFProgressManager.cs" />
+    <Compile Include="Controls\ProgressManager\OFProgressOperation.cs" />
+    <Compile Include="Controls\ProgressManager\OFProgressWindow.xaml.cs">
+      <DependentUpon>OFProgressWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\ActivationStatusToButtonVisibilityConverter.cs" />
-    <Compile Include="Converters\ActivationStatusToGridVisibilityConverter.cs" />
-    <Compile Include="Converters\AdvancedSearchTypeToStringConverter.cs" />
-    <Compile Include="Converters\StringToStringConverter.cs" />
-    <Compile Include="Events\SelectedChangedPayloadEvent.cs" />
-    <Compile Include="Helpers\AttachedProperty\ListBoxSelectedObjectAttachedProperty.cs" />
-    <Compile Include="Helpers\AttachedProperty\ListBoxShouldSetSelectAttachedProperty.cs" />
-    <Compile Include="Implements\Contact\BaseContactSearching.cs" />
-    <Compile Include="Implements\Contact\ContactAttachmentSearching.cs" />
-    <Compile Include="Implements\Contact\ContactEmailSearching.cs" />
-    <Compile Include="Implements\Rules\AttachmentContentSearchRule.cs" />
-    <Compile Include="Implements\Rules\AttachmentFilenameSearchRule.cs" />
-    <Compile Include="Implements\Rules\ContactAttachmentSearchRule.cs" />
-    <Compile Include="Implements\Rules\ContactEmailSearchRule.cs" />
-    <Compile Include="Implements\Rules\EmailContactSearchRule.cs" />
-    <Compile Include="Implements\Rules\GeneralContactRule.cs" />
-    <Compile Include="Implements\Systems\AllSearchSystem.cs" />
-    <Compile Include="Implements\Rules\BaseRules\BaseAttachmentSearchRule.cs" />
-    <Compile Include="Implements\Systems\AttachmentSearchSystem.cs" />
-    <Compile Include="Implements\Rules\BaseRules\BaseEmailSearchRule.cs" />
-    <Compile Include="Implements\Rules\BaseRules\BaseFileSearchRule.cs" />
-    <Compile Include="Implements\Rules\ContactSearchRule.cs" />
-    <Compile Include="Implements\Systems\ContactAttachmentSearchSystem.cs" />
-    <Compile Include="Implements\Systems\ContactEmailSearchSystem.cs" />
-    <Compile Include="Implements\Systems\ContactSearchSystem.cs" />
-    <Compile Include="Implements\Rules\EmailContentSearchRule.cs" />
-    <Compile Include="Implements\Systems\Core\BaseAllEmailSearchSystem.cs" />
-    <Compile Include="Implements\Systems\EmailSearchSystem.cs" />
-    <Compile Include="Implements\Rules\EmailSubjectSearchRule.cs" />
-    <Compile Include="Implements\Rules\FileContentSearchRule.cs" />
-    <Compile Include="Implements\Rules\FileFilenameSearchRule.cs" />
+    <Compile Include="Converters\OFActivationStatusToButtonVisibilityConverter.cs" />
+    <Compile Include="Converters\OFActivationStatusToGridVisibilityConverter.cs" />
+    <Compile Include="Converters\OFAdvancedSearchTypeToStringConverter.cs" />
+    <Compile Include="Converters\OFStringToStringConverter.cs" />
+    <Compile Include="Events\OFSelectedChangedPayloadEvent.cs" />
+    <Compile Include="Helpers\AttachedProperty\OFListBoxSelectedObjectAttachedProperty.cs" />
+    <Compile Include="Helpers\AttachedProperty\OFListBoxShouldSetSelectAttachedProperty.cs" />
+    <Compile Include="Implements\Contact\OFBaseContactSearching.cs" />
+    <Compile Include="Implements\Contact\OFContactAttachmentSearching.cs" />
+    <Compile Include="Implements\Contact\OFContactEmailSearching.cs" />
+    <Compile Include="Implements\Rules\OFAttachmentContentSearchRule.cs" />
+    <Compile Include="Implements\Rules\OFAttachmentFilenameSearchRule.cs" />
+    <Compile Include="Implements\Rules\OFContactAttachmentSearchRule.cs" />
+    <Compile Include="Implements\Rules\OFContactEmailSearchRule.cs" />
+    <Compile Include="Implements\Rules\OFEmailContactSearchRule.cs" />
+    <Compile Include="Implements\Rules\OFGeneralContactRule.cs" />
+    <Compile Include="Implements\Systems\OFAllSearchSystem.cs" />
+    <Compile Include="Implements\Rules\BaseRules\OFBaseAttachmentSearchRule.cs" />
+    <Compile Include="Implements\Systems\OFAttachmentSearchSystem.cs" />
+    <Compile Include="Implements\Rules\BaseRules\OFBaseEmailSearchRule.cs" />
+    <Compile Include="Implements\Rules\BaseRules\OFBaseFileSearchRule.cs" />
+    <Compile Include="Implements\Rules\OFContactSearchRule.cs" />
+    <Compile Include="Implements\Systems\OFContactAttachmentSearchSystem.cs" />
+    <Compile Include="Implements\Systems\OFContactEmailSearchSystem.cs" />
+    <Compile Include="Implements\Systems\OFContactSearchSystem.cs" />
+    <Compile Include="Implements\Rules\OFEmailContentSearchRule.cs" />
+    <Compile Include="Implements\Systems\Core\OFBaseAllEmailSearchSystem.cs" />
+    <Compile Include="Implements\Systems\OFEmailSearchSystem.cs" />
+    <Compile Include="Implements\Rules\OFEmailSubjectSearchRule.cs" />
+    <Compile Include="Implements\Rules\OFFileContentSearchRule.cs" />
+    <Compile Include="Implements\Rules\OFFileFilenameSearchRule.cs" />
     <Compile Include="Interfaces\Search\IContactSearchSystem.cs" />
-    <Compile Include="MVVM\StatusItem\StatusItemViewModel.cs" />
-    <Compile Include="Payloads\SearchObjectPayload.cs" />
+    <Compile Include="MVVM\StatusItem\OFStatusItemViewModel.cs" />
+    <Compile Include="Payloads\OFSearchObjectPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -208,21 +208,21 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RegionNames.cs" />
-    <Compile Include="Service\Dumper\MiniDumper.cs" />
-    <Compile Include="Service\EventArgs.cs" />
-    <Compile Include="Service\ExtensionMethods.cs" />
-    <Compile Include="Service\FileService.cs" />
-    <Compile Include="Service\HelperConst.cs" />
-    <Compile Include="Service\Helpers\HelperFunctions.cs" />
+    <Compile Include="Service\Dumper\OFMiniDumper.cs" />
+    <Compile Include="Service\OFEventArgs.cs" />
+    <Compile Include="Service\OFExtensionMethods.cs" />
+    <Compile Include="Service\OFFileService.cs" />
+    <Compile Include="Service\OFHelperConst.cs" />
+    <Compile Include="Service\Helpers\OFHelperFunctions.cs" />
     <Compile Include="Service\Helpers\OFEmailHelper.cs" />
     <Compile Include="Service\Helpers\OFUserActivityTracker.cs" />
-    <Compile Include="Service\Helpers\SearchItemHelper.cs" />
-    <Compile Include="Service\Helpers\TaskFinderHelper.cs" />
-    <Compile Include="Service\Rules\BaseRule.cs" />
+    <Compile Include="Service\Helpers\OFSearchItemHelper.cs" />
+    <Compile Include="Service\Helpers\OFTaskFinderHelper.cs" />
+    <Compile Include="Service\Rules\OFBaseRule.cs" />
     <Compile Include="Service\Rules\IRule.cs" />
-    <Compile Include="Service\Rules\QuoteRule.cs" />
-    <Compile Include="Service\Rules\WordRule.cs" />
-    <Compile Include="Service\ScrollData.cs" />
+    <Compile Include="Service\Rules\OFQuoteRule.cs" />
+    <Compile Include="Service\Rules\OFWordRule.cs" />
+    <Compile Include="Service\OFScrollData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WSUI.Core\OF.Core.csproj">
@@ -231,23 +231,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\BlockControl\BlockControl.xaml">
+    <Page Include="Controls\BlockControl\OFBlockControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\BusyControl\BusyIndicator.xaml">
+    <Page Include="Controls\BusyControl\OFBusyIndicator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\HightliteHyperlink.xaml">
+    <Page Include="Controls\OFHightliteHyperlink.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\HightliteTextBlock.xaml">
+    <Page Include="Controls\OFHightliteTextBlock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\ProgressManager\ProgressWindow.xaml">
+    <Page Include="Controls\ProgressManager\OFProgressWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

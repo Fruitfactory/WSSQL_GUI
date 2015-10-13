@@ -16,15 +16,15 @@ namespace OF.Module.Interface.ViewModel
     {
         event EventHandler Start;
         event EventHandler Complete;
-        event EventHandler<SlideDirectionEventArgs> Slide;
+        event EventHandler<OFSlideDirectionEventArgs> Slide;
 
-        List<BaseSearchObject> MainDataSource { get; }
+        List<OFBaseSearchObject> MainDataSource { get; }
         void Clear();
         void SelectKind(string name);
         void PassAction(IWSAction action);
-        HostType Host { get;  }
+        OFHostType Host { get;  }
         void ForceClosePreview();
-        ActivationState ActivateStatus { get; }
+        OFActivationState ActivateStatus { get; }
         ICommand BuyCommand { get; }
         ICommand BackCommand { get; }
         ICommand ActivateCommand { get; }
@@ -43,9 +43,9 @@ namespace OF.Module.Interface.ViewModel
 
         void ShowAdvancedSearch(object tag);
 
-        BaseSearchObject Current { get; }
+        OFBaseSearchObject Current { get; }
 
-        BaseSearchObject CurrentTracked { get; }
+        OFBaseSearchObject CurrentTracked { get; }
 
         IEnumerable<MenuItem> EmailsMenuItems { get; }
 

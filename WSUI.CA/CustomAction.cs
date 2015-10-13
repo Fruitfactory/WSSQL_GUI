@@ -76,7 +76,7 @@ namespace OF.CA
             try
             {
                 string path = GetInstallationFolder(session);
-                if (RegistryHelper.Instance.IsSilendUpdate())
+                if (OFRegistryHelper.Instance.IsSilendUpdate())
                 {
                     session.Log("Silent update...");
                     return ActionResult.Success;
@@ -90,7 +90,7 @@ namespace OF.CA
                 }
                 DeleteRootFolder(session, path);
                 
-                DeleteElasticSearchFiles(session,RegistryHelper.Instance.GetElasticSearchpath());
+                DeleteElasticSearchFiles(session,OFRegistryHelper.Instance.GetElasticSearchpath());
                 DeleteRegistryKeys();
 
             }
@@ -106,9 +106,9 @@ namespace OF.CA
 
         private static void DeleteRegistryKeys()
         {
-            if (RegistryHelper.Instance.IsPluginUiVisibleKeyPresent())
+            if (OFRegistryHelper.Instance.IsPluginUiVisibleKeyPresent())
             {
-                RegistryHelper.Instance.DeletePluginUiKey();
+                OFRegistryHelper.Instance.DeletePluginUiKey();
             }
         }
 
@@ -247,7 +247,7 @@ namespace OF.CA
                         if (!prompt.Prompt())
                             return ActionResult.UserExit;
                 }
-                RegistryHelper.Instance.SetFlagClosedOutlookApplication();
+                OFRegistryHelper.Instance.SetFlagClosedOutlookApplication();
                 DeleteRegistryKeys();
             }
             catch (Exception ex)
@@ -272,12 +272,12 @@ namespace OF.CA
                 try
                 {
                     session.Log("Close outlook. IsOutllokClosedByInstaller = " +
-                                RegistryHelper.Instance.IsOutlookClosedByInstaller());
+                                OFRegistryHelper.Instance.IsOutlookClosedByInstaller());
                     CloseAllOutlookInstancesLite(session);
                     Thread.Sleep(1000); // wait for closing
                     if (IsOutlookOpen())
                         CloseAllOutlookInstancesHard(session);
-                    RegistryHelper.Instance.SetFlagClosedOutlookApplication();
+                    OFRegistryHelper.Instance.SetFlagClosedOutlookApplication();
                     res = ActionResult.Success;
                 }
                 catch (Exception ex)
@@ -293,14 +293,14 @@ namespace OF.CA
         public static ActionResult OpenOutlook(Session session)
         {
             session.Log("Open outlook. IsOutllokClosedByInstaller = " +
-                        RegistryHelper.Instance.IsOutlookClosedByInstaller());
+                        OFRegistryHelper.Instance.IsOutlookClosedByInstaller());
             var res = ActionResult.Success;
-            if (RegistryHelper.Instance.IsOutlookClosedByInstaller() && IsOutlookInstalled())
+            if (OFRegistryHelper.Instance.IsOutlookClosedByInstaller() && IsOutlookInstalled())
             {
                 try
                 {
                     Process.Start("OUTLOOK.EXE");
-                    RegistryHelper.Instance.ResetFlagClosedOutlookApplication();
+                    OFRegistryHelper.Instance.ResetFlagClosedOutlookApplication();
                 }
                 catch (Exception ex)
                 {
@@ -384,7 +384,7 @@ namespace OF.CA
         {
             var result = ActionResult.Success;
 
-            if (!RegistryHelper.Instance.IsSilendUpdate())
+            if (!OFRegistryHelper.Instance.IsSilendUpdate())
             {
                 session.Log("Isn't silent update.");
                 return result;
@@ -394,7 +394,7 @@ namespace OF.CA
             {
                 var rec = new Record();
                 rec.FormatString = "Update was successful.";
-                if (RegistryHelper.Instance.IsOutlookClosedByInstaller())
+                if (OFRegistryHelper.Instance.IsOutlookClosedByInstaller())
                 {
                     rec.FormatString += "\nOutlook will be opened soon.";
                 }
@@ -517,8 +517,8 @@ namespace OF.CA
                 File.Delete(string.Format("{0}{1}", path, LocFilename));
                 DeleteUpdateFolder(session);
                 session.Log("Silent updates is finished. Call index set up in default value (None).");
-                RegistryHelper.Instance.FinishSilentUpdate();
-                RegistryHelper.Instance.SetCallIndexKey(RegistryHelper.CallIndex.None);
+                OFRegistryHelper.Instance.FinishSilentUpdate();
+                OFRegistryHelper.Instance.SetCallIndexKey(OFRegistryHelper.CallIndex.None);
             }
             catch (Exception ex)
             {
@@ -618,7 +618,7 @@ namespace OF.CA
         [CustomAction]
         public static ActionResult ActivatePlugin(Session session)
         {
-            if (RegistryHelper.Instance.IsSilendUpdate())
+            if (OFRegistryHelper.Instance.IsSilendUpdate())
                 return ActionResult.Success;
             try
             {
@@ -642,7 +642,7 @@ namespace OF.CA
                     else
                     {
                         session.Log("ID - KEY: " + key.Item1 + " - " + key.Item2);
-                        RegistryHelper.Instance.SetPKetId(key.Item1.Trim());
+                        OFRegistryHelper.Instance.SetPKetId(key.Item1.Trim());
                         if (TurboActivate.CheckAndSavePKey(key.Item2.Trim(), TurboActivate.TA_Flags.TA_USER))
                         {
                             TurboActivate.Activate();
@@ -826,7 +826,7 @@ namespace OF.CA
         [CustomAction]
         public static ActionResult Deactivate(Session session)
         {
-            if (RegistryHelper.Instance.IsSilendUpdate())
+            if (OFRegistryHelper.Instance.IsSilendUpdate())
                 return ActionResult.Success;
             try
             {
@@ -855,7 +855,7 @@ namespace OF.CA
         public static ActionResult ErrorMessage(Session session)
         {
             var result = ActionResult.Success;
-            if (!RegistryHelper.Instance.IsSilendUpdate())
+            if (!OFRegistryHelper.Instance.IsSilendUpdate())
             {
                 session.Log("Isn't silent update.");
                 return result;
@@ -882,7 +882,7 @@ namespace OF.CA
         public static ActionResult CancelMessage(Session session)
         {
             var result = ActionResult.Success;
-            if (!RegistryHelper.Instance.IsSilendUpdate())
+            if (!OFRegistryHelper.Instance.IsSilendUpdate())
             {
                 session.Log("Isn't silent update.");
                 return result;
@@ -912,10 +912,10 @@ namespace OF.CA
         {
             try
             {
-                var officeVersion = RegistryHelper.Instance.GetOutlookVersion();
-                RegistryHelper.Instance.DeleteLoadingTime(officeVersion.Item1);
-                RegistryHelper.Instance.DeleteAddIn(officeVersion.Item1);
-                RegistryHelper.Instance.DeleteDisabling(officeVersion.Item1);
+                var officeVersion = OFRegistryHelper.Instance.GetOutlookVersion();
+                OFRegistryHelper.Instance.DeleteLoadingTime(officeVersion.Item1);
+                OFRegistryHelper.Instance.DeleteAddIn(officeVersion.Item1);
+                OFRegistryHelper.Instance.DeleteDisabling(officeVersion.Item1);
             }
             catch (Exception)
             {
@@ -974,7 +974,7 @@ namespace OF.CA
                 string javaHome = GetJavaInstallationPath();
 
                 elasticSearchPath = session["ELASTICSEASRCHINSTALLFOLDER"];
-                RegistryHelper.Instance.SetElasticSearchPath(elasticSearchPath);
+                OFRegistryHelper.Instance.SetElasticSearchPath(elasticSearchPath);
                 if (!string.IsNullOrEmpty(elasticSearchPath))
                 {
                     ProcessStartInfo si = new ProcessStartInfo();
@@ -1032,7 +1032,7 @@ namespace OF.CA
                     session.Log("ElasticSearch was stopped...");
                 }
                 string javaHome = GetJavaInstallationPath();
-                var elasticSearchPath = RegistryHelper.Instance.GetElasticSearchpath();
+                var elasticSearchPath = OFRegistryHelper.Instance.GetElasticSearchpath();
                 if (!string.IsNullOrEmpty(elasticSearchPath))
                 {
                     UnregisterPlugin(session,elasticSearchPath,javaHome);

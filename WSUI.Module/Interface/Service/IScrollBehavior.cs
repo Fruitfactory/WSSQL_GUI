@@ -9,6 +9,6 @@ namespace OF.Module.Interface.Service
         int CountSecondProcess { get; set; }
         int LimitReaction { get; set; }
         event Action SearchGo;
-        void NeedSearch(ScrollData sd);
+        void NeedSearch(OFScrollData sd);
     }
 }

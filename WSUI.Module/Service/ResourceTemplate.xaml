@@ -10,13 +10,13 @@
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro.Resources;component/Icons.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <service:DateToStringConverter x:Key="dateConverter" />
+    <service:OFDateToStringConverter x:Key="dateConverter" />
     <service:CountToFormatStringConvert x:Key="countConverter" />
-    <service:NameToImageConvert x:Key="nameConverter" />
+    <service:OFNameToImageConvert x:Key="nameConverter" />
     <service:SizebytesToStringConverter x:Key="sizeConverter" />
     <service:ObjectToNameConverter x:Key="objectConverter" />
     <service:ActualWidthToWidthConverter x:Key="ActualWidthConverter" />
-    <converters:StringToStringConverter x:Key="StringConverter" />
+    <converters:OFStringToStringConverter x:Key="StringConverter" />
     <service:IntToVisibilityConverter x:Key="IntToVisibilityConverter"></service:IntToVisibilityConverter>
     <service:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"></service:BoolToVisibilityConverter>
     <service:BoolToVisibilityConverter x:Key="InvertBoolToVisibilityConverter" IsInvert="True"></service:BoolToVisibilityConverter>
@@ -236,10 +236,10 @@
                                     <Image Style="{StaticResource ImageStyleEmail}" Grid.Column="0" Grid.Row="0" />
 
                                     <TextBlock Grid.Column="1" Grid.Row="0" Margin="0 2 0 1" FontWeight="Bold" Foreground="Red" Text="{Binding Count,Converter={StaticResource countConverter}}"></TextBlock>
-                                    <ctrl:HightliteTextBlock Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Margin="2 2 2 1" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=From}"></ctrl:HightliteTextBlock>
+                                    <ctrl:OFHightliteTextBlock Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Margin="2 2 2 1" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=From}"></ctrl:OFHightliteTextBlock>
                                     <TextBlock Grid.Column="4" Grid.Row="0" Margin="1 2 1 1" Foreground="Black" Text="{Binding Path=DateReceived,Converter={StaticResource dateConverter}}" />
 
-                                    <ctrl:HightliteTextBlock Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Margin="0 1 0 2" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=ItemName,Converter={StaticResource ResourceKey=StringConverter}}"></ctrl:HightliteTextBlock>
+                                    <ctrl:OFHightliteTextBlock Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Margin="0 1 0 2" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=ItemName,Converter={StaticResource ResourceKey=StringConverter}}"></ctrl:OFHightliteTextBlock>
                                 </Grid>
                             </Grid>
         <ContentPresenter x:Name="ExpandSite" DockPanel.Dock="Bottom" Margin="0" Focusable="false" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Visibility="Collapsed" />
@@ -310,12 +310,12 @@
                 <Image Style="{StaticResource ImageStyleEmail}" Grid.Column="0" Grid.Row="0" />
 
                 <TextBlock Grid.Column="1" Grid.Row="0" Margin="0 2 0 2" FontWeight="Bold" Foreground="Red" Text="{Binding Count,Converter={StaticResource countConverter}}"></TextBlock>
-                <ctrl:HightliteTextBlock Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Margin="2" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=From}"></ctrl:HightliteTextBlock>
+                <ctrl:OFHightliteTextBlock Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Margin="2" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=From}"></ctrl:OFHightliteTextBlock>
                 <TextBlock Grid.Column="4" Grid.Row="0" Margin="2 2 1 2" Foreground="Black" Text="{Binding Path=DateReceived,Converter={StaticResource dateConverter}}" />
 
-                <ctrl:HightliteTextBlock Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Margin="0 1 0 2" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=ItemName,Converter={StaticResource ResourceKey=StringConverter}}"></ctrl:HightliteTextBlock>
+                <ctrl:OFHightliteTextBlock Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Margin="0 1 0 2" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=ItemName,Converter={StaticResource ResourceKey=StringConverter}}"></ctrl:OFHightliteTextBlock>
                 <i:Interaction.Behaviors>
-                    <behaviors:GridListItemBehavior></behaviors:GridListItemBehavior>
+                    <behaviors:OFGridListItemBehavior></behaviors:OFGridListItemBehavior>
                 </i:Interaction.Behaviors>
             </Grid>
         </DataTemplate>
@@ -331,13 +331,13 @@
                         <ListBox ItemsSource="{Binding Items}" ItemTemplate="{StaticResource EmailItemTemplate}" Style="{StaticResource ListBoxExpanderStyle}">
 
                             <i:Interaction.Behaviors>
-                                <behaviors:ChildListBoxBehavior />
+                                <behaviors:OFChildListBoxBehavior />
                             </i:Interaction.Behaviors>
                         </ListBox>
                     </Grid>
                     <i:Interaction.Behaviors>
-                        <behaviors:ExpanderEmailBehavior></behaviors:ExpanderEmailBehavior>
-                        <behaviors:ListBoxExpandBehavior></behaviors:ListBoxExpandBehavior>
+                        <behaviors:OFExpanderEmailBehavior></behaviors:OFExpanderEmailBehavior>
+                        <behaviors:OFListBoxExpandBehavior></behaviors:OFListBoxExpandBehavior>
                     </i:Interaction.Behaviors>
                 </Expander>
             </Grid>
@@ -356,20 +356,20 @@
                     </StackPanel>
                 </Grid.ToolTip>
                 <Image Style="{StaticResource ImageStyle}" Grid.Column="1" Source="..\Images\user.png" />
-                <ctrl:HightliteHyperlink Grid.Column="2" Margin="5" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Converter={StaticResource objectConverter}}">
-                    <ctrl:HightliteHyperlink.Style>
-                        <Style TargetType="ctrl:HightliteTextBlockBase">
-                            <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Blue" />
+                <ctrl:OFHightliteHyperlink Grid.Column="2" Margin="5" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Converter={StaticResource objectConverter}}">
+                    <ctrl:OFHightliteHyperlink.Style>
+                        <Style TargetType="ctrl:OFHightliteTextBlockBase">
+                            <Setter Property="ctrl:OFHightliteTextBlockBase.ForegroundColor" Value="Blue" />
                             <Style.Triggers>
                                 <Trigger Property="Control.IsMouseOver" Value="True">
-                                    <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Red" />
+                                    <Setter Property="ctrl:OFHightliteTextBlockBase.ForegroundColor" Value="Red" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
-                    </ctrl:HightliteHyperlink.Style>
-                </ctrl:HightliteHyperlink>
+                    </ctrl:OFHightliteHyperlink.Style>
+                </ctrl:OFHightliteHyperlink>
                 <i:Interaction.Behaviors>
-                    <behaviors:GridListItemBehavior></behaviors:GridListItemBehavior>
+                    <behaviors:OFGridListItemBehavior></behaviors:OFGridListItemBehavior>
                 </i:Interaction.Behaviors>
             </Grid>
         </DataTemplate>
@@ -402,12 +402,12 @@
                 <Image Style="{StaticResource ImageStyle}" Grid.Column="1" Source="{Binding Path=Filename,Converter={StaticResource ResourceKey=nameConverter}}" />
                 <TextBlock Grid.Column="2" Margin="2 5 2 5" FontWeight="Bold" Foreground="Red" Text="{Binding Count,Converter={StaticResource countConverter}}"
                            Visibility="{Binding Count, Converter={StaticResource IntToVisibilityConverter}}"></TextBlock>
-                <ctrl:HightliteTextBlock Grid.Column="3" Grid.ColumnSpan="2" Margin="2 5 5 5" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=Filename}" />
+                <ctrl:OFHightliteTextBlock Grid.Column="3" Grid.ColumnSpan="2" Margin="2 5 5 5" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=Filename}" />
 
                 <TextBlock Grid.Column="5" Margin="5" Foreground="Black" Text="{Binding Path=DateCreated,Converter={StaticResource dateConverter}}" />
 
                 <i:Interaction.Behaviors>
-                    <behaviors:GridListItemBehavior></behaviors:GridListItemBehavior>
+                    <behaviors:OFGridListItemBehavior></behaviors:OFGridListItemBehavior>
                 </i:Interaction.Behaviors>
             </Grid>
         </DataTemplate>
@@ -441,11 +441,11 @@
                 <Image Style="{StaticResource ImageStyle}" Grid.Column="1" Source="{Binding Path=Filename,Converter={StaticResource ResourceKey=nameConverter}}" />
                 <TextBlock Grid.Column="2" Margin="2 5 2 5" FontWeight="Bold" Foreground="Red" Text="{Binding Count,Converter={StaticResource countConverter}}"
                            Visibility="{Binding Count, Converter={StaticResource IntToVisibilityConverter}}"></TextBlock>
-                <ctrl:HightliteTextBlock Grid.Column="3" Grid.ColumnSpan="2" Margin="2 5 5 5" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=Filename}" />
+                <ctrl:OFHightliteTextBlock Grid.Column="3" Grid.ColumnSpan="2" Margin="2 5 5 5" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=Filename}" />
                 <TextBlock Grid.Column="5" Margin="5" Foreground="Black" Text="{Binding Path=DateCreated,Converter={StaticResource dateConverter}}" />
 
                 <i:Interaction.Behaviors>
-                    <behaviors:GridListItemBehavior></behaviors:GridListItemBehavior>
+                    <behaviors:OFGridListItemBehavior></behaviors:OFGridListItemBehavior>
                 </i:Interaction.Behaviors>
             </Grid>
         </DataTemplate>
@@ -462,11 +462,11 @@
                 </Grid.ColumnDefinitions>
                 <Image Style="{StaticResource ImageStyle}" Grid.Column="1" Source="..\Images\date.png" />
                 <TextBlock Grid.Column="2" Margin="2 5 2 5" FontWeight="Bold" Foreground="Red" Text="{Binding Count,Converter={StaticResource countConverter}}"></TextBlock>
-                <ctrl:HightliteTextBlock Grid.Column="3" Margin="5" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=ItemName}" />
+                <ctrl:OFHightliteTextBlock Grid.Column="3" Margin="5" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=ItemName}" />
                 <TextBlock Grid.Column="4" Margin="5" Foreground="Black" Text="{Binding Path=DateModified,Converter={StaticResource dateConverter}}" />
 
                 <i:Interaction.Behaviors>
-                    <behaviors:GridListItemBehavior></behaviors:GridListItemBehavior>
+                    <behaviors:OFGridListItemBehavior></behaviors:OFGridListItemBehavior>
                 </i:Interaction.Behaviors>
             </Grid>
         </DataTemplate>
@@ -497,10 +497,10 @@
                 </Grid.ToolTip>
                 <Image Style="{StaticResource ImageStyle}" Grid.Column="1" Source="..\Images\picture.png" />
                 <TextBlock Grid.Column="2" Margin="2 5 2 5" FontWeight="Bold" Foreground="Red" Text="{Binding Count,Converter={StaticResource countConverter}}"></TextBlock>
-                <ctrl:HightliteTextBlock Grid.Column="3" Margin="5" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=ItemName}" />
+                <ctrl:OFHightliteTextBlock Grid.Column="3" Margin="5" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=ItemName}" />
                 <TextBlock Grid.Column="4" Margin="5" Foreground="Black" Text="{Binding Path=DateCreated,Converter={StaticResource dateConverter}}" />
                 <i:Interaction.Behaviors>
-                    <behaviors:GridListItemBehavior></behaviors:GridListItemBehavior>
+                    <behaviors:OFGridListItemBehavior></behaviors:OFGridListItemBehavior>
                 </i:Interaction.Behaviors>
             </Grid>
         </DataTemplate>
@@ -509,23 +509,23 @@
             <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ListBox}},Path=ActualWidth,Converter={StaticResource ActualWidthConverter}}" HorizontalAlignment="Stretch" LastChildFill="True">
                 <Image Style="{StaticResource ImageStyle}" DockPanel.Dock="Left" Grid.Column="0" Source="..\Images\more1.png" />
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <ctrl:HightliteHyperlink Margin="5" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=ItemName}">
-                        <ctrl:HightliteHyperlink.Style>
-                            <Style TargetType="ctrl:HightliteTextBlockBase">
-                                <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Blue" />
+                    <ctrl:OFHightliteHyperlink Margin="5" Hightlight="{Binding Path=DataContext.HighlightPattern,Mode=OneTime,ElementName=this}" Text="{Binding Path=ItemName}">
+                        <ctrl:OFHightliteHyperlink.Style>
+                            <Style TargetType="ctrl:OFHightliteTextBlockBase">
+                                <Setter Property="ctrl:OFHightliteTextBlockBase.ForegroundColor" Value="Blue" />
                                 <Style.Triggers>
                                     <Trigger Property="Control.IsMouseOver" Value="True">
-                                        <Setter Property="ctrl:HightliteTextBlockBase.ForegroundColor" Value="Red" />
+                                        <Setter Property="ctrl:OFHightliteTextBlockBase.ForegroundColor" Value="Red" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
-                        </ctrl:HightliteHyperlink.Style>
-                    </ctrl:HightliteHyperlink>
+                        </ctrl:OFHightliteHyperlink.Style>
+                    </ctrl:OFHightliteHyperlink>
                 </StackPanel>
             </DockPanel>
         </DataTemplate>
 
-        <service:AllFilesDataTemplateSelector x:Key="templateSelector" AttachmentTemplate="{StaticResource ResourceKey=AttachmentTemplate}" CalendarTemplate="{StaticResource ResourceKey=CalendarTemplate}" CommandTemplate="{StaticResource ResourceKey=CommandTemplate}" EmailTemplate="{StaticResource ResourceKey=EmailTemplate}" FileTemplate="{StaticResource ResourceKey=FileTemplate}" NoneTemplate="{StaticResource ResourceKey=NoneTemplate}" PictureTemplate="{StaticResource ResourceKey=PictureTemplate}" UserTemplate="{StaticResource ResourceKey=UserTemplate}" />
+        <service:OFAllFilesDataTemplateSelector x:Key="templateSelector" AttachmentTemplate="{StaticResource ResourceKey=AttachmentTemplate}" CalendarTemplate="{StaticResource ResourceKey=CalendarTemplate}" CommandTemplate="{StaticResource ResourceKey=CommandTemplate}" EmailTemplate="{StaticResource ResourceKey=EmailTemplate}" FileTemplate="{StaticResource ResourceKey=FileTemplate}" NoneTemplate="{StaticResource ResourceKey=NoneTemplate}" PictureTemplate="{StaticResource ResourceKey=PictureTemplate}" UserTemplate="{StaticResource ResourceKey=UserTemplate}" />
 
         <ContextMenu x:Key="contextMenu">
             <MenuItem Command="{Binding OpenCommand}" Header="Open file" />

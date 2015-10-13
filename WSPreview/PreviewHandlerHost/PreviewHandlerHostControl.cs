@@ -91,7 +91,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerHost
             }
         }
 
-        public void PreviewForSearchObject(BaseSearchObject searchObject)
+        public void PreviewForSearchObject(OFBaseSearchObject searchObject)
         {
             if (IsDesignTime() || searchObject == null)
             {
@@ -103,7 +103,7 @@ namespace OFPreview.PreviewHandler.PreviewHandlerHost
             OnStopLoad(null);
         }
 
-        private void GeneratePreviewForObject(BaseSearchObject searchObject)
+        private void GeneratePreviewForObject(OFBaseSearchObject searchObject)
         {
             PrepareForGenerating();
             _comInstance = HelperPreviewHandlers.Instance.GetReadyHandlerForSearchObject(searchObject.TypeItem);

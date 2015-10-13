@@ -32,7 +32,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace OF.Module.ViewModel
 {
-    public class ContactDetailsViewModel : ViewModelBase, IContactDetailsViewModel, IScrollableViewExtended
+    public class ContactDetailsViewModel : OFViewModelBase, IContactDetailsViewModel, IScrollableViewExtended
     {
         private const double AvaregeTwoRowItemHeight = 47;
         private const double AvaregeOneRowItemHeight = 25;
@@ -77,12 +77,12 @@ namespace OF.Module.ViewModel
 
             InitCommands();
 
-            _scrollBehavior = new ScrollBehavior { LimitReaction = 85 };
+            _scrollBehavior = new OFScrollBehavior { LimitReaction = 85 };
             _scrollBehavior.SearchGo += ScrollBehaviorOnSearchGo;
-            _scrollBehavior2 = new ScrollBehavior { LimitReaction = 85 };
+            _scrollBehavior2 = new OFScrollBehavior { LimitReaction = 85 };
             _scrollBehavior2.SearchGo += ScrollBehaviorOnSearchGo2;
-            EmailsSource = new ObservableCollection<EmailSearchObject>();
-            ItemsSource = new ObservableCollection<AttachmentContentSearchObject>();
+            EmailsSource = new ObservableCollection<OFEmailSearchObject>();
+            ItemsSource = new ObservableCollection<OFAttachmentContentSearchObject>();
             InitContactCommands();
         }
 
@@ -90,8 +90,8 @@ namespace OF.Module.ViewModel
         {
             CreateEmailCommand = new OFRelayCommand(CreateEmailExecute);
             MoreCommand = new DelegateCommand<object>(MoreCommandExecute, o => true);
-            MainEmailSource = new ObservableCollection<EmailSearchObject>();
-            MainFileSource = new ObservableCollection<AttachmentContentSearchObject>();
+            MainEmailSource = new ObservableCollection<OFEmailSearchObject>();
+            MainFileSource = new ObservableCollection<OFAttachmentContentSearchObject>();
             ScrollChangeCommand = new DelegateCommand<object>(OnScroll, o => true);
             ScrollChangedCommand2 = new DelegateCommand<object>(OnScroll2, o => true);
             CopyPhoneCommand = new DelegateCommand<object>(CopyPhoneToClipboard, o => true);
@@ -126,28 +126,28 @@ namespace OF.Module.ViewModel
 
         public object View { get; private set; }
 
-        public ObservableCollection<AttachmentContentSearchObject> ItemsSource { get; private set; }
+        public ObservableCollection<OFAttachmentContentSearchObject> ItemsSource { get; private set; }
 
-        public ObservableCollection<EmailSearchObject> EmailsSource { get; private set; }
+        public ObservableCollection<OFEmailSearchObject> EmailsSource { get; private set; }
 
-        public ObservableCollection<AttachmentContentSearchObject> MainFileSource { get; private set; }
+        public ObservableCollection<OFAttachmentContentSearchObject> MainFileSource { get; private set; }
 
-        public ObservableCollection<EmailSearchObject> MainEmailSource { get; private set; }
+        public ObservableCollection<OFEmailSearchObject> MainEmailSource { get; private set; }
 
         public void SetDataObject(ISearchObject dataSearchObject)
         {
             _from = string.Empty;
             _to = string.Empty;
-            if (dataSearchObject is EmailContactSearchObject)
+            if (dataSearchObject is OFEmailContactSearchObject)
             {
-                var temp = dataSearchObject as EmailContactSearchObject;
+                var temp = dataSearchObject as OFEmailContactSearchObject;
                 ApplyEmailContactInfo(temp);
                 _from = FirstName;
                 _to = temp.EMail.ToLowerInvariant();
             }
-            else if (dataSearchObject is ContactSearchObject)
+            else if (dataSearchObject is OFContactSearchObject)
             {
-                var temp = dataSearchObject as ContactSearchObject;
+                var temp = dataSearchObject as OFContactSearchObject;
                 ApplyContactInfo(temp);
                 _from = string.Format("{0} {1}", temp.FirstName, temp.LastName);
                 _to = temp.GetEmail();
@@ -161,15 +161,15 @@ namespace OF.Module.ViewModel
 
         public bool IsSameData(ISearchObject dataObject)
         {
-            if (dataObject is EmailContactSearchObject)
+            if (dataObject is OFEmailContactSearchObject)
             {
-                var emailContact = dataObject as EmailContactSearchObject;
+                var emailContact = dataObject as OFEmailContactSearchObject;
                 var result = FirstName == emailContact.ContactName && ( string.IsNullOrEmpty(emailContact.EMail) || Emails.Any(e => string.Equals(e, emailContact.EMail, StringComparison.InvariantCultureIgnoreCase)));
                 return result;
             }
-            if (dataObject is ContactSearchObject)
+            if (dataObject is OFContactSearchObject)
             {
-                var contact = dataObject as ContactSearchObject;
+                var contact = dataObject as OFContactSearchObject;
                 var result = FirstName == contact.FirstName && LastName == contact.LastName &&
                        (string.IsNullOrEmpty(contact.EmailAddress1) || Emails.Any(
                            e => string.Equals(e, contact.EmailAddress1, StringComparison.InvariantCultureIgnoreCase)));
@@ -197,7 +197,7 @@ namespace OF.Module.ViewModel
             ResetSelectedChanged();
         }
 
-        public IEnumerable<UIItem> ContactUIItemCollection { get; private set; }
+        public IEnumerable<OFUIItem> ContactUIItemCollection { get; private set; }
 
         #endregion [interface]
 
@@ -363,12 +363,12 @@ namespace OF.Module.ViewModel
 
         private void InitializeSearchSystem()
         {
-            _contactEmailSearching = new ContactEmailSearching(Lock);
+            _contactEmailSearching = new OFContactEmailSearching(Lock);
             _contactEmailSearching.Initialize(_unityContainer);
             _contactEmailSearching.PreviewSearchingFinished += ContactEmailSearchingOnPreviewSearchingFinished;
             _contactEmailSearching.MainSearchingFinished += ContactEmailSearchingOnMainSearchingFinished;
 
-            _contactAttachmentSearching = new ContactAttachmentSearching(Lock);
+            _contactAttachmentSearching = new OFContactAttachmentSearching(Lock);
             _contactAttachmentSearching.Initialize(_unityContainer);
             _contactAttachmentSearching.PreviewSearchingFinished += ContactAttachmentSearchingOnPreviewSearchingFinished;
             _contactAttachmentSearching.MainSearchingFinished += ContactAttachmentSearchingOnMainSearchingFinished;
@@ -401,7 +401,7 @@ namespace OF.Module.ViewModel
                 return;
             foreach (var systemSearchResult in result)
             {
-                CollectionExtensions.AddRange(ItemsSource, systemSearchResult.Result.OperationResult.OfType<AttachmentContentSearchObject>());
+                CollectionExtensions.AddRange(ItemsSource, systemSearchResult.Result.OperationResult.OfType<OFAttachmentContentSearchObject>());
             }
             OnPropertyChanged(() => ItemsSource);
         }
@@ -411,10 +411,10 @@ namespace OF.Module.ViewModel
             IList<ISystemSearchResult> result = _contactAttachmentSearching.GetPreviewResult();
             if (result == null || !result.Any())
                 return;
-            List<AttachmentContentSearchObject> items = new List<AttachmentContentSearchObject>();
+            List<OFAttachmentContentSearchObject> items = new List<OFAttachmentContentSearchObject>();
             foreach (var systemSearchResult in result)
             {
-                items.AddRange(systemSearchResult.Result.OperationResult.OfType<AttachmentContentSearchObject>());
+                items.AddRange(systemSearchResult.Result.OperationResult.OfType<OFAttachmentContentSearchObject>());
             }
             if (!_isFilesInitialized && items.Any())
             {
@@ -434,7 +434,7 @@ namespace OF.Module.ViewModel
                 return;
             foreach (var systemSearchResult in result)
             {
-                CollectionExtensions.AddRange(EmailsSource, systemSearchResult.Result.OperationResult.OfType<EmailSearchObject>());
+                CollectionExtensions.AddRange(EmailsSource, systemSearchResult.Result.OperationResult.OfType<OFEmailSearchObject>());
             }
             OnPropertyChanged(() => EmailsSource);
         }
@@ -444,10 +444,10 @@ namespace OF.Module.ViewModel
             IList<ISystemSearchResult> result = _contactEmailSearching.GetPreviewResult();
             if (result == null || !result.Any())
                 return;
-            List<EmailSearchObject> items = new List<EmailSearchObject>();
+            List<OFEmailSearchObject> items = new List<OFEmailSearchObject>();
             foreach (var systemSearchResult in result)
             {
-                items.AddRange(systemSearchResult.Result.OperationResult.OfType<EmailSearchObject>());
+                items.AddRange(systemSearchResult.Result.OperationResult.OfType<OFEmailSearchObject>());
             }
             if (!_isEmailsInitialized && items.Any())
             {
@@ -462,20 +462,20 @@ namespace OF.Module.ViewModel
             RunAttachemntPreviewSearching(_from, _to);
         }
 
-        private void ApplyContactInfo(ContactSearchObject dataObject)
+        private void ApplyContactInfo(OFContactSearchObject dataObject)
         {
             FirstName = dataObject.FirstName;
             LastName = dataObject.LastName;
             string name = "";
             Emails = (new List<string> { dataObject.EmailAddress1, dataObject.EmailAddress2, dataObject.EmailAddress3 }).Distinct().Where(s => !string.IsNullOrEmpty(s));
-            FotoFilepath = OutlookHelper.Instance.GetContactFotoTempFileName(dataObject);
+            FotoFilepath = OFOutlookHelper.Instance.GetContactFotoTempFileName(dataObject);
             BusinessTelephone = dataObject.BusinessTelephone;
             HomeTelephone = dataObject.HomeTelephone;
             MobileTelephone = dataObject.MobileTelephone;
             RaiseNotification();
         }
 
-        private void ApplyEmailContactInfo(EmailContactSearchObject dataObject)
+        private void ApplyEmailContactInfo(OFEmailContactSearchObject dataObject)
         {
             Emails = new List<string>() { dataObject.EMail };
             string name = string.Empty;
@@ -485,7 +485,7 @@ namespace OF.Module.ViewModel
 
         private bool IsAbleGetNameFromContact(string email, ref string name)
         {
-            var contact = OutlookHelper.Instance.GetContact(email);
+            var contact = OFOutlookHelper.Instance.GetContact(email);
             if (contact == null)
             {
                 return false;
@@ -549,14 +549,14 @@ namespace OF.Module.ViewModel
         {
             if (_eventAggregator == null || SelectedElement == null)
                 return;
-            _eventAggregator.GetEvent<SelectedChangedPayloadEvent>().Publish(new SearchObjectPayload(SelectedElement));
+            _eventAggregator.GetEvent<OFSelectedChangedPayloadEvent>().Publish(new OFSearchObjectPayload(SelectedElement));
         }
 
         private void ResetSelectedChanged()
         {
             if (_eventAggregator == null)
                 return;
-            _eventAggregator.GetEvent<SelectedChangedPayloadEvent>().Publish(new SearchObjectPayload(null));
+            _eventAggregator.GetEvent<OFSelectedChangedPayloadEvent>().Publish(new OFSearchObjectPayload(null));
         }
 
         private void CreateEmailExecute(object o)
@@ -565,7 +565,7 @@ namespace OF.Module.ViewModel
             if (string.IsNullOrEmpty(adr))
                 return;
 
-            Outlook.MailItem email = OutlookHelper.Instance.CreateNewEmail();
+            Outlook.MailItem email = OFOutlookHelper.Instance.CreateNewEmail();
             email.To = adr;
             email.BodyFormat = Outlook.OlBodyFormat.olFormatHTML;
             email.Display(false);
@@ -621,11 +621,11 @@ namespace OF.Module.ViewModel
 
         private void InitContactCommands()
         {
-            ContactUIItemCollection = new List<UIItem>()
+            ContactUIItemCollection = new List<OFUIItem>()
             {
-                new UIItem(){UIName =  "Everething", Data = "M33.597977,10.759002C37.946865,10.759002 41.485962,14.285001 41.485962,18.649 41.485962,23 37.946865,26.535 33.597977,26.535 29.23909,26.535 25.709992,23 25.709992,18.649 25.709992,17.784 25.849955,16.953001 26.109888,16.174002 26.779719,16.881001 27.70948,17.327002 28.759213,17.327002 30.778696,17.327002 32.418278,15.691001 32.418278,13.668001 32.418278,12.663001 32.008381,11.748001 31.348551,11.087002 32.058369,10.876001 32.818176,10.759002 33.597977,10.759002z M33.606682,4.3679962C25.92741,4.3679957 19.698065,10.594956 19.698065,18.27293 19.698065,25.953894 25.92741,32.177862 33.606682,32.177862 41.295838,32.177862 47.515175,25.953894 47.515175,18.27293 47.515175,10.594956 41.295838,4.3679957 33.606682,4.3679962z M34.867642,1.546141E-09C36.890393,2.6508449E-05 58.705193,0.41938579 68.893006,18.299923 68.893006,18.299923 57.1442,36.139837 34.44656,34.768854 34.44656,34.768854 14.428583,36.59984 0,18.299923 0,18.299923 9.0791523,0.4590019 34.716553,0.0010111886 34.716553,0.0010114873 34.768162,-1.4442128E-06 34.867642,1.546141E-09z"},
-                new UIItem(){UIName =  "Conversations", Data = "M0,4.0800388L0.030031017,4.0800388 12.610706,16.409995 26.621516,30.149985 40.642334,16.409995 53.223011,4.0800388 53.333001,4.0800388 53.333001,39.080039 0,39.080039z M3.1698808,0L26.660885,0 50.161892,0 38.411389,11.791528 26.660885,23.573054 14.920383,11.791528z"},
-                new UIItem(){UIName =  "File Exchanged", Data = "F1M-1800.12,3181.48C-1800.12,3181.48 -1803.22,3172.42 -1813.67,3175.58 -1813.67,3175.58 -1822.52,3177.87 -1820.93,3188.08L-1807.87,3226.17 -1804.99,3225.18 -1817.71,3188.05C-1817.71,3188.05 -1820.44,3181.75 -1812.98,3178.38 -1812.98,3178.38 -1805.77,3175.6 -1802.56,3183.22L-1786.65,3229.63C-1786.65,3229.63 -1786.14,3234.44 -1790.63,3235.46 -1790.63,3235.46 -1792.78,3236.54 -1796.5,3233.79L-1803.82,3212.42 -1809.85,3194.84C-1809.85,3194.84 -1809.94,3192.33 -1808.27,3191.61 -1807.43,3191.25 -1805.9,3191.14 -1805.05,3193.37L-1794.19,3225.06 -1791.09,3224 -1802.17,3191.67C-1802.17,3191.67 -1803.96,3187.16 -1809.04,3188.84 -1810.81,3189.42 -1813.38,3190.48 -1812.95,3195.18L-1799.38,3234.78C-1799.38,3234.78 -1796.27,3240.08 -1789.53,3238.67 -1789.53,3238.67 -1783.39,3237.06 -1783.69,3229.41L-1800.12,3181.48z"}
+                new OFUIItem(){UIName =  "Everething", Data = "M33.597977,10.759002C37.946865,10.759002 41.485962,14.285001 41.485962,18.649 41.485962,23 37.946865,26.535 33.597977,26.535 29.23909,26.535 25.709992,23 25.709992,18.649 25.709992,17.784 25.849955,16.953001 26.109888,16.174002 26.779719,16.881001 27.70948,17.327002 28.759213,17.327002 30.778696,17.327002 32.418278,15.691001 32.418278,13.668001 32.418278,12.663001 32.008381,11.748001 31.348551,11.087002 32.058369,10.876001 32.818176,10.759002 33.597977,10.759002z M33.606682,4.3679962C25.92741,4.3679957 19.698065,10.594956 19.698065,18.27293 19.698065,25.953894 25.92741,32.177862 33.606682,32.177862 41.295838,32.177862 47.515175,25.953894 47.515175,18.27293 47.515175,10.594956 41.295838,4.3679957 33.606682,4.3679962z M34.867642,1.546141E-09C36.890393,2.6508449E-05 58.705193,0.41938579 68.893006,18.299923 68.893006,18.299923 57.1442,36.139837 34.44656,34.768854 34.44656,34.768854 14.428583,36.59984 0,18.299923 0,18.299923 9.0791523,0.4590019 34.716553,0.0010111886 34.716553,0.0010114873 34.768162,-1.4442128E-06 34.867642,1.546141E-09z"},
+                new OFUIItem(){UIName =  "Conversations", Data = "M0,4.0800388L0.030031017,4.0800388 12.610706,16.409995 26.621516,30.149985 40.642334,16.409995 53.223011,4.0800388 53.333001,4.0800388 53.333001,39.080039 0,39.080039z M3.1698808,0L26.660885,0 50.161892,0 38.411389,11.791528 26.660885,23.573054 14.920383,11.791528z"},
+                new OFUIItem(){UIName =  "File Exchanged", Data = "F1M-1800.12,3181.48C-1800.12,3181.48 -1803.22,3172.42 -1813.67,3175.58 -1813.67,3175.58 -1822.52,3177.87 -1820.93,3188.08L-1807.87,3226.17 -1804.99,3225.18 -1817.71,3188.05C-1817.71,3188.05 -1820.44,3181.75 -1812.98,3178.38 -1812.98,3178.38 -1805.77,3175.6 -1802.56,3183.22L-1786.65,3229.63C-1786.65,3229.63 -1786.14,3234.44 -1790.63,3235.46 -1790.63,3235.46 -1792.78,3236.54 -1796.5,3233.79L-1803.82,3212.42 -1809.85,3194.84C-1809.85,3194.84 -1809.94,3192.33 -1808.27,3191.61 -1807.43,3191.25 -1805.9,3191.14 -1805.05,3193.37L-1794.19,3225.06 -1791.09,3224 -1802.17,3191.67C-1802.17,3191.67 -1803.96,3187.16 -1809.04,3188.84 -1810.81,3189.42 -1813.38,3190.48 -1812.95,3195.18L-1799.38,3234.78C-1799.38,3234.78 -1796.27,3240.08 -1789.53,3238.67 -1789.53,3238.67 -1783.39,3237.06 -1783.69,3229.41L-1800.12,3181.48z"}
             };
         }
 
@@ -703,7 +703,7 @@ namespace OF.Module.ViewModel
 
         private void OnScroll(object args)
         {
-            InternalOnScroll(args as ScrollData, _scrollBehavior);
+            InternalOnScroll(args as OFScrollData, _scrollBehavior);
         }
 
         public ICommand ScrollChangedCommand2
@@ -714,10 +714,10 @@ namespace OF.Module.ViewModel
 
         private void OnScroll2(object args)
         {
-            InternalOnScroll(args as ScrollData, _scrollBehavior2);
+            InternalOnScroll(args as OFScrollData, _scrollBehavior2);
         }
 
-        private void InternalOnScroll(ScrollData args, IScrollBehavior behavior)
+        private void InternalOnScroll(OFScrollData args, IScrollBehavior behavior)
         {
             if (args == null || behavior == null)
                 return;

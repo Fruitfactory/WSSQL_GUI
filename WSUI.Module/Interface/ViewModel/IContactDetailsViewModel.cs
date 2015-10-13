@@ -12,9 +12,9 @@ namespace OF.Module.Interface.ViewModel
     {
         object View { get; }
 
-        ObservableCollection<AttachmentContentSearchObject> ItemsSource { get; }
+        ObservableCollection<OFAttachmentContentSearchObject> ItemsSource { get; }
 
-        ObservableCollection<EmailSearchObject> EmailsSource { get; } 
+        ObservableCollection<OFEmailSearchObject> EmailsSource { get; } 
 
         void SetDataObject(ISearchObject dataSearchObject);
 
@@ -26,7 +26,7 @@ namespace OF.Module.Interface.ViewModel
 
         void ApplyIndexForShowing(int index);
 
-        IEnumerable<UIItem> ContactUIItemCollection { get; }
+        IEnumerable<OFUIItem> ContactUIItemCollection { get; }
         int SelectedIndex { get; }
 
         string SearchCriteria { get; }

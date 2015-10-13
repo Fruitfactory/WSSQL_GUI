@@ -12,7 +12,7 @@ namespace OF.Module.Interface.Service
             get;
         }
 
-        TypeSearchItem Type
+        OFTypeSearchItem Type
         {
             get;
         }
