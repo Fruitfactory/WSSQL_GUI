@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Input;
 using OF.Core;
@@ -89,7 +90,19 @@ namespace OF.Module.ViewModel
         {
             TopQueryResult = ScrollBehavior.CountFirstProcess;
             ShowMessageNoMatches = true;
+            CheckSearchString();
             base.OnFilterData();
+        }
+
+        private void CheckSearchString()
+        {
+            string pattern = "to:|body:|folder:|sortby:";
+            var criteria = CriteriaSource.FirstOrDefault(c => c.CriteriaType == AdvancedSearchCriteriaType.Body);
+            if (!Regex.IsMatch(SearchString, pattern) && criteria.IsNotNull())
+            {
+                criteria.Value = SearchString;
+                CriteriaOnPropertyChanged(null, null);
+            }
         }
 
         private void OnScroll(object args)
