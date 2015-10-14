@@ -67,7 +67,7 @@ namespace OF.Core.Win32
         private static extern uint GetTickCount();
 
         [DllImport("Kernel32.dll")]
-        private static extern uint GetLastError();
+        public static extern uint GetLastError();
 
        
         #endregion [function]

@@ -16,6 +16,7 @@ using OFPreview.PreviewHandler.TypeResolver;
 using OF.Core.Data;
 using OF.Core.Extensions;
 using OF.Core.Logger;
+using OF.Core.Win32;
 
 namespace OFPreview.PreviewHandler
 {
@@ -81,17 +82,21 @@ namespace OFPreview.PreviewHandler
                 bool res = false;
                 if (res = LoadFile(filename, _pdfDoc))
                 {
-                    
-                    _pdfDoc.NextPage();
 
+                    _pdfDoc.NextPage();
                     _pdfDoc.PreviousPage();
-                    _pdfDoc.RenderPage(pageViewControl1.Handle);
+                    //_pdfDoc.RenderPage(pageViewControl1.Handle);
                     Render();
                 }
             }
             catch (Exception ex)
             {
                 OFLogger.Instance.LogError(ex.Message);
+            }
+            catch
+            {
+                uint codeError = WindowsFunction.GetLastError();
+                OFLogger.Instance.LogError("Unmanaged Error. Code: {0}", codeError);
             }
         }
 
@@ -306,7 +311,7 @@ namespace OFPreview.PreviewHandler
             OFLogger.Instance.LogError("Check");
             if (_pdfDoc != null)
             {
-                FitWidth();
+                FitSize();
                 Render();
             }
         }
@@ -320,17 +325,31 @@ namespace OFPreview.PreviewHandler
             Invalidate();
         }
 
+        private void FitSize()
+        {
+            if (_pdfDoc != null && _pdfDoc.CurrentPage > 0)
+            {
+                using (PictureBox box = new PictureBox())
+                {
+                    box.Width = pageViewControl1.ClientSize.Width;
+                    box.Height = pageViewControl1.ClientSize.Height;
+                    _pdfDoc.FitToWidth(box.Handle);
+                }
+                _pdfDoc.RenderPage(pageViewControl1.Handle);
+            }
+        }
+
         private void FitWidth()
         {
             OFLogger.Instance.LogError("Check");
             if (_pdfDoc != null && _pdfDoc.CurrentPage > 0)
             {
-                using (PictureBox p = new PictureBox())
+                using (PictureBox box = new PictureBox())
                 {
-                    p.Width = pageViewControl1.ClientSize.Width;
-                    _pdfDoc.FitToWidth(p.Handle);
+                    box.Width = pageViewControl1.ClientSize.Width;
+                    _pdfDoc.FitToWidth(box.Handle);
                 }
-                _pdfDoc.RenderPageThread(pageViewControl1.Handle, true);
+                _pdfDoc.RenderPage(pageViewControl1.Handle);
             }
         }
 
@@ -338,44 +357,11 @@ namespace OFPreview.PreviewHandler
         {
             if (_pdfDoc != null && _pdfDoc.CurrentPage > 0)
             {
-                using (PictureBox p = new PictureBox())
-                {
-                    p.Width = pageViewControl1.ClientSize.Height;
-                    _pdfDoc.FitToHeight(p.Handle);
-                }
-                _pdfDoc.RenderPageThread(pageViewControl1.Handle, false);
+                _pdfDoc.FitToHeight(pageViewControl1.Handle);
+                _pdfDoc.RenderPage(pageViewControl1.Handle);
             }
         }
 
-
-
-        private void txtPage_KeyDown(object sender, KeyEventArgs e)
-        {
-            //try
-            //{
-            //    if (_pdfDoc != null && e.KeyCode == Keys.Return)
-            //    {
-            //        int page = -1;
-            //        if (int.TryParse(txtPage.Text, out page))
-            //        {
-            //            if (page > 0 && page <= _pdfDoc.PageCount)
-            //            {
-            //                _pdfDoc.CurrentPage = page;
-
-            //                _pdfDoc.RenderPage(pageViewControl1.Handle);
-            //                Render();
-            //            }
-            //            else
-            //                page = -1;
-            //        }
-            //    }
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message, "Error");
-            //}
-        }
 
         private void tsbNext_Click(object sender, EventArgs e)
         {
@@ -421,7 +407,7 @@ namespace OFPreview.PreviewHandler
                 }
             }
         }
-      
+
         public bool LoadStream(System.IO.Stream fileStream)
         {
             OFLogger.Instance.LogError("Check");
@@ -496,7 +482,7 @@ namespace OFPreview.PreviewHandler
                 if (_pdfDoc != null)
                 {
                     _pdfDoc.ZoomIN();
-                    _pdfDoc.RenderPageThread(pageViewControl1.Handle, false);
+                    _pdfDoc.RenderPage(pageViewControl1.Handle);
                     Render();
                 }
 
@@ -505,24 +491,17 @@ namespace OFPreview.PreviewHandler
 
         }
 
-        void _pdfDoc_RenderFinished()
-        {
-
-        }
-
         private void tsbZoomOut_Click(object sender, EventArgs e)
         {
             OFLogger.Instance.LogError("Check");
             try
             {
-
                 if (_pdfDoc != null)
                 {
                     _pdfDoc.ZoomOut();
-                    _pdfDoc.RenderPageThread(pageViewControl1.Handle, false);
+                    _pdfDoc.RenderPage(pageViewControl1.Handle);
                     Render();
                 }
-
             }
             catch (Exception) { }
         }
@@ -695,10 +674,10 @@ namespace OFPreview.PreviewHandler
                 }
 
             }
-             catch (Exception ex)
-             {
-                 OFLogger.Instance.LogError(ex.Message);
-             }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.Message);
+            }
             return false;
         }
 

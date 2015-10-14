@@ -203,13 +203,13 @@ namespace OFPreview.PreviewHandler
             this.vsb.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBar1_Scroll);
             this.vsb.Resize += new System.EventHandler(this.vsb_Resize);
             // 
-            // DoubleBufferControl
+            // PageViewer
             // 
-            this.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(251)))), ((int)(((byte)(253)))));
             this.Controls.Add(this.vsb);
             this.Controls.Add(this.hsb);
             this.Margin = new System.Windows.Forms.Padding(10);
-            this.Name = "DoubleBufferControl";
+            this.Name = "PageViewer";
             this.Size = new System.Drawing.Size(361, 419);
             this.MarginChanged += new System.EventHandler(this.DoubleBufferControl_MarginChanged);
             this.Resize += new System.EventHandler(this.DoubleBufferControl_Resize);
