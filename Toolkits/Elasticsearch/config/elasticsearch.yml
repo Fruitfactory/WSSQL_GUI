@@ -181,7 +181,7 @@ node.name: "Outlook Finder  ElasticSearch PST River"
 #
 # Set this property to true to lock the memory:
 #
-#bootstrap.mlockall: true
+bootstrap.mlockall: true
 
 # Make sure that the ES_MIN_MEM and ES_MAX_MEM environment variables are set
 # to the same value, and that the machine has enough memory to allocate
@@ -388,4 +388,5 @@ node.name: "Outlook Finder  ElasticSearch PST River"
 # When you run a query that requires access to new field values, it will load the values into memory and then try to add them to fielddata. 
 # If the resulting fielddata size would exceed the specified size, other values would be evicted in order to make space.
 # By default, this setting is unbounded—Elasticsearch will never evict data from fielddata.
-indices.fielddata.cache.size:  40%
+indices.fielddata.cache.size:  25%
+

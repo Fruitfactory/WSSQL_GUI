@@ -77,7 +77,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
     @Override
     public void run() {
 
-        if(this._riverInitializer  != null){
+        if(this._riverInitializer != null){
             this._riverInitializer.init();
         }
 
@@ -131,6 +131,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
                     setLastCountIndexedOfAttachments(countAttachments);
                     
                     setRiverStatus(PstRiverStatus.StandBy);
+                    flush();
                     
                     if(delayTimeOut > 0){
                         Thread.sleep(TimeValue.timeValueHours(delayTimeOut).millis());
@@ -224,12 +225,14 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
             if (_closed) {
                 return lastDate;
             }
+
+
             GetResponse lastSeqGetResponse = _client
                     .prepareGet("_river", riverName.name(),
                             PstGlobalConst.LAST_UPDATED_FIELD).execute().actionGet();
             if (lastSeqGetResponse.isExists()) {
                 Map<String, Object> fsState = (Map<String, Object>) lastSeqGetResponse
-                        .getSourceAsMap().get(PstGlobalConst.PST_PREFIX);
+                        .getSourceAsMap().get(PstGlobalConst.LAST_UPDATED_FIELD);
 
                 if (fsState != null) {
                     Object lastupdate = fsState.get("lastdate");
@@ -260,7 +263,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
 
             XContentBuilder xb = jsonBuilder()
                     .startObject()
-                    .startObject(PstGlobalConst.PST_PREFIX)
+                    .startObject(PstGlobalConst.LAST_UPDATED_FIELD)
                     .field("feedname", riverName.getName())
                     .field("lastdate", scanDate)
                     .endObject()

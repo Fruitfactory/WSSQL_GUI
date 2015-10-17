@@ -5,7 +5,7 @@ using OFOutlookPlugin.Core;
 
 namespace OFOutlookPlugin.Managers
 {
-    public class OFCommandBarManager : SearchCommandManager
+    public class OFCommandBarManager : OFSearchCommandManager
     {
         private readonly ADXCommandBarButton _buttonShow;
         private readonly ADXCommandBarButton _buttonHide;

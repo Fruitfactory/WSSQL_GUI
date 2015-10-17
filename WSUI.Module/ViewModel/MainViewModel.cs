@@ -61,9 +61,8 @@ namespace OF.Module.ViewModel
         private List<OFLazyKind> _listItems;
         private ILazyKind _selectedLazyKind;
         private Visibility _dataVisibility;
-        private Visibility _backButtonVisibility;
+        
         private bool _isBusy;
-        private object _oldView = null;
         private INavigationService _navigationService;
         private SubscriptionToken _token;
 
@@ -71,7 +70,6 @@ namespace OF.Module.ViewModel
         private Dictionary<OFTypeSearchItem, IEnumerable<MenuItem>> _menuItems;
         private ICommandStrategy _currentStrategy;
         private int _selectedUIItemIndex;
-        private IContactDetailsViewModel _contactDetails;
         private IElasticSearchViewModel _elasticSearchViewModel;
         private IUserActivityTracker _userActivityTracker;
 
@@ -604,8 +602,9 @@ namespace OF.Module.ViewModel
         public event EventHandler Start;
 
         public event EventHandler Complete;
-
+#pragma warning disable 0067
         public event EventHandler<OFSlideDirectionEventArgs> Slide;
+#pragma warning restore 0067
 
         public List<OFBaseSearchObject> MainDataSource { get; protected set; }
 

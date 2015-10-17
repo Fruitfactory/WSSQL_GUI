@@ -13,7 +13,7 @@ using OFOutlookPlugin.Core;
 
 namespace OFOutlookPlugin.Managers
 {
-    public class OFAboutCommandManager : BaseCommandManager
+    public class OFAboutCommandManager : OFBaseCommandManager
     {
         #region [needs]
 

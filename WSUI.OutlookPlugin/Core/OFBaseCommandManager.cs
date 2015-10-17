@@ -5,7 +5,7 @@ using OFOutlookPlugin.Interfaces;
 
 namespace OFOutlookPlugin.Core
 {
-    public abstract class BaseCommandManager : ICommandManager
+    public abstract class OFBaseCommandManager : ICommandManager
     {
         private IEventAggregator _eventAggregator;
         

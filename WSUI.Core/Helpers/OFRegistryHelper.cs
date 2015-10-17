@@ -408,7 +408,7 @@ namespace OF.Core.Helpers
                 var lowerKey = key.ToLowerInvariant();
                 return values != null && values.Any(v => v.ToLowerInvariant().Equals(lowerKey));
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }

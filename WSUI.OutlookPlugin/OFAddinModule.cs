@@ -50,17 +50,15 @@ namespace OFOutlookPlugin
     {
         private int _outlookVersion = 0;
         private string _officeVersion = string.Empty;
-        private bool _refreshCurrentFolderExecuting = false;
+       
         private IUpdatable _updatable = null;
         private IPluginBootStraper _wsuiBootStraper = null;
         private IEventAggregator _eventAggregator = null;
-        private Outlook.MAPIFolder _lastMapiFolder;
         private IOFCommandManager _commandManager;
         private ICommandManager _aboutCommandManager;
         private ISidebarForm _sidebarForm;
         private bool IsLoading = true;
         private int _initHashCode;
-        private string _previewReferenceSelected = null;
         private Stopwatch _watch;
 
         #region [const]
@@ -594,7 +592,7 @@ namespace OFOutlookPlugin
                 }
                 if (_updatable == null)
                 {
-                    _updatable = UpdateHelper.Instance;
+                    _updatable = OFUpdateHelper.Instance;
                     _updatable.Module = this;
                 }
                 StopWatch("Init");
@@ -664,7 +662,7 @@ namespace OFOutlookPlugin
             try
             {
                 StartWatch();
-                DllPreloader.Instance.PreloadDll();
+                OFDllPreloader.Instance.PreloadDll();
                 _wsuiBootStraper = new PluginBootStraper();
                 _wsuiBootStraper.Run();
                 _eventAggregator = _wsuiBootStraper.Container.Resolve<IEventAggregator>();

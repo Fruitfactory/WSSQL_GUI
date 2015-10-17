@@ -9,7 +9,7 @@ using AddinExpress.OL;
 using OF.Core.Logger;
 
 namespace OFOutlookPlugin.Core {
-public class DllPreloader {
+public class OFDllPreloader {
   #region [needs]
 
   private const string DllExt = "*.dll";
@@ -19,7 +19,7 @@ public class DllPreloader {
 
   #region [ctor]
 
-  protected DllPreloader()
+  protected OFDllPreloader()
   {
 
   }
@@ -27,14 +27,14 @@ public class DllPreloader {
 
   #region [static]
 
-  private static Lazy<DllPreloader> _instance = new Lazy<DllPreloader>(() =>
+  private static Lazy<OFDllPreloader> _instance = new Lazy<OFDllPreloader>(() =>
   {
-    var inst = new DllPreloader();
+    var inst = new OFDllPreloader();
     inst.Init();
     return inst;
   });
 
-  public static DllPreloader Instance
+  public static OFDllPreloader Instance
   {
     get {
       return _instance.Value;

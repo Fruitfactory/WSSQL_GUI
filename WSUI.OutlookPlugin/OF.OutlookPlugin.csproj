@@ -159,10 +159,10 @@
     <Compile Include="About\OFAbout.Designer.cs">
       <DependentUpon>OFAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core\DllPreloader.cs" />
-    <Compile Include="Core\Extensions.cs" />
-    <Compile Include="Core\SearchCommandManager.cs" />
-    <Compile Include="Core\UpdateHelper.cs" />
+    <Compile Include="Core\OFDllPreloader.cs" />
+    <Compile Include="Core\OFExtensions.cs" />
+    <Compile Include="Core\OFSearchCommandManager.cs" />
+    <Compile Include="Core\OFUpdateHelper.cs" />
     <Compile Include="Events\OFHideWindow.cs" />
     <Compile Include="Events\OFOpenWindow.cs" />
     <Compile Include="Events\OFSearch.cs" />
@@ -178,9 +178,9 @@
     <Compile Include="Interfaces\IMainForm.cs" />
     <Compile Include="Interfaces\ISidebarForm.cs" />
     <Compile Include="Interfaces\IUpdatable.cs" />
-    <Compile Include="Interfaces\IWSUICommandManager.cs" />
-    <Compile Include="Core\BaseCommandManager.cs" />
-    <Compile Include="Interfaces\IWSUIOutlookItemEvents.cs" />
+    <Compile Include="Interfaces\IOFCommandManager.cs" />
+    <Compile Include="Core\OFBaseCommandManager.cs" />
+    <Compile Include="Interfaces\IOFOutlookItemEvents.cs" />
     <Compile Include="Managers\OFAboutCommandManager.cs" />
     <Compile Include="Managers\OFCommandBarManager.cs" />
     <Compile Include="Managers\OFRibbonManager.cs" />

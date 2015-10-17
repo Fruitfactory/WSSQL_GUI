@@ -362,8 +362,9 @@ namespace OF.Module.Core
         public event EventHandler<EventArgs<bool>> Complete;
 
         public event EventHandler<EventArgs<bool>> Error;
-
+#pragma warning disable 0067
         public event EventHandler<EventArgs<OFBaseSearchObject>> CurrentItemChanged;
+#pragma warning restore 0067
 
         public event EventHandler Choose;
 

@@ -93,11 +93,13 @@ namespace OFPreview.PreviewHandler
             {
                 OFLogger.Instance.LogError(ex.Message);
             }
+#pragma warning disable 1058
             catch
             {
                 uint codeError = WindowsFunction.GetLastError();
                 OFLogger.Instance.LogError("Unmanaged Error. Code: {0}", codeError);
             }
+#pragma warning restore 1058
         }
 
         public void LoadFile(Stream stream)

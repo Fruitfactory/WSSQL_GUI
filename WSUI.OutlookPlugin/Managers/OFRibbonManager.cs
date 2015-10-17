@@ -6,7 +6,7 @@ using OFOutlookPlugin.Core;
 
 namespace OFOutlookPlugin.Managers
 {
-    public class OFRibbonManager : SearchCommandManager
+    public class OFRibbonManager : OFSearchCommandManager
     {
         private readonly ADXRibbonButton _buttonSwitchView;
         private readonly ADXRibbonButton _buttonSwitch;

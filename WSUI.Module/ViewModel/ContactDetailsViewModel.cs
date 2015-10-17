@@ -466,7 +466,6 @@ namespace OF.Module.ViewModel
         {
             FirstName = dataObject.FirstName;
             LastName = dataObject.LastName;
-            string name = "";
             Emails = (new List<string> { dataObject.EmailAddress1, dataObject.EmailAddress2, dataObject.EmailAddress3 }).Distinct().Where(s => !string.IsNullOrEmpty(s));
             FotoFilepath = OFOutlookHelper.Instance.GetContactFotoTempFileName(dataObject);
             BusinessTelephone = dataObject.BusinessTelephone;

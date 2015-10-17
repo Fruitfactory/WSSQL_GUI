@@ -168,7 +168,6 @@ namespace OFPreview.PreviewHandler.PreviewHandlerFramework
         protected virtual void ProcessWinMessage(MSG msg)
         {
             const int WM_KEYDOWN = 0x100;
-            const int WM_KEYUP = 0x101;
             switch (msg.message)
             {
                 case WM_KEYDOWN:

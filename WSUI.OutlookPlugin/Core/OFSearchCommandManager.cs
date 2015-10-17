@@ -5,7 +5,7 @@ using OFOutlookPlugin.Interfaces;
 
 namespace OFOutlookPlugin.Core
 {
-    public abstract class SearchCommandManager : BaseCommandManager, IOFCommandManager
+    public abstract class OFSearchCommandManager : OFBaseCommandManager, IOFCommandManager
     {
 
         public virtual void SetShowHideButtonsEnabling(bool isShowButtonEnable, bool isHideButtonEnable)

@@ -20,16 +20,12 @@ namespace OF.Module.Service.Index
     public class OFAttachmentReader : OFViewModelBase, IAttachmentReader
     { 
         private string AttachSchema = "http://schemas.microsoft.com/mapi/proptag/0x37010102";
-        private string TransportHeaderSchema = "http://schemas.microsoft.com/mapi/proptag/0x007D001F";
         private Thread _thread;
         private CancellationTokenSource _cancellationSource;
         private CancellationToken _cancellationToken;
         private IElasticSearchIndexAttachmentClient _indexAttachmentClient;
         private DateTime? _lastUpdated;
         private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
-
-        private static readonly long ContentMaxSize = 5*1024*1024;
-
 
         private static readonly string DateFormat = "MM/dd/yyyy HH:mm:ss";
         private static int PageMaxSize = 65536;

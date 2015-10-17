@@ -13,7 +13,6 @@ namespace OFOutlookPlugin
     public partial class OFSidebar : AddinExpress.OL.ADXOlForm, ISidebarForm
     {
         private IPluginBootStraper _wsuiBootStraper = null;
-        private bool _isDebugMode = false;
         private bool _isSecondInstance = false;
 
         public OFSidebar()

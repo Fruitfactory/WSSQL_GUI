@@ -32,7 +32,6 @@ namespace OF.Module.ViewModel
     public class AdvancedSearchViewModel : OFKindViewModelBase, IUView<AdvancedSearchViewModel>, IAdvancedSearchViewModel, IScrollableView
     {
         private readonly Dictionary<AdvancedSearchCriteriaType, string> _prefixes = new Dictionary<AdvancedSearchCriteriaType, string>();
-        private bool _isAdvancedMode = false;
 
         public AdvancedSearchViewModel(IUnityContainer container, IEventAggregator eventAggregator, ISettingsView<AdvancedSearchViewModel> settingsView, IDataView<AdvancedSearchViewModel> dataView)
             : base(container, eventAggregator)

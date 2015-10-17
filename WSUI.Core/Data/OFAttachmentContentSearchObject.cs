@@ -41,7 +41,7 @@ namespace OF.Core.Data
             set { Set(() => Path, value); }
         }
 
-        public long Size
+        public new long Size
         {
             get { return Get(() => Size); }
             set { Set(() => Size, value); }

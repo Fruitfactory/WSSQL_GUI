@@ -44,7 +44,6 @@ namespace OF.Module.ViewModel
         private IRegionManager _regionManager;
         private IAttachmentReader _attachmentReader;
         private Timer _timer;
-        private bool _isFinishing = false;
 
         private readonly object _lock = new object();
 

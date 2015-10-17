@@ -26,8 +26,6 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
         private static readonly String WARM_NAME_EMAIL = "warm_email";
         private static readonly String WARM_NAME_ATTACHMENT = "warm_attachment";
 
-        private static readonly int HITS_INDEX = 2;
-        private static readonly int TOTAL_INDEX = 0;
         private static readonly int WARM_UP_SIZER = 100;
         
 

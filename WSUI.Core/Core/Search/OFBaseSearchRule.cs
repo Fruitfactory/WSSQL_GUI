@@ -37,7 +37,6 @@ namespace OF.Core.Core.Search
         #region [needs private]
 
         private Thread _ruleThread;
-        private IQueryReader _reader;
         private volatile bool _isSearching = false;
         private bool _exludeIgnored = false;
         private IElasticSearchClient _elasticSearchClient;

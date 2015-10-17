@@ -16,7 +16,7 @@ using Timer = System.Timers.Timer;
 
 namespace OFOutlookPlugin.Core
 {
-    public class UpdateHelper : IUpdatable
+    public class OFUpdateHelper : IUpdatable
     {
         #region [const]
 
@@ -76,7 +76,7 @@ namespace OFOutlookPlugin.Core
         #region [static]
         private static readonly Lazy<IUpdatable> _instance = new Lazy<IUpdatable>(() =>
                                                                                       {
-                                                                                          UpdateHelper upd = new UpdateHelper();
+                                                                                          OFUpdateHelper upd = new OFUpdateHelper();
                                                                                           upd.Init();
                                                                                           return upd;
                                                                                       });
@@ -89,7 +89,7 @@ namespace OFOutlookPlugin.Core
 
         #region [ctor]
 
-        private UpdateHelper()
+        private OFUpdateHelper()
         {
                     
         }
@@ -238,7 +238,7 @@ namespace OFOutlookPlugin.Core
 
         private string GetInstalationPath(string localpath)
         {
-            string manifest = localpath + UpdateHelper.ManifestFilename;
+            string manifest = localpath + OFUpdateHelper.ManifestFilename;
             XDocument doc = XDocument.Load(manifest);
             var msi = doc.Descendants("msi").FirstOrDefault();
             if (msi == null)

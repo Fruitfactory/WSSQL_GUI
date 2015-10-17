@@ -24,6 +24,7 @@ import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.cluster.block.ClusterBlockException;
 import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.util.concurrent.EsExecutors;
 import org.elasticsearch.common.xcontent.XContentBuilder;
@@ -126,9 +127,9 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
                     logger.warn("Error executing bulk", failure);
                 }
             })
-                    .setBulkActions(100)
+                    .setBulkActions(-1)
                     .setConcurrentRequests(1)
-                    .setFlushInterval(TimeValue.timeValueSeconds(2))
+                    .setBulkSize(ByteSizeValue.parseBytesSizeValue("10m"))
                     .build();
         
         

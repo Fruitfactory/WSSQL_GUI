@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace OFOutlookPlugin.Core
 {
-    public static class Extensions
+    public static class OFExtensions
     {
         public static void HideForm(this AddinExpress.OL.ADXOlFormsManager manager)
         {
