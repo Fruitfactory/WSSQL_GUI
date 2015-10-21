@@ -1317,7 +1317,7 @@ namespace OFOutlookPlugin
 
                 foreach (var valueName in key.GetValueNames())
                 {
-                    var value = (byte[])key.GetValue(valueName, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
+                    var value = key.GetValue(valueName, null, RegistryValueOptions.DoNotExpandEnvironmentNames) as byte[];
                     if (value.IsNull())
                         return;
                     var buffer = new byte[value.Length];
