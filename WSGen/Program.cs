@@ -28,14 +28,15 @@ namespace WSGen
             }
 
 
-            var build = Convert.ToInt16(Properties.Settings.Default.BuildCount);
+            var revision = (int)(DateTime.UtcNow - new DateTime(2013, 8, 20)).TotalDays;
 
             string source = args[0];
-            string buildNumber = string.Format("{0}.{1}", Properties.Settings.Default.BuildNumber, build);
+            string buildNumber = string.Format("{0}.{1}.{2}.{3}", Properties.Settings.Default.Major, Properties.Settings.Default.Minor,Properties.Settings.Default.Build, revision);
             string setupProject = string.Format("{0}{1}", source, Properties.Settings.Default.SetupProjectFile);
             GenerateVersionFile(source, buildNumber);
             UpdateSetupProject(setupProject, buildNumber);
-            Properties.Settings.Default["BuildCount"] = Convert.ToInt32(++build);
+            Properties.Settings.Default["Revision"] = Convert.ToInt32(revision);
+            Properties.Settings.Default["BuildNumber"] = buildNumber;
             Properties.Settings.Default.Save();
             Properties.Settings.Default.Reload();
         }

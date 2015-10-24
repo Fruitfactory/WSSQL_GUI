@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.7" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.795" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />-->
     <Upgrade Id="6169fa5d-89fa-44d3-9801-cefe8fc8755e">
@@ -26,18 +26,7 @@
       <ComponentRef Id="INSTALLFOLDERLIB64" />
       <ComponentGroupRef Id="ProductComponents" />
     </Feature>
-
-    <Feature Id="ElasticSearchProductFeature" 
-             Title="Elastic Search" 
-             Level="1"
-             Absent="disallow"
-             TypicalDefault="install"
-             AllowAdvertise="no"
-             ConfigurableDirectory="ELASTICSEASRCHINSTALLFOLDER"
-             InstallDefault="local"
-             >
-
-      
+    <Feature Id="ElasticSearchProductFeature" Title="Elastic Search" Level="1" Absent="disallow" TypicalDefault="install" AllowAdvertise="no" ConfigurableDirectory="ELASTICSEASRCHINSTALLFOLDER" InstallDefault="local">
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDER" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERBIN" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" />
@@ -46,8 +35,6 @@
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERPLUGINS" />
       <ComponentGroupRef Id="ElasticSearchComponents" />
     </Feature>
-    
-    
     <?ifndef TRIAL ?>
     <Binary Id="Turbo_Activate_dat" SourceFile="$(var.OF.OutlookPlugin.TargetDir)TurboActivate.dat" />
     <Binary Id="Turbo_Activate_dll" SourceFile="$(var.OF.OutlookPlugin.TargetDir)TurboActivate.dll" />
@@ -72,13 +59,9 @@
     <CustomAction Id="ClosePrompt" BinaryKey="managedAction" DllEntry="ClosePrompt" Execute="immediate" Return="check" />
     <?ifndef TRIAL ?>
     <CustomAction Id="ActivatePlugin" BinaryKey="managedAction" DllEntry="ActivatePlugin" Execute="immediate" Return="check" />
-
     <CustomAction Id="InstallElasticSearch" BinaryKey="managedAction" DllEntry="InstallElasticSearch" Return="check" Execute="immediate" />
-
     <CustomAction Id="UnInstallElasticSearch" BinaryKey="managedAction" DllEntry="UnInstallElasticSearch" Execute="immediate" Return="check" />
     <CustomAction Id="SetJavaSdkVariable" BinaryKey="managedAction" DllEntry="SetJavaSdkVariable" Execute="immediate" Return="check" />
-    
-    
     <?endif?>
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallValidate" />
@@ -88,8 +71,8 @@
       <Custom Action="Deactivate" After="UnregisterDll">Installed</Custom>
       <Custom Action="UnInstallElasticSearch" After="Deactivate">Installed</Custom>
       <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>
-      <Custom Action='SetJavaSdkVariable' After='InstallFinalize'>NOT Installed</Custom>
-      <Custom Action='InstallElasticSearch' After='SetJavaSdkVariable'>NOT Installed</Custom>
+      <Custom Action="SetJavaSdkVariable" After="InstallFinalize">NOT Installed</Custom>
+      <Custom Action="InstallElasticSearch" After="SetJavaSdkVariable">NOT Installed</Custom>
       <Custom Action="ClosePrompt" After="CostFinalize">NOT Installed OR Installed OR REMOVE="ALL"</Custom>
       <!--<Custom Action="CloseOutlook" After="AppSearch">NOT Installed OR Installed OR REMOVE="ALL"</Custom>-->
       <Custom Action="SuccesMessage" OnExit="success">NOT Installed</Custom>
@@ -109,7 +92,6 @@
       <RegistrySearch Id="JRE_CURRENT_VERSION_REGSEARCH" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Name="CurrentVersion" Type="raw" Win64="yes" />
     </Property>
     <Condition Message="Java Runtime Environment (32 Bit) is not installed or outdated. Please install Oracle JRE 1.8 or later."><![CDATA[Installed OR (JAVA_CURRENT_VERSION >= "1.8")]]></Condition>
-    
   </Product>
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
@@ -132,15 +114,12 @@
             </Component>
           </Directory>
         </Directory>
-
         <!-- elastic search dir -->
         <Directory Id="ELASTICSEASRCHINSTALLFOLDER" Name="ElasticSearch">
-
           <Component Id="ELASTICSEASRCHINSTALLFOLDER" Guid="20D2309D-3D31-45C6-9C34-34859D61A91B">
             <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDER" />
             <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="ElasticSearch" />
           </Component>
-
           <Directory Id="ELASTICSEASRCHINSTALLFOLDERBIN" Name="bin">
             <Component Id="ELASTICSEASRCHINSTALLFOLDERBIN" Guid="7B2ED621-76B5-4FBC-BB23-8E0FADE4BDCC">
               <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERBIN" />
@@ -148,7 +127,6 @@
               <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="bin" />
             </Component>
           </Directory>
-
           <Directory Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" Name="config">
             <Component Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" Guid="20AEDE7C-8EA0-4B41-B33A-7DDC77DF9925">
               <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" />
@@ -156,7 +134,6 @@
               <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="config" />
             </Component>
           </Directory>
-          
           <Directory Id="ELASTICSEASRCHINSTALLFOLDERPLUGINS" Name="plugins">
             <Component Id="ELASTICSEASRCHINSTALLFOLDERPLUGINS" Guid="E8C9D655-A35C-40C5-A576-73E400DEF3CA">
               <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERPLUGINS" />
@@ -164,14 +141,12 @@
               <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="plugins" />
             </Component>
           </Directory>
-
           <Directory Id="ELASTICSEASRCHINSTALLFOLDERLIB" Name="lib">
             <Component Id="ELASTICSEASRCHINSTALLFOLDERLIB" Guid="7FA11EB8-B03F-44AB-B620-C8263C37C637">
               <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERLIB" />
               <RemoveFile Id="libFile" Name="*.*" On="uninstall" />
               <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="lib" />
             </Component>
-
             <Directory Id="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR" Name="sigar">
               <Component Id="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR" Guid="CDA8023C-E724-4843-8F03-587D6CF64C53">
                 <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR" />
@@ -179,16 +154,11 @@
                 <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="sigar" />
               </Component>
             </Directory>
-
-
           </Directory>
-
         </Directory>
-        
       </Directory>
     </Directory>
   </Fragment>
-  
   <Fragment>
     <ComponentGroup Id="ProductComponents">
       <!-- gfl wrappers for x86 and x64 systems -->
@@ -261,14 +231,9 @@
         <File Id="_DDay_Collections_dll" Name="DDay.Collections.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_DDay_iCal_dll" Name="DDay.iCal.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Transitionals_dll" Name="Transitionals.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
-
         <File Id="_Elasticsearch_Net_dll" Name="Elasticsearch.Net.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nest_dll" Name="Nest.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Newtonsoft_Json_dll" Name="Newtonsoft.Json.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
-        
-        
-        
-        
       </Component>
     </ComponentGroup>
   </Fragment>
@@ -279,89 +244,82 @@
         <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDER]" KeyPath="yes" />
         </RegistryKey>
-        <File Id="_LICENSE_txt" Name="LICENSE.txt" Source="$(var.SolutionDir)Toolkits\Elasticsearch\"/>
-        <File Id="_NOTICE_txt" Name="NOTICE.txt" Source="$(var.SolutionDir)Toolkits\Elasticsearch\"/>
-        <File Id="_README_textile" Name="README.textile" Source="$(var.SolutionDir)Toolkits\Elasticsearch\"/>
+        <File Id="_LICENSE_txt" Name="LICENSE.txt" Source="$(var.SolutionDir)Toolkits\Elasticsearch\" />
+        <File Id="_NOTICE_txt" Name="NOTICE.txt" Source="$(var.SolutionDir)Toolkits\Elasticsearch\" />
+        <File Id="_README_textile" Name="README.textile" Source="$(var.SolutionDir)Toolkits\Elasticsearch\" />
       </Component>
-
       <Component Id="ElasticSearchProductComponentBin" Guid="3CC2D98E-C9F0-4DEE-8C20-62E25B6543D5" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERBIN">
         <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERBIN]" KeyPath="yes" />
         </RegistryKey>
-        <File Id="_elasticsearch_" Name="elasticsearch" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
-        <File Id="_elasticsearch_bat" Name="elasticsearch.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
-        <File Id="_elasticsearch_in_bat" Name="elasticsearch.in.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
-        <File Id="_elasticsearch_service_mgr_exe" Name="elasticsearch-service-mgr.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
-        <File Id="_elasticsearch_service_x64_exe" Name="elasticsearch-service-x64.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
-        <File Id="_elasticsearch_service_x86_exe" Name="elasticsearch-service-x86.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
-        <File Id="_elasticsearch_in_sh" Name="elasticsearch.in.sh" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
-        <File Id="_plugin_" Name="plugin" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
-        <File Id="_plugin_bat" Name="plugin.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
-        <File Id="_removeplugin_bat" Name="removeplugin.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
-        <File Id="_service_bat" Name="service.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"/>
+        <File Id="_elasticsearch_" Name="elasticsearch" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
+        <File Id="_elasticsearch_bat" Name="elasticsearch.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
+        <File Id="_elasticsearch_in_bat" Name="elasticsearch.in.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
+        <File Id="_elasticsearch_service_mgr_exe" Name="elasticsearch-service-mgr.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
+        <File Id="_elasticsearch_service_x64_exe" Name="elasticsearch-service-x64.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
+        <File Id="_elasticsearch_service_x86_exe" Name="elasticsearch-service-x86.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
+        <File Id="_elasticsearch_in_sh" Name="elasticsearch.in.sh" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
+        <File Id="_plugin_" Name="plugin" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
+        <File Id="_plugin_bat" Name="plugin.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
+        <File Id="_removeplugin_bat" Name="removeplugin.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
+        <File Id="_service_bat" Name="service.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
       </Component>
-
       <Component Id="ElasticSearchConfigProductComponent" Guid="C7B8FDDD-0F0C-4ABD-83ED-58B15C1262AA" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERCONFIG">
         <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERCONFIG]" KeyPath="yes" />
         </RegistryKey>
-        <File Id="_elasticsearch_yml" Name="elasticsearch.yml" Source="$(var.SolutionDir)Toolkits\Elasticsearch\config\"/>
-        <File Id="_logging_yml" Name="logging.yml" Source="$(var.SolutionDir)Toolkits\Elasticsearch\config\"/>
+        <File Id="_elasticsearch_yml" Name="elasticsearch.yml" Source="$(var.SolutionDir)Toolkits\Elasticsearch\config\" />
+        <File Id="_logging_yml" Name="logging.yml" Source="$(var.SolutionDir)Toolkits\Elasticsearch\config\" />
       </Component>
-
       <Component Id="ElasticSearchLibProductComponent" Guid="F3D1954B-7861-41C6-98A4-3D21E2A3CB32" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERLIB">
         <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERLIB]" KeyPath="yes" />
         </RegistryKey>
-        <File Id="_antlr_runtime_3_5_jar" Name="antlr-runtime-3.5.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_apache_log4j_extras_1_2_17_jar" Name="apache-log4j-extras-1.2.17.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_asm_4_1_jar" Name="asm-4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_asm_commons_4_1_jar" Name="asm-commons-4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_elasticsearch_1_7_0_jar" Name="elasticsearch-1.7.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_groovy_all_2_4_4_jar" Name="groovy-all-2.4.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_jna_4_1_0_jar" Name="jna-4.1.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_jts_1_13_jar" Name="jts-1.13.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_log4j_1_2_17_jar" Name="log4j-1.2.17.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_analyzers_common_4_10_4_jar" Name="lucene-analyzers-common-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_core_4_10_4_jar" Name="lucene-core-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_expressions_4_10_4_jar" Name="lucene-expressions-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_grouping_4_10_4_jar" Name="lucene-grouping-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_highlighter_4_10_4_jar" Name="lucene-highlighter-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_join_4_10_4_jar" Name="lucene-join-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_memory_4_10_4_jar" Name="lucene-memory-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_misc_4_10_4_jar" Name="lucene-misc-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_queries_4_10_4_jar" Name="lucene-queries-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_queryparser_4_10_4_jar" Name="lucene-queryparser-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_sandbox_4_10_4_jar" Name="lucene-sandbox-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_spatial_4_10_4_jar" Name="lucene-spatial-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_lucene_suggest_4_10_4_jar" Name="lucene-suggest-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
-        <File Id="_spatial4j_0_4_1_jar" Name="spatial4j-0.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\"/>
+        <File Id="_antlr_runtime_3_5_jar" Name="antlr-runtime-3.5.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_apache_log4j_extras_1_2_17_jar" Name="apache-log4j-extras-1.2.17.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_asm_4_1_jar" Name="asm-4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_asm_commons_4_1_jar" Name="asm-commons-4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_elasticsearch_1_7_0_jar" Name="elasticsearch-1.7.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_groovy_all_2_4_4_jar" Name="groovy-all-2.4.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_jna_4_1_0_jar" Name="jna-4.1.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_jts_1_13_jar" Name="jts-1.13.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_log4j_1_2_17_jar" Name="log4j-1.2.17.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_lucene_analyzers_common_4_10_4_jar" Name="lucene-analyzers-common-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_lucene_core_4_10_4_jar" Name="lucene-core-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_lucene_expressions_4_10_4_jar" Name="lucene-expressions-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_lucene_grouping_4_10_4_jar" Name="lucene-grouping-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_lucene_highlighter_4_10_4_jar" Name="lucene-highlighter-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_lucene_join_4_10_4_jar" Name="lucene-join-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_lucene_memory_4_10_4_jar" Name="lucene-memory-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_lucene_misc_4_10_4_jar" Name="lucene-misc-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_lucene_queries_4_10_4_jar" Name="lucene-queries-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_lucene_queryparser_4_10_4_jar" Name="lucene-queryparser-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_lucene_sandbox_4_10_4_jar" Name="lucene-sandbox-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_lucene_spatial_4_10_4_jar" Name="lucene-spatial-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_lucene_suggest_4_10_4_jar" Name="lucene-suggest-4.10.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_spatial4j_0_4_1_jar" Name="spatial4j-0.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
       </Component>
-
-
       <Component Id="ElasticSearchLibSigarProductComponent" Guid="7BACBEF6-7A63-46F3-8D1E-85486A5D870A" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR">
         <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERLIBSIGAR]" KeyPath="yes" />
         </RegistryKey>
-        <File Id="_libsigar_amd64_freebsd_6_so" Name="libsigar-amd64-freebsd-6.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_libsigar_amd64_linux_so" Name="libsigar-amd64-linux.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_libsigar_amd64_solaris_so" Name="libsigar-amd64-solaris.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_libsigar_ia64_linux_so" Name="libsigar-ia64-linux.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_libsigar_sparc_solaris_so" Name="libsigar-sparc-solaris.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_libsigar_sparc64_solaris_so" Name="libsigar-sparc64-solaris.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_libsigar_universal_macosx_dylib" Name="libsigar-universal-macosx.dylib" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_libsigar_universal64_macosx_dylib" Name="libsigar-universal64-macosx.dylib" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_libsigar_x86_freebsd_5_so" Name="libsigar-x86-freebsd-5.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_libsigar_x86_freebsd_6_so" Name="libsigar-x86-freebsd-6.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_libsigar_x86_linux_so" Name="libsigar-x86-linux.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_libsigar_x86_solaris_so" Name="libsigar-x86-solaris.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_sigar_1_6_4_jar" Name="sigar-1.6.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_sigar_amd64_winnt_dll" Name="sigar-amd64-winnt.dll" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_sigar_x86_winnt_dll" Name="sigar-x86-winnt.dll" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
-        <File Id="_sigar_x86_winnt_lib" Name="sigar-x86-winnt.lib" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\"/>
+        <File Id="_libsigar_amd64_freebsd_6_so" Name="libsigar-amd64-freebsd-6.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_libsigar_amd64_linux_so" Name="libsigar-amd64-linux.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_libsigar_amd64_solaris_so" Name="libsigar-amd64-solaris.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_libsigar_ia64_linux_so" Name="libsigar-ia64-linux.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_libsigar_sparc_solaris_so" Name="libsigar-sparc-solaris.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_libsigar_sparc64_solaris_so" Name="libsigar-sparc64-solaris.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_libsigar_universal_macosx_dylib" Name="libsigar-universal-macosx.dylib" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_libsigar_universal64_macosx_dylib" Name="libsigar-universal64-macosx.dylib" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_libsigar_x86_freebsd_5_so" Name="libsigar-x86-freebsd-5.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_libsigar_x86_freebsd_6_so" Name="libsigar-x86-freebsd-6.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_libsigar_x86_linux_so" Name="libsigar-x86-linux.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_libsigar_x86_solaris_so" Name="libsigar-x86-solaris.so" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_sigar_1_6_4_jar" Name="sigar-1.6.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_sigar_amd64_winnt_dll" Name="sigar-amd64-winnt.dll" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_sigar_x86_winnt_dll" Name="sigar-x86-winnt.dll" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
+        <File Id="_sigar_x86_winnt_lib" Name="sigar-x86-winnt.lib" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\sigar\" />
       </Component>
-      
-      
     </ComponentGroup>
   </Fragment>
 </Wix>

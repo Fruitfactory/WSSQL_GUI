@@ -81,6 +81,9 @@
     <Reference Include="Microsoft.Deployment.WindowsInstaller" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
     <Compile Include="..\WSUI.Core\Core\LimeLM\LimeLM.cs">
       <Link>LimeLM\LimeLM.cs</Link>
     </Compile>
