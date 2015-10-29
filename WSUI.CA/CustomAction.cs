@@ -1131,5 +1131,15 @@ namespace OF.CA
 
         #endregion
 
+        #region [Download and install java]
+
+        public static ActionResult DownloadAndInstallJava(Session session)
+        {
+            return ActionResult.Success;
+        }
+
+
+        #endregion
+
     }
 }
