@@ -53,7 +53,7 @@
         <CustomAction Id="CancelMessage" BinaryKey="managedAction" DllEntry="CancelMessage" Execute="immediate" Return="check" />
         <CustomAction Id="ErrorMessage" BinaryKey="managedAction" DllEntry="ErrorMessage" Execute="immediate" Return="check" />
         <CustomAction Id="ClosePrompt" BinaryKey="managedAction" DllEntry="ClosePrompt" Execute="immediate" Return="check" />
-      <CustomAction Id="DownloadAndInstallJava" BinaryKey="managedAction" DllEntry="DownloadAndInstallJava" Execute="immediate" Return="check" />
+        <!--<CustomAction Id="DownloadAndInstallJava" BinaryKey="managedAction" DllEntry="DownloadAndInstallJava" Execute="deferred" Return="check" />-->
         <?ifndef TRIAL ?>
         <CustomAction Id="ActivatePlugin" BinaryKey="managedAction" DllEntry="ActivatePlugin" Execute="immediate" Return="check" />
         <CustomAction Id="InstallElasticSearch" BinaryKey="managedAction" DllEntry="InstallElasticSearch" Return="check" Execute="immediate" />
@@ -68,6 +68,7 @@
             <Custom Action="Deactivate" After="UnregisterDll">Installed</Custom>
             <Custom Action="UnInstallElasticSearch" After="Deactivate">Installed</Custom>
             <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>
+            <!--<Custom Action="DownloadAndInstallJava" After="InstallExecute"><![CDATA[NOT Installed AND (JAVA_CURRENT_VERSION = "" OR JAVA_CURRENT_VERSION < "1.8") ]]></Custom>-->
             <Custom Action="SetJavaSdkVariable" After="InstallFinalize">NOT Installed</Custom>
             <Custom Action="InstallElasticSearch" After="SetJavaSdkVariable">NOT Installed</Custom>
             <Custom Action="ClosePrompt" After="CostFinalize">NOT Installed OR Installed OR REMOVE="ALL"</Custom>
@@ -80,36 +81,15 @@
         <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again."><![CDATA[Installed OR NETFRAMEWORK40CLIENT]]></Condition>
         <!-- Check some requirements ONLY on "install", but not on modify or uninstall. -->
         <Property Id="JAVA_CURRENT_VERSION">
-            <!--<RegistrySearch Id="JRE_CURRENT_VERSION_REGSEARCH" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Name="CurrentVersion" Type="raw" Win64="yes" />-->
-            <RegistrySearch Id="JRE_CURRENT_VERSION_REGSEARCH" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Development Kit" Name="CurrentVersion" Type="raw" Win64="yes" />
+            <RegistrySearch Id="JRE_CURRENT_VERSION_REGSEARCH" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Name="CurrentVersion" Type="raw" Win64="yes" />
+            <!--<RegistrySearch Id="JRE_CURRENT_VERSION_REGSEARCH" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Development Kit" Name="CurrentVersion" Type="raw" Win64="yes" />-->
         </Property>
         <!-- custom UI begins -->
       
         <UIRef Id="WixUI_Common" />
         <UIRef Id="MyUI" />
         <UI Id="MyUI">
-            <Dialog Id="JavaDialog" Title="!(loc.InstallDirDlg_Title)" Width="370" Height="270">
-                <Control Id="Next" Type="PushButton" Default="yes" Text="Next" X="236" Y="243" Width="56" Height="17">
-                    <Condition Action="disable"><![CDATA[(JAVA_CURRENT_VERSION = "" OR JAVA_CURRENT_VERSION < "1.8")]]></Condition>
-                    <Condition Action="enable"><![CDATA[JAVA_CURRENT_VERSION >= "1.8"]]></Condition>
-                    <Publish Event="NewDialog" Value="CustomizeDlg"></Publish>
-                </Control>
-                <Control Id="Back" Type="PushButton" Text="Back" X="180" Y="243" Width="56" Height="17">
-                    <Publish Event="NewDialog" Value="LicenseAgreementDlg" />
-                </Control>
-                <Control Id="Cancel" Type="PushButton" Cancel="yes" Text="Cancel" X="304" Y="243" Width="56" Height="17">
-                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
-                </Control>
-                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.InstallDirDlgBannerBitmap)" />
-                <Control Id="Title" Type="Text" Transparent="yes" NoPrefix="yes" Text="Installer wasn't able to find appropriate version of Java. The version of Java should be equal or greater than 1.8." X="15" Y="6" Width="219" Height="28" />
-                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
-                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
-                <Control Type="PushButton" Id="DownloadInstallJava" Width="150" Height="17" X="11" Y="86" Text="Download and install Java Runtime">
-                    <Publish Event="DoAction" Value="DownloadAndInstallJava" />
-                </Control>
-                <Control Type="ProgressBar" Id="DownloadInstallProgress" Width="348" Height="17" X="11" Y="109" />
-            </Dialog>
-            
+
             <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
             <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
             <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
@@ -131,9 +111,10 @@
             <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseAgreementDlg">NOT Installed</Publish>
           
             <Publish Dialog="LicenseAgreementDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
-            <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="CustomizeDlg" Order="2">LicenseAccepted = "1" AND JAVA_CURRENT_VERSION >= "1.8"</Publish>
-            <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="JavaDialog" Order="3"><![CDATA[  LicenseAccepted = "1" AND JAVA_CURRENT_VERSION < "1.8"]]></Publish>
-            <Publish Dialog="JavaDialog" Control="Back" Event="NewDialog" Value="LicenseAgreementDlg" Order="1">1</Publish>
+          
+            <!--<Publish Dialog="LicenseAgreementDlg" Control="Next" Event="DoAction" Value="DownloadAndInstallJava" Order="2"><![CDATA[  LicenseAccepted = "1" AND (JAVA_CURRENT_VERSION = "" OR JAVA_CURRENT_VERSION < "1.8")]]></Publish>-->
+          
+            <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="CustomizeDlg" Order="3">LicenseAccepted = "1"</Publish> <!-- AND JAVA_CURRENT_VERSION >= "1.8"-->
 
             <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="1">Installed</Publish>
             <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="LicenseAgreementDlg" Order="2">NOT Installed</Publish>

@@ -111,6 +111,13 @@
       <DependentUpon>DeleteDataFolderForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DeleteDataPromt\DeleteDataPromtApplication.cs" />
+    <Compile Include="DownloadInstallJava\JavaInstallApplication.cs" />
+    <Compile Include="DownloadInstallJava\JavaInstallForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DownloadInstallJava\JavaInstallForm.Designer.cs">
+      <DependentUpon>JavaInstallForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EmailValidate\EmailForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,7 +127,18 @@
     <Compile Include="EmailValidate\EmailValidateApplication.cs" />
     <Compile Include="Enums\eClosePrompt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Content Include="CustomAction.config" />
+    <Content Include="Image\dialog.bmp" />
+    <Content Include="Image\dialog.png" />
+    <Content Include="Image\favicon1.png" />
+    <Content Include="Image\logo_64.ico" />
+    <Content Include="Image\main.ico" />
+    <Content Include="Image\top.bmp" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ClosePromt\ClosePromptForm.resx">
@@ -129,8 +147,15 @@
     <EmbeddedResource Include="DeleteDataPromt\DeleteDataFolderForm.resx">
       <DependentUpon>DeleteDataFolderForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DownloadInstallJava\JavaInstallForm.resx">
+      <DependentUpon>JavaInstallForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EmailValidate\EmailForm.resx">
       <DependentUpon>EmailForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

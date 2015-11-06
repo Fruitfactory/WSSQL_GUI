@@ -14,6 +14,7 @@ namespace OF.CA.DeleteDataPromt
         public DeleteDataFolderForm()
         {
             InitializeComponent();
+            Application.EnableVisualStyles();
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

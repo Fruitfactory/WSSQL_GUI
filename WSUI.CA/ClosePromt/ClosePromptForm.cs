@@ -9,6 +9,7 @@ namespace OF.CA.ClosePromt
         public ClosePromptForm(string text)
         {
             InitializeComponent();
+            Application.EnableVisualStyles();
             messageText.Text = text;
         }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Text.RegularExpressions;
@@ -16,6 +17,7 @@ using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 using OF.CA.ClosePromt;
 using OF.CA.DeleteDataPromt;
+using OF.CA.DownloadInstallJava;
 using OF.CA.EmailValidate;
 using OF.Core.Core.LimeLM;
 using OF.Core.Helpers;
@@ -89,8 +91,8 @@ namespace OF.CA
                     DeleteFile(session, path, filename);
                 }
                 DeleteRootFolder(session, path);
-                
-                DeleteElasticSearchFiles(session,OFRegistryHelper.Instance.GetElasticSearchpath());
+
+                DeleteElasticSearchFiles(session, OFRegistryHelper.Instance.GetElasticSearchpath());
                 DeleteRegistryKeys();
 
             }
@@ -195,7 +197,7 @@ namespace OF.CA
                             using (var form = new DeleteDataPromtApplication(session["ProductName"]))
                             {
                                 var result = form.PromtDeleteFolder();
-                                if(!result)
+                                if (!result)
                                     continue;
                             }
                         }
@@ -942,8 +944,16 @@ namespace OF.CA
                     return ActionResult.Success;
                 }
                 string javaPath = GetJavaInstallationPath();
-                session.Log(string.Format("JAVA_HOME will be set => {0}",javaPath));
-                Environment.SetEnvironmentVariable(JavaHomeVar,javaPath,EnvironmentVariableTarget.Machine);
+                if (!string.IsNullOrEmpty(javaPath))
+                {
+                    session.Log(string.Format("JAVA_HOME will be set => {0}", javaPath));
+                    Environment.SetEnvironmentVariable(JavaHomeVar, javaPath, EnvironmentVariableTarget.Machine);
+                }
+                else
+                {
+                    session.Log(string.Format("Java Runtime Path is empty!!!"));
+                }
+
             }
             catch (Exception ex)
             {
@@ -956,12 +966,37 @@ namespace OF.CA
         private static String GetJavaInstallationPath()
         {
             String javaKey = "SOFTWARE\\JavaSoft\\Java Runtime Environment";
-            using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(javaKey))
+            String javaWow3264Node = "SOFTWARE\\Wow6432Node\\JavaSoft\\Java Runtime Environment";
+
+            var machineKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+
+            if (machineKey == null)
             {
-                String currentVersion = baseKey.GetValue("CurrentVersion").ToString();
-                using (var homeKey = baseKey.OpenSubKey(currentVersion))
-                    return homeKey.GetValue("JavaHome").ToString();
+                return "";
             }
+
+            using (var baseKey = machineKey.OpenSubKey(javaKey))
+            {
+
+                if (baseKey != null)
+                {
+                    String currentVersion = baseKey.GetValue("CurrentVersion").ToString();
+                    using (var homeKey = baseKey.OpenSubKey(currentVersion))
+                        return homeKey.GetValue("JavaHome").ToString();
+                }
+            }
+            using (var baseWowKey = machineKey.OpenSubKey(javaWow3264Node))
+            {
+                if (baseWowKey != null)
+                {
+                    String currentVersion = baseWowKey.GetValue("CurrentVersion").ToString();
+                    using (var homeKey = baseWowKey.OpenSubKey(currentVersion))
+                        return homeKey.GetValue("JavaHome").ToString();
+                }
+            }
+
+
+            return "";
         }
 
 
@@ -978,7 +1013,7 @@ namespace OF.CA
                 if (!string.IsNullOrEmpty(elasticSearchPath))
                 {
                     ProcessStartInfo si = new ProcessStartInfo();
-                    si.FileName = string.Format("{0}{1}{2}",elasticSearchPath, "\\bin\\", "service.bat");
+                    si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "service.bat");
                     if (!File.Exists(si.FileName))
                     {
                         session.Log("File not Exits: " + si.FileName);
@@ -986,11 +1021,11 @@ namespace OF.CA
                     }
                     session.Log("JAVA_HOME = " + javaHome);
                     session.Log("ElasticSearch Path = " + elasticSearchPath);
-                    si.Arguments = string.Format(" {0} \"{1}\"","install", javaHome);
+                    si.Arguments = string.Format(" {0} \"{1}\"", "install", javaHome);
                     //si.Verb = "runas";
                     si.WindowStyle = ProcessWindowStyle.Hidden;
-                    si.WorkingDirectory = string.Format("{0}{1}",elasticSearchPath, "\\bin");
-                    Process pInstall = new Process {StartInfo = si};
+                    si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
+                    Process pInstall = new Process { StartInfo = si };
                     pInstall.Start();
                     pInstall.WaitForExit();
                     session.Log("Install Elastic Search: install service");
@@ -998,7 +1033,7 @@ namespace OF.CA
                     RegisterPlugin(session, elasticSearchPath, javaHome);
 
                     si.Arguments = string.Format(" {0} \"{1}\"", "start", javaHome);
-                    Process pStart = new Process {StartInfo = si};
+                    Process pStart = new Process { StartInfo = si };
                     pStart.Start();
                     pStart.WaitForExit();
                     session.Log("Install Elastis Search: run service");
@@ -1035,21 +1070,21 @@ namespace OF.CA
                 var elasticSearchPath = OFRegistryHelper.Instance.GetElasticSearchpath();
                 if (!string.IsNullOrEmpty(elasticSearchPath))
                 {
-                    UnregisterPlugin(session,elasticSearchPath,javaHome);
+                    UnregisterPlugin(session, elasticSearchPath, javaHome);
 
                     ProcessStartInfo si = new ProcessStartInfo();
                     si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "service.bat");
-                    si.Arguments = string.Format(" {0} \"{1}\"", "stop",javaHome);
-                    
+                    si.Arguments = string.Format(" {0} \"{1}\"", "stop", javaHome);
+
                     //si.Verb = "runas";
                     si.WindowStyle = ProcessWindowStyle.Hidden;
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
 
-                    Process pInstall = new Process {StartInfo = si};
+                    Process pInstall = new Process { StartInfo = si };
                     pInstall.Start();
                     pInstall.WaitForExit();
                     si.Arguments = string.Format(" {0} \"{1}\"", "remove", javaHome);
-                    Process pStart = new Process {StartInfo = si};
+                    Process pStart = new Process { StartInfo = si };
                     pStart.Start();
                     pStart.WaitForExit();
                 }
@@ -1070,11 +1105,11 @@ namespace OF.CA
 
         private static void ExtractPstPlugin(Session session, string path)
         {
-            if (!CopyFileFromDatabase(session, path, PstPluginKey,PstPluginFilename))
+            if (!CopyFileFromDatabase(session, path, PstPluginKey, PstPluginFilename))
                 throw new FileLoadException(PstPluginFilename);
         }
 
-        
+
         private static void RegisterPlugin(Session session, string elasticSearchPath, string javaHome)
         {
             try
@@ -1086,11 +1121,11 @@ namespace OF.CA
 
                 ExtractPstPlugin(session, path);
 
-                if (File.Exists(fullpath)  && !string.IsNullOrEmpty(elasticSearchPath))
+                if (File.Exists(fullpath) && !string.IsNullOrEmpty(elasticSearchPath))
                 {
                     ProcessStartInfo si = new ProcessStartInfo();
                     si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "plugin.bat");
-                    si.Arguments = string.Format(InstallArguments,PstPluginName,fullpath,javaHome);
+                    si.Arguments = string.Format(InstallArguments, PstPluginName, fullpath, javaHome);
                     //si.Verb = "runas";
                     si.WindowStyle = ProcessWindowStyle.Hidden;
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
@@ -1133,11 +1168,97 @@ namespace OF.CA
 
         #region [Download and install java]
 
+        private static string JAVA_RUNTIME_86 =
+          "http://javadl.sun.com/webapps/download/AutoDL?BundleId=111687";
+
+        private static string JAVA_RUNTIME_64 = "http://javadl.sun.com/webapps/download/AutoDL?BundleId=111689";
+
+        [CustomAction]
         public static ActionResult DownloadAndInstallJava(Session session)
         {
+            //var productName = session["ProductName"];
+            //using (var downloadinstallJava = new JavaInstallApplication(productName, session))
+            //{
+            //    var res = downloadinstallJava.DownloadAndInstallJava();
+            //    foreach (var message in downloadinstallJava.GetMessages())
+            //    {
+            //        session.Log(message);
+            //    }
+            //    if (!res)
+            //    {
+            //        return ActionResult.Failure;
+            //    }
+            //    session["JAVA_CURRENT_VERSION"] = "1.8";
+            //}
+
+            ResetProgress(session);
+            SetupProgress(session);
+
+            var url = Environment.Is64BitOperatingSystem ? JAVA_RUNTIME_64 : JAVA_RUNTIME_86;
+
+            string path =
+                Path.Combine(Path.GetTempPath(), "jre.exe");
+            try
+            {
+                WebClient _webClient = new WebClient();
+                session.Log("Downloading JRE...");
+                ShowMessage(session, "Downloading JRE...");
+                _webClient.DownloadFile(url, path);
+                if (string.IsNullOrEmpty(path))
+                {
+                    session.Log("Java Runtime path is empty.");
+                    return ActionResult.Failure;
+                }
+                if (File.Exists(path))
+                {
+                    session.Log("Installing JRE...");
+                    ShowMessage(session, "Installing JRE...");
+                    ProcessStartInfo startInfo = new ProcessStartInfo(path, " /s SPONSORS=0 /L C:\\install_jre.log");
+                    startInfo.Verb = "runas";
+                    Process instalation = Process.Start(startInfo);
+                    instalation.WaitForExit();
+                    session["JAVA_CURRENT_VERSION"] = "1.8";
+                }
+            }
+            catch (Exception ex)
+            {
+                session.Log(ex.ToString());
+            }
             return ActionResult.Success;
         }
 
+        private static void ResetProgress(Session session)
+        {
+            using (var record = new Record(4))
+            {
+                record[1] = 0.ToString();
+                record[2] = 2.ToString();
+                record[3] = 0.ToString();
+                record[4] = 0.ToString();
+                session.Message(InstallMessage.Progress, record);
+            }
+        }
+
+        private static void SetupProgress(Session session)
+        {
+            using (var record = new Record(3))
+            {
+                record[1] = 1.ToString();
+                record[2] = 1.ToString();
+                record[3] = 1.ToString();
+                session.Message(InstallMessage.Progress, record);
+            }
+        }
+
+
+        private static void ShowMessage(Session session, string message)
+        {
+            using (var record = new Record(1))
+            {
+                record[1] = message;
+                session.Message(InstallMessage.ActionData, record);
+            }
+        }
 
         #endregion
 
