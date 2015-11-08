@@ -23,8 +23,12 @@
     <Setting Name="Build" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
+    <Setting Name="BootstrapperProject" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\OF.OutlookFinderSetup\Bundle.wxs</Value>
+    </Setting>
     <Setting Name="BuildNumber" Type="System.String" Scope="User">
-      <Value Profile="(Default)"> </Value>
+      <Value Profile="(Default)">
+                </Value>
     </Setting>
   </Settings>
 </SettingsFile>

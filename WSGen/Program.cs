@@ -33,8 +33,10 @@ namespace WSGen
             string source = args[0];
             string buildNumber = string.Format("{0}.{1}.{2}.{3}", Properties.Settings.Default.Major, Properties.Settings.Default.Minor,Properties.Settings.Default.Build, revision);
             string setupProject = string.Format("{0}{1}", source, Properties.Settings.Default.SetupProjectFile);
+            string bootstrapperProject = string.Format("{0}{1}", source, Properties.Settings.Default.BootstrapperProject);
             GenerateVersionFile(source, buildNumber);
-            UpdateSetupProject(setupProject, buildNumber);
+            UpdateSetupProjects(setupProject, buildNumber);
+            UpdateSetupProjects(bootstrapperProject,buildNumber);
             Properties.Settings.Default["Revision"] = Convert.ToInt32(revision);
             Properties.Settings.Default["BuildNumber"] = buildNumber;
             Properties.Settings.Default.Save();
@@ -52,7 +54,7 @@ namespace WSGen
             }
         }
 
-        static void UpdateSetupProject(string setupProject, string buildNumber)
+        static void UpdateSetupProjects(string setupProject, string buildNumber)
         {
             if (!File.Exists(setupProject))
                 return;
@@ -70,7 +72,10 @@ namespace WSGen
             }
 
             doc.Save(setupProject);
+
+
         }
+        
 
     }
 }

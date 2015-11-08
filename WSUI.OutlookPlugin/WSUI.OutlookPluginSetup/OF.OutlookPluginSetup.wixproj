@@ -65,6 +65,7 @@
     <Content Include="Image\logo_64.ico" />
     <Content Include="Image\main.ico" />
     <Content Include="Image\top.bmp" />
+    <Content Include="License.rtf" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\WSUI.OutlookPlugin\OF.OutlookPlugin.csproj">

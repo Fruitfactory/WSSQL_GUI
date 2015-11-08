@@ -15,6 +15,7 @@ namespace OF.CA.DeleteDataPromt
         {
             InitializeComponent();
             Application.EnableVisualStyles();
+            this.TopMost = true;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

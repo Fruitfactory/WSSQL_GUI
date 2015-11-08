@@ -11,6 +11,7 @@ namespace OF.CA.ClosePromt
             InitializeComponent();
             Application.EnableVisualStyles();
             messageText.Text = text;
+            this.TopMost = true;
         }
 
         public eClosePrompt Result { get; set; }

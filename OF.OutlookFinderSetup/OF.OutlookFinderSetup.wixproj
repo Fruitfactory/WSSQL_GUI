@@ -8,20 +8,16 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>OutlookFinderSetup</OutputName>
     <OutputType>Bundle</OutputType>
-	<SignOutput>true</SignOutput>
+    <SignOutput>true</SignOutput>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
-	
-	
   </PropertyGroup>
-  
-  <Target Name='SignBundleEngine'>
-	<Exec  Command='"$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p Seattle98  /f "$(SolutionDir)Toolkits\Certificate\mycert.pfx" /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  $(TargetFileName) "@(SignBundleEngine)"'/>
+  <Target Name="SignBundleEngine">
+    <Exec Command="&quot;$(SolutionDir)Toolkits\Certificate\signtool.exe&quot; sign /p Seattle98  /f &quot;$(SolutionDir)Toolkits\Certificate\mycert.pfx&quot; /d &quot;OutlookFinder&quot; /du &quot;http://www.outlookfinder.com/&quot; /t http://timestamp.comodoca.com/authenticode /v  $(TargetFileName) &quot;@(SignBundleEngine)&quot;" />
   </Target>
-  <Target Name='SignBundle'>
-	<Exec  Command='"$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p Seattle98  /f "$(SolutionDir)Toolkits\Certificate\mycert.pfx" /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  $(TargetFileName) "@(SignBundle)"'/>
+  <Target Name="SignBundle">
+    <Exec Command="&quot;$(SolutionDir)Toolkits\Certificate\signtool.exe&quot; sign /p Seattle98  /f &quot;$(SolutionDir)Toolkits\Certificate\mycert.pfx&quot; /d &quot;OutlookFinder&quot; /du &quot;http://www.outlookfinder.com/&quot; /t http://timestamp.comodoca.com/authenticode /v  $(TargetFileName) &quot;@(SignBundle)&quot;" />
   </Target>
-  
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>..\Output\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
@@ -31,7 +27,6 @@
     <OutputPath>..\ROutput\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
-  
   <ItemGroup>
     <Compile Include="Bundle.wxs" />
   </ItemGroup>
@@ -49,8 +44,22 @@
       <Name>WixBalExtension</Name>
     </WixExtension>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Image" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app.manifest" />
+    <Content Include="Image\dialog.bmp" />
+    <Content Include="Image\dialog.png" />
+    <Content Include="Image\favicon1.png" />
+    <Content Include="Image\logo_64.ico" />
+    <Content Include="Image\main.ico" />
+    <Content Include="Image\top.bmp" />
+    <Content Include="License.rtf" />
+  </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <PropertyGroup>
+    <PostBuildEvent />
   </PropertyGroup>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -195,11 +195,11 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
     private void esIndex(String index, String type, String id,
             XContentBuilder xb) throws Exception {
         //if (logger.isDebugEnabled()) logger.debug("Indexing in ES " + index + ", " + type + ", " + id);
-        logger.warn("Indexing in ES " + index + ", " + type + ", " + id);
+        //logger.warn("Indexing in ES " + index + ", " + type + ", " + id);
         if (logger.isTraceEnabled()) {
             logger.trace("JSon indexed : {}", xb.string());
         }
-        logger.warn("JSon indexed : {}", xb.string());
+        //logger.warn("JSon indexed : {}", xb.string());
 
         if (!_closed) {
             _bulkProcessor.add(new IndexRequest(index, type, id).source(xb));

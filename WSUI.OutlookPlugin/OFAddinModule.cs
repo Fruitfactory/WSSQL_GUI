@@ -1028,8 +1028,6 @@ namespace OFOutlookPlugin
 
         private void OutlookFinderEvents_Quit(object sender, EventArgs e)
         {
-            StartWatch();
-
             FinalizeComponents();
 
             OFRegistryHelper.Instance.ResetLoadingAddinMode();
@@ -1037,11 +1035,12 @@ namespace OFOutlookPlugin
             ResetLoadingTime();
             ResetAddIn();
             ResetDisabling();
-            _wsuiBootStraper.PassAction(new OFAction(OFActionType.Quit, null));
+            if (_wsuiBootStraper != null)
+            {
+                _wsuiBootStraper.PassAction(new OFAction(OFActionType.Quit, null));
+            }
             SetOutlookFolderProperties(string.Empty, string.Empty);
             OFLogger.Instance.LogInfo("Shutdown...");
-
-            StopWatch("OutlookFinderEvents_Quit");
         }
 
         private void FinalizeComponents()

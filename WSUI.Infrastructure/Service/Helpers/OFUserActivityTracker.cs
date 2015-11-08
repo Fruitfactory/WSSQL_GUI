@@ -29,6 +29,10 @@ namespace OF.Infrastructure.Service.Helpers
 
         public void Stop()
         {
+            if (!_userActivityThread.IsAlive)
+            {
+                return;
+            }
             _stop = true;
             _userActivityThread.Join();
         }

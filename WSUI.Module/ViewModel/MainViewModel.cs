@@ -627,45 +627,52 @@ namespace OF.Module.ViewModel
 
         public void PassAction(IWSAction action)
         {
-            switch (action.Action)
+            try
             {
-                case OFActionType.Copy:
-                case OFActionType.Cut:
-                case OFActionType.Paste:
-                case OFActionType.ShowContextMenu:
-                    if (_navigationService.IsPreviewVisible)
-                    {
-                        _navigationService.PreviewView.PassActionForPreview(action);
-                    }
-                    break;
+                switch (action.Action)
+                {
+                    case OFActionType.Copy:
+                    case OFActionType.Cut:
+                    case OFActionType.Paste:
+                    case OFActionType.ShowContextMenu:
+                        if (_navigationService.IsPreviewVisible)
+                        {
+                            _navigationService.PreviewView.PassActionForPreview(action);
+                        }
+                        break;
 
-                case OFActionType.Search:
-                    RunSearchFromExternal(action);
-                    break;
+                    case OFActionType.Search:
+                        RunSearchFromExternal(action);
+                        break;
 
-                case OFActionType.Show:
-                    CheckStateAndShowActivatedForm();
-                    break;
+                    case OFActionType.Show:
+                        CheckStateAndShowActivatedForm();
+                        break;
 
-                case OFActionType.Hide:
-                    break;
+                    case OFActionType.Hide:
+                        break;
 
-                case OFActionType.Quit:
-                    StopUserActivityTracker();
-                    Clear();
-                    NotifyServerPluginShutdown();
-                    break;
+                    case OFActionType.Quit:
+                        StopUserActivityTracker();
+                        Clear();
+                        NotifyServerPluginShutdown();
+                        break;
 
-                case OFActionType.ClearText:
-                    ClearTextCriteriaForAllKinds();
-                    break;
-                case OFActionType.ShowContact:
-                    ShowSenderOfSelectedOutlookEmail(action);
-                    break;
-                case OFActionType.Settings:
-                    var wnd = _container.Resolve<IMainSettingsWindow>();
-                    wnd.ShowModal();
-                    break;
+                    case OFActionType.ClearText:
+                        ClearTextCriteriaForAllKinds();
+                        break;
+                    case OFActionType.ShowContact:
+                        ShowSenderOfSelectedOutlookEmail(action);
+                        break;
+                    case OFActionType.Settings:
+                        var wnd = _container.Resolve<IMainSettingsWindow>();
+                        wnd.ShowModal();
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -1028,7 +1035,6 @@ namespace OF.Module.ViewModel
                 return;
             }
             ofPluginStatus.OFPluginStatus(OFPluginStatus.Shotdown);
-            
         }
 
 
