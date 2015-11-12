@@ -23,6 +23,6 @@ public class PstRiverScheduleDeserializer implements JsonDeserializer<PstRiverSc
         int key = je.getAsInt();
         return PstRiverSchedule.getValue(key);
     }
-    
-    
+
+
 }
