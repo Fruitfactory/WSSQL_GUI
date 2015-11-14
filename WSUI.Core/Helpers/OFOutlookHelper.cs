@@ -177,7 +177,7 @@ namespace OF.Core.Helpers
 
         public string GetAttachmentTempFile(OFAttachmentContentSearchObject attachment)
         {
-            if (attachment.IsNull() || string.IsNullOrEmpty(attachment.Content) || string.IsNullOrEmpty(attachment.Filename))
+            if (attachment.IsNull() || string.IsNullOrEmpty(attachment.Filename))
                 return string.Empty;
 
             var folder = OFTempFileManager.Instance.GenerateTempFolderForObject(attachment);
