@@ -609,7 +609,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             {
                 var clearStr = recipient.Name.ClearString();
                 var emailAddress = recipient.Address;
-                var tt = IsEmail(emailAddress) ? GetContactNameWithEmail(clearStr, emailAddress) : GetContactName(clearStr);
+                var tt = IsEmail(emailAddress) ? !string.IsNullOrEmpty(clearStr) ? GetContactNameWithEmail(clearStr, emailAddress) : GetEmailToString(emailAddress) : GetContactName(clearStr);
                 list.Add(tt);
             }
             return string.Join("; ", list.Where(s => !string.IsNullOrEmpty(s)));
@@ -671,6 +671,13 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
         private string GetContactNameWithEmail(string name, string email)
         {
             return string.Format(ContactNameWithEmail, string.Format("{0}:{1}", name, email), HighlightSearchString(name));
+        }
+
+
+        private string GetEmailToString(string email)
+        {
+            return string.Format(ContactNameWithEmail, string.Format("{0}:{1}", email, email),
+                HighlightSearchString(email));
         }
 
         private string GetContactName(string name)

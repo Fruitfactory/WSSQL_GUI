@@ -3,6 +3,6 @@
   <startup useLegacyV2RuntimeActivationPolicy="true">
     <supportedRuntime version="v4.0" />
   </startup>
-  <assemblyIdentity name="OF.OutlookPlugin, PublicKeyToken=dfa14d3b5c78db24" />
+  <assemblyIdentity name="OF.OutlookPlugin, PublicKeyToken=dfa14d3b5c78db24" imageRuntimeVersion="v4.0.30319" />
   <loaderSettings generateLogFile="true" shadowCopyEnabled="false" privileges="user" configFileName="OF.OutlookPlugin.dll.config" />
 </configuration>
