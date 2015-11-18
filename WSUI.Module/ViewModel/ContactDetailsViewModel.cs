@@ -35,9 +35,9 @@ namespace OF.Module.ViewModel
     public class ContactDetailsViewModel : OFViewModelBase, IContactDetailsViewModel, IScrollableViewExtended
     {
         private const double AvaregeTwoRowItemHeight = 47;
-        private const double AvaregeOneRowItemHeight = 25;
-        private const double FileValue = 0.2;
-        private const double EmailValue = 0.7;
+        private const double AvaregeOneRowItemHeight = 27;
+        private const double FileValue = 0.25;
+        private const double EmailValue = 0.65;
         private const double DefaultHeight = 600;//px
         private const double Delta = 32; // "more" section, mergings and paddings
 
