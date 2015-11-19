@@ -306,15 +306,19 @@ namespace OF.Module.ViewModel
         private void ExecuteCommandForService(string command)
         {
             string path = OFRegistryHelper.Instance.GetElasticSearchpath();
-            if (path.IsEmpty() || command.IsEmpty())
+            string javaHome = OFRegistryHelper.Instance.GetJavaInstallationPath();
+            if (path.IsEmpty() || command.IsEmpty() || javaHome.IsEmpty())
+            {
+                OFLogger.Instance.LogDebug("Path or Command or JavaHome was empty");
                 return;
-            const string serviceinstallcommand = "service.bat";
+            }
+            const string serviceBat = "service.bat";
             try
             {
                 Process p = new Process();
                 p.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-                p.StartInfo.FileName = string.Format("{0}\\bin\\{1}", path, serviceinstallcommand);
-                p.StartInfo.Arguments = command;
+                p.StartInfo.FileName = string.Format("{0}\\bin\\{1}", path, serviceBat);
+                p.StartInfo.Arguments = string.Format("{0} \"{1}\"",command,javaHome);
                 p.StartInfo.Verb = "runas";
                 p.Start();
                 p.WaitForExit();

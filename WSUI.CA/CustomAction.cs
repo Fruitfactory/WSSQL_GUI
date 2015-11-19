@@ -906,7 +906,6 @@ namespace OF.CA
 
         #endregion [cancel message]
 
-
         #region [clear registry (loading times, disabling etc)]
 
         [CustomAction]
@@ -927,7 +926,6 @@ namespace OF.CA
 
         #endregion
 
-
         #region [elastc search]
 
         private const string JavaHomeVar = "JAVA_HOME";
@@ -937,13 +935,7 @@ namespace OF.CA
         {
             try
             {
-                var isExistJavaHome = Environment.GetEnvironmentVariables().OfType<DictionaryEntry>().Any(e => e.Key.ToString().ToUpperInvariant() == JavaHomeVar.ToUpperInvariant());
-                if (isExistJavaHome)
-                {
-                    session.Log(string.Format("JAVA_HOME is exist"));
-                    return ActionResult.Success;
-                }
-                string javaPath = GetJavaInstallationPath();
+                string javaPath = OFRegistryHelper.Instance.GetJavaInstallationPath();
                 if (!string.IsNullOrEmpty(javaPath))
                 {
                     session.Log(string.Format("JAVA_HOME will be set => {0}", javaPath));
@@ -962,51 +954,13 @@ namespace OF.CA
             return ActionResult.Success;
         }
 
-
-        private static String GetJavaInstallationPath()
-        {
-            String javaKey = "SOFTWARE\\JavaSoft\\Java Runtime Environment";
-            String javaWow3264Node = "SOFTWARE\\Wow6432Node\\JavaSoft\\Java Runtime Environment";
-
-            var machineKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-
-            if (machineKey == null)
-            {
-                return "";
-            }
-
-            using (var baseKey = machineKey.OpenSubKey(javaKey))
-            {
-
-                if (baseKey != null)
-                {
-                    String currentVersion = baseKey.GetValue("CurrentVersion").ToString();
-                    using (var homeKey = baseKey.OpenSubKey(currentVersion))
-                        return homeKey.GetValue("JavaHome").ToString();
-                }
-            }
-            using (var baseWowKey = machineKey.OpenSubKey(javaWow3264Node))
-            {
-                if (baseWowKey != null)
-                {
-                    String currentVersion = baseWowKey.GetValue("CurrentVersion").ToString();
-                    using (var homeKey = baseWowKey.OpenSubKey(currentVersion))
-                        return homeKey.GetValue("JavaHome").ToString();
-                }
-            }
-
-
-            return "";
-        }
-
-
         [CustomAction]
         public static ActionResult InstallElasticSearch(Session session)
         {
             string elasticSearchPath = string.Empty;
             try
             {
-                string javaHome = GetJavaInstallationPath();
+                string javaHome = OFRegistryHelper.Instance.GetJavaInstallationPath();
 
                 elasticSearchPath = session["ELASTICSEASRCHINSTALLFOLDER"];
                 OFRegistryHelper.Instance.SetElasticSearchPath(elasticSearchPath);
@@ -1066,7 +1020,7 @@ namespace OF.CA
                     sct.Stop();
                     session.Log("ElasticSearch was stopped...");
                 }
-                string javaHome = GetJavaInstallationPath();
+                string javaHome = OFRegistryHelper.Instance.GetJavaInstallationPath();
                 var elasticSearchPath = OFRegistryHelper.Instance.GetElasticSearchpath();
                 if (!string.IsNullOrEmpty(elasticSearchPath))
                 {
@@ -1165,102 +1119,5 @@ namespace OF.CA
         }
 
         #endregion
-
-        #region [Download and install java]
-
-        private static string JAVA_RUNTIME_86 =
-          "http://javadl.sun.com/webapps/download/AutoDL?BundleId=111687";
-
-        private static string JAVA_RUNTIME_64 = "http://javadl.sun.com/webapps/download/AutoDL?BundleId=111689";
-
-        [CustomAction]
-        public static ActionResult DownloadAndInstallJava(Session session)
-        {
-            //var productName = session["ProductName"];
-            //using (var downloadinstallJava = new JavaInstallApplication(productName, session))
-            //{
-            //    var res = downloadinstallJava.DownloadAndInstallJava();
-            //    foreach (var message in downloadinstallJava.GetMessages())
-            //    {
-            //        session.Log(message);
-            //    }
-            //    if (!res)
-            //    {
-            //        return ActionResult.Failure;
-            //    }
-            //    session["JAVA_CURRENT_VERSION"] = "1.8";
-            //}
-
-            ResetProgress(session);
-            SetupProgress(session);
-
-            var url = Environment.Is64BitOperatingSystem ? JAVA_RUNTIME_64 : JAVA_RUNTIME_86;
-
-            string path =
-                Path.Combine(Path.GetTempPath(), "jre.exe");
-            try
-            {
-                WebClient _webClient = new WebClient();
-                session.Log("Downloading JRE...");
-                ShowMessage(session, "Downloading JRE...");
-                _webClient.DownloadFile(url, path);
-                if (string.IsNullOrEmpty(path))
-                {
-                    session.Log("Java Runtime path is empty.");
-                    return ActionResult.Failure;
-                }
-                if (File.Exists(path))
-                {
-                    session.Log("Installing JRE...");
-                    ShowMessage(session, "Installing JRE...");
-                    ProcessStartInfo startInfo = new ProcessStartInfo(path, " /s SPONSORS=0 /L C:\\install_jre.log");
-                    startInfo.Verb = "runas";
-                    Process instalation = Process.Start(startInfo);
-                    instalation.WaitForExit();
-                    session["JAVA_CURRENT_VERSION"] = "1.8";
-                }
-            }
-            catch (Exception ex)
-            {
-                session.Log(ex.ToString());
-            }
-            return ActionResult.Success;
-        }
-
-        private static void ResetProgress(Session session)
-        {
-            using (var record = new Record(4))
-            {
-                record[1] = 0.ToString();
-                record[2] = 2.ToString();
-                record[3] = 0.ToString();
-                record[4] = 0.ToString();
-                session.Message(InstallMessage.Progress, record);
-            }
-        }
-
-        private static void SetupProgress(Session session)
-        {
-            using (var record = new Record(3))
-            {
-                record[1] = 1.ToString();
-                record[2] = 1.ToString();
-                record[3] = 1.ToString();
-                session.Message(InstallMessage.Progress, record);
-            }
-        }
-
-
-        private static void ShowMessage(Session session, string message)
-        {
-            using (var record = new Record(1))
-            {
-                record[1] = message;
-                session.Message(InstallMessage.ActionData, record);
-            }
-        }
-
-        #endregion
-
     }
 }

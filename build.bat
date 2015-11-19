@@ -11,9 +11,6 @@ if /i "%CONFIG%" == "Debug" set OUT_DIR=Output
 rem ============================= Clean ==================================
 
 if /i "%2"=="Rebuild" (
-
-  call gen_build_num.bat	
-  call build-plugin.bat		
   %DEVENV% Build.sln /Clean "%CONFIG%|Mixed Platforms"
   if ERRORLEVEL 1 goto FAILED
 

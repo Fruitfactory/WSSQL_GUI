@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.817" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.821" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />-->
     <Upgrade Id="6169fa5d-89fa-44d3-9801-cefe8fc8755e">
@@ -65,8 +65,8 @@
       <Custom Action="RegisterDll" After="SelfRegModules">NOT Installed</Custom>
       <Custom Action="ResetRegistry" After="RegisterDll">NOT Installed</Custom>
       <Custom Action="UnregisterDll" After="SelfUnregModules">Installed</Custom>
-      <Custom Action="Deactivate" After="UnregisterDll">Installed</Custom>
-      <Custom Action="UnInstallElasticSearch" After="Deactivate">Installed</Custom>
+      <Custom Action="UnInstallElasticSearch" After="UnregisterDll">Installed</Custom>
+      <Custom Action="Deactivate" After="UnInstallElasticSearch">UnregisterDll</Custom>
       <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>
       <!--<Custom Action="DownloadAndInstallJava" After="InstallExecute"><![CDATA[NOT Installed AND (JAVA_CURRENT_VERSION = "" OR JAVA_CURRENT_VERSION < "1.8") ]]></Custom>-->
       <Custom Action="SetJavaSdkVariable" After="InstallFinalize">NOT Installed</Custom>

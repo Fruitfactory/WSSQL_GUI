@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
+using System.Text;
 using Microsoft.Win32;
 
 namespace OF.Core.Helpers
@@ -116,7 +117,7 @@ namespace OF.Core.Helpers
             const string AddInLoadTimesKey = "Software\\Microsoft\\Office\\{0}\\Outlook\\AddInLoadTimes";
             const string ModuleKey = "OFOutlookPlugin.AddinModule";
 
-            var CurrentOulookVersion = string.Format(AddInLoadTimesKey, officeVersion);
+            var CurrentOulookVersion = String.Format(AddInLoadTimesKey, officeVersion);
             try
             {
                 var key = Registry.CurrentUser.OpenSubKey(CurrentOulookVersion, true);
@@ -132,7 +133,7 @@ namespace OF.Core.Helpers
         public void DeleteAddIn(string officeVersion)
         {
             const string AddInLoadTimesKey = "Software\\Microsoft\\Office\\{0}\\Outlook\\AddIns\\OFOutlookPlugin.AddinModule";
-            var CurrentOulookVersion = string.Format(AddInLoadTimesKey, officeVersion);
+            var CurrentOulookVersion = String.Format(AddInLoadTimesKey, officeVersion);
 
             try
             {
@@ -153,7 +154,7 @@ namespace OF.Core.Helpers
         public void DeleteDisabling(string officeVersion)
         {
             const string DisableKey = "Software\\Microsoft\\Office\\{0}\\Outlook\\Resiliency\\DisabledItems";
-            var CurrentOulookVersion = string.Format(DisableKey, officeVersion);
+            var CurrentOulookVersion = String.Format(DisableKey, officeVersion);
             RegistryKey registry = null;
             try
             {
@@ -166,7 +167,7 @@ namespace OF.Core.Helpers
                         var val =
                             (byte[])registry.GetValue(item, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
 
-                        var temp = System.Text.Encoding.Unicode.GetString(val);
+                        var temp = Encoding.Unicode.GetString(val);
                         if (temp.Length > 0 && temp.IndexOf(ProgIdKey) > -1)
                         {
                             registry.DeleteValue(item);
@@ -195,35 +196,35 @@ namespace OF.Core.Helpers
                 RegistryKey reg = Registry.ClassesRoot.OpenSubKey("Outlook.Application");
                 if (reg == null)
                 {
-                    return new Tuple<string, int>(string.Empty,-1);
+                    return new Tuple<string, int>(String.Empty,-1);
                 }
                 var curVer = reg.OpenSubKey("CurVer");
 
                 if (curVer == null)
                 {
-                    return new Tuple<string, int>(string.Empty, -1);
+                    return new Tuple<string, int>(String.Empty, -1);
                 }
 
                 var val = curVer.GetValue(null) as string;
 
-                if (string.IsNullOrEmpty(val))
+                if (String.IsNullOrEmpty(val))
                 {
-                    return new Tuple<string, int>(string.Empty, -1);
+                    return new Tuple<string, int>(String.Empty, -1);
                 }
                 var arr = val.Split('.');
                 if (arr == null || arr.Length == 0)
                 {
-                    return new Tuple<string, int>(string.Empty, -1);
+                    return new Tuple<string, int>(String.Empty, -1);
                 }
 
                 int version = 0;
-                int.TryParse(arr[arr.Length - 1], out version);
-                return new Tuple<string, int>(string.Format("{0:0.0}",version),version);
+                Int32.TryParse(arr[arr.Length - 1], out version);
+                return new Tuple<string, int>(String.Format("{0:0.0}",version),version);
             }
             catch (Exception)
             {   
             }
-            return new Tuple<string, int>(string.Empty, -1);
+            return new Tuple<string, int>(String.Empty, -1);
         }
 
         public bool IsSilendUpdate()
@@ -259,10 +260,10 @@ namespace OF.Core.Helpers
         private bool ProcessBoolKey(string key)
         {
             var v = ReadKey<string>(key);
-            if (string.IsNullOrEmpty(v))
+            if (String.IsNullOrEmpty(v))
                 return false;
             bool parseresult = false;
-            bool.TryParse(v, out parseresult);
+            Boolean.TryParse(v, out parseresult);
             return parseresult;
         }
 
@@ -311,7 +312,7 @@ namespace OF.Core.Helpers
         public bool GetIsPluginUiVisible()
         {
             var res = ReadKey<string>(IsPluginUiVisible);
-            return string.IsNullOrEmpty(res) || bool.Parse(res);
+            return String.IsNullOrEmpty(res) || Boolean.Parse(res);
         }
 
         public void SetIsPluginUiVisible(bool visible)
@@ -354,7 +355,7 @@ namespace OF.Core.Helpers
 
         public bool IsShouldRestoreOutlookFolder()
         {
-            return !string.IsNullOrEmpty(ReadKey<string>(OutlookFolderName));
+            return !String.IsNullOrEmpty(ReadKey<string>(OutlookFolderName));
         }
 
         #endregion [restore outlook folders]
@@ -384,7 +385,7 @@ namespace OF.Core.Helpers
                     return;
                 if (value is bool)
                 {
-                    subKey.SetValue(key.ToLower(), (bool)value ? bool.TrueString : bool.FalseString);
+                    subKey.SetValue(key.ToLower(), (bool)value ? Boolean.TrueString : Boolean.FalseString);
                 }
                 else
                     subKey.SetValue(key.ToLower(), value);
@@ -445,5 +446,40 @@ namespace OF.Core.Helpers
         }
 
 
+        public String GetJavaInstallationPath()
+        {
+            String javaKey = "SOFTWARE\\JavaSoft\\Java Runtime Environment";
+            String javaWow3264Node = "SOFTWARE\\Wow6432Node\\JavaSoft\\Java Runtime Environment";
+
+            var machineKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+
+            if (machineKey == null)
+            {
+                return "";
+            }
+
+            using (var baseKey = machineKey.OpenSubKey(javaKey))
+            {
+
+                if (baseKey != null)
+                {
+                    String currentVersion = baseKey.GetValue("CurrentVersion").ToString();
+                    using (var homeKey = baseKey.OpenSubKey(currentVersion))
+                        return homeKey.GetValue("JavaHome").ToString();
+                }
+            }
+            using (var baseWowKey = machineKey.OpenSubKey(javaWow3264Node))
+            {
+                if (baseWowKey != null)
+                {
+                    String currentVersion = baseWowKey.GetValue("CurrentVersion").ToString();
+                    using (var homeKey = baseWowKey.OpenSubKey(currentVersion))
+                        return homeKey.GetValue("JavaHome").ToString();
+                }
+            }
+
+
+            return "";
+        }
     }
 }
