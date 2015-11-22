@@ -18,6 +18,7 @@ using Microsoft.Practices.Unity;
 using Nest;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
+using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Enums;
 using OF.Core.Events;
@@ -399,11 +400,12 @@ namespace OF.Module.ViewModel
                     ShowProgress = Visibility.Visible;
                     double sumAll = (double)response.Response.Items.Sum(s => s.Count);
                     double sumProcessing = response.Response.Items.Sum(s => s.Processing);
-                    double sumAttachments = response.Response.Items.Sum(s => s.Attachment) + _attachmentReader.Count;
                     var busyReader = response.Response.Items.FirstOrDefault(r => r.Status == PstReaderStatus.Busy);
                     CurrentFolder = busyReader.IsNotNull() ? busyReader.Folder : "";
                     CurrentProgress = (sumProcessing / sumAll) * 100.0;
-                    CountEmailsAttachments = string.Format("{0} / {1}", sumProcessing, sumAttachments);
+                    var emailCount = ElasticSearchClient.GetTypeCount<OFEmail>();
+                    var attachmentCount = ElasticSearchClient.GetTypeCount<OFAttachmentContent>();
+                    CountEmailsAttachments = string.Format("{0} / {1}", emailCount, attachmentCount);
                 }
                 lock (_lock)
                 {

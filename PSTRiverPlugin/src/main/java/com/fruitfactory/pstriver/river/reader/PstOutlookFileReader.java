@@ -100,6 +100,10 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
                 _pstFile.close();
                 _logger.info("File close...");
             }
+            listShortEmailData.clear();
+            listUsers.clear();
+            listShortEmailData = null;
+            listUsers = null;
         }catch(Exception ex){
             _logger.error(LOG_TAG + ex.getMessage());
         }

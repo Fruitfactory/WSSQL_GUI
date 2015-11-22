@@ -173,6 +173,7 @@
     <Compile Include="Helpers\OFObjectJsonSaveReadHelper.cs" />
     <Compile Include="Interfaces\IElasticSearchForceClient.cs" />
     <Compile Include="Interfaces\IElasticSearchIndexAttachmentClient.cs" />
+    <Compile Include="Interfaces\IElasticSearchItemsCount.cs" />
     <Compile Include="Interfaces\IElasticSearchOFPluginStatusClient.cs" />
     <Compile Include="Interfaces\IElasticSearchRiverStatus.cs" />
     <Compile Include="Interfaces\IElasticTrackingClient.cs" />

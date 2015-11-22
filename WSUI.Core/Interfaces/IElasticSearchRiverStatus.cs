@@ -4,10 +4,10 @@ using OF.Core.Data.ElasticSearch.Response;
 
 namespace OF.Core.Interfaces
 {
-    public interface IElasticSearchRiverStatus
+    public interface IElasticSearchRiverStatus : IElasticSearchItemsCount
     {
         ElasticsearchResponse<OFRiverStatusInfo> GetRiverStatus();
         IndexStatus GetIndexStatus(string indexName);
-        long GetTypeCount<T>() where T : class;
+        
     }
 }

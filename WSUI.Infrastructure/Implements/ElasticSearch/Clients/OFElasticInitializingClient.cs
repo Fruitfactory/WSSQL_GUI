@@ -67,7 +67,8 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
         public long GetTypeCount<T>() where T : class
         {
-            throw new NotImplementedException();
+            var status = ElasticClient.Count<T>();
+            return status.Count;
         }
 
 
