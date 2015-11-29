@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.824" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.830" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />-->
     <Upgrade Id="6169fa5d-89fa-44d3-9801-cefe8fc8755e">
@@ -19,7 +19,7 @@
     <WixVariable Id="WixUIBannerBmp" Value="Image\top.bmp" />
     <WixVariable Id="WixUIDialogBmp" Value="Image\dialog.bmp" />
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
-    <Property Id="ALLUSERS" Secure="yes" />
+    <Property Id="MSIUSEREALADMINDETECTION" Value="1" />
     <Feature Id="ProductFeature" Title="OutlookFinder" Level="1" ConfigurableDirectory="INSTALLFOLDER">
       <ComponentRef Id="INSTALLFOLDER" />
       <ComponentRef Id="INSTALLFOLDERLIB" />
@@ -35,13 +35,10 @@
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERPLUGINS" />
       <ComponentGroupRef Id="ElasticSearchComponents" />
     </Feature>
-    <?ifndef TRIAL ?>
     <Binary Id="Turbo_Activate_dat" SourceFile="$(var.OF.OutlookPlugin.TargetDir)TurboActivate.dat" />
     <Binary Id="Turbo_Activate_dll" SourceFile="$(var.OF.OutlookPlugin.TargetDir)TurboActivate.dll" />
     <Binary Id="Turbo_Activate_exe" SourceFile="$(var.OF.OutlookPlugin.TargetDir)TurboActivate.exe" />
     <Binary Id="Turbo_Activate64_dll" SourceFile="$(var.OF.OutlookPlugin.TargetDir)TurboActivate64.dll" />
-    <Binary Id="pstriver_1_0_SNAPSHOT_zip" SourceFile="$(var.SolutionDir)PSTRiverPlugin\target\releases\pstriver-1.0-SNAPSHOT.zip" />
-    <?endif?>
     <Binary Id="adxregistrator_exe" SourceFile="$(var.ADX_PATH)\Redistributables\adxregistrator.exe" />
     <Binary Id="managedAction" SourceFile="$(var.OF.OutlookPlugin.TargetDir)OF.CA.dll" />
     <CustomAction Id="RegisterDll" BinaryKey="adxregistrator_exe" Execute="deferred" ExeCommand="/install=&quot;[INSTALLFOLDER]$(var.OF.OutlookPlugin.TargetFileName)&quot; /privileges=user /returnExitCode=false" Impersonate="yes" />
@@ -53,13 +50,10 @@
     <CustomAction Id="CancelMessage" BinaryKey="managedAction" DllEntry="CancelMessage" Execute="immediate" Return="check" />
     <CustomAction Id="ErrorMessage" BinaryKey="managedAction" DllEntry="ErrorMessage" Execute="immediate" Return="check" />
     <CustomAction Id="ClosePrompt" BinaryKey="managedAction" DllEntry="ClosePrompt" Execute="immediate" Return="check" />
-    <!--<CustomAction Id="DownloadAndInstallJava" BinaryKey="managedAction" DllEntry="DownloadAndInstallJava" Execute="deferred" Return="check" />-->
-    <?ifndef TRIAL ?>
     <CustomAction Id="ActivatePlugin" BinaryKey="managedAction" DllEntry="ActivatePlugin" Execute="immediate" Return="check" />
-    <CustomAction Id="InstallElasticSearch" BinaryKey="managedAction" DllEntry="InstallElasticSearch" Return="check" Execute="immediate" />
-    <CustomAction Id="UnInstallElasticSearch" BinaryKey="managedAction" DllEntry="UnInstallElasticSearch" Execute="immediate" Return="check" />
-    <CustomAction Id="SetJavaSdkVariable" BinaryKey="managedAction" DllEntry="SetJavaSdkVariable" Execute="immediate" Return="check" />
-    <?endif?>
+    <CustomAction Id="SetInstallElasticSearchProperties" Property="InstallElasticSearch" Value="ESPATH=[ELASTICSEASRCHINSTALLFOLDER];OFPATH=[INSTALLFOLDER]"></CustomAction>
+    <CustomAction Id="InstallElasticSearch" BinaryKey="managedAction" DllEntry="InstallElasticSearch" Execute="deferred" Impersonate="no" Return="check" />
+    <CustomAction Id="UnInstallElasticSearch" BinaryKey="managedAction" DllEntry="UnInstallElasticSearch" Execute="deferred" Impersonate="no" Return="check" />
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallValidate" />
       <Custom Action="RegisterDll" After="SelfRegModules">NOT Installed</Custom>
@@ -68,9 +62,8 @@
       <Custom Action="UnInstallElasticSearch" After="UnregisterDll">Installed</Custom>
       <Custom Action="Deactivate" After="UnInstallElasticSearch">UnregisterDll</Custom>
       <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>
-      <!--<Custom Action="DownloadAndInstallJava" After="InstallExecute"><![CDATA[NOT Installed AND (JAVA_CURRENT_VERSION = "" OR JAVA_CURRENT_VERSION < "1.8") ]]></Custom>-->
-      <Custom Action="SetJavaSdkVariable" After="InstallFinalize">NOT Installed</Custom>
-      <Custom Action="InstallElasticSearch" After="SetJavaSdkVariable">NOT Installed</Custom>
+      <Custom Action="SetInstallElasticSearchProperties" Before="InstallFinalize">NOT Installed</Custom>
+      <Custom Action="InstallElasticSearch" After="SetInstallElasticSearchProperties">NOT Installed</Custom>
       <Custom Action="ClosePrompt" After="CostFinalize">NOT Installed OR Installed OR REMOVE="ALL"</Custom>
       <Custom Action="SuccesMessage" OnExit="success">NOT Installed</Custom>
       <Custom Action="CancelMessage" OnExit="cancel">NOT Installed</Custom>
@@ -262,6 +255,7 @@
         <File Id="_Elasticsearch_Net_dll" Name="Elasticsearch.Net.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nest_dll" Name="Nest.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Newtonsoft_Json_dll" Name="Newtonsoft.Json.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        <File Id="pstriver_1_0_SNAPSHOT_zip" Name="pstriver-1.0-SNAPSHOT.zip" Source="$(var.SolutionDir)PSTRiverPlugin\target\releases\" />
       </Component>
     </ComponentGroup>
   </Fragment>

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.ServiceProcess;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -928,41 +929,18 @@ namespace OF.CA
 
         #region [elastc search]
 
-        private const string JavaHomeVar = "JAVA_HOME";
-
-        [CustomAction]
-        public static ActionResult SetJavaSdkVariable(Session session)
-        {
-            try
-            {
-                string javaPath = OFRegistryHelper.Instance.GetJavaInstallationPath();
-                if (!string.IsNullOrEmpty(javaPath))
-                {
-                    session.Log(string.Format("JAVA_HOME will be set => {0}", javaPath));
-                    Environment.SetEnvironmentVariable(JavaHomeVar, javaPath, EnvironmentVariableTarget.Machine);
-                }
-                else
-                {
-                    session.Log(string.Format("Java Runtime Path is empty!!!"));
-                }
-
-            }
-            catch (Exception ex)
-            {
-                session.Log(ex.Message);
-            }
-            return ActionResult.Success;
-        }
-
         [CustomAction]
         public static ActionResult InstallElasticSearch(Session session)
         {
             string elasticSearchPath = string.Empty;
             try
             {
+                //Debugger.Launch();
+                //Debugger.Break();
                 string javaHome = OFRegistryHelper.Instance.GetJavaInstallationPath();
 
-                elasticSearchPath = session["ELASTICSEASRCHINSTALLFOLDER"];
+                elasticSearchPath = session.CustomActionData["ESPATH"];
+                var ofPath = session.CustomActionData["OFPATH"];
                 OFRegistryHelper.Instance.SetElasticSearchPath(elasticSearchPath);
                 if (!string.IsNullOrEmpty(elasticSearchPath))
                 {
@@ -976,21 +954,29 @@ namespace OF.CA
                     session.Log("JAVA_HOME = " + javaHome);
                     session.Log("ElasticSearch Path = " + elasticSearchPath);
                     si.Arguments = string.Format(" {0} \"{1}\"", "install", javaHome);
-                    //si.Verb = "runas";
-                    si.WindowStyle = ProcessWindowStyle.Hidden;
+                    //if (!IsAdministrator())
+                    //{
+                    //    session.Log("User Is not administrator");
+                    //    si.Verb = "runas";
+                    //}
+                    //si.WindowStyle = ProcessWindowStyle.Hidden;
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
-                    Process pInstall = new Process { StartInfo = si };
+                    Process pInstall = new Process {StartInfo = si};
                     pInstall.Start();
                     pInstall.WaitForExit();
                     session.Log("Install Elastic Search: install service");
 
-                    RegisterPlugin(session, elasticSearchPath, javaHome);
+                    RegisterPlugin(session, elasticSearchPath, ofPath, javaHome);
 
                     si.Arguments = string.Format(" {0} \"{1}\"", "start", javaHome);
-                    Process pStart = new Process { StartInfo = si };
+                    Process pStart = new Process {StartInfo = si};
                     pStart.Start();
                     pStart.WaitForExit();
                     session.Log("Install Elastis Search: run service");
+                }
+                else
+                {
+                    session.Log("ESPATH is empty.");
                 }
             }
             catch (Exception exception)
@@ -1029,8 +1015,11 @@ namespace OF.CA
                     ProcessStartInfo si = new ProcessStartInfo();
                     si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "service.bat");
                     si.Arguments = string.Format(" {0} \"{1}\"", "stop", javaHome);
-
-                    //si.Verb = "runas";
+                    //if (!IsAdministrator())
+                    //{
+                    //    session.Log("User Is not administrator");
+                    //    si.Verb = "runas";
+                    //}
                     si.WindowStyle = ProcessWindowStyle.Hidden;
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
 
@@ -1064,23 +1053,18 @@ namespace OF.CA
         }
 
 
-        private static void RegisterPlugin(Session session, string elasticSearchPath, string javaHome)
+        private static void RegisterPlugin(Session session, string elasticSearchPath, string ofPath, string javaHome)
         {
             try
             {
-                string path = Path.GetDirectoryName(typeof(CustomActions).Assembly.Location);
-                session.Log(string.Format("Path {0}", path));
-                string fullpath = string.Format("{0}\\{1}", path, PstPluginFilename);
+                string fullpath = string.Format("{0}\\{1}", ofPath, PstPluginFilename);
                 session.Log("Full path: " + fullpath);
-
-                ExtractPstPlugin(session, path);
 
                 if (File.Exists(fullpath) && !string.IsNullOrEmpty(elasticSearchPath))
                 {
                     ProcessStartInfo si = new ProcessStartInfo();
                     si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "plugin.bat");
                     si.Arguments = string.Format(InstallArguments, PstPluginName, fullpath, javaHome);
-                    //si.Verb = "runas";
                     si.WindowStyle = ProcessWindowStyle.Hidden;
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
                     Process pInstall = new Process();
@@ -1103,7 +1087,11 @@ namespace OF.CA
                 ProcessStartInfo si = new ProcessStartInfo();
                 si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "removeplugin.bat");
                 si.Arguments = string.Format(UnistallArguments, PstPluginName, javaHome);
-                //si.Verb = "runas";
+                //if (!IsAdministrator())
+                //{
+                //    session.Log("User Is not administrator");
+                //    si.Verb = "runas";
+                //}
                 si.WindowStyle = ProcessWindowStyle.Hidden;
                 si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
                 Process pInstall = new Process();
@@ -1116,6 +1104,13 @@ namespace OF.CA
             {
                 session.Log(exception.Message);
             }
+        }
+
+        private static bool IsAdministrator()
+        {
+            WindowsIdentity identity = WindowsIdentity.GetCurrent();
+            WindowsPrincipal principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
         #endregion

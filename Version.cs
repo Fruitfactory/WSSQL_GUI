@@ -3,5 +3,5 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 
-[assembly: AssemblyVersion("1.0.2.824")]
-[assembly: AssemblyFileVersion("1.0.2.824")]
+[assembly: AssemblyVersion("1.0.2.830")]
+[assembly: AssemblyFileVersion("1.0.2.830")]
