@@ -942,6 +942,8 @@ namespace OF.CA
                 elasticSearchPath = session.CustomActionData["ESPATH"];
                 var ofPath = session.CustomActionData["OFPATH"];
                 OFRegistryHelper.Instance.SetElasticSearchPath(elasticSearchPath);
+                OFRegistryHelper.Instance.SetOfPath(ofPath);
+                OFRegistryHelper.Instance.SetMachineOfPath(ofPath);
                 if (!string.IsNullOrEmpty(elasticSearchPath))
                 {
                     ProcessStartInfo si = new ProcessStartInfo();
@@ -959,7 +961,7 @@ namespace OF.CA
                     //    session.Log("User Is not administrator");
                     //    si.Verb = "runas";
                     //}
-                    //si.WindowStyle = ProcessWindowStyle.Hidden;
+                    si.WindowStyle = ProcessWindowStyle.Hidden;
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
                     Process pInstall = new Process {StartInfo = si};
                     pInstall.Start();

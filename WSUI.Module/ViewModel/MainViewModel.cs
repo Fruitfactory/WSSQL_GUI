@@ -90,7 +90,7 @@ namespace OF.Module.ViewModel
             _token = _eventAggregator.GetEvent<OFSelectedChangedPayloadEvent>().Subscribe(OnSelectedItemChanged);
             _elasticSearchViewModel = _container.Resolve<IElasticSearchViewModel>();
             _elasticSearchViewModel.IndexingFinished += ElasticSearchViewModelOnIndexingFinished;
-            _userActivityTracker = _container.Resolve<IUserActivityTracker>();
+            //_userActivityTracker = _container.Resolve<IUserActivityTracker>();
             Monitoring = _container.Resolve<IElasticSearchMonitoringViewModel>();
         }
 
@@ -653,7 +653,7 @@ namespace OF.Module.ViewModel
                         break;
 
                     case OFActionType.Quit:
-                        StopUserActivityTracker();
+                        //StopUserActivityTracker();
                         Clear();
                         NotifyServerPluginShutdown();
                         break;
@@ -872,10 +872,10 @@ namespace OF.Module.ViewModel
                         Monitoring.Start();
                     }
                 }
-                if (_userActivityTracker.IsNotNull())
-                {
-                    _userActivityTracker.Start();
-                }
+                //if (_userActivityTracker.IsNotNull())
+                //{
+                //    _userActivityTracker.Start();
+                //}
             }
             catch (Exception ex)
             {

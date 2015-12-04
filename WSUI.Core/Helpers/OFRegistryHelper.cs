@@ -31,6 +31,7 @@ namespace OF.Core.Helpers
         private const string IsPluginUiVisible = "IsPluginUiVisible";
         private const string ElastiSearchPath = "ElasticSearchPath";
         private const string LoggingSettings = "Logging";
+        private const string OFPath = "ofpath";
 
         private const string AddInOutlookSubKey = @"Software\Microsoft\Office\Outlook\Addins\OFOutlookPlugin.AddinModule";
         private const string RequireShutdownNotificationKey = "RequireShutdownNotification";
@@ -340,6 +341,27 @@ namespace OF.Core.Helpers
             Write(ElastiSearchPath,path);
         }
 
+        public string GetMachineOfPath()
+        {
+            return ReadMachineKey<string>(OFPath);
+        }
+
+        public string GetOfPath()
+        {
+            return ReadKey<string>(OFPath);
+        }
+
+        public void SetMachineOfPath(string path)
+        {
+            WriteMachine(OFPath,path);
+        }
+
+        public void SetOfPath(string path)
+        {
+            Write(OFPath,path);
+        }
+
+
         public void SetLoggingsettings(int value)
         {
             Write(LoggingSettings,value);
@@ -351,6 +373,39 @@ namespace OF.Core.Helpers
         }
 
 
+        public static void DeleteMachineProductKey()
+        {
+            try
+            {
+                var software = GetSoftwareKey(Registry.LocalMachine);
+                if (software == null)
+                {
+                    return;
+                }
+                software.DeleteSubKey(ProductSubKey);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public static void DeleteUserProductKey()
+        {
+            try
+            {
+                var software = GetSoftwareKey(Registry.CurrentUser);
+                if (software == null)
+                {
+                    return;
+                }
+                software.DeleteSubKey(ProductSubKey);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+
         #region [restore outlook folders]
 
         public bool IsShouldRestoreOutlookFolder()
@@ -359,6 +414,12 @@ namespace OF.Core.Helpers
         }
 
         #endregion [restore outlook folders]
+
+
+        private static RegistryKey GetSoftwareKey(RegistryKey rootKey)
+        {
+            return rootKey.CreateSubKey("SOFTWARE");
+        }
 
         private T ReadKey<T>(string key, bool IsProduct = true)
         {
@@ -376,6 +437,24 @@ namespace OF.Core.Helpers
             }
         }
 
+        private T ReadMachineKey<T>(string key)
+        {
+            try
+            {
+                RegistryKey subkey = GetMachineRegistryKey();
+                if (subkey == null)
+                    return default(T);
+
+                var objVal = subkey.GetValue(key.ToLower());
+                return objVal != null ? (T) objVal : default(T);
+            }
+            catch (Exception)
+            {
+                return default(T);
+            }
+        }
+            
+
         private void Write(string key, object value, bool IsProduct = true)
         {
             try
@@ -389,6 +468,26 @@ namespace OF.Core.Helpers
                 }
                 else
                     subKey.SetValue(key.ToLower(), value);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+        }
+
+        private void WriteMachine(string key, object value)
+        {
+            try
+            {
+                RegistryKey registryKey = GetMachineRegistryKey();
+                if (registryKey == null)
+                    return;
+                if (value is bool)
+                {
+                    registryKey.SetValue(key.ToLower(), (bool)value ? Boolean.TrueString : Boolean.FalseString);
+                }
+                else
+                    registryKey.SetValue(key.ToLower(), value);
             }
             catch (Exception)
             {
@@ -431,12 +530,30 @@ namespace OF.Core.Helpers
             }
         }
 
+        
+
         private RegistryKey GetRegistrySubKey(bool IsProduct = true)
         {
             try
             {
                 RegistryKey temp = _baseRegistry;
                 RegistryKey subKey = temp.CreateSubKey(IsProduct ? ProductSubKey : AddInOutlookSubKey);
+                return subKey;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+
+
+        private RegistryKey GetMachineRegistryKey()
+        {
+            try
+            {
+                RegistryKey temp = Registry.LocalMachine;
+                RegistryKey subKey = temp.CreateSubKey(ProductSubKey);
                 return subKey;
             }
             catch (Exception)

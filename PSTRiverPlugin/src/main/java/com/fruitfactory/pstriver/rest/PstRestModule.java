@@ -112,7 +112,7 @@ public class PstRestModule extends BaseRestHandler {
                 String value = json.get("idle_time").toString();
                 PstRESTRepository.setLastUserActivity(value);
             }
-            rc.sendResponse(new BytesRestResponse(RestStatus.OK));    
+            rc.sendResponse(new BytesRestResponse(RestStatus.OK));
         } catch (Exception e) {
             try {
                 rc.sendResponse(new BytesRestResponse(rc, e));
