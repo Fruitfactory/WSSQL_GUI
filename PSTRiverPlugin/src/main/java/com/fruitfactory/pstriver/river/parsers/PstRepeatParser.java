@@ -41,6 +41,7 @@ public class PstRepeatParser extends PstParserBase{
     protected int onProcess(List<Thread> readers) throws Exception {
         setRiverStatus(PstRiverStatus.Busy);
         PstOutlookAttachmentReader attachmentReader = getAttachmentReader();
+        getRestAttachmentClient().startRead(getLastDateFromRiver());
         attachmentReader.start();
         for(Thread reader : readers){
             try{
@@ -53,6 +54,7 @@ public class PstRepeatParser extends PstParserBase{
             }
         }
         attachmentReader.join();
+        getRestAttachmentClient().stopRead();
         return _repeatSettings.getHourPeriod();
     }
 

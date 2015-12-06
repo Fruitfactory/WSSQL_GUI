@@ -10,10 +10,10 @@ using OF.Core.Utils;
 using OF.Infrastructure;
 using OF.Infrastructure.Implements.ElasticSearch.Clients;
 using OF.Infrastructure.Service.Helpers;
+using OF.Infrastructure.Service.Index;
 using OF.Module.Interface.Service;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
-using OF.Module.Service.Index;
 using OF.Module.View;
 using OF.Module.View.Settings;
 using OF.Module.View.Windows;
@@ -114,7 +114,6 @@ namespace OF.Module
             _unityContainer.RegisterType<ILoggingSettingsView, OFLoggingSettingsView>();
 
             _unityContainer.RegisterType<IElasticSearchIndexAttachmentClient, OFElasticSeachIndexAttachmentClient>();
-            _unityContainer.RegisterType<IAttachmentReader,OFAttachmentReader>();
 
             _unityContainer.RegisterType<IElasticSearchOFPluginStatusClient, OFElasticSearchOFPluginStatusClient>();
             _unityContainer.RegisterType<IElasticSearchForceClient, OFElasticSearchForceClient>();

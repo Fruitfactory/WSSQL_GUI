@@ -5,10 +5,12 @@
  */
 package com.fruitfactory.pstriver.river.parsers.core;
 
+import com.fruitfactory.pstriver.interfaces.IPstRestAttachmentClient;
 import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
 import com.fruitfactory.pstriver.rest.PstRESTRepository;
+import com.fruitfactory.pstriver.rest.PstRestClient;
 import com.fruitfactory.pstriver.river.reader.PstOutlookAttachmentReader;
 import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
@@ -52,6 +54,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
     private PstRiverStatus riverStatus;
     private IPstRiverInitializer _riverInitializer;
     private PstOutlookAttachmentReader _attachmentReader;
+    private IPstRestAttachmentClient _restAttachmentClient;
 
     private int countEmails;
     private int countAttachments;
@@ -66,6 +69,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
         this.riverName = riverName;
         this._indexName = indexName;
         this._riverInitializer = riverInitializer;
+        this._restAttachmentClient = new PstRestClient(logger);
         parseSettings();
         
     }
@@ -165,6 +169,8 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
         return _attachmentReader;
     }
 
+    protected IPstRestAttachmentClient getRestAttachmentClient() { return _restAttachmentClient; }
+
     protected PstRiverStatus getRiverStatus(){
         return this.riverStatus;
     }
@@ -209,7 +215,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
     }
 
     @SuppressWarnings("unchecked")
-    private Date getLastDateFromRiver() {
+    protected Date getLastDateFromRiver() {
         Date lastDate = null;
         try {
                 // Do something

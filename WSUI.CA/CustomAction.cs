@@ -853,6 +853,59 @@ namespace OF.CA
 
         #endregion [deactivate CA]
 
+
+        #region [Stop Service Application]
+
+        [CustomAction]
+        public static ActionResult StopServiceApp(Session session)
+        {
+            try
+            {
+                Process process =
+                    Process.GetProcesses().FirstOrDefault(p => p.ProcessName.ToUpperInvariant().Contains("SERVICEAPP"));
+                if (process != null)
+                {
+                    session.Log("Stopping Service Application....");
+                    OFRegistryHelper.Instance.DeleteAutoRunHelperApplication();
+                    process.Kill();
+                }
+            }
+            catch (Exception ex)
+            {
+                session.Log(ex.ToString());
+            }
+            return ActionResult.Success;
+        }
+
+        #endregion
+
+        #region [Start Service Application]
+
+        [CustomAction]
+        public static ActionResult StartServiceApp(Session session)
+        {
+            try
+            {
+                var ofPath = GetInstallationFolder(session);
+                var filename = Path.Combine(ofPath, "serviceapp.exe");
+                if (File.Exists(filename))
+                {
+                    session.Log("Starting Service Application...");
+                    OFRegistryHelper.Instance.SetAutoRunHelperApplication(ofPath);
+                    ProcessStartInfo info = new ProcessStartInfo(filename);
+                    Process.Start(info);
+                }
+            }
+            catch (Exception ex)
+            {
+                session.Log(ex.ToString());
+            }
+            return ActionResult.Success;
+        }
+
+        #endregion
+
+
         #region [error message]
 
         public static ActionResult ErrorMessage(Session session)

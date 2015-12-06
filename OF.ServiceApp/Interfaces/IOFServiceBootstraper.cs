@@ -4,6 +4,9 @@ namespace OF.ServiceApp.Interfaces
 {
     public interface IOFServiceBootstraper
     {
+
+        bool IsApplicationAlreadyWorking();
+
         void Initialize();
 
         void Run();

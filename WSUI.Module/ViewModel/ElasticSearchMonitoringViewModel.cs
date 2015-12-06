@@ -29,7 +29,6 @@ namespace OF.Module.ViewModel
         private IEventAggregator _eventAggregator;
         private IUnityContainer _unityContainer;
         private IRegionManager _regionManager;
-        private IAttachmentReader _attachmentReader;
 
         private readonly  object _lock = new object();
 
@@ -140,24 +139,6 @@ namespace OF.Module.ViewModel
             LastUpdated = result.Lastupdated;
             EmailCount = emailCount;
             AttachmentCount = attachmentCount;
-            AttachmentMonitoring();
-        }
-
-        private void AttachmentMonitoring()
-        {
-            lock (_lock)
-            {
-                if (Status == OFRiverStatus.Busy && _attachmentReader.IsNull())
-                {
-                    _attachmentReader = _unityContainer.Resolve<IAttachmentReader>();
-                    _attachmentReader.Start(LastUpdated);
-                }
-                else if (Status == OFRiverStatus.StandBy && _attachmentReader.IsNotNull())
-                {
-                    _attachmentReader.Stop();
-                    _attachmentReader = null;
-                }    
-            }
         }
 
         public void Stop()

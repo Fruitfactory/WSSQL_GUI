@@ -43,7 +43,6 @@ namespace OF.Module.ViewModel
         private IEventAggregator _eventAggregator;
         private IUnityContainer _unityContainer;
         private IRegionManager _regionManager;
-        private IAttachmentReader _attachmentReader;
         private Timer _timer;
 
         private readonly object _lock = new object();
@@ -346,13 +345,6 @@ namespace OF.Module.ViewModel
             }
         }
 
-        private void StartReadingAttachment()
-        {
-            OFLogger.Instance.LogDebug("Create Attachment Reader...");
-            _attachmentReader = _unityContainer.Resolve<IAttachmentReader>();
-            _attachmentReader.Start(null);
-        }
-
         private void TimerProgressCallback(object state)
         {
             try
@@ -367,7 +359,7 @@ namespace OF.Module.ViewModel
                 {
                     return;
                 }
-                if (response.Response.Items.All(s => s.Status == PstReaderStatus.Finished) && _attachmentReader.IsNotNull() && _attachmentReader.Status == PstReaderStatus.Finished)
+                if (response.Response.Items.All(s => s.Status == PstReaderStatus.Finished))
                 {
                     _timer.Change(Timeout.Infinite, Timeout.Infinite);
                     IsIndexExisted = true;
@@ -376,26 +368,8 @@ namespace OF.Module.ViewModel
                     OnIndexingFinished();
                     return;
                 }
-
-                if (response.Response.Items.All(i => i.Status == PstReaderStatus.Finished) &&
-                    _attachmentReader.IsNotNull() && _attachmentReader.IsSuspended &&
-                    _attachmentReader.Status != PstReaderStatus.Finished)
-                {
-                    _attachmentReader.Resume();
-                }
                 if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Busy))
                 {
-                    lock (_lock)
-                    {
-                        if (_attachmentReader.IsNull())
-                        {
-                            StartReadingAttachment();
-                        }
-                        else if (_attachmentReader.IsNotNull() && _attachmentReader.IsSuspended && _attachmentReader.Status != PstReaderStatus.Finished)
-                        {
-                            _attachmentReader.Resume();
-                        }    
-                    }
                     IsBusy = true;
                     ShowProgress = Visibility.Visible;
                     double sumAll = (double)response.Response.Items.Sum(s => s.Count);
@@ -407,19 +381,6 @@ namespace OF.Module.ViewModel
                     var attachmentCount = ElasticSearchClient.GetTypeCount<OFAttachmentContent>();
                     CountEmailsAttachments = string.Format("{0} / {1}", emailCount, attachmentCount);
                 }
-                lock (_lock)
-                {
-                    if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Suspended ))
-                    {
-                        if (_attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended &&
-                            _attachmentReader.Status != PstReaderStatus.Finished)
-                        {
-                            _attachmentReader.Suspend();
-                        }
-                        IsBusy = false;
-                    }    
-                }
-
             }
             catch (WebException w)
             {

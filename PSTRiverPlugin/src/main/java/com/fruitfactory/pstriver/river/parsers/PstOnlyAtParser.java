@@ -64,6 +64,7 @@ public class PstOnlyAtParser extends PstParserBase {
 
         setRiverStatus(PstRiverStatus.Busy);
         PstOutlookAttachmentReader attachmentReader = getAttachmentReader();
+        getRestAttachmentClient().startRead(getLastDateFromRiver());
         attachmentReader.start();
         for (Thread reader : readers){
             try {
@@ -77,6 +78,7 @@ public class PstOnlyAtParser extends PstParserBase {
         }
 
         attachmentReader.join(1500);
+        getRestAttachmentClient().stopRead();
         
         return 0;
     }

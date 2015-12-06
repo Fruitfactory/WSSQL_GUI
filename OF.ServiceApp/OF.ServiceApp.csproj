@@ -1,11 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D0F267A3-EFA2-4270-8E71-B8AB364FB987}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OF.ServiceApp</RootNamespace>
     <AssemblyName>serviceapp</AssemblyName>
@@ -51,21 +54,29 @@
     <Reference Include="Nancy.Hosting.Self">
       <HintPath>..\Toolkits\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Bootstraper\OFServiceBootstraper.cs" />
+    <Compile Include="Events\OFResumeReadEvent.cs" />
+    <Compile Include="Events\OFStartReadEvent.cs" />
     <Compile Include="Events\OFStopEvent.cs" />
+    <Compile Include="Events\OFStopReadEvent.cs" />
+    <Compile Include="Events\OFSuspendReadEvent.cs" />
     <Compile Include="Interfaces\IOFRestModule.cs" />
     <Compile Include="Interfaces\IOFServiceBootstraper.cs" />
     <Compile Include="Program.cs" />

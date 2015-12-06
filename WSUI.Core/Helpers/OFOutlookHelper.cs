@@ -775,7 +775,7 @@ namespace OF.Core.Helpers
                 if (ret == null)
                     return ret;
                 Outlook.NameSpace ns = ret.GetNamespace("MAPI");
-                ns.Logon(Type.Missing, "", Type.Missing, Type.Missing);//ret.DefaultProfileName
+                ns.Logon(ret.DefaultProfileName, "", Type.Missing, Type.Missing);//ret.DefaultProfileName
             }
             catch (Exception ex)
             {

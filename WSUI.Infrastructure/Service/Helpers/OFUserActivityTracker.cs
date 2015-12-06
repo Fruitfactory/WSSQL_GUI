@@ -48,10 +48,12 @@ namespace OF.Infrastructure.Service.Helpers
                     var resp = _elasticSearchClient.IndexExists(request);
                     if (!resp.Exists)
                     {
+                        Console.WriteLine("ES Exist = {0}", resp.Exists);
                         Thread.Sleep(2000);
                         continue;
                     }
                     uint idleTimeSec = WindowsFunction.GetIdleTime() / 1000;
+                    Console.WriteLine("Input = {0}",idleTimeSec);
                     _elasticSearchClient.SetUserActivityTime((int)idleTimeSec);
                 }
                 catch (Exception ex)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Win32;
@@ -41,6 +42,9 @@ namespace OF.Core.Helpers
         private const string ADXStartModeDefaultValue = "NORMAL"; // value => NORMAL
 
         private RegistryKey _baseRegistry = Registry.CurrentUser;
+
+        private const string OUTLOOKFINDER_HELPER_APPLICATION = "OutlookFinder Helper Application";
+
 
         private const string DefaultNamespace = "MAPI";
 
@@ -405,6 +409,35 @@ namespace OF.Core.Helpers
             }
         }
 
+
+        public void SetAutoRunHelperApplication(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+            try
+            {
+                var filename = Path.Combine(path, "serviceapp.exe");
+                RegistryKey add = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                add.SetValue(OUTLOOKFINDER_HELPER_APPLICATION,"\"" + filename + "\"");
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public void DeleteAutoRunHelperApplication()
+        {
+            try
+            {
+                RegistryKey add = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                add.DeleteValue(OUTLOOKFINDER_HELPER_APPLICATION);
+            }
+            catch (Exception)
+            {
+            }
+        }
 
         #region [restore outlook folders]
 

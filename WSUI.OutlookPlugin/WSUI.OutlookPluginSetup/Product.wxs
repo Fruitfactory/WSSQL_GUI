@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.835" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.838" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />-->
     <Upgrade Id="6169fa5d-89fa-44d3-9801-cefe8fc8755e">
@@ -44,6 +44,8 @@
     <CustomAction Id="RegisterDll" BinaryKey="adxregistrator_exe" Execute="deferred" ExeCommand="/install=&quot;[INSTALLFOLDER]$(var.OF.OutlookPlugin.TargetFileName)&quot; /privileges=user /returnExitCode=false" Impersonate="yes" />
     <CustomAction Id="UnregisterDll" BinaryKey="adxregistrator_exe" Execute="deferred" ExeCommand="/uninstall=&quot;[INSTALLFOLDER]$(var.OF.OutlookPlugin.TargetFileName)&quot; /privileges=user" Impersonate="yes" Return="ignore" />
     <CustomAction Id="Deactivate" BinaryKey="managedAction" DllEntry="Deactivate" Execute="immediate" Return="check" />
+    <CustomAction Id="StopServiceApp" BinaryKey="managedAction" DllEntry="StopServiceApp" Execute="immediate" Return="check" />
+    <CustomAction Id="StartServiceApp" BinaryKey="managedAction" DllEntry="StartServiceApp" Execute="immediate" Return="check" />
     <CustomAction Id="DeleteFiles" BinaryKey="managedAction" DllEntry="ClearFiles" Execute="immediate" Return="check" />
     <CustomAction Id="ResetRegistry" BinaryKey="managedAction" DllEntry="ResetRegistry" Execute="immediate" Return="check" />
     <CustomAction Id="SuccesMessage" BinaryKey="managedAction" DllEntry="SuccesMessage" Execute="immediate" Return="check" />
@@ -60,10 +62,12 @@
       <Custom Action="ResetRegistry" After="RegisterDll">NOT Installed</Custom>
       <Custom Action="UnregisterDll" After="SelfUnregModules">Installed</Custom>
       <Custom Action="UnInstallElasticSearch" After="UnregisterDll">Installed</Custom>
-      <Custom Action="Deactivate" After="UnInstallElasticSearch">UnregisterDll</Custom>
+      <Custom Action="Deactivate" Before="InstallInitialize">Installed</Custom>
+      <Custom Action="StopServiceApp" After="Deactivate">Installed</Custom>
       <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>
       <Custom Action="SetInstallElasticSearchProperties" Before="InstallFinalize">NOT Installed</Custom>
       <Custom Action="InstallElasticSearch" After="SetInstallElasticSearchProperties">NOT Installed</Custom>
+      <Custom Action="StartServiceApp" After="InstallFinalize">NOT Installed</Custom>
       <Custom Action="ClosePrompt" After="CostFinalize">NOT Installed OR Installed OR REMOVE="ALL"</Custom>
       <Custom Action="SuccesMessage" OnExit="success">NOT Installed</Custom>
       <Custom Action="CancelMessage" OnExit="cancel">NOT Installed</Custom>
@@ -257,6 +261,8 @@
         <File Id="_Newtonsoft_Json_dll" Name="Newtonsoft.Json.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="pstriver_1_0_SNAPSHOT_zip" Name="pstriver-1.0-SNAPSHOT.zip" Source="$(var.SolutionDir)PSTRiverPlugin\target\releases\" />
         <File Id="_serviceapp_exe_" Name="serviceapp.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        <File Id="_Nancy_dll_" Name="Nancy.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        <File Id="_Nancy_Hosting_Self_dll_" Name="Nancy.Hosting.Self.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
       </Component>
     </ComponentGroup>
   </Fragment>

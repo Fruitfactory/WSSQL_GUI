@@ -1,7 +1,7 @@
 ﻿using System;
 using OF.Core.Enums;
 
-namespace OF.Module.Interface.Service
+namespace OF.Infrastructure.Implements.Service
 {
     public interface IAttachmentReader
     {
@@ -12,6 +12,8 @@ namespace OF.Module.Interface.Service
         void Suspend();
 
         void Resume();
+
+        void Close();
 
         bool IsSuspended { get; }
 

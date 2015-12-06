@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.fruitfactory.pstriver.helpers.PstRiverStatus;
+import com.fruitfactory.pstriver.interfaces.IPstRestAttachmentClient;
 import com.fruitfactory.pstriver.rest.PstRESTRepository;
 import com.fruitfactory.pstriver.river.parsers.core.IPstStatusTracker;
 import org.elasticsearch.common.logging.ESLogger;
@@ -41,23 +42,26 @@ public class PstUserActivityTracker extends Thread {
 
 
     private IPstStatusTracker statusTracker;
+    private IPstRestAttachmentClient restAttachmentClient;
     
-    public PstUserActivityTracker(IInputHookIdle hookIdleTime,IPstStatusTracker statusTracker,  List<IReaderControl> readers,ESLogger logger) {
+    public PstUserActivityTracker(IInputHookIdle hookIdleTime, IPstStatusTracker statusTracker, List<IReaderControl> readers, IPstRestAttachmentClient restAttachmentClient, ESLogger logger) {
         this.readers = readers;
         onlineTime = (int)TimeValue.timeValueMinutes(2).getSeconds();
         idleTime = (int)TimeValue.timeValueMinutes(2).getSeconds();
         this.logger = logger;
         this.hookIdleTime = hookIdleTime;
         this.statusTracker = statusTracker;
+        this.restAttachmentClient = restAttachmentClient;
     }
 
-    public PstUserActivityTracker(IInputHookIdle hookIdleTime, IPstStatusTracker statusTracker, List<IReaderControl> readers, int onlineTime, int idleTime,ESLogger logger) {
+    public PstUserActivityTracker(IInputHookIdle hookIdleTime, IPstStatusTracker statusTracker, List<IReaderControl> readers, IPstRestAttachmentClient restAttachmentClient, int onlineTime, int idleTime,ESLogger logger) {
         this.readers = readers;
         this.onlineTime = onlineTime;
         this.idleTime = idleTime;
         this.logger = logger;
         this.hookIdleTime = hookIdleTime;
         this.statusTracker = statusTracker;
+        this.restAttachmentClient = restAttachmentClient;
     }
     
     public  void startTracking(){
@@ -122,6 +126,7 @@ public class PstUserActivityTracker extends Thread {
                 }
             }
         }
+        restAttachmentClient.suspentRead();
         statusTracker.setStatus(PstRiverStatus.StandBy);
     }
     
@@ -138,6 +143,7 @@ public class PstUserActivityTracker extends Thread {
                 }
             }
         }
+        restAttachmentClient.resumeRead();
         statusTracker.setStatus(PstRiverStatus.Busy);
     }
     

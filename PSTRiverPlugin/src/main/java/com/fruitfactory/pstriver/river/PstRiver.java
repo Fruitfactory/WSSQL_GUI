@@ -5,7 +5,9 @@
  */
 package com.fruitfactory.pstriver.river;
 
+import com.fruitfactory.pstriver.interfaces.IPstRestClient;
 import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
+import com.fruitfactory.pstriver.rest.PstRestClient;
 import com.fruitfactory.pstriver.river.parsers.core.IPstParser;
 import com.fruitfactory.pstriver.river.parsers.*;
 
@@ -65,6 +67,7 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
     private volatile boolean _closed = false;
     private PstFeedDefinition _definition;
     private IPstParser _parser;
+    IPstRestClient _restClient;
     
     @Inject
     public PstRiver(RiverName riverName, RiverSettings settings, Client client) {
@@ -96,7 +99,7 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
             System.setProperty("jna.library.path", "f:\\Visual\\WORK\\elasticsearch\\elasticsearch\\lib\\" );
         }
         logger.warn(LOG_TAG + es_home_path);
-        
+        _restClient = new PstRestClient(logger);
     }
 
     @Override
@@ -166,6 +169,12 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
     public void close() {
         logger.warn(LOG_TAG + "Closing pst river");
             _closed = true;
+
+            if(_restClient != null){
+                logger.warn(LOG_TAG + "Stopping OutlooFinder service application");
+                _restClient.stop();
+                _restClient = null;
+            }
 
             if(_parser != null){
                 _parser.close();
@@ -260,18 +269,20 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
             return;
         }
         logger.warn(LOG_TAG + "River has created mapping...");
-        logger.warn(LOG_TAG + "Running Service App...");
-        try{
-            runServiceApp();
-        }catch (Exception ex){
-            logger.warn("Run Service App",ex,_indexName);
-        }
+//        logger.warn(LOG_TAG + "Running Service App...");
+//        try{
+//            runServiceApp();
+//        }catch (Exception ex){
+//            logger.warn("Run Service App",ex,_indexName);
+//        }
 
     }
 
     private static String serviceApp = "serviceapp.exe";
 
     public final static String REGISTRY_KEY_NAME = "SOFTWARE\\\\OFOutlookPlugin";
+    public final static String REGISTRY_WOW64_KEY_NAME = "SOFTWARE\\Wow6432Node\\OFOutlookPlugin";
+
     public final static String REGISTRY_KEY_VALUE_NAME = "ofpath";
 
     private void runServiceApp() throws IOException {
@@ -286,13 +297,17 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
                 Runtime.getRuntime().exec(cmd);
             }
         }else{
-        logger.warn("OF path is empty");
-    }
+            logger.warn("OF path is empty");
+        }
     }
 
 
     private static String getOutlookFinderPath(){
-        return (String) Advapi32Util.registryGetValue(WinReg.HKEY_LOCAL_MACHINE,REGISTRY_KEY_NAME,REGISTRY_KEY_VALUE_NAME);
+        String  value = (String) Advapi32Util.registryGetValue(WinReg.HKEY_LOCAL_MACHINE,REGISTRY_KEY_NAME,REGISTRY_KEY_VALUE_NAME);
+        if(value == null || value.isEmpty()){
+            value = (String) Advapi32Util.registryGetValue(WinReg.HKEY_LOCAL_MACHINE,REGISTRY_WOW64_KEY_NAME,REGISTRY_KEY_VALUE_NAME);
+        }
+        return value;
     }
 
 }

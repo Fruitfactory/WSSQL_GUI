@@ -59,12 +59,12 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
 
         setRiverStatus(PstRiverStatus.Busy);
 
-        PstUserActivityTracker tracker = new PstUserActivityTracker(this._inputHookManage,this, null, _settings.getIdleTime(), _settings.getIdleTime(), getLogger());
+        PstUserActivityTracker tracker = new PstUserActivityTracker(this._inputHookManage,this, null, getRestAttachmentClient(), _settings.getIdleTime(), _settings.getIdleTime(), getLogger());
         tracker.startTracking();
 
         getLogger().info(LOG_TAG + "User activity tracker was created...");
         getLogger().info(LOG_TAG + "Start parsing files...");
-
+        getRestAttachmentClient().startRead(getLastDateFromRiver());
         attachmentReader.start();
 
         for (Thread reader : readers) {
@@ -76,8 +76,8 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
             readerControls.remove(reader);
             ((PstOutlookFileReader) reader).close();
         }
-
         attachmentReader.join();
+        getRestAttachmentClient().stopRead();
 
         if (tracker != null) {
             try {

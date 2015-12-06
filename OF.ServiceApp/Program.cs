@@ -13,6 +13,13 @@ namespace OF.ServiceApp
         static void Main(string[] args)
         {
             IOFServiceBootstraper bootstraper = new OFServiceBootstraper();
+
+            if (bootstraper.IsApplicationAlreadyWorking())
+            {
+                Console.WriteLine("Another copy is running...");
+                return;
+            }
+
             bootstraper.Initialize();
             bootstraper.Run();
 

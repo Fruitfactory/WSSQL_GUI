@@ -12,10 +12,12 @@ using OF.Core.Extensions;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
-using OF.Module.Interface.Service;
+using OF.Infrastructure.Implements.ElasticSearch.Clients;
+using OF.Infrastructure.Implements.Service;
+using Exception = System.Exception;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
-namespace OF.Module.Service.Index
+namespace OF.Infrastructure.Service.Index
 {
     public class OFAttachmentReader : OFViewModelBase, IAttachmentReader
     { 
@@ -25,24 +27,30 @@ namespace OF.Module.Service.Index
         private CancellationToken _cancellationToken;
         private IElasticSearchIndexAttachmentClient _indexAttachmentClient;
         private DateTime? _lastUpdated;
+        
         private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
-
+        private Outlook._Application _application;
         private static readonly string DateFormat = "MM/dd/yyyy HH:mm:ss";
         private static int PageMaxSize = 65536;
 
-        [InjectionConstructor]
-        public OFAttachmentReader(IUnityContainer unityContainer)
+        
+        public OFAttachmentReader()
         {
             Status = PstReaderStatus.None;
             _cancellationSource = new CancellationTokenSource();
             _cancellationToken = _cancellationSource.Token;
-            _indexAttachmentClient = unityContainer.Resolve<IElasticSearchIndexAttachmentClient>();
+            _indexAttachmentClient = new OFElasticSeachIndexAttachmentClient();
         }
 
         public PstReaderStatus Status
         {
             get { return Get(() => Status); }
             private set { Set(() => Status, value); }
+        }
+
+        public void Close()
+        {
+            
         }
 
         public bool IsSuspended
@@ -90,9 +98,11 @@ namespace OF.Module.Service.Index
             try
             {
                 Status = PstReaderStatus.Busy;
-                var folderList = OFOutlookHelper.Instance.GetFolders().OfType<Outlook.MAPIFolder>();
+                _application = CreateOutlookApplication();
+                var folderList = GetFolders().OfType<Outlook.MAPIFolder>();
                 if (!folderList.Any())
                 {
+                    CloseApplication();
                     return;
                 }
                 foreach (var mapiFolder in folderList)
@@ -160,6 +170,7 @@ namespace OF.Module.Service.Index
             {
                 SendAttachments(null, OFAttachmentIndexProcess.End);
                 Status = PstReaderStatus.Finished;
+                CloseApplication();
                 System.Diagnostics.Debug.WriteLine("!!!!!!!! Exit From Attachment Reader");
             }
         }
@@ -248,5 +259,82 @@ namespace OF.Module.Service.Index
             }
         }
 
+        private Outlook._Application CreateOutlookApplication()
+        {
+            Outlook._Application ret = null;
+            try
+            {
+                ret = new Outlook.Application() as Outlook._Application;
+                if (ret == null)
+                    return ret;
+                Outlook.NameSpace ns = ret.GetNamespace("MAPI");
+                ns.Logon(ret.DefaultProfileName, "", Type.Missing, Type.Missing);//ret.DefaultProfileName
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "CreateOutlookApplication", ex.Message));
+            }
+
+            return ret;
+        }
+
+        public List<object> GetFolders()
+        {
+            List<object> res = new List<object>();
+            if (_application == null)
+                return res;
+            try
+            {
+                Outlook.NameSpace ns = _application.GetNamespace("MAPI");
+                foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
+                {
+                    res.Add(folder);
+                    GetOutlookFolders(folder, res);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolders", ex.Message));
+                return res;
+            }
+            return res;
+        }
+
+        private void GetOutlookFolders(Outlook.MAPIFolder folder, List<object> res)
+        {
+            try
+            {
+                if (folder.Folders.Count == 0)
+                    return;
+                foreach (var subfolder in folder.Folders.OfType<Outlook.MAPIFolder>())
+                {
+                    try
+                    {
+                        res.Add(subfolder);
+                        GetOutlookFolders(subfolder, res);
+                    }
+                    catch (Exception e)
+                    {
+                        OFLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetOutlookFolders", e.Message));
+            }
+        }
+
+        private void CloseApplication()
+        {
+            if (_application == null)
+            {
+                return;
+            }
+
+            _application.Quit();
+            _application = null;
+        }
     }
 }
