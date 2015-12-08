@@ -280,9 +280,10 @@ namespace OF.Infrastructure.Service.Index
 
         public List<object> GetFolders()
         {
-            List<object> res = new List<object>();
             if (_application == null)
-                return res;
+                return default(List<object>);
+
+            List<object> res = new List<object>();
             try
             {
                 Outlook.NameSpace ns = _application.GetNamespace("MAPI");
