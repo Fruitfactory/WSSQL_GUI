@@ -30,7 +30,7 @@ namespace OF.Core.Extensions
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.ToString());
             }
             return null;
         }
@@ -55,7 +55,7 @@ namespace OF.Core.Extensions
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.ToString());
             }
             return default(T);
         }
@@ -220,7 +220,7 @@ namespace OF.Core.Extensions
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
                 oldIndex = -1;
             }
         }

@@ -70,14 +70,14 @@ namespace OF.Core.Extensions
                     }
                     catch (Exception ex)
                     {
-                        OFLogger.Instance.LogError(ex.Message);
+                        OFLogger.Instance.LogError(ex.ToString());
                     }
                 }
                 return sender.Address; //sender.PropertyAccessor.GetProperty(PR_SMTP_ADDRESS) as string;
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
             return null;
         }

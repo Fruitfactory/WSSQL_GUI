@@ -119,7 +119,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "Copy file", tempFilename, ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0}: {1} - {2}", "Copy file", tempFilename, ex.ToString()));
                 return null;
             }
             return tempFilename;
@@ -140,7 +140,7 @@ namespace OF.Core.Helpers
                     }
                     catch (Exception ex)
                     {
-                        OFLogger.Instance.LogError(ex.Message);
+                        OFLogger.Instance.LogError(ex.ToString());
                     }
                 }
             }
@@ -225,7 +225,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "CopyFile", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "CopyFile", ex.ToString()));
             }
             finally
             {

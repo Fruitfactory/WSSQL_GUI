@@ -80,7 +80,7 @@ namespace OF.Infrastructure.Implements.Rules
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError("GeneralContact: {0}", ex.Message);
+                OFLogger.Instance.LogError("GeneralContact: {0}", ex.ToString());
             }
             finally
             {

@@ -30,6 +30,7 @@ namespace OF.ServiceApp.Rest
             Get["/stopread"] = StopRead;
             Get["/suspendread"] = SuspendRead;
             Get["/resumeread"] = ResumeRead;
+            Get["/resumeread/{arg}"] = ResumeRead;
         }
 
         public object Stop(object arg)
@@ -49,15 +50,13 @@ namespace OF.ServiceApp.Rest
             {
                 if (dict.Keys.Any())
                 {
-                    OFLogger.Instance.LogInfo("Update of attachments...");
-                    Console.WriteLine("Update of attachments...");
+                    OFLogger.Instance.LogDebug("Update of attachments...");
                     DateTime date = DateTime.Parse(dict.Values.First());
                     _eventAggregator.GetEvent<OFStartReadEvent>().Publish(date);
                 }
                 else
                 {
-                    OFLogger.Instance.LogInfo("Initial reading of attachments...");
-                    Console.WriteLine("Initial reading of attachments...");
+                    OFLogger.Instance.LogDebug("Initial reading of attachments...");
                     _eventAggregator.GetEvent<OFStartReadEvent>().Publish(null);
                 }
                 return Response.AsJson(new { Result = true });
@@ -72,24 +71,22 @@ namespace OF.ServiceApp.Rest
         public object SuspendRead(object arg)
         {
             _eventAggregator.GetEvent<OFSuspendReadEvent>().Publish(true);
-            OFLogger.Instance.LogInfo("Suspend Read...");
-            Console.WriteLine("Suspend Read...");
+            OFLogger.Instance.LogDebug("Suspend Read...");
             return Response.AsJson(new { Result = true });
         }
 
         public object ResumeRead(object arg)
         {
-            _eventAggregator.GetEvent<OFResumeReadEvent>().Publish(true);
-            OFLogger.Instance.LogInfo("Resume Read...");
-            Console.WriteLine("Resume Read...");
+            var lastDate = GetLastDate(arg);
+            _eventAggregator.GetEvent<OFResumeReadEvent>().Publish(lastDate);
+            OFLogger.Instance.LogDebug("Resume Read...");
             return Response.AsJson(new { Result = true });
         }
 
         public object StopRead(object arg)
         {
             _eventAggregator.GetEvent<OFStopReadEvent>().Publish(true);
-            OFLogger.Instance.LogInfo("Stop Read...");
-            Console.WriteLine("Stop Read...");
+            OFLogger.Instance.LogDebug("Stop Read...");
             return Response.AsJson(new { Result = true });
         }
 
@@ -97,5 +94,17 @@ namespace OF.ServiceApp.Rest
         {
             return Response.AsJson(new{Result = true});
         }
+
+        private DateTime? GetLastDate(object arg)
+        {
+            var dict = arg as DynamicDictionary;
+            if (dict == null || !dict.Keys.Any())
+            {
+                return null;
+            }
+            DateTime date = DateTime.Parse(dict.Values.First());
+            return (DateTime?)date;
+        }
+
     }
 }

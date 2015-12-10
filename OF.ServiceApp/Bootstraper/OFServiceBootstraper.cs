@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.ServiceModel.Configuration;
 using System.Threading;
 using Microsoft.Practices.Prism.Events;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
+using OF.Core.Logger;
 using OF.Infrastructure.Implements.Service;
 using OF.Infrastructure.Service.Helpers;
 using OF.Infrastructure.Service.Index;
@@ -23,6 +25,9 @@ namespace OF.ServiceApp.Bootstraper
         private IAttachmentReader _attachmentReader;
         private OFRestHosting _restHosting;
         private AutoResetEvent _stopEvent;
+        private DateTime? _lastDateTime;
+
+        private readonly object _lock = new object();
 
         #endregion
 
@@ -41,6 +46,7 @@ namespace OF.ServiceApp.Bootstraper
             _eventAggregator = new EventAggregator();
             _userActivityTracker = new OFUserActivityTracker();
             _restHosting = new OFRestHosting(new OFNancyBootstraper(_eventAggregator));
+            _attachmentReader = new OFAttachmentReader();
             
             _eventAggregator.GetEvent<OFStopEvent>().Subscribe(StopExecute);
             _eventAggregator.GetEvent<OFStartReadEvent>().Subscribe(StartReadExecute);
@@ -55,7 +61,7 @@ namespace OF.ServiceApp.Bootstraper
 
         public void Run()
         {
-            Console.WriteLine("Service App have been started...");
+            System.Diagnostics.Debug.WriteLine("Service App have been started...");
             _userActivityTracker.Start();
             _restHosting.Start();
             _stopEvent.WaitOne();
@@ -73,7 +79,7 @@ namespace OF.ServiceApp.Bootstraper
 
             _stopEvent.Dispose();
             _stopEvent = null;
-            Console.WriteLine("Service App have been stopped...");
+            System.Diagnostics.Debug.WriteLine("Service App have been stopped...");
         }
 
         #endregion
@@ -86,36 +92,52 @@ namespace OF.ServiceApp.Bootstraper
             _stopEvent.Set();
         }
 
-        private void ResumeReadExecute(bool b)
+        private void ResumeReadExecute(DateTime? date)
         {
-            if (_attachmentReader.IsNotNull() && _attachmentReader.IsSuspended)
+            StartReadExecute(date);
+            lock (_lock)
             {
-                _attachmentReader.Resume();
+                if (_attachmentReader.IsNotNull() && _attachmentReader.IsStarted && _attachmentReader.IsSuspended)
+                {
+                    _attachmentReader.Resume(date);
+                }    
             }
         }
 
         private void SuspenReadExecute(bool b)
         {
-            if (_attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended)
+            lock (_lock)
             {
-                _attachmentReader.Suspend();
+                if (_attachmentReader.IsNotNull() && _attachmentReader.IsStarted && !_attachmentReader.IsSuspended)
+                {
+                    _attachmentReader.Suspend();
+                }    
             }
         }
 
         private void StopReadExecute(bool b)
         {
-            if (_attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended)
+            lock (_lock)
             {
-                _attachmentReader.Stop();
-                _attachmentReader = null;
+                if (_attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended)
+                {
+                    _attachmentReader.Stop();
+                }    
             }
         }
 
         private void StartReadExecute(DateTime? date)
         {
-            _attachmentReader = new OFAttachmentReader();
-            _attachmentReader.Start(date);
+            lock (_lock)
+            {
+                if (_attachmentReader.IsNotNull() && !_attachmentReader.IsStarted)
+                {
+                    OFLogger.Instance.LogDebug("Start Reading Attachment...");
+                    _attachmentReader.Start(date);
+                }    
+            }
         }
+
         #endregion
 
 

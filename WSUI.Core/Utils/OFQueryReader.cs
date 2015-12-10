@@ -74,7 +74,7 @@ namespace OF.Core.Utils
                 }
                 catch (Exception ex)
                 {
-                    OFLogger.Instance.LogError("Readresult: {0}", ex.Message);
+                    OFLogger.Instance.LogError("Readresult: {0}", ex.ToString());
                 }
             });
             return result;
@@ -102,7 +102,7 @@ namespace OF.Core.Utils
                 }
                 catch (Exception ex)
                 {
-                    OFLogger.Instance.LogError("Readresult: {0}", ex.Message);
+                    OFLogger.Instance.LogError("Readresult: {0}", ex.ToString());
                 }
             });
             return result;

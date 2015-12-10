@@ -13,6 +13,6 @@ public interface IPstRestAttachmentClient {
 
     void suspentRead();
 
-    void resumeRead();
+    void resumeRead(Date date);
 
 }

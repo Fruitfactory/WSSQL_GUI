@@ -5,12 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using OF.Core.Data;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
+using OF.Core.Win32;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace OF.Core.Helpers
@@ -151,7 +154,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogWarning(string.Format("{0}: {1} - {2}", "Save error: ", tempFileName, ex.Message));
+                OFLogger.Instance.LogWarning(string.Format("{0}: {1} - {2}", "Save error: ", tempFileName, ex.ToString()));
                 return null;
             }
             return tempFileName;
@@ -196,7 +199,7 @@ namespace OF.Core.Helpers
                 }
                 catch (Exception ex)
                 {
-                    OFLogger.Instance.LogError(ex.Message);
+                    OFLogger.Instance.LogError(ex.ToString());
                 }
             }
             else
@@ -213,7 +216,7 @@ namespace OF.Core.Helpers
                 }
                 catch (Exception ex)
                 {
-                    OFLogger.Instance.LogError(ex.Message);
+                    OFLogger.Instance.LogError(ex.ToString());
                 }
             }
             return string.Empty;
@@ -491,7 +494,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolderNameList", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolderNameList", ex.ToString()));
                 return res;
             }
             res.Insert(0, OFOutlookHelper.AllFolders);
@@ -517,7 +520,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolders", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolders", ex.ToString()));
                 return res;
             }
             return res;
@@ -618,13 +621,13 @@ namespace OF.Core.Helpers
                     }
                     catch (Exception ex)
                     {
-                        OFLogger.Instance.LogError("GetContact: {0}",ex.Message);
+                        OFLogger.Instance.LogError("GetContact: {0}",ex.ToString());
                     }
                 }
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.ToString()));
             }
             return ci;
         }
@@ -661,14 +664,14 @@ namespace OF.Core.Helpers
                     }
                     catch (Exception ex)
                     {
-                        OFLogger.Instance.LogError("GetContact: {0}", ex.Message);
+                        OFLogger.Instance.LogError("GetContact: {0}", ex.ToString());
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.ToString()));
             }
             return ci;
         }
@@ -726,7 +729,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetAttachment", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetAttachment", ex.ToString()));
             }
             return att;
         }
@@ -735,15 +738,17 @@ namespace OF.Core.Helpers
 
         #region private
 
-        private Outlook._Application GetApplication()
+        public Tuple<object,bool> GetApplication()
         {
+            bool isProcess = true;
             Outlook._Application ret = GetFromProcess();
             if (ret == null)
             {
+                isProcess = false;
                 ret = CreateOutlookApplication();
             }
 
-            return ret;
+            return new Tuple<object, bool>(ret, isProcess);
         }
 
         private Outlook._Application GetFromProcess()
@@ -759,8 +764,8 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFromProcess", ex.Message));
-                //System.Windows.MessageBox.Show(String.Format("Get Process: {0}", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFromProcess", ex.ToString()));
+                //System.Windows.MessageBox.Show(String.Format("Get Process: {0}", ex.ToString()));
             }
 
             return ret;
@@ -771,16 +776,31 @@ namespace OF.Core.Helpers
             Outlook._Application ret = null;
             try
             {
+                var ev = new AutoResetEvent(false);
+                Task.Factory.StartNew(() =>
+                {
+                    Thread.Sleep(1500);
+                    var hwnd = WindowsFunction.SearchForWindow("#32770", "Choose Profile");
+                    if (hwnd != IntPtr.Zero)
+                    {
+                        var btnHwnd = WindowsFunction.FindWindowEx(hwnd, IntPtr.Zero, "Button", "OK");
+                        Console.WriteLine(btnHwnd);
+                        WindowsFunction.SendMessage((int)btnHwnd, WindowsFunction.BN_CLICKED, 0, IntPtr.Zero);
+                    }
+                    ev.Set();
+                });
+
                 ret = new Outlook.Application() as Outlook._Application;
+                ev.WaitOne();
                 if (ret == null)
                     return ret;
                 Outlook.NameSpace ns = ret.GetNamespace("MAPI");
-                ns.Logon(ret.DefaultProfileName, "", Type.Missing, Type.Missing);//ret.DefaultProfileName
+                ns.Logon(ret.DefaultProfileName, "", false, true);
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "CreateOutlookApplication", ex.Message));
-                //System.Windows.MessageBox.Show(String.Format("Create Process: {0}", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "CreateOutlookApplication", ex.ToString()));
+                //System.Windows.MessageBox.Show(String.Format("Create Process: {0}", ex.ToString()));
             }
 
             return ret;
@@ -800,7 +820,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetMailItem", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetMailItem", ex.ToString()));
             }
             return mi;
         }
@@ -822,7 +842,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetAppointment", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetAppointment", ex.ToString()));
             }
             return appointItem;
         }
@@ -842,7 +862,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "IsOutlookAlive", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "IsOutlookAlive", ex.ToString()));
             }
 
             return res;
@@ -852,7 +872,7 @@ namespace OF.Core.Helpers
         {
             Marshal.ReleaseComObject(app);
             app = null;
-            app = GetApplication();
+            app = GetApplication().Item1 as Outlook._Application;
             OFLogger.Instance.LogWarning("Outlook was closed. Create new instance.");
         }
 
@@ -944,7 +964,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetContact", ex.ToString()));
             }
             return ci;
         }

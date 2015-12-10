@@ -11,11 +11,14 @@ namespace OF.Infrastructure.Implements.Service
 
         void Suspend();
 
-        void Resume();
+        void Resume(DateTime? lastUpdated);
 
         void Close();
 
         bool IsSuspended { get; }
+
+        bool IsStarted { get; }
+
 
         int Count { get; }
 

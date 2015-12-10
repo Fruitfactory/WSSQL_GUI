@@ -135,7 +135,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
 
         }
@@ -164,7 +164,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogInfo(ex.Message);
+                OFLogger.Instance.LogInfo(ex.ToString());
             }
         }
 
@@ -180,7 +180,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -196,7 +196,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
 
         }

@@ -29,6 +29,8 @@ public class PstRestClient implements IPstRestClient, IPstRestAttachmentClient{
 
     private Resty  restyClient;
     private ESLogger logger;
+    private final Object lock = new Object();
+    private boolean isStarted = false;
 
     public PstRestClient(ESLogger logger){
         this.logger = logger;
@@ -37,54 +39,55 @@ public class PstRestClient implements IPstRestClient, IPstRestAttachmentClient{
 
     @Override
     public void stop() {
-        SendSimpleCommand(STOP_CMD);
+        synchronized (lock){
+            sendSimpleCommand(STOP_CMD);
+        }
     }
 
     @Override
     public void status() {
-        SendSimpleCommand(STATUS_CMD);
+        sendSimpleCommand(STATUS_CMD);
     }
 
     @Override
     public void startRead(Date date) {
-        try{
-            if(date !=null){
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-                String frm = df.format(date);
-                String url = java.lang.String.format("%s/%s", getUrl(START_READ_CMD),frm);
-                JSONResource response = restyClient.json(new URI(url));
-                JSONObject obj = response.object();
-                System.out.println(obj);
-            }else{
-                JSONResource response = restyClient.json(new URI(getUrl(START_READ_CMD)));
-                JSONObject obj = response.object();
-                System.out.println(obj);
-            }
-        }catch(Exception ex){
-            System.out.println(ex.getMessage());
+        synchronized (lock){
+            isStarted = true;
+            sendWithDate(START_READ_CMD,date);
         }
     }
 
     @Override
     public void stopRead() {
-        SendSimpleCommand(STOP_READ_CMD);
+        synchronized (lock){
+            isStarted = false;
+            sendSimpleCommand(STOP_READ_CMD);
+        }
     }
 
     @Override
     public void suspentRead() {
-        SendSimpleCommand(SUSPEND_READ_CMD);
+        synchronized (lock){
+            if(isStarted){
+                sendSimpleCommand(SUSPEND_READ_CMD);
+            }
+        }
     }
 
     @Override
-    public void resumeRead() {
-        SendSimpleCommand(RESUME_READ_CMD);
+    public void resumeRead(Date date ) {
+        synchronized (lock){
+            if(isStarted){
+                sendWithDate(RESUME_READ_CMD,date);
+            }
+        }
     }
 
     private String getUrl(String cmd){
         return ROOT_URL + cmd;
     }
 
-    private JSONResource SendSimpleCommand(String cmd){
+    private JSONResource sendSimpleCommand(String cmd){
         JSONResource response = null;
         try{
             response = restyClient.json(new URI(getUrl(cmd)));
@@ -92,5 +95,24 @@ public class PstRestClient implements IPstRestClient, IPstRestAttachmentClient{
             logger.error("REST CLIENT: " + ex.toString());
         }
         return response;
+    }
+
+    private void sendWithDate(String cmd, Date date){
+        try{
+            if(date !=null){
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                String frm = df.format(date);
+                String url = java.lang.String.format("%s/%s", getUrl(cmd),frm);
+                JSONResource response = restyClient.json(new URI(url));
+                JSONObject obj = response.object();
+                System.out.println(obj);
+            }else{
+                JSONResource response = restyClient.json(new URI(getUrl(cmd)));
+                JSONObject obj = response.object();
+                System.out.println(obj);
+            }
+        }catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
     }
 }

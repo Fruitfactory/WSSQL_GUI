@@ -381,6 +381,10 @@ namespace OF.Module.ViewModel
                     var attachmentCount = ElasticSearchClient.GetTypeCount<OFAttachmentContent>();
                     CountEmailsAttachments = string.Format("{0} / {1}", emailCount, attachmentCount);
                 }
+                if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Suspended))
+                {
+                    IsBusy = false;
+                }
             }
             catch (WebException w)
             {

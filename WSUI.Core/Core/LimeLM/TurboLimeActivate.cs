@@ -127,7 +127,7 @@ namespace OF.Core.Core.LimeLM
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -175,7 +175,7 @@ namespace OF.Core.Core.LimeLM
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError("Error occured during checking activation: [{0}]", ex.Message);
+                OFLogger.Instance.LogError("Error occured during checking activation: [{0}]", ex.ToString());
                 return false;
             }
         }
@@ -217,7 +217,7 @@ namespace OF.Core.Core.LimeLM
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError("Error occured during checking new activation: [{0}]", ex.Message);
+                OFLogger.Instance.LogError("Error occured during checking new activation: [{0}]", ex.ToString());
             }
 
             return new CheckActivationResult(isActivated, isTrial, checkInOldWay);
@@ -278,7 +278,7 @@ namespace OF.Core.Core.LimeLM
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError("{0}", ex.Message);
+                OFLogger.Instance.LogError("{0}", ex.ToString());
             }
             return false;
         }

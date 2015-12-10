@@ -124,7 +124,7 @@ namespace OF.Infrastructure.Controls.ProgressManager
                 }
                 catch (Exception ex)
                 {
-                    OFLogger.Instance.LogError(string.Format("{0} - {1}","ShowSplash",ex.Message));
+                    OFLogger.Instance.LogError(string.Format("{0} - {1}","ShowSplash",ex.ToString()));
                 }
             }
             ((Window)_progressForm).ShowDialog();

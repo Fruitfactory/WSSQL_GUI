@@ -58,7 +58,7 @@ namespace OF.Core.Core.ElasticSearch
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 

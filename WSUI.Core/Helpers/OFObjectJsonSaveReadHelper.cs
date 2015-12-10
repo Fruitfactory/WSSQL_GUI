@@ -35,7 +35,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
             return result;
         }
@@ -58,7 +58,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
             return default(T);
         }

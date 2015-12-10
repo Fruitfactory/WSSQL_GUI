@@ -59,7 +59,7 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
 
         setRiverStatus(PstRiverStatus.Busy);
 
-        PstUserActivityTracker tracker = new PstUserActivityTracker(this._inputHookManage,this, null, getRestAttachmentClient(), _settings.getIdleTime(), _settings.getIdleTime(), getLogger());
+        PstUserActivityTracker tracker = new PstUserActivityTracker(this._inputHookManage,this, null, getRestAttachmentClient(), getLastDateFromRiver(), _settings.getIdleTime(), _settings.getIdleTime(), getLogger());
         tracker.startTracking();
 
         getLogger().info(LOG_TAG + "User activity tracker was created...");

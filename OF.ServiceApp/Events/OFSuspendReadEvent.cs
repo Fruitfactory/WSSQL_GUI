@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.Prism.Events;
+﻿using System;
+using Microsoft.Practices.Prism.Events;
 
 namespace OF.ServiceApp.Events
 {

@@ -6,6 +6,8 @@
 package com.fruitfactory.pstriver.useractivity;
 
 import com.fruitfactory.pstriver.helpers.PstReaderStatus;
+
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +41,7 @@ public class PstUserActivityTracker extends Thread {
     private LocalTime timeBeginNight = new LocalTime(0,0,0);
     private LocalTime timeFinishNight = new LocalTime(6,0,0);
     private final Object lock = new Object();
+    private Date _lastUpdated;
 
 
     private IPstStatusTracker statusTracker;
@@ -54,7 +57,7 @@ public class PstUserActivityTracker extends Thread {
         this.restAttachmentClient = restAttachmentClient;
     }
 
-    public PstUserActivityTracker(IInputHookIdle hookIdleTime, IPstStatusTracker statusTracker, List<IReaderControl> readers, IPstRestAttachmentClient restAttachmentClient, int onlineTime, int idleTime,ESLogger logger) {
+    public PstUserActivityTracker(IInputHookIdle hookIdleTime, IPstStatusTracker statusTracker, List<IReaderControl> readers, IPstRestAttachmentClient restAttachmentClient, Date lastDate, int onlineTime, int idleTime, ESLogger logger) {
         this.readers = readers;
         this.onlineTime = onlineTime;
         this.idleTime = idleTime;
@@ -62,6 +65,7 @@ public class PstUserActivityTracker extends Thread {
         this.hookIdleTime = hookIdleTime;
         this.statusTracker = statusTracker;
         this.restAttachmentClient = restAttachmentClient;
+        this._lastUpdated = lastDate;
     }
     
     public  void startTracking(){
@@ -70,6 +74,7 @@ public class PstUserActivityTracker extends Thread {
     
     public void stopTracking(){
         readers = null;
+        restAttachmentClient = null;
         stopped = true;
     }
 
@@ -126,7 +131,9 @@ public class PstUserActivityTracker extends Thread {
                 }
             }
         }
-        restAttachmentClient.suspentRead();
+        if(restAttachmentClient != null){
+            restAttachmentClient.suspentRead();
+        }
         statusTracker.setStatus(PstRiverStatus.StandBy);
     }
     
@@ -143,7 +150,9 @@ public class PstUserActivityTracker extends Thread {
                 }
             }
         }
-        restAttachmentClient.resumeRead();
+        if(restAttachmentClient != null){
+            restAttachmentClient.resumeRead(_lastUpdated);
+        }
         statusTracker.setStatus(PstRiverStatus.Busy);
     }
     

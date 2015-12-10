@@ -229,7 +229,7 @@ namespace OF.Core.Core.Search
             {
                 _typeResult = OFTypeResult.Error;
                 _listMessage.Add(new OFResultMessage() { Message = "An error was occured during searching.Please, see log." });
-                OFLogger.Instance.LogError("Search <{0}>: {1}", typeof(T).Name, ex.Message);
+                OFLogger.Instance.LogError("Search <{0}>: {1}", typeof(T).Name, ex.ToString());
             }
             finally
             {

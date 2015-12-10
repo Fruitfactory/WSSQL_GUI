@@ -34,6 +34,16 @@ namespace OF.Core.Win32
             public uint dwTime;
         }
 
+
+        public class SearchData
+        {
+            // You can put any dicks or Doms in here...
+            public string Wndclass;
+            public string Title;
+            public IntPtr hWnd;
+        }
+
+
         #endregion [struct]
 
         #region [function]
@@ -54,9 +64,6 @@ namespace OF.Core.Win32
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr GetFocus();
 
-        [DllImport("user32", CharSet = CharSet.Auto)]
-        public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
-
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
@@ -69,8 +76,53 @@ namespace OF.Core.Win32
         [DllImport("Kernel32.dll")]
         public static extern uint GetLastError();
 
+        private delegate bool EnumWindowsProc(IntPtr hWnd, ref SearchData data);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, ref SearchData data);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
+
+        public const int BN_CLICKED = 245;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern int SendMessage(int hWnd, int msg, int wParam, IntPtr lParam);
+
        
         #endregion [function]
+
+
+        public static IntPtr SearchForWindow(string wndclass, string title)
+        {
+            SearchData sd = new SearchData { Wndclass = wndclass, Title = title };
+            EnumWindows(new EnumWindowsProc(EnumProc), ref sd);
+            return sd.hWnd;
+        }
+
+        public static bool EnumProc(IntPtr hWnd, ref SearchData data)
+        {
+            StringBuilder sb = new StringBuilder(1024);
+            GetClassName(hWnd, sb, sb.Capacity);
+            if (sb.ToString().StartsWith(data.Wndclass))
+            {
+                sb = new StringBuilder(1024);
+                GetWindowText(hWnd, sb, sb.Capacity);
+                if (sb.ToString().StartsWith(data.Title))
+                {
+                    data.hWnd = hWnd;
+                    return false;    // Found the wnd, halt enumeration
+                }
+            }
+            return true;
+        }
 
         public static Point TransformToScreen(Point point, Visual relativeTo)
         {

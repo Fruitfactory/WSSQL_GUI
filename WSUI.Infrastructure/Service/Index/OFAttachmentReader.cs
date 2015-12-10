@@ -27,9 +27,9 @@ namespace OF.Infrastructure.Service.Index
         private CancellationToken _cancellationToken;
         private IElasticSearchIndexAttachmentClient _indexAttachmentClient;
         private DateTime? _lastUpdated;
+        private readonly object _lock = new object();
         
         private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
-        private Outlook._Application _application;
         private static readonly string DateFormat = "MM/dd/yyyy HH:mm:ss";
         private static int PageMaxSize = 65536;
 
@@ -59,25 +59,42 @@ namespace OF.Infrastructure.Service.Index
             private set { Set(() => IsSuspended,value);}
         }
 
+        public bool IsStarted
+        {
+            get { return Get(() => IsStarted); }
+            private set{Set(() => IsStarted, value);}
+        }
+
         public int Count { get; private set; }
 
 
         public void Start(DateTime? lastUpdated)
         {
-            if (_thread == null)
+            lock (_lock)
             {
-                _thread = new Thread(ProcessAttachment);
+                if (_thread == null)
+                {
+                    _thread = new Thread(ProcessAttachment);
+                    _lastUpdated = lastUpdated;
+                    OFLogger.Instance.LogDebug("Last Updated Date: {0}", lastUpdated.HasValue ? lastUpdated.Value.ToString() : "N/a");
+                    IsStarted = true;
+                    Status = PstReaderStatus.Busy;
+                    _thread.Start();
+                }
             }
-            _lastUpdated = lastUpdated;
-            _thread.Start();
-            Status = PstReaderStatus.Busy;
         }
 
         public void Stop()
         {
-            _cancellationSource.Cancel();
-            _thread.Join();
-            Status = PstReaderStatus.Finished;
+            Resume(_lastUpdated);
+            lock (_lock)
+            {
+                _cancellationSource.Cancel();
+                _thread.Join();
+                _thread = null;
+                Status = PstReaderStatus.Finished;
+                IsStarted = false;    
+            }
         }
 
         public void Suspend()
@@ -86,27 +103,34 @@ namespace OF.Infrastructure.Service.Index
             OFLogger.Instance.LogDebug("Reader Attachment has been Suspended");
         }
 
-        public void Resume()
+        public void Resume(DateTime? lastUpdated)
         {
+            _lastUpdated = lastUpdated;
             _eventPause.Set();
             IsSuspended = false;
             OFLogger.Instance.LogDebug("Reader Attachment has been Resumed");
+            OFLogger.Instance.LogDebug("Last Updated Date: {0}", lastUpdated.HasValue ? lastUpdated.Value.ToString() : "N/a");
         }
 
         private void ProcessAttachment(object arg)
         {
+            Outlook._Application application = null;
+            var isExistingProcess = false;
             try
             {
                 Status = PstReaderStatus.Busy;
-                _application = CreateOutlookApplication();
-                var folderList = GetFolders().OfType<Outlook.MAPIFolder>();
+                var resultApplication = OFOutlookHelper.Instance.GetApplication();
+                application = resultApplication.Item1 as Outlook._Application;
+                isExistingProcess = resultApplication.Item2;
+                var folderList = GetFolders(application).OfType<Outlook.MAPIFolder>();
                 if (!folderList.Any())
                 {
-                    CloseApplication();
+                    CloseApplication(application,isExistingProcess);
                     return;
                 }
                 foreach (var mapiFolder in folderList)
                 {
+                    OFLogger.Instance.LogDebug("Attachment Reader => Folder name: {0}", mapiFolder.Name);
                     if (mapiFolder.Items.Count == 0)
                     {
                         continue;
@@ -144,7 +168,7 @@ namespace OF.Infrastructure.Service.Index
                             {
                                 OFLogger.Instance.LogError("---- Attachment Failed => {0}", attachment.FileName);
                                 OFLogger.Instance.LogError("---- Type Failed => {0}", ex.GetType().Name);
-                                OFLogger.Instance.LogError(ex.Message);
+                                OFLogger.Instance.LogError(ex.ToString());
                             }
                         }
                         CheckCancellation();
@@ -160,7 +184,7 @@ namespace OF.Infrastructure.Service.Index
             }
             catch (AggregateException ex)
             {
-                OFLogger.Instance.LogError("Canceled: {0}", ex.Message);
+                OFLogger.Instance.LogError("Canceled: {0}", ex.ToString());
             }
             catch (Exception common)
             {
@@ -170,8 +194,9 @@ namespace OF.Infrastructure.Service.Index
             {
                 SendAttachments(null, OFAttachmentIndexProcess.End);
                 Status = PstReaderStatus.Finished;
-                CloseApplication();
+                CloseApplication(application,isExistingProcess);
                 System.Diagnostics.Debug.WriteLine("!!!!!!!! Exit From Attachment Reader");
+                IsStarted = false;
             }
         }
 
@@ -201,7 +226,7 @@ namespace OF.Infrastructure.Service.Index
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
             finally
             {
@@ -259,34 +284,15 @@ namespace OF.Infrastructure.Service.Index
             }
         }
 
-        private Outlook._Application CreateOutlookApplication()
+        public List<object> GetFolders(Outlook._Application application)
         {
-            Outlook._Application ret = null;
-            try
-            {
-                ret = new Outlook.Application() as Outlook._Application;
-                if (ret == null)
-                    return ret;
-                Outlook.NameSpace ns = ret.GetNamespace("MAPI");
-                ns.Logon(ret.DefaultProfileName, "", Type.Missing, Type.Missing);//ret.DefaultProfileName
-            }
-            catch (Exception ex)
-            {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "CreateOutlookApplication", ex.Message));
-            }
-
-            return ret;
-        }
-
-        public List<object> GetFolders()
-        {
-            if (_application == null)
+            if (application == null)
                 return default(List<object>);
 
             List<object> res = new List<object>();
             try
             {
-                Outlook.NameSpace ns = _application.GetNamespace("MAPI");
+                Outlook.NameSpace ns = application.GetNamespace("MAPI");
                 foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
                 {
                     res.Add(folder);
@@ -296,7 +302,7 @@ namespace OF.Infrastructure.Service.Index
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolders", ex.Message));
+                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolders", ex.ToString()));
                 return res;
             }
             return res;
@@ -327,15 +333,14 @@ namespace OF.Infrastructure.Service.Index
             }
         }
 
-        private void CloseApplication()
+        private void CloseApplication(Outlook._Application application, bool isExistingProcess)
         {
-            if (_application == null)
+            OFLogger.Instance.LogDebug("Outlook is existed: {0}");
+            if (application == null || isExistingProcess)
             {
                 return;
             }
-
-            _application.Quit();
-            _application = null;
+            Marshal.ReleaseComObject(application);
         }
     }
 }

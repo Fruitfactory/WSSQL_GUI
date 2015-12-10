@@ -195,7 +195,7 @@ namespace OF.Core.Core.Search
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError("{0}", ex.Message);
+                OFLogger.Instance.LogError("{0}", ex.ToString());
             }
             finally
             {

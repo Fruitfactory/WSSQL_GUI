@@ -69,7 +69,7 @@ namespace OF.Core.Core.Search
                 }
                 catch (Exception ex)
                 {
-                    OF.Core.Logger.OFLogger.Instance.LogError("GetDataByReader: {0}", ex.Message);
+                    OF.Core.Logger.OFLogger.Instance.LogError("GetDataByReader: {0}", ex.ToString());
                 }
                 finally
                 {
@@ -126,7 +126,7 @@ namespace OF.Core.Core.Search
                         }
                         catch (Exception ex)
                         {
-                            System.Diagnostics.Debug.WriteLine(ex.Message);
+                            System.Diagnostics.Debug.WriteLine(ex.ToString());
                             continue;
                         }
                     }
@@ -135,7 +135,7 @@ namespace OF.Core.Core.Search
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
             }
             return resultTable;
         }

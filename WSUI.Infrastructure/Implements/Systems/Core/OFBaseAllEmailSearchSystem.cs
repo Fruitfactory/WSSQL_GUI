@@ -59,7 +59,7 @@ namespace OF.Infrastructure.Implements.Systems.Core
         //    }
         //    catch (System.Exception ex)
         //    {
-        //        OFLogger.Instance.LogError("{0}", ex.Message);
+        //        OFLogger.Instance.LogError("{0}", ex.ToString());
         //    }
         //    finally
         //    {

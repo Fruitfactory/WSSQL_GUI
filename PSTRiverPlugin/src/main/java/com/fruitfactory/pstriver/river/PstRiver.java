@@ -15,15 +15,8 @@ import com.fruitfactory.pstriver.utils.PstFeedDefinition;
 import com.fruitfactory.pstriver.utils.PstGlobalConst;
 import com.fruitfactory.pstriver.utils.PstMetadataTags;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
-import com.sun.jna.platform.win32.Advapi32;
-import com.sun.jna.platform.win32.Advapi32Util;
-import com.sun.jna.platform.win32.WinNT;
-import com.sun.jna.platform.win32.WinReg;
-import com.sun.jna.ptr.IntByReference;
 import org.elasticsearch.ExceptionsHelper;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
 import org.elasticsearch.action.bulk.BulkItemResponse;
@@ -37,7 +30,6 @@ import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.util.concurrent.EsExecutors;
 import org.elasticsearch.common.xcontent.XContentBuilder;
-import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 import org.elasticsearch.common.xcontent.support.XContentMapValues;
 import org.elasticsearch.indices.IndexAlreadyExistsException;
 import org.elasticsearch.river.AbstractRiverComponent;
@@ -256,7 +248,6 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
             }
         }
 
-
         logger.warn(LOG_TAG + "River is creating mapping...");
         try {
             pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE, PstMetadataTags.buildPstEmailMapping());
@@ -269,45 +260,6 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
             return;
         }
         logger.warn(LOG_TAG + "River has created mapping...");
-//        logger.warn(LOG_TAG + "Running Service App...");
-//        try{
-//            runServiceApp();
-//        }catch (Exception ex){
-//            logger.warn("Run Service App",ex,_indexName);
-//        }
-
-    }
-
-    private static String serviceApp = "serviceapp.exe";
-
-    public final static String REGISTRY_KEY_NAME = "SOFTWARE\\\\OFOutlookPlugin";
-    public final static String REGISTRY_WOW64_KEY_NAME = "SOFTWARE\\Wow6432Node\\OFOutlookPlugin";
-
-    public final static String REGISTRY_KEY_VALUE_NAME = "ofpath";
-
-    private void runServiceApp() throws IOException {
-        String basePath = getOutlookFinderPath();
-        if(basePath != null && !basePath.isEmpty()){
-            logger.warn("OF path is: "+ basePath);
-
-            String command = basePath + serviceApp;
-            File f = new File(command);
-            if(f.exists()){
-                String[] cmd = {"cmd","/c","start","\"ServiceApp\"", command};
-                Runtime.getRuntime().exec(cmd);
-            }
-        }else{
-            logger.warn("OF path is empty");
-        }
-    }
-
-
-    private static String getOutlookFinderPath(){
-        String  value = (String) Advapi32Util.registryGetValue(WinReg.HKEY_LOCAL_MACHINE,REGISTRY_KEY_NAME,REGISTRY_KEY_VALUE_NAME);
-        if(value == null || value.isEmpty()){
-            value = (String) Advapi32Util.registryGetValue(WinReg.HKEY_LOCAL_MACHINE,REGISTRY_WOW64_KEY_NAME,REGISTRY_KEY_VALUE_NAME);
-        }
-        return value;
     }
 
 }
