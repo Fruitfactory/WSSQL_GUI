@@ -12,6 +12,7 @@ using OF.Core.Extensions;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
+using OF.Core.Win32;
 using OF.Infrastructure.Implements.ElasticSearch.Clients;
 using OF.Infrastructure.Implements.Service;
 using Exception = System.Exception;
@@ -37,8 +38,6 @@ namespace OF.Infrastructure.Service.Index
         public OFAttachmentReader()
         {
             Status = PstReaderStatus.None;
-            _cancellationSource = new CancellationTokenSource();
-            _cancellationToken = _cancellationSource.Token;
             _indexAttachmentClient = new OFElasticSeachIndexAttachmentClient();
         }
 
@@ -75,7 +74,10 @@ namespace OF.Infrastructure.Service.Index
                 if (_thread == null)
                 {
                     _thread = new Thread(ProcessAttachment);
+                    _thread.SetApartmentState(ApartmentState.STA);
                     _lastUpdated = lastUpdated;
+                    _cancellationSource = new CancellationTokenSource();
+                    _cancellationToken = _cancellationSource.Token;
                     OFLogger.Instance.LogDebug("Last Updated Date: {0}", lastUpdated.HasValue ? lastUpdated.Value.ToString() : "N/a");
                     IsStarted = true;
                     Status = PstReaderStatus.Busy;
@@ -89,9 +91,15 @@ namespace OF.Infrastructure.Service.Index
             Resume(_lastUpdated);
             lock (_lock)
             {
-                _cancellationSource.Cancel();
-                _thread.Join();
-                _thread = null;
+                if (_cancellationSource != null)
+                {
+                    _cancellationSource.Cancel();
+                }
+                if (_thread != null)
+                {
+                    _thread.Join();
+                    _thread = null;
+                }
                 Status = PstReaderStatus.Finished;
                 IsStarted = false;    
             }
@@ -114,6 +122,8 @@ namespace OF.Infrastructure.Service.Index
 
         private void ProcessAttachment(object arg)
         {
+            OFMessageFilter.Register();
+
             Outlook._Application application = null;
             var isExistingProcess = false;
             try
@@ -130,6 +140,8 @@ namespace OF.Infrastructure.Service.Index
                 }
                 foreach (var mapiFolder in folderList)
                 {
+                    CheckCancellation();
+                    TryToWait();
                     OFLogger.Instance.LogDebug("Attachment Reader => Folder name: {0}", mapiFolder.Name);
                     if (mapiFolder.Items.Count == 0)
                     {
@@ -137,11 +149,12 @@ namespace OF.Infrastructure.Service.Index
                     }
                     foreach (var result in mapiFolder.Items.OfType<Outlook.MailItem>())
                     {
+                        CheckCancellation();
+                        TryToWait();
                         if (result.Attachments.Count == 0 || (_lastUpdated.HasValue && result.ReceivedTime < _lastUpdated.Value))
                         {
                             continue;
                         }
-                        TryToWait();
                         List<OFAttachmentContent> attachmentContents = new List<OFAttachmentContent>();
                         foreach (var attachment in result.Attachments.OfType<Outlook.Attachment>())
                         {
@@ -150,6 +163,7 @@ namespace OF.Infrastructure.Service.Index
                             {
                                 continue;
                             }
+                            CheckCancellation();
                             TryToWait();
                             try
                             {
@@ -195,8 +209,14 @@ namespace OF.Infrastructure.Service.Index
                 SendAttachments(null, OFAttachmentIndexProcess.End);
                 Status = PstReaderStatus.Finished;
                 CloseApplication(application,isExistingProcess);
+                application = null;
+                OFLogger.Instance.LogInfo("!!!!!!!! Exit From Attachment Reader");
                 System.Diagnostics.Debug.WriteLine("!!!!!!!! Exit From Attachment Reader");
                 IsStarted = false;
+                _thread = null;
+                _cancellationSource.Dispose();    
+                _cancellationSource = null;
+                OFMessageFilter.Revoke();
             }
         }
 
@@ -278,7 +298,7 @@ namespace OF.Infrastructure.Service.Index
 
         private void CheckCancellation()
         {
-            if (_cancellationToken.IsCancellationRequested)
+            if ( _cancellationToken.IsCancellationRequested)
             {
                 _cancellationToken.ThrowIfCancellationRequested();
             }
@@ -339,6 +359,14 @@ namespace OF.Infrastructure.Service.Index
             if (application == null || isExistingProcess)
             {
                 return;
+            }
+            try
+            {
+                application.Quit();
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.ToString());
             }
             Marshal.ReleaseComObject(application);
         }

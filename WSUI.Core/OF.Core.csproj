@@ -47,7 +47,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Output\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TA_BOTH_DLL</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TA_BOTH_DLL; CONSOLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -329,6 +329,7 @@
     <Compile Include="Utils\OFFieldCash.cs" />
     <Compile Include="Utils\OFQueryGenerator.cs" />
     <Compile Include="Utils\OFQueryReader.cs" />
+    <Compile Include="Win32\OFMessageFilter.cs" />
     <Compile Include="Win32\WindowsFunction.cs" />
   </ItemGroup>
   <ItemGroup>

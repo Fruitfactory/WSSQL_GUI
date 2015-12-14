@@ -79,6 +79,9 @@ namespace OF.Core.Logger
 #if DEBUG
             System.Diagnostics.Debug.WriteLine(tempMessage);
 #endif
+#if CONSOLE
+            Console.WriteLine(message);
+#endif
         }
 
         public void LogError(string format, params object[] args)
@@ -93,7 +96,9 @@ namespace OF.Core.Logger
 #if DEBUG
             System.Diagnostics.Debug.WriteLine(tempMessage);
 #endif
-
+#if CONSOLE
+            Console.WriteLine(message);
+#endif
         }
 
         public void LogInfo(string message)
@@ -102,7 +107,9 @@ namespace OF.Core.Logger
 #if DEBUG
             System.Diagnostics.Debug.WriteLine(message);
 #endif
-
+#if CONSOLE
+            Console.WriteLine(message);
+#endif
         }
 
         public void LogInfo(string format, params object[] args)
@@ -111,6 +118,9 @@ namespace OF.Core.Logger
             LogInfo(message);
 #if DEBUG
             System.Diagnostics.Debug.WriteLine(message);
+#endif
+#if CONSOLE
+            Console.WriteLine(message);
 #endif
         }
 
@@ -129,6 +139,9 @@ namespace OF.Core.Logger
 #if DEBUG
             System.Diagnostics.Debug.WriteLine(message);
 #endif
+#if CONSOLE
+            Console.WriteLine(message);
+#endif
         }
 
         public void LogDebug(string message)
@@ -137,6 +150,10 @@ namespace OF.Core.Logger
 #if DEBUG
             System.Diagnostics.Debug.WriteLine(message);
 #endif
+#if CONSOLE
+          Console.WriteLine(message);
+#endif
+
         }
 
         public void LogDebug(string format, params object[] args)

@@ -60,15 +60,19 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
         setRiverStatus(PstRiverStatus.Busy);
 
         PstUserActivityTracker tracker = new PstUserActivityTracker(this._inputHookManage,this, null, getRestAttachmentClient(), getLastDateFromRiver(), _settings.getIdleTime(), _settings.getIdleTime(), getLogger());
-        tracker.startTracking();
 
         getLogger().info(LOG_TAG + "User activity tracker was created...");
         getLogger().info(LOG_TAG + "Start parsing files...");
         getRestAttachmentClient().startRead(getLastDateFromRiver());
         attachmentReader.start();
 
+        tracker.startTracking();
+
         for (Thread reader : readers) {
             readerControls.add((IReaderControl)reader);
+            if(tracker.getLastState() == PstUserActivityTracker.State.ONLINE){
+                ((IReaderControl)reader).pauseThread();
+            }
             tracker.setReaders(readerControls);
             reader.start();
             getLogger().info(((PstOutlookFileReader)reader).getFilename());
@@ -76,17 +80,15 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
             readerControls.remove(reader);
             ((PstOutlookFileReader) reader).close();
         }
-        attachmentReader.join();
-        getRestAttachmentClient().stopRead();
 
-        if (tracker != null) {
-            try {
-                tracker.stopTracking();
-                tracker.join();
-                PstRESTRepository.resetForcingIndexing();
-            } catch (InterruptedException ex) {
-                getLogger().error(Level.SEVERE.toString() +  ex.getMessage());
-            }
+        try {
+            attachmentReader.join();
+            tracker.stopTracking();
+            getRestAttachmentClient().stopRead();
+            tracker.join();
+            PstRESTRepository.resetForcingIndexing();
+        } catch (InterruptedException ex) {
+            getLogger().error(Level.SEVERE.toString() +  ex.getMessage());
         }
         readerControls.clear();
         return 1;

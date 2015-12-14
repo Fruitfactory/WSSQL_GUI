@@ -10,6 +10,7 @@ namespace OF.ServiceApp
 {
     class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
             IOFServiceBootstraper bootstraper = new OFServiceBootstraper();

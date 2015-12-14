@@ -132,7 +132,7 @@ namespace OF.ServiceApp.Bootstraper
             {
                 if (_attachmentReader.IsNotNull() && !_attachmentReader.IsStarted)
                 {
-                    OFLogger.Instance.LogDebug("Start Reading Attachment...");
+                    OFLogger.Instance.LogInfo("Start Reading Attachment...");
                     _attachmentReader.Start(date);
                 }    
             }

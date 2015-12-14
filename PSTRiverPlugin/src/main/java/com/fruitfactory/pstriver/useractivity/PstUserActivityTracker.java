@@ -26,7 +26,7 @@ import org.joda.time.*;
  */
 public class PstUserActivityTracker extends Thread {
     
-     enum State {
+    public enum State {
 
         UNKNOWN, ONLINE, IDLE, AWAY, NIGHT
     };
@@ -42,7 +42,7 @@ public class PstUserActivityTracker extends Thread {
     private LocalTime timeFinishNight = new LocalTime(6,0,0);
     private final Object lock = new Object();
     private Date _lastUpdated;
-
+    private boolean isWorking = false;
 
     private IPstStatusTracker statusTracker;
     private IPstRestAttachmentClient restAttachmentClient;
@@ -70,12 +70,16 @@ public class PstUserActivityTracker extends Thread {
     
     public  void startTracking(){
         start();
+        isWorking = true;
     }
     
     public void stopTracking(){
-        readers = null;
-        restAttachmentClient = null;
-        stopped = true;
+        synchronized (lock){
+            readers = null;
+            restAttachmentClient = null;
+            stopped = true;
+            isWorking = false;
+        }
     }
 
     public void setReaders(List<IReaderControl> readers){
@@ -84,20 +88,33 @@ public class PstUserActivityTracker extends Thread {
         }
     }
 
+    public synchronized boolean isWorking(){
+        return isWorking;
+    }
+
+    public synchronized State getLastState(){
+        return oldState;
+    }
+
     @Override
     public void run() {
-        while(!stopped){
+        while(true){
+            synchronized (lock){
+                if(stopped){
+                    break;
+                }
+            }
             try{
                 State state = State.UNKNOWN;
                 long idleSec = this.hookIdleTime.getIdleTime();// / 1000; // PstWin32IdleTime.getIdleTimeMillisWin32(logger) / 1000;
                 boolean isForce = PstRESTRepository.isForce();
                 State newState = IsHight() || isForce ? State.NIGHT : idleSec < onlineTime ? State.ONLINE: idleSec > idleTime ? State.AWAY : State.IDLE;
-                if(newState != state){
+                if(newState != getLastState()){
                     processState(newState);
                 }
                 //System.out.println(String.format("Time = %s, State = %s", idleSec, newState));
-                logger.info(String.format("Time = %s, State = %s", idleSec, newState));
-                oldState = newState;
+                //logger.info(String.format("Time = %s, State = %s, OldState = %s", idleSec, newState,oldState));
+                setLastState(newState);
                 Thread.sleep(1000);
             }catch(Exception ex){
                 Logger.getGlobal().log(Level.SEVERE, ex.getMessage());
@@ -105,7 +122,11 @@ public class PstUserActivityTracker extends Thread {
             }
         }
     } 
-    
+
+    private synchronized void setLastState(State newState){
+        oldState = newState;
+    }
+
     private void processState(State state){
         if(readers == null || readers.isEmpty()){
             return;

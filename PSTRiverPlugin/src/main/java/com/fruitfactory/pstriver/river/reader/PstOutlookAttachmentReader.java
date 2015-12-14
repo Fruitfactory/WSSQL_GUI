@@ -123,11 +123,11 @@ public class PstOutlookAttachmentReader extends PstBaseOutlookIndexer implements
     @Override
     public void run() {
         try {
-            if(!PstRESTRepository.gettIsOFPluginRunning()){
-                _status = PstReaderStatus.Finished;
-                PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
-                return;
-            }
+//            if(!PstRESTRepository.gettIsOFPluginRunning()){
+//                _status = PstReaderStatus.Finished;
+//                PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
+//                return;
+//            }
             PstRESTRepository.setAttachmentProcessor(this);
             _status = PstReaderStatus.Busy;
             PstRESTRepository.setStatus(_name, PstReaderStatus.Busy);

@@ -779,7 +779,7 @@ namespace OF.Core.Helpers
                 var ev = new AutoResetEvent(false);
                 Task.Factory.StartNew(() =>
                 {
-                    Thread.Sleep(1500);
+                    Thread.Sleep(2500);
                     var hwnd = WindowsFunction.SearchForWindow("#32770", "Choose Profile");
                     if (hwnd != IntPtr.Zero)
                     {
@@ -792,8 +792,6 @@ namespace OF.Core.Helpers
 
                 ret = new Outlook.Application() as Outlook._Application;
                 ev.WaitOne();
-                if (ret == null)
-                    return ret;
                 Outlook.NameSpace ns = ret.GetNamespace("MAPI");
                 ns.Logon(ret.DefaultProfileName, "", false, true);
             }
