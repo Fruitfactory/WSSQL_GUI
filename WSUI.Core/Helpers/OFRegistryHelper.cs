@@ -192,7 +192,21 @@ namespace OF.Core.Helpers
             }
         }
 
-
+        public void DisableOutlookSecurityWarning()
+        {
+            var registry = _baseRegistry;
+            try
+            {
+                var securityKey = registry.CreateSubKey("Software\\Policies\\Microsoft\\Security");
+                if (securityKey != null)
+                {
+                    securityKey.SetValue("CheckAdminSettings",1);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
 
         public Tuple<string, int> GetOutlookVersion()
         {

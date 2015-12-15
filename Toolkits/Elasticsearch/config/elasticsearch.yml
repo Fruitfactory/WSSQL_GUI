@@ -200,16 +200,16 @@ bootstrap.mlockall: true
 
 # Set the bind address specifically (IPv4 or IPv6):
 #
-network.bind_host: localhost
+#network.bind_host: localhost
 
 # Set the address other nodes will use to communicate with this node. If not
 # set, it is automatically derived. It must point to an actual IP address.
-#
-network.publish_host: localhost
+# http://blog.emaillenin.com/2015/03/failed-to-reconnect-to-node-elasticsearch-log.html
+network.publish_host: 127.0.0.1
 
 # Set both 'bind_host' and 'publish_host':
 #
-network.host: localhost
+#network.host: localhost
 
 # Set a custom port for the node to node communication (9300 by default):
 #

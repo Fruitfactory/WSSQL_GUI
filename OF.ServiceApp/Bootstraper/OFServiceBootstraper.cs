@@ -5,6 +5,7 @@ using System.ServiceModel.Configuration;
 using System.Threading;
 using Microsoft.Practices.Prism.Events;
 using OF.Core.Extensions;
+using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 using OF.Infrastructure.Implements.Service;
@@ -54,6 +55,7 @@ namespace OF.ServiceApp.Bootstraper
             _eventAggregator.GetEvent<OFSuspendReadEvent>().Subscribe(SuspenReadExecute);
             _eventAggregator.GetEvent<OFResumeReadEvent>().Subscribe(ResumeReadExecute);
 
+            OFRegistryHelper.Instance.DisableOutlookSecurityWarning();
 
             _stopEvent = new AutoResetEvent(false);
         }
