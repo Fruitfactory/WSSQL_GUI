@@ -1,6 +1,8 @@
 package com.fruitfactory.pstriver.river.reader;
 
 import com.fruitfactory.pstriver.helpers.PstReaderStatus;
+import com.fruitfactory.pstriver.helpers.PstReaderStatusInfo;
+import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
 import com.fruitfactory.pstriver.interfaces.IPstAttachmentProcessor;
 import com.fruitfactory.pstriver.rest.PstRESTRepository;
 import com.fruitfactory.pstriver.rest.data.PstAttachmentContainer;
@@ -58,64 +60,6 @@ public class PstOutlookAttachmentReader extends PstBaseOutlookIndexer implements
     }
 
 
-    // from queue
-
-//    @Override
-//    public void run() {
-//        try {
-//
-//            if(!PstRESTRepository.gettIsOFPluginRunning()){
-//                _status = PstReaderStatus.Finished;
-//                PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
-//                return;
-//            }
-//            _status = PstReaderStatus.Busy;
-//            PstRESTRepository.setStatus(_name, PstReaderStatus.Busy);
-//            while(true){
-//                tryToWait();
-//                PstAttachmentContainer container = PstRESTRepository.getAttachmentContainer();
-//                if(container == null){
-//                    continue;
-//                }
-//                if(PstAttachmentIndexProcess.getValue(container.getProcess()) == PstAttachmentIndexProcess.End){
-//                    break;
-//                }
-//                for(PstAttachmentContent content : container.getAttachments()){
-//                    saveAttachment(content);
-//                }
-//            }
-//            _status = PstReaderStatus.Finished;
-//            PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
-//
-//        }catch (Exception e){
-//            _logger.error(e.getMessage());
-//        }finally {
-//            _logger.info("!!!!!!!! Exit From Attachment Reader");
-//            _status = PstReaderStatus.Finished;
-//            PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
-//        }
-//    }
-//
-//    @Override
-//    public void processAttachment(PstAttachmentContainer attachmentContainer) {
-//
-//        if(PstAttachmentIndexProcess.getValue(attachmentContainer.getProcess()) == PstAttachmentIndexProcess.End){
-//            synchronized (_lock){
-//                _status = PstReaderStatus.Finished;
-//            }
-//            return;
-//        }
-//        if(attachmentContainer.getAttachments().size() == 0){
-//            return;
-//        }
-//        try {
-//            for(PstAttachmentContent content : attachmentContainer.getAttachments()){
-//                saveAttachment(content);
-//            }
-//        }catch(Exception ex){
-//            _logger.error(ex.getMessage());
-//        }
-//    }
 
     // one by one
 
@@ -128,6 +72,7 @@ public class PstOutlookAttachmentReader extends PstBaseOutlookIndexer implements
 //                PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
 //                return;
 //            }
+            PstRESTRepository.setStatusInfo(new PstReaderStatusInfo(_name,0));
             PstRESTRepository.setAttachmentProcessor(this);
             _status = PstReaderStatus.Busy;
             PstRESTRepository.setStatus(_name, PstReaderStatus.Busy);
