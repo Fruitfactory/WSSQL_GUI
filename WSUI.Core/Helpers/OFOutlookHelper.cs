@@ -91,6 +91,48 @@ namespace OF.Core.Helpers
 
         #region public
 
+        public string GetOfficeVersion(Outlook._Application app)
+        {
+            var officeVersion = string.Empty;
+            try
+            {
+                if ((app != null))
+                {
+                    string hostVersion = app.Version;
+                    if (hostVersion.StartsWith("9.0"))
+                    {
+                        officeVersion = "9.0";
+                    }
+                    if (hostVersion.StartsWith("10.0"))
+                    {
+                        officeVersion = "10.0";
+                    }
+                    if (hostVersion.StartsWith("11.0"))
+                    {
+                        officeVersion = "11.0";
+                    }
+                    if (hostVersion.StartsWith("12.0"))
+                    {
+                        officeVersion = "12.0";
+                    }
+                    if (hostVersion.StartsWith("14.0"))
+                    {
+                        officeVersion = "14.0";
+                    }
+                    if (hostVersion.StartsWith("15.0"))
+                    {
+                        officeVersion = "15.0";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.Message);
+            }
+            return officeVersion;
+        }
+
+
         public Tuple<string,string> GetCurrentyUserInfo()
         {
             if (OutlookApp == null)

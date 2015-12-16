@@ -131,6 +131,7 @@ namespace OF.Infrastructure.Service.Index
                 Status = PstReaderStatus.Busy;
                 var resultApplication = OFOutlookHelper.Instance.GetApplication();
                 application = resultApplication.Item1 as Outlook._Application;
+
                 isExistingProcess = resultApplication.Item2;
                 var folderList = GetFolders(application).OfType<Outlook.MAPIFolder>();
                 if (!folderList.Any())

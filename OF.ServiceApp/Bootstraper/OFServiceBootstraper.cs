@@ -55,8 +55,6 @@ namespace OF.ServiceApp.Bootstraper
             _eventAggregator.GetEvent<OFSuspendReadEvent>().Subscribe(SuspenReadExecute);
             _eventAggregator.GetEvent<OFResumeReadEvent>().Subscribe(ResumeReadExecute);
 
-            OFRegistryHelper.Instance.DisableOutlookSecurityWarning();
-
             _stopEvent = new AutoResetEvent(false);
         }
 

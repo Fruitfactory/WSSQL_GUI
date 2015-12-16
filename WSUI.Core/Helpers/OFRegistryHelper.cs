@@ -192,15 +192,22 @@ namespace OF.Core.Helpers
             }
         }
 
-        public void DisableOutlookSecurityWarning()
+        public void DisableOutlookSecurityWarning(string officeVersion)
         {
+            if (string.IsNullOrEmpty(officeVersion))
+            {
+                return;
+            }
             var registry = _baseRegistry;
             try
             {
-                var securityKey = registry.CreateSubKey("Software\\Policies\\Microsoft\\Security");
+                var key = string.Format("Software\\Policies\\Microsoft\\Office\\{0}\\Outlook\\Security", officeVersion);
+                var securityKey = registry.CreateSubKey(key);
                 if (securityKey != null)
                 {
-                    securityKey.SetValue("CheckAdminSettings",1);
+                    securityKey.SetValue("PromptSimpleMAPISend", 2);
+                    securityKey.SetValue("PromptSimpleMAPINameResolve", 2);
+                    securityKey.SetValue("PromptSimpleMAPIOpenMessage", 2);
                 }
             }
             catch (Exception)
