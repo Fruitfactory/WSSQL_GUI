@@ -205,9 +205,19 @@ namespace OF.Core.Helpers
                 var securityKey = registry.CreateSubKey(key);
                 if (securityKey != null)
                 {
-                    securityKey.SetValue("PromptSimpleMAPISend", 2);
-                    securityKey.SetValue("PromptSimpleMAPINameResolve", 2);
-                    securityKey.SetValue("PromptSimpleMAPIOpenMessage", 2);
+                    securityKey.SetValue("promptsimplemapisend", 2);
+                    securityKey.SetValue("promptsimplemapinameresolve", 2);
+                    securityKey.SetValue("promptsimplemapiopenmessage", 2);
+
+                    securityKey.SetValue("promptoomsend", 2);
+                    securityKey.SetValue("promptoommeetingtaskrequestresponse", 2);
+                    securityKey.SetValue("promptoomaddressinformationaccess", 2);
+                    securityKey.SetValue("promptoomsaveas", 2);
+                    securityKey.SetValue("promptoomformulaaccess", 2);
+                    securityKey.SetValue("promptoomaddressbookaccess", 2);
+                    securityKey.SetValue("adminsecuritymode", 3);
+
+
                 }
             }
             catch (Exception)
