@@ -171,6 +171,7 @@
     <Compile Include="Extensions\FileExtensions.cs" />
     <Compile Include="Helpers\OFIsolatedStorageHelper.cs" />
     <Compile Include="Helpers\OFObjectJsonSaveReadHelper.cs" />
+    <Compile Include="Helpers\OFOfficeVersion.cs" />
     <Compile Include="Interfaces\IElasticSearchForceClient.cs" />
     <Compile Include="Interfaces\IElasticSearchIndexAttachmentClient.cs" />
     <Compile Include="Interfaces\IElasticSearchItemsCount.cs" />

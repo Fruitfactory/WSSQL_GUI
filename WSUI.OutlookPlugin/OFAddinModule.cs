@@ -1017,7 +1017,6 @@ namespace OFOutlookPlugin
                         _officeVersion = "15.0";
                         GlobalConst.CurrentOutlookVersion = OutlookVersions.Otlook2013;
                     }
-                    OFRegistryHelper.Instance.DisableOutlookSecurityWarning(_officeVersion);
                     OFLogger.Instance.LogInfo("Outlook Version: {0}, {1}, {2}", hostVersion, _outlookVersion, _officeVersion);
                 }
             }
