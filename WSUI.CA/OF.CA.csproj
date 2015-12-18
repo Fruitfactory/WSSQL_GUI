@@ -90,6 +90,9 @@
     <Compile Include="..\WSUI.Core\Core\LimeLM\TurboActivate.cs">
       <Link>LimeLM\TurboActivate.cs</Link>
     </Compile>
+    <Compile Include="..\WSUI.Core\Helpers\OFOfficeVersion.cs">
+      <Link>OFOfficeVersion.cs</Link>
+    </Compile>
     <Compile Include="..\WSUI.Core\Helpers\OFRegistryHelper.cs">
       <Link>OFRegistryHelper.cs</Link>
     </Compile>

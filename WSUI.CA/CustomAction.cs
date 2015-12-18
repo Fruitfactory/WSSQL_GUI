@@ -890,6 +890,9 @@ namespace OF.CA
                 var filename = Path.Combine(ofPath, "serviceapp.exe");
                 if (File.Exists(filename))
                 {
+                    session.Log("Disable Access Prompt...");
+                    DisabeAccessPrompt();
+
                     session.Log("Starting Service Application...");
                     OFRegistryHelper.Instance.SetAutoRunHelperApplication(ofPath);
                     ProcessStartInfo info = new ProcessStartInfo(filename);
@@ -901,6 +904,13 @@ namespace OF.CA
                 session.Log(ex.ToString());
             }
             return ActionResult.Success;
+        }
+
+
+        private static void DisabeAccessPrompt()
+        {
+            var versions = (new OFOfficeVersionFinder()).GetOfficeVersion();
+            OFRegistryHelper.Instance.DisableOutlookSecurityWarning(versions.Item2);
         }
 
         #endregion
