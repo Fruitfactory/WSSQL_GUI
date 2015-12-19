@@ -53,6 +53,8 @@ namespace OF.Module.ViewModel.Settings
         {
             _detailsSettingsViewModels.Add(_unityContainer.Resolve<IElasticSearchRiverSettingsViewModel>());
             _detailsSettingsViewModels.Add(_unityContainer.Resolve<ILoggingSettingsViewModel>());
+            _detailsSettingsViewModels.Add(_unityContainer.Resolve<IServiceApplicationSettingsViewModel>());
+            _detailsSettingsViewModels.Add(_unityContainer.Resolve<IOutlookSecuritySettingsViewModel>());
 
             _detailsSettingsViewModels.ForEach(d => d.Initialize());
 
@@ -68,6 +70,16 @@ namespace OF.Module.ViewModel.Settings
         public ILoggingSettingsViewModel LoggingSettingsViewModel
         {
             get { return _detailsSettingsViewModels[1] as ILoggingSettingsViewModel;}
+        }
+
+        public IServiceApplicationSettingsViewModel ServiceApplicationSettingsViewModel
+        {
+            get { return _detailsSettingsViewModels[2] as IServiceApplicationSettingsViewModel;}
+        }
+
+        public IOutlookSecuritySettingsViewModel OutlookSecuritySettingsViewModel
+        {
+            get { return _detailsSettingsViewModels[3] as IOutlookSecuritySettingsViewModel;}
         }
 
         public ICommand OkCommand

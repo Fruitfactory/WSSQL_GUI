@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Win32;
+using OF.Core.Extensions;
 
 namespace OF.Core.Helpers
 {
@@ -50,6 +52,22 @@ namespace OF.Core.Helpers
 
         public const string ProgIdKey = "OFOutlookPlugin.AddinModule";
 
+
+
+
+        private Dictionary<string,int> _keyDisableWarningsValues = new Dictionary<string, int>()
+        {
+            {"promptsimplemapisend", 2},
+            {"promptsimplemapinameresolve", 2},
+            {"promptsimplemapiopenmessage", 2},
+            {"promptoomsend", 2},
+            {"promptoommeetingtaskrequestresponse", 2},
+            {"promptoomaddressinformationaccess", 2},
+            {"promptoomsaveas", 2},
+            {"promptoomformulaaccess", 2},
+            {"promptoomaddressbookaccess", 2},
+            {"adminsecuritymode", 3}
+        }; 
 
         #endregion [needs]
 
@@ -205,25 +223,87 @@ namespace OF.Core.Helpers
                 var securityKey = registry.CreateSubKey(key);
                 if (securityKey != null)
                 {
-                    securityKey.SetValue("promptsimplemapisend", 2);
-                    securityKey.SetValue("promptsimplemapinameresolve", 2);
-                    securityKey.SetValue("promptsimplemapiopenmessage", 2);
-
-                    securityKey.SetValue("promptoomsend", 2);
-                    securityKey.SetValue("promptoommeetingtaskrequestresponse", 2);
-                    securityKey.SetValue("promptoomaddressinformationaccess", 2);
-                    securityKey.SetValue("promptoomsaveas", 2);
-                    securityKey.SetValue("promptoomformulaaccess", 2);
-                    securityKey.SetValue("promptoomaddressbookaccess", 2);
-                    securityKey.SetValue("adminsecuritymode", 3);
-
-
+                    _keyDisableWarningsValues.ForEach(p => securityKey.SetValue(p.Key,p.Value));
                 }
             }
             catch (Exception)
             {
             }
         }
+
+
+        public void DeleteOutlookSecuritySettings(string officeVersion)
+        {
+            if (string.IsNullOrEmpty(officeVersion))
+            {
+                return;
+            }
+            var registry = _baseRegistry;
+            try
+            {
+                var key = string.Format("Software\\Policies\\Microsoft\\Office\\{0}\\Outlook\\Security", officeVersion);
+                var securityKey = registry.OpenSubKey(key,RegistryKeyPermissionCheck.ReadWriteSubTree);
+                if (securityKey != null)
+                {
+                    _keyDisableWarningsValues.ForEach(p => securityKey.DeleteValue(p.Key));
+                }
+            }
+            catch (Exception)
+            {
+            }           
+        }
+
+        public bool IsSecurityWarningDisable(string officeVersion)
+        {
+            if (string.IsNullOrEmpty(officeVersion))
+            {
+                return false;
+            }
+            try
+            {
+                var registry = _baseRegistry;
+                var key = string.Format("Software\\Policies\\Microsoft\\Office\\{0}\\Outlook\\Security", officeVersion);
+                var securityKey = registry.OpenSubKey(key);
+                return securityKey.IsNotNull();
+            }
+            catch (Exception)
+            {
+                
+            }
+            return false;
+        }
+
+        public bool IsAllSecuritySettingsApply(string officeVersion)
+        {
+            if (string.IsNullOrEmpty(officeVersion))
+            {
+                return false;
+            }
+            try
+            {
+                var registry = _baseRegistry;
+                var key = string.Format("Software\\Policies\\Microsoft\\Office\\{0}\\Outlook\\Security", officeVersion);
+                var securityKey = registry.OpenSubKey(key);
+                if (securityKey != null)
+                {
+                    var valuenames = securityKey.GetValueNames().Select(name => name.ToUpperInvariant());
+                    var keysPresent = _keyDisableWarningsValues.Keys.ToDictionary(p => p.ToUpperInvariant(), p => false);
+                    foreach (var valuename in valuenames)
+                    {
+                        if (keysPresent.ContainsKey(valuename))
+                        {
+                            keysPresent[valuename] = true;
+                        }
+                    }
+                    return keysPresent.Values.All(v => v);
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return false;
+        }
+
 
         public Tuple<string, int> GetOutlookVersion()
         {
@@ -457,6 +537,21 @@ namespace OF.Core.Helpers
             {
             }
         }
+
+        public bool IsServiceApplicationAutoRunExist()
+        {
+            try
+            {
+                RegistryKey add = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                var value = add.GetValue(OUTLOOKFINDER_HELPER_APPLICATION);
+                return value.IsNotNull();
+            }
+            catch (Exception)
+            {
+            }
+            return false;
+        }
+
 
         public void DeleteAutoRunHelperApplication()
         {

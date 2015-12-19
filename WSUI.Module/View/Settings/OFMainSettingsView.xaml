@@ -33,6 +33,13 @@
             <controls:MetroTabItem Header="Logging">
                 <ContentControl Margin="5" Content="{Binding LoggingSettingsViewModel.View}"></ContentControl>
             </controls:MetroTabItem>
+            <controls:MetroTabItem Header="Service Application">
+                <ContentControl Margin="5" Content="{Binding ServiceApplicationSettingsViewModel.View}"></ContentControl>
+            </controls:MetroTabItem>
+            <controls:MetroTabItem Header="Secutiry">
+                <ContentControl Margin="5" Content="{Binding OutlookSecuritySettingsViewModel.View}"></ContentControl>
+            </controls:MetroTabItem>
+            
 
         </TabControl>
 

@@ -167,6 +167,8 @@
     <Compile Include="Interface\ViewModel\IElasticSearchViewModel.cs" />
     <Compile Include="Interface\ViewModel\ILoggingSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IMainSettingsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IOutlookSecuritySettingsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IServiceApplicationSettingsViewModel.cs" />
     <Compile Include="Interface\View\IAllDataView.cs" />
     <Compile Include="Interface\View\IContactAttachmentDetailsView.cs" />
     <Compile Include="Interface\View\IContactDetailsView.cs" />
@@ -184,10 +186,12 @@
     <Compile Include="Interface\View\IMainSettingsView.cs" />
     <Compile Include="Interface\View\IMainView.cs" />
     <Compile Include="Interface\ViewModel\IMainViewModel.cs" />
+    <Compile Include="Interface\View\IOutlookSecuritySettingsView.cs" />
     <Compile Include="Interface\View\IPreviewView.cs" />
     <Compile Include="Interface\View\IScrollableView.cs" />
     <Compile Include="Interface\Service\IScrollBehavior.cs" />
     <Compile Include="Interface\Service\ISearchData.cs" />
+    <Compile Include="Interface\View\IServiceApplicationSettingsView.cs" />
     <Compile Include="Interface\View\ISettingsView.cs" />
     <Compile Include="Interface\View\ISidebarView.cs" />
     <Compile Include="Interface\View\IUIView.cs" />
@@ -228,12 +232,14 @@
     <Compile Include="ViewModel\ContactDetailsViewModel.cs" />
     <Compile Include="ViewModel\ContactViewModel.cs" />
     <Compile Include="ViewModel\ElasticSearchMonitoringViewModel.cs" />
-    <Compile Include="ViewModel\Settings\ElasticSearchRiverSettingsViewModel.cs" />
+    <Compile Include="ViewModel\Settings\OFElasticSearchRiverSettingsViewModel.cs" />
     <Compile Include="ViewModel\ElasticSearchViewModel.cs" />
     <Compile Include="ViewModel\EmailViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFLoggingSettingsViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFMainSettingsViewModel.cs" />
+    <Compile Include="ViewModel\Settings\OFOutlookSecutirySettingsViewModel.cs" />
+    <Compile Include="ViewModel\Settings\OFServiceApplicationSettingsViewModel.cs" />
     <Compile Include="View\AdvancedSearchSettingsView.xaml.cs">
       <DependentUpon>AdvancedSearchSettingsView.xaml</DependentUpon>
     </Compile>
@@ -296,6 +302,12 @@
     </Compile>
     <Compile Include="View\PreviewView.xaml.cs">
       <DependentUpon>PreviewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Settings\OFOutlookSecuritySettingsView.xaml.cs">
+      <DependentUpon>OFOutlookSecuritySettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Settings\OFServiceApplicationSettingsView.xaml.cs">
+      <DependentUpon>OFServiceApplicationSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SidebarKindsView.xaml.cs">
       <DependentUpon>SidebarKindsView.xaml</DependentUpon>
@@ -419,6 +431,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\PreviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Settings\OFOutlookSecuritySettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Settings\OFServiceApplicationSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -15,7 +15,7 @@
             WindowStartupLocation="CenterScreen"
             GlowBrush="{DynamicResource AccentColorBrush}"
             NonActiveGlowBrush="Red"
-                      Width="550"
+                      Width="750"
                       Height="350"
                      
                       >

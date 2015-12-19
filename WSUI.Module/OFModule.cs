@@ -102,7 +102,7 @@ namespace OF.Module
 
             _unityContainer.RegisterType<IMainSettingsWindow, OFMainSettingsWindow>();
             _unityContainer.RegisterType<IElasticSearchRiverSettingsView, ElasticSearchRiverSettingsView>();
-            _unityContainer.RegisterType<IElasticSearchRiverSettingsViewModel, ElasticSearchRiverSettingsViewModel>();
+            _unityContainer.RegisterType<IElasticSearchRiverSettingsViewModel, OFElasticSearchRiverSettingsViewModel>();
             _unityContainer.RegisterType<IElasticUpdateSettingsClient, OFElasticUpdateSettingsClient>();
 
             _unityContainer.RegisterType<IElasticSearchMonitoringView, ElasticSearchMonitoringView>();
@@ -117,6 +117,12 @@ namespace OF.Module
 
             _unityContainer.RegisterType<IElasticSearchOFPluginStatusClient, OFElasticSearchOFPluginStatusClient>();
             _unityContainer.RegisterType<IElasticSearchForceClient, OFElasticSearchForceClient>();
+
+            _unityContainer.RegisterType<IServiceApplicationSettingsViewModel, OFServiceApplicationSettingsViewModel>();
+            _unityContainer.RegisterType<IServiceApplicationSettingsView, OFServiceApplicationSettingsView>();
+
+            _unityContainer.RegisterType<IOutlookSecuritySettingsViewModel, OFOutlookSecutirySettingsViewModel>();
+            _unityContainer.RegisterType<IOutlookSecuritySettingsView, OFOutlookSecuritySettingsView>();
             
             watch.Stop();
             OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));

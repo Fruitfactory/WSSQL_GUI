@@ -19,7 +19,7 @@ using OF.Module.Interface.ViewModel;
 
 namespace OF.Module.ViewModel.Settings
 {
-    public class ElasticSearchRiverSettingsViewModel : OFViewModelBase, IElasticSearchRiverSettingsViewModel
+    public class OFElasticSearchRiverSettingsViewModel : OFViewModelBase, IElasticSearchRiverSettingsViewModel
     {
         private IElasticSearchRiverSettingsView _view = null;
         private readonly IEventAggregator _eventAggregator;
@@ -54,7 +54,7 @@ namespace OF.Module.ViewModel.Settings
         #endregion
 
 
-        public ElasticSearchRiverSettingsViewModel(IEventAggregator eventAggregator, IUnityContainer unityContainer)
+        public OFElasticSearchRiverSettingsViewModel(IEventAggregator eventAggregator, IUnityContainer unityContainer)
         {
             _eventAggregator = eventAggregator;
             _unityContainer = unityContainer;
