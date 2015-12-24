@@ -143,8 +143,16 @@ namespace OF.ServiceApp.Bootstraper
 
         private void DisableAccessPrompt()
         {
-            var versions = (new OFOfficeVersionFinder()).GetOfficeVersion();
-            OFRegistryHelper.Instance.DisableOutlookSecurityWarning(versions.Item2);
+            try
+            {
+                var versions = (new OFOfficeVersionFinder()).GetOfficeVersion();
+                OFRegistryHelper.Instance.DisableOutlookSecurityWarning(versions.Item2);
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.ToString());
+            }
+            
         }
 
         #endregion
