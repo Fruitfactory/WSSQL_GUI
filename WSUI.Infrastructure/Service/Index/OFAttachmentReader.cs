@@ -146,54 +146,75 @@ namespace OF.Infrastructure.Service.Index
                     OFLogger.Instance.LogDebug("Attachment Reader => Folder name: {0}", mapiFolder.Name);
                     if (mapiFolder.Items.Count == 0)
                     {
+                        Marshal.ReleaseComObject(mapiFolder);
                         continue;
                     }
                     foreach (var result in mapiFolder.Items.OfType<Outlook.MailItem>())
                     {
                         CheckCancellation();
                         TryToWait();
-                        if (result.Attachments.Count == 0 || (_lastUpdated.HasValue && result.ReceivedTime < _lastUpdated.Value))
+                        try
                         {
-                            continue;
-                        }
-                        List<OFAttachmentContent> attachmentContents = new List<OFAttachmentContent>();
-                        foreach (var attachment in result.Attachments.OfType<Outlook.Attachment>())
-                        {
-
-                            if (attachment.Size < PageMaxSize)
+                            if (result.Attachments.Count == 0 || (_lastUpdated.HasValue && result.ReceivedTime < _lastUpdated.Value))
                             {
                                 continue;
                             }
+                            List<OFAttachmentContent> attachmentContents = new List<OFAttachmentContent>();
+                            foreach (var attachment in result.Attachments.OfType<Outlook.Attachment>())
+                            {
+                                try
+                                {
+                                    if (attachment.Size < PageMaxSize)
+                                    {
+                                        continue;
+                                    }
+                                    byte[] contentBytes = attachment.FileName.IsFileAllowed()
+                                        ? GetContentByProperty(attachment)
+                                        : null;
+                                    AddAttachment(attachmentContents, result, attachment, contentBytes);
+                                }
+                                catch (COMException comEx)
+                                {
+                                    OFLogger.Instance.LogError("----COM Attachment Failed => {0}", attachment.FileName);
+                                    OFLogger.Instance.LogError(comEx.Message);
+
+                                    byte[] conBytes = attachment.FileName.IsFileAllowed()
+                                        ? GetContentByTempFile(attachment)
+                                        : null;
+                                    AddAttachment(attachmentContents, result, attachment, conBytes);
+                                }
+                                catch (Exception ex)
+                                {
+                                    OFLogger.Instance.LogError("---- Attachment Failed => {0}", attachment.FileName);
+                                    OFLogger.Instance.LogError("---- Type Failed => {0}", ex.GetType().Name);
+                                    OFLogger.Instance.LogError(ex.ToString());
+                                }
+                                finally
+                                {
+                                    Marshal.ReleaseComObject(attachment);
+                                }
+                                CheckCancellation();
+                                TryToWait();
+                            }
                             CheckCancellation();
                             TryToWait();
-                            try
+                            if (attachmentContents.Count > 0)
                             {
-                                byte[] contentBytes = attachment.FileName.IsFileAllowed() ? GetContentByProperty(attachment) : null;
-                                AddAttachment(attachmentContents, result, attachment, contentBytes);
-                            }
-                            catch (COMException comEx)
-                            {
-                                OFLogger.Instance.LogError("----COM Attachment Failed => {0}", attachment.FileName);
-                                OFLogger.Instance.LogError(comEx.Message);
-
-                                byte[] conBytes = attachment.FileName.IsFileAllowed() ? GetContentByTempFile(attachment) : null;
-                                AddAttachment(attachmentContents, result, attachment, conBytes);
-                            }
-                            catch (Exception ex)
-                            {
-                                OFLogger.Instance.LogError("---- Attachment Failed => {0}", attachment.FileName);
-                                OFLogger.Instance.LogError("---- Type Failed => {0}", ex.GetType().Name);
-                                OFLogger.Instance.LogError(ex.ToString());
+                                SendAttachments(attachmentContents, OFAttachmentIndexProcess.Chunk);
                             }
                         }
-                        CheckCancellation();
-                        TryToWait();
-                        if (attachmentContents.Count > 0)
+                        finally
                         {
-                            SendAttachments(attachmentContents, OFAttachmentIndexProcess.Chunk);
+                            Marshal.ReleaseComObject(result);
                         }
-
                     }
+                    Marshal.ReleaseComObject(mapiFolder);
+                    // begin - guys recomend o_O - https://social.msdn.microsoft.com/Forums/vstudio/en-US/e8fd2d43-7c2d-46f4-85a8-37d30b4774d9/closing-mailitems-some-help-needed?forum=vsto
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    // end
                     CheckCancellation();
                 }
             }

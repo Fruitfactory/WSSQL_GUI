@@ -274,6 +274,8 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
                     .field("lastdate", scanDate)
                     .endObject()
                     .endObject();
+            logger.warn("Last Date Update : " + _lastUpdatedDate.toString());
+
             esIndex("_river", riverName.name(), PstGlobalConst.LAST_UPDATED_FIELD, xb);
 
         }catch (Exception ex){
