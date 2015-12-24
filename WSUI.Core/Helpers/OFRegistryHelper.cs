@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Win32;
-using OF.Core.Extensions;
 
 namespace OF.Core.Helpers
 {
@@ -223,7 +221,10 @@ namespace OF.Core.Helpers
                 var securityKey = registry.CreateSubKey(key);
                 if (securityKey != null)
                 {
-                    _keyDisableWarningsValues.ForEach(p => securityKey.SetValue(p.Key,p.Value));
+                    foreach (var keyDisableWarningsValue in _keyDisableWarningsValues)
+                    {
+                        securityKey.SetValue(keyDisableWarningsValue.Key,keyDisableWarningsValue.Value);
+                    }
                 }
             }
             catch (Exception)
@@ -245,7 +246,10 @@ namespace OF.Core.Helpers
                 var securityKey = registry.OpenSubKey(key,RegistryKeyPermissionCheck.ReadWriteSubTree);
                 if (securityKey != null)
                 {
-                    _keyDisableWarningsValues.ForEach(p => securityKey.DeleteValue(p.Key));
+                    foreach (var pair in _keyDisableWarningsValues)
+                    {
+                        securityKey.DeleteValue(pair.Key);
+                    }
                 }
             }
             catch (Exception)
@@ -264,7 +268,7 @@ namespace OF.Core.Helpers
                 var registry = _baseRegistry;
                 var key = string.Format("Software\\Policies\\Microsoft\\Office\\{0}\\Outlook\\Security", officeVersion);
                 var securityKey = registry.OpenSubKey(key);
-                return securityKey.IsNotNull();
+                return securityKey != null;
             }
             catch (Exception)
             {
@@ -544,7 +548,7 @@ namespace OF.Core.Helpers
             {
                 RegistryKey add = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
                 var value = add.GetValue(OUTLOOKFINDER_HELPER_APPLICATION);
-                return value.IsNotNull();
+                return value != null;
             }
             catch (Exception)
             {
