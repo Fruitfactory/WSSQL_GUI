@@ -806,8 +806,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFromProcess", ex.ToString()));
-                //System.Windows.MessageBox.Show(String.Format("Get Process: {0}", ex.ToString()));
+                OFLogger.Instance.LogError( ex.ToString());
             }
 
             return ret;

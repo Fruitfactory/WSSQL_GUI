@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:bal="http://schemas.microsoft.com/wix/BalExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <Bundle Name="OutlookFinder Setup" Version="1.0.2.851" Manufacturer="FruitFactory" UpgradeCode="1fca87ea-4d43-499c-8163-931e88304ba9" IconSourceFile="Image\logo_64.ico">
+  <Bundle Name="OutlookFinder Setup" Version="1.0.2.856" Manufacturer="FruitFactory" UpgradeCode="1fca87ea-4d43-499c-8163-931e88304ba9" IconSourceFile="Image\logo_64.ico">
     <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense">
       <bal:WixStandardBootstrapperApplication LicenseFile="License.rtf" LogoFile="Image\logo_64.ico" SuppressOptionsUI="yes" />
     </BootstrapperApplicationRef>
