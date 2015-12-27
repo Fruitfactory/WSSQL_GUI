@@ -53,7 +53,7 @@ namespace OF.Infrastructure.Service.Helpers
                         continue;
                     }
                     uint idleTimeSec = WindowsFunction.GetIdleTime() / 1000;
-                    OFLogger.Instance.LogDebug("Input = " + idleTimeSec);
+                    //OFLogger.Instance.LogDebug("Input = " + idleTimeSec);
                     _elasticSearchClient.SetUserActivityTime((int)idleTimeSec);
                 }
                 catch (Exception ex)
