@@ -799,8 +799,16 @@ namespace OF.Core.Helpers
             try
             {
                 var outlook = Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith(OutlookProcessName));
-                if (outlook.Count() > 0)
+                if (outlook.Count() > 0 && WindowsFunction.IsOutlookRegisteredInROT())
                 {
+                    OFLogger.Instance.LogInfo("Outlook is existing and have been registered in ROT...");
+                    ret = Marshal.GetActiveObject(OutlookApplication) as Outlook._Application;
+                }
+                else if (outlook.Count() > 0)
+                {
+                    WindowsFunction.SetShellWindowActive();
+                    Thread.Sleep(1000);
+                    OFLogger.Instance.LogInfo("Outlook is existing and trying to be register in ROT...");
                     ret = Marshal.GetActiveObject(OutlookApplication) as Outlook._Application;
                 }
             }
@@ -839,7 +847,6 @@ namespace OF.Core.Helpers
             catch (Exception ex)
             {
                 OFLogger.Instance.LogError(string.Format("{0} - {1}", "CreateOutlookApplication", ex.ToString()));
-                //System.Windows.MessageBox.Show(String.Format("Create Process: {0}", ex.ToString()));
             }
 
             return ret;

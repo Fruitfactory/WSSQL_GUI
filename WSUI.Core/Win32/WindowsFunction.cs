@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Windows;
 using System.Windows.Interop;
@@ -96,7 +98,40 @@ namespace OF.Core.Win32
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern int SendMessage(int hWnd, int msg, int wParam, IntPtr lParam);
 
-       
+        [DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true)]
+        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll", EntryPoint = "SetActiveWindow", SetLastError = true)]
+        static extern IntPtr SetActiveWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll", EntryPoint = "SetFocus", SetLastError = true)]
+        static extern IntPtr SetFocus(IntPtr hWnd);
+
+
+
+
+
+        const int WM_COMMAND = 0x111;
+        const int MIN_ALL = 419;
+        const int MIN_ALL_UNDO = 416;
+        public const int WM_LBUTTONDOWN = 0x201;
+        public const int WM_LBUTTONUP = 0x202;
+        const int WM_ACTIVATE = 0x0006;
+
+
+        [DllImport("ole32.dll")]
+        static extern int CreateBindCtx(
+            uint reserved,
+            out IBindCtx ppbc);
+
+        [DllImport("ole32.dll")]
+        public static extern void GetRunningObjectTable(
+            int reserved,
+            out IRunningObjectTable prot);
+
+
+
+
         #endregion [function]
 
 
@@ -153,7 +188,7 @@ namespace OF.Core.Win32
             ClientToScreen(hwndSource.Handle, pointScreenPixels);
             return new Point(pointScreenPixels.x, pointScreenPixels.y);
         }
- 
+
         public static uint GetIdleTime()
         {
             LASTINPUTINFO lastInPut = new LASTINPUTINFO();
@@ -162,5 +197,91 @@ namespace OF.Core.Win32
             var tickCount = GetTickCount();
             return (tickCount - lastInPut.dwTime);
         }
+
+        private static List<object> GetRunningInstances(string[] progIds)
+        {
+            List<string> clsIds = new List<string>();
+
+            // get the app clsid
+            foreach (string progId in progIds)
+            {
+                Type type = Type.GetTypeFromProgID(progId);
+
+                if (type != null)
+                    clsIds.Add(type.GUID.ToString().ToUpper());
+            }
+
+            // get Running Object Table ...
+            IRunningObjectTable Rot = null;
+            GetRunningObjectTable(0, out Rot);
+            if (Rot == null)
+                return null;
+
+            // get enumerator for ROT entries
+            IEnumMoniker monikerEnumerator = null;
+            Rot.EnumRunning(out monikerEnumerator);
+
+            if (monikerEnumerator == null)
+                return null;
+
+            monikerEnumerator.Reset();
+
+            List<object> instances = new List<object>();
+
+            IntPtr pNumFetched = new IntPtr();
+            IMoniker[] monikers = new IMoniker[1];
+
+            // go through all entries and identifies app instances
+            while (monikerEnumerator.Next(1, monikers, pNumFetched) == 0)
+            {
+                IBindCtx bindCtx;
+                CreateBindCtx(0, out bindCtx);
+                if (bindCtx == null)
+                    continue;
+
+                string displayName;
+                monikers[0].GetDisplayName(bindCtx, null, out displayName);
+
+                foreach (string clsId in clsIds)
+                {
+                    if (displayName.ToUpper().IndexOf(clsId) > 0)
+                    {
+                        object ComObject;
+                        Rot.GetObject(monikers[0], out ComObject);
+
+
+                        if (ComObject == null)
+                            continue;
+
+                        instances.Add(ComObject);
+                        break;
+                    }
+                }
+            }
+
+            return instances;
+        }
+
+        public static bool IsOutlookRegisteredInROT()
+        {
+            string[] progIds =
+            {
+                "Outlook.Application"
+            };
+
+            List<object> instances = GetRunningInstances(progIds);
+
+            return instances.Count > 0;
+        }
+
+        public static void SetShellWindowActive()
+        {
+            IntPtr lHwnd = FindWindow("Shell_TrayWnd", null);
+            if (lHwnd != null)
+            {
+                SetFocus(lHwnd);
+            }
+        }
+
     }
 }

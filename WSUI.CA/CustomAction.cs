@@ -909,8 +909,8 @@ namespace OF.CA
 
         private static void DisabeAccessPrompt()
         {
-            var versions = (new OFOfficeVersionFinder()).GetOfficeVersion();
-            OFRegistryHelper.Instance.DisableOutlookSecurityWarning(versions.Item2);
+            var versions = OFRegistryHelper.Instance.GetOutlookVersion();
+            OFRegistryHelper.Instance.DisableOutlookSecurityWarning(versions.Item1);
         }
 
         #endregion
