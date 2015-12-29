@@ -1,4 +1,6 @@
-﻿namespace OF.Core.Core.Rules
+﻿using OF.Core.Enums;
+
+namespace OF.Core.Core.Rules
 {
     public class OFQuoteRule : OFBaseRule
     {
@@ -11,6 +13,11 @@
             base.InitRule();
             Rule = "\"(?<group>[\\w\u0020]*)\"";
             Priority = 1;
+        }
+
+        protected override ofRuleType Type
+        {
+            get { return ofRuleType.Quote; }
         }
     }
 }

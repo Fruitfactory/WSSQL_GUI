@@ -38,7 +38,7 @@ namespace OF.Infrastructure.Implements.Rules
                 body.query = query;
                 foreach (var preparedCriteria in preparedCriterias)
                 {
-                    var term = new OFTerm<OFAttachmentSimpleContentTerm>(preparedCriteria);
+                    var term = new OFTerm<OFAttachmentSimpleContentTerm>(preparedCriteria.Result);
                     query._bool.must.Add(term);
                 }
                 return body;

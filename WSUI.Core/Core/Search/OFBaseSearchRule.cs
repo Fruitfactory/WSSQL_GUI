@@ -43,7 +43,7 @@ namespace OF.Core.Core.Search
         private Func<T> _create;
         private int _from = 0;
         private long _total = 0;
-        private List<string> _keywords;
+        private List<OFRuleToken> _keywords;
         private IUnityContainer _unityContainer;
 
         #endregion [needs private]
@@ -366,7 +366,7 @@ namespace OF.Core.Core.Search
             return DateTime.Now.AddDays(1);
         }
 
-        protected IList<string> GetKeywordsList()
+        protected IList<OFRuleToken> GetKeywordsList()
         {
             return _keywords;
         }
@@ -381,16 +381,20 @@ namespace OF.Core.Core.Search
             return string.Format("{0}*", criteria);
         }
 
-        protected List<string> GetProcessingSearchCriteria(string keyword = "")
+        protected List<OFRuleToken> GetProcessingSearchCriteria(string keyword = "")
         {
             IList<IRule> listRuleCriteriasRules = OFRuleFactory.Instance.GetAllRules();
             var tempCriteria = string.IsNullOrEmpty(keyword) ? Query : keyword;
-            var listW = new List<string>();
+            var listW = new List<OFRuleToken>();
 
             foreach (var rule in listRuleCriteriasRules.OrderBy(i => i.Priority))
             {
-                listW.AddRange(rule.ApplyRule(tempCriteria));
-                tempCriteria = rule.ClearCriteriaAccordingRule(tempCriteria);
+                var result = rule.ApplyRule(tempCriteria);
+                if (result.IsNotNull())
+                {
+                    listW.AddRange(result);
+                    tempCriteria = rule.ClearCriteriaAccordingRule(tempCriteria);
+                }
             }
             return listW;
         }

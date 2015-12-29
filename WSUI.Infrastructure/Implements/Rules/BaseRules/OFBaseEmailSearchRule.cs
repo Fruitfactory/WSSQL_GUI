@@ -66,7 +66,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             {
                 return queryDescriptor.Bool(descriptor =>
                 {
-                    descriptor.Must(preparedCriterias.Select(preparedCriteria => (Func<QueryDescriptor<OFEmail>, QueryContainer>) (descriptor1 => descriptor1.Term(GetSearchedProperty(), preparedCriteria))).ToArray());
+                    descriptor.Must(preparedCriterias.Select(preparedCriteria => (Func<QueryDescriptor<OFEmail>, QueryContainer>) (descriptor1 => descriptor1.Term(GetSearchedProperty(), preparedCriteria.Result))).ToArray());
                 });
             }
             return queryDescriptor.Term(GetSearchedProperty(), Query);

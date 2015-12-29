@@ -1,4 +1,6 @@
-﻿namespace OF.Core.Core.Rules
+﻿using System.Collections.Generic;
+
+namespace OF.Core.Core.Rules
 {
     public interface IRule
     {
@@ -8,7 +10,7 @@
 
         int Priority { get; }
 
-        string[] ApplyRule(string criteria);
+        IEnumerable<OFRuleToken> ApplyRule(string criteria);
 
         string ClearCriteriaAccordingRule(string criteria);
     }

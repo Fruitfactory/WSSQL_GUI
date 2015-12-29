@@ -102,17 +102,17 @@ namespace OF.Infrastructure.Implements.Rules
                     var should = new OFQueryBoolShould<OFBaseTerm>();
 
                     var tn = new OFToNameTerm();
-                    tn.SetValue(preparedCriteria);
+                    tn.SetValue(preparedCriteria.Result);
                     var ta = new OFToAddressTerm();
-                    ta.SetValue(preparedCriteria);
+                    ta.SetValue(preparedCriteria.Result);
                     var cn = new OFCcNameTerm();
-                    cn.SetValue(preparedCriteria);
+                    cn.SetValue(preparedCriteria.Result);
                     var sa = new OFCcAddressTerm();
-                    sa.SetValue(preparedCriteria);
+                    sa.SetValue(preparedCriteria.Result);
                     var fn = new OFFromNameTerm();
-                    fn.SetValue(preparedCriteria);
+                    fn.SetValue(preparedCriteria.Result);
                     var fa = new OFFromAddressTerm();
-                    fa.SetValue(preparedCriteria);
+                    fa.SetValue(preparedCriteria.Result);
 
                     should._bool.should.Add(tn);
                     should._bool.should.Add(ta);

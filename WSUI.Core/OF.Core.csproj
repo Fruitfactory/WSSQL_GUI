@@ -122,6 +122,7 @@
     <Compile Include="Core\Attributes\OFEnumPrefixAttribute.cs" />
     <Compile Include="Core\Attributes\OFFieldAttribute.cs" />
     <Compile Include="Core\Rules\OFPriceAnountRule.cs" />
+    <Compile Include="Core\Rules\OFRuleToken.cs" />
     <Compile Include="Data\ElasticSearch\Converter\OFConditionCollectionConverter.cs" />
     <Compile Include="Data\ElasticSearch\OFAttachmentIndexingContainer.cs" />
     <Compile Include="Data\ElasticSearch\OFPluginStatusContainer.cs" />
@@ -138,6 +139,8 @@
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Request\Contact\OFContactTerms.cs" />
     <Compile Include="Data\ElasticSearch\Request\Contact\OFEmaillContactTerms.cs" />
+    <Compile Include="Data\ElasticSearch\Request\Email\OFContentMatchPhrase.cs" />
+    <Compile Include="Data\ElasticSearch\Request\Email\OFSubjectMatchPhrase.cs" />
     <Compile Include="Data\ElasticSearch\Request\OFBoolMust.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFSimpleContentTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFSimpleSubjectTerm.cs" />
@@ -151,6 +154,7 @@
     <Compile Include="Data\ElasticSearch\Request\OFMustCondition.cs" />
     <Compile Include="Data\ElasticSearch\Request\OFQueryBoolMust.cs" />
     <Compile Include="Data\ElasticSearch\Request\OFQueryBoolShould.cs" />
+    <Compile Include="Data\ElasticSearch\Request\OFQueryMatchPhrase.cs" />
     <Compile Include="Data\ElasticSearch\Request\OFQuerySimpleTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFSortDateCreated.cs" />
     <Compile Include="Data\ElasticSearch\Request\OFShouldCondition.cs" />

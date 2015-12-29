@@ -67,9 +67,15 @@ namespace OF.Infrastructure.Implements.Rules
                 body.query = query;
                 foreach (var preparedCriteria in preparedCriterias)
                 {
-                    var term = new OFTerm<OFSimpleSubjectTerm>(preparedCriteria);
+                    var term = new OFTerm<OFSimpleSubjectTerm>(preparedCriteria.Result);
                     query._bool.must.Add(term);
                 }
+                return body;
+            }
+            if (preparedCriterias.All(p => p.Type == ofRuleType.Quote))
+            {
+                var criteria = preparedCriterias.FirstOrDefault(p => p.Type == ofRuleType.Quote);
+                body.query = new OFQueryMatchPhrase<OFSubjectMatchPhrase>(new OFSubjectMatchPhrase(){subject = criteria.Result});
                 return body;
             }
             body.query = new OFQuerySimpleTerm<OFSimpleSubjectTerm>(Query);

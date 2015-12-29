@@ -9,12 +9,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Practices.Unity;
 using OF.Core.Core.Rules;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Request;
 using OF.Core.Data.ElasticSearch.Request.Email;
+using OF.Core.Enums;
 using OF.Infrastructure.Implements.Rules.BaseRules;
 
 namespace OF.Infrastructure.Implements.Rules 
@@ -51,9 +53,15 @@ namespace OF.Infrastructure.Implements.Rules
                 body.query = query;
                 foreach (var preparedCriteria in preparedCriterias)
                 {
-                    var term = new OFTerm<OFSimpleContentTerm>(preparedCriteria);
+                    var term = new OFTerm<OFSimpleContentTerm>(preparedCriteria.Result);
                     query._bool.must.Add(term);
                 }
+                return body;
+            }
+            if (preparedCriterias.All(p => p.Type == ofRuleType.Quote))
+            {
+                var criteria = preparedCriterias.FirstOrDefault(p => p.Type == ofRuleType.Quote);
+                body.query = new OFQueryMatchPhrase<OFContentMatchPhrase>(new OFContentMatchPhrase() { analyzedcontent = criteria.Result });
                 return body;
             }
             body.query = new OFQuerySimpleTerm<OFSimpleContentTerm>(Query);
