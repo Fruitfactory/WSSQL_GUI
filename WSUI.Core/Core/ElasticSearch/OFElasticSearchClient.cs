@@ -70,7 +70,10 @@ namespace OF.Core.Core.ElasticSearch
 
         protected INestSerializer Serializer
         {
-            get { return ElasticClient.Serializer; }
+            get
+            {
+                return ElasticClient.Serializer;
+            }
         }
 
         protected IElasticsearchClient Raw

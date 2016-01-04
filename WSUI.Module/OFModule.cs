@@ -113,7 +113,7 @@ namespace OF.Module
             _unityContainer.RegisterType<ILoggingSettingsViewModel, OFLoggingSettingsViewModel>();
             _unityContainer.RegisterType<ILoggingSettingsView, OFLoggingSettingsView>();
 
-            _unityContainer.RegisterType<IElasticSearchIndexAttachmentClient, OFElasticSeachIndexAttachmentClient>();
+            _unityContainer.RegisterType<IElasticSearchIndexOutlookItemsClient, OFElasticSeachIndexOutlookItemsClient>();
 
             _unityContainer.RegisterType<IElasticSearchOFPluginStatusClient, OFElasticSearchOFPluginStatusClient>();
             _unityContainer.RegisterType<IElasticSearchForceClient, OFElasticSearchForceClient>();

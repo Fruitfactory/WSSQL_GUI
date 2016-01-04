@@ -124,7 +124,7 @@
     <Compile Include="Core\Rules\OFPriceAnountRule.cs" />
     <Compile Include="Core\Rules\OFRuleToken.cs" />
     <Compile Include="Data\ElasticSearch\Converter\OFConditionCollectionConverter.cs" />
-    <Compile Include="Data\ElasticSearch\OFAttachmentIndexingContainer.cs" />
+    <Compile Include="Data\ElasticSearch\OFOutlookItemsIndexingContainer.cs" />
     <Compile Include="Data\ElasticSearch\OFPluginStatusContainer.cs" />
     <Compile Include="Data\ElasticSearch\OFQueryBoolConditions.cs" />
     <Compile Include="Data\ElasticSearch\OFRiverMeta.cs" />
@@ -168,7 +168,7 @@
     <Compile Include="Data\ElasticSearch\Response\OFShardsRaw.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFStatusItem.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFStatusResponse.cs" />
-    <Compile Include="Enums\OFAttachmentIndexProcess.cs" />
+    <Compile Include="Enums\OFOutlookItemsIndexProcess.cs" />
     <Compile Include="Enums\OFPluginStatus.cs" />
     <Compile Include="Events\OFMenuEnabling.cs" />
     <Compile Include="Extensions\EmailExtensions.cs" />
@@ -177,7 +177,7 @@
     <Compile Include="Helpers\OFObjectJsonSaveReadHelper.cs" />
     <Compile Include="Helpers\OFOfficeVersion.cs" />
     <Compile Include="Interfaces\IElasticSearchForceClient.cs" />
-    <Compile Include="Interfaces\IElasticSearchIndexAttachmentClient.cs" />
+    <Compile Include="Interfaces\IElasticSearchIndexOutlookItemsClient.cs" />
     <Compile Include="Interfaces\IElasticSearchItemsCount.cs" />
     <Compile Include="Interfaces\IElasticSearchOFPluginStatusClient.cs" />
     <Compile Include="Interfaces\IElasticSearchRiverStatus.cs" />

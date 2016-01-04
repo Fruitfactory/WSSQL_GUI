@@ -11,7 +11,7 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
 import com.fruitfactory.pstriver.rest.PstRESTRepository;
 import com.fruitfactory.pstriver.rest.PstRestClient;
-import com.fruitfactory.pstriver.river.reader.PstOutlookAttachmentReader;
+import com.fruitfactory.pstriver.river.reader.PstOutlookItemsReader;
 import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
 
@@ -53,7 +53,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
     private String _indexName;
     private PstRiverStatus riverStatus;
     private IPstRiverInitializer _riverInitializer;
-    private PstOutlookAttachmentReader _attachmentReader;
+    private PstOutlookItemsReader outlookItemsReader;
     private IPstRestAttachmentClient _restAttachmentClient;
 
     private int countEmails;
@@ -102,19 +102,19 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
                 }
                 setRiverStatus(riverStatus);
                 
-                String[] psts = _def.getDataArray();
-                int index = 1;
-                for (String file : psts) {
-                    if (!Files.exists(Paths.get(file), LinkOption.NOFOLLOW_LINKS)) {
-                        continue;
-                    }
-                    PstOutlookFileReader reader = new PstOutlookFileReader(_indexName, file, _lastUpdatedDate, logger, _bulkProcessor, "pst_" + Integer.toString(index));
-                    reader.init();
-                    reader.prepareStatusInfo();
-                    _readers.add(reader);
-                    index++;
-                }
-                _attachmentReader = new PstOutlookAttachmentReader(_indexName,_lastUpdatedDate,_bulkProcessor,"pst_attachment",logger);
+                //String[] psts = _def.getDataArray();
+                //int index = 1;
+//                for (String file : psts) {
+//                    if (!Files.exists(Paths.get(file), LinkOption.NOFOLLOW_LINKS)) {
+//                        continue;
+//                    }
+//                    PstOutlookFileReader reader = new PstOutlookFileReader(_indexName, file, _lastUpdatedDate, logger, _bulkProcessor, "pst_" + Integer.toString(index));
+//                    reader.init();
+//                    reader.prepareStatusInfo();
+//                    _readers.add(reader);
+//                    index++;
+//                }
+                outlookItemsReader = new PstOutlookItemsReader(_indexName,_lastUpdatedDate,_bulkProcessor,"pst_attachment",logger);
 
                 int delayTimeOut = onProcess(_readers);
 
@@ -165,8 +165,8 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
 
     protected abstract int onProcess(List<Thread> readers) throws Exception;
 
-    protected PstOutlookAttachmentReader getAttachmentReader(){
-        return _attachmentReader;
+    protected PstOutlookItemsReader getOutlookItemsReader(){
+        return outlookItemsReader;
     }
 
     protected IPstRestAttachmentClient getRestAttachmentClient() { return _restAttachmentClient; }

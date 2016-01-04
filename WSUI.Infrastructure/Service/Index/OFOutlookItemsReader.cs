@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
+using System.Windows.Documents;
 using Microsoft.Practices.Unity;
+using Nest;
 using OF.Core.Core.MVVM;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Enums;
@@ -20,13 +23,13 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace OF.Infrastructure.Service.Index
 {
-    public class OFAttachmentReader : OFViewModelBase, IAttachmentReader
+    public class OFOutlookItemsReader : OFViewModelBase, IOutlookItemsReader
     { 
         private string AttachSchema = "http://schemas.microsoft.com/mapi/proptag/0x37010102";
         private Thread _thread;
         private CancellationTokenSource _cancellationSource;
         private CancellationToken _cancellationToken;
-        private IElasticSearchIndexAttachmentClient _indexAttachmentClient;
+        private IElasticSearchIndexOutlookItemsClient _indexOutlookItemsClient;
         private DateTime? _lastUpdated;
         private readonly object _lock = new object();
         
@@ -35,10 +38,10 @@ namespace OF.Infrastructure.Service.Index
         private static int PageMaxSize = 65536;
 
         
-        public OFAttachmentReader()
+        public OFOutlookItemsReader()
         {
             Status = PstReaderStatus.None;
-            _indexAttachmentClient = new OFElasticSeachIndexAttachmentClient();
+            _indexOutlookItemsClient = new OFElasticSeachIndexOutlookItemsClient();
         }
 
         public PstReaderStatus Status
@@ -139,6 +142,9 @@ namespace OF.Infrastructure.Service.Index
                     CloseApplication(application,isExistingProcess);
                     return;
                 }
+
+                _indexOutlookItemsClient.SendOutlookItemsCount(folderList.Sum(f => f.Items.Count));
+
                 foreach (var mapiFolder in folderList)
                 {
                     CheckCancellation();
@@ -155,53 +161,23 @@ namespace OF.Infrastructure.Service.Index
                         TryToWait();
                         try
                         {
-                            if (result.Attachments.Count == 0 || (_lastUpdated.HasValue && result.ReceivedTime < _lastUpdated.Value))
+                            if (_lastUpdated.HasValue && result.ReceivedTime < _lastUpdated.Value)
                             {
                                 continue;
                             }
-                            List<OFAttachmentContent> attachmentContents = new List<OFAttachmentContent>();
-                            foreach (var attachment in result.Attachments.OfType<Outlook.Attachment>())
-                            {
-                                try
-                                {
-                                    if (attachment.Size < PageMaxSize)
-                                    {
-                                        continue;
-                                    }
-                                    byte[] contentBytes = attachment.FileName.IsFileAllowed()
-                                        ? GetContentByProperty(attachment)
-                                        : null;
-                                    AddAttachment(attachmentContents, result, attachment, contentBytes);
-                                }
-                                catch (COMException comEx)
-                                {
-                                    OFLogger.Instance.LogError("----COM Attachment Failed => {0}", attachment.FileName);
-                                    OFLogger.Instance.LogError(comEx.Message);
+                            OFEmail email = new OFEmail();
+                            ProcessEmail(email, result, mapiFolder);
 
-                                    byte[] conBytes = attachment.FileName.IsFileAllowed()
-                                        ? GetContentByTempFile(attachment)
-                                        : null;
-                                    AddAttachment(attachmentContents, result, attachment, conBytes);
-                                }
-                                catch (Exception ex)
-                                {
-                                    OFLogger.Instance.LogError("---- Attachment Failed => {0}", attachment.FileName);
-                                    OFLogger.Instance.LogError("---- Type Failed => {0}", ex.GetType().Name);
-                                    OFLogger.Instance.LogError(ex.ToString());
-                                }
-                                finally
-                                {
-                                    Marshal.ReleaseComObject(attachment);
-                                }
-                                CheckCancellation();
-                                TryToWait();
-                            }
+
+                            List<OFAttachmentContent> attachmentContents = new List<OFAttachmentContent>();
+                            ProcessAttachmentsFull(result, attachmentContents);
+
+
                             CheckCancellation();
                             TryToWait();
-                            if (attachmentContents.Count > 0)
-                            {
-                                SendAttachments(attachmentContents, OFAttachmentIndexProcess.Chunk);
-                            }
+
+                            SendOutlookItems(email,attachmentContents, OFOutlookItemsIndexProcess.Chunk);
+
                         }
                         finally
                         {
@@ -228,7 +204,7 @@ namespace OF.Infrastructure.Service.Index
             }
             finally
             {
-                SendAttachments(null, OFAttachmentIndexProcess.End);
+                SendOutlookItems(null,null, OFOutlookItemsIndexProcess.End);
                 Status = PstReaderStatus.Finished;
                 CloseApplication(application,isExistingProcess);
                 application = null;
@@ -240,6 +216,136 @@ namespace OF.Infrastructure.Service.Index
                 _cancellationSource = null;
                 OFMessageFilter.Revoke();
             }
+        }
+
+        private void ProcessAttachmentsFull(Outlook.MailItem result, List<OFAttachmentContent> attachmentContents)
+        {
+            foreach (var attachment in result.Attachments.OfType<Outlook.Attachment>())
+            {
+                try
+                {
+                    if (attachment.Size < PageMaxSize)
+                    {
+                        continue;
+                    }
+                    byte[] contentBytes = attachment.FileName.IsFileAllowed()
+                        ? GetContentByProperty(attachment)
+                        : null;
+                    AddAttachment(attachmentContents, result, attachment, contentBytes);
+                }
+                catch (COMException comEx)
+                {
+                    OFLogger.Instance.LogError("----COM Attachment Failed => {0}", attachment.FileName);
+                    OFLogger.Instance.LogError(comEx.Message);
+
+                    byte[] conBytes = attachment.FileName.IsFileAllowed()
+                        ? GetContentByTempFile(attachment)
+                        : null;
+                    AddAttachment(attachmentContents, result, attachment, conBytes);
+                }
+                catch (Exception ex)
+                {
+                    OFLogger.Instance.LogError("---- Attachment Failed => {0}", attachment.FileName);
+                    OFLogger.Instance.LogError("---- Type Failed => {0}", ex.GetType().Name);
+                    OFLogger.Instance.LogError(ex.ToString());
+                }
+                finally
+                {
+                    Marshal.ReleaseComObject(attachment);
+                }
+                CheckCancellation();
+                TryToWait();
+            }
+        }
+
+        private void ProcessEmail(OFEmail email, Outlook.MailItem result, Outlook.MAPIFolder folder)
+        {
+            if (result == null)
+            {
+                return;
+            }
+            email.ItemName = result.Subject;
+            email.ItemUrl = result.Subject;
+            email.Folder = folder.Name;
+            email.Foldermessagestoreidpart = folder.EntryID;
+            email.Storagename = folder.Name;
+            email.Datecreated = result.CreationTime;
+            email.Datereceived = null;
+            email.Size = result.Size;
+            email.EntryID = result.EntryID;
+            email.Conversationid = result.EntryID;
+            email.Conversationindex = result.ConversationIndex;
+            email.Outlookconversationid = result.ConversationIndex;
+            email.Subject = result.Subject;
+            email.Content = !string.IsNullOrEmpty(result.Body) ?  Convert.ToBase64String(Encoding.UTF8.GetBytes(result.Body)) : "";
+            email.Htmlcontent = !string.IsNullOrEmpty(result.HTMLBody) ? Convert.ToBase64String(Encoding.UTF8.GetBytes(result.HTMLBody)) : "";
+            email.Hasattachments = (result.Attachments.Count > 0).ToString();
+            email.Fromname = result.SenderName;
+            email.Fromaddress = result.SenderEmailAddress;
+            ProcessRecipients(email, result);
+            ProcessEmailAttachments(email,result);
+        }
+
+        private void ProcessEmailAttachments(OFEmail email, Outlook.MailItem result)
+        {
+            if (result == null || result.Attachments.Count == 0)
+            {
+                return;
+            }
+
+            var listAttachments = new List<OFAttachment>();
+            foreach (var att in result.Attachments.OfType<Outlook.Attachment>())
+            {
+                try
+                {
+                    var attachment = new OFAttachment();
+                    attachment.FileName = att.FileName;
+                    attachment.MimeTag = att.PropertyAccessor.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x370E001E");
+                    attachment.Path = att.PathName;
+                    attachment.Size = att.Size;
+                    attachment.EntryID = result.EntryID;
+                    listAttachments.Add(attachment);
+                }
+                catch (Exception ex)
+                {
+                    OFLogger.Instance.LogError(ex.ToString());
+                }
+            }
+            email.Attachments = listAttachments.ToArray();
+        }
+
+        private void ProcessRecipients(OFEmail email, Outlook.MailItem result)
+        {
+            var listTo = new List<OFRecipient>();
+            var listCC = new List<OFRecipient>();
+            var listBCC = new List<OFRecipient>();
+
+            foreach (var recipient in result.Recipients.OfType<Outlook.Recipient>())
+            {
+                var r = new OFRecipient(){Address = recipient.GetSMTPAddress(),Name = recipient.Name,Emailaddresstype = recipient.Type.ToString(),EntryID =  recipient.EntryID};
+                switch (recipient.Type)
+                {
+                    case 0:
+                        if (email.Fromaddress.IsStringEmptyOrNull() || !email.Fromaddress.IsEmail())
+                        {
+                            email.Fromaddress = recipient.GetSMTPAddress();
+                        }
+                        break;
+                    case 1: // To
+                        listTo.Add(r);
+                        break;
+                    case 2: // CC
+                        listCC.Add(r);
+                        break;
+                    case 3: //BCC
+                        listBCC.Add(r);
+                        break;
+                }
+            }
+
+            email.To = listTo.ToArray();
+            email.Cc = listCC.ToArray();
+            email.Bcc = listBCC.ToArray();
         }
 
         private void TryToWait()
@@ -284,14 +390,9 @@ namespace OF.Infrastructure.Service.Index
         {
             OFAttachmentContent indexAttach = new OFAttachmentContent();
             indexAttach.Size = attachment.Size;
-            var messageId = email.Headers("Message-ID");
-            indexAttach.Emailid = messageId.Any() ? messageId.FirstOrDefault() : string.Empty;
+            indexAttach.Emailid = email.EntryID;
             indexAttach.Outlookemailid = email.EntryID;
             indexAttach.Datecreated = email.CreationTime;
-            
-            System.Diagnostics.Debug.WriteLine("Subject => {0} ReceivedTime => {1} TransportMessaageId => {2}",
-                email.Subject, email.ReceivedTime.ToString(DateFormat),
-                messageId.Any() ? messageId.FirstOrDefault() : "n/a");
             OFLogger.Instance.LogDebug("---- Attachment => {0}", attachment.FileName);
             indexAttach.Filename = attachment.FileName;
             if (content != null)
@@ -308,12 +409,12 @@ namespace OF.Infrastructure.Service.Index
 
 
 
-        private void SendAttachments(IEnumerable<OFAttachmentContent> attachments, OFAttachmentIndexProcess process)
+        private void SendOutlookItems(OFEmail email,IEnumerable<OFAttachmentContent> attachments, OFOutlookItemsIndexProcess process)
         {
-            if (_indexAttachmentClient.IsNotNull())
+            if (_indexOutlookItemsClient.IsNotNull())
             {
-                OFAttachmentIndexingContainer container = new OFAttachmentIndexingContainer() { Attachments = attachments, Process = process };
-                _indexAttachmentClient.SendAttachmentToIndex(container);
+                OFOutlookItemsIndexingContainer container = new OFOutlookItemsIndexingContainer() { Email =  email,Attachments = attachments, Process = process };
+                _indexOutlookItemsClient.SendOutlookItemsToIndex(container);
                 Count += attachments.IsNotNull() ? attachments.Count() : 0;
             }
         }

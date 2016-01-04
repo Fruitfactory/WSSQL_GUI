@@ -20,9 +20,9 @@ namespace OF.Core.Data.ElasticSearch
 
         public string Storagename { get; set; }
 
-        public DateTime Datecreated { get; set; }
+        public DateTime? Datecreated { get; set; }
 
-        public DateTime Datereceived { get; set; }
+        public DateTime? Datereceived { get; set; }
 
         public long Size { get; set; }
 
@@ -42,9 +42,9 @@ namespace OF.Core.Data.ElasticSearch
 
         public string Hasattachments { get; set; }
 
-        public string FromName { get; set; }
+        public string Fromname { get; set; }
 
-        public string FromAddress { get; set; }
+        public string Fromaddress { get; set; }
 
         public OFRecipient[] To { get; set; }
 
@@ -56,7 +56,7 @@ namespace OF.Core.Data.ElasticSearch
 
         public override string ToString()
         {
-            return string.Format("Subject<{0}> From<{1} {2}>", Subject, FromName, FromAddress);
+            return string.Format("Subject<{0}> From<{1} {2}>", Subject, Fromname, Fromaddress);
         }
     }
 }

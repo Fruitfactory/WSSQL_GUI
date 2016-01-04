@@ -14,8 +14,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-import com.fruitfactory.pstriver.interfaces.IPstAttachmentProcessor;
-import com.fruitfactory.pstriver.rest.data.PstAttachmentContainer;
+import com.fruitfactory.pstriver.interfaces.IPstOutlookItemsProcessor;
+import com.fruitfactory.pstriver.rest.data.PstOutlookItemsContainer;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.xcontent.XContentBuilder;
@@ -31,7 +31,7 @@ public class PstRESTRepository {
     
     private static HashMap<String, PstReaderStatusInfo> _repository = new HashMap<String, PstReaderStatusInfo>();
     private static HashMap<String,PstRiverStatusInfo> _reposirotyRiverStatus = new HashMap<String, PstRiverStatusInfo>();
-    private static Queue<PstAttachmentContainer> _attachmentContainers = new LinkedList<PstAttachmentContainer>();
+    private static Queue<PstOutlookItemsContainer> _attachmentContainers = new LinkedList<PstOutlookItemsContainer>();
     private static boolean forceIndexing;
 
 
@@ -44,7 +44,7 @@ public class PstRESTRepository {
 
     private static final ESLogger logger = Loggers.getLogger(PstRESTRepository.class);
 
-    private static IPstAttachmentProcessor _pstAttachmentProcessor;
+    private static IPstOutlookItemsProcessor _pstAttachmentProcessor;
     private static final Object _attachmentLock = new Object();
 
 
@@ -88,7 +88,15 @@ public class PstRESTRepository {
             }
         }
     }
-    
+
+    public static void setOutlookItemsCount(String name, int count){
+        synchronized (_repository){
+            if(_repository.containsKey(name)){
+                _repository.get(name).setCount(count);
+            }
+        }
+    }
+
     public static void setRiverStatus(PstRiverStatusInfo riverStatus){
         synchronized(_reposirotyRiverStatus){
             _reposirotyRiverStatus.put(PST_RIVER_STATUS, riverStatus);
@@ -149,17 +157,16 @@ public class PstRESTRepository {
         }
     }
 
-    public static void putAttachmentContainer(PstAttachmentContainer container){
+    public static void putAttachmentContainer(PstOutlookItemsContainer container){
         if(_pstAttachmentProcessor == null){
             return;
         }
         synchronized (_attachmentLock){
-            log(String.format("!!! Process Attachment: %d",container.attachments != null ? container.attachments.size() : 0));
-            _pstAttachmentProcessor.processAttachment(container);
+            _pstAttachmentProcessor.processOutlookItems(container);
         }
     }
 
-    public static void setAttachmentProcessor(IPstAttachmentProcessor attachmentProcessor){
+    public static void setAttachmentProcessor(IPstOutlookItemsProcessor attachmentProcessor){
 
         synchronized (_attachmentLock){
             _pstAttachmentProcessor = attachmentProcessor;
@@ -174,15 +181,15 @@ public class PstRESTRepository {
 
 
 
-//    public static void putAttachmentContainer(PstAttachmentContainer container){
+//    public static void putAttachmentContainer(PstOutlookItemsContainer container){
 //        synchronized (_attachmentLock){
 //            _attachmentContainers.offer(container);
 //            log(String.format("Queue count: %d",_attachmentContainers.size()));
 //        }
 //    }
 //
-//    public static PstAttachmentContainer getAttachmentContainer(){
-//        PstAttachmentContainer result = null;
+//    public static PstOutlookItemsContainer getAttachmentContainer(){
+//        PstOutlookItemsContainer result = null;
 //        synchronized (_attachmentLock){
 //            result = _attachmentContainers.poll();
 //        }

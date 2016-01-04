@@ -372,13 +372,13 @@ namespace OF.Module.ViewModel
                 {
                     IsBusy = true;
                     ShowProgress = Visibility.Visible;
+                    var emailCount = ElasticSearchClient.GetTypeCount<OFEmail>();
+                    var attachmentCount = ElasticSearchClient.GetTypeCount<OFAttachmentContent>();
                     double sumAll = (double)response.Response.Items.Sum(s => s.Count);
-                    double sumProcessing = response.Response.Items.Sum(s => s.Processing);
+                    double sumProcessing = emailCount + attachmentCount;
                     var busyReader = response.Response.Items.FirstOrDefault(r => r.Status == PstReaderStatus.Busy);
                     CurrentFolder = busyReader.IsNotNull() ? busyReader.Folder : "";
                     CurrentProgress = (sumProcessing / sumAll) * 100.0;
-                    var emailCount = ElasticSearchClient.GetTypeCount<OFEmail>();
-                    var attachmentCount = ElasticSearchClient.GetTypeCount<OFAttachmentContent>();
                     CountEmailsAttachments = string.Format("{0} / {1}", emailCount, attachmentCount);
                 }
                 if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Suspended))

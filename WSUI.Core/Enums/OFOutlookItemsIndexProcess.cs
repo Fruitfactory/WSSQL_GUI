@@ -1,6 +1,6 @@
 ﻿namespace OF.Core.Enums
 {
-    public enum OFAttachmentIndexProcess
+    public enum OFOutlookItemsIndexProcess
     {
         None,
         Chunk,

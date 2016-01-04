@@ -3,7 +3,7 @@ using OF.Core.Enums;
 
 namespace OF.Infrastructure.Implements.Service
 {
-    public interface IAttachmentReader
+    public interface IOutlookItemsReader
     {
         PstReaderStatus Status { get; }
         void Start(DateTime? lastUpdate);

@@ -7,9 +7,11 @@ package com.fruitfactory.pstriver.rest;
 
 import java.io.IOException;
 
-import com.fruitfactory.pstriver.rest.data.PstAttachmentContainer;
+import com.fruitfactory.pstriver.rest.data.PstCountItems;
+import com.fruitfactory.pstriver.rest.data.PstOutlookItemsContainer;
 import com.fruitfactory.pstriver.rest.data.PstOFPluginStatus;
 import com.fruitfactory.pstriver.rest.data.PstOFPluginStatusContainer;
+import com.google.gson.FieldNamingPolicy;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
@@ -39,6 +41,7 @@ public class PstRestModule extends BaseRestHandler {
         controller.registerHandler(RestRequest.Method.PUT, "_river/{rivername}/indexattachment", this);
         controller.registerHandler(RestRequest.Method.PUT,"_river/{rivername}/client",this);
         controller.registerHandler(RestRequest.Method.PUT,"_river/{rivername}/force",this);
+        controller.registerHandler(RestRequest.Method.PUT,"_river/{rivername}/countitems",this);
     }
 
     @Override
@@ -72,7 +75,29 @@ public class PstRestModule extends BaseRestHandler {
             processForce(rr,rc);
             return;
         }
+        if(rr.rawPath().contains("countitems")){
+            processItems(rr,rc);
+            return;
+        }
+
     }
+
+    private void processItems(RestRequest rr, RestChannel rc) {
+        try {
+            String content = rr.content().toUtf8();
+            Gson gson = new GsonBuilder().create();
+            PstCountItems container =  gson.fromJson(content, PstCountItems.class);
+            PstRESTRepository.setOutlookItemsCount("outlookitems",container.getCount());
+            rc.sendResponse(new BytesRestResponse(RestStatus.OK));
+        } catch (Exception e) {
+            try {
+                rc.sendResponse(new BytesRestResponse(rc, e));
+            } catch (IOException e1) {
+                rc.sendResponse(new BytesRestResponse(RestStatus.INTERNAL_SERVER_ERROR));
+            }
+        }
+    }
+
 
     private void processStatusRequest(RestChannel rc) {
         try {
@@ -126,11 +151,13 @@ public class PstRestModule extends BaseRestHandler {
         try {
             String content = rr.content().toUtf8();
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").create();
-            PstAttachmentContainer container =  gson.fromJson(content, PstAttachmentContainer.class);
+            PstOutlookItemsContainer container =  gson.fromJson(content, PstOutlookItemsContainer.class);
             PstRESTRepository.putAttachmentContainer(container);
             rc.sendResponse(new BytesRestResponse(RestStatus.OK));
         } catch (Exception e) {
             try {
+                System.out.println(e.getMessage());
+                System.out.println(e.toString());
                 rc.sendResponse(new BytesRestResponse(rc, e));
             } catch (IOException e1) {
                 rc.sendResponse(new BytesRestResponse(RestStatus.INTERNAL_SERVER_ERROR));

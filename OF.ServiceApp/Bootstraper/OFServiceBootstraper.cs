@@ -23,7 +23,7 @@ namespace OF.ServiceApp.Bootstraper
 
         private IEventAggregator _eventAggregator;
         private IUserActivityTracker _userActivityTracker;
-        private IAttachmentReader _attachmentReader;
+        private IOutlookItemsReader _outlookItemsReader;
         private OFRestHosting _restHosting;
         private AutoResetEvent _stopEvent;
         private DateTime? _lastDateTime;
@@ -49,7 +49,7 @@ namespace OF.ServiceApp.Bootstraper
             _eventAggregator = new EventAggregator();
             _userActivityTracker = new OFUserActivityTracker();
             _restHosting = new OFRestHosting(new OFNancyBootstraper(_eventAggregator));
-            _attachmentReader = new OFAttachmentReader();
+            _outlookItemsReader = new OFOutlookItemsReader();
             
             _eventAggregator.GetEvent<OFStopEvent>().Subscribe(StopExecute);
             _eventAggregator.GetEvent<OFStartReadEvent>().Subscribe(StartReadExecute);
@@ -99,9 +99,9 @@ namespace OF.ServiceApp.Bootstraper
             StartReadExecute(date);
             lock (_lock)
             {
-                if (_attachmentReader.IsNotNull() && _attachmentReader.IsStarted && _attachmentReader.IsSuspended)
+                if (_outlookItemsReader.IsNotNull() && _outlookItemsReader.IsStarted && _outlookItemsReader.IsSuspended)
                 {
-                    _attachmentReader.Resume(date);
+                    _outlookItemsReader.Resume(date);
                 }    
             }
         }
@@ -110,9 +110,9 @@ namespace OF.ServiceApp.Bootstraper
         {
             lock (_lock)
             {
-                if (_attachmentReader.IsNotNull() && _attachmentReader.IsStarted && !_attachmentReader.IsSuspended)
+                if (_outlookItemsReader.IsNotNull() && _outlookItemsReader.IsStarted && !_outlookItemsReader.IsSuspended)
                 {
-                    _attachmentReader.Suspend();
+                    _outlookItemsReader.Suspend();
                 }    
             }
         }
@@ -121,9 +121,9 @@ namespace OF.ServiceApp.Bootstraper
         {
             lock (_lock)
             {
-                if (_attachmentReader.IsNotNull() && !_attachmentReader.IsSuspended)
+                if (_outlookItemsReader.IsNotNull() && !_outlookItemsReader.IsSuspended)
                 {
-                    _attachmentReader.Stop();
+                    _outlookItemsReader.Stop();
                 }    
             }
         }
@@ -132,10 +132,10 @@ namespace OF.ServiceApp.Bootstraper
         {
             lock (_lock)
             {
-                if (_attachmentReader.IsNotNull() && !_attachmentReader.IsStarted)
+                if (_outlookItemsReader.IsNotNull() && !_outlookItemsReader.IsStarted)
                 {
                     OFLogger.Instance.LogInfo("Start Reading Attachment...");
-                    _attachmentReader.Start(date);
+                    _outlookItemsReader.Start(date);
                 }    
             }
         }

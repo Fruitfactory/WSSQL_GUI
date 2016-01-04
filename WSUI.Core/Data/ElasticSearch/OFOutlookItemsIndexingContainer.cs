@@ -3,10 +3,12 @@ using OF.Core.Enums;
 
 namespace OF.Core.Data.ElasticSearch
 {
-    public class OFAttachmentIndexingContainer
+    public class OFOutlookItemsIndexingContainer
     {
+        public OFEmail Email { get; set; }
+
         public IEnumerable<OFAttachmentContent> Attachments { get; set; }
 
-        public OFAttachmentIndexProcess Process { get; set; }
+        public OFOutlookItemsIndexProcess Process { get; set; }
     }
 }

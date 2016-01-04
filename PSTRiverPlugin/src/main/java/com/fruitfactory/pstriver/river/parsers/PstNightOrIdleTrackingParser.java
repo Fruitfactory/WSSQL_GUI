@@ -12,8 +12,7 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
 
 import com.fruitfactory.pstriver.river.parsers.settings.PstNightIdleTimeSettings;
-import com.fruitfactory.pstriver.river.reader.PstOutlookAttachmentReader;
-import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
+import com.fruitfactory.pstriver.river.reader.PstOutlookItemsReader;
 import com.fruitfactory.pstriver.useractivity.IInputHookManage;
 import com.fruitfactory.pstriver.useractivity.IReaderControl;
 import com.fruitfactory.pstriver.useractivity.PstLastInputEventTracker;
@@ -22,7 +21,6 @@ import com.fruitfactory.pstriver.utils.PstFeedDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import org.joda.time.*;
 
 import com.fruitfactory.pstriver.utils.PstGlobalConst;
 import com.google.gson.Gson;
@@ -30,7 +28,6 @@ import com.google.gson.GsonBuilder;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.logging.ESLogger;
-import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.river.RiverName;
 
 /**
@@ -51,11 +48,10 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
     protected int onProcess(List<Thread> readers) throws InterruptedException, Exception {
 
         List<IReaderControl> readerControls = new ArrayList<>();
-        PstOutlookAttachmentReader attachmentReader = getAttachmentReader();
+        PstOutlookItemsReader attachmentReader = getOutlookItemsReader();
         if(attachmentReader != null){
             readerControls.add((IReaderControl)attachmentReader);
         }
-        getLogger().info(LOG_TAG + "Reader Controls: " + readerControls.size());
 
         setRiverStatus(PstRiverStatus.Busy);
 
@@ -65,22 +61,8 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
         getLogger().info(LOG_TAG + "Start parsing files...");
         getRestAttachmentClient().startRead(getLastDateFromRiver());
         attachmentReader.start();
-
+        tracker.setReaders(readerControls);
         tracker.startTracking();
-
-        for (Thread reader : readers) {
-            readerControls.add((IReaderControl)reader);
-            if(tracker.getLastState() == PstUserActivityTracker.State.ONLINE){
-                ((IReaderControl)reader).pauseThread();
-            }
-            tracker.setReaders(readerControls);
-            reader.start();
-            getLogger().info(((PstOutlookFileReader)reader).getFilename());
-            reader.join();
-            readerControls.remove(reader);
-            ((PstOutlookFileReader) reader).close();
-        }
-
         try {
             attachmentReader.join();
             tracker.stopTracking();

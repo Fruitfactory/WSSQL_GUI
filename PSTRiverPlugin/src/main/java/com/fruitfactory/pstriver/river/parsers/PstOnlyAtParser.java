@@ -9,7 +9,7 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.river.parsers.core.PstParserBase;
 import com.fruitfactory.pstriver.river.parsers.settings.PstOnlyAtSettings;
-import com.fruitfactory.pstriver.river.reader.PstOutlookAttachmentReader;
+import com.fruitfactory.pstriver.river.reader.PstOutlookItemsReader;
 import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
 import com.fruitfactory.pstriver.utils.PstFeedDefinition;
 import com.fruitfactory.pstriver.utils.PstGlobalConst;
@@ -17,10 +17,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -63,7 +59,7 @@ public class PstOnlyAtParser extends PstParserBase {
         }
 
         setRiverStatus(PstRiverStatus.Busy);
-        PstOutlookAttachmentReader attachmentReader = getAttachmentReader();
+        PstOutlookItemsReader attachmentReader = getOutlookItemsReader();
         getRestAttachmentClient().startRead(getLastDateFromRiver());
         attachmentReader.start();
         for (Thread reader : readers){

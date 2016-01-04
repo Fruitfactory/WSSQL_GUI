@@ -7,7 +7,10 @@ import java.util.List;
 /**
  * Created by Yariki on 8/26/2015.
  */
-public class PstAttachmentContainer {
+public class PstOutlookItemsContainer {
+
+    @SerializedName("email")
+    public PstEmailContent email;
 
     @SerializedName("attachments")
     public List<PstAttachmentContent> attachments;
@@ -15,7 +18,15 @@ public class PstAttachmentContainer {
     @SerializedName("process")
     public int process;
 
-    public PstAttachmentContainer() {
+    public PstOutlookItemsContainer() {
+    }
+
+    public PstEmailContent getEmail() {
+        return email;
+    }
+
+    public void setEmail(PstEmailContent email) {
+        this.email = email;
     }
 
     public List<PstAttachmentContent> getAttachments() {

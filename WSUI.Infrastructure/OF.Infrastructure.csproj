@@ -124,13 +124,13 @@
     <Compile Include="Helpers\OFEmailCommandPreviewHelper.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticInitializingClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticRiverStatus.cs" />
-    <Compile Include="Implements\ElasticSearch\Clients\OFElasticSeachIndexAttachmentClient.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFElasticSeachIndexOutlookItemsClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchForceClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchOFPluginStatusClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticTrackingClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticUpdateSettingsClient.cs" />
-    <Compile Include="Implements\Service\IAttachmentReader.cs" />
+    <Compile Include="Implements\Service\IOutlookItemsReader.cs" />
     <Compile Include="MVVM\AdvancedSearch\OFSortByAdvancedSearchCriteria.cs" />
     <Compile Include="MVVM\AdvancedSearch\OFStringAdvancedSearchCriteria.cs" />
     <Compile Include="Attributes\OFFieldIndexAttribute.cs" />
@@ -210,7 +210,7 @@
     </Compile>
     <Compile Include="RegionNames.cs" />
     <Compile Include="Service\Dumper\OFMiniDumper.cs" />
-    <Compile Include="Service\Index\OFAttachmentReader.cs" />
+    <Compile Include="Service\Index\OFOutlookItemsReader.cs" />
     <Compile Include="Service\OFEventArgs.cs" />
     <Compile Include="Service\OFExtensionMethods.cs" />
     <Compile Include="Service\OFFileService.cs" />

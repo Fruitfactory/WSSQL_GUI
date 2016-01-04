@@ -9,7 +9,7 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.river.parsers.core.PstParserBase;
 import com.fruitfactory.pstriver.river.parsers.settings.PstEveryHourPeriodSettings;
-import com.fruitfactory.pstriver.river.reader.PstOutlookAttachmentReader;
+import com.fruitfactory.pstriver.river.reader.PstOutlookItemsReader;
 import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
 import com.fruitfactory.pstriver.utils.PstFeedDefinition;
 import java.util.List;
@@ -20,7 +20,6 @@ import com.google.gson.GsonBuilder;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.logging.ESLogger;
-import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.river.RiverName;
 
 /**
@@ -40,7 +39,7 @@ public class PstRepeatParser extends PstParserBase{
     @Override
     protected int onProcess(List<Thread> readers) throws Exception {
         setRiverStatus(PstRiverStatus.Busy);
-        PstOutlookAttachmentReader attachmentReader = getAttachmentReader();
+        PstOutlookItemsReader attachmentReader = getOutlookItemsReader();
         getRestAttachmentClient().startRead(getLastDateFromRiver());
         attachmentReader.start();
         for(Thread reader : readers){
