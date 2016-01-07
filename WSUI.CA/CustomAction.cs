@@ -243,53 +243,25 @@ namespace OF.CA
                     return ActionResult.Failure;
                 }
 
+                DeleteRegistryKeys();
                 for (var i = 0; i < processes.Length; i++)
                 {
                     session.Log("Prompting process {0} with name {1} to close.", processes[i], displayNames[i]);
                     using (var prompt = new PromptCloseApplication(productName, processes[i], displayNames[i]))
                         if (!prompt.Prompt())
+                        {
                             return ActionResult.UserExit;
+                        }
                 }
-                OFRegistryHelper.Instance.SetFlagClosedOutlookApplication();
-                DeleteRegistryKeys();
             }
             catch (Exception ex)
             {
-                session.Log("Missing properties or wrong values. Please check that 'PromptToCloseProcesses' and 'PromptToCloseDisplayNames' exist and have same number of items. \nException:" + ex.Message);
+                session.Log("Missing properties or wrong values. Please check that 'PromptToCloseProcesses' and 'PromptToCloseDisplayNames' exist and have same number of items. \nException:" + ex.ToString());
                 return ActionResult.Failure;
             }
 
             session.Log("End PromptToCloseApplications");
             return ActionResult.Success;
-        }
-
-
-
-        [CustomAction]
-        public static ActionResult CloseOutlook(Session session)
-        {
-            _Application outlookProcess;
-            var res = ActionResult.Success;
-            if (IsOutlookOpen())
-            {
-                try
-                {
-                    session.Log("Close outlook. IsOutllokClosedByInstaller = " +
-                                OFRegistryHelper.Instance.IsOutlookClosedByInstaller());
-                    CloseAllOutlookInstancesLite(session);
-                    Thread.Sleep(1000); // wait for closing
-                    if (IsOutlookOpen())
-                        CloseAllOutlookInstancesHard(session);
-                    OFRegistryHelper.Instance.SetFlagClosedOutlookApplication();
-                    res = ActionResult.Success;
-                }
-                catch (Exception ex)
-                {
-                    session.Log("Error during closing outlook: " + ex.Message);
-                    res = ActionResult.Failure;
-                }
-            }
-            return res;
         }
 
         [CustomAction]

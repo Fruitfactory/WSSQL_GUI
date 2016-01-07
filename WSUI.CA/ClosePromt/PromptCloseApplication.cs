@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using OF.CA.Core;
 using OF.CA.Enums;
+using OF.Core.Helpers;
 
 namespace OF.CA.ClosePromt
 {
@@ -37,6 +38,7 @@ namespace OF.CA.ClosePromt
                 {
                     case eClosePrompt.Continue:
                         CloseAllOutlookInstancesHard();
+                        OFRegistryHelper.Instance.SetFlagClosedOutlookApplication();
                         return true;
                     case eClosePrompt.Cancel:
                         return false;

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:bal="http://schemas.microsoft.com/wix/BalExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <Bundle Name="OutlookFinder Setup" Version="1.0.2.863" Manufacturer="FruitFactory" UpgradeCode="1fca87ea-4d43-499c-8163-931e88304ba9" IconSourceFile="Image\logo_64.ico">
-    <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense">
-      <bal:WixStandardBootstrapperApplication LicenseFile="License.rtf" LogoFile="Image\logo_64.ico" SuppressOptionsUI="yes" />
+  <Bundle Name="OutlookFinder Setup" Version="1.0.2.863" Manufacturer="FruitFactory" UpgradeCode="1fca87ea-4d43-499c-8163-931e88304ba9" IconSourceFile="Image\logo_64.ico" DisableModify="yes" DisableRemove="no">
+    <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense" >
+      <bal:WixStandardBootstrapperApplication LicenseFile="License.rtf" LogoFile="Image\logo_64.ico" SuppressOptionsUI="yes"/>
     </BootstrapperApplicationRef>
     <util:RegistrySearch Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Value="CurrentVersion" Variable="JavaCurrentVersion" Win64="yes" />
     <util:RegistrySearch Root="HKLM" Key="SOFTWARE\Wow6432Node\JavaSoft\Java Runtime Environment" Value="CurrentVersion" Variable="JavaCurrentVersionWow" Win64="yes" />
@@ -12,7 +12,7 @@
         <RemotePayload ProductName="jre-8u65-windows-i586.exe" Description="Java Platform SE binary" Size="50130016" Version="8.0.650.17" Hash="5e0b4ef55faf1de9b4b85d769bfe0899481c5d79" />
       </ExePackage>
       <RollbackBoundary Id="Rollback"></RollbackBoundary>
-      <MsiPackage SourceFile="$(var.TargetDir)\OutlookFinder.msi" DisplayInternalUI="yes" />
+      <MsiPackage SourceFile="$(var.TargetDir)\OutlookFinder.msi" DisplayInternalUI="yes"  />
     </Chain>
   </Bundle>
 </Wix>
