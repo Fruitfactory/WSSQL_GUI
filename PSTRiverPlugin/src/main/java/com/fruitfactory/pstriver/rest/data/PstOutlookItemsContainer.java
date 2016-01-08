@@ -15,10 +15,21 @@ public class PstOutlookItemsContainer {
     @SerializedName("attachments")
     public List<PstAttachmentContent> attachments;
 
+    @SerializedName("contact")
+    public PstContactContent contact;
+
     @SerializedName("process")
     public int process;
 
     public PstOutlookItemsContainer() {
+    }
+
+    public PstContactContent getContact() {
+        return contact;
+    }
+
+    public void setContact(PstContactContent contact) {
+        this.contact = contact;
     }
 
     public PstEmailContent getEmail() {

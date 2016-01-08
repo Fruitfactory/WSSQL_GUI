@@ -76,7 +76,7 @@ namespace OF.Infrastructure.Service.Index
             {
                 if (_thread == null)
                 {
-                    _thread = new Thread(ProcessAttachment);
+                    _thread = new Thread(ProcessOutlookItems);
                     _thread.SetApartmentState(ApartmentState.STA);
                     _lastUpdated = lastUpdated;
                     _cancellationSource = new CancellationTokenSource();
@@ -123,7 +123,7 @@ namespace OF.Infrastructure.Service.Index
             OFLogger.Instance.LogDebug("Last Updated Date: {0}", lastUpdated.HasValue ? lastUpdated.Value.ToString() : "N/a");
         }
 
-        private void ProcessAttachment(object arg)
+        private void ProcessOutlookItems(object arg)
         {
             OFMessageFilter.Register();
 
@@ -155,29 +155,20 @@ namespace OF.Infrastructure.Service.Index
                         Marshal.ReleaseComObject(mapiFolder);
                         continue;
                     }
-                    foreach (var result in mapiFolder.Items.OfType<Outlook.MailItem>())
+                    foreach (var result in mapiFolder.Items)
                     {
                         CheckCancellation();
                         TryToWait();
                         try
                         {
-                            if (_lastUpdated.HasValue && result.ReceivedTime < _lastUpdated.Value)
+                            if (result is Outlook.MailItem)
                             {
-                                continue;
+                                ProcessEmailItem(result as Outlook.MailItem, mapiFolder);
                             }
-                            OFEmail email = new OFEmail();
-                            ProcessEmail(email, result, mapiFolder);
-
-
-                            List<OFAttachmentContent> attachmentContents = new List<OFAttachmentContent>();
-                            ProcessAttachmentsFull(result, attachmentContents);
-
-
-                            CheckCancellation();
-                            TryToWait();
-
-                            SendOutlookItems(email,attachmentContents, OFOutlookItemsIndexProcess.Chunk);
-
+                            else if (result is Outlook.ContactItem)
+                            {
+                                ProcessContactItem(result as Outlook.ContactItem);
+                            }
                         }
                         finally
                         {
@@ -204,7 +195,7 @@ namespace OF.Infrastructure.Service.Index
             }
             finally
             {
-                SendOutlookItems(null,null, OFOutlookItemsIndexProcess.End);
+                SendOutlookItems(null,null,null, OFOutlookItemsIndexProcess.End);
                 Status = PstReaderStatus.Finished;
                 CloseApplication(application,isExistingProcess);
                 application = null;
@@ -217,6 +208,88 @@ namespace OF.Infrastructure.Service.Index
                 OFMessageFilter.Revoke();
             }
         }
+
+
+        private void ProcessContactItem(Outlook.ContactItem contactItem)
+        {
+            if (contactItem == null)
+            {
+                return;
+            }
+            OFContact contact = new OFContact();
+            contact.Firstname = contactItem.FirstName;
+            contact.Lastname = contactItem.LastName;
+            contact.Emailaddress1 = contactItem.Email1Address;
+            contact.Emailaddress2 = contactItem.Email2Address;
+            contact.Emailaddress3 = contactItem.Email3Address;
+            contact.Businesstelephone = contactItem.BusinessTelephoneNumber;
+            contact.Hometelephone = contactItem.HomeTelephoneNumber;
+            contact.Mobiletelephone = contactItem.MobileTelephoneNumber;
+            
+            contact.HomeAddressCity = contactItem.HomeAddressCity;
+            contact.HomeAddressCountry = contactItem.HomeAddressCountry;
+            contact.HomeAddressPostalCode = contactItem.HomeAddressPostalCode;
+            contact.HomeAddressState = contactItem.HomeAddressState;
+            contact.HomeAddressStreet = contactItem.HomeAddressStreet;
+            contact.HomeAddressPostOfficeBox = contactItem.HomeAddressPostOfficeBox;
+
+
+            contact.BusinessAddressCity = contactItem.BusinessAddressCity;
+            contact.BusinessAddressCountry = contactItem.BusinessAddressCountry;
+            contact.BusinessAddressState = contactItem.BusinessAddressState;
+            contact.BusinessAddressStreet = contactItem.BusinessAddressStreet;
+            contact.BusinessAddressPostOfficeBox = contactItem.BusinessAddressPostOfficeBox;
+
+            contact.Keyword = "";
+            contact.Location = contactItem.OfficeLocation;
+            contact.CompanyName = contactItem.CompanyName;
+            contact.Title = contactItem.Title;
+            contact.DepartmentName = contactItem.Department;
+            contact.MiddleName = contactItem.MiddleName;
+            contact.DisplyNamePrefix = "";
+            contact.Profession = contactItem.Profession;
+            contact.Note = "";
+            contact.HomeAddress = contactItem.HomeAddress;
+            contact.WorkAddress = contactItem.BusinessAddress;
+            contact.OtherAddress = contactItem.OtherAddress;
+            contact.Birthday = null; //contactItem.Birthday;
+
+            contact.EntryID = contactItem.EntryID;
+
+            contact.Addresstype = "";
+
+
+            CheckCancellation();
+            TryToWait();
+
+            SendOutlookItems(null,null,contact,OFOutlookItemsIndexProcess.Chunk);
+        }
+
+
+        private void ProcessEmailItem(Outlook.MailItem emailItem, Outlook.MAPIFolder mapiFolder)
+        {
+            if (emailItem == null)
+            {
+                return;
+            }
+            if (_lastUpdated.HasValue && emailItem.ReceivedTime < _lastUpdated.Value)
+            {
+                return;
+            }
+            OFEmail email = new OFEmail();
+            ProcessEmail(email, emailItem, mapiFolder);
+
+
+            List<OFAttachmentContent> attachmentContents = new List<OFAttachmentContent>();
+            ProcessAttachmentsFull(emailItem, attachmentContents);
+
+
+            CheckCancellation();
+            TryToWait();
+
+            SendOutlookItems(email, attachmentContents, null, OFOutlookItemsIndexProcess.Chunk);
+        }
+
 
         private void ProcessAttachmentsFull(Outlook.MailItem result, List<OFAttachmentContent> attachmentContents)
         {
@@ -409,11 +482,11 @@ namespace OF.Infrastructure.Service.Index
 
 
 
-        private void SendOutlookItems(OFEmail email,IEnumerable<OFAttachmentContent> attachments, OFOutlookItemsIndexProcess process)
+        private void SendOutlookItems(OFEmail email,IEnumerable<OFAttachmentContent> attachments, OFContact contact, OFOutlookItemsIndexProcess process)
         {
             if (_indexOutlookItemsClient.IsNotNull())
             {
-                OFOutlookItemsIndexingContainer container = new OFOutlookItemsIndexingContainer() { Email =  email,Attachments = attachments, Process = process };
+                OFOutlookItemsIndexingContainer container = new OFOutlookItemsIndexingContainer() { Email =  email,Attachments = attachments, Contact = contact, Process = process };
                 _indexOutlookItemsClient.SendOutlookItemsToIndex(container);
                 Count += attachments.IsNotNull() ? attachments.Count() : 0;
             }

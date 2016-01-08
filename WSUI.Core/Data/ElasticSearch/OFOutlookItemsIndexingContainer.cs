@@ -9,6 +9,8 @@ namespace OF.Core.Data.ElasticSearch
 
         public IEnumerable<OFAttachmentContent> Attachments { get; set; }
 
+        public OFContact Contact { get; set; }
+
         public OFOutlookItemsIndexProcess Process { get; set; }
     }
 }

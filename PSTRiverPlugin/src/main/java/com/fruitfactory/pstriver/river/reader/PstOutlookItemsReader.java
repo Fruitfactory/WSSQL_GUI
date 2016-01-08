@@ -105,8 +105,66 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
         try {
             saveEmail(pstOutlookItemsContainer);
             saveAttachments(pstOutlookItemsContainer);
+            saveContact(pstOutlookItemsContainer);
         }catch(Exception ex){
 
+        }
+    }
+
+    private void saveContact(PstOutlookItemsContainer pstOutlookItemsContainer) throws IOException {
+        if(pstOutlookItemsContainer == null || pstOutlookItemsContainer.getContact() == null){
+            return;
+        }
+
+        try {
+            PstContactContent contact = pstOutlookItemsContainer.getContact();
+
+            XContentBuilder source = jsonBuilder().startObject();
+
+            _logger.info(String.format("---- Contact => %s %s",contact.getFirstname(),contact.getLastname()));
+
+            source
+                    .field(PstMetadataTags.Contact.ITEM_FIRST_NAME, contact.getFirstname())
+                    .field(PstMetadataTags.Contact.ITEM_LAST_NAME, contact.getLastname())
+                    .field(PstMetadataTags.Contact.ITEM_EMAILADDRESS1, contact.getEmailaddress1())
+                    .field(PstMetadataTags.Contact.ITEM_EMAILADDRESS2, contact.getEmailaddress2())
+                    .field(PstMetadataTags.Contact.ITEM_EMAILADDRESS3, contact.getEmailaddress3())
+                    .field(PstMetadataTags.Contact.ITEM_BUSINESSTELEPHONE, contact.getBusinesstelephone())
+                    .field(PstMetadataTags.Contact.ITEM_HOMETELEPHONE, contact.getHometelephone())
+                    .field(PstMetadataTags.Contact.ITEM_MOBILETELEPHONE, contact.getMobiletelephone())
+                    .field(PstMetadataTags.Contact.ITEM_HOMEADDRESSCITY, contact.getHomeaddresscity())
+                    .field(PstMetadataTags.Contact.ITEM_HOMEADDRESSCOUNTRY, contact.getHomeaddresscountry())
+                    .field(PstMetadataTags.Contact.ITEM_HOMEADDRESSPOSTALCODE, contact.getHomeaddresspostalcode())
+                    .field(PstMetadataTags.Contact.ITEM_HOMEADDRESSSTATE, contact.getHomeaddressstate())
+                    .field(PstMetadataTags.Contact.ITEM_HOMEADRESSSTREET, contact.getHomeaddressstreet())
+                    .field(PstMetadataTags.Contact.ITEM_HOMEADDRESSPOSTOFFICEBOX, contact.getHomeaddresspostofficebox())
+                    .field(PstMetadataTags.Contact.ITEM_BUSINESSADDRESSCITY, contact.getBusinessaddresscity())
+                    .field(PstMetadataTags.Contact.ITEM_BUSINESSADDRESSCOUTRY, contact.getBusinessaddresscountry())
+                    .field(PstMetadataTags.Contact.ITEM_BUSINESSADDRESSSTATE, contact.getBusinessaddressstate())
+                    .field(PstMetadataTags.Contact.ITEM_BUSINESSADDRESSSTREET, contact.getBusinessaddressstreet())
+                    .field(PstMetadataTags.Contact.ITEM_BUSINESSADDRESSPOSTOFFICEBOX, contact.getHomeaddresspostofficebox())
+                    .field(PstMetadataTags.Contact.ITEM_KEYWORD, contact.getKeyword())
+                    .field(PstMetadataTags.Contact.ITEM_LOCATION, contact.getLocation())
+                    .field(PstMetadataTags.Contact.ITEM_COMPANY_NAME, contact.getCompanyname())
+                    .field(PstMetadataTags.Contact.ITEM_TITLE, contact.getTitle())
+                    .field(PstMetadataTags.Contact.ITEM_DEPARTMENT_NAME, contact.getDepartmentname())
+                    .field(PstMetadataTags.Contact.ITEM_MIDDLE_NAME, contact.getMiddlename())
+                    .field(PstMetadataTags.Contact.ITEM_DISPLAY_NAME_PREFIX, contact.getDisplynameprefix())
+                    .field(PstMetadataTags.Contact.ITEM_PROFESSION, contact.getProfession())
+                    .field(PstMetadataTags.Contact.ITEM_NOTE, contact.getNote())
+                    .field(PstMetadataTags.Contact.ITEM_HOME_ADDRESS, contact.getHomeaddress())
+                    .field(PstMetadataTags.Contact.ITEM_WORK_ADDRESS, contact.getWorkaddress())
+                    .field(PstMetadataTags.Contact.ITEM_OTHER_ADDRESS, contact.getOtheraddress())
+                    .field(PstMetadataTags.Contact.ITEM_BIRTHDAY, contact.getBirthday())
+                    .field(PstMetadataTags.Contact.ENTRY_ID, contact.getEntryid())
+                    .field(PstMetadataTags.Contact.ADDRESS_TYPE,contact.getAddresstype());
+            source.endObject();
+
+            esIndex(_indexName, PstMetadataTags.INDEX_TYPE_CONTACT, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
+
+        }catch(Exception ex){
+            System.out.println(ex.toString());
+            _logger.error(ex.toString());
         }
     }
 
