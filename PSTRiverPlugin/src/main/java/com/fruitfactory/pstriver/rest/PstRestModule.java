@@ -6,7 +6,9 @@
 package com.fruitfactory.pstriver.rest;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
+import com.fruitfactory.pstriver.helpers.PstTimeWatch;
 import com.fruitfactory.pstriver.rest.data.PstAttachmentContainer;
 import com.fruitfactory.pstriver.rest.data.PstOFPluginStatus;
 import com.fruitfactory.pstriver.rest.data.PstOFPluginStatusContainer;
@@ -124,11 +126,14 @@ public class PstRestModule extends BaseRestHandler {
 
     private void processIndexingAttachment(RestRequest rr, RestChannel rc){
         try {
+            PstTimeWatch time = PstTimeWatch.start();
             String content = rr.content().toUtf8();
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").create();
             PstAttachmentContainer container =  gson.fromJson(content, PstAttachmentContainer.class);
             PstRESTRepository.putAttachmentContainer(container);
             rc.sendResponse(new BytesRestResponse(RestStatus.OK));
+            long seconds = time.time(TimeUnit.MILLISECONDS);
+            logger.info(String.format("REST MODULE: %s",seconds));
         } catch (Exception e) {
             try {
                 rc.sendResponse(new BytesRestResponse(rc, e));

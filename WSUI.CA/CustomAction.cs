@@ -203,17 +203,21 @@ namespace OF.CA
                             }
                         }
                         session.Log("Deleting " + enumerateDirectory.Name + "...");
-                        enumerateDirectory.Delete(true);
+                        Directory.Delete(enumerateDirectory.FullName, true);
                     }
                     foreach (var enumerateFile in rootDir.EnumerateFiles())
                     {
                         session.Log("Deleting " + enumerateFile.Name + "...");
                         enumerateFile.Delete();
                     }
+                    if (rootDir.GetDirectories().Length == 0 && rootDir.GetFiles().Length == 0)
+                    {
+                        rootDir.Delete(true);
+                    }
                 }
                 else
                 {
-                    rootDir.Delete(true);
+                    rootDir.Delete(true);    
                 }
             }
             catch (Exception ex)
