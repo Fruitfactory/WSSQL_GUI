@@ -461,7 +461,8 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
         private string FormatAttachmentFilename(string filename)
         {
             string name = Path.GetFileName(filename);
-            return !string.IsNullOrEmpty(filename) ? string.Format(LinkTemplate, name, filename, HighlightSearchString(name)) : "";
+            string icon = GetAttachmentContentFileIcon(filename);
+            return !string.IsNullOrEmpty(filename) ? string.Format(LinkTemplate, name, icon, HighlightSearchString(name)) : "";
         }
 
         public string GetPathForEmail(Uri url, string filename)
@@ -720,16 +721,27 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
 
         private string GetAttachmentValue(Outlook.Attachment att, string tempFolder)
         {
+            return GetAttachmentFileIcon(att.FileName,tempFolder);
+        }
+
+        private string GetAttachmentContentFileIcon(string filename)
+        {
+            var folder = Path.GetDirectoryName(filename);
+            return GetAttachmentFileIcon(filename,folder);
+        }
+
+        private string GetAttachmentFileIcon(string filename, string folder)
+        {
             List<string> resourceArray = Assembly.GetExecutingAssembly().GetManifestResourceNames().Where(s => s.EndsWith(ExtOfImage)).ToList();
-            var ext = Path.GetExtension(att.FileName);
+            var ext = Path.GetExtension(filename);
             ext = ext.Substring(1, ext.Length - 1);
             var key = string.Format("{0}.{1}", ext, ExtOfImage);
             var name = resourceArray.FirstOrDefault(s => s.EndsWith(key));
             if (string.IsNullOrEmpty(name))
             {
-                return ReturnKeyImage(resourceArray, "_blank", tempFolder);
+                return ReturnKeyImage(resourceArray, "_blank", folder);
             }
-            return ReturnKeyImage(resourceArray, ext, tempFolder);
+            return ReturnKeyImage(resourceArray, ext, folder);
         }
 
         private string ReturnKeyImage(List<string> keysList, string key, string tempFolder)
