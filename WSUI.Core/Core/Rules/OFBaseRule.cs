@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using OF.Core.Enums;
 
 namespace OF.Core.Core.Rules
 {
@@ -11,23 +12,24 @@ namespace OF.Core.Core.Rules
 
         public int Priority { get; protected set; }
 
+        protected abstract ofRuleType Type { get; }
+
         public virtual void InitRule()
         { }
 
-        public string[] ApplyRule(string criteria)
+        public IEnumerable<OFRuleToken> ApplyRule(string criteria)
         {
             MatchCollection col = Regex.Matches(criteria, Rule);
             if (col.Count == 0)
-                return new string[] { };
-            var list = new List<string>();
+                return null;
+            var list = new List<OFRuleToken>();
             for (int i = 0; i < col.Count; i++)
             {
                 var item = col[i];
                 if (string.IsNullOrEmpty(item.Groups[1].Value))
                     continue;
-                list.Add(item.Groups[1].Value);
+                list.Add( new OFRuleToken(Type){Result = item.Groups[1].Value});
             }
-
             return list.ToArray();
         }
 

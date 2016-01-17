@@ -39,4 +39,14 @@ namespace OF.Core.Enums
         Finished,
         Suspended
     }
+
+    public enum ofRuleType
+    {
+        None,
+        Quote,
+        Word,
+        Amount,
+        Price
+    }
+
 }

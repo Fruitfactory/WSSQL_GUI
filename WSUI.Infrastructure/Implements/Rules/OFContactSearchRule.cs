@@ -62,11 +62,11 @@ namespace OF.Infrastructure.Implements.Rules
 
                 foreach (var criteria in preparedCriterias)
                 {
-                    list.Add(descriptor => descriptor.Term(c => c.Firstname, criteria));
-                    list.Add(descriptor => descriptor.Term(c => c.Lastname, criteria));
-                    list.Add(descriptor => descriptor.Term(c => c.Emailaddress1, criteria));
-                    list.Add(descriptor => descriptor.Term(c => c.Emailaddress2, criteria));
-                    list.Add(descriptor => descriptor.Term(c => c.Emailaddress3, criteria));
+                    list.Add(descriptor => descriptor.Term(c => c.Firstname, criteria.Result));
+                    list.Add(descriptor => descriptor.Term(c => c.Lastname, criteria.Result));
+                    list.Add(descriptor => descriptor.Term(c => c.Emailaddress1, criteria.Result));
+                    list.Add(descriptor => descriptor.Term(c => c.Emailaddress2, criteria.Result));
+                    list.Add(descriptor => descriptor.Term(c => c.Emailaddress3, criteria.Result));
                 }
 
                 return queryDescriptor.Bool(bd => bd.Should(list.ToArray()));
@@ -96,16 +96,16 @@ namespace OF.Infrastructure.Implements.Rules
                     var should = new OFQueryBoolShould<OFBaseTerm>();
 
                     var fn = new OFFirstNameTerm();
-                    fn.SetValue(preparedCriteria);
+                    fn.SetValue(preparedCriteria.Result);
 
                     var ln = new OFLastNameTerm();
-                    ln.SetValue(preparedCriteria);
+                    ln.SetValue(preparedCriteria.Result);
                     var ea11 = new OFEmailaddress1Term();
-                    ea11.SetValue(preparedCriteria);
+                    ea11.SetValue(preparedCriteria.Result);
                     var ea22 = new OFEmailaddress2Term();
-                    ea22.SetValue(preparedCriteria);
+                    ea22.SetValue(preparedCriteria.Result);
                     var ea33 = new OFEmailaddress3Term();
-                    ea33.SetValue(preparedCriteria);
+                    ea33.SetValue(preparedCriteria.Result);
 
                     should._bool.should.Add(fn);
                     should._bool.should.Add(ln);

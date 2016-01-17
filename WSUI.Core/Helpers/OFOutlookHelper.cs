@@ -352,6 +352,7 @@ namespace OF.Core.Helpers
                 item.Subject = subject;
                 item.SendUsingAccount = FindSenderAccount(data);
                 item.To = (new OFRecipient() {Address = data.FromAddress, Name = data.FromName}).ToString();
+
                 return item;
             }
             catch (Exception exception)

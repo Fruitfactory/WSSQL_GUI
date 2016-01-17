@@ -28,13 +28,13 @@ namespace OF.Infrastructure.Implements.Rules
     {
 
         public OFEmailSubjectSearchRule(IUnityContainer container)
-            :this(null,container)
+            : this(null, container)
         {
             Priority = 2;
         }
 
         public OFEmailSubjectSearchRule(object lockObject, IUnityContainer container)
-            : base(lockObject,container)
+            : base(lockObject, container)
         {
             Priority = 2;
         }
@@ -67,9 +67,15 @@ namespace OF.Infrastructure.Implements.Rules
                 body.query = query;
                 foreach (var preparedCriteria in preparedCriterias)
                 {
-                    var term = new OFTerm<OFSimpleSubjectTerm>(preparedCriteria);
+                    var term = new OFTerm<OFSimpleSubjectTerm>(preparedCriteria.Result);
                     query._bool.must.Add(term);
                 }
+                return body;
+            }
+            if (preparedCriterias.All(p => p.Type == ofRuleType.Quote))
+            {
+                var criteria = preparedCriterias.FirstOrDefault(p => p.Type == ofRuleType.Quote);
+                body.query = new OFQueryMatchPhrase<OFSubjectMatchPhrase>(new OFSubjectMatchPhrase() { subject = criteria.Result });
                 return body;
             }
             body.query = new OFQuerySimpleTerm<OFSimpleSubjectTerm>(Query);
@@ -87,7 +93,7 @@ namespace OF.Infrastructure.Implements.Rules
             switch (sort)
             {
                 case AdvancedSearchSortByType.NewestToOldest:
-                    return  sortFieldDescriptor.OnField(e => e.Datereceived).Descending();
+                    return sortFieldDescriptor.OnField(e => e.Datereceived).Descending();
                 case AdvancedSearchSortByType.OldestToNewest:
                     return sortFieldDescriptor.OnField(e => e.Datereceived).Ascending();
                 default:
@@ -111,7 +117,7 @@ namespace OF.Infrastructure.Implements.Rules
                 {
                     case AdvancedSearchCriteriaType.To:
                         var listShould = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
-                        listShould.Add(d => d.Term("to.address",temp.Value));
+                        listShould.Add(d => d.Term("to.address", temp.Value));
                         listShould.Add(d => d.Term("to.name", temp.Value));
 
                         listCriterias.Add(desc => desc.Bool(bd => bd.Should(listShould.ToArray())));
@@ -121,7 +127,24 @@ namespace OF.Infrastructure.Implements.Rules
                         listCriterias.Add(d => d.Term(e => e.Folder, temp.Value));
                         break;
                     case AdvancedSearchCriteriaType.Body:
-                        listCriterias.Add(d => d.Term(e => e.Analyzedcontent,temp.Value));
+
+                        var listTokens = GetProcessingSearchCriteria((string)temp.Value);
+
+                        var listShouldBody = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
+
+                        foreach (var ofRuleToken in listTokens)
+                        {
+                            switch (ofRuleToken.Type)
+                            {
+                                case ofRuleType.Quote:
+                                    listShouldBody.Add(d => d.MatchPhrase(m => m.OnField(e => e.Analyzedcontent).Query(ofRuleToken.Result)));
+                                    break;
+                                default:
+                                    listShouldBody.Add(d => d.Term(e => e.Analyzedcontent, ofRuleToken.Result));
+                                    break;
+                            }
+                        }
+                        listCriterias.Add(d => d.Bool(bd => bd.Should(listShouldBody.ToArray())));
                         break;
                 }
             }

@@ -1,16 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 using OF.CA.Core;
 using OF.CA.Enums;
+using OF.Core.Helpers;
 
 namespace OF.CA.ClosePromt
 {
     public class PromptCloseApplication : CoreSetupApplication
     {
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool TerminateProcess(IntPtr hProcess, uint uExitCode);
 
         private readonly string _processName;
         private readonly string _displayName;
@@ -37,6 +44,7 @@ namespace OF.CA.ClosePromt
                 {
                     case eClosePrompt.Continue:
                         CloseAllOutlookInstancesHard();
+                        OFRegistryHelper.Instance.SetFlagClosedOutlookApplication();
                         return true;
                     case eClosePrompt.Cancel:
                         return false;
@@ -82,7 +90,7 @@ namespace OF.CA.ClosePromt
         {
             try
             {
-                app.Kill();
+                TerminateProcess(app.Handle, 0);
             }
             finally
             {
