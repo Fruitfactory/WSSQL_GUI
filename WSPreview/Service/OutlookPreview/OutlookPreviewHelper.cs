@@ -536,7 +536,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
         {
             string page = GetBeginingOfPreview(mail);
             var senderEmailAddress = mail.GetSenderSMTPAddress();
-            var clearSenderName = mail.SenderName.ClearString();
+            var clearSenderName = mail.SenderName.ClearString().DecodeMimeString();
             var clearsenderEmail = senderEmailAddress.ClearString();
             page += string.Format(SenderRow, IsEmail(senderEmailAddress) ? GetContactNameWithEmail(GetConvertetString(clearSenderName), clearsenderEmail) : GetContactName(GetConvertetString(clearSenderName)));
             if (!string.IsNullOrEmpty(mail.CC))
@@ -559,7 +559,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
         {
             string page = GetBeginingOfPreview(email);
             var senderEmailAddress = email.FromAddress;
-            var clearSenderName = email.FromName.ClearString();
+            var clearSenderName = email.FromName.ClearString().DecodeMimeString();
             var clearsenderEmail = senderEmailAddress.ClearString();
             page += string.Format(SenderRow, IsEmail(senderEmailAddress) ? GetContactNameWithEmail(GetConvertetString(clearSenderName), clearsenderEmail) : GetContactName(GetConvertetString(clearSenderName)));
             if (email.Cc != null && email.Cc.Length > 0)
@@ -590,7 +590,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             var list = new List<string>();
             foreach (Outlook.Recipient recipient in mail.Recipients.OfType<Outlook.Recipient>())
             {
-                var clearStr = recipient.Name.ClearString();
+                var clearStr = recipient.Name.ClearString().DecodeMimeString();
                 var email = recipient.GetSMTPAddress();
                 var tt = IsEmail(email) ? GetContactNameWithEmail(clearStr, email) : GetContactName(clearStr);
                 list.Add(tt);
@@ -607,7 +607,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             var list = new List<string>();
             foreach (OFRecipient recipient in ccs)
             {
-                var clearStr = recipient.Name.ClearString();
+                var clearStr = recipient.Name.ClearString().DecodeMimeString();
                 var emailAddress = recipient.Address;
                 var tt = IsEmail(emailAddress) ? !string.IsNullOrEmpty(clearStr) ? GetContactNameWithEmail(clearStr, emailAddress) : GetEmailToString(emailAddress) : GetContactName(clearStr);
                 list.Add(tt);
@@ -617,7 +617,12 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
 
         private string GetConvertetString(string str)
         {
-            return !string.IsNullOrEmpty(str) ? str.DecodeString() : NAEmpty;
+            string result = string.Empty;
+            if (!string.IsNullOrEmpty(str))
+            {
+                result = str.DecodeString();
+            }
+            return result;
         }
 
         public string GetPreviewForAppointment(Outlook.AppointmentItem appointment, string filename)

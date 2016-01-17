@@ -292,10 +292,10 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
             return;
         }
 
-        String subject = message.getSubject().trim();
+        String subject = PstStringHelper.DecodeMimeString(message.getSubject().trim());
 
         PSTTransportRecipient  from = message.getFrom();
-        String sender = from != null ? from.getName() : message.getSentRepresentingName();
+        String sender = PstStringHelper.DecodeMimeString(from != null ? from.getName() : message.getSentRepresentingName());
         String senderEmail = from != null ? from.getEmailAddress() : message.getSentRepresentingEmailAddress();
 
         if(!sender.isEmpty() && !senderEmail.isEmpty() && !PstEmailValidator.isEmail(senderEmail)){
@@ -485,11 +485,12 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
         
         for(PSTTransportRecipient r : list){
             String emailAddress = r.getEmailAddress();
+            String repName = PstStringHelper.DecodeMimeString(r.getName());
             if(!PstEmailValidator.isEmail(emailAddress)){
-                emailAddress = getAppropriateEmail(subject,r.getName());
+                emailAddress = getAppropriateEmail(subject,repName);
             }
-            addUser(r.getName().toLowerCase(),emailAddress);
-            Triple<String, String,String> pairRecipient = new Triple<String, String,String>(r.getName(), emailAddress,"");
+            addUser(repName.toLowerCase(),emailAddress);
+            Triple<String, String,String> pairRecipient = new Triple<String, String,String>(repName, emailAddress,"");
             result.add(pairRecipient);
         }
         return result;
@@ -505,12 +506,13 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
                 if (flag != recipientType) {
                     continue;
                 }
+                String repName = PstStringHelper.DecodeMimeString(recipient.getDisplayName());
                 String emailAddress = recipient.getEmailAddress();
                 if(!PstEmailValidator.isEmail(emailAddress)){
-                    emailAddress = getAppropriateEmail(subject,recipient.getDisplayName().toLowerCase());
+                    emailAddress = getAppropriateEmail(subject,repName.toLowerCase());
                 }
-                addUser(recipient.getDisplayName().toLowerCase(),emailAddress);
-                Triple<String, String, String> pairRecipient = new Triple<String, String, String>(recipient.getDisplayName(), emailAddress, recipient.getEmailAddressType());
+                addUser(repName.toLowerCase(),emailAddress);
+                Triple<String, String, String> pairRecipient = new Triple<String, String, String>(repName, emailAddress, recipient.getEmailAddressType());
                 result.add(pairRecipient);
                 
             } catch (PSTException e) {
