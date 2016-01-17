@@ -38,7 +38,7 @@ namespace OF.ServiceApp.Bootstraper
         {
             var currentExecutablel = (typeof (OFServiceBootstraper)).Assembly.GetName().Name.ToUpperInvariant();
             var processList = Process.GetProcesses();
-            var count = processList.Count(p => p.ProcessName.ToUpperInvariant().Contains(currentExecutablel));
+            var count = processList.Count(p => p.ProcessName.ToUpperInvariant().Equals(currentExecutablel));
             return count > 1;
         }
 

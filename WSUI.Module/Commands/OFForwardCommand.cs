@@ -33,6 +33,7 @@ namespace OF.Module.Commands
                         Outlook.MailItem reply = OFEmailCommandPreviewHelper.Instance.CreateForwardEmail(searchItem as OFEmailSearchObject);
                         if (reply.IsNotNull())
                         {
+                            InsertAttachments(reply,searchItem as OFEmailSearchObject);
                             reply.Display(false);
                         }
                         break;
