@@ -21,7 +21,7 @@ import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 public class PstStringHelper {
 
     private static List<String> AllowedExtensions = Arrays.asList("DOC", "DOCX", "XLS", "XLSX", "PPT", "PPTX", "PDF", "TXT", "LOG" );
-    private final static Pattern patternMime = Pattern.compile("(?:=\\?)([^\\?]+)(?:\\?B\\?)([^\\?]*)(?:\\?=)");
+    private final static Pattern patternMime = Pattern.compile("(?:=\\?)([^\\?]+)(?:\\?([BQ])\\?)([^\\?]*)(?:\\?=)");
 
     public static int pecentageOfTextMatch(String text1, String text2){
         int percentage = 0;
@@ -52,9 +52,18 @@ public class PstStringHelper {
             Matcher m = patternMime.matcher(original);
             if (m.find()) {
                 String charset =m.group(1);
-                String data = m.group(2);
-                byte[] b = Base64.decode(data);
-                String res = new String(b,charset);
+                String typeEncoding = m.group(2).toUpperCase();
+                String data = m.group(3);
+                String res = "";
+                switch(typeEncoding){
+                    case "B":
+                        byte[] b = Base64.decode(data);
+                        res = new String(b,charset);
+                        break;
+                    case "Q":
+                        res = data.replace('_',' ').replace('=',' ');
+                        break;
+                }
                 return res;
             }
             return original;
