@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using Microsoft.Office.Interop.Outlook;
 using OF.Core.Data;
@@ -76,8 +77,24 @@ namespace OF.Infrastructure.Helpers
 
         private string PrepareEmail(OFEmailSearchObject emailSearchObject)
         {
-            string temp = Regex.Replace(Resources.template, "{From}",
-                string.Format("{0}: {1}", emailSearchObject.FromName, emailSearchObject.FromAddress));
+            var temp = string.Empty;
+            if (!string.IsNullOrEmpty(emailSearchObject.FromName) &&
+                !string.IsNullOrEmpty(emailSearchObject.FromAddress))
+            {
+                temp = Regex.Replace(Resources.template, "{From}",
+                    string.Format("{0}: {1}", emailSearchObject.FromName, emailSearchObject.FromAddress));    
+            }
+            else if (!string.IsNullOrEmpty(emailSearchObject.FromAddress))
+            {
+                temp = Regex.Replace(Resources.template, "{From}",
+                    emailSearchObject.FromAddress);    
+            }
+            else if (string.IsNullOrEmpty(emailSearchObject.FromName))
+            {
+                temp = Regex.Replace(Resources.template, "{From}",
+                    emailSearchObject.FromName);    
+            }
+            
             temp = Regex.Replace(temp, "{Sent}", emailSearchObject.DateReceived.ToLongDateString());
             temp = Regex.Replace(temp, "{To}", string.Join(";", GetRecepientString(emailSearchObject.To)));
             temp = Regex.Replace(temp, "{Subject}", emailSearchObject.Subject);
