@@ -68,7 +68,7 @@ namespace OF.Infrastructure.Service.Helpers
             var listMatches = new List<MatchInfo>();
             foreach (var word in list)
             {
-                var col = Regex.Matches(text, string.Format(@"({0})", Regex.Escape(word.ClearString())),RegexOptions.IgnoreCase);
+                var col = Regex.Matches(text, string.Format(@"(\b{0}\b)", Regex.Escape(word.ClearString())),RegexOptions.IgnoreCase);
                 if(col.Count ==  0)
                     continue;
                 for (int i = 0; i < col.Count; i++)
