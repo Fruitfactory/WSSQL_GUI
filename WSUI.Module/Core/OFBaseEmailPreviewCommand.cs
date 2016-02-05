@@ -32,6 +32,10 @@ namespace OF.Module.Core
         protected void InsertAttachments(MailItem email, OFEmailSearchObject searchEmail)
         {
             var attachments = OutlookPreviewHelper.Instance.GetAttachments(searchEmail);
+            if (attachments == null)
+            {
+                return;
+            }
             attachments.Where(s => !string.IsNullOrEmpty(s)).ForEach(s =>
             {
                 email.Attachments.Add(s, OlAttachmentType.olByValue, 1, Path.GetFileName(s));
