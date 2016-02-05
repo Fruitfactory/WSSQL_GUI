@@ -56,6 +56,17 @@
     <Content Include="Image\main.ico" />
     <Content Include="Image\top.bmp" />
     <Content Include="License.rtf" />
+    <Content Include="BootstrapperCore.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OF.OutlookFinderSetupUI\OF.OutlookFinderSetupUI.csproj">
+      <Name>OF.OutlookFinderSetupUI</Name>
+      <Project>{0b59530a-25c9-437a-a36b-4760b6059afc}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <PropertyGroup>

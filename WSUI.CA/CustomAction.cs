@@ -254,6 +254,7 @@ namespace OF.CA
                     using (var prompt = new PromptCloseApplication(productName, processes[i], displayNames[i]))
                         if (!prompt.Prompt())
                         {
+                            session.Log("User press cancel...");
                             return ActionResult.UserExit;
                         }
                 }

@@ -1,0 +1,63 @@
+﻿<mba:BaseBAWindow x:Class="OF.OutlookFinderSetupUI.MainWindow"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:mba="clr-namespace:WixWPF;assembly=WixWPF"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  Title="OutlookFinder Setup"
+                  Height="160" Width="400" ResizeMode="NoResize"
+                  WindowStartupLocation="CenterScreen"
+                  mc:Ignorable="d" >
+    <Window.Resources>
+        <mba:ConvertBoolToVisibility x:Key="BoolToVis" />
+        <mba:ConvertBoolToVisibility x:Key="BoolToVisNeg" TrueValue="Collapsed" FalseValue="Visible" />
+    </Window.Resources>
+    <Grid x:Name="LayoutRoot" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="1" Grid.RowSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Image Grid.Row="1" MaxHeight="75"  Source="/OF.OutlookFinderSetupUI;component/logo_H_120.png" Stretch="Uniform" 
+                   VerticalAlignment="Top"
+                   />
+            <StackPanel Orientation="Vertical">
+                <TextBlock Grid.Row="1" Text="Search better, save time" Margin="10,0,0,0" FontSize="24" VerticalAlignment="Center" FontFamily="Open Sans, Sans Serif"  />
+                <TextBlock Grid.Row="1" Text="OutlookFinder will find all of your email, contacts, attachments directly from Outlook - in seconds... Finally, Outlook search that works!" TextWrapping="Wrap" Margin="10,0,0,0" FontSize="12" VerticalAlignment="Center" FontFamily="Open Sans, Sans Serif"  Width="260"/>
+            </StackPanel>
+        </StackPanel>
+        
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}" Margin="5 0 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="{Binding Message, StringFormat='Process: {0}'}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <ProgressBar Grid.Row="1" Value="{Binding Progress,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Maximum="100" Height="10"/>
+            </Grid>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" >
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Margin" Value="6,0" />
+                        <Setter Property="Padding" Value="4,2" />
+                    </Style>
+                </StackPanel.Resources>
+                <Button x:Name="ButtonInstall" Content="Install" Visibility="{Binding InstallVisibility,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled,UpdateSourceTrigger=PropertyChanged}"  Click="OnButtonClick" />
+                <Button x:Name="ButtonUninstall" Content="Uninstall" Visibility="{Binding UnistallVisibility, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled,UpdateSourceTrigger=PropertyChanged}" Click="OnButtonClick" />
+                <Button x:Name="ButtonQuit" Content="Quit" Click="OnButtonClick" IsEnabled="{Binding IsEnabled,UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+        </Grid>
+        
+    </Grid>
+</mba:BaseBAWindow>
