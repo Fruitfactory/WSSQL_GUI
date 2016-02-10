@@ -27,6 +27,7 @@ namespace OF.OutlookFinderSetupUI
             InitializeComponent();
             InstallData = new InstallerInfo();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+            //System.Diagnostics.Debugger.Launch();
         }
 
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
@@ -53,6 +54,7 @@ namespace OF.OutlookFinderSetupUI
                 {
                     case "INSTALL": { Bootstrapper.Engine.Plan(Wix.LaunchAction.Install); } break;
                     case "UNINSTALL": { Bootstrapper.Engine.Plan(Wix.LaunchAction.Uninstall); } break;
+                    case "DONE":
                     case "QUIT": { Close(); } break;
                     default: break;
                 }
@@ -67,7 +69,7 @@ namespace OF.OutlookFinderSetupUI
         /// <param name="e">The arguments of the event.</param>
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-            // TODO : Handle window load wire ups
+            
         }
         #endregion OnWindowLoaded
 
@@ -78,6 +80,7 @@ namespace OF.OutlookFinderSetupUI
         {
             if (IsValid(args) && Wix.Result.None.Equals(args.Arguments.Result))
             {
+                InstallData.IsApplied = true;
                 args.Cancel = true;
                 Bootstrapper.Engine.Detect();
             }
@@ -89,10 +92,13 @@ namespace OF.OutlookFinderSetupUI
         /// <param name="args">The arguments of the event.</param>
         public override void OnDetectComplete(WPFBootstrapperEventArgs<Wix.DetectCompleteEventArgs> args)
         {
+            
             InstallData.IsBusy = false;
             InstallData.IsInstalled = _packageStates.All(x => Wix.PackageState.Present.Equals(x.Value));
         }
         #endregion OnDetectComplete
+
+        
 
         #region OnDetectPackageComplete
         /// <summary>Called when a packages source is being resolved.</summary>

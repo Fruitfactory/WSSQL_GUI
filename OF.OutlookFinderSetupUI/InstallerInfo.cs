@@ -6,6 +6,7 @@ namespace OF.OutlookFinderSetupUI
     /// <summary>The main installer data context.</summary>
     public class InstallerInfo : BaseBAObject
     {
+
         #region Member Variables
 
         /// <summary>Indicates if the product</summary>
@@ -19,9 +20,21 @@ namespace OF.OutlookFinderSetupUI
 
         private double _progress;
 
+
+        public InstallerInfo()
+        {
+            IsApplied = false;
+        }
+
         #endregion Member Variables
 
         #region Properties
+
+        #region [isapplied]
+
+        public bool IsApplied { get; set; }
+
+        #endregion
 
         #region CanInstall
         /// <summary>Indicates if the product can be installed.</summary>
@@ -32,7 +45,7 @@ namespace OF.OutlookFinderSetupUI
 
         public Visibility InstallVisibility
         {
-            get { return CanInstall ? Visibility.Visible : Visibility.Collapsed; }
+            get { return !IsApplied && CanInstall ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         #endregion 
@@ -46,14 +59,23 @@ namespace OF.OutlookFinderSetupUI
 
         public Visibility UnistallVisibility
         {
-            get { return IsInstalled ? Visibility.Visible : Visibility.Collapsed; }
+            get { return !IsApplied && IsInstalled ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         #endregion
 
         #region IsInstalled
+
         /// <summary>Indicates if the product is installed.</summary>
-        public bool IsInstalled { get { return _isInstalled; } set { _isInstalled = value; OnPropertiesChanged("IsInstalled", "CanInstall", "CanUninstall", "InstallVisibility", "UnistallVisibility"); } }
+        public bool IsInstalled
+        {
+            get { return _isInstalled; }
+            set
+            {
+                _isInstalled = value; 
+                OnPropertiesChanged("IsInstalled", "CanInstall", "CanUninstall", "InstallVisibility", "UnistallVisibility", "CancelButtonName");
+            }
+        }
         #endregion IsInstalled
 
         #region IsBusy
@@ -62,6 +84,8 @@ namespace OF.OutlookFinderSetupUI
         #endregion IsBusy
 
         public bool IsEnabled { get { return !IsBusy; } }
+
+        public string CancelButtonName { get { return "Done"; } }
 
 
         #region Message
