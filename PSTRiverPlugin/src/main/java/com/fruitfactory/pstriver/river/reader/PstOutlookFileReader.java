@@ -270,6 +270,7 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
                 }
                 PstRESTRepository.setProcessCount(_name, count);
             }
+            System.gc();
         } catch (Exception e) {
             _logger.error(LOG_TAG + e.getMessage());
         }
