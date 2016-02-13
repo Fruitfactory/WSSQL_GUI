@@ -364,6 +364,7 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
+            hasAttachment = false; // if getting attachments crashes we shoudn't show attachment sign. Because we won't be able to show attachment.
         }
 
         XContentBuilder source = jsonBuilder().startObject();
@@ -541,24 +542,21 @@ public class PstOutlookFileReader extends PstBaseOutlookIndexer {//implements Ru
         String entryid = attachment.getEntryID();
         StringBuilder strBuilder = new StringBuilder();
         String parsedContent = "";
-        try (InputStream reader = attachment.getFileInputStream()) {
-            ByteArrayOutputStream bufferStream = new ByteArrayOutputStream();
-            final int lenght = 8176;
-            byte[] output = new byte[lenght];
-            int nRead;
-            while ( (nRead = reader.read(output)) != -1) {
-                bufferStream.write(output,0,nRead);
-            }
-            bufferStream.flush();
-            byte[] byteBuffer = bufferStream.toByteArray();
+        InputStream reader = attachment.getFileInputStream();
+        ByteArrayOutputStream bufferStream = new ByteArrayOutputStream();
+        final int lenght = 8176;
+        byte[] output = new byte[lenght];
+        int nRead;
+        while ( (nRead = reader.read(output)) != -1) {
+            bufferStream.write(output,0,nRead);
+        }
+        bufferStream.flush();
+        byte[] byteBuffer = bufferStream.toByteArray();
 
-            strBuilder.append(Base64.encode(byteBuffer));
+        strBuilder.append(Base64.encode(byteBuffer));
 
-            if(PstStringHelper.isFileAllowed(filename)){
-                parsedContent = _tika.parseToString(new BytesStreamInput(byteBuffer), new Metadata());
-            }
-        } catch (Exception ex) {
-            _logger.error(LOG_TAG + ex.getMessage());
+        if(PstStringHelper.isFileAllowed(filename)){
+            parsedContent = _tika.parseToString(new BytesStreamInput(byteBuffer), new Metadata());
         }
 
         XContentBuilder source = jsonBuilder().startObject();
