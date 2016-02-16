@@ -1,6 +1,11 @@
-﻿using OF.Core.Data;
+﻿using System.IO;
+using System.Linq;
+using Microsoft.Office.Interop.Outlook;
+using OF.Core.Data;
 using OF.Core.Enums;
+using OF.Core.Extensions;
 using OF.Module.Interface.ViewModel;
+using OFPreview.PreviewHandler.Service.OutlookPreview;
 
 namespace OF.Module.Core
 {
@@ -21,6 +26,20 @@ namespace OF.Module.Core
                 )
                 return true;
             return false;
+        }
+
+
+        protected void InsertAttachments(MailItem email, OFEmailSearchObject searchEmail)
+        {
+            var attachments = OutlookPreviewHelper.Instance.GetAttachments(searchEmail);
+            if (attachments == null)
+            {
+                return;
+            }
+            attachments.Where(s => !string.IsNullOrEmpty(s)).ForEach(s =>
+            {
+                email.Attachments.Add(s, OlAttachmentType.olByValue, 1, Path.GetFileName(s));
+            });
         }
 
 

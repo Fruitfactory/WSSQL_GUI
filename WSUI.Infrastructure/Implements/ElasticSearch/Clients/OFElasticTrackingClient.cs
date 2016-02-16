@@ -2,6 +2,7 @@
 using Elasticsearch.Net.Serialization;
 using Microsoft.Practices.Unity;
 using OF.Core.Core.ElasticSearch;
+using OF.Core.Extensions;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 
@@ -24,8 +25,8 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                     idle_time = seconds
                 };
                 var body = Serializer.Serialize(idleTime, SerializationFormatting.Indented);
-                Raw.IndexPut("_river", DefaultInfrastructureName, "useractivity", body);
-                
+                var result = Raw.IndexPut("_river", DefaultInfrastructureName, "useractivity", body);
+                //System.Diagnostics.Debug.WriteLine(string.Format("{0} {1}",idleTime.idle_time,result.HttpStatusCode));
             }
             catch (Exception ex)
             {

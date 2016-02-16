@@ -38,7 +38,7 @@ namespace OF.ServiceApp.Bootstraper
         {
             var currentExecutablel = (typeof (OFServiceBootstraper)).Assembly.GetName().Name.ToUpperInvariant();
             var processList = Process.GetProcesses();
-            var count = processList.Count(p => p.ProcessName.ToUpperInvariant().Contains(currentExecutablel));
+            var count = processList.Count(p => p.ProcessName.ToUpperInvariant().Equals(currentExecutablel));
             return count > 1;
         }
 
@@ -145,8 +145,8 @@ namespace OF.ServiceApp.Bootstraper
         {
             try
             {
-                var versions = (new OFOfficeVersionFinder()).GetOfficeVersion();
-                OFRegistryHelper.Instance.DisableOutlookSecurityWarning(versions.Item2);
+                //var versions = (new OFOfficeVersionFinder()).GetOfficeVersion();
+                //OFRegistryHelper.Instance.DisableOutlookSecurityWarning(versions.Item2);
             }
             catch (Exception ex)
             {

@@ -19,6 +19,7 @@ namespace OF.Core.Extensions
         private const string EmailPattern = @"\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b";
         private const string HtmlCommentPattern = @"<!--[\d\D]*?-->";
         private const string AmountPattern = @"^\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{0,2})?$";
+        private const string MimeStringFormat = @"(?:=\?)([^\?]+)(?:\?([BQ])\?)([^\?]*)(?:\?=)";
 
 
         public static string ConvertToIso(this string str)
@@ -143,6 +144,39 @@ namespace OF.Core.Extensions
             return h;
         }
 
+        public static bool IsMimeFormat(this string obj)
+        {
+            return Regex.IsMatch(obj, MimeStringFormat);
+        }
+
+        public static string DecodeMimeString(this string obj)
+        {
+            if (!Regex.IsMatch(obj, MimeStringFormat))
+            {
+                return obj;
+            }
+            MatchCollection m = Regex.Matches(obj, MimeStringFormat);
+            if (m.Count > 0)
+            {
+                string charset = m[0].Groups[1].Value;
+                string typeEncoding = m[0].Groups[2].Value;
+                string data = m[0].Groups[3].Value;
+                string res = "";
+                switch (typeEncoding)
+                {
+                    case "B":
+                        byte[] b = Convert.FromBase64String(data);
+                        res = Encoding.GetEncoding(charset).GetString(b);
+                        break;
+                    case "Q":
+                        res = data.Replace('_', ' ').Replace('=', ' ');
+                        break;
+                }
+                return res;
+
+            }
+            return string.Empty;
+        }
 
     }
 }

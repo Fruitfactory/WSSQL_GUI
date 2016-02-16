@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using GDIDraw.Service;
 using HtmlAgilityPack;
+using Microsoft.Office.Interop.Word;
 using Nest;
 using OFPreview.PreviewHandler.PreviewHandlerFramework;
 using OF.Core.Core.ElasticSearch;
@@ -371,42 +372,49 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             return null;
         }
 
-        private string GetAttachments(OFEmailSearchObject searchObj)
+
+        private string GetFormatedAttachmentRow(OFEmailSearchObject searchObject)
+        {
+            string urls = "";
+            var listFilenames = GetAttachments(searchObject);
+            if (listFilenames.All(s => string.IsNullOrEmpty(s)))
+            {
+                return "";
+            }
+            listFilenames.Where(s => !string.IsNullOrEmpty(s)).ForEach(s => urls += FormatAttachmentFilename(s));
+            return string.Format(AttachmentsRow, urls);
+        }
+
+        public IEnumerable<string> GetAttachments(OFEmailSearchObject searchObj)
         {
             var esClient = new OFElasticSearchClient();
             var result = esClient.Search<OFAttachmentContent>(s => s.Query(c => c.Match(descriptor => descriptor.OnField("emailid").Query(searchObj.EntryID))));
             if (result.Documents.Any())
             {
                 var tempFolder = OFTempFileManager.Instance.GenerateTempFolderForObject(searchObj);
-                var urls = string.Empty;
+                var listFiles = new List<string>();
 
-                if (searchObj.Attachments.IsNotNull())
-                {
-                    urls = SaveEmailAttachments(searchObj, result, tempFolder);
-                }
-                else
-                {
-                    urls = SaveFoundAttachments(result, tempFolder);                    
-                }
+                listFiles = searchObj.Attachments.IsNotNull() ? SaveEmailAttachments(searchObj, result, tempFolder) : SaveFoundAttachments(result, tempFolder);
                 
-                return string.Format(AttachmentsRow, urls);
+                return listFiles;
             }
-            return string.Empty;
+            return null;
         }
 
-        private string SaveFoundAttachments(ISearchResponse<OFAttachmentContent> result, string tempFolder)
+        private List<string> SaveFoundAttachments(ISearchResponse<OFAttachmentContent> result, string tempFolder)
         {
-            string urls = "";
+            var list = new List<string>();
             foreach (var ofAttachmentContent in result.Documents)
             {
-                urls += SaveAttachment(ofAttachmentContent, tempFolder);
+                var filename = SaveAttachment(ofAttachmentContent, tempFolder);
+                list.Add(filename);
             }
-            return urls;
+            return list;
         }
 
-        private string SaveEmailAttachments(OFEmailSearchObject searchObj, ISearchResponse<OFAttachmentContent> result, string tempFolder)
+        private List<string> SaveEmailAttachments(OFEmailSearchObject searchObj, ISearchResponse<OFAttachmentContent> result, string tempFolder)
         {
-            string urls = "";
+            var list = new List<string>();
             foreach (var ofAttachment in searchObj.Attachments)
             {
                 var attachment =
@@ -418,9 +426,10 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
                 {
                     continue;
                 }
-                urls += SaveAttachment(attachment, tempFolder);
+                var filename = SaveAttachment(attachment, tempFolder);
+                list.Add(filename);
             }
-            return urls;
+            return list;
         }
 
 
@@ -444,9 +453,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
                     byte[] content = Convert.FromBase64String(attachment.Content);
                     File.WriteAllBytes(filename, content);
                 }
-                if (!string.IsNullOrEmpty(filename))
-                    return string.Format(LinkTemplate, attachment.Filename, filename, HighlightSearchString(attachment.Filename));
-
+                return filename;
             }
             catch (Exception exception)
             {
@@ -455,6 +462,12 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             return string.Empty;
         }
 
+        private string FormatAttachmentFilename(string filename)
+        {
+            string name = Path.GetFileName(filename);
+            string icon = GetAttachmentContentFileIcon(filename);
+            return !string.IsNullOrEmpty(filename) ? string.Format(LinkTemplate, name, icon, HighlightSearchString(name)) : "";
+        }
 
         public string GetPathForEmail(Uri url, string filename)
         {
@@ -536,7 +549,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
         {
             string page = GetBeginingOfPreview(mail);
             var senderEmailAddress = mail.GetSenderSMTPAddress();
-            var clearSenderName = mail.SenderName.ClearString();
+            var clearSenderName = mail.SenderName.ClearString().DecodeMimeString();
             var clearsenderEmail = senderEmailAddress.ClearString();
             page += string.Format(SenderRow, IsEmail(senderEmailAddress) ? GetContactNameWithEmail(GetConvertetString(clearSenderName), clearsenderEmail) : GetContactName(GetConvertetString(clearSenderName)));
             if (!string.IsNullOrEmpty(mail.CC))
@@ -559,7 +572,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
         {
             string page = GetBeginingOfPreview(email);
             var senderEmailAddress = email.FromAddress;
-            var clearSenderName = email.FromName.ClearString();
+            var clearSenderName = email.FromName.ClearString().DecodeMimeString();
             var clearsenderEmail = senderEmailAddress.ClearString();
             page += string.Format(SenderRow, IsEmail(senderEmailAddress) ? GetContactNameWithEmail(GetConvertetString(clearSenderName), clearsenderEmail) : GetContactName(GetConvertetString(clearSenderName)));
             if (email.Cc != null && email.Cc.Length > 0)
@@ -572,7 +585,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             }
             page += string.Format(SendRow, email.DateReceived.ToString());
             if(email.IsAttachmentPresent)
-                page += GetAttachments(email);
+                page += GetFormatedAttachmentRow(email);
             string temp = GetHtmlBodyHightlight(email.HtmlContent);
             page += string.Format(EmailRow, temp);
             page += TableEnd + PageEnd;
@@ -590,7 +603,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             var list = new List<string>();
             foreach (Outlook.Recipient recipient in mail.Recipients.OfType<Outlook.Recipient>())
             {
-                var clearStr = recipient.Name.ClearString();
+                var clearStr = recipient.Name.ClearString().DecodeMimeString();
                 var email = recipient.GetSMTPAddress();
                 var tt = IsEmail(email) ? GetContactNameWithEmail(clearStr, email) : GetContactName(clearStr);
                 list.Add(tt);
@@ -607,7 +620,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             var list = new List<string>();
             foreach (OFRecipient recipient in ccs)
             {
-                var clearStr = recipient.Name.ClearString();
+                var clearStr = recipient.Name.ClearString().DecodeMimeString();
                 var emailAddress = recipient.Address;
                 var tt = IsEmail(emailAddress) ? !string.IsNullOrEmpty(clearStr) ? GetContactNameWithEmail(clearStr, emailAddress) : GetEmailToString(emailAddress) : GetContactName(clearStr);
                 list.Add(tt);
@@ -617,7 +630,12 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
 
         private string GetConvertetString(string str)
         {
-            return !string.IsNullOrEmpty(str) ? str.DecodeString() : NAEmpty;
+            string result = string.Empty;
+            if (!string.IsNullOrEmpty(str))
+            {
+                result = str.DecodeString();
+            }
+            return result;
         }
 
         public string GetPreviewForAppointment(Outlook.AppointmentItem appointment, string filename)
@@ -707,16 +725,27 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
 
         private string GetAttachmentValue(Outlook.Attachment att, string tempFolder)
         {
+            return GetAttachmentFileIcon(att.FileName,tempFolder);
+        }
+
+        private string GetAttachmentContentFileIcon(string filename)
+        {
+            var folder = Path.GetDirectoryName(filename);
+            return GetAttachmentFileIcon(filename,folder);
+        }
+
+        private string GetAttachmentFileIcon(string filename, string folder)
+        {
             List<string> resourceArray = Assembly.GetExecutingAssembly().GetManifestResourceNames().Where(s => s.EndsWith(ExtOfImage)).ToList();
-            var ext = Path.GetExtension(att.FileName);
+            var ext = Path.GetExtension(filename);
             ext = ext.Substring(1, ext.Length - 1);
             var key = string.Format("{0}.{1}", ext, ExtOfImage);
             var name = resourceArray.FirstOrDefault(s => s.EndsWith(key));
             if (string.IsNullOrEmpty(name))
             {
-                return ReturnKeyImage(resourceArray, "_blank", tempFolder);
+                return ReturnKeyImage(resourceArray, "_blank", folder);
             }
-            return ReturnKeyImage(resourceArray, ext, tempFolder);
+            return ReturnKeyImage(resourceArray, ext, folder);
         }
 
         private string ReturnKeyImage(List<string> keysList, string key, string tempFolder)

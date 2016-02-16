@@ -10,6 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 /**
  *
@@ -18,7 +21,7 @@ import java.util.List;
 public class PstStringHelper {
 
     private static List<String> AllowedExtensions = Arrays.asList("DOC", "DOCX", "XLS", "XLSX", "PPT", "PPTX", "PDF", "TXT", "LOG" );
-
+    private final static Pattern patternMime = Pattern.compile("(?:=\\?)([^\\?]+)(?:\\?([BQ])\\?)([^\\?]*)(?:\\?=)");
 
     public static int pecentageOfTextMatch(String text1, String text2){
         int percentage = 0;
@@ -43,5 +46,31 @@ public class PstStringHelper {
         String ext = FilenameUtils.getExtension(filename).toUpperCase();
         return AllowedExtensions.indexOf(ext) > -1;
     }
+
+    public static String DecodeMimeString(String original){
+        try{
+            Matcher m = patternMime.matcher(original);
+            if (m.find()) {
+                String charset =m.group(1);
+                String typeEncoding = m.group(2).toUpperCase();
+                String data = m.group(3);
+                String res = "";
+                switch(typeEncoding){
+                    case "B":
+                        byte[] b = Base64.decode(data);
+                        res = new String(b,charset);
+                        break;
+                    case "Q":
+                        res = data.replace('_',' ').replace('=',' ');
+                        break;
+                }
+                return res;
+            }
+            return original;
+        }catch (Exception ex){
+            return original;
+        }
+    }
+
     
 }

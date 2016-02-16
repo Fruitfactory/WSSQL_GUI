@@ -133,6 +133,7 @@
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleFilenameWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseCondition.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseDictionaryTerm.cs" />
+    <Compile Include="Data\ElasticSearch\Request\Base\OFBaseDictionaryWildcardTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseInternalBool.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseInternalConditions.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseTerm.cs" />

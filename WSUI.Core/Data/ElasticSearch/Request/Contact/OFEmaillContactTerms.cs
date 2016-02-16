@@ -2,7 +2,7 @@
 
 namespace OF.Core.Data.ElasticSearch.Request.Contact
 {
-    public class OFToNameTerm : OFBaseDictionaryTerm
+    public class OFToNameTerm : OFBaseDictionaryWildcardTerm
     {
         protected override string GetKey()
         {
@@ -10,7 +10,7 @@ namespace OF.Core.Data.ElasticSearch.Request.Contact
         }
     }
 
-    public class OFToAddressTerm : OFBaseDictionaryTerm
+    public class OFToAddressTerm : OFBaseDictionaryWildcardTerm
     {
         protected override string GetKey()
         {
@@ -18,7 +18,7 @@ namespace OF.Core.Data.ElasticSearch.Request.Contact
         }
     }
 
-    public class OFCcNameTerm : OFBaseDictionaryTerm
+    public class OFCcNameTerm : OFBaseDictionaryWildcardTerm
     {
         protected override string GetKey()
         {
@@ -26,7 +26,7 @@ namespace OF.Core.Data.ElasticSearch.Request.Contact
         }
     }
 
-    public class OFCcAddressTerm : OFBaseDictionaryTerm
+    public class OFCcAddressTerm : OFBaseDictionaryWildcardTerm
     {
         protected override string GetKey()
         {
@@ -34,7 +34,7 @@ namespace OF.Core.Data.ElasticSearch.Request.Contact
         }
     }
 
-    public class OFBccNameTerm : OFBaseDictionaryTerm
+    public class OFBccNameTerm : OFBaseDictionaryWildcardTerm
     {
         protected override string GetKey()
         {
@@ -42,7 +42,7 @@ namespace OF.Core.Data.ElasticSearch.Request.Contact
         }
     }
 
-    public class OFBccAddressTerm : OFBaseDictionaryTerm
+    public class OFBccAddressTerm : OFBaseDictionaryWildcardTerm
     {
         protected override string GetKey()
         {
@@ -50,7 +50,7 @@ namespace OF.Core.Data.ElasticSearch.Request.Contact
         }
     }
 
-    public class OFFromNameTerm : OFBaseDictionaryTerm
+    public class OFFromNameTerm : OFBaseDictionaryWildcardTerm
     {
         protected override string GetKey()
         {
@@ -58,7 +58,7 @@ namespace OF.Core.Data.ElasticSearch.Request.Contact
         }
     }
 
-    public class OFFromAddressTerm : OFBaseDictionaryTerm
+    public class OFFromAddressTerm : OFBaseDictionaryWildcardTerm
     {
         protected override string GetKey()
         {

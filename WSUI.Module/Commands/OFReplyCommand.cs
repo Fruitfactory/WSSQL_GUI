@@ -32,6 +32,7 @@ namespace OF.Module.Commands
                         MailItem reply = OFEmailCommandPreviewHelper.Instance.CreateReplyEmail(itemSearch as OFEmailSearchObject);
                         if (reply.IsNotNull())
                         {
+                            InsertAttachments(reply,itemSearch as OFEmailSearchObject);
                             reply.Display(false);
                         }
                         break;

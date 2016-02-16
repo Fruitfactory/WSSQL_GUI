@@ -52,7 +52,9 @@ namespace OF.Infrastructure.Service.Helpers
                         Thread.Sleep(2000);
                         continue;
                     }
-                    uint idleTimeSec = WindowsFunction.GetIdleTime() / 1000;
+                    var idle = WindowsFunction.GetIdleTime();
+                    uint idleTimeSec = idle / 1000;
+                    System.Diagnostics.Debug.WriteLine(string.Format("{0} - {1}",idle,idleTimeSec));
                     //OFLogger.Instance.LogDebug("Input = " + idleTimeSec);
                     _elasticSearchClient.SetUserActivityTime((int)idleTimeSec);
                 }

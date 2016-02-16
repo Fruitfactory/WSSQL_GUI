@@ -138,11 +138,10 @@ namespace OFOutlookPlugin
                 }
                 //CreateInboxSubFolder((Outlook.Application)OutlookApp);
 
-
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -188,6 +187,7 @@ namespace OFOutlookPlugin
             this.wsuiImageList = new System.Windows.Forms.ImageList(this.components);
             this.btnSplit = new AddinExpress.MSO.ADXRibbonSplitButton(this.components);
             this.menuHelp = new AddinExpress.MSO.ADXRibbonMenu(this.components);
+            this.mnuSettings = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.btnHelp = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.adxRibbonMenuSeparator1 = new AddinExpress.MSO.ADXRibbonMenuSeparator(this.components);
             this.btnAbout = new AddinExpress.MSO.ADXRibbonButton(this.components);
@@ -204,12 +204,11 @@ namespace OFOutlookPlugin
             this.wsuiButtonSwitch = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.btnMainSplit = new AddinExpress.MSO.ADXRibbonSplitButton(this.components);
             this.mnuMain = new AddinExpress.MSO.ADXRibbonMenu(this.components);
+            this.mnuMainSettings = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.btnMainHelp = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.btnMainMenuSeparatotr = new AddinExpress.MSO.ADXRibbonMenuSeparator(this.components);
             this.btnMainAbout = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.OutlookFinderEvents = new AddinExpress.MSO.ADXOutlookAppEvents(this.components);
-            this.mnuSettings = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.mnuMainSettings = new AddinExpress.MSO.ADXRibbonButton(this.components);
             // 
             // outlookFormManager
             // 
@@ -222,13 +221,13 @@ namespace OFOutlookPlugin
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
             this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
-            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem)
-                        | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem)
-                        | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem)
-                        | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem)
-                        | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem)
-                        | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem)
-                        | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
+            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
             this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
             this.formRightSidebar.FormClassName = "OFOutlookPlugin.OFSidebar";
             this.formRightSidebar.IsMinimizedStateAllowed = false;
@@ -316,6 +315,13 @@ namespace OFOutlookPlugin
             this.menuHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.menuHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             this.menuHelp.ShowCaption = false;
+            // 
+            // mnuSettings
+            // 
+            this.mnuSettings.Caption = "Settings...";
+            this.mnuSettings.Id = "adxRibbonButton_479736670ccc428b8fc2782bc97ca1f1";
+            this.mnuSettings.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.mnuSettings.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // btnHelp
             // 
@@ -455,6 +461,13 @@ namespace OFOutlookPlugin
             this.mnuMain.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.mnuMain.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
+            // mnuMainSettings
+            // 
+            this.mnuMainSettings.Caption = "Settings...";
+            this.mnuMainSettings.Id = "adxRibbonButton_bde112361dfb425b89e394ed664825cb";
+            this.mnuMainSettings.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.mnuMainSettings.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            // 
             // btnMainHelp
             // 
             this.btnMainHelp.Caption = "Help";
@@ -481,20 +494,6 @@ namespace OFOutlookPlugin
             this.OutlookFinderEvents.Quit += new System.EventHandler(this.OutlookFinderEvents_Quit);
             this.OutlookFinderEvents.NewExplorer += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_NewExplorer);
             this.OutlookFinderEvents.ExplorerSelectionChange += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerSelectionChange);
-            // 
-            // mnuSettings
-            // 
-            this.mnuSettings.Caption = "Settings...";
-            this.mnuSettings.Id = "adxRibbonButton_479736670ccc428b8fc2782bc97ca1f1";
-            this.mnuSettings.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.mnuSettings.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // mnuMainSettings
-            // 
-            this.mnuMainSettings.Caption = "Settings...";
-            this.mnuMainSettings.Id = "adxRibbonButton_bde112361dfb425b89e394ed664825cb";
-            this.mnuMainSettings.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.mnuMainSettings.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // OFAddinModule
             // 
@@ -578,7 +577,7 @@ namespace OFOutlookPlugin
             {
                 StartWatch();
                 OFLogger.Instance.LogDebug("Plugin is loading...");
-                outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
+                //outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
                 OFRegistryHelper.Instance.ResetShutdownNotification();
                 if (System.Windows.Application.Current == null)
                 {
@@ -599,7 +598,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -616,7 +615,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -638,7 +637,7 @@ namespace OFOutlookPlugin
                 }
                 catch (Exception ex)
                 {
-                    OFLogger.Instance.LogError(ex.Message);
+                    OFLogger.Instance.LogError(ex.ToString());
                 }
             }));
         }
@@ -695,7 +694,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -726,7 +725,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
             return null;
         }
@@ -781,7 +780,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -801,7 +800,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -820,7 +819,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -843,7 +842,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -865,7 +864,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -892,7 +891,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -913,7 +912,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -928,18 +927,16 @@ namespace OFOutlookPlugin
             {
                 foreach (var item in (firstChanceExceptionEventArgs.Exception as ReflectionTypeLoadException).LoaderExceptions)
                 {
-                    OFLogger.Instance.LogError("Reflection Type Load: {0}", item.Message.ToString());
+                    OFLogger.Instance.LogError("Reflection Type Load: {0}", item.ToString());
                 }
             }
-            OFLogger.Instance.LogDebug("Domain Exception: {0}", firstChanceExceptionEventArgs.Exception.Message);
-            OFLogger.Instance.LogDebug("Domain Stacktrace: {0}", firstChanceExceptionEventArgs.Exception.StackTrace);
+            OFLogger.Instance.LogDebug("Domain Exception: {0}", firstChanceExceptionEventArgs.Exception.ToString());
         }
 
 
         private void WPFApplicationOnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs dispatcherUnhandledExceptionEventArgs)
         {
-            OFLogger.Instance.LogDebug("WPF Exception: {0}", dispatcherUnhandledExceptionEventArgs.Exception.Message);
-            OFLogger.Instance.LogDebug("WPF Stacktrace: {0}", dispatcherUnhandledExceptionEventArgs.Exception.StackTrace);
+            OFLogger.Instance.LogDebug("WPF Exception: {0}", dispatcherUnhandledExceptionEventArgs.Exception.ToString());
         }
 
         #region [event handlers for ribbon]
@@ -958,7 +955,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -1022,7 +1019,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -1063,7 +1060,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -1095,7 +1092,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -1114,7 +1111,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -1134,7 +1131,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
             return null;
         }
@@ -1163,7 +1160,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
             return null;
         }
@@ -1299,7 +1296,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -1325,7 +1322,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 
@@ -1356,7 +1353,7 @@ namespace OFOutlookPlugin
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             }
             finally
             {

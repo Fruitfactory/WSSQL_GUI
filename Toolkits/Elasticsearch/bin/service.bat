@@ -124,7 +124,7 @@ goto:eof
 
 :foundJVM
 if "%ES_MIN_MEM%" == "" set ES_MIN_MEM=256m
-if "%ES_MAX_MEM%" == "" set ES_MAX_MEM=416m
+if "%ES_MAX_MEM%" == "" set ES_MAX_MEM=256m
 
 if NOT "%ES_HEAP_SIZE%" == "" set ES_MIN_MEM=%ES_HEAP_SIZE%
 if NOT "%ES_HEAP_SIZE%" == "" set ES_MAX_MEM=%ES_HEAP_SIZE%
