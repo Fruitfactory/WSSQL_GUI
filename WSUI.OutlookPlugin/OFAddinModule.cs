@@ -577,7 +577,7 @@ namespace OFOutlookPlugin
             {
                 StartWatch();
                 OFLogger.Instance.LogDebug("Plugin is loading...");
-                outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
+                //outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
                 OFRegistryHelper.Instance.ResetShutdownNotification();
                 if (System.Windows.Application.Current == null)
                 {
