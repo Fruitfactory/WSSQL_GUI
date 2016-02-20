@@ -1,7 +1,8 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
+using Microsoft.Office.Interop.Outlook;
 using OF.Core.Enums;
+using OF.Core.Extensions;
 using OF.Core.Helpers;
 using OF.Core.Logger;
 using OF.Infrastructure.Service.Helpers;
@@ -9,6 +10,7 @@ using OF.Module.Core;
 using OF.Module.Interface;
 using OF.Module.Interface.ViewModel;
 using OF.Module.Service.Dialogs.Message;
+using Exception = System.Exception;
 
 namespace OF.Module.Commands
 {
@@ -28,13 +30,15 @@ namespace OF.Module.Commands
                 switch (type)
                 {
                     case OFTypeSearchItem.Email:
-                        filename = OFSearchItemHelper.GetFileName(currentItem);
+                        filename = OFTempFileManager.Instance.GenerateTempFileName(currentItem);
+                        var email = OFOutlookHelper.Instance.GetEmailItem(currentItem.EntryID) as MailItem;
+                        if (email.IsNotNull() && !string.IsNullOrEmpty(filename))
+                        {
+                            email.SaveAs(filename);
+                            Process.Start(filename);
+                        }
                         break;
                 }
-                if(string.IsNullOrEmpty(filename))
-                    return;
-                Process.Start(filename);
-
             }
             catch (Exception ex)
             {

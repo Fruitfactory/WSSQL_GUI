@@ -386,7 +386,7 @@ namespace OF.Module.ViewModel
                     case OFTypeSearchItem.Email:
                         if (_currentData.TypeItem == OFTypeSearchItem.Email)
                         {
-                            previewView.SetFullFolderPath(OFSearchItemHelper.GetFullFolderPath(_currentData));
+                            previewView.SetFullFolderPath(OFSearchItemHelper.GetFullFolderPath(_currentData as OFEmailSearchObject));
                         }
                         previewView.SetPreviewObject(_currentData);
                         break;

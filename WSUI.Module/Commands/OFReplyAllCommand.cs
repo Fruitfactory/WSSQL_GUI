@@ -1,4 +1,5 @@
-﻿using Microsoft.Office.Interop.Outlook;
+﻿using System.Runtime.InteropServices;
+using Microsoft.Office.Interop.Outlook;
 using OF.Core.Data;
 using OF.Core.Enums;
 using OF.Core.Extensions;
@@ -29,11 +30,12 @@ namespace OF.Module.Commands
                 switch (itemSearch.TypeItem)
                 {
                     case OFTypeSearchItem.Email:
-                        MailItem reply = OFEmailCommandPreviewHelper.Instance.CreateReplyAllEmail(itemSearch as OFEmailSearchObject);
-                        if (reply.IsNotNull())
+                        MailItem mailItem = OFOutlookHelper.Instance.GetEmailItem(itemSearch.EntryID) as MailItem;
+                        if (mailItem.IsNotNull())
                         {
-                            InsertAttachments(reply, itemSearch as OFEmailSearchObject);
-                            reply.Display(false);
+                            var replyAll = mailItem.ReplyAll();
+                            replyAll.Display(false);
+                            Marshal.ReleaseComObject(mailItem);
                         }
                         break;
                 }

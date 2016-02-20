@@ -196,7 +196,7 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
             String storageName = email.getStoragename();
             String storePartId = email.getFoldermessagestoreidpart();
             Date dateCreated = email.getDatecreated();
-            Date dateReceived = new Date();
+            Date dateReceived = email.getDatereceived();
             long size = email.getSize();
             String conversationID = email.getConversationid();
 

@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using OF.Core.Data;
 using OF.Core.Enums;
 using OF.Core.Extensions;
@@ -30,11 +31,12 @@ namespace OF.Module.Commands
                 switch (searchItem.TypeItem)
                 {
                     case OFTypeSearchItem.Email:
-                        Outlook.MailItem reply = OFEmailCommandPreviewHelper.Instance.CreateForwardEmail(searchItem as OFEmailSearchObject);
-                        if (reply.IsNotNull())
+                        Outlook.MailItem mailItem = OFOutlookHelper.Instance.GetEmailItem(searchItem.EntryID) as Outlook.MailItem;
+                        if (mailItem.IsNotNull())
                         {
-                            InsertAttachments(reply,searchItem as OFEmailSearchObject);
-                            reply.Display(false);
+                            var forward = mailItem.Forward();
+                            forward.Display(false);
+                            Marshal.ReleaseComObject(mailItem);
                         }
                         break;
                 }

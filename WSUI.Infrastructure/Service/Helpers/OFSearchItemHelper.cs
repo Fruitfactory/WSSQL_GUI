@@ -70,7 +70,7 @@ namespace OF.Infrastructure.Service.Helpers
             }
         }
 
-        public static string GetFullFolderPath(OFBaseSearchObject item)
+        public static string GetFullFolderPath(OFEmailSearchObject item)
         {
             return OFOutlookHelper.Instance.GetFullFolderPath(item);
         }

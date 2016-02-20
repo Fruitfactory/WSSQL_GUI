@@ -245,7 +245,7 @@ namespace OF.Core.Helpers
             switch (searchItem.TypeItem)
             {
                 case Enums.OFTypeSearchItem.Email:
-                    ext = ".eml";
+                    ext = ".msg";
                     break;
 
                 case Enums.OFTypeSearchItem.Attachment:

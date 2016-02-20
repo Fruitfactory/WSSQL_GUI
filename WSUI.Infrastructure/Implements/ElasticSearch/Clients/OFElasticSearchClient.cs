@@ -50,6 +50,8 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                 Stopwatch watchParsing = new Stopwatch();
                 watchParsing.Start();
 
+                str = Encoding.UTF8.GetString(result.Response);
+
                 using (var stream = new MemoryStream(result.Response))
                 using (var reader = new StreamReader(stream))
                 {

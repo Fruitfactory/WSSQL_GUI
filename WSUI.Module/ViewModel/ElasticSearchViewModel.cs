@@ -258,9 +258,9 @@ namespace OF.Module.ViewModel
                 IsServiceInstalled = true;
                 IsServiceRunning = sct.Status == ServiceControllerStatus.Running;
             }
-#if DEBUG
+//#if DEBUG
             IsServiceRunning = IsServiceInstalled = true;
-#endif
+//#endif
             if (IsServiceRunning)
             {
                 var resp = ElasticSearchClient.IndexExists(OFElasticSearchClientBase.DefaultInfrastructureName);

@@ -191,7 +191,7 @@ namespace OF.Infrastructure.Service.Index
             }
             catch (Exception common)
             {
-                OFLogger.Instance.LogError(common.Message);
+                OFLogger.Instance.LogError(common.ToString());
             }
             finally
             {
@@ -268,26 +268,35 @@ namespace OF.Infrastructure.Service.Index
 
         private void ProcessEmailItem(Outlook.MailItem emailItem, Outlook.MAPIFolder mapiFolder)
         {
-            if (emailItem == null)
+            try
             {
-                return;
+                if (emailItem == null)
+                {
+                    return;
+                }
+                if (_lastUpdated.HasValue && emailItem.ReceivedTime < _lastUpdated.Value)
+                {
+                    return;
+                }
+                //OFLogger.Instance.LogWarning("Subject: {0}", emailItem.Subject.ToUpperInvariant());
+                //if (!string.IsNullOrEmpty(emailItem.Subject) && emailItem.Subject.ToUpperInvariant().Equals("RE: Indexing stuck".ToUpperInvariant()))
+                {
+                    OFEmail email = new OFEmail();
+                    ProcessEmail(email, emailItem, mapiFolder);
+
+                    List<OFAttachmentContent> attachmentContents = new List<OFAttachmentContent>();
+                    ProcessAttachmentsFull(emailItem, attachmentContents);
+
+                    CheckCancellation();
+                    TryToWait();
+
+                    SendOutlookItems(email, attachmentContents, null, OFOutlookItemsIndexProcess.Chunk);
+                }
             }
-            if (_lastUpdated.HasValue && emailItem.ReceivedTime < _lastUpdated.Value)
+            catch (Exception ex)
             {
-                return;
+                OFLogger.Instance.LogDebug(ex.ToString());
             }
-            OFEmail email = new OFEmail();
-            ProcessEmail(email, emailItem, mapiFolder);
-
-
-            List<OFAttachmentContent> attachmentContents = new List<OFAttachmentContent>();
-            ProcessAttachmentsFull(emailItem, attachmentContents);
-
-
-            CheckCancellation();
-            TryToWait();
-
-            SendOutlookItems(email, attachmentContents, null, OFOutlookItemsIndexProcess.Chunk);
         }
 
 
@@ -297,13 +306,13 @@ namespace OF.Infrastructure.Service.Index
             {
                 try
                 {
-                    if (attachment.Size < PageMaxSize)
-                    {
-                        continue;
-                    }
                     byte[] contentBytes = attachment.FileName.IsFileAllowed()
                         ? GetContentByProperty(attachment)
                         : null;
+                    if (attachment.FileName.IsFileAllowed() && contentBytes == null)
+                    {
+                        contentBytes = GetContentByTempFile(attachment);
+                    }
                     AddAttachment(attachmentContents, result, attachment, contentBytes);
                 }
                 catch (COMException comEx)
@@ -343,7 +352,8 @@ namespace OF.Infrastructure.Service.Index
             email.Foldermessagestoreidpart = folder.EntryID;
             email.Storagename = folder.Name;
             email.Datecreated = result.CreationTime;
-            email.Datereceived = null;
+            var recev = result.ReceivedTime;    
+            email.Datereceived = new DateTime(recev.Year,recev.Month,recev.Day,recev.Hour,recev.Minute,recev.Second,111);
             email.Size = result.Size;
             email.EntryID = result.EntryID;
             email.Conversationid = result.EntryID;

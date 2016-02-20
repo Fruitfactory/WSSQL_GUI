@@ -377,7 +377,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
         {
             string urls = "";
             var listFilenames = GetAttachments(searchObject);
-            if (listFilenames.All(s => string.IsNullOrEmpty(s)))
+            if (listFilenames.IsNull() || listFilenames.All(s => string.IsNullOrEmpty(s)))
             {
                 return "";
             }
@@ -555,11 +555,11 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             if (!string.IsNullOrEmpty(mail.CC))
                 page += string.Format(CCRow, HighlightSearchString(GetConvertetString(mail.CC)));
             page += string.Format(ToRow, GetRecipientsRow(mail));
-            var folder = GetEmailFolder();
-            if (folder != null && !string.IsNullOrEmpty(folder.Item1) && !string.IsNullOrEmpty(folder.Item2))
-            {
-                page += string.Format(InRow, folder.Item1, folder.Item2);
-            }
+            //var folder = GetEmailFolder();
+            //if (folder != null && !string.IsNullOrEmpty(folder.Item1) && !string.IsNullOrEmpty(folder.Item2))
+            //{
+            //    page += string.Format(InRow, folder.Item1, folder.Item2);
+            //}
             page += string.Format(SendRow, mail.ReceivedTime.ToString());
             page += GetAttachments(mail, filename);
             string temp = GetHtmlBodyHightlight(mail.HTMLBody);
@@ -578,7 +578,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             if (email.Cc != null && email.Cc.Length > 0)
                 page += string.Format(CCRow, GetRecipientsRow(email.Cc));
             page += string.Format(ToRow, GetRecipientsRow(email.To));
-            var folder = GetEmailFolder();
+            var folder = GetEmailFolder(email);
             if (folder != null && !string.IsNullOrEmpty(folder.Item1) && !string.IsNullOrEmpty(folder.Item2))
             {
                 page += string.Format(InRow, folder.Item1, folder.Item2);
@@ -793,12 +793,10 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             return res;
         }
 
-        private Tuple<string, string> GetEmailFolder()
+        private Tuple<string, string> GetEmailFolder(OFEmailSearchObject email)
         {
-            if (string.IsNullOrEmpty(FullFolderPath))
-                return default(Tuple<string, string>);
-            var name = FullFolderPath.Substring(FullFolderPath.LastIndexOf('\\') + 1);
-            return new Tuple<string, string>(FullFolderPath, name);
+            var fullFolder = OFOutlookHelper.Instance.GetFullFolderPath(email);
+            return new Tuple<string, string>(fullFolder, email.Folder);
         }
 
         #endregion [generate privew]

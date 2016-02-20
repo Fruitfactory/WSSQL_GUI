@@ -51,6 +51,10 @@ namespace OF.Core.Core.ElasticSearch
             {
                 var node = new Uri(host);
                 var settings = new ConnectionSettings(node, defaultIndexName);
+                settings.SetJsonSerializerSettingsModifier(jsonSettings =>
+                {
+                    jsonSettings.DateFormatString = "yyyy-MM-ddTHH:mm:ss.fff";
+                });
                 ElasticClient = new ElasticClient(settings);
                 _settings = new JsonSerializerSettings();
                 _settings.Converters.Add(new OFConditionCollectionConverter());
