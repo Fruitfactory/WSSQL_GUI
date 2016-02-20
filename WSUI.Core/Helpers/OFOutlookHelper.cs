@@ -437,45 +437,14 @@ namespace OF.Core.Helpers
             return result;
         }
 
-        public string GetFullFolderPath(OFBaseSearchObject data)
+        public string GetFullFolderPath(OFEmailSearchObject data)
         {
             OFBaseEmailSearchObject emailSearch = data as OFBaseEmailSearchObject;
             if (emailSearch == null)
                 return string.Empty;
 
-            Outlook.MAPIFolder folder = null;
+            Outlook.MAPIFolder folder = OutlookApp.Session.GetFolderFromID(data.FolderMessageStoreIdPart);
 
-            if (emailSearch.IsOst)
-            {
-                int count = OutlookApp.Session.Stores.Count;
-                for (int i = 1; i < count; i++)
-                {
-                    Outlook.Store store = OutlookApp.Session.Stores[i];
-                    if (
-                        store.GetRootFolder()
-                            .EntryID.ToLowerInvariant()
-                            .IndexOf(emailSearch.FolderMessageStoreIdPart.ToLowerInvariant()) > -1)
-                    {
-                        folder = GetOstFolder(store.GetRootFolder(), emailSearch.FolderMessageStoreIdPart,
-                            emailSearch.Folder);
-                    }
-                }
-            }
-            else
-            {
-                int count = OutlookApp.Session.Stores.Count;
-                for (int i = 1; i < count; i++)
-                {
-                    Outlook.Store store = OutlookApp.Session.Stores[i];
-                    if (
-                        store.GetRootFolder()
-                            .Name.ToLowerInvariant()
-                            .IndexOf(emailSearch.StorageName.ToLowerInvariant()) > -1)
-                    {
-                        folder = GetPstFolder(store.GetRootFolder(),emailSearch.Folder);
-                    }
-                }
-            }
             return folder.IsNotNull() ? folder.FullFolderPath : "";
         }
 
