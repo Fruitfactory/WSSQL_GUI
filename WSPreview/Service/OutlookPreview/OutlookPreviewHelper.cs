@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -388,7 +389,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
         public IEnumerable<string> GetAttachments(OFEmailSearchObject searchObj)
         {
             var esClient = new OFElasticSearchClient();
-            var result = esClient.Search<OFAttachmentContent>(s => s.Query(c => c.Match(descriptor => descriptor.OnField("emailid").Query(searchObj.EntryID))));
+            var result = esClient.Search<OFAttachmentContent>(s => s.Query(c => c.Match(descriptor => descriptor.OnField("emailid").Query(searchObj.EntryID))).Take(20));
             if (result.Documents.Any())
             {
                 var tempFolder = OFTempFileManager.Instance.GenerateTempFolderForObject(searchObj);
@@ -427,7 +428,8 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
                     continue;
                 }
                 var filename = SaveAttachment(attachment, tempFolder);
-                list.Add(filename);
+                if(!filename.IsStringEmptyOrNull())
+                    list.Add(filename);
             }
             return list;
         }
@@ -447,13 +449,14 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
                         return String.Empty;
                     }
                     att.SaveAsFile(filename);
+                    return filename;
                 }
-                else
+                else if(!attachment.Content.IsStringEmptyOrNull())
                 {
                     byte[] content = Convert.FromBase64String(attachment.Content);
                     File.WriteAllBytes(filename, content);
+                    return filename;
                 }
-                return filename;
             }
             catch (Exception exception)
             {
