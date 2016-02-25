@@ -377,7 +377,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
         {
             string urls = "";
             var listFilenames = GetAttachments(searchObject);
-            if (listFilenames.All(s => string.IsNullOrEmpty(s)))
+            if (listFilenames.IsNull() || listFilenames.All(s => string.IsNullOrEmpty(s)))
             {
                 return "";
             }

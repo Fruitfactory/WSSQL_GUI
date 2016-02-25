@@ -159,6 +159,10 @@ namespace OF.Infrastructure.Service.Index
                             {
                                 continue;
                             }
+                            //if (result.Subject != null && result.Subject.Equals("RE: Cute items"))
+                            //{
+                            //    TryToWait();            
+                            //}
                             List<OFAttachmentContent> attachmentContents = new List<OFAttachmentContent>();
                             foreach (var attachment in result.Attachments.OfType<Outlook.Attachment>())
                             {
@@ -168,6 +172,9 @@ namespace OF.Infrastructure.Service.Index
                                     {
                                         continue;
                                     }
+
+                                    
+
                                     byte[] contentBytes = attachment.FileName.IsFileAllowed()
                                         ? GetContentByProperty(attachment)
                                         : null;
