@@ -364,7 +364,7 @@ namespace OF.Infrastructure.Service.Index
             email.Htmlcontent = !string.IsNullOrEmpty(result.HTMLBody) ? Convert.ToBase64String(Encoding.UTF8.GetBytes(result.HTMLBody)) : "";
             email.Hasattachments = (result.Attachments.Count > 0).ToString();
             email.Fromname = result.SenderName;
-            email.Fromaddress = result.SenderEmailAddress;
+            email.Fromaddress = result.GetSenderSMTPAddress();
             ProcessRecipients(email, result);
             ProcessEmailAttachments(email,result);
         }

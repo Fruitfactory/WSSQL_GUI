@@ -169,22 +169,29 @@ namespace OF.Infrastructure.Implements.Rules
             var arr = SplitSearchCriteria(Query);
             foreach (var group in groups)
             {
-                var item = group.First();
-
-                var listResult = GetEmailAddress(item.To, arr); 
-                listResult.AddRange(GetEmailAddress(item.Cc, arr));
-                var recipient = GetRecepient(item.FromName, item.FromAddress, arr);
-                if (recipient.IsNotNull())
+                try
                 {
-                    listResult.Add(recipient);
-                }
+                    var item = group.First();
 
-                if (!listResult.Any())
-                {
-                    continue;
+                    var listResult = GetEmailAddress(item.To, arr);
+                    listResult.AddRange(GetEmailAddress(item.Cc, arr));
+                    var recipient = GetRecepient(item.FromName, item.FromAddress, arr);
+                    if (recipient.IsNotNull())
+                    {
+                        listResult.Add(recipient);
+                    }
+
+                    if (!listResult.Any())
+                    {
+                        continue;
+                    }
+                    _listEmails.AddRange(listResult.Select(r => r.Address));
+                    result.AddRange(listResult.Select(r => new OFEmailContactSearchObject() { AddressType = r.Emailaddresstype, ContactName = r.Name, EMail = r.Address }));
                 }
-                _listEmails.AddRange(listResult.Select(r => r.Address));
-                result.AddRange(listResult.Select(r => new OFEmailContactSearchObject(){AddressType = r.Emailaddresstype,ContactName = r.Name,EMail = r.Address}));
+                catch (Exception ex)
+                {
+                    OFLogger.Instance.LogError(ex.ToString());
+                }
             }
             if (Result.Any())
             {
@@ -219,12 +226,12 @@ namespace OF.Infrastructure.Implements.Rules
         
         private List<OFRecipient> GetEmailAddress(OFRecipient[] recepients, string[] searchCriteria)
         {
-            if (recepients == null || recepients.Length == 0)
+            if (recepients == null || recepients.Length == 0 || searchCriteria == null || searchCriteria.Length == 0)
             {
                 return new List<OFRecipient>();
             }
-            var result = recepients.Where(n => searchCriteria.All(s => n.Name.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) > -1) 
-                                                      || searchCriteria.All(s => n.Address.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) > -1)).ToList();
+            var result = recepients.Where(n => searchCriteria.All(s => !string.IsNullOrEmpty(n.Name) && n.Name.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) > -1) 
+                                           ||  searchCriteria.All(s => !string.IsNullOrEmpty(n.Address) && n.Address.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) > -1)).ToList();
             return result;
         }
         
