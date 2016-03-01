@@ -36,7 +36,7 @@ namespace WSGen
             string bootstrapperProject = string.Format("{0}{1}", source, Properties.Settings.Default.BootstrapperProject);
             GenerateVersionFile(source, buildNumber);
             UpdateSetupProjects(setupProject, buildNumber);
-            UpdateSetupProjects(bootstrapperProject,buildNumber);
+            UpdateSetupProjects(bootstrapperProject,buildNumber,true);
             Properties.Settings.Default["Revision"] = Convert.ToInt32(revision);
             Properties.Settings.Default["BuildNumber"] = buildNumber;
             Properties.Settings.Default.Save();
@@ -54,7 +54,7 @@ namespace WSGen
             }
         }
 
-        static void UpdateSetupProjects(string setupProject, string buildNumber)
+        static void UpdateSetupProjects(string setupProject, string buildNumber, bool bootStrap = false)
         {
             if (!File.Exists(setupProject))
                 return;
@@ -62,7 +62,7 @@ namespace WSGen
 
             XDocument doc = XDocument.Load(setupProject);
 
-            XElement program = doc.Root.FirstNode as XElement;
+            XElement program = !bootStrap ? doc.Root.FirstNode as XElement : doc.Root.LastNode as XElement;
             if (program != null)
             {
                 //XAttribute attr = program.Attribute("Id");
