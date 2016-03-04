@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
-using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using AddinExpress.MSO;
 using AddinExpress.OL;
-using Elasticsearch.Net.Serialization;
-using Extensibility;
-using Microsoft.Office.Core;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using OFPreview.PreviewHandler.Service.OutlookPreview;
@@ -35,10 +27,7 @@ using OFOutlookPlugin.Managers;
 using Application = System.Windows.Forms.Application;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
-using Nest;
 using OF.Core;
-using OF.Core.Core.ElasticSearch;
-
 
 namespace OFOutlookPlugin
 {
@@ -569,13 +558,13 @@ namespace OFOutlookPlugin
             set;
         }
 
-        #region my own initialization
+        //#region my own initialization
 
         private void Init()
         {
             try
             {
-                StartWatch();
+                //StartWatch();
                 OFLogger.Instance.LogDebug("Plugin is loading...");
                 //outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
                 OFRegistryHelper.Instance.ResetShutdownNotification();
@@ -594,7 +583,7 @@ namespace OFOutlookPlugin
                     _updatable = OFUpdateHelper.Instance;
                     _updatable.Module = this;
                 }
-                StopWatch("Init");
+                //StopWatch("Init");
             }
             catch (Exception ex)
             {
@@ -607,11 +596,11 @@ namespace OFOutlookPlugin
         {
             try
             {
-                StartWatch();
+                //StartWatch();
                 if (IsLoading)
                     return;
                 HideSidebarDuringSwitching();
-                StopWatch("OutlookFormManagerOnAdxFolderSwitchEx");
+                //StopWatch("OutlookFormManagerOnAdxFolderSwitchEx");
             }
             catch (Exception ex)
             {
@@ -642,25 +631,25 @@ namespace OFOutlookPlugin
             }));
         }
 
-        #endregion my own initialization
+        //#endregion my own initialization
 
-        private void CheckUpdate()
-        {
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-            if (!ReferenceEquals(_updatable, null))
-            {
-                _updatable.Update();
-            }
-            watch.Stop();
-            OFLogger.Instance.LogInfo(string.Format("Check for update: {0}ms", watch.ElapsedMilliseconds));
-        }
+        //private void CheckUpdate()
+        //{
+        //    Stopwatch watch = new Stopwatch();
+        //    watch.Start();
+        //    if (!ReferenceEquals(_updatable, null))
+        //    {
+        //        _updatable.Update();
+        //    }
+        //    watch.Stop();
+        //    OFLogger.Instance.LogInfo(string.Format("Check for update: {0}ms", watch.ElapsedMilliseconds));
+        //}
 
         private void RunPluginUI()
         {
             try
             {
-                StartWatch();
+                //StartWatch();
                 OFDllPreloader.Instance.PreloadDll();
                 _wsuiBootStraper = new PluginBootStraper();
                 _wsuiBootStraper.Run();
@@ -689,7 +678,7 @@ namespace OFOutlookPlugin
                 LogVersions();
 
                 IsLoading = false;
-                StopWatch("RunPluginUI");
+                //StopWatch("RunPluginUI");
 
             }
             catch (Exception ex)
@@ -767,7 +756,7 @@ namespace OFOutlookPlugin
         {
             try
             {
-                StartWatch();
+                //StartWatch();
                 _sidebarForm = GetSidebarForm();
                 if (_sidebarForm != null && !_sidebarForm.IsDisposed)
                 {
@@ -776,7 +765,7 @@ namespace OFOutlookPlugin
                     IsMainUIVisible = true;
                     OFRegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
                 }
-                StopWatch("ShowUi");
+                //StopWatch("ShowUi");
             }
             catch (Exception ex)
             {
@@ -788,7 +777,7 @@ namespace OFOutlookPlugin
         {
             try
             {
-                StartWatch();
+                //StartWatch();
                 _sidebarForm = GetSidebarForm();
                 if (_sidebarForm != null && !_sidebarForm.IsDisposed)
                 {
@@ -796,7 +785,7 @@ namespace OFOutlookPlugin
                     IsMainUIVisible = false;
                     OFRegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
                 }
-                StopWatch("HideUi");
+                //StopWatch("HideUi");
             }
             catch (Exception ex)
             {
@@ -833,7 +822,7 @@ namespace OFOutlookPlugin
                                       : new OFRibbonManager(buttonShow, wsuiButtonSwitch, adxRibbonButtonSearch, adxRibbonEditBoxSearch, wsuiHomeSearch, wsuiButtonSearch);
                 if (!adxMainPluginCommandBar.UseForRibbon)
                 {
-                    _aboutCommandManager = new OFAboutCommandManager(btnHelp, btnAbout, mnuSettings,  btnMainHelp, btnMainAbout,mnuMainSettings);
+                    _aboutCommandManager = new OFAboutCommandManager(btnHelp, btnAbout, mnuSettings, btnMainHelp, btnMainAbout, mnuMainSettings);
                 }
                 else if (OFRegistryHelper.Instance.GetIsPluginUiVisible())
                 {
@@ -868,16 +857,16 @@ namespace OFOutlookPlugin
             }
         }
 
-        #region Outlook Object Model routines
+        //#region Outlook Object Model routines
 
-        private enum OutlookPane
-        {
-            olFolderList = 2,
-            olNavigationPane = 4,
-            olOutlookBar = 1,
-            olPreview = 3,
-            olToDoPane = 5
-        }
+        //private enum OutlookPane
+        //{
+        //    olFolderList = 2,
+        //    olNavigationPane = 4,
+        //    olOutlookBar = 1,
+        //    olPreview = 3,
+        //    olToDoPane = 5
+        //}
 
 
         private void SetExplorerFolder(Outlook.Explorer Explorer, Outlook.MAPIFolder Folder)
@@ -895,20 +884,20 @@ namespace OFOutlookPlugin
             }
         }
 
-        #endregion Outlook Object Model routines
+        //#endregion Outlook Object Model routines
 
         private void OFAddinModule_AddinStartupComplete(object sender, EventArgs e)
         {
             try
             {
-                StartWatch();
-                RestoreOutlookFolder();
+                //StartWatch();
+                //RestoreOutlookFolder();
                 //CheckUpdate(); // TODO: just for testing
                 this.SendMessage(WM_LOADED, IntPtr.Zero, IntPtr.Zero);
                 OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
                 OFOutlookHelper.Instance.OutlookApp = OutlookApp;
                 OFLogger.Instance.LogInfo("OF AddinModule Startup Complete...");
-                StopWatch("OFAddinModule_AddinStartupComplete");
+                //StopWatch("OFAddinModule_AddinStartupComplete");
             }
             catch (Exception ex)
             {
@@ -939,7 +928,7 @@ namespace OFOutlookPlugin
             OFLogger.Instance.LogDebug("WPF Exception: {0}", dispatcherUnhandledExceptionEventArgs.Exception.ToString());
         }
 
-        #region [event handlers for ribbon]
+        //#region [event handlers for ribbon]
 
         private void PassSearchActionToSearchEngine(string text)
         {
@@ -969,7 +958,7 @@ namespace OFOutlookPlugin
             }
         }
 
-        #endregion [event handlers for ribbon]
+        //#endregion [event handlers for ribbon]
 
         private void outlookFormManager_OnInitialize()
         {
@@ -1064,39 +1053,39 @@ namespace OFOutlookPlugin
             }
         }
 
-        public void RestoreOutlookFolder()
-        {
-            try
-            {
-                if (OFRegistryHelper.Instance.IsShouldRestoreOutlookFolder())
-                {
-                    OFLogger.Instance.LogDebug("{0}", "OutlookFolder is empty");
-                    return;
-                }
+        //public void RestoreOutlookFolder()
+        //{
+        //    try
+        //    {
+        //        if (OFRegistryHelper.Instance.IsShouldRestoreOutlookFolder())
+        //        {
+        //            OFLogger.Instance.LogDebug("{0}", "OutlookFolder is empty");
+        //            return;
+        //        }
 
-                string id = OFRegistryHelper.Instance.GetOutllokFolderName();
-                Outlook.NameSpace outlookNamespace = OutlookApp.GetNamespace(DefaultNamespace);
-                if (outlookNamespace == null || string.IsNullOrEmpty(id))
-                    return;
-                OFLogger.Instance.LogDebug("OutlookFolder ID: {0}", id);
-                Outlook.MAPIFolder folder = outlookNamespace.GetFolderFromID(id, Type.Missing);
-                if (folder == null)
-                    return;
-                folder.WebViewURL = OFRegistryHelper.Instance.GetOutlookFolderWebUrl();
-                folder.WebViewOn = true;
+        //        string id = OFRegistryHelper.Instance.GetOutllokFolderName();
+        //        Outlook.NameSpace outlookNamespace = OutlookApp.GetNamespace(DefaultNamespace);
+        //        if (outlookNamespace == null || string.IsNullOrEmpty(id))
+        //            return;
+        //        OFLogger.Instance.LogDebug("OutlookFolder ID: {0}", id);
+        //        Outlook.MAPIFolder folder = outlookNamespace.GetFolderFromID(id, Type.Missing);
+        //        if (folder == null)
+        //            return;
+        //        folder.WebViewURL = OFRegistryHelper.Instance.GetOutlookFolderWebUrl();
+        //        folder.WebViewOn = true;
 
-                OFLogger.Instance.LogDebug("WebViewURL: {0}", folder.WebViewURL);
+        //        OFLogger.Instance.LogDebug("WebViewURL: {0}", folder.WebViewURL);
 
-                Marshal.ReleaseComObject(folder);
-                Marshal.ReleaseComObject(outlookNamespace);
-            }
-            catch (Exception ex)
-            {
-                OFLogger.Instance.LogError(ex.ToString());
-            }
-        }
+        //        Marshal.ReleaseComObject(folder);
+        //        Marshal.ReleaseComObject(outlookNamespace);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        OFLogger.Instance.LogError(ex.ToString());
+        //    }
+        //}
 
-        // TODO: uncomment
+        //// TODO: uncomment
         private void OFAddinModule_OnKeyDown(object sender, ADXKeyDownEventArgs e)
         {
             try
@@ -1167,18 +1156,18 @@ namespace OFOutlookPlugin
 
         private void OutlookFinderEvents_NewExplorer(object sender, object explorer)
         {
-            StartWatch();
+            //StartWatch();
             var exp = explorer as Outlook._Explorer;
             if (IsLoading && exp != null)
             {
                 _initHashCode = exp.GetHashCode();
             }
-            StopWatch("OutlookFinderEvents_NewExplorer");
+            //StopWatch("OutlookFinderEvents_NewExplorer");
         }
 
         private void wsuiTab_PropertyChanging(object sender, ADXRibbonPropertyChangingEventArgs e)
         {
-            if (e.PropertyType == ADXRibbonControlPropertyType.Visible && e.Context.GetHashCode() != _initHashCode)
+            if (IsMainUIVisible && e.PropertyType == ADXRibbonControlPropertyType.Visible && e.Context.GetHashCode() != _initHashCode)
             {
                 e.Value = false;
             }
@@ -1186,22 +1175,22 @@ namespace OFOutlookPlugin
 
         private void wsuiMainGroup_PropertyChanging(object sender, ADXRibbonPropertyChangingEventArgs e)
         {
-            if (e.PropertyType == ADXRibbonControlPropertyType.Visible && e.Context.GetHashCode() != _initHashCode)
+            if (IsMainUIVisible && e.PropertyType == ADXRibbonControlPropertyType.Visible && e.Context.GetHashCode() != _initHashCode)
             {
                 e.Value = false;
             }
         }
 
-        private void StartWatch()
-        {
-            (_watch = new Stopwatch()).Start();
-        }
+        //private void StartWatch()
+        //{
+        //    (_watch = new Stopwatch()).Start();
+        //}
 
-        private void StopWatch(string method)
-        {
-            _watch.Stop();
-            OFLogger.Instance.LogDebug("--------------- {0} => {1}", method, _watch.ElapsedMilliseconds);
-        }
+        //private void StopWatch(string method)
+        //{
+        //    _watch.Stop();
+        //    OFLogger.Instance.LogDebug("--------------- {0} => {1}", method, _watch.ElapsedMilliseconds);
+        //}
 
 
         private void OutlookFinderEvents_ExplorerSelectionChange(object sender, object explorer)

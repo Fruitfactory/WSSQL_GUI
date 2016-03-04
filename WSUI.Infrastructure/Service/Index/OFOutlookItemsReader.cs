@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -562,7 +563,7 @@ namespace OF.Infrastructure.Service.Index
         private void CloseApplication(Outlook._Application application, bool isExistingProcess)
         {
             OFLogger.Instance.LogDebug("Outlook is existed: {0}");
-            if (application == null || isExistingProcess)
+            if (application == null || IsMainWiwdowOFOutlookOpened() || isExistingProcess)
             {
                 return;
             }
@@ -575,6 +576,13 @@ namespace OF.Infrastructure.Service.Index
                 OFLogger.Instance.LogError(ex.ToString());
             }
             Marshal.ReleaseComObject(application);
+        }
+
+
+        private bool IsMainWiwdowOFOutlookOpened()
+        {
+            var process = Process.GetProcesses("outlook".ToUpperInvariant()).FirstOrDefault();
+            return process != null && process.MainWindowHandle != IntPtr.Zero;
         }
     }
 }
