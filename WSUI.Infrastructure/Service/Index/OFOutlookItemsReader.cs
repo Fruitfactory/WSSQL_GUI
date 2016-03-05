@@ -581,7 +581,7 @@ namespace OF.Infrastructure.Service.Index
 
         private bool IsMainWiwdowOFOutlookOpened()
         {
-            var process = Process.GetProcesses("outlook".ToUpperInvariant()).FirstOrDefault();
+            var process = Process.GetProcessesByName("outlook".ToUpperInvariant()).FirstOrDefault();
             return process != null && process.MainWindowHandle != IntPtr.Zero;
         }
     }
