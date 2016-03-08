@@ -31,7 +31,7 @@ if EXIST "%EXECUTABLE%" goto okExe
 echo elasticsearch-service-(x86|x64).exe was not found...
 
 :okExe
-set ES_VERSION=1.7.0
+set ES_VERSION=1.7.5
 
 if "%LOG_DIR%" == "" set LOG_DIR=%ES_HOME%\logs
 
@@ -120,11 +120,9 @@ echo JAVA_HOME points to an invalid Java installation (no jvm.dll found in "%ES_
 goto:eof
 )
 
-
-
 :foundJVM
 if "%ES_MIN_MEM%" == "" set ES_MIN_MEM=256m
-if "%ES_MAX_MEM%" == "" set ES_MAX_MEM=256m
+if "%ES_MAX_MEM%" == "" set ES_MAX_MEM=356m
 
 if NOT "%ES_HEAP_SIZE%" == "" set ES_MIN_MEM=%ES_HEAP_SIZE%
 if NOT "%ES_HEAP_SIZE%" == "" set ES_MAX_MEM=%ES_HEAP_SIZE%

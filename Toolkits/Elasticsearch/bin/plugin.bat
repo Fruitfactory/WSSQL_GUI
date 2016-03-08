@@ -9,7 +9,7 @@ echo %es_java_home%
 set SCRIPT_DIR=%~dp0
 for %%I in ("%SCRIPT_DIR%..") do set ES_HOME=%%~dpfI
 
-TITLE Elasticsearch Plugin Manager 1.7.0
+TITLE Elasticsearch Plugin Manager 1.7.5
 
 SET HOSTNAME=%COMPUTERNAME%
 
