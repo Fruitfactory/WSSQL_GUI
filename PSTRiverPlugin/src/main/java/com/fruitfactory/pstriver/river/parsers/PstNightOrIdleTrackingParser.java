@@ -12,6 +12,7 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
 
 import com.fruitfactory.pstriver.river.parsers.settings.PstNightIdleTimeSettings;
+import com.fruitfactory.pstriver.river.reader.PstCleaner;
 import com.fruitfactory.pstriver.river.reader.PstOutlookItemsReader;
 import com.fruitfactory.pstriver.useractivity.IInputHookManage;
 import com.fruitfactory.pstriver.useractivity.IReaderControl;
@@ -52,6 +53,10 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
         if(attachmentReader != null){
             readerControls.add((IReaderControl)attachmentReader);
         }
+        PstCleaner cleaner = getCleaner();
+        if(cleaner != null){
+            readerControls.add(cleaner);
+        }
 
         setRiverStatus(PstRiverStatus.Busy);
 
@@ -61,10 +66,12 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
         getLogger().info(LOG_TAG + "Start parsing files...");
         getRestAttachmentClient().startRead(getLastDateFromRiver());
         attachmentReader.start();
+        cleaner.start();
         tracker.setReaders(readerControls);
         tracker.startTracking();
         try {
             attachmentReader.join();
+            cleaner.stopThread();
             tracker.stopTracking();
             getRestAttachmentClient().stopRead();
             tracker.join();

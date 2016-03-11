@@ -11,6 +11,7 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
 import com.fruitfactory.pstriver.rest.PstRESTRepository;
 import com.fruitfactory.pstriver.rest.PstRestClient;
+import com.fruitfactory.pstriver.river.reader.PstCleaner;
 import com.fruitfactory.pstriver.river.reader.PstOutlookItemsReader;
 import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
@@ -54,6 +55,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
     private PstRiverStatus riverStatus;
     private IPstRiverInitializer _riverInitializer;
     private PstOutlookItemsReader outlookItemsReader;
+    private PstCleaner cleanerThread;
     private IPstRestAttachmentClient _restAttachmentClient;
 
     private int countEmails;
@@ -115,6 +117,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
 //                    index++;
 //                }
                 outlookItemsReader = new PstOutlookItemsReader(_indexName,_lastUpdatedDate,_bulkProcessor,"pst_attachment",logger);
+                cleanerThread = new PstCleaner(_indexName,logger);
 
                 int delayTimeOut = onProcess(_readers);
 
@@ -168,6 +171,8 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
     protected PstOutlookItemsReader getOutlookItemsReader(){
         return outlookItemsReader;
     }
+
+    protected PstCleaner getCleaner(){return cleanerThread;}
 
     protected IPstRestAttachmentClient getRestAttachmentClient() { return _restAttachmentClient; }
 

@@ -19,6 +19,8 @@ public interface IReaderControl {
     void pauseThread();
 
     void resumeThread();
+
+    void stopThread();
     
     PstReaderStatus getStatus();
     

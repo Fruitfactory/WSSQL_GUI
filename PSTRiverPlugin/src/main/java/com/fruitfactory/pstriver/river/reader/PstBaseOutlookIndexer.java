@@ -29,7 +29,7 @@ public abstract class PstBaseOutlookIndexer extends Thread  implements IReaderCo
         this._logger = _logger;
         this._bulkProcessor = _bulkProcessor;
     }
-
+    @Override
     public void pauseThread(){
         synchronized(LOCK){
             _paused = true;
@@ -37,13 +37,28 @@ public abstract class PstBaseOutlookIndexer extends Thread  implements IReaderCo
             _logger.info(LOG_TAG + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Thread #"+ getName() + " was paused...");
         }
     }
-
+    @Override
     public void resumeThread(){
         synchronized(LOCK){
             _paused = false;
             PstRESTRepository.setStatus(getReaderName(),PstReaderStatus.Busy);
             LOCK.notifyAll();
             _logger.info(LOG_TAG + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Thread #"+ getName() + " was resumed...");
+        }
+    }
+
+    @Override
+    public void stopThread() {
+        synchronized (LOCK){
+            _closed = true;
+            LOCK.notifyAll();
+            PstRESTRepository.setStatus(getReaderName(),PstReaderStatus.Finished);
+            _logger.info(LOG_TAG + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Thread #"+ getName() + " was stoped...");
+            try {
+                this.join();
+            }catch(InterruptedException ex){
+                _logger.error(getReaderName().toUpperCase() + " " + ex.toString());
+            }
         }
     }
 

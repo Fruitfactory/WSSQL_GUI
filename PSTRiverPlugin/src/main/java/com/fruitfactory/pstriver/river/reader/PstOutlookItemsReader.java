@@ -65,16 +65,12 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
     @Override
     public void run() {
         try {
-//            if(!PstRESTRepository.gettIsOFPluginRunning()){
-//                _status = PstReaderStatus.Finished;
-//                PstRESTRepository.setStatus(_name, PstReaderStatus.Finished);
-//                return;
-//            }
+
             PstRESTRepository.setStatusInfo(new PstReaderStatusInfo(_name,0));
             PstRESTRepository.setAttachmentProcessor(this);
             _status = PstReaderStatus.Busy;
             PstRESTRepository.setStatus(_name, PstReaderStatus.Busy);
-            while(true){
+            while(!_closed){
                 tryToWait();
                 synchronized (_lock){
                     if(_status == PstReaderStatus.Finished){

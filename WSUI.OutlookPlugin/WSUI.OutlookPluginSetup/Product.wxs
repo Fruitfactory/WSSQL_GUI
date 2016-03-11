@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.930" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
+  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.932" Manufacturer="FruitFactory" UpgradeCode="6169fa5d-89fa-44d3-9801-cefe8fc8755e" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />-->
     <Upgrade Id="6169fa5d-89fa-44d3-9801-cefe8fc8755e">
@@ -308,7 +308,7 @@
         <File Id="_apache_log4j_extras_1_2_17_jar" Name="apache-log4j-extras-1.2.17.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="_asm_4_1_jar" Name="asm-4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="_asm_commons_4_1_jar" Name="asm-commons-4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="_elasticsearch_1_7_0_jar" Name="elasticsearch-1.7.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="_elasticsearch_1_7_5_jar" Name="elasticsearch-1.7.5.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="_groovy_all_2_4_4_jar" Name="groovy-all-2.4.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="_jna_4_1_0_jar" Name="jna-4.1.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="_jts_1_13_jar" Name="jts-1.13.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />

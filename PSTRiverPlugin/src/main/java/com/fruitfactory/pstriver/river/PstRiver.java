@@ -131,7 +131,7 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
             })
                     .setBulkActions(-1)
                     .setConcurrentRequests(1)
-                    .setBulkSize(ByteSizeValue.parseBytesSizeValue("5m"))
+                    .setBulkSize(ByteSizeValue.parseBytesSizeValue("2m"))
                     .build();
         
         
