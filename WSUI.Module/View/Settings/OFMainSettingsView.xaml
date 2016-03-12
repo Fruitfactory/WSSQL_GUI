@@ -36,7 +36,7 @@
             <controls:MetroTabItem Header="Service Application">
                 <ContentControl Margin="5" Content="{Binding ServiceApplicationSettingsViewModel.View}"></ContentControl>
             </controls:MetroTabItem>
-            <controls:MetroTabItem Header="Secutiry">
+            <controls:MetroTabItem Header="Security">
                 <ContentControl Margin="5" Content="{Binding OutlookSecuritySettingsViewModel.View}"></ContentControl>
             </controls:MetroTabItem>
             
