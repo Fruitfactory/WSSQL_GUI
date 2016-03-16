@@ -178,5 +178,15 @@ namespace OF.Core.Extensions
             return string.Empty;
         }
 
+
+        public static string ToLowerCase(this object obj)
+        {
+            if (obj == null)
+            {
+                return "";
+            }
+            return obj.ToString().ToLowerInvariant();
+        }
+
     }
 }

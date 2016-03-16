@@ -18,7 +18,7 @@ public class PstCleaner extends PstBaseOutlookIndexer {
         while(!_closed){
             try {
                 tryToWait();
-                Thread.sleep(1500);
+                Thread.sleep(750);
             }catch(Exception ex){
                 _logger.error(getReaderName().toUpperCase() + " " + ex.toString());
             }finally {

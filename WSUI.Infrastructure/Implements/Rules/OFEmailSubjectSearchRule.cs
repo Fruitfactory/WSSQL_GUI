@@ -117,18 +117,21 @@ namespace OF.Infrastructure.Implements.Rules
                 {
                     case AdvancedSearchCriteriaType.To:
                         var listShould = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
-                        listShould.Add(d => d.Term("to.address", temp.Value));
-                        listShould.Add(d => d.Term("to.name", temp.Value));
+                        //listShould.Add(d => d.Term("to.address", temp.Value.ToLowerCase()));
+                        //listShould.Add(d => d.Term("to.name", temp.Value.ToLowerCase()));
+                        listShould.Add(d => d.Wildcard("to.address",string.Format("*{0}*",temp.Value.ToLowerCase())));
+                        listShould.Add(d => d.Wildcard("to.name", string.Format("*{0}*", temp.Value.ToLowerCase())));
 
                         listCriterias.Add(desc => desc.Bool(bd => bd.Should(listShould.ToArray())));
 
                         break;
                     case AdvancedSearchCriteriaType.Folder:
-                        listCriterias.Add(d => d.Term(e => e.Folder, temp.Value));
+                        //listCriterias.Add(d => d.Term(e => e.Folder, temp.Value.ToLowerCase()));
+                        listCriterias.Add(d => d.Wildcard(e => e.Folder, temp.Value.ToLowerCase()));
                         break;
                     case AdvancedSearchCriteriaType.Body:
 
-                        var listTokens = GetProcessingSearchCriteria((string)temp.Value);
+                        var listTokens = GetProcessingSearchCriteria((string)temp.Value.ToLowerCase());
 
                         var listShouldBody = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
 

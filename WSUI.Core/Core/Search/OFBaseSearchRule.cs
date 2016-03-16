@@ -166,6 +166,9 @@ namespace OF.Core.Core.Search
                         );
                     if (resultAdvance.IsNotNull())
                     {
+#if DEBUG
+                        var str = Encoding.Default.GetString(resultAdvance.RequestInformation.Request);
+#endif
                         Documents = resultAdvance.Documents;
                         total = resultAdvance.Total;
                     }
