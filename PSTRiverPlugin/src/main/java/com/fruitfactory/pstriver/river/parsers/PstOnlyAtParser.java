@@ -9,6 +9,7 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.river.parsers.core.PstParserBase;
 import com.fruitfactory.pstriver.river.parsers.settings.PstOnlyAtSettings;
+import com.fruitfactory.pstriver.river.reader.PstCleaner;
 import com.fruitfactory.pstriver.river.reader.PstOutlookItemsReader;
 import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
 import com.fruitfactory.pstriver.utils.PstFeedDefinition;
@@ -60,22 +61,19 @@ public class PstOnlyAtParser extends PstParserBase {
 
         setRiverStatus(PstRiverStatus.Busy);
         PstOutlookItemsReader attachmentReader = getOutlookItemsReader();
-        getRestAttachmentClient().startRead(getLastDateFromRiver());
-        attachmentReader.start();
-        for (Thread reader : readers){
-            try {
-                reader.start();
-                reader.join();
-                flush();
-                ((PstOutlookFileReader) reader).close();
-            } catch (InterruptedException ex) {
-                getLogger().error(Level.SEVERE.toString() +  ex.getMessage());
-            }
+        PstCleaner cleaner = getCleaner();
+        try{
+            getRestAttachmentClient().startRead(getLastDateFromRiver());
+            attachmentReader.start();
+            cleaner.start();
+            attachmentReader.join();
+            cleaner.stopThread();
+        }catch (Exception ex) {
+            getLogger().error(Level.SEVERE.toString() +  ex.getMessage());
+        }finally {
+            attachmentReader.join(1500);
+            getRestAttachmentClient().stopRead();
         }
-
-        attachmentReader.join(1500);
-        getRestAttachmentClient().stopRead();
-        
         return 0;
     }
 

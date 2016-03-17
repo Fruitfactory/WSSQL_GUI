@@ -50,6 +50,7 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
         setPriority(MIN_PRIORITY);
         _name = "outlookitems";
         _status = PstReaderStatus.None;
+        PstRESTRepository.setStatusInfo(new PstReaderStatusInfo(_name,0));
     }
 
     @Override
@@ -57,16 +58,12 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
         return _name;
     }
 
-
-
     // one by one
-
 
     @Override
     public void run() {
         try {
 
-            PstRESTRepository.setStatusInfo(new PstReaderStatusInfo(_name,0));
             PstRESTRepository.setAttachmentProcessor(this);
             _status = PstReaderStatus.Busy;
             PstRESTRepository.setStatus(_name, PstReaderStatus.Busy);

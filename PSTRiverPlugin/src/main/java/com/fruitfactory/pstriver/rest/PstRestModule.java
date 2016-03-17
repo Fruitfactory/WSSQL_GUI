@@ -159,7 +159,7 @@ public class PstRestModule extends BaseRestHandler {
             PstRESTRepository.putAttachmentContainer(container);
             rc.sendResponse(new BytesRestResponse(RestStatus.OK));
             long seconds = time.time(TimeUnit.MILLISECONDS);
-            logger.info(String.format("REST MODULE: %s",seconds));
+            //logger.info(String.format("REST MODULE: %s",seconds));
         } catch (Exception e) {
             try {
                 System.out.println(e.getMessage());

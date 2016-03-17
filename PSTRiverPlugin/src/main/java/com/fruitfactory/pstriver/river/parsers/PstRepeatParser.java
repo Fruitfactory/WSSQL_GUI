@@ -9,6 +9,7 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.river.parsers.core.PstParserBase;
 import com.fruitfactory.pstriver.river.parsers.settings.PstEveryHourPeriodSettings;
+import com.fruitfactory.pstriver.river.reader.PstCleaner;
 import com.fruitfactory.pstriver.river.reader.PstOutlookItemsReader;
 import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
 import com.fruitfactory.pstriver.utils.PstFeedDefinition;
@@ -38,22 +39,23 @@ public class PstRepeatParser extends PstParserBase{
 
     @Override
     protected int onProcess(List<Thread> readers) throws Exception {
+
         setRiverStatus(PstRiverStatus.Busy);
         PstOutlookItemsReader attachmentReader = getOutlookItemsReader();
-        getRestAttachmentClient().startRead(getLastDateFromRiver());
-        attachmentReader.start();
-        for(Thread reader : readers){
-            try{
-                reader.start();
-                reader.join();
-                flush();
-                ((PstOutlookFileReader)reader).close();
-            }catch(Exception ex){
-                getLogger().error(PstGlobalConst.PST_PREFIX + " " + ex.getMessage() );
-            }
+        PstCleaner cleaner = getCleaner();
+
+        try{
+            getRestAttachmentClient().startRead(getLastDateFromRiver());
+            attachmentReader.start();
+            cleaner.start();
+            attachmentReader.join();
+            cleaner.stopThread();
+            getRestAttachmentClient().stopRead();
+            flush();
+        }catch(Exception ex){
+            getLogger().error(PstGlobalConst.PST_PREFIX + " " + ex.getMessage() );
         }
-        attachmentReader.join();
-        getRestAttachmentClient().stopRead();
+
         return _repeatSettings.getHourPeriod();
     }
 
