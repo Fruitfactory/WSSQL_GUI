@@ -9,7 +9,7 @@ namespace OF.Core.Data
         public OFEmailContactSearchObject()
         {
             TypeItem = OFTypeSearchItem.Contact;
-            Tag = "Click to email recipient";
+            Tag = "Click for details";
         }
 
         public string EMail { get; set; }

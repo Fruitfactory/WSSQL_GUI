@@ -227,9 +227,6 @@
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Path=OutlookConversationId}" />
-                                            </StackPanel>
                                         </StackPanel>
                                     </Grid.ToolTip>
 
@@ -301,9 +298,6 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Path=Size, Converter={StaticResource sizeConverter}}" />
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Path=OutlookConversationId}" />
-                                            </StackPanel>
                     </StackPanel>
                 </Grid.ToolTip>
 

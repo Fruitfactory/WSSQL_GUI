@@ -18,6 +18,13 @@ namespace OF.Core.Data
 {
     public class OFContactSearchObject : OFBaseSearchObject
     {
+
+        public OFContactSearchObject()
+        {
+            TypeItem = OFTypeSearchItem.Contact;
+            Tag = "Click for details";
+        }
+
         public string FirstName
         {
             get { return Get(() => FirstName); }
@@ -217,11 +224,7 @@ namespace OF.Core.Data
             set { Set(() => AddressType, value); }
         }
 
-        public OFContactSearchObject()
-        {
-            TypeItem = OFTypeSearchItem.Contact;
-            //Tag = "Click to email recipient";
-        }
+       
 
         public string GetEmail()
         {

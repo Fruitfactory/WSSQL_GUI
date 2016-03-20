@@ -333,8 +333,7 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                var list = OFOutlookHelper.GetOutlookFiles();
-                ElasticSearchClient.CreateInfrastructure(list);
+                ElasticSearchClient.CreateInfrastructure();
                 Thread.Sleep(1000);
                 _timer = new Timer(TimerProgressCallback,null,1000,2000);
                 OnIndexingStarted();

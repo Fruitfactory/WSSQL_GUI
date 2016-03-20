@@ -77,10 +77,9 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
             
             logger.info(LOG_TAG + " _indexName = " + this._indexName );
 
-            String[] pstList = PstFeedDefinition.getListOfPst(settings.settings(), PstFeedDefinition.PST_LIST_PATH);
-            _definition = new PstFeedDefinition(riverName.getName(), pstList, updateRate,onlineTime,idleTime,schedule);
+            _definition = new PstFeedDefinition(riverName.getName(), updateRate,onlineTime,idleTime,schedule);
         } else {
-            _definition = new PstFeedDefinition(riverName.getName(), null, TimeValue.timeValueMinutes(60),TimeValue.timeValueMinutes(2),TimeValue.timeValueMinutes(2));
+            _definition = new PstFeedDefinition(riverName.getName(), TimeValue.timeValueMinutes(60),TimeValue.timeValueMinutes(2),TimeValue.timeValueMinutes(2));
             this._indexName = riverName.getName();
         }
         logger.warn(LOG_TAG + "River was created...");

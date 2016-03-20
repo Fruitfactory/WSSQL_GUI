@@ -33,15 +33,13 @@ public class PstFeedDefinition {
     private static final String SETTINGS = "settings";
 
     private String _riverName;
-    private String[] _dataArray;
     private TimeValue _updateRate;
     private TimeValue _onlineTime;
     private TimeValue _idleTime;
     private PstScheduleSettings _scheduleSettings;
 
-    public PstFeedDefinition(String _riverName, String[] _dataArray, TimeValue _updateRate, TimeValue onlineTime, TimeValue idleTime) {
+    public PstFeedDefinition(String _riverName, TimeValue _updateRate, TimeValue onlineTime, TimeValue idleTime) {
         this._riverName = _riverName;
-        this._dataArray = _dataArray;
         this._updateRate = _updateRate;
         this._onlineTime = onlineTime;
         this._idleTime = idleTime;
@@ -51,9 +49,8 @@ public class PstFeedDefinition {
     }
     private static final String IDLE_TIME120 = "{\"idle_time\":120}";
 
-    public PstFeedDefinition(String _riverName, String[] _dataArray, TimeValue _updateRate, TimeValue onlineTime, TimeValue idleTime, Map<String,Object> scheduleSettings) {
+    public PstFeedDefinition(String _riverName, TimeValue _updateRate, TimeValue onlineTime, TimeValue idleTime, Map<String,Object> scheduleSettings) {
         this._riverName = _riverName;
-        this._dataArray = _dataArray;
         this._updateRate = _updateRate;
         this._onlineTime = onlineTime;
         this._idleTime = idleTime;
@@ -74,10 +71,6 @@ public class PstFeedDefinition {
 
     public String getRiverName() {
         return _riverName;
-    }
-
-    public String[] getDataArray() {
-        return _dataArray;
     }
 
     public TimeValue getUpdateRate() {

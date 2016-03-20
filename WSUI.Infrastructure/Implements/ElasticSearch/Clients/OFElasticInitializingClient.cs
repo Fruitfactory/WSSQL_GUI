@@ -34,13 +34,13 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
         {
         }
 
-        public void CreateInfrastructure(IEnumerable<string> listOfFiles)
+        public void CreateInfrastructure()
         {
             try
             {
                 if (CreateIndex())
                 {
-                    CreateRiver(listOfFiles);
+                    CreateRiver();
                 }
             }
             catch (Exception exception)
@@ -212,9 +212,9 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
         }
 
-        private void CreateRiver(IEnumerable<string> listOfFiles)
+        private void CreateRiver()
         {
-            var riverMeta = new OFRiverMeta(listOfFiles,DefaultInfrastructureName);
+            var riverMeta = new OFRiverMeta(DefaultInfrastructureName);
             var body = Serializer.Serialize(riverMeta, SerializationFormatting.Indented);
 
             var response = Raw.IndexPut("_river", DefaultInfrastructureName, "_meta", body);

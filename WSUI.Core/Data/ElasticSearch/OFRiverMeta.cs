@@ -11,10 +11,10 @@ namespace OF.Core.Data.ElasticSearch
         {   
         }
 
-        public OFRiverMeta(IEnumerable<string> listFiles, string indexName )
+        public OFRiverMeta(string indexName )
         {
             Type = "pst";
-            Pst = new OFPstMeta("1h","3m","3m",listFiles,indexName);
+            Pst = new OFPstMeta("1h","3m","3m",indexName);
         }
         [JsonProperty("type")]
         public string Type { get; set; }
@@ -30,12 +30,11 @@ namespace OF.Core.Data.ElasticSearch
         {
         }
 
-        public OFPstMeta(string updateRate, string onlibeTime, string idleTime, IEnumerable<string> pstFiles, string indexName )
+        public OFPstMeta(string updateRate, string onlibeTime, string idleTime, string indexName )
         {
             UpdateRate = updateRate;
             OnlineTime = onlibeTime;
             IdleTime = idleTime;
-            PstFiles = pstFiles;
             IndexName = indexName;
             Schedule = new OFScheduleMeta();
         }
@@ -46,8 +45,7 @@ namespace OF.Core.Data.ElasticSearch
         public string OnlineTime { get; set; }
         [JsonProperty("idle_time")]
         public string IdleTime { get; set; }
-        [JsonProperty("pst_list")]
-        public IEnumerable<string> PstFiles { get; set; }
+        
         [JsonProperty("index_name")]
         public string IndexName { get; set; }
 
@@ -65,17 +63,17 @@ namespace OF.Core.Data.ElasticSearch
 #if DEBUG
            // user tracking
 
-            ScheduleType = OFRiverSchedule.EveryNightOrIdle;
-            var idlesettings = new { idle_time = 60 };
-            var set = JsonConvert.SerializeObject(idlesettings);
-            Settings = set;
+            //ScheduleType = OFRiverSchedule.EveryNightOrIdle;
+            //var idlesettings = new { idle_time = 60 };
+            //var set = JsonConvert.SerializeObject(idlesettings);
+            //Settings = set;
 
             //period
 
-            //ScheduleType = RiverSchedule.EveryHours;
-            //var idlesettings = new { hour_period = 1 };
-            //var set = JsonConvert.SerializeObject(idlesettings);
-            //Settings = set;
+            ScheduleType = OFRiverSchedule.EveryHours;
+            var idlesettings = new { hour_period = 1 };
+            var set = JsonConvert.SerializeObject(idlesettings);
+            Settings = set;
 #else
             // user tracking
 

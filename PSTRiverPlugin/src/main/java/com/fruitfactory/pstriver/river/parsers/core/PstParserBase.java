@@ -104,31 +104,10 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
                 }
                 setRiverStatus(riverStatus);
                 
-                //String[] psts = _def.getDataArray();
-                //int index = 1;
-//                for (String file : psts) {
-//                    if (!Files.exists(Paths.get(file), LinkOption.NOFOLLOW_LINKS)) {
-//                        continue;
-//                    }
-//                    PstOutlookFileReader reader = new PstOutlookFileReader(_indexName, file, _lastUpdatedDate, logger, _bulkProcessor, "pst_" + Integer.toString(index));
-//                    reader.init();
-//                    reader.prepareStatusInfo();
-//                    _readers.add(reader);
-//                    index++;
-//                }
                 outlookItemsReader = new PstOutlookItemsReader(_indexName,_lastUpdatedDate,_bulkProcessor,"pst_attachment",logger);
                 cleanerThread = new PstCleaner(_indexName,logger);
 
                 int delayTimeOut = onProcess(_readers);
-
-                for (Thread thr : _readers){
-                    if(!(thr instanceof PstOutlookFileReader)){
-                        continue;
-                    }
-                    PstOutlookFileReader reader = (PstOutlookFileReader)thr;
-                    countEmails += reader.getCountOfIndexedEmails();
-                    countAttachments += reader.getCountOfIndexedAttachments();
-                }
 
                 try {
                     _lastUpdatedDate = new Date();

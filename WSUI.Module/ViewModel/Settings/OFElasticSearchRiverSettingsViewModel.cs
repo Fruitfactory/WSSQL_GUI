@@ -212,7 +212,7 @@ namespace OF.Module.ViewModel.Settings
                     OFObjectJsonSaveReadHelper.Instance.Read<OFRiverMeta>(GlobalConst.SettingsRiverFile);
                 if (_settingsMeta.IsNull())
                 {
-                    _settingsMeta = new OFRiverMeta(OFOutlookHelper.GetOutlookFiles(),OFElasticSearchClientBase.DefaultInfrastructureName);
+                    _settingsMeta = new OFRiverMeta(OFElasticSearchClientBase.DefaultInfrastructureName);
                 }
                 if (_settingsMeta.IsNotNull())
                 {
