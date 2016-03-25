@@ -12,11 +12,13 @@ using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
 using Nest;
+using Newtonsoft.Json;
 using OF.Core.Core.AdvancedSearchCriteria;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.Rules;
@@ -269,6 +271,24 @@ namespace OF.Core.Core.Search
         protected virtual OFBody GetSearchBody()
         {
             return null;
+        }
+
+        protected virtual IEnumerable<string> GetRequiredFields()
+        {
+            var requiredProperties = GetNotIgnoredProperties(typeof (E));
+            return requiredProperties.Select(p => p.Name.ToLowerInvariant());
+        }
+
+        private PropertyInfo[] GetNotIgnoredProperties(Type type)
+        {
+            var arr = type.GetProperties().Where(p => !IsIgnoredProperty(p)).ToArray();
+            return arr;
+        }
+
+        private bool IsIgnoredProperty(PropertyInfo pInfo)
+        {
+            var attributes = pInfo.GetCustomAttributes(typeof (JsonIgnoreAttribute),true);
+            return attributes != null && attributes.Length > 0;
         }
 
         protected virtual DataTable GetDataTable(string query)

@@ -20,7 +20,7 @@ namespace OF.Infrastructure.Implements.Rules
         }
 
         public OFAttachmentFilenameSearchRule(object lockObject, IUnityContainer container)
-            : base(lockObject,container)
+            : base(lockObject, container)
         {
             CreateInit();
         }
@@ -50,7 +50,7 @@ namespace OF.Infrastructure.Implements.Rules
         {
             var preparedCriterias = GetKeywordsList();
 
-            var body = new OFBody();
+            var body = new OFBodyFields();
             if (preparedCriterias.Count > 1)
             {
                 var query = new OFQueryBoolMust<OFWildcard<OFAttachmentSimpleFilenameWildcard>>();
@@ -60,13 +60,12 @@ namespace OF.Infrastructure.Implements.Rules
                     var term = new OFWildcard<OFAttachmentSimpleFilenameWildcard>(preparedCriteria.Result);
                     query._bool.must.Add(term);
                 }
-                return body;                   
+                return body;
             }
-
+            body.fields = GetRequiredFields();
             body.query = new OFWildcard<OFAttachmentSimpleFilenameWildcard>(Query);
             return body;
         }
-
 
         protected override IEnumerable<OFAttachmentSearchObject> GetSortedAttachmentSearchObjects(IEnumerable<OFAttachmentSearchObject> list)
         {

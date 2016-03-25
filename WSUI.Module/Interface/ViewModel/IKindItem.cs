@@ -82,5 +82,7 @@ namespace OF.Module.Interface.ViewModel
         string GetSearchPattern();
 
         void SetSearchString(string searchCriteria);
+
+        event EventHandler SearchStringCleared;
     }
 }

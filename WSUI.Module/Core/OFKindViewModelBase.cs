@@ -215,6 +215,10 @@ namespace OF.Module.Core
         {
             ResetSearchSystem();
             ClearDataSource();
+            if (SearchString.IsStringEmptyOrNull())
+            {
+                OnSearchStringClear();
+            }
             if (Parent != null)
                 Parent.ForceClosePreview();
             _canSearch = true;
@@ -252,6 +256,15 @@ namespace OF.Module.Core
 
         private void SearchSystemOnSearchStarted(object o)
         {
+        }
+
+        private void OnSearchStringClear()
+        {
+            var temp = SearchStringCleared;
+            if (temp != null)
+            {
+                temp(this,EventArgs.Empty);
+            }
         }
 
         protected virtual void OnFilterData()
@@ -367,6 +380,10 @@ namespace OF.Module.Core
 #pragma warning restore 0067
 
         public event EventHandler Choose;
+
+
+        public event EventHandler SearchStringCleared;
+
 
         public OFBaseSearchObject Current
         {

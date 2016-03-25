@@ -44,8 +44,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
-    <Reference Include="WixWPF">
-      <HintPath>$(WixWPF)v3.10\WixWPF.dll</HintPath>
+    <Reference Include="WixWPF, Version=3.10.0.0, Culture=neutral, PublicKeyToken=8665a3a8c7e50284, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolkits\WixWPF\WixWPF.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

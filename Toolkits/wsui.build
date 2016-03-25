@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project name="WSUI">
   
-  <property name="project.name" value="WSOutlookPlugin" />
+  <property name="project.name" value="OF.OutlookPlugin" />
   <property name="project.build.type" value="Release" unless="${property::exists('project.build.type')}"/>
   
-  <property name="solution" value="OutlookFinder.sln" />
-  <property name="outlookplugin.project" value="WSUI.OutlookPlugin.csproj" />
+  <property name="solution" value="Build.sln" />
+  <property name="outlookplugin.project" value="OF.OutlookPlugin.csproj" />
   
   <property name="working.dir" value="${path::get-full-path('..')}"/>
   <property name="build.tools.dir" value="${working.dir}\Toolkits" />

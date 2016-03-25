@@ -142,6 +142,7 @@
     <Compile Include="Data\ElasticSearch\Request\Contact\OFEmaillContactTerms.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFContentMatchPhrase.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFSubjectMatchPhrase.cs" />
+    <Compile Include="Data\ElasticSearch\Request\OFBodyFields.cs" />
     <Compile Include="Data\ElasticSearch\Request\OFBoolMust.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFSimpleContentTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFSimpleSubjectTerm.cs" />

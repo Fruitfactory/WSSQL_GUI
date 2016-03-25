@@ -315,6 +315,8 @@ namespace OF.Module.ViewModel
             _currentItem.Start -= OnStart;
             _currentItem.Complete -= OnComplete;
             _currentItem.Error -= OnError;
+            _currentItem.SearchStringCleared -= CurrentItemOnSearchStringCleared;
+
         }
 
         private void Connect()
@@ -325,6 +327,18 @@ namespace OF.Module.ViewModel
             _currentItem.Start += OnStart;
             _currentItem.Complete += OnComplete;
             _currentItem.Error += OnError;
+            _currentItem.SearchStringCleared += CurrentItemOnSearchStringCleared;
+        }
+
+        private void CurrentItemOnSearchStringCleared(object sender, EventArgs eventArgs)
+        {
+            foreach (var ofLazyKind in _listItems)
+            {
+                if (!ReferenceEquals(ofLazyKind.Kind, _currentItem))
+                {
+                    ofLazyKind.Kind.SetSearchString(string.Empty);
+                }
+            }
         }
 
         private void OnSelectedItemChanged(OFSearchObjectPayload searchObjectPayload)

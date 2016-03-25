@@ -9,19 +9,19 @@
       <Value Profile="(Default)">h:\Visual\WORK\WSUI\solution\ClickTwice\trial\</Value>
     </Setting>
     <Setting Name="FtpServer" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">ftp://213.108.40.45:8888/</Value>
+      <Value Profile="(Default)">ftp://server40.web-hosting.com/</Value>
     </Setting>
     <Setting Name="Username" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">anonymous</Value>
+      <Value Profile="(Default)">yaroslav@outlookfinder.com</Value>
     </Setting>
     <Setting Name="Password" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">7!M^mG_[[_N$</Value>
     </Setting>
     <Setting Name="RemoteFullPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">ftp://213.108.40.45:8888/shares/NetShare/FTP/downloads/clicktwice/full/</Value>
+      <Value Profile="(Default)">downloads/clicktwice/full/</Value>
     </Setting>
     <Setting Name="RemoteTrialPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">ftp://213.108.40.45:8888/shares/NetShare/FTP/downloads/clicktwice/trial/</Value>
+      <Value Profile="(Default)">downloads/clicktwice/trial/</Value>
     </Setting>
   </Settings>
 </SettingsFile>
