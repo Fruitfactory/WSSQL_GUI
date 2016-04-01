@@ -5,9 +5,6 @@ namespace OFOutlookPlugin.Interfaces
 {
     public interface IOFOutlookItemEvents : IDisposable
     {
-        bool ConnectTo(object olFolder, bool eventClassReleasesComObject);
-        bool ConnectTo(object olFolder, bool eventClassReleasesComObject, bool recursive);
-        bool ConnectTo(ADXOlDefaultFolders folderType, bool eventClassReleasesComObject);
-        void RemoveConnection();
+        void ConnectTo(Microsoft.Office.Interop.Outlook.MailItem Mail);
     }
 }

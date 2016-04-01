@@ -128,6 +128,7 @@
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchForceClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchOFPluginStatusClient.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchRemovingClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticTrackingClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticUpdateSettingsClient.cs" />
     <Compile Include="Implements\Service\IOutlookItemsReader.cs" />

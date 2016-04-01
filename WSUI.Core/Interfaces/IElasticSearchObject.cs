@@ -2,6 +2,6 @@
 {
     public interface  IElasticSearchObject
     {
-        string EntryID { get; set; }
+        string Entryid { get; set; }
     }
 }

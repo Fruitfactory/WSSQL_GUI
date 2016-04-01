@@ -232,6 +232,29 @@ namespace OF.Core.Helpers
             }
         }
 
+        public void FixBeforeItemMoveEvent(string officeVersion)
+        {
+            //https://support.microsoft.com/en-us/kb/971367
+            if (string.IsNullOrEmpty(officeVersion))
+            {
+                return;
+            }
+            var registry = _baseRegistry;
+            try
+            {
+                var key = string.Format("Software\\Microsoft\\Office\\{0}\\Outlook\\Preferences",officeVersion);
+                var preferenceKey = registry.CreateSubKey(key);
+                if (preferenceKey != null)
+                {
+                    preferenceKey.SetValue("ReliableFolderMoveEvent", 1);
+                }
+            }
+            catch (Exception)
+            {
+                
+            }
+        }
+
 
         public void DeleteOutlookSecuritySettings(string officeVersion)
         {

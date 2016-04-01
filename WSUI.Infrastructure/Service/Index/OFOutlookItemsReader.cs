@@ -255,7 +255,7 @@ namespace OF.Infrastructure.Service.Index
             contact.OtherAddress = contactItem.OtherAddress;
             contact.Birthday = null; //contactItem.Birthday;
 
-            contact.EntryID = contactItem.EntryID;
+            contact.Entryid = contactItem.EntryID;
 
             contact.Addresstype = "";
 
@@ -356,7 +356,7 @@ namespace OF.Infrastructure.Service.Index
             var recev = result.ReceivedTime;    
             email.Datereceived = new DateTime(recev.Year,recev.Month,recev.Day,recev.Hour,recev.Minute,recev.Second,111);
             email.Size = result.Size;
-            email.EntryID = result.EntryID;
+            email.Entryid = result.EntryID;
             email.Conversationid = result.EntryID;
             email.Conversationindex = result.ConversationIndex;
             email.Outlookconversationid = result.ConversationIndex;
@@ -387,7 +387,7 @@ namespace OF.Infrastructure.Service.Index
                     attachment.MimeTag = att.PropertyAccessor.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x370E001E");
                     attachment.Path = att.PathName;
                     attachment.Size = att.Size;
-                    attachment.EntryID = result.EntryID;
+                    attachment.Entryid = result.EntryID;
                     listAttachments.Add(attachment);
                 }
                 catch (Exception ex)
@@ -406,7 +406,7 @@ namespace OF.Infrastructure.Service.Index
 
             foreach (var recipient in result.Recipients.OfType<Outlook.Recipient>())
             {
-                var r = new OFRecipient(){Address = recipient.GetSMTPAddress(),Name = recipient.Name,Emailaddresstype = recipient.Type.ToString(),EntryID =  recipient.EntryID};
+                var r = new OFRecipient(){Address = recipient.GetSMTPAddress(),Name = recipient.Name,Emailaddresstype = recipient.Type.ToString(),Entryid =  recipient.EntryID};
                 switch (recipient.Type)
                 {
                     case 0:

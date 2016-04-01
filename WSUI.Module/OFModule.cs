@@ -123,6 +123,8 @@ namespace OF.Module
 
             _unityContainer.RegisterType<IOutlookSecuritySettingsViewModel, OFOutlookSecutirySettingsViewModel>();
             _unityContainer.RegisterType<IOutlookSecuritySettingsView, OFOutlookSecuritySettingsView>();
+
+            _unityContainer.RegisterType<IOFElasticSearchRemovingClient, OFElasticSearchRemovingClient>();
             
             watch.Stop();
             OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));

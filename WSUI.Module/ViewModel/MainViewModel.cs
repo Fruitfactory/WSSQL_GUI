@@ -682,11 +682,30 @@ namespace OF.Module.ViewModel
                         var wnd = _container.Resolve<IMainSettingsWindow>();
                         wnd.ShowModal();
                         break;
+                    case OFActionType.DeleteMail:
+                        System.Diagnostics.Debug.WriteLine("!!!! Remove!");
+                        //RemoveEmail(action);
+                        break;
                 }
             }
             catch (Exception ex)
             {
                 OFLogger.Instance.LogError(ex.ToString());
+            }
+        }
+
+        private void RemoveEmail(IWSAction action)
+        {
+            var entryId = action.Data as string;
+            if (string.IsNullOrEmpty(entryId))
+            {
+                return;
+            }
+
+            var removingClient = _container.Resolve<IOFElasticSearchRemovingClient>();
+            if (removingClient.IsNotNull())
+            {
+                removingClient.RemoveEmail(entryId);                
             }
         }
 

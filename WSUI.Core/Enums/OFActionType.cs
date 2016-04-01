@@ -13,6 +13,7 @@
         ClearText,
         ShowContact,
         Settings,
-        EnableMenu
+        EnableMenu,
+        DeleteMail
     }
 }

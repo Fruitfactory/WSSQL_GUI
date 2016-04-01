@@ -176,6 +176,7 @@
     <Compile Include="Hooks\MouseEventExtArgs.cs" />
     <Compile Include="Interfaces\ICommandManager.cs" />
     <Compile Include="Interfaces\IMainForm.cs" />
+    <Compile Include="Interfaces\IOFMailRemovingManager.cs" />
     <Compile Include="Interfaces\ISidebarForm.cs" />
     <Compile Include="Interfaces\IUpdatable.cs" />
     <Compile Include="Interfaces\IOFCommandManager.cs" />
@@ -183,7 +184,9 @@
     <Compile Include="Interfaces\IOFOutlookItemEvents.cs" />
     <Compile Include="Managers\OFAboutCommandManager.cs" />
     <Compile Include="Managers\OFCommandBarManager.cs" />
+    <Compile Include="Managers\OFMailRemovingManager.cs" />
     <Compile Include="Managers\OFRibbonManager.cs" />
+    <Compile Include="Managers\OutlookEventsManagers\OFOutlookItemEvents.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

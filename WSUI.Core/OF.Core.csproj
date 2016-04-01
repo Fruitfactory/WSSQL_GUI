@@ -187,7 +187,7 @@
     <Compile Include="Interfaces\IElasticSearchClient.cs" />
     <Compile Include="Enums\OFRiverSchedule.cs" />
     <Compile Include="Interfaces\IElasticSearchInitializationIndex.cs" />
-    <Compile Include="Core\ElasticSearch\OFElasticSearchClient.cs" />
+    <Compile Include="Core\ElasticSearch\OFElasticSearchClientBase.cs" />
     <Compile Include="Core\Event\OFBasePayloadEvent.cs" />
     <Compile Include="Core\LimeLM\LimeLM.cs" />
     <Compile Include="Core\LimeLM\TurboActivate.cs" />
@@ -301,6 +301,7 @@
     <Compile Include="Interfaces\IFieldCash.cs" />
     <Compile Include="Interfaces\IIndexerDataReader.cs" />
     <Compile Include="Interfaces\INavigationView.cs" />
+    <Compile Include="Interfaces\IOFElasticSearchRemovingClient.cs" />
     <Compile Include="Interfaces\IOutlookFolder.cs" />
     <Compile Include="Interfaces\IOutlookHelper.cs" />
     <Compile Include="Interfaces\IQueryGenerator.cs" />

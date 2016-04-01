@@ -4,7 +4,7 @@ namespace OF.Core.Data.ElasticSearch
 {
     public class OFElasticSearchBaseEntity : IElasticSearchObject
     {
-        public string EntryID
+        public string Entryid
         {
             get; set;
         }

@@ -868,7 +868,7 @@ namespace OF.CA
                 if (File.Exists(filename))
                 {
                     session.Log("Disable Access Prompt...");
-                    DisabeAccessPrompt();
+                    SetRegistrySettings();
 
                     session.Log("Starting Service Application...");
                     OFRegistryHelper.Instance.SetAutoRunHelperApplication(ofPath);
@@ -883,11 +883,21 @@ namespace OF.CA
             return ActionResult.Success;
         }
 
-
-        private static void DisabeAccessPrompt()
+        private static void SetRegistrySettings()
         {
             var versions = OFRegistryHelper.Instance.GetOutlookVersion();
-            OFRegistryHelper.Instance.DisableOutlookSecurityWarning(versions.Item1);
+            DisabeAccessPrompt(versions.Item1);
+            FixBeforeItemMoveEvent(versions.Item1);
+        }
+
+        private static void DisabeAccessPrompt(string version)
+        {
+            OFRegistryHelper.Instance.DisableOutlookSecurityWarning(version);
+        }
+
+        private static void FixBeforeItemMoveEvent(string version)
+        {
+            OFRegistryHelper.Instance.FixBeforeItemMoveEvent(version);
         }
 
         #endregion

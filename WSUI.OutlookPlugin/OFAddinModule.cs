@@ -28,6 +28,7 @@ using Application = System.Windows.Forms.Application;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 using OF.Core;
+using OF.Core.Interfaces;
 
 namespace OFOutlookPlugin
 {
@@ -49,6 +50,8 @@ namespace OFOutlookPlugin
         private bool IsLoading = true;
         private int _initHashCode;
         private Stopwatch _watch;
+        private IOFMailRemovingManager _mailRemovingManager;
+        private bool _canConnect = true;
 
         #region [const]
 
@@ -112,9 +115,16 @@ namespace OFOutlookPlugin
             Init();
             this.OnSendMessage += OFAddinModule_OnSendMessage;
             this.AddinInitialize += OnAddinInitialize;
+            this.AddinBeginShutdown += OnAddinBeginShutdown;
+            _mailRemovingManager = new OFMailRemovingManager(this);
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
+        }
+
+        private void OnAddinBeginShutdown(object sender, EventArgs eventArgs)
+        {
+
         }
 
         private void OnAddinInitialize(object sender, EventArgs eventArgs)
@@ -480,8 +490,13 @@ namespace OFOutlookPlugin
             // 
             // OutlookFinderEvents
             // 
+            this.OutlookFinderEvents.ItemSend += new AddinExpress.MSO.ADXOlItemSend_EventHandler(this.OutlookFinderEvents_ItemSend);
             this.OutlookFinderEvents.Quit += new System.EventHandler(this.OutlookFinderEvents_Quit);
+            this.OutlookFinderEvents.InspectorActivate += new AddinExpress.MSO.ADXOlInspector_EventHandler(this.OutlookFinderEvents_InspectorActivate);
+            this.OutlookFinderEvents.InspectorClose += new AddinExpress.MSO.ADXOlInspector_EventHandler(this.OutlookFinderEvents_InspectorClose);
             this.OutlookFinderEvents.NewExplorer += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_NewExplorer);
+            this.OutlookFinderEvents.ExplorerActivate += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerActivate);
+            this.OutlookFinderEvents.ExplorerClose += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerClose);
             this.OutlookFinderEvents.ExplorerSelectionChange += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerSelectionChange);
             // 
             // OFAddinModule
@@ -566,7 +581,7 @@ namespace OFOutlookPlugin
             {
                 //StartWatch();
                 OFLogger.Instance.LogDebug("Plugin is loading...");
-                //outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
+                outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
                 OFRegistryHelper.Instance.ResetShutdownNotification();
                 if (System.Windows.Application.Current == null)
                 {
@@ -596,11 +611,8 @@ namespace OFOutlookPlugin
         {
             try
             {
-                //StartWatch();
-                if (IsLoading)
-                    return;
-                HideSidebarDuringSwitching();
-                //StopWatch("OutlookFormManagerOnAdxFolderSwitchEx");
+                var folder = args.FolderObj as Outlook.Folder;
+                _mailRemovingManager.ConnectTo(folder);
             }
             catch (Exception ex)
             {
@@ -896,6 +908,7 @@ namespace OFOutlookPlugin
                 this.SendMessage(WM_LOADED, IntPtr.Zero, IntPtr.Zero);
                 OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
                 OFOutlookHelper.Instance.OutlookApp = OutlookApp;
+                _mailRemovingManager.Initialize();
                 OFLogger.Instance.LogInfo("OF AddinModule Startup Complete...");
                 //StopWatch("OFAddinModule_AddinStartupComplete");
             }
@@ -1021,6 +1034,7 @@ namespace OFOutlookPlugin
             ResetLoadingTime();
             ResetAddIn();
             ResetDisabling();
+            _mailRemovingManager.Dispose();
             if (_wsuiBootStraper != null)
             {
                 _wsuiBootStraper.PassAction(new OFAction(OFActionType.Quit, null));
@@ -1195,75 +1209,7 @@ namespace OFOutlookPlugin
 
         private void OutlookFinderEvents_ExplorerSelectionChange(object sender, object explorer)
         {
-            return;
-
-            //var exp = explorer as Outlook._Explorer;
-            //if (exp == null || exp.Selection.Count == 0)
-            //    return;
-
-            //string email = string.Empty;
-            //string[] names = default(string[]);
-            //dynamic item = null;
-            //if (exp.Selection[1] is Outlook.MailItem)
-            //{
-            //    var itemMail = exp.Selection[1] as Outlook.MailItem;
-            //    var senderContact = itemMail.Sender as Outlook.AddressEntry;
-            //    names = senderContact.Name.Split(' ');
-            //    email = senderContact.GetEmailAddress();
-            //    item = itemMail;
-            //}
-            //else if (exp.Selection[1] is Outlook.AppointmentItem)
-            //{
-            //    var itemAppointment = exp.Selection[1] as Outlook.AppointmentItem;
-            //    var organizer = itemAppointment.GetOrganizer() as Outlook.AddressEntry;
-            //    names = organizer.Name.Split(' ');
-            //    email = organizer.GetEmailAddress();
-            //    item = itemAppointment;
-            //}
-            //else if (exp.Selection[1] is Outlook.MeetingItem)
-            //{
-            //    var itemMeeting = exp.Selection[1] as Outlook.MeetingItem;
-            //    names = itemMeeting.SenderName.Split(' ');
-            //    if (itemMeeting.SenderEmailAddress.IsEmail())
-            //    {
-            //        email = itemMeeting.SenderEmailAddress;
-            //    }
-            //    else if (names.Length > 1)
-            //    {
-            //        var contact = OutlookHelper.Instance.GetContact(names[0], names[1]);
-            //        if (contact.Any())
-            //        {
-            //            var ct = contact.FirstOrDefault(c => !string.IsNullOrEmpty(c.Email1Address));
-            //            if (ct.IsNotNull() && ct.Email1Address.IsEmail())
-            //            {
-            //                email = ct.Email1Address;
-            //            }
-            //        }
-            //    }
-            //    item = itemMeeting;
-            //}
-            //if (item == null)
-            //{
-            //    return;
-            //}
-            //var referenceItem = item.EntryID;
-            //if (_previewReferenceSelected != null && _previewReferenceSelected == referenceItem)
-            //    return;
-            //_previewReferenceSelected = referenceItem;
-
-            //if (_wsuiBootStraper == null)
-            //    return;
-
-            //if(names.Length > 1)
-            //{
-            //    var tag = new ContactSearchObject() { FirstName = names[0], LastName = names[1], EmailAddress = email };
-            //    _wsuiBootStraper.PassAction(new WSAction(WSActionType.ShowContact, tag));
-            //}
-            //else if (names.Length > 0)
-            //{
-            //    var tag = new EmailContactSearchObject() { ContactName = names[0], EMail = email };
-            //    _wsuiBootStraper.PassAction(new WSAction(WSActionType.ShowContact, tag));
-            //}
+            ConnectToSelectedItem(explorer);
         }
 
         private void ResetLoadingTime()
@@ -1354,8 +1300,82 @@ namespace OFOutlookPlugin
         }
 
 
+        private void ConnectToSelectedItem(object explorer)
+        {
+            Outlook.Selection sel = null;
+            try
+            {
+                Outlook._Explorer expl = explorer as Outlook._Explorer;
+                sel = expl.Selection;
+                if (sel.Count == 1)
+                {
+                    var mail = sel[1] as Outlook.MailItem;
+                    if (mail != null)
+                    {
+                        _mailRemovingManager.ConnectTo(mail);
+                    }
+                    else
+                    {
+                        Marshal.ReleaseComObject(mail);
+                    }
+                }
+            }
+            finally
+            {
+                if (sel != null)
+                {
+                    Marshal.ReleaseComObject(sel);
+                }
+            }
+        }
+
+        private void OutlookFinderEvents_InspectorActivate(object sender, object inspector, string folderName)
+        {
+            if (_canConnect)
+            {
+                Outlook._Inspector insp = (Outlook._Inspector) inspector;
+                var item = insp.CurrentItem as Outlook.MailItem;
+                if (item != null)
+                {
+                    _mailRemovingManager.ConnectTo(item);                    
+                }
+            }
+        }
+
+        private void OutlookFinderEvents_ExplorerClose(object sender, object explorer)
+        {
+            int count = 0;
+            Outlook._Explorers expls = null;
+            try
+            {
+                expls = OutlookApp.Explorers;
+                count = expls.Count;
+            }
+            finally 
+            {
+                if (expls != null)
+                {
+                    Marshal.ReleaseComObject(expls);
+                }
+            }
+            if (count == 0)
+            {
+                _canConnect = false;
+            }
+        }
 
 
+        private void OutlookFinderEvents_ExplorerActivate(object sender, object explorer)
+        {
+            ConnectToSelectedItem(explorer);
+        }
 
+        private void OutlookFinderEvents_ItemSend(object sender, ADXOlItemSendEventArgs e)
+        {
+        }
+
+        private void OutlookFinderEvents_InspectorClose(object sender, object inspector, string folderName)
+        {
+        }
     }
 }
