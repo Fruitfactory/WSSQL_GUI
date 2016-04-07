@@ -10,8 +10,8 @@ import java.util.List;
  */
 public class PstEmailContent {
 
-    @SerializedName("entryID")
-    public String entryID;
+    @SerializedName("entryid")
+    public String entryid;
 
     @SerializedName("itemName")
     public String itemName;
@@ -82,12 +82,12 @@ public class PstEmailContent {
     public PstEmailContent() {
     }
 
-    public String getEntryID() {
-        return entryID;
+    public String getEntryid() {
+        return entryid;
     }
 
-    public void setEntryID(String entryID) {
-        this.entryID = entryID;
+    public void setEntryid(String entryid) {
+        this.entryid = entryid;
     }
 
     public String getItemName() {

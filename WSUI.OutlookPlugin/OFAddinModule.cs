@@ -1316,7 +1316,10 @@ namespace OFOutlookPlugin
                     }
                     else
                     {
-                        Marshal.ReleaseComObject(mail);
+                        if (mail != null)
+                        {
+                            Marshal.ReleaseComObject(mail);
+                        }
                     }
                 }
             }

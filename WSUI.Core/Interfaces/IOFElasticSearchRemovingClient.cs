@@ -1,6 +1,8 @@
-﻿namespace OF.Core.Interfaces
+﻿using System;
+
+namespace OF.Core.Interfaces
 {
-    public interface IOFElasticSearchRemovingClient
+    public interface IOFElasticSearchRemovingClient : IDisposable
     {
         void RemoveEmail(string entryId);
     }

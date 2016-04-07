@@ -25,7 +25,6 @@ namespace OFOutlookPlugin.Managers
 
         private OFAddinModule _module;
         private IDictionary<string,Outlook.Folder> _folders = new Dictionary<string, Outlook.Folder>();
-        private Outlook.Folder _folder;
         private OFOutlookItemEvents _itemEvents;
 
 
@@ -82,15 +81,16 @@ namespace OFOutlookPlugin.Managers
             {
                 return;
             }
-            if (_folder.IsNotNull())
-            {
-                _folder.BeforeItemMove -= FolderOnBeforeItemMove;
-                Marshal.ReleaseComObject(_folder);
-                _folder = null;
-            }
 
-            _folder = Folder;
-            _folder.BeforeItemMove += FolderOnBeforeItemMove;
+            if (!_folders.ContainsKey(Folder.EntryID))
+            {
+                Outlook.Folder folder = _module.OutlookApp.Session.GetFolderFromID(Folder.EntryID) as Outlook.Folder;
+                if (folder != null)
+                {
+                    folder.BeforeItemMove += FolderOnBeforeItemMove;
+                    _folders.Add(Folder.EntryID,folder);
+                }
+            }
         }
 
         public void RemoveConnection()
@@ -134,13 +134,8 @@ namespace OFOutlookPlugin.Managers
                 }
                 _folders.Clear();
             }
-            if (_folder.IsNotNull())
-            {
-                _folder.BeforeItemMove -= FolderOnBeforeItemMove;
-                Marshal.ReleaseComObject(_folder);
-                _folder = null;
-            }
-
+            _itemEvents.RemoveConnection();
+            _itemEvents.Dispose();
         }
     }
 }

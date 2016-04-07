@@ -683,8 +683,8 @@ namespace OF.Module.ViewModel
                         wnd.ShowModal();
                         break;
                     case OFActionType.DeleteMail:
-                        System.Diagnostics.Debug.WriteLine("!!!! Remove!");
-                        //RemoveEmail(action);
+                        OFLogger.Instance.LogDebug("!!!! Remove Email From ES " + action.Data);
+                        RemoveEmail(action);
                         break;
                 }
             }
@@ -702,10 +702,12 @@ namespace OF.Module.ViewModel
                 return;
             }
 
-            var removingClient = _container.Resolve<IOFElasticSearchRemovingClient>();
-            if (removingClient.IsNotNull())
+            using (var removingClient = _container.Resolve<IOFElasticSearchRemovingClient>())
             {
-                removingClient.RemoveEmail(entryId);                
+                if (removingClient.IsNotNull())
+                {
+                    removingClient.RemoveEmail(entryId);
+                }
             }
         }
 

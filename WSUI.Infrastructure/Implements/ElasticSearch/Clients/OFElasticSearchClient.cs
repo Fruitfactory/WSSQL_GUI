@@ -40,7 +40,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                var str = Encoding.UTF8.GetString(bodyBytes);
+                //var str = Encoding.UTF8.GetString(bodyBytes);
 
                 var result = Raw.Search<byte[]>(DefaultInfrastructureName, GetSearchType(typeof(T)), bodyBytes);
 
@@ -50,7 +50,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                 Stopwatch watchParsing = new Stopwatch();
                 watchParsing.Start();
 
-                str = Encoding.UTF8.GetString(result.Response);
+                //str = Encoding.UTF8.GetString(result.Response);
 
                 using (var stream = new MemoryStream(result.Response))
                 using (var reader = new StreamReader(stream))

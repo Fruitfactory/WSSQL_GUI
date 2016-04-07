@@ -28,15 +28,16 @@ namespace WSGen
             }
 
 
-            var revision = (int)(DateTime.UtcNow - new DateTime(2013, 8, 20)).TotalDays;
+            var revision = 964;//(int)(DateTime.UtcNow - new DateTime(2013, 8, 20)).TotalDays;
 
             string source = args[0];
             string buildNumber = string.Format("{0}.{1}.{2}.{3}", Properties.Settings.Default.Major, Properties.Settings.Default.Minor,Properties.Settings.Default.Build, revision);
             string setupProject = string.Format("{0}{1}", source, Properties.Settings.Default.SetupProjectFile);
             string bootstrapperProject = string.Format("{0}{1}", source, Properties.Settings.Default.BootstrapperProject);
+            Guid newUpgradeCode = Guid.NewGuid();
             GenerateVersionFile(source, buildNumber);
-            UpdateSetupProjects(setupProject, buildNumber);
-            UpdateSetupProjects(bootstrapperProject,buildNumber,true);
+            UpdateSetupProjects(setupProject, buildNumber,newUpgradeCode);
+            UpdateSetupProjects(bootstrapperProject,buildNumber,newUpgradeCode, true);
             Properties.Settings.Default["Revision"] = Convert.ToInt32(revision);
             Properties.Settings.Default["BuildNumber"] = buildNumber;
             Properties.Settings.Default.Save();
@@ -54,7 +55,7 @@ namespace WSGen
             }
         }
 
-        static void UpdateSetupProjects(string setupProject, string buildNumber, bool bootStrap = false)
+        static void UpdateSetupProjects(string setupProject, string buildNumber, Guid upgradeCode, bool bootStrap = false)
         {
             if (!File.Exists(setupProject))
                 return;
@@ -65,10 +66,19 @@ namespace WSGen
             XElement program = !bootStrap ? doc.Root.FirstNode as XElement : doc.Root.LastNode as XElement;
             if (program != null)
             {
-                //XAttribute attr = program.Attribute("Id");
-                //attr.Value = Guid.NewGuid().ToString().ToUpperInvariant();
+                //XAttribute upgradeCodeXml = program.Attribute("UpgradeCode");
+                //upgradeCodeXml.Value = upgradeCode.ToString();
                 XAttribute attr = program.Attribute("Version");
                 attr.Value = buildNumber;
+                //if (!bootStrap)
+                //{
+                //    var upgrade = program.Descendants().FirstOrDefault(xe => xe.Name.LocalName.Equals("Upgrade",StringComparison.Ordinal));
+                //    if (upgrade != null)
+                //    {
+                //        var id = upgrade.Attribute("Id");
+                //        id.Value = upgradeCode.ToString();
+                //    }
+                //}
             }
 
             doc.Save(setupProject);

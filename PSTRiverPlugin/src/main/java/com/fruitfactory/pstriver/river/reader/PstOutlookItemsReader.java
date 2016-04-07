@@ -202,7 +202,7 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
             String hasAttachments = email.getHasattachments();
             String fromName = email.getFromname();
             String fromAddress = email.getFromaddress();
-            String entryId = email.getEntryID();
+            String entryId = email.getEntryid();
 
             _logger.info(String.format("---- Email => %s",subject));
 
