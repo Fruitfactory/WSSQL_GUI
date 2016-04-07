@@ -28,7 +28,7 @@ namespace WSGen
             }
 
 
-            var revision = 964;//(int)(DateTime.UtcNow - new DateTime(2013, 8, 20)).TotalDays;
+            var revision = (int)(DateTime.UtcNow - new DateTime(2013, 8, 20)).TotalDays;
 
             string source = args[0];
             string buildNumber = string.Format("{0}.{1}.{2}.{3}", Properties.Settings.Default.Major, Properties.Settings.Default.Minor,Properties.Settings.Default.Build, revision);
