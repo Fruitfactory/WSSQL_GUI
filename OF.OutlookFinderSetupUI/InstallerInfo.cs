@@ -85,7 +85,7 @@ namespace OF.OutlookFinderSetupUI
 
         public bool IsEnabled { get { return !IsBusy; } }
 
-        public string CancelButtonName { get { return "Done"; } }
+        public string CancelButtonName { get { return (InstallVisibility == Visibility.Visible || UnistallVisibility == Visibility.Visible ) ? "Cancel" : "Done"; } }
 
 
         #region Message

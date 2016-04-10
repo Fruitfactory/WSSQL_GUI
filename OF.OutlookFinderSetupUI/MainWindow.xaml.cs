@@ -55,6 +55,7 @@ namespace OF.OutlookFinderSetupUI
                     case "INSTALL": { Bootstrapper.Engine.Plan(Wix.LaunchAction.Install); } break;
                     case "UNINSTALL": { Bootstrapper.Engine.Plan(Wix.LaunchAction.Uninstall); } break;
                     case "DONE":
+                    case "CANCEL":
                     case "QUIT": { Close(); } break;
                     default: break;
                 }

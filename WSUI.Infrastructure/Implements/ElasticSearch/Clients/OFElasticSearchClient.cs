@@ -40,7 +40,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                //var str = Encoding.UTF8.GetString(bodyBytes);
+                var str = Encoding.UTF8.GetString(bodyBytes);
 
                 var result = Raw.Search<byte[]>(DefaultInfrastructureName, GetSearchType(typeof(T)), bodyBytes);
 

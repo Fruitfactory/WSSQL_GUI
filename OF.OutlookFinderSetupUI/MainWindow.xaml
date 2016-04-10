@@ -53,9 +53,9 @@
                         <Setter Property="Padding" Value="4,2" />
                     </Style>
                 </StackPanel.Resources>
+                <Button x:Name="ButtonQuit" Content="{Binding CancelButtonName,UpdateSourceTrigger=PropertyChanged}" Click="OnButtonClick" IsEnabled="{Binding IsEnabled,UpdateSourceTrigger=PropertyChanged}"/>
                 <Button x:Name="ButtonInstall" Content="Install" Visibility="{Binding InstallVisibility,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled,UpdateSourceTrigger=PropertyChanged}"  Click="OnButtonClick" />
                 <Button x:Name="ButtonUninstall" Content="Uninstall" Visibility="{Binding UnistallVisibility,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled,UpdateSourceTrigger=PropertyChanged}" Click="OnButtonClick" />
-                <Button x:Name="ButtonQuit" Content="{Binding CancelButtonName,UpdateSourceTrigger=PropertyChanged}" Click="OnButtonClick" IsEnabled="{Binding IsEnabled,UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
         </Grid>
         

@@ -51,6 +51,7 @@ namespace OF.Infrastructure.Implements.Rules
             var preparedCriterias = GetKeywordsList();
 
             var body = new OFBodyFields();
+            body.fields = GetRequiredFields();
             if (preparedCriterias.Count > 1)
             {
                 var query = new OFQueryBoolMust<OFWildcard<OFAttachmentSimpleFilenameWildcard>>();
@@ -62,7 +63,6 @@ namespace OF.Infrastructure.Implements.Rules
                 }
                 return body;
             }
-            body.fields = GetRequiredFields();
             body.query = new OFWildcard<OFAttachmentSimpleFilenameWildcard>(Query);
             return body;
         }

@@ -443,7 +443,15 @@ namespace OF.Core.Helpers
             if (emailSearch == null)
                 return string.Empty;
 
-            Outlook.MAPIFolder folder = OutlookApp.Session.GetFolderFromID(data.FolderMessageStoreIdPart);
+            Outlook.MAPIFolder folder = null;
+            try
+            {
+                folder = OutlookApp.Session.GetFolderFromID(data.FolderMessageStoreIdPart);
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.ToString());
+            }
 
             return folder.IsNotNull() ? folder.FullFolderPath : "";
         }
