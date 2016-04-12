@@ -440,7 +440,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             try
             {
                 var filename = string.Format("{0}/{1}", tempFolder, attachment.Filename);
-                if (attachment.Content.IsStringEmptyOrNull() && !attachment.Outlookemailid.IsStringEmptyOrNull())
+                if (string.IsNullOrEmpty(attachment.Content) && !attachment.Outlookemailid.IsStringEmptyOrNull())
                 {
                     Outlook.MailItem email = OFOutlookHelper.Instance.GetEmailItem(attachment.Outlookemailid);
                     Outlook.Attachment att = OFOutlookHelper.Instance.GetAttacment(email, attachment.Filename);
@@ -451,7 +451,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
                     att.SaveAsFile(filename);
                     return filename;
                 }
-                else if(!attachment.Content.IsStringEmptyOrNull())
+                else if(!string.IsNullOrEmpty(attachment.Content))
                 {
                     byte[] content = Convert.FromBase64String(attachment.Content);
                     File.WriteAllBytes(filename, content);
