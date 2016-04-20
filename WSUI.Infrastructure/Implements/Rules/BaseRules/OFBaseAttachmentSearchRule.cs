@@ -88,7 +88,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
 
 	    protected override void ProcessResult()
 	    {
-            var groups = Result.GroupBy(i => new { Name = i.ItemNameDisplay, Size = i.Size });
+            var groups = Result.OrderByDescending(i => i.DateCreated).GroupBy(i => new { Name = i.ItemNameDisplay, Size = i.Size });
 	        var result = new List<OFAttachmentContentSearchObject>();
             OFLogger.Instance.LogDebug(string.Format("Count attachments: {0}", groups.Count()));
             foreach (var group in groups)
@@ -106,7 +106,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             {
                 OFLogger.Instance.LogDebug("{0}: {1}",RuleName,result.Count);
                 Result = result;
-                //LastDate = Result.Min(d => d.DateReceived); // TODO should be re-factored
+                LastDate = Result.Min(d => d.DateCreated.Value); // TODO should be re-factored
             }
 	    }
 

@@ -27,8 +27,9 @@ namespace OF.OutlookFinderSetupUI
             InitializeComponent();
             InstallData = new InstallerInfo();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
-            //System.Diagnostics.Debugger.Launch();
+            System.Diagnostics.Debugger.Launch();
         }
+
 
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
@@ -136,6 +137,27 @@ namespace OF.OutlookFinderSetupUI
         {
             Bootstrapper.WriteToLog(Wix.LogLevel.Standard,"Closed");
             base.OnClosed(e);
+        }
+
+        public override void OnExecuteComplete(WPFBootstrapperEventArgs<Wix.ExecuteCompleteEventArgs> args)
+        {
+            //InstallData.IsBusy = false;
+            base.OnExecuteComplete(args);
+        }
+
+        public override void OnExecutePackageComplete(WPFBootstrapperEventArgs<Wix.ExecutePackageCompleteEventArgs> args)
+        {
+            base.OnExecutePackageComplete(args);
+        }
+
+        public override void OnShutdown(WPFBootstrapperEventArgs<Wix.ShutdownEventArgs> args)
+        {
+            base.OnShutdown(args);
+        }
+
+        public override void OnSystemShutdown(WPFBootstrapperEventArgs<Wix.SystemShutdownEventArgs> args)
+        {
+            base.OnSystemShutdown(args);
         }
 
         #region OnPlanComplete

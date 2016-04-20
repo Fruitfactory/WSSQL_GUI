@@ -476,7 +476,8 @@ namespace OF.Infrastructure.Service.Index
             indexAttach.Size = attachment.Size;
             indexAttach.Emailid = email.EntryID;
             indexAttach.Outlookemailid = email.EntryID;
-            indexAttach.Datecreated = email.CreationTime;
+            var recev = email.ReceivedTime;
+            indexAttach.Datecreated = new DateTime(recev.Year, recev.Month, recev.Day, recev.Hour, recev.Minute, recev.Second, 111);
             OFLogger.Instance.LogDebug("---- Attachment => {0}", attachment.FileName);
             indexAttach.Filename = attachment.FileName;
             if (content != null)
