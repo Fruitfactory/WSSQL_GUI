@@ -13,6 +13,8 @@ import com.fruitfactory.pstriver.helpers.PstRiverStatus;
  */
 public interface IPstStatusTracker {
     void setStatus(PstRiverStatus riverStatus);
-    
+
     PstRiverStatus getStatus();
+
+    PstRiverStatus getInitialStatus();
 }

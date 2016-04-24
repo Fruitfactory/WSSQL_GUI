@@ -268,6 +268,7 @@ namespace OF.Module.ViewModel
                 var riverStatusResp = ElasticSearchClient.GetRiverStatus();
                 IsInitialIndexinginProgress = riverStatusResp.Response.IsNotNull() &&
                                               riverStatusResp.Response.Status == OFRiverStatus.InitialIndexing;
+                OFLogger.Instance.LogInfo("STATUS: {0}",riverStatusResp.Response.Status);
                 _eventAggregator.GetEvent<OFMenuEnabling>().Publish(resp.Exists);
             }
         }

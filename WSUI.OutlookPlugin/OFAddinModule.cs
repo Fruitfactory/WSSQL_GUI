@@ -593,6 +593,7 @@ namespace OFOutlookPlugin
                         System.Windows.Application.Current.DispatcherUnhandledException += WPFApplicationOnDispatcherUnhandledException;
                     }
                 }
+               
                 if (_updatable == null)
                 {
                     _updatable = OFUpdateHelper.Instance;

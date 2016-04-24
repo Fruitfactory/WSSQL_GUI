@@ -892,9 +892,10 @@ namespace OF.Module.ViewModel
                 if (_elasticSearchViewModel.IsNotNull())
                 {
                     _elasticSearchViewModel.Initialize();
-                    if (!_elasticSearchViewModel.IsServiceInstalled ||
+                    if (!_elasticSearchViewModel.IsInitialIndexinginProgress && 
+                        (!_elasticSearchViewModel.IsServiceInstalled ||
                         !_elasticSearchViewModel.IsServiceRunning ||
-                        !_elasticSearchViewModel.IsIndexExisted)
+                        !_elasticSearchViewModel.IsIndexExisted))
                     {
                         _elasticSearchViewModel.Show(false);
                     }

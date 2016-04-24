@@ -40,7 +40,6 @@ public class PstRepeatParser extends PstParserBase{
     @Override
     protected int onProcess(List<Thread> readers) throws Exception {
 
-        setRiverStatus(PstRiverStatus.Busy);
         PstOutlookItemsReader attachmentReader = getOutlookItemsReader();
         PstCleaner cleaner = getCleaner();
 

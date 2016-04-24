@@ -53,6 +53,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
     private RiverName riverName;
     private String _indexName;
     private PstRiverStatus riverStatus;
+    private PstRiverStatus initialriverStatus;
     private IPstRiverInitializer _riverInitializer;
     private PstOutlookItemsReader outlookItemsReader;
     private PstCleaner cleanerThread;
@@ -94,15 +95,15 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
             }
             try {
                 _lastUpdatedDate = getLastDateFromRiver();
-                riverStatus = getStatusFromRiver();
+                initialriverStatus = getStatusFromRiver();
 
                 countEmails = getLastCountIndexedCountOfEmails();
                 countAttachments = getLastCountIndexedOfAttachments();
 
-                if (riverStatus != PstRiverStatus.InitialIndexing) {
-                    riverStatus = PstRiverStatus.Busy;
+                if (initialriverStatus != PstRiverStatus.InitialIndexing) {
+                    initialriverStatus = PstRiverStatus.Busy;
                 }
-                setRiverStatus(riverStatus);
+                setRiverStatus(initialriverStatus);
                 
                 outlookItemsReader = new PstOutlookItemsReader(_indexName,_lastUpdatedDate,_bulkProcessor,"pst_attachment",logger);
                 cleanerThread = new PstCleaner(_indexName,logger);
@@ -143,6 +144,10 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
 
     public PstRiverStatus getStatus(){
         return this.riverStatus;
+    }
+
+    public PstRiverStatus getInitialStatus(){
+        return this.initialriverStatus;
     }
 
     protected abstract int onProcess(List<Thread> readers) throws Exception;
@@ -269,7 +274,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
     }
 
     @SuppressWarnings("unchecked")
-    private PstRiverStatus getStatusFromRiver() {
+    protected PstRiverStatus getStatusFromRiver() {
         PstRiverStatus riverStatus = PstRiverStatus.None;
 
         Object value = getSavedValue(null,PstGlobalConst.RIVER_STATUS,"riverstatus");

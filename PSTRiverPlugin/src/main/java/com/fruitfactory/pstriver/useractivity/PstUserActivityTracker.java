@@ -174,7 +174,7 @@ public class PstUserActivityTracker extends Thread {
         if(restAttachmentClient != null){
             restAttachmentClient.resumeRead(_lastUpdated);
         }
-        statusTracker.setStatus(PstRiverStatus.Busy);
+        statusTracker.setStatus(statusTracker.getInitialStatus());
     }
     
 }

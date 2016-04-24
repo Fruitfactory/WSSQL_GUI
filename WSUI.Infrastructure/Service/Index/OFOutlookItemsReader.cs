@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -31,6 +32,7 @@ namespace OF.Infrastructure.Service.Index
         private CancellationTokenSource _cancellationSource;
         private CancellationToken _cancellationToken;
         private IElasticSearchIndexOutlookItemsClient _indexOutlookItemsClient;
+        private readonly Dictionary<string, object> _processedItems = new Dictionary<string, object>();
         private DateTime? _lastUpdated;
         private readonly object _lock = new object();
         
@@ -38,7 +40,9 @@ namespace OF.Infrastructure.Service.Index
         private static readonly string DateFormat = "MM/dd/yyyy HH:mm:ss";
         private static int PageMaxSize = 65536;
 
-        
+        Outlook.Application _application = null;
+
+
         public OFOutlookItemsReader()
         {
             Status = PstReaderStatus.None;
@@ -128,62 +132,84 @@ namespace OF.Infrastructure.Service.Index
         {
             OFMessageFilter.Register();
 
-            Outlook._Application application = null;
+            
             var isExistingProcess = false;
             try
             {
                 Status = PstReaderStatus.Busy;
                 var resultApplication = OFOutlookHelper.Instance.GetApplication();
-                application = resultApplication.Item1 as Outlook._Application;
+                _application = resultApplication.Item1 as Outlook.Application;
 
                 isExistingProcess = resultApplication.Item2;
-                var folderList = GetFolders(application).OfType<Outlook.MAPIFolder>();
+                var folderList = GetFolders(_application).OfType<Outlook.MAPIFolder>();
                 if (!folderList.Any())
                 {
-                    CloseApplication(application,isExistingProcess);
+                    CloseApplication(_application, isExistingProcess);
                     return;
                 }
 
                 _indexOutlookItemsClient.SendOutlookItemsCount(folderList.Sum(f => f.Items.Count));
 
-                foreach (var mapiFolder in folderList)
+                try
                 {
-                    CheckCancellation();
-                    TryToWait();
-                    OFLogger.Instance.LogDebug("Attachment Reader => Folder name: {0}", mapiFolder.Name);
-                    if (mapiFolder.Items.Count == 0)
-                    {
-                        Marshal.ReleaseComObject(mapiFolder);
-                        continue;
-                    }
-                    foreach (var result in mapiFolder.Items)
+
+                    foreach (var mapiFolder in folderList)
                     {
                         CheckCancellation();
                         TryToWait();
-                        try
+                        OFLogger.Instance.LogDebug("Attachment Reader => Folder name: {0}", mapiFolder.Name);
+                        if (mapiFolder.Items.Count == 0)
                         {
-                            if (result is Outlook.MailItem)
+                            Marshal.ReleaseComObject(mapiFolder);
+                            continue;
+                        }
+                        foreach (var result in mapiFolder.Items)
+                        {
+                            CheckCancellation();
+                            TryToWait();
+                            try
                             {
-                                ProcessEmailItem(result as Outlook.MailItem, mapiFolder);
+                                var email = result as Outlook.MailItem;
+                                var contact = result as Outlook.ContactItem;
+
+                                if (email != null)
+                                {
+                                    if (_processedItems.ContainsKey(email.EntryID))
+                                        continue;
+                                    ProcessEmailItem(email, mapiFolder);
+                                    _processedItems.Add(email.EntryID, null);
+                                }
+                                else if (contact != null)
+                                {
+                                    if (_processedItems.ContainsKey(contact.EntryID))
+                                        continue;
+                                    ProcessContactItem(contact);
+                                    _processedItems.Add(contact.EntryID, null);
+                                }
                             }
-                            else if (result is Outlook.ContactItem)
+                            finally
                             {
-                                ProcessContactItem(result as Outlook.ContactItem);
+                                Marshal.ReleaseComObject(result);
                             }
                         }
-                        finally
-                        {
-                            Marshal.ReleaseComObject(result);
-                        }
+                        Marshal.ReleaseComObject(mapiFolder);
+                        // begin - guys recomend o_O - https://social.msdn.microsoft.com/Forums/vstudio/en-US/e8fd2d43-7c2d-46f4-85a8-37d30b4774d9/closing-mailitems-some-help-needed?forum=vsto
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
+                        // end
+                        CheckCancellation();
                     }
-                    Marshal.ReleaseComObject(mapiFolder);
-                    // begin - guys recomend o_O - https://social.msdn.microsoft.com/Forums/vstudio/en-US/e8fd2d43-7c2d-46f4-85a8-37d30b4774d9/closing-mailitems-some-help-needed?forum=vsto
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    // end
-                    CheckCancellation();
+                }
+                catch (COMException com)
+                {
+                    OFLogger.Instance.LogError(com.ToString());
+                    OFLogger.Instance.LogWarning("Restart the indexing process...");
+                    if (com.Message.Contains("The RPC server is unavailable"))
+                    {
+                        ProcessOutlookItems(null);
+                    }
                 }
             }
             catch (AggregateException ex)
@@ -197,19 +223,22 @@ namespace OF.Infrastructure.Service.Index
             finally
             {
                 SendOutlookItems(null,null,null, OFOutlookItemsIndexProcess.End);
+                _processedItems.Clear();
                 Status = PstReaderStatus.Finished;
-                CloseApplication(application,isExistingProcess);
-                application = null;
+                CloseApplication(_application,isExistingProcess);
+                _application = null;
                 OFLogger.Instance.LogInfo("!!!!!!!! Exit From Attachment Reader");
                 System.Diagnostics.Debug.WriteLine("!!!!!!!! Exit From Attachment Reader");
                 IsStarted = false;
                 _thread = null;
-                _cancellationSource.Dispose();    
-                _cancellationSource = null;
+                if (_cancellationSource != null)
+                {
+                    _cancellationSource.Dispose();
+                    _cancellationSource = null;
+                }    
                 OFMessageFilter.Revoke();
             }
         }
-
 
         private void ProcessContactItem(Outlook.ContactItem contactItem)
         {
@@ -506,7 +535,7 @@ namespace OF.Infrastructure.Service.Index
 
         private void CheckCancellation()
         {
-            if ( _cancellationToken.IsCancellationRequested)
+            if (_cancellationToken.IsCancellationRequested)
             {
                 _cancellationToken.ThrowIfCancellationRequested();
             }
