@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -39,6 +41,9 @@ namespace OF.Infrastructure.Service.Index
         private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
         private static readonly string DateFormat = "MM/dd/yyyy HH:mm:ss";
         private static int PageMaxSize = 65536;
+
+        private static readonly int RPCUnavaibleErrorCode = unchecked((int) 0x000006BA);
+        private static readonly int SyncErrorCode = unchecked((int)0x00000009);
 
         Outlook.Application _application = null;
 
@@ -187,6 +192,14 @@ namespace OF.Infrastructure.Service.Index
                                     _processedItems.Add(contact.EntryID, null);
                                 }
                             }
+                            catch (COMException com)
+                            {
+                                OFLogger.Instance.LogInfo("Reading Outlook items: ErrorCode={0}, {1}",com.ErrorCode.GetErrorCode(), com.ToString());
+                                if (com.ErrorCode.GetErrorCode() != SyncErrorCode)
+                                {
+                                    throw;
+                                }
+                            }
                             finally
                             {
                                 Marshal.ReleaseComObject(result);
@@ -205,9 +218,10 @@ namespace OF.Infrastructure.Service.Index
                 catch (COMException com)
                 {
                     OFLogger.Instance.LogError(com.ToString());
-                    OFLogger.Instance.LogWarning("Restart the indexing process...");
-                    if (com.Message.Contains("The RPC server is unavailable"))
+                    OFLogger.Instance.LogInfo("Reading Outlook items: ErrorCode={0}, {1}", com.ErrorCode.GetErrorCode(), com.ToString());
+                    if (com.ErrorCode.GetErrorCode() == RPCUnavaibleErrorCode)
                     {
+                        OFLogger.Instance.LogInfo("Restart the indexing process...");
                         ProcessOutlookItems(null);
                     }
                 }

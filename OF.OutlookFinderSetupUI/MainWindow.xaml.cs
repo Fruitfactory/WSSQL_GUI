@@ -27,7 +27,7 @@ namespace OF.OutlookFinderSetupUI
             InitializeComponent();
             InstallData = new InstallerInfo();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
-            System.Diagnostics.Debugger.Launch();
+            //System.Diagnostics.Debugger.Launch();
         }
 
 

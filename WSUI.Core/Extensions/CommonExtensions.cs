@@ -62,5 +62,10 @@ namespace OF.Core.Extensions
             return obj is string && string.IsNullOrEmpty(obj as string);
         }
 
+        public static int GetErrorCode(this int hresult)
+        {
+            return hresult & 0x0000FFFF;
+        }
+
     }
 }

@@ -34,10 +34,9 @@ namespace WSGen
             string buildNumber = string.Format("{0}.{1}.{2}.{3}", Properties.Settings.Default.Major, Properties.Settings.Default.Minor,Properties.Settings.Default.Build, revision);
             string setupProject = string.Format("{0}{1}", source, Properties.Settings.Default.SetupProjectFile);
             string bootstrapperProject = string.Format("{0}{1}", source, Properties.Settings.Default.BootstrapperProject);
-            Guid newUpgradeCode = Guid.NewGuid();
             GenerateVersionFile(source, buildNumber);
-            UpdateSetupProjects(setupProject, buildNumber,newUpgradeCode);
-            UpdateSetupProjects(bootstrapperProject,buildNumber,newUpgradeCode, true);
+            UpdateSetupProjects(setupProject, buildNumber);
+            UpdateSetupProjects(bootstrapperProject, buildNumber, true);
             Properties.Settings.Default["Revision"] = Convert.ToInt32(revision);
             Properties.Settings.Default["BuildNumber"] = buildNumber;
             Properties.Settings.Default.Save();
@@ -55,7 +54,7 @@ namespace WSGen
             }
         }
 
-        static void UpdateSetupProjects(string setupProject, string buildNumber, Guid upgradeCode, bool bootStrap = false)
+        static void UpdateSetupProjects(string setupProject, string buildNumber, bool bootStrap = false)
         {
             if (!File.Exists(setupProject))
                 return;
@@ -66,19 +65,10 @@ namespace WSGen
             XElement program = !bootStrap ? doc.Root.FirstNode as XElement : doc.Root.LastNode as XElement;
             if (program != null)
             {
-                //XAttribute upgradeCodeXml = program.Attribute("UpgradeCode");
-                //upgradeCodeXml.Value = upgradeCode.ToString();
+                //XAttribute attr = program.Attribute("Id");
+                //attr.Value = Guid.NewGuid().ToString().ToUpperInvariant();
                 XAttribute attr = program.Attribute("Version");
                 attr.Value = buildNumber;
-                //if (!bootStrap)
-                //{
-                //    var upgrade = program.Descendants().FirstOrDefault(xe => xe.Name.LocalName.Equals("Upgrade",StringComparison.Ordinal));
-                //    if (upgrade != null)
-                //    {
-                //        var id = upgrade.Attribute("Id");
-                //        id.Value = upgradeCode.ToString();
-                //    }
-                //}
             }
 
             doc.Save(setupProject);

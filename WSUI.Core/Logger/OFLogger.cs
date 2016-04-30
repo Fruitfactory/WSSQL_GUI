@@ -13,7 +13,7 @@ namespace OF.Core.Logger
     {
         private const string Filename = "log4net.config";
 
-        private static readonly int DefaultLogginfLevels = 5;
+        private static readonly int DefaultLogginfLevels = 15;
 
         #region fields
 
