@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Reflection;
+using OF.Core.Core.LimeLM;
 using OF.Core.Enums;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using OF.Core.Logger;
+using COMException = System.Runtime.InteropServices.COMException;
 
 namespace OF.Core.Extensions
 {
@@ -74,6 +76,14 @@ namespace OF.Core.Extensions
                     }
                 }
                 return sender.Address; //sender.PropertyAccessor.GetProperty(PR_SMTP_ADDRESS) as string;
+            }
+            catch (COMException com)
+            {
+                if (com.ErrorCode.GetErrorCode() == 0x000006BA)
+                {
+                    throw;
+                }
+                OFLogger.Instance.LogError(com.ToString());
             }
             catch (Exception ex)
             {

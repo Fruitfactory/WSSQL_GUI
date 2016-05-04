@@ -51,6 +51,14 @@ namespace OF.Core.Helpers
         public const string ProgIdKey = "OFOutlookPlugin.AddinModule";
 
 
+        #region [unistall]
+        private static string UnistallKey = @"Software\Microsoft\Windows\CurrentVersion\Uninstall";
+        private static string DisplayNameSubKey = "DisplayName";
+        private static string DisplayVersionSubKey = "DisplayVersion";
+        private static string BundleVersionSubKey = "BundleVersion";
+
+        #endregion
+
 
 
         private Dictionary<string,int> _keyDisableWarningsValues = new Dictionary<string, int>()
@@ -591,6 +599,51 @@ namespace OF.Core.Helpers
             {
             }
         }
+
+        public void DeleteUnistallKeyNotCurrentVersion(string version, string productName)
+        {
+            try
+            {
+                RegistryKey unistall = Registry.CurrentUser.OpenSubKey(UnistallKey,true);
+                foreach (var subKeyName in unistall.GetSubKeyNames())
+                {
+                    var subKey = unistall.OpenSubKey(subKeyName);
+                    if(subKey == null)
+                        continue;
+                    if ((string)subKey.GetValue(DisplayNameSubKey) == productName && (string) subKey.GetValue(DisplayVersionSubKey) != version)
+                    {
+                        unistall.DeleteSubKey(subKeyName);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void DeleteUnistallKeyCurrentVersion(string version, string productName)
+        {
+            try
+            {
+                RegistryKey unistall = Registry.CurrentUser.OpenSubKey(UnistallKey, true);
+                foreach (var subKeyName in unistall.GetSubKeyNames())
+                {
+                    var subKey = unistall.OpenSubKey(subKeyName);
+                    if (subKey == null)
+                        continue;
+                    if ((string)subKey.GetValue(DisplayNameSubKey) == productName && (string)subKey.GetValue(DisplayVersionSubKey) == version)
+                    {
+                        unistall.DeleteSubKey(subKeyName);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
         #region [restore outlook folders]
 

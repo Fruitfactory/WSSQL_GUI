@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.984" Manufacturer="FruitFactory" UpgradeCode="602854f0-ede9-4eba-bd8c-b6f91822510a" Codepage="1252">
+  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.2.987" Manufacturer="FruitFactory" UpgradeCode="602854f0-ede9-4eba-bd8c-b6f91822510a" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowDowngrades="no" />-->
     <Upgrade Id="602854f0-ede9-4eba-bd8c-b6f91822510a">
@@ -56,11 +56,13 @@
     <CustomAction Id="SetInstallElasticSearchProperties" Property="InstallElasticSearch" Value="ESPATH=[ELASTICSEASRCHINSTALLFOLDER];OFPATH=[INSTALLFOLDER]"></CustomAction>
     <CustomAction Id="InstallElasticSearch" BinaryKey="managedAction" DllEntry="InstallElasticSearch" Execute="deferred" Impersonate="no" Return="check" />
     <CustomAction Id="UnInstallElasticSearch" BinaryKey="managedAction" DllEntry="UnInstallElasticSearch" Execute="deferred" Impersonate="no" Return="check" />
+    <CustomAction Id="CheckVersion" BinaryKey="managedAction" DllEntry="CheckVersion" Execute="immediate" Return="check" />
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallInitialize" />
       <Custom Action="RegisterDll" After="SelfRegModules">NOT Installed</Custom>
       <Custom Action="ResetRegistry" After="RegisterDll">NOT Installed</Custom>
       <Custom Action="UnregisterDll" After="SelfUnregModules">Installed</Custom>
+      <Custom Action="CheckVersion" Before="InstallInitialize" />
       <Custom Action="UnInstallElasticSearch" After="UnregisterDll">Installed</Custom>
       <Custom Action="Deactivate" Before="InstallInitialize">Installed</Custom>
       <Custom Action="StopServiceApp" After="Deactivate">Installed</Custom>

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using OF.Core.Helpers;
 using WixWPF;
 using Wix = Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
 
@@ -28,8 +29,28 @@ namespace OF.OutlookFinderSetupUI
             InstallData = new InstallerInfo();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
             //System.Diagnostics.Debugger.Launch();
+            DeleteUnistallInfo();
         }
 
+        private void DeleteUnistallInfo()
+        {
+            try
+            {
+                var version = GetCurrentVersion();
+                var productName = "OutlookFinder";
+                OFRegistryHelper.Instance.DeleteUnistallKeyNotCurrentVersion(version,productName);
+            }
+            catch (Exception ex)
+            {
+                Bootstrapper.LogError(ex.ToString());
+            }    
+        }
+        
+        private string GetCurrentVersion()
+        {
+            var currentAssembly = this.GetType().Assembly;
+            return currentAssembly != null ? currentAssembly.GetName().Version.ToString() : "";
+        }
 
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {

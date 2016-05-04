@@ -17,7 +17,5 @@ using OF.OutlookFinderSetupUI;
 
 [assembly: Guid("d813d4b0-4457-42e2-80c7-0afade72b36d")]
 
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: StartupWindow(typeof(MainWindow))]

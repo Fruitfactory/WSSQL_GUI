@@ -337,6 +337,14 @@ namespace OF.Infrastructure.Service.Index
                     SendOutlookItems(email, attachmentContents, null, OFOutlookItemsIndexProcess.Chunk);
                 }
             }
+            catch (COMException com)
+            {
+                if (com.ErrorCode.GetErrorCode() == RPCUnavaibleErrorCode)
+                {
+                    throw;
+                }
+                OFLogger.Instance.LogError(com.ToString());
+            }
             catch (Exception ex)
             {
                 OFLogger.Instance.LogDebug(ex.ToString());
@@ -361,6 +369,11 @@ namespace OF.Infrastructure.Service.Index
                 }
                 catch (COMException comEx)
                 {
+                    if (comEx.ErrorCode.GetErrorCode() == RPCUnavaibleErrorCode)
+                    {
+                        throw;
+                    }
+
                     OFLogger.Instance.LogError("----COM Attachment Failed => {0}", attachment.FileName);
                     OFLogger.Instance.LogError(comEx.Message);
 

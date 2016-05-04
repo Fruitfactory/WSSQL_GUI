@@ -50,6 +50,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
+    <Compile Include="..\WSUI.Core\Helpers\OFRegistryHelper.cs">
+      <Link>OFRegistryHelper.cs</Link>
+    </Compile>
     <Compile Include="InstallerInfo.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

@@ -71,6 +71,10 @@ namespace OF.CA
 
         #endregion elements fo manifest
 
+
+       
+
+
         #region [CA ClearFiles]
 
         [CustomAction]
@@ -95,6 +99,7 @@ namespace OF.CA
 
                 DeleteElasticSearchFiles(session, OFRegistryHelper.Instance.GetElasticSearchpath());
                 DeleteRegistryKeys();
+                DeleteUnistallInfo(session);
 
             }
             catch (Exception)
@@ -112,6 +117,20 @@ namespace OF.CA
             if (OFRegistryHelper.Instance.IsPluginUiVisibleKeyPresent())
             {
                 OFRegistryHelper.Instance.DeletePluginUiKey();
+            }
+        }
+
+        private static void DeleteUnistallInfo(Session session)
+        {
+            try
+            {
+                var version = session["ProductVersion"];
+                var productName = session["ProductName"];
+                OFRegistryHelper.Instance.DeleteUnistallKeyCurrentVersion(version, productName);
+            }
+            catch (Exception ex)
+            {
+                session.Log(ex.ToString());
             }
         }
 
@@ -227,6 +246,28 @@ namespace OF.CA
         }
 
         #endregion [private for delete files]
+
+        #region [CHECK VERSION]
+
+        [CustomAction]
+        public static ActionResult CheckVersion(Session session)
+        {
+
+            try
+            {
+                var version = session["ProductVersion"];
+                var productName = session["ProductName"];
+                OFRegistryHelper.Instance.DeleteUnistallKeyNotCurrentVersion(version,productName);
+            }
+            catch (Exception ex)
+            {
+                session.Log(ex.ToString());                
+            }
+            return ActionResult.Success;
+        }
+
+        #endregion
+
 
         #region [CA operation with Outlook]
 
