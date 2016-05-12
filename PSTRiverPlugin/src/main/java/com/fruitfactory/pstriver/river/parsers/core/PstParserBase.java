@@ -5,6 +5,7 @@
  */
 package com.fruitfactory.pstriver.river.parsers.core;
 
+import com.fruitfactory.pstriver.helpers.PstMonitorObjectHelper;
 import com.fruitfactory.pstriver.interfaces.IPstRestAttachmentClient;
 import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.helpers.PstRiverStatus;
@@ -116,12 +117,13 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
                     updateLastDateRiver(_lastUpdatedDate);
                     setLastCountIndexedOfEmails(countEmails);
                     setLastCountIndexedOfAttachments(countAttachments);
-                    
+                    PstRESTRepository.resetForcingIndexing();
                     setRiverStatus(PstRiverStatus.StandBy);
                     flush();
                     
                     if(delayTimeOut > 0){
-                        Thread.sleep(TimeValue.timeValueHours(delayTimeOut).millis());
+                        PstMonitorObjectHelper.INSTANCE.doWait(TimeValue.timeValueHours(delayTimeOut).millis());
+                        //Thread.sleep(TimeValue.timeValueHours(delayTimeOut).millis());
                     }
 
                 } catch (Exception ex) {

@@ -49,7 +49,6 @@ namespace OFOutlookPlugin
         private ISidebarForm _sidebarForm;
         private bool IsLoading = true;
         private int _initHashCode;
-        private Stopwatch _watch;
         private IOFMailRemovingManager _mailRemovingManager;
         private bool _canConnect = true;
 

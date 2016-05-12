@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 using OF.Core.Helpers;
 using WixWPF;
 using Wix = Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
@@ -17,6 +18,7 @@ namespace OF.OutlookFinderSetupUI
 
         /// <summary>The detected package states.</summary>
         private Dictionary<string, Wix.PackageState> _packageStates = new Dictionary<string, Wix.PackageState>();
+        private static readonly string DisableMSIKey = "DisableMSI";
 
         #endregion Member Variables
 
@@ -30,6 +32,24 @@ namespace OF.OutlookFinderSetupUI
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
             //System.Diagnostics.Debugger.Launch();
             DeleteUnistallInfo();
+            //SetDisableMSIKey(false);
+        }
+
+        private void SetDisableMSIKey(bool b)
+        {
+            string key = @"SOFTWARE\Policies\Microsoft\Windows\Installer";
+            try
+            {
+                var installer = Registry.LocalMachine.CreateSubKey(key, RegistryKeyPermissionCheck.ReadWriteSubTree);
+                if (installer != null)
+                {
+                    installer.SetValue(DisableMSIKey, b ? 1 : 0);
+                }
+            }
+            catch (Exception ex)
+            {
+                Bootstrapper.LogError(ex.ToString());
+            }
         }
 
         private void DeleteUnistallInfo()
@@ -150,6 +170,7 @@ namespace OF.OutlookFinderSetupUI
 
         protected override void OnClosing(CancelEventArgs e)
         {
+            //SetDisableMSIKey(true);
             Bootstrapper.WriteToLog(Wix.LogLevel.Standard,"Closing");
             base.OnClosing(e);
         }

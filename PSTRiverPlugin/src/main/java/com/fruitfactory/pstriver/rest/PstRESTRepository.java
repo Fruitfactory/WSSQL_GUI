@@ -5,6 +5,7 @@
  */
 package com.fruitfactory.pstriver.rest;
 
+import com.fruitfactory.pstriver.helpers.PstMonitorObjectHelper;
 import com.fruitfactory.pstriver.helpers.PstReaderStatus;
 import com.fruitfactory.pstriver.helpers.PstReaderStatusInfo;
 import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
@@ -218,6 +219,7 @@ public class PstRESTRepository {
 
     public static void forceIndexing(){
         synchronized (lockForceIndexing){
+            PstMonitorObjectHelper.INSTANCE.doNotify();
             forceIndexing = true;
         }
     }
@@ -232,6 +234,7 @@ public class PstRESTRepository {
 
     public static void resetForcingIndexing(){
         synchronized (lockForceIndexing){
+            PstMonitorObjectHelper.INSTANCE.resetSignaledState();
             forceIndexing = false;
         }
     }

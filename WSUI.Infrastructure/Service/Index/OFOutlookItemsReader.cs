@@ -39,8 +39,6 @@ namespace OF.Infrastructure.Service.Index
         private readonly object _lock = new object();
         
         private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
-        private static readonly string DateFormat = "MM/dd/yyyy HH:mm:ss";
-        private static int PageMaxSize = 65536;
 
         private static readonly int RPCUnavaibleErrorCode = unchecked((int) 0x000006BA);
         private static readonly int SyncErrorCode = unchecked((int)0x00000009);

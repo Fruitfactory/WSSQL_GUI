@@ -1,5 +1,7 @@
-﻿namespace OF.Core.Enums
+﻿
+namespace OF.Core.Enums
 {
+    
     public enum OFActionType
     {
         Copy,

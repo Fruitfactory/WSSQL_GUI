@@ -73,7 +73,6 @@ public class PstNightOrIdleTrackingParser extends PstParserBase {
             tracker.stopTracking();
             getRestAttachmentClient().stopRead();
             tracker.join();
-            PstRESTRepository.resetForcingIndexing();
         } catch (InterruptedException ex) {
             getLogger().error(Level.SEVERE.toString() +  ex.getMessage());
         }

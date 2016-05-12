@@ -858,6 +858,7 @@ namespace OF.CA
                     return ActionResult.Success;
                 }
                 var startinfo = new ProcessStartInfo(fullname, "unistall");
+                startinfo.WindowStyle = ProcessWindowStyle.Hidden;
                 Process p = Process.Start(startinfo);
                 p.WaitForExit();
             }
@@ -1047,12 +1048,9 @@ namespace OF.CA
                     session.Log("JAVA_HOME = " + javaHome);
                     session.Log("ElasticSearch Path = " + elasticSearchPath);
                     si.Arguments = string.Format(" {0} \"{1}\"", "install", javaHome);
-                    //if (!IsAdministrator())
-                    //{
-                    //    session.Log("User Is not administrator");
-                    //    si.Verb = "runas";
-                    //}
-                    si.WindowStyle = ProcessWindowStyle.Hidden;
+                    si.UseShellExecute = false;
+                    si.CreateNoWindow = true;
+                    si.Verb = "runas";
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
                     Process pInstall = new Process {StartInfo = si};
                     pInstall.Start();
@@ -1108,12 +1106,9 @@ namespace OF.CA
                     ProcessStartInfo si = new ProcessStartInfo();
                     si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "service.bat");
                     si.Arguments = string.Format(" {0} \"{1}\"", "stop", javaHome);
-                    //if (!IsAdministrator())
-                    //{
-                    //    session.Log("User Is not administrator");
-                    //    si.Verb = "runas";
-                    //}
-                    si.WindowStyle = ProcessWindowStyle.Hidden;
+                    si.UseShellExecute = false;
+                    si.Verb = "runas";
+                    si.CreateNoWindow = true;
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
 
                     Process pInstall = new Process { StartInfo = si };
@@ -1158,7 +1153,9 @@ namespace OF.CA
                     ProcessStartInfo si = new ProcessStartInfo();
                     si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "plugin.bat");
                     si.Arguments = string.Format(InstallArguments, PstPluginName, fullpath, javaHome);
-                    si.WindowStyle = ProcessWindowStyle.Hidden;
+                    si.UseShellExecute = false;
+                    si.Verb = "runas";
+                    si.CreateNoWindow = true;
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
                     Process pInstall = new Process();
                     pInstall.StartInfo = si;
@@ -1180,12 +1177,9 @@ namespace OF.CA
                 ProcessStartInfo si = new ProcessStartInfo();
                 si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "removeplugin.bat");
                 si.Arguments = string.Format(UnistallArguments, PstPluginName, javaHome);
-                //if (!IsAdministrator())
-                //{
-                //    session.Log("User Is not administrator");
-                //    si.Verb = "runas";
-                //}
-                si.WindowStyle = ProcessWindowStyle.Hidden;
+                si.UseShellExecute = false;
+                si.Verb = "runas";
+                si.CreateNoWindow = true;
                 si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
                 Process pInstall = new Process();
                 pInstall.StartInfo = si;

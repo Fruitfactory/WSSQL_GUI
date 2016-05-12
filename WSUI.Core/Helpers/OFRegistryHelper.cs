@@ -55,7 +55,6 @@ namespace OF.Core.Helpers
         private static string UnistallKey = @"Software\Microsoft\Windows\CurrentVersion\Uninstall";
         private static string DisplayNameSubKey = "DisplayName";
         private static string DisplayVersionSubKey = "DisplayVersion";
-        private static string BundleVersionSubKey = "BundleVersion";
 
         #endregion
 

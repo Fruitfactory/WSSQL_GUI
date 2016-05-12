@@ -7,6 +7,7 @@ package com.fruitfactory.pstriver.river.parsers;
 
 import com.fruitfactory.pstriver.helpers.PstRiverStatus;
 import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
+import com.fruitfactory.pstriver.rest.PstRESTRepository;
 import com.fruitfactory.pstriver.river.parsers.core.PstParserBase;
 import com.fruitfactory.pstriver.river.parsers.settings.PstOnlyAtSettings;
 import com.fruitfactory.pstriver.river.reader.PstCleaner;
@@ -49,7 +50,7 @@ public class PstOnlyAtParser extends PstParserBase {
         
         setRiverStatus(PstRiverStatus.StandBy);
 
-        while(true){
+        while(true && !PstRESTRepository.isForce()){
             DateTime date = new DateTime();
             int hour = date.getHourOfDay();
             int minutes = date.getMinuteOfHour();

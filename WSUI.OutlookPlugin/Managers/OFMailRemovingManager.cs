@@ -18,8 +18,6 @@ namespace OFOutlookPlugin.Managers
     {
         #region [needs]
 
-        private static readonly string DELETED_FOLDER = "Deleted";
-
         private readonly IDictionary<string,object> _dictionaryDeleteFolders = new Dictionary<string, object>();
 
 

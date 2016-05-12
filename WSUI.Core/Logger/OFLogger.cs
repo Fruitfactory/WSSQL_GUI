@@ -12,14 +12,16 @@ namespace OF.Core.Logger
     public class OFLogger : ILoggerFacade
     {
         private const string Filename = "log4net.config";
-
+#if DEBUG
         private static readonly int DefaultLogginfLevels = 15;
-
+#else
+        private static readonly int DefaultLogginfLevels = 5;
+#endif
         #region fields
 
         private ILog _log;
 
-        #endregion fields
+#endregion fields
 
         [Flags]
         public enum LevelLogging
@@ -30,12 +32,12 @@ namespace OF.Core.Logger
             Debug = 0x08,
         }
 
-        #region fields static
+#region fields static
 
         private static OFLogger _instance = null;
         private static object _lock = new object();
 
-        #endregion fields static
+#endregion fields static
 
         private OFLogger()
         {
@@ -49,7 +51,11 @@ namespace OF.Core.Logger
                 var col = XmlConfigurator.Configure(fi);
                 _log = log4net.LogManager.GetLogger("OFLogger");
             }
+#if DEBUG
+            int levels = DefaultLogginfLevels;
+#else
             int levels = OFRegistryHelper.Instance.GetLoggingSettings();
+#endif
             if (levels == default(int))
             {
                 OFRegistryHelper.Instance.SetLoggingsettings(DefaultLogginfLevels);
@@ -67,7 +73,7 @@ namespace OF.Core.Logger
             }
         }
 
-        #region public
+#region public
 
         public void LogError(string message)
         {
@@ -164,9 +170,9 @@ namespace OF.Core.Logger
 
 
 
-        #endregion public
+#endregion public
 
-        #region private
+#region private
 
         private void WriteLog(LevelLogging level, string message)
         {
@@ -198,7 +204,7 @@ namespace OF.Core.Logger
             return level == (LevelLogging)((int)level & levels);
         }
 
-        #endregion private
+#endregion private
 
         public void Log(string message, Category category, Priority priority)
         {

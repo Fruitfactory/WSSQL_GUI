@@ -12,7 +12,6 @@ namespace OF.Module.ViewModel.Settings
     {
         private IUnityContainer _container;
         private IOutlookSecuritySettingsView _view;
-        private bool _isSecutiryWindowsDisable;
 
         public OFOutlookSecutirySettingsViewModel(IUnityContainer container)
         {

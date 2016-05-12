@@ -71,7 +71,6 @@ namespace OF.Module.ViewModel
         private ICommandStrategy _currentStrategy;
         private int _selectedUIItemIndex;
         private IElasticSearchViewModel _elasticSearchViewModel;
-        private IUserActivityTracker _userActivityTracker;
 
         public MainViewModel(IUnityContainer container, IKindsView kindView, IEventAggregator eventAggregator)
         {
@@ -90,7 +89,6 @@ namespace OF.Module.ViewModel
             _token = _eventAggregator.GetEvent<OFSelectedChangedPayloadEvent>().Subscribe(OnSelectedItemChanged);
             _elasticSearchViewModel = _container.Resolve<IElasticSearchViewModel>();
             _elasticSearchViewModel.IndexingFinished += ElasticSearchViewModelOnIndexingFinished;
-            //_userActivityTracker = _container.Resolve<IUserActivityTracker>();
             Monitoring = _container.Resolve<IElasticSearchMonitoringViewModel>();
         }
 
@@ -1035,14 +1033,7 @@ namespace OF.Module.ViewModel
         {
             return _currentItem != null ? _currentItem.CurrentTrackedObject : null;
         }
-
-        private void StopUserActivityTracker()
-        {
-            if (_userActivityTracker.IsNull())
-                return;
-            _userActivityTracker.Stop();
-        }
-
+        
         private void ElasticSearchViewModelOnIndexingFinished(object sender, EventArgs eventArgs)
         {
             if (Monitoring.IsNotNull())
