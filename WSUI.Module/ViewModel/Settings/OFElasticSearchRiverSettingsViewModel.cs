@@ -8,6 +8,7 @@ using OF.Core;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
 using OF.Core.Data.ElasticSearch;
+using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Helpers;
@@ -25,6 +26,7 @@ namespace OF.Module.ViewModel.Settings
         private readonly IEventAggregator _eventAggregator;
         private readonly IUnityContainer _unityContainer;
         private OFRiverMeta _settingsMeta;
+        private bool _canForce = true;
 
         #region [local classes]
 
@@ -140,6 +142,13 @@ namespace OF.Module.ViewModel.Settings
             set { Set(() => IdleTime, value); }
         }
 
+        public ICommand ForceCommand
+        {
+            get { return Get(() => ForceCommand); }
+            set { Set(() => ForceCommand, value); }
+        }
+
+
         public void ApplySettings()
         {
             Save();
@@ -160,6 +169,7 @@ namespace OF.Module.ViewModel.Settings
 
         public void Initialize()
         {
+            ForceCommand = new OFRelayCommand(ForceCommandExecute,CanForceCommandExecute);
             HoursSource = new ObservableCollection<int>()
             {
                 1,2,3,4,5,6,7,8,9,10,11,12
@@ -293,6 +303,31 @@ namespace OF.Module.ViewModel.Settings
             {
                 updateClient.UpdateSettings(_settingsMeta);
             }
+        }
+
+
+        private bool CanForceCommandExecute(object o)
+        {
+            var restElasticSearchClient = _unityContainer.Resolve<IElasticSearchRiverStatus>();
+            if (restElasticSearchClient == null)
+            {
+                return false;
+            }
+
+            var status = restElasticSearchClient.GetRiverStatus();
+            return _canForce && status != null && status.Response != null &&
+                   status.Response.Status == OFRiverStatus.StandBy;
+        }
+
+        private void ForceCommandExecute(object o)
+        {
+            var force = _unityContainer.Resolve<IElasticSearchForceClient>();
+            if (force == null)
+            {
+                return;
+            }
+            force.Force();
+            _canForce = false;
         }
 
         #endregion

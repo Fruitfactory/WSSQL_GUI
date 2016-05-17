@@ -5,7 +5,7 @@
  */
 package com.fruitfactory.pstriver.river.parsers.core;
 
-import com.fruitfactory.pstriver.helpers.PstMonitorObjectHelper;
+import com.fruitfactory.pstriver.interfaces.IPstMonitorObjectHelper;
 import com.fruitfactory.pstriver.interfaces.IPstRestAttachmentClient;
 import com.fruitfactory.pstriver.interfaces.IPstRiverInitializer;
 import com.fruitfactory.pstriver.helpers.PstRiverStatus;
@@ -14,14 +14,12 @@ import com.fruitfactory.pstriver.rest.PstRESTRepository;
 import com.fruitfactory.pstriver.rest.PstRestClient;
 import com.fruitfactory.pstriver.river.reader.PstCleaner;
 import com.fruitfactory.pstriver.river.reader.PstOutlookItemsReader;
-import com.fruitfactory.pstriver.river.reader.PstOutlookFileReader;
+
 import static com.fruitfactory.pstriver.river.PstRiver.LOG_TAG;
 
 import com.fruitfactory.pstriver.utils.PstFeedDefinition;
 import com.fruitfactory.pstriver.utils.PstGlobalConst;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Paths;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +40,7 @@ import org.elasticsearch.river.RiverName;
  *
  * @author Yariki
  */
-public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
+public abstract class PstParserBase implements IPstParser, IPstStatusTracker,IPstMonitorObjectHelper {
 
     private Date _lastUpdatedDate;
     private PstFeedDefinition _def;
@@ -88,7 +86,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
         if(this._riverInitializer != null){
             this._riverInitializer.init();
         }
-
+        PstRESTRepository.setMonitorHelper(this);
         while (true) {
             if (_closed) {
                 logger.warn(LOG_TAG + "River pst was closed...");
@@ -122,8 +120,9 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
                     flush();
                     
                     if(delayTimeOut > 0){
-                        PstMonitorObjectHelper.INSTANCE.doWait(TimeValue.timeValueHours(delayTimeOut).millis());
-                        //Thread.sleep(TimeValue.timeValueHours(delayTimeOut).millis());
+                        synchronized (this){
+                            wait(TimeValue.timeValueHours(delayTimeOut).millis());
+                        }
                     }
 
                 } catch (Exception ex) {
@@ -138,6 +137,13 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker {
 
         }
        
+    }
+
+    public void doNotify(){
+        synchronized (this){
+            //_monitorHelper.doNotify();
+            notify();
+        }
     }
 
     public void setStatus(PstRiverStatus riverStatus){

@@ -118,6 +118,41 @@ namespace OF.Core.Win32
         public const int WM_LBUTTONUP = 0x202;
         const int WM_ACTIVATE = 0x0006;
 
+        const int GWL_HWNDPARENT = (-8);
+
+        const int GWL_ID = (-12);
+        const int GWL_STYLE = (-16);
+        const int GWL_EXSTYLE = (-20);
+
+// Window Styles 
+        const UInt32 WS_OVERLAPPED = 0;
+        const UInt32 WS_POPUP = 0x80000000;
+        const UInt32 WS_CHILD = 0x40000000;
+        const UInt32 WS_MINIMIZE = 0x20000000;
+        const UInt32 WS_VISIBLE = 0x10000000;
+        const UInt32 WS_DISABLED = 0x8000000;
+        const UInt32 WS_CLIPSIBLINGS = 0x4000000;
+        const UInt32 WS_CLIPCHILDREN = 0x2000000;
+        const UInt32 WS_MAXIMIZE = 0x1000000;
+        const UInt32 WS_CAPTION = 0xC00000;      // WS_BORDER or WS_DLGFRAME  
+        const UInt32 WS_BORDER = 0x800000;
+        const UInt32 WS_DLGFRAME = 0x400000;
+        const UInt32 WS_VSCROLL = 0x200000;
+        const UInt32 WS_HSCROLL = 0x100000;
+        const UInt32 WS_SYSMENU = 0x80000;
+        const UInt32 WS_THICKFRAME = 0x40000;
+        const UInt32 WS_GROUP = 0x20000;
+        const UInt32 WS_TABSTOP = 0x10000;
+        const UInt32 WS_MINIMIZEBOX = 0x20000;
+        const UInt32 WS_MAXIMIZEBOX = 0x10000;
+        const UInt32 WS_TILED = WS_OVERLAPPED;
+        const UInt32 WS_ICONIC = WS_MINIMIZE;
+        const UInt32 WS_SIZEBOX = WS_THICKFRAME;
+        const int SW_HIDE = 0;
+        const int SW_SHOWNORMAL = 1;
+        const int SW_NORMAL = 1;
+
+
 
         [DllImport("ole32.dll")]
         static extern int CreateBindCtx(
@@ -130,7 +165,18 @@ namespace OF.Core.Win32
             out IRunningObjectTable prot);
 
 
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern uint GetWindowLong(IntPtr hWnd, int nIndex);
 
+        [DllImport("user32.dll")]
+        static extern uint SetWindowLong(IntPtr hWnd, int nIndex, uint dwNewLong);
+
+        [DllImport("User32")]
+        private static extern int ShowWindow(IntPtr hwnd, int nCmdShow);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWindowVisible(IntPtr hWnd);
 
         #endregion [function]
 
@@ -150,13 +196,23 @@ namespace OF.Core.Win32
             {
                 sb = new StringBuilder(1024);
                 GetWindowText(hWnd, sb, sb.Capacity);
-                if (sb.ToString().StartsWith(data.Title))
+                if (sb.ToString().StartsWith(data.Title) || sb.ToString().Contains(data.Title))
                 {
                     data.hWnd = hWnd;
                     return false;    // Found the wnd, halt enumeration
                 }
             }
             return true;
+        }
+
+        public static void HideWindow(IntPtr hWnd)
+        {
+            ShowWindow(hWnd, SW_HIDE);
+        }
+
+        public static void ShowWindow(IntPtr hWnd)
+        {
+            ShowWindow(hWnd, SW_SHOWNORMAL);
         }
 
         public static Point TransformToScreen(Point point, Visual relativeTo)

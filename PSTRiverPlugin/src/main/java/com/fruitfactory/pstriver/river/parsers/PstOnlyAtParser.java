@@ -47,7 +47,7 @@ public class PstOnlyAtParser extends PstParserBase {
 
     @Override
     protected int onProcess(List<Thread> readers) throws Exception {
-        
+
         setRiverStatus(PstRiverStatus.StandBy);
 
         while(true && !PstRESTRepository.isForce()){

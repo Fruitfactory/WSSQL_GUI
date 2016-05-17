@@ -5,7 +5,6 @@
  */
 package com.fruitfactory.pstriver.rest;
 
-import com.fruitfactory.pstriver.helpers.PstMonitorObjectHelper;
 import com.fruitfactory.pstriver.helpers.PstReaderStatus;
 import com.fruitfactory.pstriver.helpers.PstReaderStatusInfo;
 import com.fruitfactory.pstriver.helpers.PstRiverStatusInfo;
@@ -15,6 +14,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
+import com.fruitfactory.pstriver.interfaces.IPstMonitorObjectHelper;
 import com.fruitfactory.pstriver.interfaces.IPstOutlookItemsProcessor;
 import com.fruitfactory.pstriver.rest.data.PstOutlookItemsContainer;
 import org.elasticsearch.common.logging.ESLogger;
@@ -47,6 +47,7 @@ public class PstRESTRepository {
 
     private static IPstOutlookItemsProcessor _pstAttachmentProcessor;
     private static final Object _attachmentLock = new Object();
+    private static IPstMonitorObjectHelper _monitorHelper;
 
 
     public static void setStatusInfo(PstReaderStatusInfo statusInfo) {
@@ -217,10 +218,18 @@ public class PstRESTRepository {
         }
     }
 
+    public static void setMonitorHelper(IPstMonitorObjectHelper helper){
+        synchronized (lockForceIndexing){
+            _monitorHelper = helper;
+        }
+    }
+
     public static void forceIndexing(){
         synchronized (lockForceIndexing){
-            PstMonitorObjectHelper.INSTANCE.doNotify();
             forceIndexing = true;
+            if(_monitorHelper != null){
+                _monitorHelper.doNotify();
+            }
         }
     }
 
@@ -234,7 +243,6 @@ public class PstRESTRepository {
 
     public static void resetForcingIndexing(){
         synchronized (lockForceIndexing){
-            PstMonitorObjectHelper.INSTANCE.resetSignaledState();
             forceIndexing = false;
         }
     }

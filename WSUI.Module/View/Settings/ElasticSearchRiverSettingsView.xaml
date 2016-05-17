@@ -45,6 +45,7 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -139,6 +140,10 @@
                     </StackPanel>
                 </RadioButton>
 
+                <!-- row 4 -->
+                <StackPanel Grid.Row="4" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Command="{Binding ForceCommand}"  Margin="0 0 0 0">Update OutlookFinder index</Button>
+                </StackPanel>
 
             </Grid>
 

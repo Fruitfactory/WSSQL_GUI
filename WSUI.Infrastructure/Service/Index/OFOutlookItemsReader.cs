@@ -142,7 +142,6 @@ namespace OF.Infrastructure.Service.Index
                 Status = PstReaderStatus.Busy;
                 var resultApplication = OFOutlookHelper.Instance.GetApplication();
                 _application = resultApplication.Item1 as Outlook.Application;
-
                 isExistingProcess = resultApplication.Item2;
                 var folderList = GetFolders(_application).OfType<Outlook.MAPIFolder>();
                 if (!folderList.Any())
@@ -250,6 +249,11 @@ namespace OF.Infrastructure.Service.Index
                 }    
                 OFMessageFilter.Revoke();
             }
+        }
+
+        private void OnActivate()
+        {
+            OFOutlookHelper.Instance.ShowOutlook();
         }
 
         private void ProcessContactItem(Outlook.ContactItem contactItem)

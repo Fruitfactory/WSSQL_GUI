@@ -817,7 +817,11 @@ namespace OF.Core.Helpers
                     ev.Set();
                 });
 
-                ret = new Outlook.Application() as Outlook._Application;
+                //ProcessStartInfo ps = new ProcessStartInfo("outlook.exe") { CreateNoWindow = false, LoadUserProfile = true, WindowStyle = ProcessWindowStyle.Hidden };
+                //Process.Start(ps);
+                //Thread.Sleep(2000);
+                ret = new Outlook.Application();//GetFromProcess();
+                //HideOutlookUi(ret);
                 ev.WaitOne();
                 Outlook.NameSpace ns = ret.GetNamespace("MAPI");
                 ns.Logon(ret.DefaultProfileName, "", false, true);
@@ -828,6 +832,53 @@ namespace OF.Core.Helpers
             }
 
             return ret;
+        }
+
+        private static void HideOutlookUi(Outlook._Application ret)
+        {
+
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        if (ret != null && ret.ActiveExplorer() != null)
+                        {
+                            ret.ActiveExplorer().WindowState = Outlook.OlWindowState.olMinimized;
+                            
+                            break;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                while (true)
+                {
+                    var outlook = Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith(OutlookProcessName));
+                    if (outlook.Any() && outlook.First().MainWindowHandle != IntPtr.Zero &&
+                        WindowsFunction.IsWindowVisible(outlook.First().MainWindowHandle))
+                    {
+                        WindowsFunction.HideWindow(outlook.First().MainWindowHandle);
+                        //outlook.First().CloseMainWindow();
+                        break;
+                    }
+                }
+            });
+        }
+
+        public void ShowOutlook()
+        {
+            while (true)
+            {
+                var outlook = Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith(OutlookProcessName));
+                if (outlook.Any() && outlook.First().MainWindowHandle != IntPtr.Zero )
+                {
+                    WindowsFunction.ShowWindow(outlook.First().MainWindowHandle);
+                    break;
+                }
+            }
         }
 
         private dynamic GetMailItem(string entryID)

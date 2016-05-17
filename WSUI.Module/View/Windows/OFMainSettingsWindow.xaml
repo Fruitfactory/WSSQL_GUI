@@ -16,7 +16,7 @@
             GlowBrush="{DynamicResource AccentColorBrush}"
             NonActiveGlowBrush="Red"
                       Width="750"
-                      Height="350"
+                      Height="400"
                      
                       >
     <Window.Resources>
