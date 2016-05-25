@@ -64,7 +64,7 @@ namespace OF.Infrastructure.Implements.Rules
                 body.query = new OFQueryMatchPhrase<OFContentMatchPhrase>(new OFContentMatchPhrase() { analyzedcontent = criteria.Result });
                 return body;
             }
-            body.query = new OFQuerySimpleTerm<OFSimpleContentTerm>(Query);
+            body.query = new OFWildcard<OFAnalyzedContentWildcard>(Query);
             return body;
         }
 

@@ -140,6 +140,7 @@
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Request\Contact\OFContactTerms.cs" />
     <Compile Include="Data\ElasticSearch\Request\Contact\OFEmaillContactTerms.cs" />
+    <Compile Include="Data\ElasticSearch\Request\Email\OFAnalyzedContentWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFContentMatchPhrase.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFSubjectMatchPhrase.cs" />
     <Compile Include="Data\ElasticSearch\Request\OFBodyFields.cs" />
