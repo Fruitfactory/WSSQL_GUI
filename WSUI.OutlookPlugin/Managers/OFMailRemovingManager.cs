@@ -8,6 +8,7 @@ using OF.Control;
 using OF.Core.Data;
 using OF.Core.Enums;
 using OF.Core.Extensions;
+using OF.Core.Logger;
 using OFOutlookPlugin.Interfaces;
 using OFOutlookPlugin.Managers.OutlookEventsManagers;
 using Outlook = Microsoft.Office.Interop.Outlook;
@@ -44,7 +45,19 @@ namespace OFOutlookPlugin.Managers
                 {
                     var store = nm.Stores[i];
                     Outlook.PropertyAccessor pa = store.PropertyAccessor;
-                    var property = (byte[])pa.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x35E30102");
+                    byte[] property = null;
+                    try
+                    {
+                        property = (byte[]) pa.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x35E30102");
+                    }
+                    catch (UnauthorizedAccessException ex)
+                    {
+                        OFLogger.Instance.LogError(ex.ToString());
+                        property = (byte[])pa.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x35E30102");
+                    }
+                    
+                    if(property == null)
+                        continue;
                     var id = pa.BinaryToString(property);
                     Outlook.MAPIFolder folder = null;
                     if (!string.IsNullOrEmpty(id) && (folder = nm.GetFolderFromID(id)) != null)

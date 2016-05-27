@@ -150,7 +150,18 @@ namespace OF.Infrastructure.Service.Index
                     return;
                 }
 
-                _indexOutlookItemsClient.SendOutlookItemsCount(folderList.Sum(f => f.Items.Count));
+                try
+                {
+                    _indexOutlookItemsClient.SendOutlookItemsCount(folderList.Sum(f => f.Items.Count));
+                }
+                catch (System.UnauthorizedAccessException exception)
+                {
+                    OFLogger.Instance.LogError(exception.ToString());
+                    OFLogger.Instance.LogWarning("Try to set counts one more time...");
+                    _indexOutlookItemsClient.SendOutlookItemsCount(folderList.Sum(f => f.Items.Count));
+                }
+
+                
 
                 try
                 {
