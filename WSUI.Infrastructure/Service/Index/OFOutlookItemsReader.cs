@@ -42,6 +42,7 @@ namespace OF.Infrastructure.Service.Index
 
         private static readonly int RPCUnavaibleErrorCode = unchecked((int) 0x000006BA);
         private static readonly int SyncErrorCode = unchecked((int)0x00000009);
+        private static readonly int NetworkProblemErrorCode = unchecked ((int) 0x00000115);
 
         Outlook.Application _application = null;
 
@@ -152,7 +153,22 @@ namespace OF.Infrastructure.Service.Index
 
                 try
                 {
-                    _indexOutlookItemsClient.SendOutlookItemsCount(folderList.Sum(f => f.Items.Count));
+                    int count = 0;
+                    foreach (var mapiFolder in folderList)
+                    {
+                        try
+                        {
+                            count += mapiFolder.Items.Count;
+                        }
+                        catch (COMException com)
+                        {
+                            if (com.ErrorCode.GetErrorCode() == NetworkProblemErrorCode)
+                            {
+                                OFLogger.Instance.LogError("Network Problem: {0}",com.ToString());   
+                            }
+                        }
+                    }
+                    _indexOutlookItemsClient.SendOutlookItemsCount(count);
                 }
                 catch (System.UnauthorizedAccessException exception)
                 {
@@ -161,8 +177,6 @@ namespace OF.Infrastructure.Service.Index
                     _indexOutlookItemsClient.SendOutlookItemsCount(folderList.Sum(f => f.Items.Count));
                 }
 
-                
-
                 try
                 {
 
@@ -170,47 +184,58 @@ namespace OF.Infrastructure.Service.Index
                     {
                         CheckCancellation();
                         TryToWait();
-                        OFLogger.Instance.LogDebug("Attachment Reader => Folder name: {0}", mapiFolder.Name);
-                        if (mapiFolder.Items.Count == 0)
-                        {
-                            Marshal.ReleaseComObject(mapiFolder);
-                            continue;
-                        }
-                        foreach (var result in mapiFolder.Items)
-                        {
-                            CheckCancellation();
-                            TryToWait();
-                            try
-                            {
-                                var email = result as Outlook.MailItem;
-                                var contact = result as Outlook.ContactItem;
 
-                                if (email != null)
+                        try
+                        {
+                            OFLogger.Instance.LogDebug("Attachment Reader => Folder name: {0}", mapiFolder.Name);
+                            if (mapiFolder.Items.Count == 0)
+                            {
+                                Marshal.ReleaseComObject(mapiFolder);
+                                continue;
+                            }
+                            foreach (var result in mapiFolder.Items)
+                            {
+                                CheckCancellation();
+                                TryToWait();
+                                try
                                 {
-                                    if (_processedItems.ContainsKey(email.EntryID))
-                                        continue;
-                                    ProcessEmailItem(email, mapiFolder);
-                                    _processedItems.Add(email.EntryID, null);
+                                    var email = result as Outlook.MailItem;
+                                    var contact = result as Outlook.ContactItem;
+
+                                    if (email != null)
+                                    {
+                                        if (_processedItems.ContainsKey(email.EntryID))
+                                            continue;
+                                        ProcessEmailItem(email, mapiFolder);
+                                        _processedItems.Add(email.EntryID, null);
+                                    }
+                                    else if (contact != null)
+                                    {
+                                        if (_processedItems.ContainsKey(contact.EntryID))
+                                            continue;
+                                        ProcessContactItem(contact);
+                                        _processedItems.Add(contact.EntryID, null);
+                                    }
                                 }
-                                else if (contact != null)
+                                catch (COMException com)
                                 {
-                                    if (_processedItems.ContainsKey(contact.EntryID))
-                                        continue;
-                                    ProcessContactItem(contact);
-                                    _processedItems.Add(contact.EntryID, null);
+                                    OFLogger.Instance.LogInfo("Reading Outlook items: ErrorCode={0}, {1}", com.ErrorCode.GetErrorCode(), com.ToString());
+                                    if (com.ErrorCode.GetErrorCode() != SyncErrorCode)
+                                    {
+                                        throw;
+                                    }
+                                }
+                                finally
+                                {
+                                    Marshal.ReleaseComObject(result);
                                 }
                             }
-                            catch (COMException com)
+                        }
+                        catch (COMException com)
+                        {
+                            if (com.ErrorCode.GetErrorCode() == NetworkProblemErrorCode)
                             {
-                                OFLogger.Instance.LogInfo("Reading Outlook items: ErrorCode={0}, {1}",com.ErrorCode.GetErrorCode(), com.ToString());
-                                if (com.ErrorCode.GetErrorCode() != SyncErrorCode)
-                                {
-                                    throw;
-                                }
-                            }
-                            finally
-                            {
-                                Marshal.ReleaseComObject(result);
+                                OFLogger.Instance.LogError("Network Problem: {0}", com.ToString());
                             }
                         }
                         Marshal.ReleaseComObject(mapiFolder);
