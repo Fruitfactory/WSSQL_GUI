@@ -37,21 +37,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             int total = 0;
             try
             {
-                Stopwatch watch = new Stopwatch();
-                watch.Start();
-
-                var str = Encoding.UTF8.GetString(bodyBytes);
-
                 var result = Raw.Search<byte[]>(DefaultInfrastructureName, GetSearchType(typeof(T)), bodyBytes);
-
-                watch.Stop();
-                OFLogger.Instance.LogDebug("Search (Send request to ES and retrieve response): {0}ms", watch.ElapsedMilliseconds);
-
-                Stopwatch watchParsing = new Stopwatch();
-                watchParsing.Start();
-
-                //str = Encoding.UTF8.GetString(result.Response);
-
                 using (var stream = new MemoryStream(result.Response))
                 using (var reader = new StreamReader(stream))
                 {
@@ -60,9 +46,6 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                     total = rawResult.hits.total;
                     listResult = rawResult.hits.hits.Select(h => h._source);
                 }
-                watchParsing.Stop();
-                OFLogger.Instance.LogDebug("Parsing dynamic response: {0}ms, Diff: {1}ms", watchParsing.ElapsedMilliseconds, Math.Abs(watchParsing.ElapsedMilliseconds - watch.ElapsedMilliseconds));
-
             }
             catch (Exception ex)
             {
