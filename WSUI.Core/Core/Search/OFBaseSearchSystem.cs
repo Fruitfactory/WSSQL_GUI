@@ -159,18 +159,11 @@ namespace OF.Core.Core.Search
                     OFLogger.Instance.LogDebug("List of Events is empty");
                     return;
                 }
-                var watchSearch = new Stopwatch();
-                watchSearch.Start();
-
                 if (IsAdvancedMode)
                     _listRules.Where(item => item.IncludedInAdvancedMode).ForEach(item => item.Search());
                 else 
                     _listRules.ForEach(item => item.Search());
-
                 WaitHandle.WaitAll(events);
-                watchSearch.Stop();
-                OFLogger.Instance.LogDebug("------------------- searching is DONE!!!!--------------------- {0}ms",watchSearch.ElapsedMilliseconds);//
-
                 if (_needStop)
                 {
                     RaiseSearchStopped();
@@ -191,7 +184,7 @@ namespace OF.Core.Core.Search
                     InternalResult.Add(itemResult);
                 }
                 watch.Stop();
-                OFLogger.Instance.LogDebug("BaseSearchSystem: {0}", watch.ElapsedMilliseconds);
+                OFLogger.Instance.LogDebug("-=Searching is DONE=- {0}", watch.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {

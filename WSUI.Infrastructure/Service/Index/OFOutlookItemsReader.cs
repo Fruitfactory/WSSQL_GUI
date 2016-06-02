@@ -624,7 +624,7 @@ namespace OF.Infrastructure.Service.Index
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetFolders", ex.ToString()));
+                OFLogger.Instance.LogError(ex.ToString());
                 return res;
             }
             return res;
@@ -645,13 +645,13 @@ namespace OF.Infrastructure.Service.Index
                     }
                     catch (Exception e)
                     {
-                        OFLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
+                        OFLogger.Instance.LogError(string.Format("{0} {1}", subfolder.Name, e.ToString()));
                     }
                 }
             }
             catch (Exception e)
             {
-                OFLogger.Instance.LogError(string.Format("{0} - {1}", "GetOutlookFolders", e.Message));
+                OFLogger.Instance.LogError(e.ToString());
             }
         }
 

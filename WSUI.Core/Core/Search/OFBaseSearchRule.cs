@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Office.Interop.Outlook;
 using Microsoft.Practices.Unity;
 using Nest;
 using Newtonsoft.Json;
@@ -29,6 +30,7 @@ using OF.Core.Extensions;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 using OF.Core.Utils;
+using Exception = System.Exception;
 
 namespace OF.Core.Core.Search
 {
@@ -143,16 +145,10 @@ namespace OF.Core.Core.Search
                 string query = Query;
                 if (string.IsNullOrEmpty(query))
                     throw new ArgumentNullException("Query is null or empty");
-                OFLogger.Instance.LogDebug("Query<{0}>: {1}", typeof (T).Name, query);
-
-
                 if (_total != 0 && _from >= _total)
                 {
                     return;
                 }
-
-                Stopwatch watch = new Stopwatch();
-                watch.Start();
 
                 IEnumerable<E> Documents = null;
                 long total = 0;
@@ -194,29 +190,14 @@ namespace OF.Core.Core.Search
                     }
                 }
 
-                watch.Stop();
-
                 // additional process
                 if (!NeedStop && Documents.Any())
                 {
-                    OFLogger.Instance.LogDebug("Search Done: Server {0}ms, Client {1}ms", took,
-                        watch.ElapsedMilliseconds);
                     _total = total;
                     _from += Documents.Count() == TopQueryResult ? TopQueryResult : Documents.Count();
-                    watch = new Stopwatch();
-                    watch.Start();
                     ReadDataFromTable(Documents);
-                    watch.Stop();
-                    OFLogger.Instance.LogDebug("Read Data Done: {0}ms", watch.ElapsedMilliseconds);
-
-                    watch = new Stopwatch();
-                    watch.Start();
                     ProcessResult();
-                    watch.Stop();
-                    OFLogger.Instance.LogDebug("Process Result Done: {0}ms", watch.ElapsedMilliseconds);
-
                     _typeResult = OFTypeResult.Ok;
-
                 }
                 else
                 {
