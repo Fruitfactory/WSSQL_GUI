@@ -90,11 +90,9 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
 	    {
             var groups = Result.OrderByDescending(i => i.DateCreated).GroupBy(i => new { Name = i.ItemNameDisplay, Size = i.Size });
 	        var result = new List<OFAttachmentContentSearchObject>();
-            OFLogger.Instance.LogDebug(string.Format("Count attachments: {0}", groups.Count()));
             foreach (var group in groups)
             {
                 var item = group.FirstOrDefault();
-                OFTypeSearchItem type = OFSearchItemHelper.GetTypeItem(item.ItemUrl, item.Kind != null && item.Kind.Length > 0 ? item.Kind[0].ToString() : string.Empty);
                 foreach (var attachmentSearchObject in group.Skip(1))
                 {
                     item.AddItem(attachmentSearchObject);
@@ -104,7 +102,6 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             Result.Clear();
             if (result.Count > 0)
             {
-                OFLogger.Instance.LogDebug("{0}: {1}",RuleName,result.Count);
                 Result = result;
                 LastDate = Result.Min(d => d.DateCreated.Value); // TODO should be re-factored
             }

@@ -51,7 +51,7 @@ namespace OF.Core.Core.MVVM
 
         protected virtual void Set<T>(string propertyName, T value)
         {
-            string property = propertyName.ToLowerInvariant();
+            string property = propertyName.ToUpperInvariant();
             if (_values.ContainsKey(property))
             {
                 _values[property] = value;
@@ -71,15 +71,15 @@ namespace OF.Core.Core.MVVM
             return Get<T>(name,default(T));
         }
 
-        protected T Get<T>(Expression<Func<T>> exp, T defaultValue)
+        protected T Get<T>(Expression<Func<T>> exp, T defaultValue )
         {
             var name = GetPropertyName(exp);
             return Get<T>(name, defaultValue);
         }
 
-        protected virtual T Get<T>(string name, T defaultValue)
+        protected virtual T Get<T>(string name, T defaultValue )
         {
-            string property = name.ToLowerInvariant();
+            string property = name.ToUpperInvariant();
             if (_values.ContainsKey(property))
             {
                 return (T)_values[property];

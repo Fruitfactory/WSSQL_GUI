@@ -37,10 +37,9 @@ namespace OF.Core.Core.MVVM
 
         protected override void Set<T>(string propertyName, T value)
         {
-            string property = propertyName.ToLowerInvariant();
-            if (_data.IsNotNull() && _properties.Any(p => p.Name.ToLowerInvariant() == property))
+            if (_data.IsNotNull() && _properties.Any(p => String.Equals(p.Name, propertyName,StringComparison.CurrentCultureIgnoreCase)))
             {
-                var pi = _properties.FirstOrDefault(p => p.Name.ToLowerInvariant() == property);
+                var pi = _properties.FirstOrDefault(p => String.Equals(p.Name, propertyName, StringComparison.CurrentCultureIgnoreCase));
                 if (pi.IsNotNull())
                 {
                     pi.SetPropertyValue(_data, value);
@@ -52,18 +51,17 @@ namespace OF.Core.Core.MVVM
             }
         }
 
-        protected override T Get<T>(string name, T defaultValue)
+        protected override T Get<T>(string propertyName, T defaultValue )
         {
-            string property = name.ToLowerInvariant();
-            if (_data.IsNotNull() && _properties.Any(p => p.Name.ToLowerInvariant() == property))
+            if (_data.IsNotNull() && _properties.Any(p => String.Equals(p.Name, propertyName, StringComparison.CurrentCultureIgnoreCase)))
             {
-                var pi = _properties.FirstOrDefault(p => p.Name.ToLowerInvariant() == property);
+                var pi = _properties.FirstOrDefault(p => String.Equals(p.Name, propertyName, StringComparison.CurrentCultureIgnoreCase));
                 if (pi.IsNotNull())
                 {
                     return pi.GetPropertyValue<T>(_data);
                 }
             }
-            return base.Get(name, defaultValue);
+            return base.Get(propertyName, defaultValue);
         }
 
         protected override void OnPropertyChanged(string property)

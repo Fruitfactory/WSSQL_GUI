@@ -107,7 +107,6 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             Result.Clear();
             if (result.Count > 0)
             {
-                OFLogger.Instance.LogDebug("{0}: {1}", RuleName, result.Count);
                 Result = result;
                 LastDate = Result.Last().DateReceived;
             }

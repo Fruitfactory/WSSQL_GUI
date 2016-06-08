@@ -57,13 +57,13 @@ namespace OF.Core.Data
 
         public OFRecipient[] To
         {
-            get { return Get(() => To); }
+            get { return Get<OFRecipient[]>("To", null); }
             set { Set(() => To, value);}
         }
 
         public OFRecipient[] Cc
         {
-            get { return Get(() => Cc); }
+            get { return Get<OFRecipient[]>("Cc", null); }
             set { Set(() => Cc, value); }
         }
 
@@ -93,7 +93,7 @@ namespace OF.Core.Data
 
         public string FromName
         {
-            get { return Get(() => FromName); }
+            get { return Get("FromName",""); }
             set { Set(() => FromName,value);}
         }
 

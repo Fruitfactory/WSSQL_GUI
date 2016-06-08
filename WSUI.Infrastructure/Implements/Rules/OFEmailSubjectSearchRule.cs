@@ -117,8 +117,6 @@ namespace OF.Infrastructure.Implements.Rules
                 {
                     case AdvancedSearchCriteriaType.To:
                         var listShould = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
-                        //listShould.Add(d => d.Term("to.address", temp.Value.ToLowerCase()));
-                        //listShould.Add(d => d.Term("to.name", temp.Value.ToLowerCase()));
                         listShould.Add(d => d.Wildcard("to.address",string.Format("*{0}*",temp.Value.ToLowerCase())));
                         listShould.Add(d => d.Wildcard("to.name", string.Format("*{0}*", temp.Value.ToLowerCase())));
 
@@ -126,8 +124,7 @@ namespace OF.Infrastructure.Implements.Rules
 
                         break;
                     case AdvancedSearchCriteriaType.Folder:
-                        //listCriterias.Add(d => d.Term(e => e.Folder, temp.Value.ToLowerCase()));
-                        listCriterias.Add(d => d.Wildcard(e => e.Folder, temp.Value.ToLowerCase()));
+                        listCriterias.Add(d => d.Wildcard(e => e.Folder, string.Format("*{0}*", temp.Value.ToLowerCase())));
                         break;
                     case AdvancedSearchCriteriaType.Body:
 
@@ -143,7 +140,7 @@ namespace OF.Infrastructure.Implements.Rules
                                     listShouldBody.Add(d => d.MatchPhrase(m => m.OnField(e => e.Analyzedcontent).Query(ofRuleToken.Result)));
                                     break;
                                 default:
-                                    listShouldBody.Add(d => d.Term(e => e.Analyzedcontent, ofRuleToken.Result));
+                                    listShouldBody.Add(d => d.Wildcard(e => e.Analyzedcontent, string.Format("*{0}*",ofRuleToken.Result.ToLowerInvariant())));
                                     break;
                             }
                         }

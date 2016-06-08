@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
+
 namespace OF.Core.Extensions
 {
     public static class ReflectionExtensions
@@ -13,12 +14,13 @@ namespace OF.Core.Extensions
 
         public static IEnumerable<PropertyInfo> GetAllPublicProperties(this Type t)
         {
-            return t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+            var list = t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+            return list;
         }
 
         public static bool HasProperty(this Type t, string name)
         {
-            return t.GetAllPublicProperties().Any(pi => pi.Name.ToLower() == name.ToLower());
+            return t.GetAllPublicProperties().Any(pi => String.Equals(pi.Name, name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public static bool HasAttribute<T>(this Type t)

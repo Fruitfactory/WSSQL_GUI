@@ -213,6 +213,10 @@ namespace OF.Infrastructure.Implements.Rules
 
         private OFRecipient GetRecepient(string name, string email, string[] criteries)
         {
+            if (name == null || email == null || criteries == null)
+            {
+                return null;
+            }
             if (criteries.All(c => name.IndexOf(c, StringComparison.InvariantCultureIgnoreCase) > -1))
             {
                 return new OFRecipient(){Name=name, Address =  email};
