@@ -11,8 +11,6 @@ namespace OF.Core.Interfaces
         void CreateInfrastructure();
         ElasticsearchResponse<OFStatusResponse> GetIndexingProgress();
 
-        void CreateWarms();
-
         void WarmUp();
        
     }

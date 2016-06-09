@@ -81,7 +81,7 @@ namespace OF.Core.Data
 
         public string ConversationIndex
         {
-            get { return Get(() => ConversationIndex); }
+            get { return Get<string>("ConversationIndex",String.Empty); }
             set { Set(() => ConversationIndex,value);}
         }
 
