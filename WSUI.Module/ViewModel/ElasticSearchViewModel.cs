@@ -62,7 +62,7 @@ namespace OF.Module.ViewModel
 
         public void Initialize()
         {
-            CheckServices();
+            CheckServicesAndIndex();
             InstallServiceCommand = new OFRelayCommand(InstallServiceCommandExecute);
             RunServiceCommand = new OFRelayCommand(RunServiceCommandExecute);
             CreateIndexCommand = new OFRelayCommand(CreateIndexCommandExecute);
@@ -246,7 +246,7 @@ namespace OF.Module.ViewModel
             }
         }
 
-        private void CheckServices()
+        private void CheckServicesAndIndex()
         {
             ServiceController sct = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName.IndexOf(ElasticSearchService,StringComparison.InvariantCultureIgnoreCase) > -1);
             if (sct == null)
@@ -270,20 +270,24 @@ namespace OF.Module.ViewModel
                                               riverStatusResp.Response.Status == OFRiverStatus.InitialIndexing;
                 OFLogger.Instance.LogInfo("STATUS: {0}",riverStatusResp.Response.Status);
                 _eventAggregator.GetEvent<OFMenuEnabling>().Publish(resp.Exists);
+                if (IsIndexExisted)
+                {
+                    ElasticSearchClient.CheckAndCreareWarms();
+                }
             }
         }
 
         private void InstallServiceCommandExecute(object arg)
         {
             ExecuteCommandForService("install");
-            CheckServices();                
+            CheckServicesAndIndex();                
         }
 
         private void RunServiceCommandExecute(object arg)
         {
             ExecuteCommandForService("start");
             Thread.Sleep(3000);
-            CheckServices();
+            CheckServicesAndIndex();
         }
 
         private void CreateIndexCommandExecute(object arg)
@@ -291,7 +295,7 @@ namespace OF.Module.ViewModel
             InitElasticSearch();
             CreateIndexVisibility = Visibility.Collapsed;
             ShowProgress = Visibility.Visible;
-            //CheckServices();
+            //CheckServicesAndIndex();
         }
 
         private void ForceCommandExecute(object arg)

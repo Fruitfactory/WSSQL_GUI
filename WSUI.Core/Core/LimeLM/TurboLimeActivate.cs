@@ -168,10 +168,15 @@ namespace OF.Core.Core.LimeLM
             try
             {
                 IsGenuineResult gr = TurboActivate.IsGenuine(DaysBetweenCheck, GraceOfInerErr, true);
-                IsInternetError = gr == IsGenuineResult.InternetError;
                 OFLogger.Instance.LogDebug("GenuineResult: {0}", gr);
+                if (gr == IsGenuineResult.NotGenuine)
+                {
+                    var isActivated = TurboActivate.IsActivated();    
+                    OFLogger.Instance.LogInfo("if TRUE you know the error is a result of the customer not contacting the servers in X+Y days, if FALSE the customer was never activated and/or their computer has change significantly: {0}", isActivated);
+                    return isActivated;
+                }
                 return gr == IsGenuineResult.Genuine || gr == IsGenuineResult.GenuineFeaturesChanged ||
-                       IsInternetError;
+                       (IsInternetError = gr == IsGenuineResult.InternetError) ;
             }
             catch (Exception ex)
             {
