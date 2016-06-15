@@ -79,11 +79,6 @@ namespace OF.Core.Core.LimeLM
             get
             {
                 OFActivationState state = OFActivationState.Error;
-                if (IsInternetError)
-                {
-                    OFLogger.Instance.LogWarning("Check - Internet connection is available or Lime services (servers) are available.");
-                    return OFActivationState.Error; 
-                }
                 if (IsActivated)
                     return OFActivationState.Activated;
                 if (!IsTrialPeriodEnded)
@@ -168,15 +163,21 @@ namespace OF.Core.Core.LimeLM
             try
             {
                 IsGenuineResult gr = TurboActivate.IsGenuine(DaysBetweenCheck, GraceOfInerErr, true);
-                OFLogger.Instance.LogDebug("GenuineResult: {0}", gr);
-                if (gr == IsGenuineResult.NotGenuine)
+                OFLogger.Instance.LogInfo("GenuineResult: {0}", gr);
+                if (gr == IsGenuineResult.Genuine || gr == IsGenuineResult.GenuineFeaturesChanged ||
+                    (IsInternetError = gr == IsGenuineResult.InternetError))
                 {
-                    var isActivated = TurboActivate.IsActivated();    
-                    OFLogger.Instance.LogInfo("if TRUE you know the error is a result of the customer not contacting the servers in X+Y days, if FALSE the customer was never activated and/or their computer has change significantly: {0}", isActivated);
-                    return isActivated;
+                    return true;
                 }
-                return gr == IsGenuineResult.Genuine || gr == IsGenuineResult.GenuineFeaturesChanged ||
-                       (IsInternetError = gr == IsGenuineResult.InternetError) ;
+                var activated = TurboActivate.IsActivated();
+                OFLogger.Instance.LogInfo("TurboActive.IsActivated() result: {0}",activated.ToString());
+                if (activated)
+                {
+                    var result = TurboActivate.IsGenuine();
+                    return result == IsGenuineResult.Genuine || result == IsGenuineResult.GenuineFeaturesChanged ||
+                           result == IsGenuineResult.InternetError;
+                }
+                return false;
             }
             catch (Exception ex)
             {
