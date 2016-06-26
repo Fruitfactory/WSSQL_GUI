@@ -150,7 +150,13 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
                     .field(PstMetadataTags.Contact.ITEM_OTHER_ADDRESS, contact.getOtheraddress())
                     .field(PstMetadataTags.Contact.ITEM_BIRTHDAY, contact.getBirthday())
                     .field(PstMetadataTags.Contact.ENTRY_ID, contact.getEntryid())
-                    .field(PstMetadataTags.Contact.ADDRESS_TYPE,contact.getAddresstype());
+                    .field(PstMetadataTags.Contact.ADDRESS_TYPE,contact.getAddresstype())
+                    .field(PstMetadataTags.Contact.ITEM_FIRST_NAME_SUGGEST, contact.getFirstname())
+                    .field(PstMetadataTags.Contact.ITEM_LAST_NAME_SUGGEST, contact.getLastname())
+                    .field(PstMetadataTags.Contact.ITEM_NAME_SUGGEST,String.format("%s %s",contact.getFirstname(),contact.getLastname()).trim())
+                    .field(PstMetadataTags.Contact.ITEM_EMAILADDRESS1_SUGGEST, contact.getEmailaddress1())
+                    .field(PstMetadataTags.Contact.ITEM_EMAILADDRESS2_SUGGEST, contact.getEmailaddress2())
+                    .field(PstMetadataTags.Contact.ITEM_EMAILADDRESS3_SUGGEST, contact.getEmailaddress3());
             source.endObject();
 
             esIndex(_indexName, PstMetadataTags.INDEX_TYPE_CONTACT, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
@@ -227,8 +233,10 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
                     .field(PstMetadataTags.Email.HAS_ATTACHMENTS, hasAttachments)
                     .field(PstMetadataTags.Email.FROM_NAME, fromName)
                     .field(PstMetadataTags.Email.FROM_ADDRESS, fromAddress)
-                    .field(PstMetadataTags.Email.ENTRY_ID, entryId);
-
+                    .field(PstMetadataTags.Email.ENTRY_ID, entryId)
+                    .field(PstMetadataTags.Email.FROM_NAME_SUGGEST,fromName)
+                    .field(PstMetadataTags.Email.FROM_ADDRESS_SUGGEST,fromAddress)
+                    .field(PstMetadataTags.Email.SUBJECT_SUGGEST,subject);
 
             addArrayOfEmails(source, email.getTo(),
                     PstMetadataTags.Email.TO,
@@ -324,7 +332,8 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
                     .field(PstMetadataTags.Attachment.EMAIL_ID, attachment.getEmailid())
                     .field(PstMetadataTags.Attachment.ENTRYID, entryid)
                     .field(PstMetadataTags.Attachment.CREATED_DATE,attachment.getDatecreated())
-                    .field(PstMetadataTags.Attachment.OUTLOOK_EMAIL_ID, attachment.getOutlookemailid());
+                    .field(PstMetadataTags.Attachment.OUTLOOK_EMAIL_ID, attachment.getOutlookemailid())
+                    .field(PstMetadataTags.Attachment.FILENAME_SUGGEST,filename);
 
             source.endObject();
             esIndex(_indexName, PstMetadataTags.INDEX_TYPE_ATTACHMENT, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);

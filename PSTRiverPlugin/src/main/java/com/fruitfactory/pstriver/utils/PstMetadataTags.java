@@ -46,6 +46,9 @@ public class PstMetadataTags {
         public static final String FROM_NAME = "fromname";
         public static final String FROM_ADDRESS = "fromaddress";
         public static final String ENTRY_ID = "entryid";
+        public static final String FROM_NAME_SUGGEST = "fromnamesuggest";
+        public static final String FROM_ADDRESS_SUGGEST = "fromaddresssuggest";
+        public static final String SUBJECT_SUGGEST = "subjectsuggest";
 
         public static final String TO = "to";
 
@@ -96,6 +99,7 @@ public class PstMetadataTags {
         public static final String ENTRYID = "entryid";
         public static final String OUTLOOK_EMAIL_ID = "outlookemailid";
         public static final String CREATED_DATE = "datecreated";
+        public static final String FILENAME_SUGGEST = "filenamesuggest";
     }
 
     public static XContentBuilder buildPstEmailMapping() throws IOException {
@@ -122,6 +126,9 @@ public class PstMetadataTags {
         addAnalyzedString(mapping, Email.FROM_NAME);
         addAnalyzedString(mapping, Email.FROM_ADDRESS);
         addNotAnalyzedString(mapping, Email.ENTRY_ID);
+        addSuggestString(mapping, Email.FROM_NAME_SUGGEST);
+        addSuggestString(mapping, Email.FROM_ADDRESS_SUGGEST);
+        addSuggestString(mapping,Email.SUBJECT_SUGGEST);
 
         mapping.startObject(Email.TO);
         mapping.startObject(PROPERTIES);
@@ -168,6 +175,7 @@ public class PstMetadataTags {
         addNotAnalyzedString(mapping, Attachment.EMAIL_ID);
         addNotAnalyzedString(mapping, Attachment.ENTRYID);
         addNotAnalyzedString(mapping, Attachment.OUTLOOK_EMAIL_ID);
+        addSuggestString(mapping,Attachment.FILENAME_SUGGEST);
         mapping.endObject();
         mapping.endObject();
         mapping.endObject();
@@ -215,6 +223,13 @@ public class PstMetadataTags {
         public static final String ITEM_BIRTHDAY = "birthday";
         public static final String ENTRY_ID = "entryid";
         public static final String ADDRESS_TYPE = "addresstype";
+
+        public static final String ITEM_FIRST_NAME_SUGGEST = "firstnamesuggest";
+        public static final String ITEM_LAST_NAME_SUGGEST = "lastnamesuggest";
+        public static final String ITEM_NAME_SUGGEST = "namesuggest";
+        public static final String ITEM_EMAILADDRESS1_SUGGEST = "emailaddress1suggest";
+        public static final String ITEM_EMAILADDRESS2_SUGGEST = "emailaddress2suggest";
+        public static final String ITEM_EMAILADDRESS3_SUGGEST = "emailaddress3suggest";
 
     }
 
@@ -282,6 +297,13 @@ public class PstMetadataTags {
         addDate(mapping, Contact.ITEM_BIRTHDAY);
         addNotAnalyzedString(mapping, Contact.ENTRY_ID);
 
+        addSuggestString(mapping,Contact.ITEM_FIRST_NAME_SUGGEST);
+        addSuggestString(mapping,Contact.ITEM_LAST_NAME_SUGGEST);
+        addSuggestString(mapping,Contact.ITEM_NAME_SUGGEST);
+        addSuggestString(mapping,Contact.ITEM_EMAILADDRESS1_SUGGEST);
+        addSuggestString(mapping,Contact.ITEM_EMAILADDRESS2_SUGGEST);
+        addSuggestString(mapping,Contact.ITEM_EMAILADDRESS3_SUGGEST);
+
         mapping.endObject();
         mapping.endObject();
         mapping.endObject();
@@ -320,6 +342,13 @@ public class PstMetadataTags {
         xcb.startObject(fieldName)
                 .field("type", "string")
                 .field("store", "yes")
+                .endObject();
+    }
+    
+    private static void addSuggestString(XContentBuilder xcb, String fieldName) throws IOException {
+        xcb.startObject(fieldName)
+                .field("type", "string")
+                .field("analyzer","shingle_analyzer")
                 .endObject();
     }
 

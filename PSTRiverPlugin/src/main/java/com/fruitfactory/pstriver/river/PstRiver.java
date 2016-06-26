@@ -15,10 +15,13 @@ import com.fruitfactory.pstriver.utils.PstFeedDefinition;
 import com.fruitfactory.pstriver.utils.PstGlobalConst;
 import com.fruitfactory.pstriver.utils.PstMetadataTags;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.elasticsearch.ExceptionsHelper;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
+import org.elasticsearch.action.admin.indices.settings.get.GetSettingsResponse;
+import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
 import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -36,6 +39,8 @@ import org.elasticsearch.river.AbstractRiverComponent;
 import org.elasticsearch.river.River;
 import org.elasticsearch.river.RiverName;
 import org.elasticsearch.river.RiverSettings;
+
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 /**
  *
@@ -179,7 +184,7 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
         }
     }
 
-    private boolean isMappingExist(String index, String type) {
+    private boolean isMappingEmpty(String index, String type) {
         return _client.admin().indices().prepareGetMappings(index).setTypes(type).get().getMappings().isEmpty();
     }
 
@@ -189,7 +194,7 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
         //}
 
         // If type does not exist, we create it
-        boolean mappingExist = isMappingExist(index, type);
+        boolean mappingExist = isMappingEmpty(index, type);
         if (mappingExist) {
             logger.info("Mapping [" + index + "]/[" + type + "] doesn't exist. Creating it.");
             XContentBuilder xcontent = mapping;
@@ -231,6 +236,8 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
         try {
             _client.admin().indices().prepareCreate(_indexName).execute()
                     .actionGet();
+
+            //_client.admin().indices().updateSettings();
         } catch (Exception e) {
             if (ExceptionsHelper.unwrapCause(e) instanceof IndexAlreadyExistsException) {
                 // that's fine
@@ -247,6 +254,18 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
             }
         }
 
+        try{
+
+            GetSettingsResponse getSettingsResponse = _client.admin().indices().prepareGetSettings(_indexName).execute().actionGet();
+            if(getSettingsResponse  != null){
+                String val = getSettingsResponse.getSetting(_indexName,"index.analysis.analyzer.shingle_analyzer.type");
+//                if(val == null){
+//                    updateSettings(_client);
+//                }
+            }
+        }catch (Exception ex){
+            logger.warn(ex.toString());
+        }
         logger.warn(LOG_TAG + "River is creating mapping...");
         try {
             pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_EMAIL_MESSAGE, PstMetadataTags.buildPstEmailMapping());
@@ -260,5 +279,41 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
         }
         logger.warn(LOG_TAG + "River has created mapping...");
     }
+
+    private void updateSettings(Client client){
+        try{
+            XContentBuilder settings = jsonBuilder().prettyPrint().startObject();
+            settings
+                    .startObject("analysis")
+                        .startObject("filter")
+                            .startObject("shingle_filter")
+                                .field("type","shingle")
+                                .field("max_shingle_size",5)
+                                .field("min_shingle_size",2)
+                            .endObject()
+                        .endObject()
+                        .startObject("analyzer")
+                            .startObject("shingle_analyzer")
+                                .field("type","custom")
+                                .field("tokenizer","whitespace")
+                                .array("filter","shingle_filter")
+                            .endObject()
+                        .endObject()
+                    .endObject()
+            .endObject();
+            client.admin().indices().prepareClose(_indexName).execute().actionGet();
+            client.admin().indices().prepareUpdateSettings(_indexName).setSettings(settings.string()).execute().actionGet();
+            client.admin().indices().prepareOpen(_indexName).execute().actionGet();
+            GetSettingsResponse getSettingsResponse = client.admin().indices().prepareGetSettings(_indexName).execute().actionGet();
+            if(getSettingsResponse  != null){
+            }
+
+        }catch(IOException ex){
+            logger.warn(String.format("IO: %s", ex.toString()));
+        }catch (Exception ex){
+            logger.warn(ex.toString());
+        }
+    }
+
 
 }

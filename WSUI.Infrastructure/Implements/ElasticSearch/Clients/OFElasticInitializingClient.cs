@@ -6,6 +6,7 @@ using Elasticsearch.Net;
 using Elasticsearch.Net.Serialization;
 using Microsoft.Practices.Unity;
 using Nest;
+using Newtonsoft.Json;
 using OF.Core;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Data.ElasticSearch;
@@ -27,7 +28,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
         private static readonly String WARM_NAME_ATTACHMENT = "warm_attachment";
 
         private static readonly int WARM_UP_SIZER = 1000;
-        
+
 
         [InjectionConstructor()]
         public OFElasticInitializingClient()
@@ -170,8 +171,26 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
         private bool CreateIndex()
         {
-            var response = ElasticClient.CreateIndex(DefaultInfrastructureName, c => c.NumberOfReplicas(0)
-                .NumberOfShards(1));
+            var response = ElasticClient.CreateIndex(DefaultInfrastructureName, c => c.NumberOfShards(1).NumberOfReplicas(0).Analysis(
+                ad =>
+                {
+                    ad.TokenFilters(d =>
+                    {
+                        d.Add("shingle_filter", new ShingleTokenFilter() {MinShingleSize = 2, MaxShingleSize = 10});
+                        d.Add("edgeNGram", new EdgeNGramTokenFilter() {MinGram = 2, MaxGram = 15});
+                        return d;
+                    });
+                    ad.Analyzers(
+                        d =>
+                            d.Add("shingle_analyzer",
+                                new CustomAnalyzer()
+                                {
+                                    Tokenizer = "whitespace",
+                                    Filter = new List<string>() { "lowercase", "shingle_filter"}
+                                }));
+                    return ad;
+                }
+                ));
             OFLogger.Instance.LogDebug("Create Index...");
             OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.ConnectionStatus.HttpStatusCode, response.ConnectionStatus.Success);
 
