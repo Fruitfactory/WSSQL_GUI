@@ -123,6 +123,8 @@
     <Compile Include="Core\Attributes\OFFieldAttribute.cs" />
     <Compile Include="Core\Rules\OFPriceAnountRule.cs" />
     <Compile Include="Core\Rules\OFRuleToken.cs" />
+    <Compile Include="Core\Suggest\OFBaseSuggester.cs" />
+    <Compile Include="Core\Suggest\OFBaseSuggestSystem.cs" />
     <Compile Include="Data\ElasticSearch\Converter\OFConditionCollectionConverter.cs" />
     <Compile Include="Data\ElasticSearch\OFOutlookItemsIndexingContainer.cs" />
     <Compile Include="Data\ElasticSearch\OFPluginStatusContainer.cs" />
