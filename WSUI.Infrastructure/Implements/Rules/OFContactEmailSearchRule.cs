@@ -66,15 +66,15 @@ namespace OF.Infrastructure.Implements.Rules
             var nameCriteria = _name.SplitString();
             var keywordsCriteria = GetProcessingSearchCriteria(_keyWord);
 
-            var listShould = AddressProperties.Select(property => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(emailCriterias.Select(email => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(des => des.Term(property.ToString(), email.ToString()))).ToArray())))).ToList();
-            listShould.AddRange(NameProperties.Select(property => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(nameCriteria.Select(name => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(des => des.Term(property.ToString(), name.ToString()))).ToArray())))));
+            var listShould = AddressProperties.Select(property => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(emailCriterias.Select(email => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(des => des.Wildcard(property.ToString(), string.Format("*{0}*",email.ToString())))).ToArray())))).ToList();
+            listShould.AddRange(NameProperties.Select(property => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(nameCriteria.Select(name => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(des => des.Wildcard(property.ToString(), string.Format("*{0}*",name.ToString())))).ToArray())))));
 
             if (!string.IsNullOrEmpty(_keyWord) && keywordsCriteria != null && keywordsCriteria.Count > 0)
             {
 
                 var listKeyWordShould = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
-                listKeyWordShould.AddRange(keywordsCriteria.Select((temp => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(d => d.Term(e => e.Analyzedcontent, temp)))).ToArray());
-                listKeyWordShould.AddRange(keywordsCriteria.Select((temp => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(d => d.Term(e => e.Subject, temp)))).ToArray());
+                listKeyWordShould.AddRange(keywordsCriteria.Select((temp => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(d => d.Wildcard(e => e.Analyzedcontent, string.Format("*{0}*",temp))))).ToArray());
+                listKeyWordShould.AddRange(keywordsCriteria.Select((temp => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(d => d.Wildcard(e => e.Subject,string.Format("*{0}*",temp))))).ToArray());
 
                 var l = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
                 l.Add(d => d.Bool(s => s.Should(listKeyWordShould.ToArray())));
@@ -179,7 +179,7 @@ namespace OF.Infrastructure.Implements.Rules
                 list.Add(mustCc);
                 list.Add(mustBCc);
             } 
-            else if (nameCriterias.IsNotNull())
+            if (nameCriterias.IsNotNull())
             {
                 var mustToName = new OFInternalBoolMust<OFBaseTerm>();
                 foreach (var nameCriteria in nameCriterias)
