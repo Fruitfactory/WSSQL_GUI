@@ -37,6 +37,7 @@ namespace OF.Infrastructure.Service.Index
         private readonly Dictionary<string, object> _processedItems = new Dictionary<string, object>();
         private DateTime? _lastUpdated;
         private readonly object _lock = new object();
+        private static readonly int COUNT_ITEMS_FOR_COLLECT = 20;
         
         private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
 
@@ -193,6 +194,7 @@ namespace OF.Infrastructure.Service.Index
                                 Marshal.ReleaseComObject(mapiFolder);
                                 continue;
                             }
+                            int count = 0;
                             foreach (var result in mapiFolder.Items)
                             {
                                 CheckCancellation();
@@ -227,6 +229,12 @@ namespace OF.Infrastructure.Service.Index
                                 }
                                 finally
                                 {
+                                    count++;
+                                    if (count == COUNT_ITEMS_FOR_COLLECT)
+                                    {
+                                        CollectCOMItems();
+                                        count = 0;
+                                    }
                                     Marshal.ReleaseComObject(result);
                                 }
                             }
@@ -239,12 +247,7 @@ namespace OF.Infrastructure.Service.Index
                             }
                         }
                         Marshal.ReleaseComObject(mapiFolder);
-                        // begin - guys recomend o_O - https://social.msdn.microsoft.com/Forums/vstudio/en-US/e8fd2d43-7c2d-46f4-85a8-37d30b4774d9/closing-mailitems-some-help-needed?forum=vsto
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
-                        // end
+                        CollectCOMItems();
                         CheckCancellation();
                     }
                 }
@@ -285,6 +288,16 @@ namespace OF.Infrastructure.Service.Index
                 }    
                 OFMessageFilter.Revoke();
             }
+        }
+
+        private static void CollectCOMItems()
+        {
+// begin - guys recomend o_O - https://social.msdn.microsoft.com/Forums/vstudio/en-US/e8fd2d43-7c2d-46f4-85a8-37d30b4774d9/closing-mailitems-some-help-needed?forum=vsto
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            // end
         }
 
         private void OnActivate()

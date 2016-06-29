@@ -1129,6 +1129,7 @@ namespace OFOutlookPlugin
                     fld = GetOutlookFolders(folder, folderPath);
                     if (fld != null)
                         break;
+                    Marshal.ReleaseComObject(folder);
                 }
                 return fld;
             }
@@ -1153,10 +1154,11 @@ namespace OFOutlookPlugin
                         mapiFolder = GetOutlookFolders(subfolder, fullpath);
                         if (mapiFolder != null)
                             break;
+                        Marshal.ReleaseComObject(subfolder);
                     }
                     catch (Exception e)
                     {
-                        OFLogger.Instance.LogError(string.Format("{0} '{1}' - {2}", "Get Folders", subfolder.Name, e.Message));
+                        OFLogger.Instance.LogError(string.Format("{0} {1}", subfolder.Name, e.Message));
                     }
                 }
                 return mapiFolder;
