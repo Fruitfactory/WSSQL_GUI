@@ -510,7 +510,13 @@ namespace OF.Core.Helpers
                 Outlook.NameSpace ns = this.OutlookApp.GetNamespace("MAPI");
 
                 foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
+                {
                     GetOutlookFolders(folder, res);
+                    Marshal.ReleaseComObject(folder);
+                    GC.Collect();
+                    GC.Collect();
+                }
+                Marshal.ReleaseComObject(ns);
             }
             catch (Exception ex)
             {
@@ -536,7 +542,8 @@ namespace OF.Core.Helpers
                     res.Add(folder);
                     GetOutlookFolders(folder, res);
                 }
-                    
+                Marshal.ReleaseComObject(ns);
+
             }
             catch (Exception ex)
             {
@@ -979,6 +986,9 @@ namespace OF.Core.Helpers
                     {
                         res.Add(subfolder.Name);
                         GetOutlookFolders(subfolder, res);
+                        Marshal.ReleaseComObject(subfolder);
+                        GC.Collect();
+                        GC.Collect();
                     }
                     catch (Exception e)
                     {
