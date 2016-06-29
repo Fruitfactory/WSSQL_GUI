@@ -138,14 +138,16 @@ namespace OF.Infrastructure.Service.Index
 
             
             var isExistingProcess = false;
+            Outlook.NameSpace ns = null;
             try
             {
                 Status = PstReaderStatus.Busy;
                 var resultApplication = OFOutlookHelper.Instance.GetApplication();
                 _application = resultApplication.Item1 as Outlook.Application;
+                ns = _application.GetNamespace("MAPI");
                 isExistingProcess = resultApplication.Item2;
-                var folderList = GetFolders(_application).OfType<Outlook.MAPIFolder>();
-                if (!folderList.Any())
+                
+                if (!GetFolders(ns).Any())
                 {
                     CloseApplication(_application, isExistingProcess);
                     return;
@@ -154,7 +156,7 @@ namespace OF.Infrastructure.Service.Index
                 try
                 {
                     int count = 0;
-                    foreach (var mapiFolder in folderList)
+                    foreach (var mapiFolder in GetFolders(ns))
                     {
                         try
                         {
@@ -174,13 +176,18 @@ namespace OF.Infrastructure.Service.Index
                 {
                     OFLogger.Instance.LogError(exception.ToString());
                     OFLogger.Instance.LogWarning("Try to set counts one more time...");
-                    _indexOutlookItemsClient.SendOutlookItemsCount(folderList.Sum(f => f.Items.Count));
+                    _indexOutlookItemsClient.SendOutlookItemsCount(GetFolders(ns).Sum(f => f.Items.Count));
                 }
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
 
                 try
                 {
 
-                    foreach (var mapiFolder in folderList)
+                    foreach (var mapiFolder in GetFolders(ns))
                     {
                         CheckCancellation();
                         TryToWait();
@@ -269,6 +276,11 @@ namespace OF.Infrastructure.Service.Index
             }
             finally
             {
+                if (ns != null)
+                {
+                    Marshal.ReleaseComObject(ns);
+                    ns = null;
+                }
                 SendOutlookItems(null,null,null, OFOutlookItemsIndexProcess.End);
                 _processedItems.Clear();
                 Status = PstReaderStatus.Finished;
@@ -606,52 +618,42 @@ namespace OF.Infrastructure.Service.Index
             }
         }
 
-        public List<object> GetFolders(Outlook._Application application)
+        static IEnumerable<Outlook.MAPIFolder> GetFolders(Outlook.NameSpace ns)
         {
-            if (application == null)
-                return default(List<object>);
-
-            List<object> res = new List<object>();
-            try
-            {
-                Outlook.NameSpace ns = application.GetNamespace("MAPI");
-                foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
-                {
-                    res.Add(folder);
-                    GetOutlookFolders(folder, res);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                OFLogger.Instance.LogError(ex.ToString());
-                return res;
-            }
-            return res;
-        }
-
-        private void GetOutlookFolders(Outlook.MAPIFolder folder, List<object> res)
-        {
-            try
+            foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
             {
                 if (folder.Folders.Count == 0)
-                    return;
-                foreach (var subfolder in folder.Folders.OfType<Outlook.MAPIFolder>())
                 {
-                    try
+                    yield return folder;
+                }
+                else
+                {
+                    foreach (var mapiFolder in GetFolders(folder))
                     {
-                        res.Add(subfolder);
-                        GetOutlookFolders(subfolder, res);
-                    }
-                    catch (Exception e)
-                    {
-                        OFLogger.Instance.LogError(string.Format("{0} {1}", subfolder.Name, e.ToString()));
+                        yield return mapiFolder;
                     }
                 }
+                Marshal.ReleaseComObject(folder);
             }
-            catch (Exception e)
+        }
+
+        static IEnumerable<Outlook.MAPIFolder> GetFolders(Outlook.MAPIFolder folder)
+        {
+            foreach (var folders in folder.Folders.OfType<Outlook.MAPIFolder>())
             {
-                OFLogger.Instance.LogError(e.ToString());
+                if (folders.Folders.Count == 0)
+                {
+                    yield return folders;
+                }
+                else
+                {
+                    foreach (var mapiFolder in GetFolders(folders))
+                    {
+                        yield return mapiFolder;
+                        Marshal.ReleaseComObject(mapiFolder);
+                    }
+                }
+                Marshal.ReleaseComObject(folders);
             }
         }
 
