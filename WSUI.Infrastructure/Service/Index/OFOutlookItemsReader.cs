@@ -180,10 +180,7 @@ namespace OF.Infrastructure.Service.Index
                     _indexOutlookItemsClient.SendOutlookItemsCount(GetFolders(ns).Sum(f => f.Items.Count));
                 }
 
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+                CollectCOMItems();
 
                 try
                 {
@@ -240,6 +237,7 @@ namespace OF.Infrastructure.Service.Index
                                     if (count == COUNT_ITEMS_FOR_COLLECT)
                                     {
                                         CollectCOMItems();
+                                        OFLogger.Instance.LogDebug("Collect COM items...");
                                         count = 0;
                                     }
                                     Marshal.ReleaseComObject(result);
