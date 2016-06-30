@@ -148,7 +148,7 @@ namespace OF.Infrastructure.Service.Index
                 ns = _application.GetNamespace("MAPI");
                 isExistingProcess = resultApplication.Item2;
                 
-                if (!GetFolders(ns).Any())
+                if (!GetAllFolders(ns.Folders).Any())
                 {
                     CloseApplication(_application, isExistingProcess);
                     return;
@@ -157,7 +157,7 @@ namespace OF.Infrastructure.Service.Index
                 try
                 {
                     int count = 0;
-                    foreach (var mapiFolder in GetFolders(ns))
+                    foreach (var mapiFolder in GetAllFolders(ns.Folders))
                     {
                         try
                         {
@@ -177,7 +177,8 @@ namespace OF.Infrastructure.Service.Index
                 {
                     OFLogger.Instance.LogError(exception.ToString());
                     OFLogger.Instance.LogWarning("Try to set counts one more time...");
-                    _indexOutlookItemsClient.SendOutlookItemsCount(GetFolders(ns).Sum(f => f.Items.Count));
+                    CollectCOMItems();
+                    _indexOutlookItemsClient.SendOutlookItemsCount(GetAllFolders(ns.Folders).Sum(f => f.Items.Count));
                 }
 
                 CollectCOMItems();
@@ -185,7 +186,7 @@ namespace OF.Infrastructure.Service.Index
                 try
                 {
 
-                    foreach (var mapiFolder in GetFolders(ns))
+                    foreach (var mapiFolder in GetAllFolders(ns.Folders))
                     {
                         CheckCancellation();
                         TryToWait();
@@ -629,42 +630,16 @@ namespace OF.Infrastructure.Service.Index
             }
         }
 
-        static IEnumerable<Outlook.MAPIFolder> GetFolders(Outlook.NameSpace ns)
-        {
-            foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
-            {
-                if (folder.Folders.Count == 0)
-                {
-                    yield return folder;
-                }
-                else
-                {
-                    foreach (var mapiFolder in GetFolders(folder))
-                    {
-                        yield return mapiFolder;
-                    }
-                }
-                Marshal.ReleaseComObject(folder);
-            }
-        }
 
-        static IEnumerable<Outlook.MAPIFolder> GetFolders(Outlook.MAPIFolder folder)
+        private static IEnumerable<Outlook.MAPIFolder> GetAllFolders(Outlook.Folders folders)
         {
-            foreach (var folders in folder.Folders.OfType<Outlook.MAPIFolder>())
+            foreach (Outlook.MAPIFolder f in folders)
             {
-                if (folders.Folders.Count == 0)
+                yield return f;
+                foreach (var subfolder in GetAllFolders(f.Folders))
                 {
-                    yield return folders;
+                    yield return subfolder;
                 }
-                else
-                {
-                    foreach (var mapiFolder in GetFolders(folders))
-                    {
-                        yield return mapiFolder;
-                        Marshal.ReleaseComObject(mapiFolder);
-                    }
-                }
-                Marshal.ReleaseComObject(folders);
             }
         }
 
