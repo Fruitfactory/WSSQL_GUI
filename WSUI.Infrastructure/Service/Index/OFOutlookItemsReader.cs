@@ -640,6 +640,7 @@ namespace OF.Infrastructure.Service.Index
                 {
                     yield return subfolder;
                 }
+                Marshal.ReleaseComObject(f);
             }
         }
 
