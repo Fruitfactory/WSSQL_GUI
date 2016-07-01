@@ -148,12 +148,12 @@ namespace OF.Infrastructure.Service.Index
                 ns = _application.GetNamespace("MAPI");
                 isExistingProcess = resultApplication.Item2;
                 
-                if (!GetAllFolders(ns.Folders).Any())
+                if (ns.Folders.Count == 0)
                 {
                     CloseApplication(_application, isExistingProcess);
                     return;
                 }
-
+                CollectCOMItems();
                 try
                 {
                     int count = 0;
@@ -196,7 +196,6 @@ namespace OF.Infrastructure.Service.Index
                             OFLogger.Instance.LogDebug("Attachment Reader => Folder name: {0}", mapiFolder.Name);
                             if (mapiFolder.Items.Count == 0)
                             {
-                                Marshal.ReleaseComObject(mapiFolder);
                                 continue;
                             }
                             int count = 0;
@@ -252,7 +251,6 @@ namespace OF.Infrastructure.Service.Index
                                 OFLogger.Instance.LogError("Network Problem: {0}", com.ToString());
                             }
                         }
-                        Marshal.ReleaseComObject(mapiFolder);
                         CollectCOMItems();
                         CheckCancellation();
                     }
