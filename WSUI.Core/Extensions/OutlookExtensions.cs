@@ -40,6 +40,12 @@ namespace OF.Core.Extensions
             }
         }
 
+        public static bool IsOfflineMode(this Outlook.Application app)
+        {
+            var ns = app.GetNamespace("MAPI");
+            return ns.IsNotNull() && (ns.Offline || ns.ExchangeConnectionMode == Outlook.OlExchangeConnectionMode.olCachedDisconnected || ns.ExchangeConnectionMode == Outlook.OlExchangeConnectionMode.olCachedOffline);
+        }
+
         public static string GetSMTPAddress(this Outlook.Recipient recipient)
         {
             if (recipient == null)

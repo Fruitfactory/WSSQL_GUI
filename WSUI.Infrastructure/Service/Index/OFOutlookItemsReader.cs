@@ -156,21 +156,7 @@ namespace OF.Infrastructure.Service.Index
                 CollectCOMItems();
                 try
                 {
-                    int count = 0;
-                    foreach (var mapiFolder in GetAllFolders(ns.Folders))
-                    {
-                        try
-                        {
-                            count += mapiFolder.Items.Count;
-                        }
-                        catch (COMException com)
-                        {
-                            if (com.ErrorCode.GetErrorCode() == NetworkProblemErrorCode)
-                            {
-                                OFLogger.Instance.LogError("Network Problem: {0}",com.ToString());   
-                            }
-                        }
-                    }
+                    int count = GetItemCount(_application);
                     _indexOutlookItemsClient.SendOutlookItemsCount(count);
                 }
                 catch (System.UnauthorizedAccessException exception)
@@ -178,81 +164,20 @@ namespace OF.Infrastructure.Service.Index
                     OFLogger.Instance.LogError(exception.ToString());
                     OFLogger.Instance.LogWarning("Try to set counts one more time...");
                     CollectCOMItems();
-                    _indexOutlookItemsClient.SendOutlookItemsCount(GetAllFolders(ns.Folders).Sum(f => f.Items.Count));
+                    int count = GetItemCount(_application);
+                    _indexOutlookItemsClient.SendOutlookItemsCount(count);
                 }
 
                 CollectCOMItems();
 
                 try
                 {
-
-                    foreach (var mapiFolder in GetAllFolders(ns.Folders))
+                    foreach (Outlook.MAPIFolder mapiFolder in ns.Folders)
                     {
                         CheckCancellation();
                         TryToWait();
-
-                        try
-                        {
-                            OFLogger.Instance.LogDebug("Attachment Reader => Folder name: {0}", mapiFolder.Name);
-                            if (mapiFolder.Items.Count == 0)
-                            {
-                                continue;
-                            }
-                            int count = 0;
-                            foreach (var result in mapiFolder.Items)
-                            {
-                                CheckCancellation();
-                                TryToWait();
-                                try
-                                {
-                                    var email = result as Outlook.MailItem;
-                                    var contact = result as Outlook.ContactItem;
-
-                                    if (email != null)
-                                    {
-                                        if (_processedItems.ContainsKey(email.EntryID))
-                                            continue;
-                                        ProcessEmailItem(email, mapiFolder);
-                                        _processedItems.Add(email.EntryID, null);
-                                    }
-                                    else if (contact != null)
-                                    {
-                                        if (_processedItems.ContainsKey(contact.EntryID))
-                                            continue;
-                                        ProcessContactItem(contact);
-                                        _processedItems.Add(contact.EntryID, null);
-                                    }
-                                }
-                                catch (COMException com)
-                                {
-                                    OFLogger.Instance.LogInfo("Reading Outlook items: ErrorCode={0}, {1}", com.ErrorCode.GetErrorCode(), com.ToString());
-                                    if (com.ErrorCode.GetErrorCode() != SyncErrorCode)
-                                    {
-                                        throw;
-                                    }
-                                }
-                                finally
-                                {
-                                    count++;
-                                    if (count == COUNT_ITEMS_FOR_COLLECT)
-                                    {
-                                        CollectCOMItems();
-                                        OFLogger.Instance.LogDebug("Collect COM items...");
-                                        count = 0;
-                                    }
-                                    Marshal.ReleaseComObject(result);
-                                }
-                            }
-                        }
-                        catch (COMException com)
-                        {
-                            if (com.ErrorCode.GetErrorCode() == NetworkProblemErrorCode)
-                            {
-                                OFLogger.Instance.LogError("Network Problem: {0}", com.ToString());
-                            }
-                        }
-                        CollectCOMItems();
-                        CheckCancellation();
+                        ProcessFolders(mapiFolder);
+                        Marshal.ReleaseComObject(mapiFolder);
                     }
                 }
                 catch (COMException com)
@@ -297,6 +222,113 @@ namespace OF.Infrastructure.Service.Index
                 }    
                 OFMessageFilter.Revoke();
             }
+        }
+
+        private void ProcessFolders(Outlook.MAPIFolder mapiFolder)
+        {
+            try
+            {
+                if (mapiFolder.Items.Count > 0)
+                {
+                    ProcessItems(mapiFolder);
+                }
+                foreach (Outlook.MAPIFolder folder in mapiFolder.Folders)
+                {
+                    try
+                    {
+                        ProcessFolders(folder);
+                    }
+                    catch (COMException com)
+                    {
+                        if (com.ErrorCode.GetErrorCode() == NetworkProblemErrorCode)
+                        {
+                            OFLogger.Instance.LogError("Network problem: {0}", com.ToString());
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        OFLogger.Instance.LogError(ex.ToString());
+                    }
+                    finally
+                    {
+                        Marshal.ReleaseComObject(folder);
+                    }
+                }
+            }
+            catch (COMException com)
+            {
+                if (com.ErrorCode.GetErrorCode() == NetworkProblemErrorCode)
+                {
+                    OFLogger.Instance.LogError("Network problem: {0}",com.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.ToString());
+            }
+        }
+
+        private void ProcessItems(Outlook.MAPIFolder mapiFolder)
+        {
+            try
+            {
+                OFLogger.Instance.LogDebug("Attachment Reader => Folder name: {0}", mapiFolder.Name);
+                int count = 0;
+                foreach (var result in mapiFolder.Items)
+                {
+                    CheckCancellation();
+                    TryToWait();
+                    try
+                    {
+                        var email = result as Outlook.MailItem;
+                        var contact = result as Outlook.ContactItem;
+
+                        if (email != null)
+                        {
+                            if (_processedItems.ContainsKey(email.EntryID))
+                                continue;
+                            ProcessEmailItem(email, mapiFolder);
+                            _processedItems.Add(email.EntryID, null);
+                        }
+                        else if (contact != null)
+                        {
+                            if (_processedItems.ContainsKey(contact.EntryID))
+                                continue;
+                            ProcessContactItem(contact);
+                            _processedItems.Add(contact.EntryID, null);
+                        }
+                    }
+                    catch (COMException com)
+                    {
+                        OFLogger.Instance.LogInfo("Reading Outlook items: ErrorCode={0}, {1}", com.ErrorCode.GetErrorCode(),
+                            com.ToString());
+                        if (com.ErrorCode.GetErrorCode() != SyncErrorCode)
+                        {
+                            throw;
+                        }
+                    }
+                    finally
+                    {
+                        Marshal.ReleaseComObject(result);
+                        count++;
+                        if (count == COUNT_ITEMS_FOR_COLLECT)
+                        {
+                            CollectCOMItems();
+                            OFLogger.Instance.LogDebug("Collect COM items...");
+                            count = 0;
+                        }
+                    }
+                }
+            }
+            catch (COMException com)
+            {
+                if (com.ErrorCode.GetErrorCode() == NetworkProblemErrorCode)
+                {
+                    OFLogger.Instance.LogError("Network Problem: {0}", com.ToString());
+                }
+            }
+            CollectCOMItems();
+            CheckCancellation();
         }
 
         private static void CollectCOMItems()
@@ -629,16 +661,54 @@ namespace OF.Infrastructure.Service.Index
         }
 
 
-        private static IEnumerable<Outlook.MAPIFolder> GetAllFolders(Outlook.Folders folders)
+        public static int GetItemCount(Outlook._Application application)
         {
-            foreach (Outlook.MAPIFolder f in folders)
+            if (application == null)
+                return 0;
+            int count = 0;
+            try
             {
-                yield return f;
-                foreach (var subfolder in GetAllFolders(f.Folders))
+                Outlook.NameSpace ns = application.GetNamespace("MAPI");
+                foreach (var folder in ns.Folders.OfType<Outlook.MAPIFolder>())
                 {
-                    yield return subfolder;
+                    GetOutlookFolders(folder, ref count);
+                    Marshal.ReleaseComObject(folder);
                 }
-                Marshal.ReleaseComObject(f);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return count;
+        }
+
+        private static void GetOutlookFolders(Outlook.MAPIFolder folder, ref int c)
+        {
+            try
+            {
+                if (folder.Folders.Count == 0)
+                    return;
+                foreach (var subfolder in folder.Folders.OfType<Outlook.MAPIFolder>())
+                {
+                    try
+                    {
+                        c += subfolder.Items != null ? subfolder.Items.Count : 0;
+                        GetOutlookFolders(subfolder, ref c);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                    finally
+                    {
+                        Marshal.ReleaseComObject(subfolder);
+                    }
+                }
+                CollectCOMItems();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
         }
 
