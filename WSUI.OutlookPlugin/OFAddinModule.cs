@@ -1325,6 +1325,10 @@ namespace OFOutlookPlugin
                     }
                 }
             }
+            catch (COMException com)
+            {
+                OFLogger.Instance.LogDebug("ErrorCode: {0}; Message: {1}",com.ErrorCode.GetErrorCode(),com.ToString());
+            }
             finally
             {
                 if (sel != null)
