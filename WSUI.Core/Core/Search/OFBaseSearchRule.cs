@@ -21,6 +21,7 @@ using Microsoft.Practices.Unity;
 using Nest;
 using Newtonsoft.Json;
 using OF.Core.Core.AdvancedSearchCriteria;
+using OF.Core.Core.Attributes;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.Rules;
 using OF.Core.Data.ElasticSearch;
@@ -268,7 +269,7 @@ namespace OF.Core.Core.Search
 
         private bool IsIgnoredProperty(PropertyInfo pInfo)
         {
-            var attributes = pInfo.GetCustomAttributes(typeof (JsonIgnoreAttribute),true);
+            var attributes = pInfo.GetCustomAttributes(typeof(OFIgnoreAttribute), true);
             return attributes != null && attributes.Length > 0;
         }
 

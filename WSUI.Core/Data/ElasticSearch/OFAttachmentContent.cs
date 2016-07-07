@@ -1,6 +1,7 @@
 ﻿using System;
 using Nest;
 using Newtonsoft.Json;
+using OF.Core.Core.Attributes;
 
 namespace OF.Core.Data.ElasticSearch
 {
@@ -20,10 +21,10 @@ namespace OF.Core.Data.ElasticSearch
 
         public string Mimetag { get; set; }
 
-        [JsonIgnore]
+        [OFIgnore]
         public string Content { get; set; }
 
-        [JsonIgnore]
+        [OFIgnore]
         public string Analyzedcontent { get; set; }
 
         public string Emailid { get; set; }

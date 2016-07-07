@@ -121,6 +121,7 @@
     <Compile Include="Core\Attributes\OFBaseWSUIAttribute.cs" />
     <Compile Include="Core\Attributes\OFEnumPrefixAttribute.cs" />
     <Compile Include="Core\Attributes\OFFieldAttribute.cs" />
+    <Compile Include="Core\Attributes\OFIgnoreAttribute.cs" />
     <Compile Include="Core\Rules\OFPriceAnountRule.cs" />
     <Compile Include="Core\Rules\OFRuleToken.cs" />
     <Compile Include="Core\Suggest\OFBaseSuggester.cs" />
