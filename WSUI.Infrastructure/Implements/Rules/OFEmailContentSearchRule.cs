@@ -49,11 +49,11 @@ namespace OF.Infrastructure.Implements.Rules
             body.sort = new OFSortDateCreated();
             if (preparedCriterias.Count > 1)
             {
-                var query = new OFQueryBoolMust<OFTerm<OFSimpleContentTerm>>();
+                var query = new OFQueryBoolMust<OFWildcard<OFAnalyzedContentWildcard>>();
                 body.query = query;
                 foreach (var preparedCriteria in preparedCriterias)
                 {
-                    var term = new OFTerm<OFSimpleContentTerm>(preparedCriteria.Result);
+                    var term = new OFWildcard<OFAnalyzedContentWildcard>(preparedCriteria.Result);
                     query._bool.must.Add(term);
                 }
                 return body;
