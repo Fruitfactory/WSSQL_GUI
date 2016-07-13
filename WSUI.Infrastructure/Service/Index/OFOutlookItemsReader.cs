@@ -533,7 +533,7 @@ namespace OF.Infrastructure.Service.Index
                     var attachment = new OFAttachment();
                     attachment.FileName = att.FileName;
                     attachment.MimeTag = att.PropertyAccessor.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x370E001E");
-                    attachment.Path = att.PathName;
+                    attachment.Path = string.Empty; // sometimes it craches on this string, so I had commented it for now. We don't use path.
                     attachment.Size = att.Size;
                     attachment.Entryid = result.EntryID;
                     listAttachments.Add(attachment);
