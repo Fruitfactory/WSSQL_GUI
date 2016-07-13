@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
+using Microsoft.Win32;
+using OF.Core.Logger;
 
 namespace OF.Core.Helpers
 {
@@ -26,6 +31,10 @@ namespace OF.Core.Helpers
         private static UIntPtr HKEY_LOCAL_MACHINE = new UIntPtr(0x80000002u);
         private static UIntPtr HKEY_CURRENT_USER = new UIntPtr(0x80000001u);
         private Dictionary<string, string> OfficeVersions = new Dictionary<string, string>();
+
+        private readonly static string OUTLOOK_ROOT_KEY = "Outlook.Application\\CurVer";
+
+
         public OFOfficeVersionFinder()
         {
             OfficeVersions.Add("7.0", "Office97");
@@ -36,7 +45,35 @@ namespace OF.Core.Helpers
             OfficeVersions.Add("12.0", "Office2007");
             OfficeVersions.Add("14.0", "Office2010");
             OfficeVersions.Add("15.0", "Office2013");
+            OfficeVersions.Add("16.0", "Office2016");
         }
+
+        public string GetOutlookVersion()
+        {
+            try
+            {
+                var key = Registry.ClassesRoot.OpenSubKey(OUTLOOK_ROOT_KEY);
+                if (key != null)
+                {
+                    var val = key.GetValueNames();
+                    if (val.Any())
+                    {
+                        var outlookApp = key.GetValue(val[0]) as string;
+                        if (!string.IsNullOrEmpty(outlookApp))
+                        {
+                            var splitValue = outlookApp.Split('.');
+                            return splitValue.Length > 2 ? string.Format("{0}.0",splitValue[splitValue.Length - 1]) : GetOfficeVersionNumber();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.ToString());
+            }
+            return string.Empty;
+        }
+
         private string GetOfficeVersionNumber()
         {
             string OfficeVersionNo = null;

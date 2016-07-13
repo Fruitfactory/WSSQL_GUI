@@ -145,8 +145,8 @@ namespace OF.ServiceApp.Bootstraper
         {
             try
             {
-                var versions = (new OFOfficeVersionFinder()).GetOfficeVersion();
-                OFRegistryHelper.Instance.DisableOutlookSecurityWarning(versions.Item2);
+                var versions = (new OFOfficeVersionFinder()).GetOutlookVersion();
+                OFRegistryHelper.Instance.DisableOutlookSecurityWarning(versions);
             }
             catch (Exception ex)
             {

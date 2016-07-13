@@ -51,28 +51,27 @@ namespace OF.Core.Helpers
         public const string ProgIdKey = "OFOutlookPlugin.AddinModule";
 
 
+        Dictionary<string, int> _keyDisableWarningsValues = new Dictionary<string, int>()
+                {
+                    {"promptsimplemapisend", 2},
+                    {"promptsimplemapinameresolve", 2},
+                    {"promptsimplemapiopenmessage", 2},
+                    {"promptoomsend", 2},
+                    {"promptoommeetingtaskrequestresponse", 2},
+                    {"promptoomaddressinformationaccess", 2},
+                    {"promptoomsaveas", 2},
+                    {"promptoomformulaaccess", 2},
+                    {"promptoomaddressbookaccess", 2},
+                    {"adminsecuritymode", 3}
+                };
+
+
         #region [unistall]
         private static string UnistallKey = @"Software\Microsoft\Windows\CurrentVersion\Uninstall";
         private static string DisplayNameSubKey = "DisplayName";
         private static string DisplayVersionSubKey = "DisplayVersion";
 
         #endregion
-
-
-
-        private Dictionary<string,int> _keyDisableWarningsValues = new Dictionary<string, int>()
-        {
-            {"promptsimplemapisend", 2},
-            {"promptsimplemapinameresolve", 2},
-            {"promptsimplemapiopenmessage", 2},
-            {"promptoomsend", 2},
-            {"promptoommeetingtaskrequestresponse", 2},
-            {"promptoomaddressinformationaccess", 2},
-            {"promptoomsaveas", 2},
-            {"promptoomformulaaccess", 2},
-            {"promptoomaddressbookaccess", 2},
-            {"adminsecuritymode", 3}
-        }; 
 
         #endregion [needs]
 
@@ -107,7 +106,7 @@ namespace OF.Core.Helpers
                 var valInt = Convert.ToInt32(valKey);
                 if (valInt == ShutdodwnNotificationRequired)
                 {
-                    Write(RequireShutdownNotificationKey,ShutdodwnNotificationNotRequired,false);
+                    Write(RequireShutdownNotificationKey, ShutdodwnNotificationNotRequired, false);
                 }
             }
             catch (Exception)
@@ -120,7 +119,7 @@ namespace OF.Core.Helpers
         {
             try
             {
-                Write(LoadBehaviorKey,LoadBehaviorDefaultValue,false);
+                Write(LoadBehaviorKey, LoadBehaviorDefaultValue, false);
             }
             catch (Exception)
             {
@@ -132,7 +131,7 @@ namespace OF.Core.Helpers
         {
             try
             {
-                Write(ADXStartModeKey,ADXStartModeDefaultValue, false);
+                Write(ADXStartModeKey, ADXStartModeDefaultValue, false);
             }
             catch (Exception)
             {
@@ -219,23 +218,21 @@ namespace OF.Core.Helpers
         {
             if (string.IsNullOrEmpty(officeVersion))
             {
-                return;
+                throw new ArgumentException("officeVersion");
             }
             var registry = _baseRegistry;
-            try
+            var key = string.Format("Software\\Policies\\Microsoft\\Office\\{0}\\Outlook\\Security", officeVersion);
+            var securityKey = registry.CreateSubKey(key);
+            if (securityKey != null)
             {
-                var key = string.Format("Software\\Policies\\Microsoft\\Office\\{0}\\Outlook\\Security", officeVersion);
-                var securityKey = registry.CreateSubKey(key);
-                if (securityKey != null)
+                foreach (var keyDisableWarningsValue in _keyDisableWarningsValues)
                 {
-                    foreach (var keyDisableWarningsValue in _keyDisableWarningsValues)
-                    {
-                        securityKey.SetValue(keyDisableWarningsValue.Key,keyDisableWarningsValue.Value);
-                    }
+                    securityKey.SetValue(keyDisableWarningsValue.Key, keyDisableWarningsValue.Value);
                 }
             }
-            catch (Exception)
+            else
             {
+                throw new NullReferenceException("SecutiryKey '" + key+"'");
             }
         }
 
@@ -249,7 +246,7 @@ namespace OF.Core.Helpers
             var registry = _baseRegistry;
             try
             {
-                var key = string.Format("Software\\Microsoft\\Office\\{0}\\Outlook\\Preferences",officeVersion);
+                var key = string.Format("Software\\Microsoft\\Office\\{0}\\Outlook\\Preferences", officeVersion);
                 var preferenceKey = registry.CreateSubKey(key);
                 if (preferenceKey != null)
                 {
@@ -258,7 +255,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception)
             {
-                
+
             }
         }
 
@@ -273,7 +270,7 @@ namespace OF.Core.Helpers
             try
             {
                 var key = string.Format("Software\\Policies\\Microsoft\\Office\\{0}\\Outlook\\Security", officeVersion);
-                var securityKey = registry.OpenSubKey(key,RegistryKeyPermissionCheck.ReadWriteSubTree);
+                var securityKey = registry.OpenSubKey(key, RegistryKeyPermissionCheck.ReadWriteSubTree);
                 if (securityKey != null)
                 {
                     foreach (var pair in _keyDisableWarningsValues)
@@ -284,7 +281,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception)
             {
-            }           
+            }
         }
 
         public bool IsSecurityWarningDisable(string officeVersion)
@@ -302,7 +299,7 @@ namespace OF.Core.Helpers
             }
             catch (Exception)
             {
-                
+
             }
             return false;
         }
@@ -346,7 +343,7 @@ namespace OF.Core.Helpers
                 RegistryKey reg = Registry.ClassesRoot.OpenSubKey("Outlook.Application");
                 if (reg == null)
                 {
-                    return new Tuple<string, int>(String.Empty,-1);
+                    return new Tuple<string, int>(String.Empty, -1);
                 }
                 var curVer = reg.OpenSubKey("CurVer");
 
@@ -369,10 +366,10 @@ namespace OF.Core.Helpers
 
                 int version = 0;
                 Int32.TryParse(arr[arr.Length - 1], out version);
-                return new Tuple<string, int>(String.Format("{0:0.0}",version),version);
+                return new Tuple<string, int>(String.Format("{0:0.0}", version), version);
             }
             catch (Exception)
-            {   
+            {
             }
             return new Tuple<string, int>(String.Empty, -1);
         }
@@ -487,7 +484,7 @@ namespace OF.Core.Helpers
 
         public void SetElasticSearchPath(string path)
         {
-            Write(ElastiSearchPath,path);
+            Write(ElastiSearchPath, path);
         }
 
         public string GetMachineOfPath()
@@ -502,18 +499,18 @@ namespace OF.Core.Helpers
 
         public void SetMachineOfPath(string path)
         {
-            WriteMachine(OFPath,path);
+            WriteMachine(OFPath, path);
         }
 
         public void SetOfPath(string path)
         {
-            Write(OFPath,path);
+            Write(OFPath, path);
         }
 
 
         public void SetLoggingsettings(int value)
         {
-            Write(LoggingSettings,value);
+            Write(LoggingSettings, value);
         }
 
         public int GetLoggingSettings()
@@ -565,7 +562,7 @@ namespace OF.Core.Helpers
             {
                 var filename = Path.Combine(path, "serviceapp.exe");
                 RegistryKey add = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                add.SetValue(OUTLOOKFINDER_HELPER_APPLICATION,"\"" + filename + "\"");
+                add.SetValue(OUTLOOKFINDER_HELPER_APPLICATION, "\"" + filename + "\"");
             }
             catch (Exception)
             {
@@ -603,13 +600,13 @@ namespace OF.Core.Helpers
         {
             try
             {
-                RegistryKey unistall = Registry.CurrentUser.OpenSubKey(UnistallKey,true);
+                RegistryKey unistall = Registry.CurrentUser.OpenSubKey(UnistallKey, true);
                 foreach (var subKeyName in unistall.GetSubKeyNames())
                 {
                     var subKey = unistall.OpenSubKey(subKeyName);
-                    if(subKey == null)
+                    if (subKey == null)
                         continue;
-                    if ((string)subKey.GetValue(DisplayNameSubKey) == productName && (string) subKey.GetValue(DisplayVersionSubKey) != version)
+                    if ((string)subKey.GetValue(DisplayNameSubKey) == productName && (string)subKey.GetValue(DisplayVersionSubKey) != version)
                     {
                         unistall.DeleteSubKey(subKeyName);
                     }
@@ -667,7 +664,7 @@ namespace OF.Core.Helpers
                 if (subKey == null)
                     return default(T);
                 var objVal = subKey.GetValue(key.ToLower());
-                return objVal != null ? (T)objVal : default (T);
+                return objVal != null ? (T)objVal : default(T);
             }
             catch (Exception)
             {
@@ -684,14 +681,14 @@ namespace OF.Core.Helpers
                     return default(T);
 
                 var objVal = subkey.GetValue(key.ToLower());
-                return objVal != null ? (T) objVal : default(T);
+                return objVal != null ? (T)objVal : default(T);
             }
             catch (Exception)
             {
                 return default(T);
             }
         }
-            
+
 
         private void Write(string key, object value, bool IsProduct = true)
         {
@@ -764,11 +761,11 @@ namespace OF.Core.Helpers
                 subKey.DeleteValue(key.ToLowerInvariant());
             }
             catch (Exception)
-            {   
+            {
             }
         }
 
-        
+
 
         private RegistryKey GetRegistrySubKey(bool IsProduct = true)
         {
