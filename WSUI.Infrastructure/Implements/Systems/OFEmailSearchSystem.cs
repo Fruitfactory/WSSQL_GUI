@@ -20,7 +20,7 @@ namespace OF.Infrastructure.Implements.Systems
 
         public override void Init(IUnityContainer container)
 	    {
-            AddRule(new OFEmailSubjectSearchRule(container));
+            //AddRule(new OFEmailSubjectSearchRule(container));
             AddRule(new OFEmailContentSearchRule(container));
 	        base.Init(container);
 	    }

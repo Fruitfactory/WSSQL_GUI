@@ -66,6 +66,14 @@ namespace OF.Core.Data.ElasticSearch.Request.Contact
         }
     }
 
+    public class OFContactContentTerm : OFBaseDictionaryWildcardTerm
+    {
+        protected override string GetKey()
+        {
+            return "analyzedcontent";
+        }
+    }
+
     public class OFContentTerm : OFBaseDictionaryTerm
     {
         protected override string GetKey()
