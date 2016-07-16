@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Effects;
 using Microsoft.Win32;
-using OF.Core.Logger;
 
 namespace OF.Core.Helpers
 {
@@ -50,26 +47,19 @@ namespace OF.Core.Helpers
 
         public string GetOutlookVersion()
         {
-            try
+            var key = Registry.ClassesRoot.OpenSubKey(OUTLOOK_ROOT_KEY);
+            if (key != null)
             {
-                var key = Registry.ClassesRoot.OpenSubKey(OUTLOOK_ROOT_KEY);
-                if (key != null)
+                var val = key.GetValueNames();
+                if (val.Any())
                 {
-                    var val = key.GetValueNames();
-                    if (val.Any())
+                    var outlookApp = key.GetValue(val[0]) as string;
+                    if (!string.IsNullOrEmpty(outlookApp))
                     {
-                        var outlookApp = key.GetValue(val[0]) as string;
-                        if (!string.IsNullOrEmpty(outlookApp))
-                        {
-                            var splitValue = outlookApp.Split('.');
-                            return splitValue.Length > 2 ? string.Format("{0}.0",splitValue[splitValue.Length - 1]) : GetOfficeVersionNumber();
-                        }
+                        var splitValue = outlookApp.Split('.');
+                        return splitValue.Length > 2 ? string.Format("{0}.0", splitValue[splitValue.Length - 1]) : GetOfficeVersionNumber();
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                OFLogger.Instance.LogError(ex.ToString());
             }
             return string.Empty;
         }
@@ -104,7 +94,7 @@ namespace OF.Core.Helpers
             }
             return CurrentOfficeVersionNo;
         }
-        public Tuple<string,string> GetOfficeVersion()
+        public Tuple<string, string> GetOfficeVersion()
         {
             string OfficeVersionNo = GetOfficeVersionNumber();
             string InstalledOfficeVersion = OfficeVersions[OfficeVersionNo];
@@ -128,7 +118,7 @@ namespace OF.Core.Helpers
                     InstalledOfficeVersion += " (Unknown bit)";
                 }
             }
-            return new Tuple<string, string>(InstalledOfficeVersion,OfficeVersionNo);
+            return new Tuple<string, string>(InstalledOfficeVersion, OfficeVersionNo);
         }
         private bool Is64BitOperatingSystem()
         {
