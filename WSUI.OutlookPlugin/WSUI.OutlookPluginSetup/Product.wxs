@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
-  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.3.1058" Manufacturer="FruitFactory" UpgradeCode="602854f0-ede9-4eba-bd8c-b6f91822510a" Codepage="1252">
+  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.3.1063" Manufacturer="FruitFactory" UpgradeCode="602854f0-ede9-4eba-bd8c-b6f91822510a" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowDowngrades="no" />-->
     <Upgrade Id="602854f0-ede9-4eba-bd8c-b6f91822510a">
@@ -262,10 +262,9 @@
         <File Id="_Nest_dll" Name="Nest.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Newtonsoft_Json_dll" Name="Newtonsoft.Json.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="pstriver_1_0_SNAPSHOT_zip" Name="pstriver-1.0-SNAPSHOT.zip" Source="$(var.SolutionDir)PSTRiverPlugin\target\releases\" />
-        <File Id="_serviceapp_exe_" Name="serviceapp.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" >
+        <File Id="_serviceapp_exe_" Name="serviceapp.exe" Source="$(var.OF.OutlookPlugin.TargetDir)">
           <fire:FirewallException Id="_serviceapp_exe_firewall" Name="Service Application for OutlookFinder" Port="11223" Protocol="tcp" Scope="any"></fire:FirewallException>
         </File>
-        
         <File Id="_Nancy_dll_" Name="Nancy.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nancy_Hosting_Self_dll_" Name="Nancy.Hosting.Self.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
       </Component>
@@ -289,15 +288,13 @@
         <File Id="_elasticsearch_" Name="elasticsearch" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
         <File Id="_elasticsearch_bat" Name="elasticsearch.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
         <File Id="_elasticsearch_in_bat" Name="elasticsearch.in.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
-        <File Id="_elasticsearch_service_mgr_exe" Name="elasticsearch-service-mgr.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" >
-        </File>
-        <File Id="_elasticsearch_service_x64_exe" Name="elasticsearch-service-x64.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" >
+        <File Id="_elasticsearch_service_mgr_exe" Name="elasticsearch-service-mgr.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"></File>
+        <File Id="_elasticsearch_service_x64_exe" Name="elasticsearch-service-x64.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\">
           <fire:FirewallException Id="_elasticsearch_service_x64_exe_firewall" Name="Elasticsearch Service x64" Port="9200" Protocol="tcp" Scope="any"></fire:FirewallException>
         </File>
-        <File Id="_elasticsearch_service_x86_exe" Name="elasticsearch-service-x86.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" >
+        <File Id="_elasticsearch_service_x86_exe" Name="elasticsearch-service-x86.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\">
           <fire:FirewallException Id="_elasticsearch_service_x86_exe_firewall" Name="Elasticsearch Service x86" Port="9200" Protocol="tcp" Scope="any"></fire:FirewallException>
         </File>
-        
         <File Id="_elasticsearch_in_sh" Name="elasticsearch.in.sh" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
         <File Id="_plugin_" Name="plugin" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
         <File Id="_plugin_bat" Name="plugin.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
