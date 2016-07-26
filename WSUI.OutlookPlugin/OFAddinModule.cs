@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
@@ -51,6 +53,8 @@ namespace OFOutlookPlugin
         private int _initHashCode;
         private IOFMailRemovingManager _mailRemovingManager;
         private bool _canConnect = true;
+
+        private static string SERVICE_APP = "SERVICEAPP";
 
         #region [const]
 
@@ -134,8 +138,7 @@ namespace OFOutlookPlugin
                 {
                     adxMainPluginCommandBar.UseForRibbon = false;
                 }
-                //CreateInboxSubFolder((Outlook.Application)OutlookApp);
-
+                CheckAndStartServiceApp();
             }
             catch (Exception ex)
             {
@@ -661,6 +664,7 @@ namespace OFOutlookPlugin
         {
             try
             {
+                
                 //StartWatch();
                 OFDllPreloader.Instance.PreloadDll();
                 _wsuiBootStraper = new PluginBootStraper();
@@ -1372,8 +1376,7 @@ namespace OFOutlookPlugin
                 _canConnect = false;
             }
         }
-
-
+        
         private void OutlookFinderEvents_ExplorerActivate(object sender, object explorer)
         {
             ConnectToSelectedItem(explorer);
@@ -1386,5 +1389,21 @@ namespace OFOutlookPlugin
         private void OutlookFinderEvents_InspectorClose(object sender, object inspector, string folderName)
         {
         }
+
+        private void CheckAndStartServiceApp()
+        {
+            int count = Process.GetProcesses().Count(p => p.ProcessName.ToUpperInvariant().Contains(SERVICE_APP));
+            if (count > 0)
+            {
+                return;
+            }
+            string filename = string.Format("{0}\\{1}", Path.GetDirectoryName(typeof(OFAddinModule).Assembly.Location),"serviceapp.exe");
+            if (File.Exists(filename))
+            {
+                ProcessStartInfo si = new ProcessStartInfo(filename);
+                Process.Start(si);
+            }
+        }
+
     }
 }

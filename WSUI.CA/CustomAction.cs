@@ -911,11 +911,7 @@ namespace OF.CA
                 {
                     session.Log("Disable Access Prompt...");
                     SetRegistrySettings();
-
-                    session.Log("Starting Service Application...");
                     OFRegistryHelper.Instance.SetAutoRunHelperApplication(ofPath);
-                    ProcessStartInfo info = new ProcessStartInfo(filename);
-                    Process.Start(info);
                 }
             }
             catch (Exception ex)
@@ -1131,7 +1127,7 @@ namespace OF.CA
         private const string PstPluginKey = "pstriver_1_0_SNAPSHOT_zip";
         private const string PstPluginFilename = "pstriver-1.0-SNAPSHOT.zip";
         private const string PstPluginName = "pstriver";
-        private const string InstallArguments = "-i {0} -u file:///{1} \"{2}\"";
+        private const string InstallArguments = "-i {0} -u \"file:///{1}\" \"{2}\"";
         private const string UnistallArguments = " --remove {0} \"{1}\"";
 
         private static void ExtractPstPlugin(Session session, string path)
@@ -1153,6 +1149,8 @@ namespace OF.CA
                     ProcessStartInfo si = new ProcessStartInfo();
                     si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "plugin.bat");
                     si.Arguments = string.Format(InstallArguments, PstPluginName, fullpath, javaHome);
+                    si.RedirectStandardOutput = true;
+                    si.RedirectStandardError = true;
                     si.UseShellExecute = false;
                     si.Verb = "runas";
                     si.CreateNoWindow = true;
@@ -1160,6 +1158,13 @@ namespace OF.CA
                     Process pInstall = new Process();
                     pInstall.StartInfo = si;
                     pInstall.Start();
+
+                    var output = pInstall.StandardOutput.ReadToEnd();
+                    session.Log(string.Format("Stadard Output: {0}",output));
+
+                    var errors = pInstall.StandardError.ReadToEnd();
+                    session.Log(string.Format("Error Output: {0}", errors));
+
                     pInstall.WaitForExit();
                     session.Log("PST plugin was installed.");
                 }
