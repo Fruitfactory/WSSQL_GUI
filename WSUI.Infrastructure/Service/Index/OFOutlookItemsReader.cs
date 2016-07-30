@@ -41,6 +41,8 @@ namespace OF.Infrastructure.Service.Index
         
         private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
 
+        private static readonly long ContentMaxSize = 5 * 1024 * 1024;
+
         private static readonly int RPCUnavaibleErrorCode = unchecked((int) 0x000006BA);
         private static readonly int SyncErrorCode = unchecked((int)0x00000009);
         private static readonly int NetworkProblemErrorCode = unchecked ((int) 0x00000115);
@@ -450,12 +452,16 @@ namespace OF.Infrastructure.Service.Index
             {
                 try
                 {
-                    byte[] contentBytes = attachment.FileName.IsFileAllowed()
+                    byte[] contentBytes = null;
+                    if (attachment.Size < ContentMaxSize)
+                    {
+                        contentBytes = attachment.FileName.IsFileAllowed() 
                         ? GetContentByProperty(attachment)
                         : null;
-                    if (attachment.FileName.IsFileAllowed() && contentBytes == null)
-                    {
-                        contentBytes = GetContentByTempFile(attachment);
+                        if (attachment.FileName.IsFileAllowed() && contentBytes == null)
+                        {
+                            contentBytes = GetContentByTempFile(attachment);
+                        }
                     }
                     AddAttachment(attachmentContents, result, attachment, contentBytes);
                 }
@@ -469,7 +475,7 @@ namespace OF.Infrastructure.Service.Index
                     OFLogger.Instance.LogError("----COM Attachment Failed => {0}", attachment.FileName);
                     OFLogger.Instance.LogError(comEx.Message);
 
-                    byte[] conBytes = attachment.FileName.IsFileAllowed()
+                    byte[] conBytes = attachment.FileName.IsFileAllowed() && attachment.Size < ContentMaxSize
                         ? GetContentByTempFile(attachment)
                         : null;
                     AddAttachment(attachmentContents, result, attachment, conBytes);

@@ -30,5 +30,8 @@
       <Value Profile="(Default)">
                 </Value>
     </Setting>
+    <Setting Name="SetupManifestFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\OF.OutlookFinderSetup\app.manifest</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

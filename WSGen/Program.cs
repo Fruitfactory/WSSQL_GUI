@@ -34,13 +34,29 @@ namespace WSGen
             string buildNumber = string.Format("{0}.{1}.{2}.{3}", Properties.Settings.Default.Major, Properties.Settings.Default.Minor,Properties.Settings.Default.Build, revision);
             string setupProject = string.Format("{0}{1}", source, Properties.Settings.Default.SetupProjectFile);
             string bootstrapperProject = string.Format("{0}{1}", source, Properties.Settings.Default.BootstrapperProject);
+            string manifestFile = string.Format("{0}{1}", source, Properties.Settings.Default.SetupManifestFile);
             GenerateVersionFile(source, buildNumber);
             UpdateSetupProjects(setupProject, buildNumber);
             UpdateSetupProjects(bootstrapperProject, buildNumber, true);
+            UpdateSetupManifestFile(manifestFile, buildNumber);
             Properties.Settings.Default["Revision"] = Convert.ToInt32(revision);
             Properties.Settings.Default["BuildNumber"] = buildNumber;
             Properties.Settings.Default.Save();
             Properties.Settings.Default.Reload();
+        }
+
+        private static void UpdateSetupManifestFile(string manifestFile, string buildNumber)
+        {
+            if (!File.Exists(manifestFile))
+                return;
+
+            var xManifest = XDocument.Load(manifestFile);
+            var assembly = xManifest.Root.Descendants().Where(d => d.Name.LocalName.Contains("assemblyIdentity"));
+            if (assembly.Any())
+            {
+                assembly.First().SetAttributeValue("version",buildNumber);
+            }
+            xManifest.Save(manifestFile);
         }
 
         static void GenerateVersionFile(string sourceDir, string buildNumber)
