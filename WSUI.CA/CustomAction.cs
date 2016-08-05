@@ -44,6 +44,7 @@ namespace OF.CA
 
         private const string InstallFolder = "INSTALLFOLDER";
         private const string ElasticSearchInstallFolder = "ELASTICSEASRCHINSTALLFOLDER";
+        private const string ElasticSearchInstallBinFolder = "ELASTICSEASRCHINSTALLFOLDERBIN";
 
         private const string ElasticSearchDataFolder = "data";
 
@@ -72,7 +73,7 @@ namespace OF.CA
         #endregion elements fo manifest
 
 
-       
+
 
 
         #region [CA ClearFiles]
@@ -139,6 +140,11 @@ namespace OF.CA
         private static string GetInstallationFolder(Session session)
         {
             return session[InstallFolder];
+        }
+
+        private static string GetElasticSearchBinFolder(Session session)
+        {
+            return session[ElasticSearchInstallBinFolder];
         }
 
         private static string GetTempPath()
@@ -236,7 +242,7 @@ namespace OF.CA
                 }
                 else
                 {
-                    rootDir.Delete(true);    
+                    rootDir.Delete(true);
                 }
             }
             catch (Exception ex)
@@ -257,11 +263,11 @@ namespace OF.CA
             {
                 var version = session["ProductVersion"];
                 var productName = session["ProductName"];
-                OFRegistryHelper.Instance.DeleteUnistallKeyNotCurrentVersion(version,productName);
+                OFRegistryHelper.Instance.DeleteUnistallKeyNotCurrentVersion(version, productName);
             }
             catch (Exception ex)
             {
-                session.Log(ex.ToString());                
+                session.Log(ex.ToString());
             }
             return ActionResult.Success;
         }
@@ -1048,7 +1054,7 @@ namespace OF.CA
                     si.CreateNoWindow = true;
                     si.Verb = "runas";
                     si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
-                    Process pInstall = new Process {StartInfo = si};
+                    Process pInstall = new Process { StartInfo = si };
                     pInstall.Start();
                     pInstall.WaitForExit();
                     session.Log("Install Elastic Search: install service");
@@ -1056,7 +1062,7 @@ namespace OF.CA
                     RegisterPlugin(session, elasticSearchPath, ofPath, javaHome);
 
                     si.Arguments = string.Format(" {0} \"{1}\"", "start", javaHome);
-                    Process pStart = new Process {StartInfo = si};
+                    Process pStart = new Process { StartInfo = si };
                     pStart.Start();
                     pStart.WaitForExit();
                     session.Log("Install Elastis Search: run service");
@@ -1160,7 +1166,7 @@ namespace OF.CA
                     pInstall.Start();
 
                     var output = pInstall.StandardOutput.ReadToEnd();
-                    session.Log(string.Format("Stadard Output: {0}",output));
+                    session.Log(string.Format("Stadard Output: {0}", output));
 
                     var errors = pInstall.StandardError.ReadToEnd();
                     session.Log(string.Format("Error Output: {0}", errors));
@@ -1204,6 +1210,59 @@ namespace OF.CA
             WindowsPrincipal principal = new WindowsPrincipal(identity);
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
+
+        #endregion
+
+
+        #region [firewall]
+        [CustomAction]
+        public static ActionResult InstallRules(Session session)
+        {
+            try
+            {
+                ApplyRules("install",session);
+            }
+            catch (Exception ex)
+            {
+                session.Log(ex.ToString());
+            }
+            return ActionResult.Success;
+        }
+
+        private static void ApplyRules(string action,Session session)
+        {
+            var esPath = GetElasticSearchBinFolder(session);
+            var ofPath = GetInstallationFolder(session);
+            var es86 = Path.Combine(esPath, "elasticsearch-service-x86.exe");
+            var es64 = Path.Combine(esPath, "elasticsearch-service-x64.exe");
+            var serviceApp = Path.Combine(ofPath, "serviceapp.exe");
+            ProcessStartInfo si = new ProcessStartInfo(Path.Combine(ofPath, "firewallrules.exe"))
+            {
+                Arguments = string.Format(" {0} \"{1}\" \"{2}\" \"{3}\"",action, es86, es64, serviceApp),
+                Verb = "runas",
+                UseShellExecute = true,
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
+            var process = Process.Start(si);
+            process.WaitForExit();
+        }
+
+        [CustomAction]
+        public static ActionResult UninstallRules(Session session)
+        {
+            try
+            {
+                ApplyRules("uninstall",session);
+            }
+            catch (Exception ex)
+            {
+                session.Log(ex.ToString());
+            }
+            return ActionResult.Success;
+        }
+
+
 
         #endregion
     }
