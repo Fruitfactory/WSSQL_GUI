@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
-  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.3.1073" Manufacturer="FruitFactory" UpgradeCode="602854f0-ede9-4eba-bd8c-b6f91822510a" Codepage="1252">
+  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.3.1085" Manufacturer="FruitFactory" UpgradeCode="602854f0-ede9-4eba-bd8c-b6f91822510a" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowDowngrades="no" />-->
     <Upgrade Id="602854f0-ede9-4eba-bd8c-b6f91822510a">
@@ -19,7 +19,6 @@
     <WixVariable Id="WixUIBannerBmp" Value="Image\top.bmp" />
     <WixVariable Id="WixUIDialogBmp" Value="Image\dialog.bmp" />
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
-    <Property Id="MSIUSEREALADMINDETECTION" Value="1" />
     <Feature Id="ProductFeature" Title="OutlookFinder" Level="1" ConfigurableDirectory="INSTALLFOLDER">
       <ComponentRef Id="INSTALLFOLDER" />
       <ComponentRef Id="INSTALLFOLDERLIB" />
@@ -59,7 +58,6 @@
     <CustomAction Id="CheckVersion" BinaryKey="managedAction" DllEntry="CheckVersion" Execute="immediate" Return="check" />
     <CustomAction Id="InstallRules" BinaryKey="managedAction" DllEntry="InstallRules" Execute="immediate" Return="check"></CustomAction>
     <CustomAction Id="UninstallRules" BinaryKey="managedAction" DllEntry="UninstallRules" Execute="immediate" Return="check"></CustomAction>
-    
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallInitialize" />
       <Custom Action="RegisterDll" After="SelfRegModules">NOT Installed</Custom>
@@ -267,7 +265,9 @@
         <File Id="_Nest_dll" Name="Nest.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Newtonsoft_Json_dll" Name="Newtonsoft.Json.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="pstriver_1_0_SNAPSHOT_zip" Name="pstriver-1.0-SNAPSHOT.zip" Source="$(var.SolutionDir)PSTRiverPlugin\target\releases\" />
-        <File Id="_serviceapp_exe_" Name="serviceapp.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        <File Id="_serviceapp_exe_" Name="serviceapp.exe" Source="$(var.OF.OutlookPlugin.TargetDir)">
+          <!--<fire:FirewallException Id="_serviceapp_exe_firewall" Name="Service Application for OutlookFinder" Port="11223" Protocol="tcp" Scope="any"></fire:FirewallException>-->
+        </File>
         <File Id="_firewallrules_exe_" Name="firewallrules.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nancy_dll_" Name="Nancy.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nancy_Hosting_Self_dll_" Name="Nancy.Hosting.Self.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
@@ -294,8 +294,10 @@
         <File Id="_elasticsearch_in_bat" Name="elasticsearch.in.bat" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
         <File Id="_elasticsearch_service_mgr_exe" Name="elasticsearch-service-mgr.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\"></File>
         <File Id="_elasticsearch_service_x64_exe" Name="elasticsearch-service-x64.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\">
+          <!--<fire:FirewallException Id="_elasticsearch_service_x64_exe_firewall" Name="Elasticsearch Service x64" Port="9200" Protocol="tcp" Scope="any"></fire:FirewallException>-->
         </File>
         <File Id="_elasticsearch_service_x86_exe" Name="elasticsearch-service-x86.exe" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\">
+          <!--<fire:FirewallException Id="_elasticsearch_service_x86_exe_firewall" Name="Elasticsearch Service x86" Port="9200" Protocol="tcp" Scope="any"></fire:FirewallException>-->
         </File>
         <File Id="_elasticsearch_in_sh" Name="elasticsearch.in.sh" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />
         <File Id="_plugin_" Name="plugin" Source="$(var.SolutionDir)Toolkits\Elasticsearch\bin\" />

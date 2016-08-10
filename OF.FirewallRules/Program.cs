@@ -14,14 +14,14 @@ namespace OF.FirewallRules
 
         private static string FIREWALL_PREFIX = "Firewall Rules: {0}";
 
-        private static string OUTLOOKFINDER_FIREWALL_RULE = "OutlookfinderFIrewallRule {0}"; 
+        private static string OUTLOOKFINDER_FIREWALL_RULE = "OutlookfinderFirewallRule {0}"; 
             
         static void Main(string[] args)
         {
-            System.Diagnostics.Debugger.Launch();
+            //System.Diagnostics.Debugger.Launch();
             if (args.Length == 0)
             {
-                OFEventLogger.Instance.LogInfo(GetMessage("The argument list is empty."));
+                //OFEventLogger.Instance.LogInfo(GetMessage("The argument list is empty."));
                 return;
             }
             switch (args[0])
@@ -44,6 +44,7 @@ namespace OF.FirewallRules
                 {
                     foreach (var path in toArray)
                     {
+                        //OFEventLogger.Instance.LogInfo(GetMessage(path));
                         OFFirewallSettings.RemoveAuthorizeApplication(path);
                     }
                 }
@@ -66,12 +67,15 @@ namespace OF.FirewallRules
                     var index = 1;
                     foreach (var path in paths)
                     {
+                        //OFEventLogger.Instance.LogInfo(GetMessage(path));
                         OFFirewallSettings.AuthorizeApplication(string.Format(OUTLOOKFINDER_FIREWALL_RULE, index++), path,
                             NET_FW_SCOPE_.NET_FW_SCOPE_ALL, NET_FW_IP_VERSION_.NET_FW_IP_VERSION_ANY);
                     }
                 }
-                OFFirewallSettings.AddOpenPort("ELASTICSEARCH_PORT", 9200);
-                OFFirewallSettings.AddOpenPort("OUTLOOKFINDER_SERVICEAPP_PORT", 11223);
+                //OFEventLogger.Instance.LogInfo(GetMessage(9200.ToString()));
+                OFFirewallSettings.AddOpenPort("ElasticSearch Port", 9200);
+                //OFEventLogger.Instance.LogInfo(GetMessage(11223.ToString()));
+                OFFirewallSettings.AddOpenPort("OutlookFinder Service Application Port", 11223);
             }
             catch (Exception ex)
             {
