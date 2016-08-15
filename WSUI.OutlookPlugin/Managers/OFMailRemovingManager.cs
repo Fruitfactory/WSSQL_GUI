@@ -41,40 +41,47 @@ namespace OFOutlookPlugin.Managers
             var nm = _module.OutlookApp.GetNamespace("MAPI");
             if (nm.IsNotNull())
             {
-                for(int i = 1; i <= nm.Stores.Count; i++)
+
+                for (int i = 1; i <= nm.Stores.Count; i++)
                 {
-                    var store = nm.Stores[i];
-                    Outlook.PropertyAccessor pa = store.PropertyAccessor;
-                    byte[] property = null;
                     try
                     {
-                        property = (byte[]) pa.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x35E30102");
+                        var store = nm.Stores[i];
+                        Outlook.PropertyAccessor pa = store.PropertyAccessor;
+                        byte[] property = null;
+                        try
+                        {
+                            property = (byte[]) pa.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x35E30102");
+                        }
+                        catch (UnauthorizedAccessException ex)
+                        {
+                            OFLogger.Instance.LogError(ex.ToString());
+                        }
+
+                        if (property == null)
+                            continue;
+                        var id = pa.BinaryToString(property);
+                        Outlook.MAPIFolder folder = null;
+                        if (!string.IsNullOrEmpty(id) && (folder = nm.GetFolderFromID(id)) != null)
+                        {
+                            _dictionaryDeleteFolders.Add(folder.FullFolderPath, null);
+                        }
+                        if (pa.IsNotNull())
+                        {
+                            Marshal.ReleaseComObject(pa);
+                        }
+                        if (folder.IsNotNull())
+                        {
+                            Marshal.ReleaseComObject(folder);
+                        }
+                        if (store.IsNotNull())
+                        {
+                            Marshal.ReleaseComObject(store);
+                        }
                     }
-                    catch (UnauthorizedAccessException ex)
+                    catch (Exception ex)
                     {
                         OFLogger.Instance.LogError(ex.ToString());
-                        property = (byte[])pa.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x35E30102");
-                    }
-                    
-                    if(property == null)
-                        continue;
-                    var id = pa.BinaryToString(property);
-                    Outlook.MAPIFolder folder = null;
-                    if (!string.IsNullOrEmpty(id) && (folder = nm.GetFolderFromID(id)) != null)
-                    {
-                        _dictionaryDeleteFolders.Add(folder.FullFolderPath,null);
-                    }
-                    if (pa.IsNotNull())
-                    {
-                        Marshal.ReleaseComObject(pa);
-                    }
-                    if (folder.IsNotNull())
-                    {
-                        Marshal.ReleaseComObject(folder);
-                    }
-                    if (store.IsNotNull())
-                    {
-                        Marshal.ReleaseComObject(store);
                     }
                 }
             }

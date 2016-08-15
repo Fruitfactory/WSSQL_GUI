@@ -57,6 +57,13 @@ namespace OF.Core.Helpers
 
         #region public
 
+        public void SetTempFilePath(Guid id, string filepath)
+        {
+            if (_tempFileList.ContainsKey(id))
+                return;
+            _tempFileList.Add(id,filepath);
+        }
+
         public string GenerateTempFileName(ISearchObject searchitem)
         {
             return InternalGetTempFilename(searchitem.Id, GetFilename(searchitem), GetExtension(searchitem));

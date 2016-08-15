@@ -225,11 +225,10 @@ namespace OF.Core.Helpers
             if (attachment.IsNull() || string.IsNullOrEmpty(attachment.Filename))
                 return string.Empty;
 
-            var folder = OFTempFileManager.Instance.GenerateTempFolderForObject(attachment);
-            if (string.IsNullOrEmpty(folder))
+            var filename = OFTempFileManager.Instance.GenerateTempFileName(attachment);
+            if (string.IsNullOrEmpty(filename))
                 return string.Empty;
-            string filename = string.Format("{0}\\{1}", folder, attachment.Filename);
-
+            
 
             if (!string.IsNullOrEmpty(attachment.Content) && string.IsNullOrEmpty(attachment.Outlookemailid))
             {
