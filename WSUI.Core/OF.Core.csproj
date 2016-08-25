@@ -132,6 +132,7 @@
     <Compile Include="Data\ElasticSearch\OFQueryBoolConditions.cs" />
     <Compile Include="Data\ElasticSearch\OFRiverMeta.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleContentTerm.cs" />
+    <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleContentWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleFilenameTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleFilenameWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseCondition.cs" />
@@ -142,10 +143,12 @@
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Request\Contact\OFContactTerms.cs" />
+    <Compile Include="Data\ElasticSearch\Request\Contact\OFContactWildcards.cs" />
     <Compile Include="Data\ElasticSearch\Request\Contact\OFEmaillContactTerms.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFAnalyzedContentWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFContentMatchPhrase.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFSubjectMatchPhrase.cs" />
+    <Compile Include="Data\ElasticSearch\Request\Email\OFSubjectWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Request\OFBodyFields.cs" />
     <Compile Include="Data\ElasticSearch\Request\OFBoolMust.cs" />
     <Compile Include="Data\ElasticSearch\Request\Email\OFSimpleContentTerm.cs" />
@@ -306,6 +309,7 @@
     <Compile Include="Interfaces\IIndexerDataReader.cs" />
     <Compile Include="Interfaces\INavigationView.cs" />
     <Compile Include="Interfaces\IOFElasticSearchRemovingClient.cs" />
+    <Compile Include="Interfaces\IOFWildcard.cs" />
     <Compile Include="Interfaces\IOutlookFolder.cs" />
     <Compile Include="Interfaces\IOutlookHelper.cs" />
     <Compile Include="Interfaces\IQueryGenerator.cs" />

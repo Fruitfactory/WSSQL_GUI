@@ -59,35 +59,7 @@ namespace OF.Infrastructure.Implements.Rules
         {
             return null;
         }
-
-        protected override QueryContainer BuildQuery(QueryDescriptor<OFEmail> queryDescriptor)
-        {
-            var emailCriterias = _to.SplitEmail();
-            var nameCriteria = _name.SplitString();
-            var keywordsCriteria = GetProcessingSearchCriteria(_keyWord);
-
-            var listShould = AddressProperties.Select(property => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(emailCriterias.Select(email => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(des => des.Wildcard(property.ToString(), string.Format("*{0}*",email.ToString())))).ToArray())))).ToList();
-            listShould.AddRange(NameProperties.Select(property => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(descriptor => descriptor.Bool(boolQueryDescriptor => boolQueryDescriptor.Must(nameCriteria.Select(name => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(des => des.Wildcard(property.ToString(), string.Format("*{0}*",name.ToString())))).ToArray())))));
-
-            if (!string.IsNullOrEmpty(_keyWord) && keywordsCriteria != null && keywordsCriteria.Count > 0)
-            {
-
-                var listKeyWordShould = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
-                listKeyWordShould.AddRange(keywordsCriteria.Select((temp => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(d => d.Wildcard(e => e.Analyzedcontent, string.Format("*{0}*",temp))))).ToArray());
-                listKeyWordShould.AddRange(keywordsCriteria.Select((temp => (Func<QueryDescriptor<OFEmail>, QueryContainer>)(d => d.Wildcard(e => e.Subject,string.Format("*{0}*",temp))))).ToArray());
-
-                var l = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
-                l.Add(d => d.Bool(s => s.Should(listKeyWordShould.ToArray())));
-                l.Add(d => d.Bool(s => s.Should(listShould.ToArray())));
-
-                return
-                    queryDescriptor.Bool(
-                        bd =>
-                            bd.Must(l.ToArray()));
-            }
-
-            return queryDescriptor.Bool(bd => bd.Should(listShould.ToArray()));
-        }
+       
 
         protected override OFBody GetSearchBody()
         {

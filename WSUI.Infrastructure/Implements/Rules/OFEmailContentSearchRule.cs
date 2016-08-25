@@ -49,6 +49,32 @@ namespace OF.Infrastructure.Implements.Rules
             body.sort = new OFSortDateCreated();
             if (preparedCriterias.Count > 1)
             {
+                var query = new OFQueryBoolMust<OFQuerySimpleTerm<OFSimpleContentTerm>>();
+                body.query = query;
+                foreach (var preparedCriteria in preparedCriterias)
+                {
+                    var term = new OFQuerySimpleTerm<OFSimpleContentTerm>(preparedCriteria.Result);
+                    query._bool.must.Add(term);
+                }
+                return body;
+            }
+            if (preparedCriterias.All(p => p.Type == ofRuleType.Quote))
+            {
+                var criteria = preparedCriterias.FirstOrDefault(p => p.Type == ofRuleType.Quote);
+                body.query = new OFQueryMatchPhrase<OFContentMatchPhrase>(new OFContentMatchPhrase() { analyzedcontent = criteria.Result });
+                return body;
+            }
+            body.query = new OFQuerySimpleTerm<OFSimpleContentTerm>(Query);
+            return body;
+        }
+
+	    protected override OFBody GetAlternativeSearchBody()
+	    {
+            var preparedCriterias = GetKeywordsList();
+            var body = new OFBodySort();
+            body.sort = new OFSortDateCreated();
+            if (preparedCriterias.Count > 1)
+            {
                 var query = new OFQueryBoolMust<OFWildcard<OFAnalyzedContentWildcard>>();
                 body.query = query;
                 foreach (var preparedCriteria in preparedCriterias)
@@ -67,6 +93,7 @@ namespace OF.Infrastructure.Implements.Rules
             body.query = new OFWildcard<OFAnalyzedContentWildcard>(Query);
             return body;
         }
+        
 
 	    protected override Expression<Func<OFEmail, string>> GetSearchedProperty()
 	    {

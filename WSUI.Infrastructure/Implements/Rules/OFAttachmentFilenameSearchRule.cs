@@ -50,6 +50,27 @@ namespace OF.Infrastructure.Implements.Rules
         {
             var preparedCriterias = GetKeywordsList();
 
+            var body = new OFBody();
+            if (preparedCriterias.Count > 1)
+            {
+                var query = new OFQueryBoolMust<OFTerm<OFAttachmentSimpleFilenameTerm>>();
+                body.query = query;
+                foreach (var preparedCriteria in preparedCriterias)
+                {
+                    var term = new OFTerm<OFAttachmentSimpleFilenameTerm>(preparedCriteria);
+                    query._bool.must.Add(term);
+                }
+                return body;
+            }
+
+            body.query = new OFQuerySimpleTerm<OFAttachmentSimpleFilenameTerm>(Query);
+            return body;
+        }
+
+        protected override OFBody GetAlternativeSearchBody()
+        {
+            var preparedCriterias = GetKeywordsList();
+
             var body = new OFBodyFields();
             body.fields = GetRequiredFields();
             if (preparedCriterias.Count > 1)
@@ -66,6 +87,7 @@ namespace OF.Infrastructure.Implements.Rules
             body.query = new OFWildcard<OFAttachmentSimpleFilenameWildcard>(Query);
             return body;
         }
+
 
         protected override IEnumerable<OFAttachmentSearchObject> GetSortedAttachmentSearchObjects(IEnumerable<OFAttachmentSearchObject> list)
         {

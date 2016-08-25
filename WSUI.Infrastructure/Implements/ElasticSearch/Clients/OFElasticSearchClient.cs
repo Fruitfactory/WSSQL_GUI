@@ -37,6 +37,10 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             int total = 0;
             try
             {
+#if DEBUG
+                var str = Encoding.Default.GetString(bodyBytes);
+#endif
+
                 var result = Raw.Search<byte[]>(DefaultInfrastructureName, GetSearchType(typeof(T)), bodyBytes);
                 using (var stream = new MemoryStream(result.Response))
                 using (var reader = new StreamReader(stream))

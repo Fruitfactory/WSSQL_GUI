@@ -59,19 +59,6 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             base.Reset();
         }
 
-        protected override QueryContainer BuildQuery(QueryDescriptor<OFEmail> queryDescriptor)
-        {
-            var preparedCriterias = GetKeywordsList();
-            if (preparedCriterias.Count > 1)
-            {
-                return queryDescriptor.Bool(descriptor =>
-                {
-                    descriptor.Must(preparedCriterias.Select(preparedCriteria => (Func<QueryDescriptor<OFEmail>, QueryContainer>) (descriptor1 => descriptor1.Term(GetSearchedProperty(), preparedCriteria.Result))).ToArray());
-                });
-            }
-            return queryDescriptor.Term(GetSearchedProperty(), Query);
-        }
-
         protected override IFieldSort BuildSortSelector(SortFieldDescriptor<OFEmail> sortFieldDescriptor)
         {
             return sortFieldDescriptor.OnField(e => e.Datecreated).Descending();

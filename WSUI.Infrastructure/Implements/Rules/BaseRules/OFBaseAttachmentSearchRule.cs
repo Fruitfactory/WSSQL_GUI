@@ -45,19 +45,6 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             return "*"; // searching in all property
         }
 
-        protected override QueryContainer BuildQuery(QueryDescriptor<OFAttachmentContent> queryDescriptor)
-        {
-            var preparedCriterias = GetKeywordsList();
-            if (preparedCriterias.Count > 1)
-            {
-                return queryDescriptor.Bool(descriptor =>
-                {
-                    descriptor.Must(preparedCriterias.Select(preparedCriteria => (Func<QueryDescriptor<OFAttachmentContent>, QueryContainer>)(descriptor1 => descriptor1.Term(GetSearchedProperty(), preparedCriteria.Result))).ToArray());
-                });
-            }
-            return queryDescriptor.Term(GetSearchedProperty(), Query);
-        }
-
         protected virtual Expression<Func<OFAttachmentContent, string>> GetSearchedProperty()
         {
             return null;

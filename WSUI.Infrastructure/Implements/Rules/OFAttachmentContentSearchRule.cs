@@ -48,6 +48,27 @@ namespace OF.Infrastructure.Implements.Rules
             return body;
         }
 
+        protected override OFBody GetAlternativeSearchBody()
+        {
+            var preparedCriterias = GetKeywordsList();
+
+            var body = new OFBodyFields();
+            body.fields = GetRequiredFields();
+            if (preparedCriterias.Count > 1)
+            {
+                var query = new OFQueryBoolMust<OFWildcard<OFAttachmentSimpleContentWildcard>>();
+                body.query = query;
+                foreach (var preparedCriteria in preparedCriterias)
+                {
+                    var term = new OFWildcard<OFAttachmentSimpleContentWildcard>(preparedCriteria.Result);
+                    query._bool.must.Add(term);
+                }
+                return body;
+            }
+            body.query = new OFWildcard<OFAttachmentSimpleContentWildcard>(Query);
+            return body;
+        }
+
         protected override Expression<Func<OFAttachmentContent, string>> GetSearchedProperty()
         {
             return a => a.Analyzedcontent;

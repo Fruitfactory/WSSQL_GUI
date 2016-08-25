@@ -4,7 +4,7 @@ using OF.Core.Interfaces;
 
 namespace OF.Core.Data.ElasticSearch.Request
 {
-    public class OFWildcard<T> : OFBaseWildcard where T : IWildcard, new()
+    public class OFWildcard<T> : OFBaseWildcard, IOFWildcard<T> where T : IWildcard, new()
     {
         public T wildcard { get; set; }
 

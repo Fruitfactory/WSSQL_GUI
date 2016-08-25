@@ -21,6 +21,7 @@ using OF.Core.Data.ElasticSearch.Request;
 using OF.Core.Data.ElasticSearch.Request.Base;
 using OF.Core.Data.ElasticSearch.Request.Contact;
 using OF.Core.Enums;
+using OF.Core.Interfaces;
 
 namespace OF.Infrastructure.Implements.Rules 
 {
@@ -50,34 +51,6 @@ namespace OF.Infrastructure.Implements.Rules
 	    protected override bool NeedSorting
 	    {
 	        get { return false; }
-	    }
-
-	    protected override QueryContainer BuildQuery(QueryDescriptor<OFContact> queryDescriptor)
-	    {
-	        var preparedCriterias = GetKeywordsList();
-            if (preparedCriterias.Count > 1)
-            {
-
-                var list = new List<Func<QueryDescriptor<OFContact>, QueryContainer>>();
-
-                foreach (var criteria in preparedCriterias)
-                {
-                    list.Add(descriptor => descriptor.Term(c => c.Firstname, criteria.Result));
-                    list.Add(descriptor => descriptor.Term(c => c.Lastname, criteria.Result));
-                    list.Add(descriptor => descriptor.Term(c => c.Emailaddress1, criteria.Result));
-                    list.Add(descriptor => descriptor.Term(c => c.Emailaddress2, criteria.Result));
-                    list.Add(descriptor => descriptor.Term(c => c.Emailaddress3, criteria.Result));
-                }
-
-                return queryDescriptor.Bool(bd => bd.Should(list.ToArray()));
-            }
-	        return queryDescriptor.Bool(bd => bd.Should(
-                qd => qd.Term(c => c.Firstname,Query),
-                qd => qd.Term(c => c.Lastname,Query),
-                qd => qd.Term(c => c.Emailaddress1,Query),
-                qd => qd.Term(c => c.Emailaddress2,Query),
-                qd => qd.Term(c => c.Emailaddress3,Query)
-	            ));
 	    }
 
 	    protected override OFBody GetSearchBody()
@@ -138,6 +111,56 @@ namespace OF.Infrastructure.Implements.Rules
             query._bool.should.Add(ea3);
 	        return body;
 	    }
-	}//end ContactSearchRule
+
+	    protected override OFBody GetAlternativeSearchBody()
+	    {
+            var preparedCriterias = GetKeywordsList();
+            var body = new OFBody();
+
+            if (preparedCriterias.Count > 1)
+            {
+
+                var queries = new OFQueryBoolConditions();
+                body.query = queries;
+                foreach (var preparedCriteria in preparedCriterias)
+                {
+
+                    var should = new OFQueryBoolShould<IOFWildcard<OFBaseWildcard>>();
+
+                    var fn = new OFWildcard<OFFirstNameWildcard>(preparedCriteria.Result);
+                    var ln = new OFWildcard<OFLastNameWildcard>(preparedCriteria.Result);
+                    var ea11 = new OFWildcard<OFEmailaddress1Wildcard>(preparedCriteria.Result);
+                    var ea22 = new OFWildcard<OFEmailaddress2Wildcard>(preparedCriteria.Result);
+                    var ea33 = new OFWildcard<OFEmailaddress3Wildcard>(preparedCriteria.Result);
+
+                    should._bool.should.Add(fn);
+                    should._bool.should.Add(ln);
+                    should._bool.should.Add(ea11);
+                    should._bool.should.Add(ea22);
+                    should._bool.should.Add(ea33);
+
+                    var must = new OFMustCondition<object>() { Value = should };
+
+                    queries._bool.Add(must);
+                }
+                return body;
+            }
+            var query = new OFQueryBoolShould<IOFWildcard<OFBaseWildcard>>();
+            body.query = query;
+
+            var firstName = new OFWildcard<OFFirstNameWildcard>(Query);
+            var lastName = new OFWildcard<OFLastNameWildcard>(Query);
+            var ea1 = new OFWildcard<OFEmailaddress1Wildcard>(Query);
+            var ea2 = new OFWildcard<OFEmailaddress2Wildcard>(Query);
+            var ea3 = new OFWildcard<OFEmailaddress3Wildcard>(Query);
+
+            query._bool.should.Add(firstName);
+            query._bool.should.Add(lastName);
+            query._bool.should.Add(ea1);
+            query._bool.should.Add(ea2);
+            query._bool.should.Add(ea3);
+            return body;
+        }
+    }//end ContactSearchRule
 
 }//end namespace Implements

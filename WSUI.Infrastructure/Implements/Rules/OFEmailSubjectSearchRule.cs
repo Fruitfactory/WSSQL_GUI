@@ -82,6 +82,34 @@ namespace OF.Infrastructure.Implements.Rules
             return body;
         }
 
+
+        protected override OFBody GetAlternativeSearchBody()
+        {
+            var preparedCriterias = GetKeywordsList();
+            var body = new OFBodySort();
+            body.sort = new OFSortDateCreated();
+            if (preparedCriterias.Count > 1)
+            {
+                var query = new OFQueryBoolMust<OFWildcard<OFSubjectWildcard>>();
+                body.query = query;
+                foreach (var preparedCriteria in preparedCriterias)
+                {
+                    var term = new OFWildcard<OFSubjectWildcard>(preparedCriteria.Result);
+                    query._bool.must.Add(term);
+                }
+                return body;
+            }
+            if (preparedCriterias.All(p => p.Type == ofRuleType.Quote))
+            {
+                var criteria = preparedCriterias.FirstOrDefault(p => p.Type == ofRuleType.Quote);
+                body.query = new OFQueryMatchPhrase<OFSubjectMatchPhrase>(new OFSubjectMatchPhrase() { subject = criteria.Result });
+                return body;
+            }
+            body.query = new OFWildcard<OFSubjectWildcard>(Query);
+            return body;
+        }
+
+
         protected override IFieldSort BuildAdvancedFieldSortSortSelector(SortFieldDescriptor<OFEmail> sortFieldDescriptor)
         {
             if (AdvancedSearchCriterias.IsNull() ||

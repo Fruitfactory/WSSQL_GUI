@@ -179,14 +179,16 @@ namespace OF.Core.Core.Search
                     var body = GetSearchBody();
                     if (body.IsNotNull())
                     {
-                        body.from = _from;
-                        body.size = TopQueryResult;
-                        result = _elasticSearchClient.RawSearch<E>(body);
-                        if (result.IsNotNull())
+                        result = GetMainResult(body, result);
+                        if (result.IsNotNull() && result.Documents.Any())
                         {
                             Documents = result.Documents;
                             took = result.Took;
                             total = result.Total;
+                        }
+                        else
+                        {
+                            Documents = GetAlternativeResult(out took, out total);
                         }
                     }
                 }
@@ -230,6 +232,37 @@ namespace OF.Core.Core.Search
             }
         }
 
+        private IEnumerable<E> GetAlternativeResult(out int took, out long total)
+        {
+            IEnumerable<E> Documents = new List<E>();
+            OFBody body;
+            IRawSearchResult<E> result;
+            body = GetAlternativeSearchBody();
+            took = 0;
+            total = 0;
+            if (body.IsNotNull())
+            {
+                body.from = _from;
+                body.size = TopQueryResult;
+                result = _elasticSearchClient.RawSearch<E>(body);
+                if (result.IsNotNull())
+                {
+                    Documents = result.Documents;
+                    took = result.Took;
+                    total = result.Total;
+                }
+            }
+            return Documents;
+        }
+
+        private IRawSearchResult<E> GetMainResult(OFBody body, IRawSearchResult<E> result)
+        {
+            body.from = _from;
+            body.size = TopQueryResult;
+            result = _elasticSearchClient.RawSearch<E>(body);
+            return result;
+        }
+
         protected virtual IFieldSort BuildSortSelector(SortFieldDescriptor<E> sortFieldDescriptor)
         {
             return default(IFieldSort);
@@ -240,17 +273,17 @@ namespace OF.Core.Core.Search
             return default(IFieldSort);
         }
 
-        protected virtual QueryContainer BuildQuery(QueryDescriptor<E> queryDescriptor)
-        {
-            return default(QueryContainer);
-        }
-
         protected virtual QueryContainer BuildAdvancedQuery(QueryDescriptor<E> queryDescriptor)
         {
             return default(QueryContainer);
         }
 
         protected virtual OFBody GetSearchBody()
+        {
+            return null;
+        }
+        
+        protected virtual OFBody GetAlternativeSearchBody()
         {
             return null;
         }

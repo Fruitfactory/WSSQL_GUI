@@ -52,39 +52,6 @@ namespace OF.Infrastructure.Implements.Rules
             base.Reset();
         }
 
-        protected override QueryContainer BuildQuery(QueryDescriptor<OFEmail> queryDescriptor)
-        {
-            var preparedCriterias = GetProcessingSearchCriteria();
-
-            if (preparedCriterias.Count > 1)
-            {
-
-                var list = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
-
-                foreach (var criteria in preparedCriterias)
-                {
-                    list.Add(descriptor => descriptor.Term("to.name", criteria));
-                    list.Add(descriptor => descriptor.Term("to.address", criteria));
-                    list.Add(descriptor => descriptor.Term("cc.name", criteria));
-                    list.Add(descriptor => descriptor.Term("cc.address", criteria));
-                    list.Add(descriptor => descriptor.Term("fromname", criteria));
-                    list.Add(descriptor => descriptor.Term("fromaddress", criteria));
-
-                }
-                return queryDescriptor.Bool(bd => bd.Should(list.ToArray()));
-            }
-            return queryDescriptor.Bool(bd => bd.Should(
-                qd => qd.Term("to.name", Query),
-                qd => qd.Term("to.address", Query),
-                qd => qd.Term("cc.name", Query),
-                qd => qd.Term("cc.address", Query),
-                qd => qd.Term("fromname", Query),
-                qd => qd.Term("fromaddress", Query)
-                ));
-
-
-        }
-
         protected override OFBody GetSearchBody()
         {
             var preparedCriterias = GetKeywordsList();
