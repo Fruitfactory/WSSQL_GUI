@@ -66,7 +66,7 @@ namespace OF.Infrastructure.Implements.Rules
                 foreach (var preparedCriteria in preparedCriterias)
                 {
 
-                    var should = new OFQueryBoolShould<OFBaseTerm>();
+                    var should = new OFQueryBoolShould<IOFQueryMatchPhrase<OFBaseMatchPhrase>>();
 
                     var fn = new OFFirstNameTerm();
                     fn.SetValue(preparedCriteria.Result);

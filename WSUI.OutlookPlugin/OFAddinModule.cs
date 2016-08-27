@@ -42,7 +42,7 @@ namespace OFOutlookPlugin
     {
         private int _outlookVersion = 0;
         private string _officeVersion = string.Empty;
-       
+
         private IUpdatable _updatable = null;
         private IPluginBootStraper _wsuiBootStraper = null;
         private IEventAggregator _eventAggregator = null;
@@ -222,12 +222,12 @@ namespace OFOutlookPlugin
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
             this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
-            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem) 
+            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem)
             | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
             this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
             this.formRightSidebar.FormClassName = "OFOutlookPlugin.OFSidebar";
@@ -595,7 +595,7 @@ namespace OFOutlookPlugin
                         System.Windows.Application.Current.DispatcherUnhandledException += WPFApplicationOnDispatcherUnhandledException;
                     }
                 }
-               
+
                 if (_updatable == null)
                 {
                     _updatable = OFUpdateHelper.Instance;
@@ -664,7 +664,7 @@ namespace OFOutlookPlugin
         {
             try
             {
-                
+
                 //StartWatch();
                 OFDllPreloader.Instance.PreloadDll();
                 _wsuiBootStraper = new PluginBootStraper();
@@ -1331,7 +1331,7 @@ namespace OFOutlookPlugin
             }
             catch (COMException com)
             {
-                OFLogger.Instance.LogDebug("ErrorCode: {0}; Message: {1}",com.ErrorCode.GetErrorCode(),com.ToString());
+                OFLogger.Instance.LogDebug("ErrorCode: {0}; Message: {1}", com.ErrorCode.GetErrorCode(), com.ToString());
             }
             finally
             {
@@ -1346,11 +1346,11 @@ namespace OFOutlookPlugin
         {
             if (_canConnect)
             {
-                Outlook._Inspector insp = (Outlook._Inspector) inspector;
+                Outlook._Inspector insp = (Outlook._Inspector)inspector;
                 var item = insp.CurrentItem as Outlook.MailItem;
                 if (item != null)
                 {
-                    _mailRemovingManager.ConnectTo(item);                    
+                    _mailRemovingManager.ConnectTo(item);
                 }
             }
         }
@@ -1364,7 +1364,7 @@ namespace OFOutlookPlugin
                 expls = OutlookApp.Explorers;
                 count = expls.Count;
             }
-            finally 
+            finally
             {
                 if (expls != null)
                 {
@@ -1376,7 +1376,7 @@ namespace OFOutlookPlugin
                 _canConnect = false;
             }
         }
-        
+
         private void OutlookFinderEvents_ExplorerActivate(object sender, object explorer)
         {
             ConnectToSelectedItem(explorer);
@@ -1397,13 +1397,19 @@ namespace OFOutlookPlugin
             {
                 return;
             }
-            string filename = string.Format("{0}\\{1}", Path.GetDirectoryName(typeof(OFAddinModule).Assembly.Location),"serviceapp.exe");
-            if (File.Exists(filename))
+            try
             {
-                ProcessStartInfo si = new ProcessStartInfo(filename);
-                Process.Start(si);
+                string filename = string.Format("{0}\\{1}", Path.GetDirectoryName(typeof(OFAddinModule).Assembly.Location), "serviceapp.exe");
+                if (File.Exists(filename))
+                {
+                    ProcessStartInfo si = new ProcessStartInfo(filename);
+                    Process.Start(si);
+                }
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
-
     }
 }

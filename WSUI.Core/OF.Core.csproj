@@ -140,6 +140,7 @@
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseDictionaryWildcardTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseInternalBool.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseInternalConditions.cs" />
+    <Compile Include="Data\ElasticSearch\Request\Base\OFBaseMatchPhrase.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Base\OFBaseWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Request\Contact\OFContactTerms.cs" />
@@ -309,6 +310,7 @@
     <Compile Include="Interfaces\IIndexerDataReader.cs" />
     <Compile Include="Interfaces\INavigationView.cs" />
     <Compile Include="Interfaces\IOFElasticSearchRemovingClient.cs" />
+    <Compile Include="Interfaces\IOFQueryMatchPhrase.cs" />
     <Compile Include="Interfaces\IOFWildcard.cs" />
     <Compile Include="Interfaces\IOutlookFolder.cs" />
     <Compile Include="Interfaces\IOutlookHelper.cs" />

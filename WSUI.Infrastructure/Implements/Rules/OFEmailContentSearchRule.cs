@@ -49,11 +49,11 @@ namespace OF.Infrastructure.Implements.Rules
             body.sort = new OFSortDateCreated();
             if (preparedCriterias.Count > 1)
             {
-                var query = new OFQueryBoolMust<OFQuerySimpleTerm<OFSimpleContentTerm>>();
+                var query = new OFQueryBoolMust<OFQueryMatchPhrase<OFContentMatchPhrase>>();
                 body.query = query;
                 foreach (var preparedCriteria in preparedCriterias)
                 {
-                    var term = new OFQuerySimpleTerm<OFSimpleContentTerm>(preparedCriteria.Result);
+                    var term = new OFQueryMatchPhrase<OFContentMatchPhrase>(new OFContentMatchPhrase() { analyzedcontent = preparedCriteria.Result });
                     query._bool.must.Add(term);
                 }
                 return body;
@@ -64,7 +64,7 @@ namespace OF.Infrastructure.Implements.Rules
                 body.query = new OFQueryMatchPhrase<OFContentMatchPhrase>(new OFContentMatchPhrase() { analyzedcontent = criteria.Result });
                 return body;
             }
-            body.query = new OFQuerySimpleTerm<OFSimpleContentTerm>(Query);
+            body.query = new OFQueryMatchPhrase<OFContentMatchPhrase>(new OFContentMatchPhrase() { analyzedcontent = Query });
             return body;
         }
 

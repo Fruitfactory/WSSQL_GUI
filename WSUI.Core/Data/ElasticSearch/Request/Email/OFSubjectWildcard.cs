@@ -13,7 +13,7 @@ namespace OF.Core.Data.ElasticSearch.Request.Email
 
         public override void SetValue(object value)
         {
-            subject = string.Format("*{0}*", value);
+            subject = string.Format("{0}*", value);
         }
     }
 }
