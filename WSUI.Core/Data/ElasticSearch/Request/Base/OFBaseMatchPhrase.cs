@@ -5,7 +5,7 @@ using System.Text;
 
 namespace OF.Core.Data.ElasticSearch.Request.Base
 {
-    class abstract OFBaseMatchPhrase
+    public abstract class  OFBaseMatchPhrase
     {
         public OFBaseMatchPhrase(){}
     }

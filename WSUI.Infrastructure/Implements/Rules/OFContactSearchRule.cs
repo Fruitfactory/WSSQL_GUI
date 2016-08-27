@@ -20,6 +20,7 @@ using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Request;
 using OF.Core.Data.ElasticSearch.Request.Base;
 using OF.Core.Data.ElasticSearch.Request.Contact;
+using OF.Core.Data.ElasticSearch.Request.Contact.MatchPhrase;
 using OF.Core.Enums;
 using OF.Core.Interfaces;
 
@@ -68,17 +69,11 @@ namespace OF.Infrastructure.Implements.Rules
 
                     var should = new OFQueryBoolShould<IOFQueryMatchPhrase<OFBaseMatchPhrase>>();
 
-                    var fn = new OFFirstNameTerm();
-                    fn.SetValue(preparedCriteria.Result);
-
-                    var ln = new OFLastNameTerm();
-                    ln.SetValue(preparedCriteria.Result);
-                    var ea11 = new OFEmailaddress1Term();
-                    ea11.SetValue(preparedCriteria.Result);
-                    var ea22 = new OFEmailaddress2Term();
-                    ea22.SetValue(preparedCriteria.Result);
-                    var ea33 = new OFEmailaddress3Term();
-                    ea33.SetValue(preparedCriteria.Result);
+                    var fn = new OFQueryMatchPhrase<OFContactFirstNameMatchPhrase>(new OFContactFirstNameMatchPhrase() {firstname = preparedCriteria.Result});
+                    var ln = new OFQueryMatchPhrase<OFContactLastNameMatchPhrase>(new OFContactLastNameMatchPhrase() {lastname = preparedCriteria.Result });
+                    var ea11 = new OFQueryMatchPhrase<OFContactEmailaddress1MatchPhrase>(new OFContactEmailaddress1MatchPhrase() {emailaddress1 = preparedCriteria.Result});
+                    var ea22 = new OFQueryMatchPhrase<OFContactEmailaddress2MatchPhrase>(new OFContactEmailaddress2MatchPhrase() {emailaddress2 = preparedCriteria.Result}) ;
+                    var ea33 = new OFQueryMatchPhrase<OFContactEmailaddress3MatchPhrase>(new OFContactEmailaddress3MatchPhrase() {emailaddress3 = preparedCriteria.Result});
 
                     should._bool.should.Add(fn);
                     should._bool.should.Add(ln);
@@ -92,18 +87,15 @@ namespace OF.Infrastructure.Implements.Rules
                 }
                 return body;
             }
-            var query = new OFQueryBoolShould<OFBaseTerm>();
+            var query = new OFQueryBoolShould<IOFQueryMatchPhrase<OFBaseMatchPhrase>>();
             body.query = query;
-            var firstName = new OFFirstNameTerm();
-            firstName.SetValue(Query);
-	        var lastName = new OFLastNameTerm();
-            lastName.SetValue(Query);
-	        var ea1 = new OFEmailaddress1Term();
-            ea1.SetValue(Query);
-            var ea2 = new OFEmailaddress2Term();
-            ea2.SetValue(Query);
-            var ea3 = new OFEmailaddress3Term();
-            ea3.SetValue(Query);
+
+            var firstName = new OFQueryMatchPhrase<OFContactFirstNameMatchPhrase>(new OFContactFirstNameMatchPhrase() { firstname = Query });
+            var lastName = new OFQueryMatchPhrase<OFContactLastNameMatchPhrase>(new OFContactLastNameMatchPhrase() { lastname = Query });
+            var ea1 = new OFQueryMatchPhrase<OFContactEmailaddress1MatchPhrase>(new OFContactEmailaddress1MatchPhrase() { emailaddress1 = Query });
+            var ea2 = new OFQueryMatchPhrase<OFContactEmailaddress2MatchPhrase>(new OFContactEmailaddress2MatchPhrase() { emailaddress2 = Query });
+            var ea3 = new OFQueryMatchPhrase<OFContactEmailaddress3MatchPhrase>(new OFContactEmailaddress3MatchPhrase() { emailaddress3 = Query });
+
             query._bool.should.Add(firstName);
             query._bool.should.Add(lastName);
             query._bool.should.Add(ea1);

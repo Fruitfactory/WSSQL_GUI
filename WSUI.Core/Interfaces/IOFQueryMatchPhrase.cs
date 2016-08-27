@@ -5,7 +5,7 @@ using System.Text;
 
 namespace OF.Core.Interfaces
 {
-    interface IOFQueryMatchPhrase<out T> where T : new()
+    public interface IOFQueryMatchPhrase<out T>
     {
     }
 }

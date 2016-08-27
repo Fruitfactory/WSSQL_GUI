@@ -13,7 +13,9 @@ using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Request;
 using OF.Core.Data.ElasticSearch.Request.Base;
 using OF.Core.Data.ElasticSearch.Request.Contact;
+using OF.Core.Data.ElasticSearch.Request.Contact.MatchPhrase;
 using OF.Core.Extensions;
+using OF.Core.Interfaces;
 using OF.Core.Logger;
 
 namespace OF.Infrastructure.Implements.Rules
@@ -57,7 +59,74 @@ namespace OF.Infrastructure.Implements.Rules
             var preparedCriterias = GetKeywordsList();
 
             var body = new OFBody();
-           
+
+            if (preparedCriterias.Count > 1)
+            {
+
+                var queries = new OFQueryBoolConditions();
+                body.query = queries;
+
+                foreach (var preparedCriteria in preparedCriterias)
+                {
+                    var should = new OFQueryBoolShould<IOFQueryMatchPhrase<OFBaseMatchPhrase>>();
+
+                    var tn = new OFQueryMatchPhrase<OFEmailContactToNameMatchPhrase>(new OFEmailContactToNameMatchPhrase() {toName = preparedCriteria.Result});
+                    
+                    var ta = new OFQueryMatchPhrase<OFEmailContactToAddressMatchPhrase>(new OFEmailContactToAddressMatchPhrase() {toAddress = preparedCriteria.Result});
+                    var cn = new OFQueryMatchPhrase<OFEmailContactCcNameMatchPhrase>(new OFEmailContactCcNameMatchPhrase() {ccName = preparedCriteria.Result});
+                    var sa = new OFQueryMatchPhrase<OFEmailContactCcAddressMatchPhrase>(new OFEmailContactCcAddressMatchPhrase() {ccAddress = preparedCriteria.Result});
+                    var fn = new OFQueryMatchPhrase<OFEmailContactFromNameMatchPhrase>(new OFEmailContactFromNameMatchPhrase() {fromname = preparedCriteria.Result});
+                    var fa = new OFQueryMatchPhrase<OFEmailContactFromAddressMatchPhrase>(new OFEmailContactFromAddressMatchPhrase() {fromaddress = preparedCriteria.Result});
+
+                    should._bool.should.Add(tn);
+                    should._bool.should.Add(ta);
+                    should._bool.should.Add(cn);
+                    should._bool.should.Add(sa);
+                    should._bool.should.Add(fn);
+                    should._bool.should.Add(fa);
+
+                    var mustCond = new OFMustCondition<object> { Value = should };
+
+                    queries._bool.Add(mustCond);
+                }
+                return body;
+            }
+
+            var query = new OFQueryBoolConditions(); //new OFQueryBoolShould<OFBaseTerm>();
+            body.query = query;
+            var should1 = new OFQueryBoolShould<IOFQueryMatchPhrase<OFBaseMatchPhrase>>();
+
+            var toName = new OFQueryMatchPhrase<OFEmailContactToNameMatchPhrase>(new OFEmailContactToNameMatchPhrase() { toName = Query});
+            var toAddress = new OFQueryMatchPhrase<OFEmailContactToAddressMatchPhrase>(new OFEmailContactToAddressMatchPhrase() { toAddress = Query });
+            var ccName = new OFQueryMatchPhrase<OFEmailContactCcNameMatchPhrase>(new OFEmailContactCcNameMatchPhrase() { ccName = Query });
+            var ccAddress = new OFQueryMatchPhrase<OFEmailContactCcAddressMatchPhrase>(new OFEmailContactCcAddressMatchPhrase() { ccAddress = Query });
+            var fromName = new OFQueryMatchPhrase<OFEmailContactFromNameMatchPhrase>(new OFEmailContactFromNameMatchPhrase() { fromname = Query });
+            var fromAddress = new OFQueryMatchPhrase<OFEmailContactFromAddressMatchPhrase>(new OFEmailContactFromAddressMatchPhrase() { fromaddress = Query });
+
+
+
+
+            should1._bool.should.Add(toName);
+            should1._bool.should.Add(toAddress);
+            should1._bool.should.Add(ccName);
+            should1._bool.should.Add(ccAddress);
+            should1._bool.should.Add(fromName);
+            should1._bool.should.Add(fromAddress);
+
+            var must = new OFMustCondition<object>() { Value = should1 };
+
+            query._bool.Add(must);
+
+            return body;
+
+        }
+
+        protected override OFBody GetAlternativeSearchBody()
+        {
+            var preparedCriterias = GetKeywordsList();
+
+            var body = new OFBody();
+
             if (preparedCriterias.Count > 1)
             {
 
@@ -88,7 +157,7 @@ namespace OF.Infrastructure.Implements.Rules
                     should._bool.should.Add(fn);
                     should._bool.should.Add(fa);
 
-                    var mustCond = new OFMustCondition<object> {Value = should};
+                    var mustCond = new OFMustCondition<object> { Value = should };
 
                     queries._bool.Add(mustCond);
                 }
@@ -117,12 +186,14 @@ namespace OF.Infrastructure.Implements.Rules
             should1._bool.should.Add(fromName);
             should1._bool.should.Add(fromAddress);
 
-            var must = new OFMustCondition<object>(){Value = should1};
+            var must = new OFMustCondition<object>() { Value = should1 };
 
             query._bool.Add(must);
 
             return body;
+
         }
+
 
         protected override bool NeedSorting
         {

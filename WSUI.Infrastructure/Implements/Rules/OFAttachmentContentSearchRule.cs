@@ -35,16 +35,16 @@ namespace OF.Infrastructure.Implements.Rules
             body.fields = GetRequiredFields();
             if (preparedCriterias.Count > 1)
             {
-                var query = new OFQueryBoolMust<OFTerm<OFAttachmentSimpleContentTerm>>();
+                var query = new OFQueryBoolMust<OFQueryMatchPhrase<OFAttachmentSimpleContentMatchPhrase>>();
                 body.query = query;
                 foreach (var preparedCriteria in preparedCriterias)
                 {
-                    var term = new OFTerm<OFAttachmentSimpleContentTerm>(preparedCriteria.Result);
+                    var term = new OFQueryMatchPhrase<OFAttachmentSimpleContentMatchPhrase>(new OFAttachmentSimpleContentMatchPhrase() {analyzedcontent = preparedCriteria.Result});
                     query._bool.must.Add(term);
                 }
                 return body;
             }
-            body.query = new OFQuerySimpleTerm<OFAttachmentSimpleContentTerm>(Query);
+            body.query = new OFQueryMatchPhrase<OFAttachmentSimpleContentMatchPhrase>(new OFAttachmentSimpleContentMatchPhrase() { analyzedcontent = Query });
             return body;
         }
 
