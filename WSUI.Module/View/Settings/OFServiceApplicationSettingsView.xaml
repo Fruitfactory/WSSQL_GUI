@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="OF.Module.View.Settings.OFServiceApplicationSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
@@ -8,10 +9,22 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="../../Service/ResourceTemplate.xaml" />
                 <ResourceDictionary Source="../../Service\SearchButtonStyle.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
+            
+            <DataTemplate x:Key="HeaderTempate">
+                <Grid Grid.Row="0" Margin="5 0">
+                    <Rectangle Fill="#CC119EDA"></Rectangle>
+                    <Label Foreground="White" Content="{Binding}">
+                    </Label>
+                </Grid>
+            </DataTemplate>
+            
 
         </ResourceDictionary>
     </UserControl.Resources>
@@ -22,17 +35,35 @@
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="5 0">
-            <Rectangle Fill="#CC119EDA"></Rectangle>
-            <Label Foreground="White">
-                OutlookFinder Service Application State
-            </Label>
-        </Grid>
+        
+        
+        <HeaderedContentControl 
+            Grid.Row="1"
+            Header="ElasticSearch Service" HeaderTemplate="{StaticResource HeaderTempate}">
+            <StackPanel Orientation="Vertical" Margin="5">
+                <!--<Button Command="{Binding ElasticSearchServiceInstallCommand}" Margin="5">Install ElasticSearch</Button>-->
+
+                <Button Command="{Binding ElasticSearchServiceRunCommand}" Margin="5">Run ElasticSearch</Button>
+                <TextBlock Visibility="{Binding WarmingVisibility,UpdateSourceTrigger=PropertyChanged}" 
+                           Margin="10 0 0 3"
+                       FontSize="10"
+                       ><Run>Warming...</Run><Run Text="{Binding WarmSecond,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:d}'}"></Run></TextBlock>
+            </StackPanel>
+        </HeaderedContentControl>
 
 
-        <Button Grid.Row="1" Command="{Binding ServiceAppAutoStartCommand}" Margin="5">Run OutlookFinder service application when the computer starts</Button>
+        <HeaderedContentControl 
+            Grid.Row="2"
+            Header="Service Application" HeaderTemplate="{StaticResource HeaderTempate}">
+            <StackPanel Orientation="Vertical" Margin="5">
+                <Button Command="{Binding ServiceAppAutoStartCommand}" Margin="5">Run OutlookFinder service application when the computer starts</Button>
 
-        <Button Grid.Row="2" Command="{Binding ServiceAppRunCommand}" Margin="5">Run OutlookFinder service appication now</Button>
+                <Button Command="{Binding ServiceAppRunCommand}" Margin="5">Run OutlookFinder service appication now</Button>
+            </StackPanel>
+        </HeaderedContentControl>
+
+        
+        
         
     </Grid>
 </UserControl>

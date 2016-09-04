@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -71,6 +72,8 @@ namespace OF.Module.ViewModel
             CreateIndexVisibility = Visibility.Visible;
             ShowProgress = Visibility.Collapsed;
             FinishedStepVisibility = Visibility.Collapsed;
+            WarmingVisibility = Visibility.Collapsed;
+            WarmSecond = 10;
             if (IsIndexExisted)
             {
                 ElasticSearchClient.WarmUp();
@@ -113,6 +116,12 @@ namespace OF.Module.ViewModel
             private set { Set(() => IsBusy, value); }
         }
 
+        public bool IsVisible
+        {
+            get { return Get(() => IsVisible); }
+            set { Set(() => IsVisible, value); }
+        }
+
         public void Show( bool showJustProgress = false)
         {
             IRegion region = _regionManager.Regions[RegionNames.ElasticSearchRegion];
@@ -133,6 +142,7 @@ namespace OF.Module.ViewModel
                 FinishedStepVisibility = Visibility.Collapsed;
                 _timer = new Timer(TimerProgressCallback, null, 0, 2000);
             }
+            IsVisible = true;
         }
 
         public void Close()
@@ -142,12 +152,15 @@ namespace OF.Module.ViewModel
             {
                 return;
             }
+            IsVisible = false;
             region.Deactivate(View);
             region.Remove(View);
+            OnClosed();
         }
 
         public event EventHandler IndexingStarted;
         public event EventHandler IndexingFinished;
+        public event EventHandler Closed;
 
         #region [properties]
 
@@ -185,6 +198,18 @@ namespace OF.Module.ViewModel
         {
             get { return Get(() => CountEmailsAttachments); }
             set { Set(() => CountEmailsAttachments, value); }
+        }
+
+        public Visibility WarmingVisibility
+        {
+            get { return Get(() => WarmingVisibility); }
+            set { Set(() => WarmingVisibility, value); }
+        }
+
+        public int WarmSecond
+        {
+            get { return Get(() => WarmSecond); }
+            set { Set(() => WarmSecond, value); }
         }
 
         #endregion
@@ -246,6 +271,15 @@ namespace OF.Module.ViewModel
             }
         }
 
+        private void OnClosed()
+        {
+            var temp = this.Closed;
+            if (temp != null)
+            {
+                temp(this,EventArgs.Empty);
+            }
+        }
+
         private void CheckServicesAndIndex()
         {
             ServiceController sct = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName.IndexOf(ElasticSearchService,StringComparison.InvariantCultureIgnoreCase) > -1);
@@ -259,7 +293,7 @@ namespace OF.Module.ViewModel
                 IsServiceRunning = sct.Status == ServiceControllerStatus.Running;
             }
 //#if DEBUG
-            IsServiceRunning = IsServiceInstalled = true;
+//            IsServiceRunning = IsServiceInstalled = true;
 //#endif
             if (IsServiceRunning)
             {
@@ -286,8 +320,30 @@ namespace OF.Module.ViewModel
         private void RunServiceCommandExecute(object arg)
         {
             ExecuteCommandForService("start");
-            Thread.Sleep(3000);
-            CheckServicesAndIndex();
+            WarmingVisibility = Visibility.Visible;
+
+            Dispatcher disp = Dispatcher.CurrentDispatcher;
+            
+
+            var backGround = new BackgroundWorker();
+            backGround.DoWork += (sender, args) =>
+            {
+                for (int i = WarmSecond - 1; i >= 0; i--)
+                {
+                    WarmSecond = i + 1;
+                    Thread.Sleep(1000);
+                }
+                disp.BeginInvoke((Action) (() =>
+                {
+                    CheckServicesAndIndex();
+                    if (IsServiceRunning && IsIndexExisted && !IsInitialIndexinginProgress)
+                    {
+                        Close();
+                    }
+                }));
+            };
+            backGround.RunWorkerAsync();
+
         }
 
         private void CreateIndexCommandExecute(object arg)
@@ -323,10 +379,19 @@ namespace OF.Module.ViewModel
                 Process p = new Process();
                 p.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
                 p.StartInfo.FileName = string.Format("{0}\\bin\\{1}", path, serviceBat);
-                p.StartInfo.Arguments = string.Format("{0} \"{1}\"",command,javaHome);
+                p.StartInfo.Arguments = string.Format(" {0} \"{1}\"", command, javaHome);
+                p.StartInfo.CreateNoWindow = true;
                 p.StartInfo.Verb = "runas";
+                p.StartInfo.WorkingDirectory = string.Format("{0}{1}", path, "\\bin");
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardError = true;
+                p.StartInfo.RedirectStandardOutput = true;
+
                 p.Start();
                 p.WaitForExit();
+
+                Debug.WriteLine(string.Format("!!!!!!!! {0}", p.StandardOutput != null ? p.StandardOutput.ReadToEnd() : ""));
+                Debug.WriteLine(string.Format("!!!!!!!! {0}", p.StandardError != null ? p.StandardError.ReadToEnd() : ""));
             }
             catch (Exception ex)
             {

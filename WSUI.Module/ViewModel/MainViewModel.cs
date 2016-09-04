@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,6 +33,7 @@ using OF.Infrastructure.Payloads;
 using OF.Infrastructure.Service.Helpers;
 using OF.Infrastructure.Services;
 using OF.Module.Core;
+using OF.Module.Events;
 using OF.Module.Interface.Service;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
@@ -54,6 +56,7 @@ namespace OF.Module.ViewModel
 
         private readonly IUnityContainer _container;
         private readonly IEventAggregator _eventAggregator;
+        private readonly object LOCK = new object();
 
         private OFBaseSearchObject _currentData;
         private IKindItem _currentItem;
@@ -61,6 +64,7 @@ namespace OF.Module.ViewModel
         private List<OFLazyKind> _listItems;
         private ILazyKind _selectedLazyKind;
         private Visibility _dataVisibility;
+        
         
         private bool _isBusy;
         private INavigationService _navigationService;
@@ -89,8 +93,13 @@ namespace OF.Module.ViewModel
             _token = _eventAggregator.GetEvent<OFSelectedChangedPayloadEvent>().Subscribe(OnSelectedItemChanged);
             _elasticSearchViewModel = _container.Resolve<IElasticSearchViewModel>();
             _elasticSearchViewModel.IndexingFinished += ElasticSearchViewModelOnIndexingFinished;
+            _elasticSearchViewModel.Closed += ElasticSearchViewModelOnIndexingFinished;
             Monitoring = _container.Resolve<IElasticSearchMonitoringViewModel>();
+
+            _eventAggregator.GetEvent<OFElasticsearchServiceStartedEvent>().Subscribe(OnElasticSearchServiceStarted);
         }
+
+        
 
         public IElasticSearchMonitoringViewModel Monitoring { get; private set; }
 
@@ -869,11 +878,7 @@ namespace OF.Module.ViewModel
 
         public bool IsMenuEnabled
         {
-            get
-            {
-                return _elasticSearchViewModel.IsServiceInstalled && _elasticSearchViewModel.IsServiceRunning &&
-                       _elasticSearchViewModel.IsIndexExisted;
-            }
+            get { return true; }
         }
 
 
@@ -906,10 +911,6 @@ namespace OF.Module.ViewModel
                         Monitoring.Start();
                     }
                 }
-                //if (_userActivityTracker.IsNotNull())
-                //{
-                //    _userActivityTracker.Start();
-                //}
             }
             catch (Exception ex)
             {
@@ -1036,22 +1037,33 @@ namespace OF.Module.ViewModel
         
         private void ElasticSearchViewModelOnIndexingFinished(object sender, EventArgs eventArgs)
         {
-            if (Monitoring.IsNotNull())
+            lock (LOCK)
             {
-                Monitoring.Start();
+                if (Monitoring.IsNotNull() && !Monitoring.IsRunning)
+                {
+                    Monitoring.Start();
+                }
+                NotifyServerPluginRunning();
             }
-            NotifyServerPluginRunning();
         }
 
 
         private void NotifyServerPluginRunning()
         {
-            var ofPluginStatus = _container.Resolve<IElasticSearchOFPluginStatusClient>();
-            if (ofPluginStatus.IsNull())
+            try
             {
-                return;
+                var ofPluginStatus = _container.Resolve<IElasticSearchOFPluginStatusClient>();
+                if (ofPluginStatus.IsNull())
+                {
+                    return;
+                }
+                ofPluginStatus.OFPluginStatus(OFPluginStatus.Running);
             }
-            ofPluginStatus.OFPluginStatus(OFPluginStatus.Running);
+            catch (WebException we)
+            {
+                OFLogger.Instance.LogError(we.ToString());
+            }
+            
         }
 
         private void NotifyServerPluginShutdown()
@@ -1064,6 +1076,22 @@ namespace OF.Module.ViewModel
             ofPluginStatus.OFPluginStatus(OFPluginStatus.Shotdown);
         }
 
+        private void OnElasticSearchServiceStarted(bool b)
+        {
+            if (!b)
+            {
+                return;
+            }
+            if (_elasticSearchViewModel.IsVisible)
+            {
+                _elasticSearchViewModel.Close();
+            }
+            else if(Monitoring.IsNotNull() && !Monitoring.IsRunning) 
+            {
+                Monitoring.Start();
+            }
+            NotifyServerPluginRunning();
+        }
 
     }
 }

@@ -14,11 +14,13 @@ namespace OF.Module.Interface.ViewModel
         bool IsIndexExisted { get; }
 
         bool IsInitialIndexinginProgress { get; }
+        bool IsVisible { get; set; }
 
         void Show(bool showJustProgress);
         void Close();
 
         event EventHandler IndexingStarted;
         event EventHandler IndexingFinished;
+        event EventHandler Closed;
     }
 }

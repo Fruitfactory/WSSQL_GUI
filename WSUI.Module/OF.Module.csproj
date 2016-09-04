@@ -153,6 +153,7 @@
     <Compile Include="Core\OFKindViewModelBase.cs" />
     <Compile Include="Core\OFLazyKind.cs" />
     <Compile Include="Enums\Enums.cs" />
+    <Compile Include="Events\OFElasticsearchServiceStartedEvent.cs" />
     <Compile Include="Interface\Service\ICommandStrategy.cs" />
     <Compile Include="Interface\Service\IMainSettingsWindow.cs" />
     <Compile Include="Interface\Service\INavigationService.cs" />

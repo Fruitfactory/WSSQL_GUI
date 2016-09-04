@@ -69,6 +69,9 @@
             <TextBlock>Service isn't running</TextBlock>
 
             <Button Command="{Binding RunServiceCommand}" Margin="5">Run ElasticSearch Service</Button>
+            <TextBlock Visibility="{Binding WarmingVisibility,UpdateSourceTrigger=PropertyChanged}" 
+                       FontSize="10"
+                       ><Run>Warming...</Run><Run Text="{Binding WarmSecond,UpdateSourceTrigger=PropertyChanged,StringFormat='{}{0:d}'}"></Run></TextBlock>
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Vertical" >

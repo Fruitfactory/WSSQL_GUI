@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Events;
@@ -56,10 +57,23 @@ namespace OF.Module.ViewModel.Settings
             _detailsSettingsViewModels.Add(_unityContainer.Resolve<IServiceApplicationSettingsViewModel>());
             _detailsSettingsViewModels.Add(_unityContainer.Resolve<IOutlookSecuritySettingsViewModel>());
 
+            if (_detailsSettingsViewModels[2].IsNotNull())
+            {
+                _detailsSettingsViewModels[2].PropertyChanged += OnPropertyChanged;
+            }
+
+
             _detailsSettingsViewModels.ForEach(d => d.Initialize());
+
+            SelectedTab = IsIndexTabEnabled ? 0 : 1;
 
             OkCommand = new OFRelayCommand(OkCommandExecute,CanOkCommandExecute);
             CancelCommand = new OFRelayCommand(CancelCommandExecute);
+        }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            OnPropertyChanged("");
         }
 
         public IElasticSearchRiverSettingsViewModel RiverSettingsViewModel
@@ -81,6 +95,22 @@ namespace OF.Module.ViewModel.Settings
         {
             get { return _detailsSettingsViewModels[3] as IOutlookSecuritySettingsViewModel;}
         }
+
+        public int SelectedTab
+        {
+            get { return Get(() => SelectedTab); }
+            set { Set(() => SelectedTab, value); }
+        }
+
+        public bool IsIndexTabEnabled
+        {
+            get
+            {
+                return ServiceApplicationSettingsViewModel.IsElasticSearchServiceRunning &&
+                       ServiceApplicationSettingsViewModel.IsElasticSearchServiceInstalled;
+            }
+        }
+
 
         public ICommand OkCommand
         {

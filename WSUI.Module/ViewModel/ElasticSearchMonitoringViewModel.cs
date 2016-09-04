@@ -149,6 +149,8 @@ namespace OF.Module.ViewModel
             }
         }
 
+        public bool IsRunning { get { return _timer.IsNotNull() && _timer.Enabled; } }
+
         protected override void Dispose(bool disposing)
         {
             if(!Disposed)

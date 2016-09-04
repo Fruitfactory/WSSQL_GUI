@@ -1,6 +1,8 @@
-﻿namespace OF.Module.Interface.ViewModel
+﻿using System.ComponentModel;
+
+namespace OF.Module.Interface.ViewModel
 {
-    public interface IDetailsSettingsViewModel
+    public interface IDetailsSettingsViewModel : INotifyPropertyChanged
     {
         void ApplySettings();
 

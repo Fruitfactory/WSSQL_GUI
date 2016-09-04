@@ -46,6 +46,8 @@ namespace OF.Core.Data.ElasticSearch
 
         public string Fromaddress { get; set; }
 
+        public string Storeid { get; set; }
+
         public OFRecipient[] To { get; set; }
 
         public OFRecipient[] Cc { get; set; }

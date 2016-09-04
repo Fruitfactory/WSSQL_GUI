@@ -2,6 +2,7 @@
 {
     public interface IServiceApplicationSettingsViewModel : IDetailsSettingsViewModel
     {
-         
+        bool IsElasticSearchServiceInstalled { get; set; }
+        bool IsElasticSearchServiceRunning { get; set; }
     }
 }

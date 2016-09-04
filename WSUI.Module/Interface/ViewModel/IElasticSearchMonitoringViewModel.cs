@@ -5,5 +5,7 @@
         object View { get; }
         void Start();
         void Stop();
+
+        bool IsRunning { get; }
     }
 }

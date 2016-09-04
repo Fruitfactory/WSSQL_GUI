@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Net;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
@@ -308,15 +309,24 @@ namespace OF.Module.ViewModel.Settings
 
         private bool CanForceCommandExecute(object o)
         {
-            var restElasticSearchClient = _unityContainer.Resolve<IElasticSearchRiverStatus>();
-            if (restElasticSearchClient == null)
-            {
-                return false;
-            }
 
-            var status = restElasticSearchClient.GetRiverStatus();
-            return _canForce && status != null && status.Response != null &&
-                   status.Response.Status == OFRiverStatus.StandBy;
+            try
+            {
+                var restElasticSearchClient = _unityContainer.Resolve<IElasticSearchRiverStatus>();
+                if (restElasticSearchClient == null)
+                {
+                    return false;
+                }
+
+                var status = restElasticSearchClient.GetRiverStatus();
+                return _canForce && status != null && status.Response != null &&
+                       status.Response.Status == OFRiverStatus.StandBy;
+            }
+            catch (WebException we)
+            {
+                OFLogger.Instance.LogError(we.ToString());
+            }
+            return false;
         }
 
         private void ForceCommandExecute(object o)

@@ -25,15 +25,15 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <TabControl Grid.Row="0" >
+        <TabControl Grid.Row="0"  SelectedIndex="{Binding SelectedTab,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
 
-            <controls:MetroTabItem Header="Indexing">
+            <controls:MetroTabItem Header="Indexing" IsEnabled="{Binding IsIndexTabEnabled,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
                 <ContentControl Margin="5" Content="{Binding RiverSettingsViewModel.View}"></ContentControl>
             </controls:MetroTabItem>
             <controls:MetroTabItem Header="Logging">
                 <ContentControl Margin="5" Content="{Binding LoggingSettingsViewModel.View}"></ContentControl>
             </controls:MetroTabItem>
-            <controls:MetroTabItem Header="Service Application">
+            <controls:MetroTabItem Header="Services">
                 <ContentControl Margin="5" Content="{Binding ServiceApplicationSettingsViewModel.View}"></ContentControl>
             </controls:MetroTabItem>
             <controls:MetroTabItem Header="Security">

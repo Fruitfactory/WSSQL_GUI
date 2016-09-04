@@ -56,7 +56,7 @@ namespace WSGen
             {
                 assembly.First().SetAttributeValue("version",buildNumber);
             }
-            xManifest.Save(manifestFile);
+            xManifest.Save(manifestFile,SaveOptions.DisableFormatting);
         }
 
         static void GenerateVersionFile(string sourceDir, string buildNumber)
