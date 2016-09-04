@@ -209,6 +209,7 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
             String fromName = email.getFromname();
             String fromAddress = email.getFromaddress();
             String entryId = email.getEntryid();
+            String storeID = email.getStoreid();
 
             _logger.info(String.format("---- Email => %s",subject));
 
@@ -236,7 +237,8 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
                     .field(PstMetadataTags.Email.ENTRY_ID, entryId)
                     .field(PstMetadataTags.Email.FROM_NAME_SUGGEST,fromName)
                     .field(PstMetadataTags.Email.FROM_ADDRESS_SUGGEST,fromAddress)
-                    .field(PstMetadataTags.Email.SUBJECT_SUGGEST,subject);
+                    .field(PstMetadataTags.Email.SUBJECT_SUGGEST,subject)
+                    .field(PstMetadataTags.Email.STOREID,storeID);
 
             addArrayOfEmails(source, email.getTo(),
                     PstMetadataTags.Email.TO,

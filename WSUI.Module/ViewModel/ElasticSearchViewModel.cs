@@ -293,7 +293,7 @@ namespace OF.Module.ViewModel
                 IsServiceRunning = sct.Status == ServiceControllerStatus.Running;
             }
 //#if DEBUG
-//            IsServiceRunning = IsServiceInstalled = true;
+            IsServiceRunning = IsServiceInstalled = true;
 //#endif
             if (IsServiceRunning)
             {

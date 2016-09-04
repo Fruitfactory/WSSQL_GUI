@@ -519,6 +519,7 @@ namespace OF.Infrastructure.Service.Index
             email.Htmlcontent = !string.IsNullOrEmpty(result.HTMLBody) ? Convert.ToBase64String(Encoding.UTF8.GetBytes(result.HTMLBody)) : "";
             email.Fromname = result.SenderName;
             email.Fromaddress = result.GetSenderSMTPAddress();
+            email.Storeid = folder.Store.StoreID;
             ProcessRecipients(email, result);
             ProcessEmailAttachments(email,result);
             email.Hasattachments = (email.Attachments != null && email.Attachments.Length > 0).ToString();

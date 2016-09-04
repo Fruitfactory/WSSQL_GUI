@@ -67,6 +67,9 @@ public class PstEmailContent {
     @SerializedName("fromaddress")
     public String fromaddress;
 
+    @SerializedName("storeid")
+    public String storeid;
+
     @SerializedName("to")
     public List<PstRecipientContent> to;
 
@@ -265,4 +268,13 @@ public class PstEmailContent {
     public void setAttachments(List<PstAttachmentSimpleContent> attachments) {
         this.attachments = attachments;
     }
+
+    public String getStoreid() {
+        return storeid;
+    }
+
+    public void setStoreid(String storeid) {
+        this.storeid = storeid;
+    }
+
 }

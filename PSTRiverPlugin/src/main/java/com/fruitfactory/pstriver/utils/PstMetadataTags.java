@@ -49,6 +49,7 @@ public class PstMetadataTags {
         public static final String FROM_NAME_SUGGEST = "fromnamesuggest";
         public static final String FROM_ADDRESS_SUGGEST = "fromaddresssuggest";
         public static final String SUBJECT_SUGGEST = "subjectsuggest";
+        public static final String STOREID = "storeid";
 
         public static final String TO = "to";
 
@@ -129,6 +130,7 @@ public class PstMetadataTags {
         addSuggestString(mapping, Email.FROM_NAME_SUGGEST);
         addSuggestString(mapping, Email.FROM_ADDRESS_SUGGEST);
         addSuggestString(mapping,Email.SUBJECT_SUGGEST);
+        addNotAnalyzedString(mapping,Email.STOREID);
 
         mapping.startObject(Email.TO);
         mapping.startObject(PROPERTIES);
