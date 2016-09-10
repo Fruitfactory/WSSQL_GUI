@@ -32,5 +32,7 @@ namespace OF.Core.Data.ElasticSearch
         public string Outlookemailid { get; set; }
 
         public DateTime? Datecreated { get; set; }
+
+        public string Storeid { get; set; }
     }
 }

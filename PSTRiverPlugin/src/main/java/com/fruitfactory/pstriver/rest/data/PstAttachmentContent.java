@@ -39,6 +39,9 @@ public class PstAttachmentContent {
     @SerializedName("datecreated")
     public Date datecreated;
 
+    @SerializedName("storeid")
+    public String storeid;
+
     public PstAttachmentContent() {
     }
 
@@ -121,4 +124,13 @@ public class PstAttachmentContent {
     public void setDatecreated(Date datecreated) {
         this.datecreated = datecreated;
     }
+
+    public String getStoreid() {
+        return storeid;
+    }
+
+    public void setStoreid(String storeid) {
+        this.storeid = storeid;
+    }
+
 }

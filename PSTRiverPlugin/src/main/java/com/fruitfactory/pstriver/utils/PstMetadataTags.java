@@ -23,6 +23,7 @@ public class PstMetadataTags {
     public static final String INDEX_TYPE_CONTACT = "contact";
     public static final String INDEX_TYPE_CALENDAR = "calendar";
     public static final String INDEX_TYPE_ATTACHMENT = "attachment";
+    public static final String INDEX_TYPE_STORE = "store";
 
     public static final class Email {
 
@@ -101,6 +102,7 @@ public class PstMetadataTags {
         public static final String OUTLOOK_EMAIL_ID = "outlookemailid";
         public static final String CREATED_DATE = "datecreated";
         public static final String FILENAME_SUGGEST = "filenamesuggest";
+        public static final String STORE_ID = "storeid";
     }
 
     public static XContentBuilder buildPstEmailMapping() throws IOException {
@@ -178,6 +180,7 @@ public class PstMetadataTags {
         addNotAnalyzedString(mapping, Attachment.ENTRYID);
         addNotAnalyzedString(mapping, Attachment.OUTLOOK_EMAIL_ID);
         addSuggestString(mapping,Attachment.FILENAME_SUGGEST);
+        addNotAnalyzedString(mapping,Attachment.STORE_ID);
         mapping.endObject();
         mapping.endObject();
         mapping.endObject();
@@ -232,6 +235,7 @@ public class PstMetadataTags {
         public static final String ITEM_EMAILADDRESS1_SUGGEST = "emailaddress1suggest";
         public static final String ITEM_EMAILADDRESS2_SUGGEST = "emailaddress2suggest";
         public static final String ITEM_EMAILADDRESS3_SUGGEST = "emailaddress3suggest";
+        public static final String ITEM_STORE_ID = "storeid";
 
     }
 
@@ -253,6 +257,23 @@ public class PstMetadataTags {
         public static final String ITEM_REQUIRED_ATTENDEES = "requiredattendees";
         public static final String ENTRY_ID = "entryid";
 
+    }
+
+    public static final class Store{
+        public static final String ITEM_NAME = "name";
+        public static final String ITEM_STORE_ID = "storeid";
+    }
+
+    public static XContentBuilder buildPstStoreMapping() throws IOException{
+        XContentBuilder mapping = jsonBuilder().prettyPrint().startObject();
+        mapping.startObject(INDEX_TYPE_STORE);
+        mapping.startObject(PROPERTIES);
+        addNotAnalyzedString(mapping,Store.ITEM_NAME);
+        addNotAnalyzedString(mapping,Store.ITEM_STORE_ID);
+        mapping.endObject();
+        mapping.endObject();
+        mapping.endObject();
+        return mapping;
     }
 
     public static XContentBuilder buildPstContactMapping() throws IOException {
@@ -305,6 +326,7 @@ public class PstMetadataTags {
         addSuggestString(mapping,Contact.ITEM_EMAILADDRESS1_SUGGEST);
         addSuggestString(mapping,Contact.ITEM_EMAILADDRESS2_SUGGEST);
         addSuggestString(mapping,Contact.ITEM_EMAILADDRESS3_SUGGEST);
+        addNotAnalyzedString(mapping,Contact.ITEM_STORE_ID);
 
         mapping.endObject();
         mapping.endObject();

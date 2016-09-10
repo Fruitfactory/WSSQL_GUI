@@ -156,7 +156,8 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
                     .field(PstMetadataTags.Contact.ITEM_NAME_SUGGEST,String.format("%s %s",contact.getFirstname(),contact.getLastname()).trim())
                     .field(PstMetadataTags.Contact.ITEM_EMAILADDRESS1_SUGGEST, contact.getEmailaddress1())
                     .field(PstMetadataTags.Contact.ITEM_EMAILADDRESS2_SUGGEST, contact.getEmailaddress2())
-                    .field(PstMetadataTags.Contact.ITEM_EMAILADDRESS3_SUGGEST, contact.getEmailaddress3());
+                    .field(PstMetadataTags.Contact.ITEM_EMAILADDRESS3_SUGGEST, contact.getEmailaddress3())
+                    .field(PstMetadataTags.Contact.ITEM_STORE_ID,contact.getStoreid());
             source.endObject();
 
             esIndex(_indexName, PstMetadataTags.INDEX_TYPE_CONTACT, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);
@@ -310,6 +311,7 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
             String mime = attachment.getMimetag();
             String entryid = attachment.getEntryid();
             StringBuilder strBuilder = new StringBuilder();
+            String storeId = attachment.getStoreid();
 
             String parsedContent = "";
 
@@ -335,7 +337,8 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
                     .field(PstMetadataTags.Attachment.ENTRYID, entryid)
                     .field(PstMetadataTags.Attachment.CREATED_DATE,attachment.getDatecreated())
                     .field(PstMetadataTags.Attachment.OUTLOOK_EMAIL_ID, attachment.getOutlookemailid())
-                    .field(PstMetadataTags.Attachment.FILENAME_SUGGEST,filename);
+                    .field(PstMetadataTags.Attachment.FILENAME_SUGGEST,filename)
+                    .field(PstMetadataTags.Attachment.STORE_ID,storeId);
 
             source.endObject();
             esIndex(_indexName, PstMetadataTags.INDEX_TYPE_ATTACHMENT, PstSignTool.sign(UUID.randomUUID().toString()).toString(), source);

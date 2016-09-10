@@ -131,6 +131,7 @@
     <Compile Include="Data\ElasticSearch\OFPluginStatusContainer.cs" />
     <Compile Include="Data\ElasticSearch\OFQueryBoolConditions.cs" />
     <Compile Include="Data\ElasticSearch\OFRiverMeta.cs" />
+    <Compile Include="Data\ElasticSearch\OFStore.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleContentMatchPhrase.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleContentTerm.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleContentWildcard.cs" />
@@ -325,6 +326,7 @@
     <Compile Include="Interfaces\IIndexerDataReader.cs" />
     <Compile Include="Interfaces\INavigationView.cs" />
     <Compile Include="Interfaces\IOFElasticSearchRemovingClient.cs" />
+    <Compile Include="Interfaces\IOFElasticsearchStoreClient.cs" />
     <Compile Include="Interfaces\IOFQueryMatchPhrase.cs" />
     <Compile Include="Interfaces\IOFWildcard.cs" />
     <Compile Include="Interfaces\IOutlookFolder.cs" />

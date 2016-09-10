@@ -85,6 +85,8 @@ namespace OF.Core.Data.ElasticSearch
 
         public string Addresstype { get; set; }
 
+        public string Storeid { get; set; }
+
 
     }
 }

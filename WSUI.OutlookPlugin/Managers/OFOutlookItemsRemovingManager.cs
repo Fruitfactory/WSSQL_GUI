@@ -15,7 +15,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace OFOutlookPlugin.Managers
 {
-    public class OFMailRemovingManager : IOFMailRemovingManager
+    public class OFOutlookItemsRemovingManager : IOFMailRemovingManager
     {
         #region [needs]
 
@@ -25,12 +25,12 @@ namespace OFOutlookPlugin.Managers
         private OFAddinModule _module;
         private IDictionary<string,Outlook.Folder> _folders = new Dictionary<string, Outlook.Folder>();
         private OFOutlookItemEvents _itemEvents;
-
+        
 
 
         #endregion
 
-        public OFMailRemovingManager(OFAddinModule Module)
+        public OFOutlookItemsRemovingManager(OFAddinModule Module)
         {
             _module = Module;
             _itemEvents = new OFOutlookItemEvents(_module,this);
@@ -39,7 +39,8 @@ namespace OFOutlookPlugin.Managers
         public void Initialize()
         {
             var nm = _module.OutlookApp.GetNamespace("MAPI");
-            if (nm.IsNotNull())
+            
+            if (nm.IsNotNull() && nm.Stores.IsNotNull() && nm.Stores.Count > 0)
             {
 
                 for (int i = 1; i <= nm.Stores.Count; i++)
@@ -47,7 +48,7 @@ namespace OFOutlookPlugin.Managers
                     try
                     {
                         var store = nm.Stores[i];
-                        Outlook.PropertyAccessor pa = store.PropertyAccessor;
+                        Outlook.PropertyAccessor pa = store.PropertyAccessor; 
                         byte[] property = null;
                         try
                         {
@@ -86,6 +87,7 @@ namespace OFOutlookPlugin.Managers
                 }
             }
         }
+
 
         public void RemoveMail(Outlook.MailItem Mail)
         {
@@ -152,6 +154,8 @@ namespace OFOutlookPlugin.Managers
                 }
                 _folders.Clear();
             }
+
+
             _itemEvents.RemoveConnection();
             _itemEvents.Dispose();
         }

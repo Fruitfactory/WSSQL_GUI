@@ -30,7 +30,9 @@ using Application = System.Windows.Forms.Application;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 using OF.Core;
+using OF.Core.Data.ElasticSearch;
 using OF.Core.Interfaces;
+using OF.Infrastructure.Implements.ElasticSearch.Clients;
 
 namespace OFOutlookPlugin
 {
@@ -119,7 +121,7 @@ namespace OFOutlookPlugin
             this.OnSendMessage += OFAddinModule_OnSendMessage;
             this.AddinInitialize += OnAddinInitialize;
             this.AddinBeginShutdown += OnAddinBeginShutdown;
-            _mailRemovingManager = new OFMailRemovingManager(this);
+            _mailRemovingManager = new OFOutlookItemsRemovingManager(this);
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
@@ -139,11 +141,18 @@ namespace OFOutlookPlugin
                     adxMainPluginCommandBar.UseForRibbon = false;
                 }
                 CheckAndStartServiceApp();
+                this.OutlookApp.Session.Stores.BeforeStoreRemove += StoresOnBeforeStoreRemove;
+
             }
             catch (Exception ex)
             {
                 OFLogger.Instance.LogError(ex.ToString());
             }
+        }
+
+        private void StoresOnBeforeStoreRemove(Outlook.Store store, ref bool cancel)
+        {
+            cancel = true;
         }
 
         private void OFAddinModule_OnSendMessage(object sender, ADXSendMessageEventArgs e)
@@ -1033,6 +1042,7 @@ namespace OFOutlookPlugin
         {
             FinalizeComponents();
 
+            this.OutlookApp.Session.Stores.BeforeStoreRemove -= StoresOnBeforeStoreRemove;
             OFRegistryHelper.Instance.ResetLoadingAddinMode();
             OFRegistryHelper.Instance.ResetAdxStartMode();
             ResetLoadingTime();
@@ -1043,9 +1053,11 @@ namespace OFOutlookPlugin
             {
                 _wsuiBootStraper.PassAction(new OFAction(OFActionType.Quit, null));
             }
+
             SetOutlookFolderProperties(string.Empty, string.Empty);
             OFLogger.Instance.LogInfo("Shutdown...");
         }
+        
 
         private void FinalizeComponents()
         {

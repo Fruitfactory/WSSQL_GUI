@@ -28,24 +28,25 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 namespace OF.Infrastructure.Service.Index
 {
     public class OFOutlookItemsReader : OFViewModelBase, IOutlookItemsReader
-    { 
+    {
         private string AttachSchema = "http://schemas.microsoft.com/mapi/proptag/0x37010102";
         private Thread _thread;
         private CancellationTokenSource _cancellationSource;
         private CancellationToken _cancellationToken;
         private IElasticSearchIndexOutlookItemsClient _indexOutlookItemsClient;
+        private IOFElasticsearchStoreClient _storeClient;
         private readonly Dictionary<string, object> _processedItems = new Dictionary<string, object>();
         private DateTime? _lastUpdated;
         private readonly object _lock = new object();
         private static readonly int COUNT_ITEMS_FOR_COLLECT = 20;
-        
+
         private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
 
         private static readonly long ContentMaxSize = 5 * 1024 * 1024;
 
-        private static readonly int RPCUnavaibleErrorCode = unchecked((int) 0x000006BA);
+        private static readonly int RPCUnavaibleErrorCode = unchecked((int)0x000006BA);
         private static readonly int SyncErrorCode = unchecked((int)0x00000009);
-        private static readonly int NetworkProblemErrorCode = unchecked ((int) 0x00000115);
+        private static readonly int NetworkProblemErrorCode = unchecked((int)0x00000115);
 
         Outlook.Application _application = null;
 
@@ -54,6 +55,7 @@ namespace OF.Infrastructure.Service.Index
         {
             Status = PstReaderStatus.None;
             _indexOutlookItemsClient = new OFElasticSeachIndexOutlookItemsClient();
+            _storeClient = new OFElasticsearchStoreClient();
         }
 
         public PstReaderStatus Status
@@ -64,19 +66,19 @@ namespace OF.Infrastructure.Service.Index
 
         public void Close()
         {
-            
+
         }
 
         public bool IsSuspended
         {
             get { return Get(() => IsSuspended); }
-            private set { Set(() => IsSuspended,value);}
+            private set { Set(() => IsSuspended, value); }
         }
 
         public bool IsStarted
         {
             get { return Get(() => IsStarted); }
-            private set{Set(() => IsStarted, value);}
+            private set { Set(() => IsStarted, value); }
         }
 
         public int Count { get; private set; }
@@ -116,7 +118,7 @@ namespace OF.Infrastructure.Service.Index
                     _thread = null;
                 }
                 Status = PstReaderStatus.Finished;
-                IsStarted = false;    
+                IsStarted = false;
             }
         }
 
@@ -139,7 +141,7 @@ namespace OF.Infrastructure.Service.Index
         {
             OFMessageFilter.Register();
 
-            
+
             var isExistingProcess = false;
             Outlook.NameSpace ns = null;
             try
@@ -149,7 +151,7 @@ namespace OF.Infrastructure.Service.Index
                 _application = resultApplication.Item1 as Outlook.Application;
                 ns = _application.GetNamespace("MAPI");
                 isExistingProcess = resultApplication.Item2;
-                
+
                 if (ns.Folders.Count == 0)
                 {
                     CloseApplication(_application, isExistingProcess);
@@ -174,12 +176,49 @@ namespace OF.Infrastructure.Service.Index
 
                 try
                 {
-                    foreach (Outlook.MAPIFolder mapiFolder in ns.Folders)
+
+                    var listOutlookStores =
+                        ns.Stores.OfType<Outlook.Store>()
+                            .Select(s => new OFStore() {Name = s.DisplayName, Storeid = s.StoreID});
+                    var listESStores = _storeClient.GetStores();
+                    var listMustIndexStore =
+                        listOutlookStores.Select(s => s.Storeid).Except(listESStores.Select(s => s.Storeid)).ToList();
+
+                    var listMustDeletedStore =
+                        listESStores.Select(s => s.Storeid).Except(listOutlookStores.Select(s => s.Storeid)).ToList();
+
+                    var listMstUpdateStore =
+                        listOutlookStores.Select(s => s.Storeid).Intersect(listESStores.Select(s => s.Storeid)).ToList();
+
+
+                    foreach (var indexStoreId in listMustIndexStore)
                     {
                         CheckCancellation();
                         TryToWait();
-                        ProcessFolders(mapiFolder);
-                        Marshal.ReleaseComObject(mapiFolder);
+                        var store = ns.Stores.OfType<Outlook.Store>().FirstOrDefault(s => s.StoreID == indexStoreId);
+                        if (store.IsNotNull())
+                        {
+                            ProcessFolders(store.GetRootFolder(),true);
+                            _storeClient.SaveStore(new OFStore() {Name = store.DisplayName, Storeid = store.StoreID});
+                        }
+                        Marshal.ReleaseComObject(store);
+                    }
+                    foreach (var deletedStoreId in listMustDeletedStore)
+                    {
+                        CheckCancellation();
+                        TryToWait();
+                        _storeClient.DeleteStore(new OFStore() {Storeid = deletedStoreId});
+                    }
+                    foreach (var updateStoreId in listMstUpdateStore)
+                    {
+                        CheckCancellation();
+                        TryToWait();
+                        var store = ns.Stores.OfType<Outlook.Store>().FirstOrDefault(s => s.StoreID == updateStoreId);
+                        if (store.IsNotNull())
+                        {
+                            ProcessFolders(store.GetRootFolder());
+                        }
+                        Marshal.ReleaseComObject(store);
                     }
                 }
                 catch (COMException com)
@@ -208,10 +247,10 @@ namespace OF.Infrastructure.Service.Index
                     Marshal.ReleaseComObject(ns);
                     ns = null;
                 }
-                SendOutlookItems(null,null,null, OFOutlookItemsIndexProcess.End);
+                SendOutlookItems(null, null, null, OFOutlookItemsIndexProcess.End);
                 _processedItems.Clear();
                 Status = PstReaderStatus.Finished;
-                CloseApplication(_application,isExistingProcess);
+                CloseApplication(_application, isExistingProcess);
                 _application = null;
                 OFLogger.Instance.LogInfo("!!!!!!!! Exit From Attachment Reader");
                 System.Diagnostics.Debug.WriteLine("!!!!!!!! Exit From Attachment Reader");
@@ -221,24 +260,24 @@ namespace OF.Infrastructure.Service.Index
                 {
                     _cancellationSource.Dispose();
                     _cancellationSource = null;
-                }    
+                }
                 OFMessageFilter.Revoke();
             }
         }
 
-        private void ProcessFolders(Outlook.MAPIFolder mapiFolder)
+        private void ProcessFolders(Outlook.MAPIFolder mapiFolder, bool ignoreUpdating = false)
         {
             try
             {
                 if (mapiFolder.Items.Count > 0)
                 {
-                    ProcessItems(mapiFolder);
+                    ProcessItems(mapiFolder,ignoreUpdating);
                 }
                 foreach (Outlook.MAPIFolder folder in mapiFolder.Folders)
                 {
                     try
                     {
-                        ProcessFolders(folder);
+                        ProcessFolders(folder,ignoreUpdating);
                     }
                     catch (COMException com)
                     {
@@ -261,7 +300,7 @@ namespace OF.Infrastructure.Service.Index
             {
                 if (com.ErrorCode.GetErrorCode() == NetworkProblemErrorCode)
                 {
-                    OFLogger.Instance.LogError("Network problem: {0}",com.ToString());
+                    OFLogger.Instance.LogError("Network problem: {0}", com.ToString());
                 }
             }
             catch (Exception ex)
@@ -270,7 +309,7 @@ namespace OF.Infrastructure.Service.Index
             }
         }
 
-        private void ProcessItems(Outlook.MAPIFolder mapiFolder)
+        private void ProcessItems(Outlook.MAPIFolder mapiFolder, bool ignoreUpdating)
         {
             try
             {
@@ -289,14 +328,14 @@ namespace OF.Infrastructure.Service.Index
                         {
                             if (_processedItems.ContainsKey(email.EntryID))
                                 continue;
-                            ProcessEmailItem(email, mapiFolder);
+                            ProcessEmailItem(email, mapiFolder,ignoreUpdating);
                             _processedItems.Add(email.EntryID, null);
                         }
                         else if (contact != null)
                         {
                             if (_processedItems.ContainsKey(contact.EntryID))
                                 continue;
-                            ProcessContactItem(contact);
+                            ProcessContactItem(contact, mapiFolder.StoreID);
                             _processedItems.Add(contact.EntryID, null);
                         }
                     }
@@ -335,7 +374,7 @@ namespace OF.Infrastructure.Service.Index
 
         private static void CollectCOMItems()
         {
-// begin - guys recomend o_O - https://social.msdn.microsoft.com/Forums/vstudio/en-US/e8fd2d43-7c2d-46f4-85a8-37d30b4774d9/closing-mailitems-some-help-needed?forum=vsto
+            // begin - guys recomend o_O - https://social.msdn.microsoft.com/Forums/vstudio/en-US/e8fd2d43-7c2d-46f4-85a8-37d30b4774d9/closing-mailitems-some-help-needed?forum=vsto
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
@@ -348,13 +387,14 @@ namespace OF.Infrastructure.Service.Index
             OFOutlookHelper.Instance.ShowOutlook();
         }
 
-        private void ProcessContactItem(Outlook.ContactItem contactItem)
+        private void ProcessContactItem(Outlook.ContactItem contactItem, string storeId)
         {
             if (contactItem == null)
             {
                 return;
             }
             OFContact contact = new OFContact();
+            contact.Storeid = storeId;
             contact.Firstname = contactItem.FirstName;
             contact.Lastname = contactItem.LastName;
             contact.Emailaddress1 = contactItem.Email1Address;
@@ -363,7 +403,7 @@ namespace OF.Infrastructure.Service.Index
             contact.Businesstelephone = contactItem.BusinessTelephoneNumber;
             contact.Hometelephone = contactItem.HomeTelephoneNumber;
             contact.Mobiletelephone = contactItem.MobileTelephoneNumber;
-            
+
             contact.HomeAddressCity = contactItem.HomeAddressCity;
             contact.HomeAddressCountry = contactItem.HomeAddressCountry;
             contact.HomeAddressPostalCode = contactItem.HomeAddressPostalCode;
@@ -400,11 +440,11 @@ namespace OF.Infrastructure.Service.Index
             CheckCancellation();
             TryToWait();
 
-            SendOutlookItems(null,null,contact,OFOutlookItemsIndexProcess.Chunk);
+            SendOutlookItems(null, null, contact, OFOutlookItemsIndexProcess.Chunk);
         }
 
 
-        private void ProcessEmailItem(Outlook.MailItem emailItem, Outlook.MAPIFolder mapiFolder)
+        private void ProcessEmailItem(Outlook.MailItem emailItem, Outlook.MAPIFolder mapiFolder,bool ignoreUpdating)
         {
             try
             {
@@ -412,24 +452,20 @@ namespace OF.Infrastructure.Service.Index
                 {
                     return;
                 }
-                if (_lastUpdated.HasValue && emailItem.ReceivedTime < _lastUpdated.Value)
+                if (!ignoreUpdating && _lastUpdated.HasValue && emailItem.ReceivedTime < _lastUpdated.Value)
                 {
                     return;
                 }
-                //OFLogger.Instance.LogWarning("Subject: {0}", emailItem.Subject.ToUpperInvariant());
-                //if (!string.IsNullOrEmpty(emailItem.Subject) && emailItem.Subject.ToUpperInvariant().Equals("RE: Indexing stuck".ToUpperInvariant()))
-                {
-                    OFEmail email = new OFEmail();
-                    ProcessEmail(email, emailItem, mapiFolder);
+                OFEmail email = new OFEmail();
+                ProcessEmail(email, emailItem, mapiFolder);
 
-                    List<OFAttachmentContent> attachmentContents = new List<OFAttachmentContent>();
-                    ProcessAttachmentsFull(emailItem, attachmentContents);
+                List<OFAttachmentContent> attachmentContents = new List<OFAttachmentContent>();
+                ProcessAttachmentsFull(emailItem, attachmentContents, mapiFolder.StoreID);
 
-                    CheckCancellation();
-                    TryToWait();
+                CheckCancellation();
+                TryToWait();
 
-                    SendOutlookItems(email, attachmentContents, null, OFOutlookItemsIndexProcess.Chunk);
-                }
+                SendOutlookItems(email, attachmentContents, null, OFOutlookItemsIndexProcess.Chunk);
             }
             catch (COMException com)
             {
@@ -446,7 +482,7 @@ namespace OF.Infrastructure.Service.Index
         }
 
 
-        private void ProcessAttachmentsFull(Outlook.MailItem result, List<OFAttachmentContent> attachmentContents)
+        private void ProcessAttachmentsFull(Outlook.MailItem result, List<OFAttachmentContent> attachmentContents, string storeId)
         {
             foreach (var attachment in result.Attachments.OfType<Outlook.Attachment>())
             {
@@ -455,7 +491,7 @@ namespace OF.Infrastructure.Service.Index
                     byte[] contentBytes = null;
                     if (attachment.Size < ContentMaxSize)
                     {
-                        contentBytes = attachment.FileName.IsFileAllowed() 
+                        contentBytes = attachment.FileName.IsFileAllowed()
                         ? GetContentByProperty(attachment)
                         : null;
                         if (attachment.FileName.IsFileAllowed() && contentBytes == null)
@@ -463,7 +499,7 @@ namespace OF.Infrastructure.Service.Index
                             contentBytes = GetContentByTempFile(attachment);
                         }
                     }
-                    AddAttachment(attachmentContents, result, attachment, contentBytes);
+                    AddAttachment(attachmentContents, result, attachment, contentBytes, storeId);
                 }
                 catch (COMException comEx)
                 {
@@ -478,7 +514,7 @@ namespace OF.Infrastructure.Service.Index
                     byte[] conBytes = attachment.FileName.IsFileAllowed() && attachment.Size < ContentMaxSize
                         ? GetContentByTempFile(attachment)
                         : null;
-                    AddAttachment(attachmentContents, result, attachment, conBytes);
+                    AddAttachment(attachmentContents, result, attachment, conBytes, storeId);
                 }
                 catch (Exception ex)
                 {
@@ -507,21 +543,21 @@ namespace OF.Infrastructure.Service.Index
             email.Foldermessagestoreidpart = folder.EntryID;
             email.Storagename = folder.Name;
             email.Datecreated = result.CreationTime;
-            var recev = result.ReceivedTime;    
-            email.Datereceived = new DateTime(recev.Year,recev.Month,recev.Day,recev.Hour,recev.Minute,recev.Second,111);
+            var recev = result.ReceivedTime;
+            email.Datereceived = new DateTime(recev.Year, recev.Month, recev.Day, recev.Hour, recev.Minute, recev.Second, 111);
             email.Size = result.Size;
             email.Entryid = result.EntryID;
             email.Conversationid = result.EntryID;
             email.Conversationindex = result.ConversationIndex;
             email.Outlookconversationid = result.ConversationIndex;
             email.Subject = result.Subject;
-            email.Content = !string.IsNullOrEmpty(result.Body) ?  Convert.ToBase64String(Encoding.UTF8.GetBytes(result.Body)) : "";
+            email.Content = !string.IsNullOrEmpty(result.Body) ? Convert.ToBase64String(Encoding.UTF8.GetBytes(result.Body)) : "";
             email.Htmlcontent = !string.IsNullOrEmpty(result.HTMLBody) ? Convert.ToBase64String(Encoding.UTF8.GetBytes(result.HTMLBody)) : "";
             email.Fromname = result.SenderName;
             email.Fromaddress = result.GetSenderSMTPAddress();
             email.Storeid = folder.Store.StoreID;
             ProcessRecipients(email, result);
-            ProcessEmailAttachments(email,result);
+            ProcessEmailAttachments(email, result);
             email.Hasattachments = (email.Attachments != null && email.Attachments.Length > 0).ToString();
         }
 
@@ -561,7 +597,7 @@ namespace OF.Infrastructure.Service.Index
 
             foreach (var recipient in result.Recipients.OfType<Outlook.Recipient>())
             {
-                var r = new OFRecipient(){Address = recipient.GetSMTPAddress(),Name = recipient.Name,Emailaddresstype = recipient.Type.ToString(),Entryid =  recipient.EntryID};
+                var r = new OFRecipient() { Address = recipient.GetSMTPAddress(), Name = recipient.Name, Emailaddresstype = recipient.Type.ToString(), Entryid = recipient.EntryID };
                 switch (recipient.Type)
                 {
                     case 0:
@@ -600,7 +636,7 @@ namespace OF.Infrastructure.Service.Index
         {
             Outlook.PropertyAccessor pacc = attachment.PropertyAccessor;
             byte[] filebyte = (byte[])pacc.GetProperty(AttachSchema);
-            return  filebyte;
+            return filebyte;
         }
 
         private byte[] GetContentByTempFile(Outlook.Attachment attachment)
@@ -622,12 +658,13 @@ namespace OF.Infrastructure.Service.Index
                     File.Delete(attachment.FileName);
                 }
             }
-            return  buffer;
+            return buffer;
         }
 
-        private void AddAttachment(List<OFAttachmentContent> attachments,Outlook.MailItem email, Outlook.Attachment attachment, byte[] content)
+        private void AddAttachment(List<OFAttachmentContent> attachments, Outlook.MailItem email, Outlook.Attachment attachment, byte[] content, string storeId)
         {
             OFAttachmentContent indexAttach = new OFAttachmentContent();
+            indexAttach.Storeid = storeId;
             indexAttach.Size = attachment.Size;
             indexAttach.Emailid = email.EntryID;
             indexAttach.Outlookemailid = email.EntryID;
@@ -641,7 +678,7 @@ namespace OF.Infrastructure.Service.Index
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine(string.Format("--- Skip Attachment (by size): {0}",email.Subject));
+                System.Diagnostics.Debug.WriteLine(string.Format("--- Skip Attachment (by size): {0}", email.Subject));
             }
 
             attachments.Add(indexAttach);
@@ -649,11 +686,11 @@ namespace OF.Infrastructure.Service.Index
 
 
 
-        private void SendOutlookItems(OFEmail email,IEnumerable<OFAttachmentContent> attachments, OFContact contact, OFOutlookItemsIndexProcess process)
+        private void SendOutlookItems(OFEmail email, IEnumerable<OFAttachmentContent> attachments, OFContact contact, OFOutlookItemsIndexProcess process)
         {
             if (_indexOutlookItemsClient.IsNotNull())
             {
-                OFOutlookItemsIndexingContainer container = new OFOutlookItemsIndexingContainer() { Email =  email,Attachments = attachments, Contact = contact, Process = process };
+                OFOutlookItemsIndexingContainer container = new OFOutlookItemsIndexingContainer() { Email = email, Attachments = attachments, Contact = contact, Process = process };
                 _indexOutlookItemsClient.SendOutlookItemsToIndex(container);
                 Count += attachments.IsNotNull() ? attachments.Count() : 0;
             }

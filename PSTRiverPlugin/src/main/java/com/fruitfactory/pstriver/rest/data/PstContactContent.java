@@ -111,6 +111,10 @@ public class PstContactContent {
     @SerializedName("addresstype")
     public String addresstype;
 
+    @SerializedName("storeid")
+    public String storeid;
+
+
     public PstContactContent() {
     }
 
@@ -385,4 +389,14 @@ public class PstContactContent {
     public void setAddresstype(String addresstype) {
         this.addresstype = addresstype;
     }
+
+    public String getStoreid() {
+        return storeid;
+    }
+
+    public void setStoreid(String storeid) {
+        this.storeid = storeid;
+    }
+
+
 }

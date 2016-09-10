@@ -272,6 +272,7 @@ public class PstRiver extends AbstractRiverComponent implements River, IPstRiver
             pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_CONTACT, PstMetadataTags.buildPstContactMapping());
             pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_CALENDAR, PstMetadataTags.buildPstAppointmentMapping());
             pushMapping(_indexName, PstMetadataTags.INDEX_TYPE_ATTACHMENT, PstMetadataTags.buildPstAttachmentMapping());
+            pushMapping(_indexName,PstMetadataTags.INDEX_TYPE_STORE,PstMetadataTags.buildPstStoreMapping());
         } catch (Exception e) {
             logger.warn("failed to create mapping for [{}], disabling river...",
                     e, _indexName);
