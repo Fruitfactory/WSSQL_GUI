@@ -231,12 +231,12 @@ namespace OFOutlookPlugin
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
             this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
-            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem)
+            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem) 
             | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
             this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
             this.formRightSidebar.FormClassName = "OFOutlookPlugin.OFSidebar";
@@ -1423,5 +1423,6 @@ namespace OFOutlookPlugin
                 OFLogger.Instance.LogError(ex.ToString());
             }
         }
+
     }
 }

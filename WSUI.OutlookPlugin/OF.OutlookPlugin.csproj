@@ -184,6 +184,7 @@
     <Compile Include="Interfaces\IOFOutlookItemEvents.cs" />
     <Compile Include="Managers\OFAboutCommandManager.cs" />
     <Compile Include="Managers\OFCommandBarManager.cs" />
+    <Compile Include="Managers\OFEmailSuggesterManager.cs" />
     <Compile Include="Managers\OFOutlookItemsRemovingManager.cs" />
     <Compile Include="Managers\OFRibbonManager.cs" />
     <Compile Include="Managers\OutlookEventsManagers\OFOutlookItemEvents.cs" />
