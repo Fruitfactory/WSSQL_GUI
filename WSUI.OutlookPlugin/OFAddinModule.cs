@@ -54,6 +54,7 @@ namespace OFOutlookPlugin
         private bool IsLoading = true;
         private int _initHashCode;
         private IOFMailRemovingManager _mailRemovingManager;
+        private IOFEmailSuggesterManager _emailSuggesterManager;
         private bool _canConnect = true;
 
         private static string SERVICE_APP = "SERVICEAPP";
@@ -141,7 +142,6 @@ namespace OFOutlookPlugin
                     adxMainPluginCommandBar.UseForRibbon = false;
                 }
                 CheckAndStartServiceApp();
-                this.OutlookApp.Session.Stores.BeforeStoreRemove += StoresOnBeforeStoreRemove;
 
             }
             catch (Exception ex)
@@ -149,12 +149,7 @@ namespace OFOutlookPlugin
                 OFLogger.Instance.LogError(ex.ToString());
             }
         }
-
-        private void StoresOnBeforeStoreRemove(Outlook.Store store, ref bool cancel)
-        {
-            cancel = true;
-        }
-
+        
         private void OFAddinModule_OnSendMessage(object sender, ADXSendMessageEventArgs e)
         {
             switch (e.Message)
@@ -690,6 +685,7 @@ namespace OFOutlookPlugin
                     };
                 }
                 CreateCommandManager();
+                CreateEmailSuggesterManager();
                 SetEventAggregatorToManager();
                 SubscribeToEvents();
 
@@ -835,6 +831,12 @@ namespace OFOutlookPlugin
             {
                 OFLogger.Instance.LogError(ex.ToString());
             }
+        }
+
+        private void CreateEmailSuggesterManager()
+        {
+            var mainWndHandle = GetOutlookWindowHandle();
+            _emailSuggesterManager = new OFEmailSuggesterManager(mainWndHandle);
         }
 
         private void CreateCommandManager()
@@ -1042,13 +1044,13 @@ namespace OFOutlookPlugin
         {
             FinalizeComponents();
 
-            this.OutlookApp.Session.Stores.BeforeStoreRemove -= StoresOnBeforeStoreRemove;
             OFRegistryHelper.Instance.ResetLoadingAddinMode();
             OFRegistryHelper.Instance.ResetAdxStartMode();
             ResetLoadingTime();
             ResetAddIn();
             ResetDisabling();
             _mailRemovingManager.Dispose();
+            _emailSuggesterManager.Dispose();
             if (_wsuiBootStraper != null)
             {
                 _wsuiBootStraper.PassAction(new OFAction(OFActionType.Quit, null));
@@ -1127,6 +1129,10 @@ namespace OFOutlookPlugin
                 {
                     _sidebarForm.SendAction(OFActionType.Copy);
                 }
+                //if (_emailSuggesterManager.IsNotNull())
+                //{
+                //    _emailSuggesterManager.ProcessKeyDown(e.VirtualKey);
+                //}
             }
             catch (Exception ex)
             {
@@ -1365,6 +1371,10 @@ namespace OFOutlookPlugin
                     _mailRemovingManager.ConnectTo(item);
                 }
             }
+            if (_emailSuggesterManager.IsNotNull())
+            {
+                _emailSuggesterManager.SubscribeMailWindow();
+            }
         }
 
         private void OutlookFinderEvents_ExplorerClose(object sender, object explorer)
@@ -1400,6 +1410,10 @@ namespace OFOutlookPlugin
 
         private void OutlookFinderEvents_InspectorClose(object sender, object inspector, string folderName)
         {
+            if (_emailSuggesterManager.IsNotNull())
+            {
+                _emailSuggesterManager.UnsubscribeMailWindow();
+            }
         }
 
         private void CheckAndStartServiceApp()
@@ -1422,6 +1436,14 @@ namespace OFOutlookPlugin
             {
                 OFLogger.Instance.LogError(ex.ToString());
             }
+        }
+
+        private IntPtr GetOutlookWindowHandle()
+        {
+            var outlook =
+                Process.GetProcesses()
+                    .FirstOrDefault(p => p.ProcessName.ToUpperInvariant().Contains("outlook".ToUpperInvariant()));
+            return outlook.IsNotNull() ? outlook.MainWindowHandle : IntPtr.Zero;
         }
 
     }

@@ -52,6 +52,9 @@ namespace OF.Core.Win32
 
         #region [function]
 
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern IntPtr GetModuleHandle(string lpModuleName);
+
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
 
@@ -286,6 +289,39 @@ namespace OF.Core.Win32
             SendDlgItemMessage(hWndParent, dwID, WM_SETTEXT, 0, result);
         }
 
+        public static void GetAllObjectWithClass(string wndClass, List<IntPtr> listObjects)
+        {
+            SearchData sd = new SearchData { Wndclass = wndClass, listPtr = listObjects };
+            EnumWindows(new EnumWindowsProc(EnumProc1), ref sd);
+        }
+
+        public static void GetAllChildWindowsWithClass(IntPtr hWndParent, string wndClass, List<IntPtr> listObjects)
+        {
+            SearchData sd = new SearchData { Wndclass = wndClass, listPtr = listObjects };
+            EnumChildWindows(hWndParent, new EnumWindowsProc(EnumProcChild), ref sd);
+        }
+
+        private static bool EnumProc1(IntPtr hWnd, ref SearchData data)
+        {
+            StringBuilder sb = new StringBuilder(1024);
+            GetClassName(hWnd, sb, sb.Capacity);
+            if (sb.ToString().StartsWith(data.Wndclass))
+            {
+                data.listPtr.Add(hWnd);
+            }
+            return true;
+        }
+
+        private static bool EnumProcChild(IntPtr hWnd, ref SearchData data)
+        {
+            StringBuilder sb = new StringBuilder(1024);
+            GetClassName(hWnd, sb, sb.Capacity);
+            if (sb.ToString().StartsWith(data.Wndclass))
+            {
+                data.listPtr.Add(hWnd);
+            }
+            return true;
+        }
 
 
         const int WM_COMMAND = 0x111;
