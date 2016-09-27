@@ -7,5 +7,6 @@ namespace OFOutlookPlugin.Interfaces
         void SubscribeMailWindow();
         void UnsubscribeMailWindow();
         //void ProcessKeyDown(int VirtualKey);
+        void ProcessKeyDown(int Key);
     }
 }

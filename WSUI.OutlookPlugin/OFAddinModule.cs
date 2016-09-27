@@ -1129,10 +1129,10 @@ namespace OFOutlookPlugin
                 {
                     _sidebarForm.SendAction(OFActionType.Copy);
                 }
-                //if (_emailSuggesterManager.IsNotNull())
-                //{
-                //    _emailSuggesterManager.ProcessKeyDown(e.VirtualKey);
-                //}
+                if (_emailSuggesterManager.IsNotNull())
+                {
+                    _emailSuggesterManager.ProcessKeyDown(e.VirtualKey);
+                }
             }
             catch (Exception ex)
             {
