@@ -853,17 +853,19 @@ namespace OF.CA
         [CustomAction]
         public static ActionResult Deactivate(Session session)
         {
-            if (OFRegistryHelper.Instance.IsSilendUpdate())
-                return ActionResult.Success;
             try
             {
+                var esPath = GetElasticSearchBinFolder(session);
+                var ofPath = GetInstallationFolder(session);
                 string fullname = string.Format("{0}\\{1}", GetInstallationFolder(session), UnistallFile);
                 if (string.IsNullOrEmpty(fullname) || !File.Exists(fullname))
                 {
                     session.Log("Couldn't call unistall.exe");
                     return ActionResult.Success;
                 }
-                var startinfo = new ProcessStartInfo(fullname, "unistall");
+                var startinfo = new ProcessStartInfo(fullname, "uninstall");
+                startinfo.Arguments = string.Format(" {0} \"{1}\" \"{2}\"", "uninstall", esPath, ofPath);
+                startinfo.Verb = "runas";
                 startinfo.WindowStyle = ProcessWindowStyle.Hidden;
                 Process p = Process.Start(startinfo);
                 p.WaitForExit();
@@ -877,32 +879,6 @@ namespace OF.CA
         }
 
         #endregion [deactivate CA]
-
-
-        #region [Stop Service Application]
-
-        [CustomAction]
-        public static ActionResult StopServiceApp(Session session)
-        {
-            try
-            {
-                Process process =
-                    Process.GetProcesses().FirstOrDefault(p => p.ProcessName.ToUpperInvariant().Contains("SERVICEAPP"));
-                if (process != null)
-                {
-                    session.Log("Stopping Service Application....");
-                    OFRegistryHelper.Instance.DeleteAutoRunHelperApplication();
-                    process.Kill();
-                }
-            }
-            catch (Exception ex)
-            {
-                session.Log(ex.ToString());
-            }
-            return ActionResult.Success;
-        }
-
-        #endregion
 
         #region [Start Service Application]
 
@@ -1081,61 +1057,12 @@ namespace OF.CA
             }
             return ActionResult.Success;
         }
-
-
-        [CustomAction]
-        public static ActionResult UnInstallElasticSearch(Session session)
-        {
-            try
-            {
-                ServiceController sct = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName.IndexOf("elasticsearch", StringComparison.InvariantCultureIgnoreCase) > -1);
-                if (sct == null)
-                {
-                    session.Log("ElasticSearch isn't installed...");
-                    return ActionResult.Success;
-                }
-                if (sct != null && sct.Status == ServiceControllerStatus.Running)
-                {
-                    sct.Stop();
-                    session.Log("ElasticSearch was stopped...");
-                }
-                string javaHome = OFRegistryHelper.Instance.GetJavaInstallationPath();
-                var elasticSearchPath = OFRegistryHelper.Instance.GetElasticSearchpath();
-                if (!string.IsNullOrEmpty(elasticSearchPath))
-                {
-                    UnregisterPlugin(session, elasticSearchPath, javaHome);
-
-                    ProcessStartInfo si = new ProcessStartInfo();
-                    si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "service.bat");
-                    si.Arguments = string.Format(" {0} \"{1}\"", "stop", javaHome);
-                    si.UseShellExecute = false;
-                    si.Verb = "runas";
-                    si.CreateNoWindow = true;
-                    si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
-
-                    Process pInstall = new Process { StartInfo = si };
-                    pInstall.Start();
-                    pInstall.WaitForExit();
-                    si.Arguments = string.Format(" {0} \"{1}\"", "remove", javaHome);
-                    Process pStart = new Process { StartInfo = si };
-                    pStart.Start();
-                    pStart.WaitForExit();
-                }
-            }
-            catch (Exception) { }
-            finally
-            {
-            }
-            return ActionResult.Success;
-        }
-
-
+        
         private const string PstPluginKey = "pstriver_1_0_SNAPSHOT_zip";
         private const string PstPluginFilename = "pstriver-1.0-SNAPSHOT.zip";
         private const string PstPluginName = "pstriver";
         private const string InstallArguments = "-i {0} -u \"file:///{1}\" \"{2}\"";
-        private const string UnistallArguments = " --remove {0} \"{1}\"";
-
+        
         private static void ExtractPstPlugin(Session session, string path)
         {
             if (!CopyFileFromDatabase(session, path, PstPluginKey, PstPluginFilename))
@@ -1181,28 +1108,7 @@ namespace OF.CA
             }
         }
 
-        private static void UnregisterPlugin(Session session, string elasticSearchPath, string javaHome)
-        {
-            try
-            {
-                ProcessStartInfo si = new ProcessStartInfo();
-                si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "removeplugin.bat");
-                si.Arguments = string.Format(UnistallArguments, PstPluginName, javaHome);
-                si.UseShellExecute = false;
-                si.Verb = "runas";
-                si.CreateNoWindow = true;
-                si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
-                Process pInstall = new Process();
-                pInstall.StartInfo = si;
-                pInstall.Start();
-                pInstall.WaitForExit();
-                session.Log("PST plugin was unistalled.");
-            }
-            catch (Exception exception)
-            {
-                session.Log(exception.Message);
-            }
-        }
+        
 
         private static bool IsAdministrator()
         {
@@ -1248,22 +1154,8 @@ namespace OF.CA
             process.WaitForExit();
         }
 
-        [CustomAction]
-        public static ActionResult UninstallRules(Session session)
-        {
-            try
-            {
-                ApplyRules("uninstall",session);
-            }
-            catch (Exception ex)
-            {
-                session.Log(ex.ToString());
-            }
-            return ActionResult.Success;
-        }
-
-
-
         #endregion
+
+
     }
 }
