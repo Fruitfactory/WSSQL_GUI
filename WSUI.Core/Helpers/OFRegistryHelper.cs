@@ -34,7 +34,9 @@ namespace OF.Core.Helpers
         private const string LoggingSettings = "Logging";
         private const string OFPath = "ofpath";
 
-        private const string AddInOutlookSubKey = @"Software\Microsoft\Office\Outlook\Addins\OFOutlookPlugin.AddinModule";
+        private const string AddInOutlookSubKey =
+            @"Software\Microsoft\Office\Outlook\Addins\OFOutlookPlugin.AddinModule";
+
         private const string RequireShutdownNotificationKey = "RequireShutdownNotification";
         private const string LoadBehaviorKey = "LoadBehavior"; // value => 3
         private const int LoadBehaviorDefaultValue = 3;
@@ -52,21 +54,23 @@ namespace OF.Core.Helpers
 
 
         Dictionary<string, int> _keyDisableWarningsValues = new Dictionary<string, int>()
-                {
-                    {"promptsimplemapisend", 2},
-                    {"promptsimplemapinameresolve", 2},
-                    {"promptsimplemapiopenmessage", 2},
-                    {"promptoomsend", 2},
-                    {"promptoommeetingtaskrequestresponse", 2},
-                    {"promptoomaddressinformationaccess", 2},
-                    {"promptoomsaveas", 2},
-                    {"promptoomformulaaccess", 2},
-                    {"promptoomaddressbookaccess", 2},
-                    {"adminsecuritymode", 3}
-                };
+        {
+            {"objectmodelguard",2 },
+            {"promptsimplemapisend", 2},
+            {"promptsimplemapinameresolve", 2},
+            {"promptsimplemapiopenmessage", 2},
+            {"promptoomsend", 2},
+            {"promptoommeetingtaskrequestresponse", 2},
+            {"promptoomaddressinformationaccess", 2},
+            {"promptoomsaveas", 2},
+            {"promptoomformulaaccess", 2},
+            {"promptoomaddressbookaccess", 2},
+            {"adminsecuritymode", 3}
+        };
 
 
         #region [unistall]
+
         private static string UnistallKey = @"Software\Microsoft\Windows\CurrentVersion\Uninstall";
         private static string DisplayNameSubKey = "DisplayName";
         private static string DisplayVersionSubKey = "DisplayVersion";
@@ -78,18 +82,19 @@ namespace OF.Core.Helpers
         #region [instance]
 
         protected OFRegistryHelper()
-        { }
+        {
+        }
 
         protected void Init()
         {
         }
 
         private static Lazy<OFRegistryHelper> _instance = new Lazy<OFRegistryHelper>(() =>
-                                                                                     {
-                                                                                         var helper = new OFRegistryHelper();
-                                                                                         helper.Init();
-                                                                                         return helper;
-                                                                                     });
+        {
+            var helper = new OFRegistryHelper();
+            helper.Init();
+            return helper;
+        });
 
         public static OFRegistryHelper Instance
         {
@@ -159,7 +164,8 @@ namespace OF.Core.Helpers
 
         public void DeleteAddIn(string officeVersion)
         {
-            const string AddInLoadTimesKey = "Software\\Microsoft\\Office\\{0}\\Outlook\\AddIns\\OFOutlookPlugin.AddinModule";
+            const string AddInLoadTimesKey =
+                "Software\\Microsoft\\Office\\{0}\\Outlook\\AddIns\\OFOutlookPlugin.AddinModule";
             var CurrentOulookVersion = String.Format(AddInLoadTimesKey, officeVersion);
 
             try
@@ -192,7 +198,7 @@ namespace OF.Core.Helpers
                     foreach (var item in registry.GetValueNames())
                     {
                         var val =
-                            (byte[])registry.GetValue(item, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
+                            (byte[]) registry.GetValue(item, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
 
                         var temp = Encoding.Unicode.GetString(val);
                         if (temp.Length > 0 && temp.IndexOf(ProgIdKey) > -1)
