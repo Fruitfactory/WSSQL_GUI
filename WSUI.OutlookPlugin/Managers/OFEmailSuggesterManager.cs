@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using OF.Core.Win32;
+using OF.Infrastructure.Helpers.AttachedProperty;
 using OFOutlookPlugin.Hooks;
 using OFOutlookPlugin.Interfaces;
 
@@ -79,31 +80,31 @@ namespace OFOutlookPlugin.Managers
             WindowsFunction.GetAllObjectWithClass("rctrl_renwnd32", listWnd);
             foreach (var intPtr in listWnd)
             {
-                if (_needHwndCtrl.ContainsKey(intPtr.ToInt32()))
-                {
-                    continue;
-                }
                 var listChilds = new List<IntPtr>();
                 WindowsFunction.GetAllChildWindowsWithClass(intPtr, "RichEdit20WPT", listChilds);
-                var listChildsInt = listChilds.Select(c => c.ToInt32()).ToList();
-                var listRemove = new List<int>();
+                var listControls = new List<int>();
                 foreach (var listChild in listChilds)
                 {
                     var ctrlId = WindowsFunction.GetDlgCtrlID(listChild);
-                    if (!_needIdList.Contains(ctrlId))
+                    if (_needIdList.Contains(ctrlId))
                     {
-                        listRemove.Add(listChild.ToInt32());
+                        listControls.Add(listChild.ToInt32());
                     }
                 }
-                listRemove.ForEach(c => listChildsInt.Remove(c));
-                if (listChildsInt.Any())
+                if (listControls.Any())
                 {
-                    foreach (var listChild in listChildsInt)
+                    foreach (var listChild in listControls)
                     {
                         System.Diagnostics.Debug.WriteLine(string.Format("{0} - {1}",intPtr,listChild));
                     }
-
-                    _needHwndCtrl.Add(intPtr.ToInt32(), listChildsInt);
+                    if (_needHwndCtrl.ContainsKey(intPtr.ToInt32()))
+                    {
+                        var temp = _needHwndCtrl[intPtr.ToInt32()];
+                        temp.AddRange(listControls);
+                        _needHwndCtrl[intPtr.ToInt32()] = temp.Distinct().ToList();
+                    }
+                    else
+                        _needHwndCtrl.Add(intPtr.ToInt32(), listControls);
                 }
             }
         }
@@ -143,11 +144,12 @@ namespace OFOutlookPlugin.Managers
             var classStr = new StringBuilder(255);
             var wnd = WindowsFunction.GetForegroundWindow();
             WindowsFunction.GetClassName(wnd, classStr, 255);
-            System.Diagnostics.Debug.WriteLine("!!!! " + classStr);
+            System.Diagnostics.Debug.WriteLine("!!!! " + classStr + " HWND: " + wnd.ToInt32());
             var hWnd = WindowsFunction.GetFocus();
             classStr = new StringBuilder(255);
+            var ctrlId = WindowsFunction.GetDlgCtrlID(hWnd);
             WindowsFunction.GetClassName(hWnd, classStr, 255);
-            System.Diagnostics.Debug.WriteLine("!!!! " + classStr);
+            System.Diagnostics.Debug.WriteLine("!!!! " + classStr + " HWND: " + hWnd.ToInt32() + " CtrlID: " + ctrlId);
 
             foreach (var keyValuePair in _needHwndCtrl)
             {
