@@ -1,8 +1,10 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using Microsoft.Practices.Unity;
 using OF.Core.Core.MVVM;
 using OF.Core.Extensions;
 using OF.Core.Helpers;
+using OF.Core.Logger;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
 
@@ -20,14 +22,21 @@ namespace OF.Module.ViewModel.Settings
 
         public void ApplySettings()
         {
-            var officeVersion = OFRegistryHelper.Instance.GetOutlookVersion().Item1;
-            if (IsSecurityWindowDisabled)
+            try
             {
-                OFRegistryHelper.Instance.DisableOutlookSecurityWarning(officeVersion);
+                var officeVersion = OFRegistryHelper.Instance.GetOutlookVersion().Item1;
+                if (IsSecurityWindowDisabled)
+                {
+                    OFRegistryHelper.Instance.DisableOutlookSecurityWarning(officeVersion, false);
+                }
+                else
+                {
+                    OFRegistryHelper.Instance.DeleteOutlookSecuritySettings(officeVersion, false);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                OFRegistryHelper.Instance.DeleteOutlookSecuritySettings(officeVersion);
+                OFLogger.Instance.LogError(ex.ToString());
             }
         }
 

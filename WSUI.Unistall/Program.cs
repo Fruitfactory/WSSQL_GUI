@@ -18,8 +18,6 @@ namespace OF.Unistall
 
         private static void Main(string[] args)
         {
-            Console.SetOut(TextWriter.Null);
-            Console.SetError(TextWriter.Null);
             try
             {
                 if (args == null || !args.Any())
@@ -34,12 +32,20 @@ namespace OF.Unistall
                 UnInstallElasticSearch();
                 ApplyRules(ParamName,args[1],args[2]);
 
+                DeleteRegistrySettings();
+
                 Console.Out.WriteLine("Done...");
             }
             catch (Exception ex)
             {
                 Console.Out.WriteLine(ex.Message);
             }
+        }
+
+        private static void DeleteRegistrySettings()
+        {
+            var versions = OFRegistryHelper.Instance.GetOutlookVersion();
+            OFRegistryHelper.Instance.DeleteOutlookSecuritySettings(versions.Item1);
         }
 
         public static void StopServiceAndApplication()
@@ -130,11 +136,11 @@ namespace OF.Unistall
                     UnregisterPlugin(elasticSearchPath, javaHome);
 
                     ProcessStartInfo si = new ProcessStartInfo();
-                    si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "service.bat");
+                    si.FileName = Path.Combine(elasticSearchPath, "service.bat");
                     si.UseShellExecute = false;
                     si.Verb = "runas";
                     si.CreateNoWindow = true;
-                    si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
+                    si.WorkingDirectory = elasticSearchPath;
 
                     si.Arguments = string.Format(" {0} \"{1}\"", "remove", javaHome);
                     Process processRemove = new Process {StartInfo = si};
@@ -156,12 +162,12 @@ namespace OF.Unistall
             try
             {
                 ProcessStartInfo si = new ProcessStartInfo();
-                si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "removeplugin.bat");
+                si.FileName = Path.Combine(elasticSearchPath, "removeplugin.bat");
                 si.Arguments = string.Format(UnistallArguments, PstPluginName, javaHome);
                 si.UseShellExecute = false;
                 si.Verb = "runas";
                 si.CreateNoWindow = true;
-                si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
+                si.WorkingDirectory = elasticSearchPath;
                 Process pInstall = new Process();
                 pInstall.StartInfo = si;
                 pInstall.Start();

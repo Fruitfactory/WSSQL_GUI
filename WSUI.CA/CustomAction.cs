@@ -855,9 +855,9 @@ namespace OF.CA
         {
             try
             {
-                var esPath = GetElasticSearchBinFolder(session);
-                var ofPath = GetInstallationFolder(session);
-                string fullname = string.Format("{0}\\{1}", GetInstallationFolder(session), UnistallFile);
+                var esPath = GetElasticSearchBinFolder(session).TrimEnd(Path.DirectorySeparatorChar);
+                var ofPath = GetInstallationFolder(session).TrimEnd(Path.DirectorySeparatorChar);
+                string fullname = Path.Combine(ofPath, UnistallFile);
                 if (string.IsNullOrEmpty(fullname) || !File.Exists(fullname))
                 {
                     session.Log("Couldn't call unistall.exe");
@@ -891,10 +891,9 @@ namespace OF.CA
                 var filename = Path.Combine(ofPath, "serviceapp.exe");
                 if (File.Exists(filename))
                 {
-                    session.Log("Disable Access Prompt...");
-                    SetRegistrySettings();
                     OFRegistryHelper.Instance.SetAutoRunHelperApplication(ofPath);
                 }
+                
             }
             catch (Exception ex)
             {
@@ -902,24 +901,7 @@ namespace OF.CA
             }
             return ActionResult.Success;
         }
-
-        private static void SetRegistrySettings()
-        {
-            var versions = OFRegistryHelper.Instance.GetOutlookVersion();
-            DisabeAccessPrompt(versions.Item1);
-            FixBeforeItemMoveEvent(versions.Item1);
-        }
-
-        private static void DisabeAccessPrompt(string version)
-        {
-            OFRegistryHelper.Instance.DisableOutlookSecurityWarning(version);
-        }
-
-        private static void FixBeforeItemMoveEvent(string version)
-        {
-            OFRegistryHelper.Instance.FixBeforeItemMoveEvent(version);
-        }
-
+        
         #endregion
 
 
@@ -999,163 +981,40 @@ namespace OF.CA
 
         #region [elastc search]
 
+
+        private readonly static string InstallFile = "install.exe";
+
         [CustomAction]
-        public static ActionResult InstallElasticSearch(Session session)
+        public static ActionResult InstallApp(Session session)
         {
-            string elasticSearchPath = string.Empty;
+            //var elasticSearchPath = session.CustomActionData["ESPATH"];
+            //var ofPath = session.CustomActionData["OFPATH"];
             try
             {
-                //Debugger.Launch();
-                //Debugger.Break();
-                string javaHome = OFRegistryHelper.Instance.GetJavaInstallationPath();
-
-                elasticSearchPath = session.CustomActionData["ESPATH"];
-                var ofPath = session.CustomActionData["OFPATH"];
-                OFRegistryHelper.Instance.SetElasticSearchPath(elasticSearchPath);
-                OFRegistryHelper.Instance.SetOfPath(ofPath);
-                OFRegistryHelper.Instance.SetMachineOfPath(ofPath);
-                if (!string.IsNullOrEmpty(elasticSearchPath))
+                var esPath = GetElasticSearchBinFolder(session).TrimEnd(Path.DirectorySeparatorChar);
+                var ofPath = GetInstallationFolder(session).TrimEnd(Path.DirectorySeparatorChar);
+                string fullname = string.Format("{0}\\{1}", GetInstallationFolder(session), InstallFile);
+                if (string.IsNullOrEmpty(fullname) || !File.Exists(fullname))
                 {
-                    ProcessStartInfo si = new ProcessStartInfo();
-                    si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "service.bat");
-                    if (!File.Exists(si.FileName))
-                    {
-                        session.Log("File not Exits: " + si.FileName);
-                        return ActionResult.Success;
-                    }
-                    session.Log("JAVA_HOME = " + javaHome);
-                    session.Log("ElasticSearch Path = " + elasticSearchPath);
-                    si.Arguments = string.Format(" {0} \"{1}\"", "install", javaHome);
-                    si.UseShellExecute = false;
-                    si.CreateNoWindow = true;
-                    si.Verb = "runas";
-                    si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
-                    Process pInstall = new Process { StartInfo = si };
-                    pInstall.Start();
-                    pInstall.WaitForExit();
-                    session.Log("Install Elastic Search: install service");
-
-                    RegisterPlugin(session, elasticSearchPath, ofPath, javaHome);
-
-                    si.Arguments = string.Format(" {0} \"{1}\"", "start", javaHome);
-                    Process pStart = new Process { StartInfo = si };
-                    pStart.Start();
-                    pStart.WaitForExit();
-                    session.Log("Install Elastis Search: run service");
+                    session.Log("Couldn't call install.exe");
+                    return ActionResult.Success;
                 }
-                else
-                {
-                    session.Log("ESPATH is empty.");
-                }
-            }
-            catch (Exception exception)
-            {
-                session.Log("Install Elastis Search: " + exception.Message + "  => path : " + elasticSearchPath);
-            }
-            finally
-            {
-            }
-            return ActionResult.Success;
-        }
-        
-        private const string PstPluginKey = "pstriver_1_0_SNAPSHOT_zip";
-        private const string PstPluginFilename = "pstriver-1.0-SNAPSHOT.zip";
-        private const string PstPluginName = "pstriver";
-        private const string InstallArguments = "-i {0} -u \"file:///{1}\" \"{2}\"";
-        
-        private static void ExtractPstPlugin(Session session, string path)
-        {
-            if (!CopyFileFromDatabase(session, path, PstPluginKey, PstPluginFilename))
-                throw new FileLoadException(PstPluginFilename);
-        }
+                var args = string.Format(" \"{0}\"  \"{1}\" ", esPath, ofPath);
+                var startinfo = new ProcessStartInfo(fullname,args);
+                startinfo.Verb = "runas";
+                startinfo.WindowStyle = ProcessWindowStyle.Hidden;
+                Process p = Process.Start(startinfo);
+                p.WaitForExit();
 
-
-        private static void RegisterPlugin(Session session, string elasticSearchPath, string ofPath, string javaHome)
-        {
-            try
-            {
-                string fullpath = string.Format("{0}\\{1}", ofPath, PstPluginFilename);
-                session.Log("Full path: " + fullpath);
-
-                if (File.Exists(fullpath) && !string.IsNullOrEmpty(elasticSearchPath))
-                {
-                    ProcessStartInfo si = new ProcessStartInfo();
-                    si.FileName = string.Format("{0}{1}{2}", elasticSearchPath, "\\bin\\", "plugin.bat");
-                    si.Arguments = string.Format(InstallArguments, PstPluginName, fullpath, javaHome);
-                    si.RedirectStandardOutput = true;
-                    si.RedirectStandardError = true;
-                    si.UseShellExecute = false;
-                    si.Verb = "runas";
-                    si.CreateNoWindow = true;
-                    si.WorkingDirectory = string.Format("{0}{1}", elasticSearchPath, "\\bin");
-                    Process pInstall = new Process();
-                    pInstall.StartInfo = si;
-                    pInstall.Start();
-
-                    var output = pInstall.StandardOutput.ReadToEnd();
-                    session.Log(string.Format("Stadard Output: {0}", output));
-
-                    var errors = pInstall.StandardError.ReadToEnd();
-                    session.Log(string.Format("Error Output: {0}", errors));
-
-                    pInstall.WaitForExit();
-                    session.Log("PST plugin was installed.");
-                }
-            }
-            catch (Exception exception)
-            {
-                session.Log(exception.Message);
-            }
-        }
-
-        
-
-        private static bool IsAdministrator()
-        {
-            WindowsIdentity identity = WindowsIdentity.GetCurrent();
-            WindowsPrincipal principal = new WindowsPrincipal(identity);
-            return principal.IsInRole(WindowsBuiltInRole.Administrator);
-        }
-
-        #endregion
-
-
-        #region [firewall]
-        [CustomAction]
-        public static ActionResult InstallRules(Session session)
-        {
-            try
-            {
-                ApplyRules("install",session);
             }
             catch (Exception ex)
             {
-                session.Log(ex.ToString());
+                session.Log("Install service and firewall rules: {0}", ex.Message);
+                return ActionResult.Failure;
             }
             return ActionResult.Success;
         }
 
-        private static void ApplyRules(string action,Session session)
-        {
-            var esPath = GetElasticSearchBinFolder(session);
-            var ofPath = GetInstallationFolder(session);
-            var es86 = Path.Combine(esPath, "elasticsearch-service-x86.exe");
-            var es64 = Path.Combine(esPath, "elasticsearch-service-x64.exe");
-            var serviceApp = Path.Combine(ofPath, "serviceapp.exe");
-            ProcessStartInfo si = new ProcessStartInfo(Path.Combine(ofPath, "firewallrules.exe"))
-            {
-                Arguments = string.Format(" {0} \"{1}\" \"{2}\" \"{3}\"",action, es86, es64, serviceApp),
-                Verb = "runas",
-                UseShellExecute = true,
-                CreateNoWindow = true,
-                WindowStyle = ProcessWindowStyle.Hidden
-            };
-            var process = Process.Start(si);
-            process.WaitForExit();
-        }
-
         #endregion
-
-
     }
 }

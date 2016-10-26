@@ -220,14 +220,14 @@ namespace OF.Core.Helpers
             }
         }
 
-        public void DisableOutlookSecurityWarning(string officeVersion)
+        public void DisableOutlookSecurityWarning(string officeVersion, bool machineScope = true)
         {
             if (string.IsNullOrEmpty(officeVersion))
             {
                 throw new ArgumentException("officeVersion");
             }
-            var registry = _baseRegistry;
-            var key = string.Format("Software\\Policies\\Microsoft\\Office\\{0}\\Outlook\\Security", officeVersion);
+            var registry = machineScope ? Registry.LocalMachine : _baseRegistry;
+            var key = machineScope ? string.Format(@"SOFTWARE\Microsoft\Office\{0}\Outlook\Security", officeVersion) : string.Format("Software\\Policies\\Microsoft\\Office\\{0}\\Outlook\\Security", officeVersion);
             var securityKey = registry.CreateSubKey(key);
             if (securityKey != null)
             {
@@ -252,7 +252,7 @@ namespace OF.Core.Helpers
             var registry = _baseRegistry;
             try
             {
-                var key = string.Format("Software\\Microsoft\\Office\\{0}\\Outlook\\Preferences", officeVersion);
+                var key = string.Format(@"SOFTWARE\Microsoft\Office\{0}\Outlook\Security", officeVersion);
                 var preferenceKey = registry.CreateSubKey(key);
                 if (preferenceKey != null)
                 {
@@ -266,16 +266,16 @@ namespace OF.Core.Helpers
         }
 
 
-        public void DeleteOutlookSecuritySettings(string officeVersion)
+        public void DeleteOutlookSecuritySettings(string officeVersion,bool machineScope = true)
         {
             if (string.IsNullOrEmpty(officeVersion))
             {
                 return;
             }
-            var registry = _baseRegistry;
+            var registry = machineScope ? Registry.LocalMachine : _baseRegistry;
             try
             {
-                var key = string.Format("Software\\Policies\\Microsoft\\Office\\{0}\\Outlook\\Security", officeVersion);
+                var key = machineScope ?string.Format(@"SOFTWARE\Microsoft\Office\{0}\Outlook\Security", officeVersion) : string.Format("Software\\Policies\\Microsoft\\Office\\{0}\\Outlook\\Security", officeVersion);
                 var securityKey = registry.OpenSubKey(key, RegistryKeyPermissionCheck.ReadWriteSubTree);
                 if (securityKey != null)
                 {
@@ -607,20 +607,33 @@ namespace OF.Core.Helpers
             try
             {
                 RegistryKey unistall = Registry.CurrentUser.OpenSubKey(UnistallKey, true);
+                if (unistall == null)
+                {
+                    return;
+                }
                 foreach (var subKeyName in unistall.GetSubKeyNames())
                 {
                     var subKey = unistall.OpenSubKey(subKeyName);
                     if (subKey == null)
                         continue;
-                    if ((string)subKey.GetValue(DisplayNameSubKey) == productName && (string)subKey.GetValue(DisplayVersionSubKey) != version)
+                    if ((string) subKey.GetValue(DisplayNameSubKey) == productName &&
+                        (string) subKey.GetValue(DisplayVersionSubKey) != version)
                     {
                         unistall.DeleteSubKey(subKeyName);
                     }
                 }
             }
-            catch (Exception)
+            catch (UnauthorizedAccessException un)
             {
-                throw;
+                throw un;
+            }
+            catch (NullReferenceException nul)
+            {
+                throw nul;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

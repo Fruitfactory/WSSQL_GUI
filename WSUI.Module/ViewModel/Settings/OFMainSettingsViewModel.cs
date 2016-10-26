@@ -7,6 +7,7 @@ using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using OF.Core.Core.MVVM;
 using OF.Core.Extensions;
+using OF.Core.Logger;
 using OF.Core.Utils.Dialog;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
@@ -18,7 +19,7 @@ namespace OF.Module.ViewModel.Settings
         private IUnityContainer _unityContainer;
         private IEventAggregator _eventAggregator;
 
-        private List<IDetailsSettingsViewModel> _detailsSettingsViewModels; 
+        private List<IDetailsSettingsViewModel> _detailsSettingsViewModels;
 
 
         #region [ctor]
@@ -35,6 +36,7 @@ namespace OF.Module.ViewModel.Settings
         #region [properties]
 
         private IMainSettingsView _view = null;
+
         public object View
         {
             get
@@ -67,7 +69,7 @@ namespace OF.Module.ViewModel.Settings
 
             SelectedTab = IsIndexTabEnabled ? 0 : 1;
 
-            OkCommand = new OFRelayCommand(OkCommandExecute,CanOkCommandExecute);
+            OkCommand = new OFRelayCommand(OkCommandExecute, CanOkCommandExecute);
             CancelCommand = new OFRelayCommand(CancelCommandExecute);
         }
 
@@ -78,22 +80,22 @@ namespace OF.Module.ViewModel.Settings
 
         public IElasticSearchRiverSettingsViewModel RiverSettingsViewModel
         {
-            get { return _detailsSettingsViewModels[0] as IElasticSearchRiverSettingsViewModel;}        
+            get { return _detailsSettingsViewModels[0] as IElasticSearchRiverSettingsViewModel; }
         }
 
         public ILoggingSettingsViewModel LoggingSettingsViewModel
         {
-            get { return _detailsSettingsViewModels[1] as ILoggingSettingsViewModel;}
+            get { return _detailsSettingsViewModels[1] as ILoggingSettingsViewModel; }
         }
 
         public IServiceApplicationSettingsViewModel ServiceApplicationSettingsViewModel
         {
-            get { return _detailsSettingsViewModels[2] as IServiceApplicationSettingsViewModel;}
+            get { return _detailsSettingsViewModels[2] as IServiceApplicationSettingsViewModel; }
         }
 
         public IOutlookSecuritySettingsViewModel OutlookSecuritySettingsViewModel
         {
-            get { return _detailsSettingsViewModels[3] as IOutlookSecuritySettingsViewModel;}
+            get { return _detailsSettingsViewModels[3] as IOutlookSecuritySettingsViewModel; }
         }
 
         public int SelectedTab
@@ -130,7 +132,14 @@ namespace OF.Module.ViewModel.Settings
 
         private void OkCommandExecute(object args)
         {
-            _detailsSettingsViewModels.ForEach(d => d.ApplySettings());
+            try
+            {
+                _detailsSettingsViewModels.ForEach(d => d.ApplySettings());
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.ToString());
+            }
             CloseRaise();
         }
 
