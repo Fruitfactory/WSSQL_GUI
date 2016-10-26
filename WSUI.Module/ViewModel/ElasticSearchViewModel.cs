@@ -378,17 +378,19 @@ namespace OF.Module.ViewModel
             {
                 Process p = new Process();
                 p.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-                p.StartInfo.FileName = string.Format("{0}\\bin\\{1}", path, serviceBat);
+                p.StartInfo.FileName = Path.Combine(path, serviceBat);
                 p.StartInfo.Arguments = string.Format(" {0} \"{1}\"", command, javaHome);
                 p.StartInfo.CreateNoWindow = true;
                 p.StartInfo.Verb = "runas";
-                p.StartInfo.WorkingDirectory = string.Format("{0}{1}", path, "\\bin");
+                p.StartInfo.WorkingDirectory = path;
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.RedirectStandardError = true;
                 p.StartInfo.RedirectStandardOutput = true;
 
                 p.Start();
                 p.WaitForExit();
+                OFLogger.Instance.LogDebug(p.StandardOutput != null ? p.StandardOutput.ReadToEnd() : "");
+                OFLogger.Instance.LogDebug(p.StandardError != null ? p.StandardError.ReadToEnd() : "");
 
                 Debug.WriteLine(string.Format("!!!!!!!! {0}", p.StandardOutput != null ? p.StandardOutput.ReadToEnd() : ""));
                 Debug.WriteLine(string.Format("!!!!!!!! {0}", p.StandardError != null ? p.StandardError.ReadToEnd() : ""));

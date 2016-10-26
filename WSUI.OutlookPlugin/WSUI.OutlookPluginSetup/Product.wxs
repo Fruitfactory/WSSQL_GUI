@@ -53,7 +53,7 @@
     <CustomAction Id="ClosePrompt" BinaryKey="managedAction" DllEntry="ClosePrompt" Execute="immediate" Return="check" />
     <CustomAction Id="ActivatePlugin" BinaryKey="managedAction" DllEntry="ActivatePlugin" Execute="immediate" Return="check" />
     <CustomAction Id="SetInstallElasticSearchProperties" Property="InstallElasticSearch" Value="ESPATH=[ELASTICSEASRCHINSTALLFOLDER];OFPATH=[INSTALLFOLDER]"></CustomAction>
-    <CustomAction Id="InstallElasticSearch" BinaryKey="managedAction" DllEntry="InstallElasticSearch" Execute="deferred" Impersonate="no" Return="check" />
+    <CustomAction Id="InstallApp" BinaryKey="managedAction" DllEntry="InstallApp" Execute="immediate" Return="check" />
     <CustomAction Id="CheckVersion" BinaryKey="managedAction" DllEntry="CheckVersion" Execute="immediate" Return="check" />
     <CustomAction Id="InstallRules" BinaryKey="managedAction" DllEntry="InstallRules" Execute="immediate" Return="check"></CustomAction>
     <InstallExecuteSequence>
@@ -66,9 +66,9 @@
       <!--<Custom Action="StopServiceApp" After="UninstallRules">Installed</Custom>-->
       <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>
       <Custom Action="SetInstallElasticSearchProperties" Before="InstallFinalize">NOT Installed</Custom>
-      <Custom Action="InstallElasticSearch" After="SetInstallElasticSearchProperties">NOT Installed</Custom>
+      <!--<Custom Action="InstallElasticSearch" After="SetInstallElasticSearchProperties">NOT Installed</Custom>-->
       <Custom Action="StartServiceApp" After="InstallFinalize">NOT Installed</Custom>
-      <Custom Action="InstallRules" After="StartServiceApp">NOT Installed</Custom>
+      <Custom Action="InstallApp" After="StartServiceApp">NOT Installed</Custom>
       <Custom Action="ClosePrompt" Before="InstallValidate">NOT Installed OR Installed OR REMOVE="ALL"</Custom>
       <Custom Action="SuccesMessage" OnExit="success">NOT Installed</Custom>
       <Custom Action="CancelMessage" OnExit="cancel">NOT Installed</Custom>
@@ -252,6 +252,7 @@
         <File Id="_Turbo_Activate_exe" Name="TurboActivate.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Turbo_Activate64_dll" Name="TurboActivate64.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_unistall_exe" Name="unistall.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        <File Id="_install_exe" Name="install.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_OF_OutlookPlugin_dll_config" Name="OF.OutlookPlugin.dll.config" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_antlr_runtime_dll" Name="antlr.runtime.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_DDay_Collections_dll" Name="DDay.Collections.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />

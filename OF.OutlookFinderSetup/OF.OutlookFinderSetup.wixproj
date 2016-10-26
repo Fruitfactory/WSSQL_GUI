@@ -73,9 +73,7 @@
     <PreBuildEvent />
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)\\Toolkits\\reshack\\ResourceHacker.exe" -modify "!(TargetPath)", "!(TargetPath)", "$(ProjectDir)\\app.manifest",manifest,1,1033
-
-"$(SolutionDir)Toolkits\Certificate\insignia.exe" -ib "!(TargetPath)" -o "$(TargetDir)engine.exe"
+    <PostBuildEvent>"$(SolutionDir)Toolkits\Certificate\insignia.exe" -ib "!(TargetPath)" -o "$(TargetDir)engine.exe"
 "$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p Yar1k1 /f "$(SolutionDir)Toolkits\Certificate\OutlookFinder.pfx"    /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  "$(TargetDir)engine.exe"
 "$(SolutionDir)Toolkits\Certificate\insignia.exe" -ab "$(TargetDir)engine.exe" "!(TargetPath)" -o "!(TargetPath)"
 "$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p Yar1k1 /f "$(SolutionDir)Toolkits\Certificate\OutlookFinder.pfx"   /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  "$(TargetFileName)"</PostBuildEvent>
