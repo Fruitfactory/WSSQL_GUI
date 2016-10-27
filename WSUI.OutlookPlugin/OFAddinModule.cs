@@ -835,8 +835,7 @@ namespace OFOutlookPlugin
 
         private void CreateEmailSuggesterManager()
         {
-            var mainWndHandle = GetOutlookWindowHandle();
-            _emailSuggesterManager = new OFEmailSuggesterManager(mainWndHandle);
+            _emailSuggesterManager = new OFEmailSuggesterManager(_wsuiBootStraper);
         }
 
         private void CreateCommandManager()

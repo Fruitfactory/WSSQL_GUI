@@ -241,6 +241,7 @@
     <Compile Include="ViewModel\Settings\OFMainSettingsViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFOutlookSecutirySettingsViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFServiceApplicationSettingsViewModel.cs" />
+    <Compile Include="ViewModel\Suggest\OFEmailSuggestViewModel.cs" />
     <Compile Include="View\AdvancedSearchSettingsView.xaml.cs">
       <DependentUpon>AdvancedSearchSettingsView.xaml</DependentUpon>
     </Compile>
@@ -312,6 +313,9 @@
     </Compile>
     <Compile Include="View\SidebarKindsView.xaml.cs">
       <DependentUpon>SidebarKindsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Windows\OFEmailSuggestWindow.xaml.cs">
+      <DependentUpon>OFEmailSuggestWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Windows\OFMainSettingsWindow.xaml.cs">
       <DependentUpon>OFMainSettingsWindow.xaml</DependentUpon>
@@ -447,6 +451,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Windows\OFEmailSuggestWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Windows\OFMainSettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -549,7 +557,9 @@
     <Resource Include="Images\openfolder.png" />
     <Resource Include="Images\picture.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="View\Suggest\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

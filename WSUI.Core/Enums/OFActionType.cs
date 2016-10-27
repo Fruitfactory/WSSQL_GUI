@@ -17,6 +17,8 @@ namespace OF.Core.Enums
         Settings,
         EnableMenu,
         DeleteMail,
-        DeleteStore
+        DeleteStore,
+        ShowSuggestEmail,
+        HideSuggestEmail
     }
 }
