@@ -123,7 +123,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p Yar1k1 /f "$(SolutionDir)Toolkits\Certificate\OutlookFinder.pfx"  /ac "$(SolutionDir)Toolkits\Certificate\OutlookFinder.cer"   /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  $(TargetFileName)</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p Yar1k1 /f "$(SolutionDir)Toolkits\Certificate\outlookfinder_1.pfx"   /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  $(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
