@@ -166,6 +166,7 @@
     <Compile Include="Interface\ViewModel\IElasticSearchMonitoringViewModel.cs" />
     <Compile Include="Interface\ViewModel\IElasticSearchRiverSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IElasticSearchViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IOFEmailSuggestViewModel.cs" />
     <Compile Include="Interface\ViewModel\ILoggingSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IMainSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IOutlookSecuritySettingsViewModel.cs" />
@@ -187,6 +188,7 @@
     <Compile Include="Interface\View\IMainSettingsView.cs" />
     <Compile Include="Interface\View\IMainView.cs" />
     <Compile Include="Interface\ViewModel\IMainViewModel.cs" />
+    <Compile Include="Interface\View\IOFEmailSuggestWindow.cs" />
     <Compile Include="Interface\View\IOutlookSecuritySettingsView.cs" />
     <Compile Include="Interface\View\IPreviewView.cs" />
     <Compile Include="Interface\View\IScrollableView.cs" />
@@ -557,9 +559,7 @@
     <Resource Include="Images\openfolder.png" />
     <Resource Include="Images\picture.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="View\Suggest\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -19,6 +19,7 @@ using OF.Module.View.Settings;
 using OF.Module.View.Windows;
 using OF.Module.ViewModel;
 using OF.Module.ViewModel.Settings;
+using OF.Module.ViewModel.Suggest;
 using Action = System.Action;
 
 namespace OF.Module
@@ -125,6 +126,10 @@ namespace OF.Module
             _unityContainer.RegisterType<IOutlookSecuritySettingsView, OFOutlookSecuritySettingsView>();
 
             _unityContainer.RegisterType<IOFElasticSearchRemovingClient, OFElasticSearchRemovingClient>();
+
+            _unityContainer.RegisterType<IOFEmailSuggestWindow, OFEmailSuggestWindow>();
+            _unityContainer.RegisterType<IOFEmailSuggestViewModel, OFEmailSuggestViewModel>();
+
             
             watch.Stop();
             OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));

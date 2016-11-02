@@ -64,8 +64,8 @@ namespace OF.Module.ViewModel
         private List<OFLazyKind> _listItems;
         private ILazyKind _selectedLazyKind;
         private Visibility _dataVisibility;
-        
-        
+
+
         private bool _isBusy;
         private INavigationService _navigationService;
         private SubscriptionToken _token;
@@ -75,6 +75,7 @@ namespace OF.Module.ViewModel
         private ICommandStrategy _currentStrategy;
         private int _selectedUIItemIndex;
         private IElasticSearchViewModel _elasticSearchViewModel;
+        private IOFEmailSuggestViewModel _suggestViewModel;
 
         public MainViewModel(IUnityContainer container, IKindsView kindView, IEventAggregator eventAggregator)
         {
@@ -95,11 +96,11 @@ namespace OF.Module.ViewModel
             _elasticSearchViewModel.IndexingFinished += ElasticSearchViewModelOnIndexingFinished;
             _elasticSearchViewModel.Closed += ElasticSearchViewModelOnIndexingFinished;
             Monitoring = _container.Resolve<IElasticSearchMonitoringViewModel>();
-
+            _suggestViewModel = _container.Resolve<IOFEmailSuggestViewModel>();
             _eventAggregator.GetEvent<OFElasticsearchServiceStartedEvent>().Subscribe(OnElasticSearchServiceStarted);
         }
 
-        
+
 
         public IElasticSearchMonitoringViewModel Monitoring { get; private set; }
 
@@ -174,7 +175,7 @@ namespace OF.Module.ViewModel
                 OnPropertyChanged(() => KindsCollection);
                 UpdatedActivatedStatus();
                 InitCommandStrategies();
-               
+
 
             }
             catch (Exception ex)
@@ -312,7 +313,7 @@ namespace OF.Module.ViewModel
             }
         }
 
-        
+
 
         private void Disconnect()
         {
@@ -370,7 +371,7 @@ namespace OF.Module.ViewModel
                 switch (data.TypeItem)
                 {
                     case OFTypeSearchItem.Contact:
-                        Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => ShowPreviewForPreviewObject(data,useTransaction)),
+                        Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => ShowPreviewForPreviewObject(data, useTransaction)),
                             null);
                         break;
 
@@ -402,7 +403,7 @@ namespace OF.Module.ViewModel
                 previewView.SetSearchPattern(_navigationService.IsContactDetailsVisible ? _navigationService.ContactDetailsViewModel.SearchCriteria : _currentItem != null
                     ? _currentItem.GetSearchPattern()
                     : string.Empty);
-                switch(_currentData.TypeItem)
+                switch (_currentData.TypeItem)
                 {
                     case OFTypeSearchItem.Email:
                         if (_currentData.TypeItem == OFTypeSearchItem.Email)
@@ -413,7 +414,7 @@ namespace OF.Module.ViewModel
                         break;
                     default:
                         string filename = OFSearchItemHelper.GetFileName(_currentData);
-                        previewView.SetPreviewFile(filename);    
+                        previewView.SetPreviewFile(filename);
                         break;
                 }
                 MoveToLeft(previewView);
@@ -437,7 +438,7 @@ namespace OF.Module.ViewModel
             try
             {
                 var contactDetails = _container.Resolve<IContactDetailsViewModel>();
-                MoveToLeft(contactDetails.View,useTransaction);
+                MoveToLeft(contactDetails.View, useTransaction);
                 Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => contactDetails.SetDataObject(previewData)));
 
             }
@@ -693,6 +694,14 @@ namespace OF.Module.ViewModel
                         OFLogger.Instance.LogDebug("!!!! Remove Email From ES " + action.Data);
                         RemoveEmail(action);
                         break;
+                    case OFActionType.ShowSuggestEmail:
+                        OFLogger.Instance.LogDebug("Show Suggested emails... " + action.Data);
+                        _suggestViewModel.Show((IntPtr)action.Data);
+                        break;
+                    case OFActionType.HideSuggestEmail:
+                        OFLogger.Instance.LogDebug("Hide Suggested emails... " + action.Data);
+                        _suggestViewModel.Hide();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -840,7 +849,7 @@ namespace OF.Module.ViewModel
 
         public void ShowContactPreview(object tag, bool useTransaction = true)
         {
-            ShowPreview(tag as OFBaseSearchObject,useTransaction);
+            ShowPreview(tag as OFBaseSearchObject, useTransaction);
         }
 
         public void ShowAdvancedSearch(object tag)
@@ -895,7 +904,7 @@ namespace OF.Module.ViewModel
                 if (_elasticSearchViewModel.IsNotNull())
                 {
                     _elasticSearchViewModel.Initialize();
-                    if (!_elasticSearchViewModel.IsInitialIndexinginProgress && 
+                    if (!_elasticSearchViewModel.IsInitialIndexinginProgress &&
                         (!_elasticSearchViewModel.IsServiceInstalled ||
                         !_elasticSearchViewModel.IsServiceRunning ||
                         !_elasticSearchViewModel.IsIndexExisted))
@@ -941,7 +950,7 @@ namespace OF.Module.ViewModel
             if (_navigationService == null)
                 return;
             BeforeMoveToLeft(view);
-            _navigationService.MoveToLeft(view as INavigationView,useTransaction);
+            _navigationService.MoveToLeft(view as INavigationView, useTransaction);
             OnPropertyChanged(() => IsKindsVisible);
         }
 
@@ -1034,7 +1043,7 @@ namespace OF.Module.ViewModel
         {
             return _currentItem != null ? _currentItem.CurrentTrackedObject : null;
         }
-        
+
         private void ElasticSearchViewModelOnIndexingFinished(object sender, EventArgs eventArgs)
         {
             lock (LOCK)
@@ -1063,7 +1072,7 @@ namespace OF.Module.ViewModel
             {
                 OFLogger.Instance.LogError(we.ToString());
             }
-            
+
         }
 
         private void NotifyServerPluginShutdown()
@@ -1086,7 +1095,7 @@ namespace OF.Module.ViewModel
             {
                 _elasticSearchViewModel.Close();
             }
-            else if(Monitoring.IsNotNull() && !Monitoring.IsRunning) 
+            else if (Monitoring.IsNotNull() && !Monitoring.IsRunning)
             {
                 Monitoring.Start();
             }

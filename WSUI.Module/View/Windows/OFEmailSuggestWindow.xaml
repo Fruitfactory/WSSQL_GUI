@@ -6,9 +6,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
               xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:local="clr-namespace:OF.Module.View.Windows"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             ShowMinButton="False"         
+             ShowCloseButton="False"
+             ShowMaxRestoreButton="False"
+             ShowTitleBar="False"
+             Width="350" Height="200" 
+             MinWidth="150" MinHeight="150"
+             >
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <ListBox ItemsSource="{Binding Emails,UpdateSourceTrigger=PropertyChanged}"
+                 SelectedItem="{Binding SelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                 ></ListBox>
+
+
     </Grid>
 </Controls:MetroWindow>
