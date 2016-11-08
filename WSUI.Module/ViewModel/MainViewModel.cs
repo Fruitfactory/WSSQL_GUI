@@ -696,7 +696,7 @@ namespace OF.Module.ViewModel
                         break;
                     case OFActionType.ShowSuggestEmail:
                         OFLogger.Instance.LogDebug("Show Suggested emails... " + action.Data);
-                        _suggestViewModel.Show((IntPtr)action.Data);
+                        _suggestViewModel.Show((Tuple<IntPtr,string>)action.Data);
                         break;
                     case OFActionType.HideSuggestEmail:
                         OFLogger.Instance.LogDebug("Hide Suggested emails... " + action.Data);

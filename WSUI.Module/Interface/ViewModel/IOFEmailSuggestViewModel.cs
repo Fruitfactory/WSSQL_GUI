@@ -4,7 +4,7 @@ namespace OF.Module.Interface.ViewModel
 {
     public interface IOFEmailSuggestViewModel
     {
-        void Show(IntPtr hWndParent);
+        void Show(Tuple<IntPtr,string> hWndParent);
         void Hide();
     }
 }

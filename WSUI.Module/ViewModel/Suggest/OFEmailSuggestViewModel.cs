@@ -37,16 +37,15 @@ namespace OF.Module.ViewModel.Suggest
             Emails = new ObservableCollection<ISearchObject>();
         }
 
-        public void Show(IntPtr hWndParent)
+        public void Show(Tuple<IntPtr,string> Data)
         {
             if (_suggestWindow.IsNull())
             {
                 return;
             }
-            var text = WindowsFunction.GetRichEditText(hWndParent);
-            _contactSearchSystem.SetSearchCriteria(text.ToString());
+            _contactSearchSystem.SetSearchCriteria(Data.Item2);
             _contactSearchSystem.Search();
-            _suggestWindow.ShowSuggestings(hWndParent);
+            _suggestWindow.ShowSuggestings(Data.Item1);
         }
 
         public void Hide()

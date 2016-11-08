@@ -589,15 +589,12 @@ namespace OFOutlookPlugin
                 OFLogger.Instance.LogDebug("Plugin is loading...");
                 outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
                 OFRegistryHelper.Instance.ResetShutdownNotification();
-                if (System.Windows.Application.Current == null)
+                new OFAppEmpty();
+                if (System.Windows.Application.Current != null)
                 {
-                    new OFAppEmpty();
-                    if (System.Windows.Application.Current != null)
-                    {
-                        // to avoid Application was shutdown exception (WALLBASH)
-                        System.Windows.Application.Current.ShutdownMode = System.Windows.ShutdownMode.OnExplicitShutdown;
-                        System.Windows.Application.Current.DispatcherUnhandledException += WPFApplicationOnDispatcherUnhandledException;
-                    }
+                    // to avoid Application was shutdown exception (WALLBASH)
+                    System.Windows.Application.Current.ShutdownMode = System.Windows.ShutdownMode.OnExplicitShutdown;
+                    System.Windows.Application.Current.DispatcherUnhandledException += WPFApplicationOnDispatcherUnhandledException;
                 }
 
                 if (_updatable == null)
@@ -1054,7 +1051,9 @@ namespace OFOutlookPlugin
             {
                 _wsuiBootStraper.PassAction(new OFAction(OFActionType.Quit, null));
             }
-
+#if DEBUG
+            CheckAndCloseServiceApp();
+#endif
             SetOutlookFolderProperties(string.Empty, string.Empty);
             OFLogger.Instance.LogInfo("Shutdown...");
         }
@@ -1434,6 +1433,15 @@ namespace OFOutlookPlugin
             catch (Exception ex)
             {
                 OFLogger.Instance.LogError(ex.ToString());
+            }
+        }
+
+        private void CheckAndCloseServiceApp()
+        {
+            var app = Process.GetProcesses().Where(p => p.ProcessName.ToUpperInvariant().Contains(SERVICE_APP)).FirstOrDefault();
+            if (app.IsNotNull())
+            {
+                app.Kill();
             }
         }
 

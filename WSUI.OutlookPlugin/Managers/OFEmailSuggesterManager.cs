@@ -109,27 +109,27 @@ namespace OFOutlookPlugin.Managers
         public void ProcessKeyDown(int Key)
         {
             var classStr = new StringBuilder(255);
-            var wnd = WindowsFunction.GetForegroundWindow();
-            WindowsFunction.GetClassName(wnd, classStr, 255);
-            System.Diagnostics.Debug.WriteLine("!!!! " + classStr + " HWND: " + wnd.ToInt32());
+            //var wnd = WindowsFunction.GetForegroundWindow();
+            //WindowsFunction.GetClassName(wnd, classStr, 255);
+            //System.Diagnostics.Debug.WriteLine("!!!! " + classStr + " HWND: " + wnd.ToInt32());
             var hWnd = WindowsFunction.GetFocus();
-            classStr = new StringBuilder(255);
+            //classStr = new StringBuilder(255);
             var ctrlId = WindowsFunction.GetDlgCtrlID(hWnd);
             WindowsFunction.GetClassName(hWnd, classStr, 255);
             System.Diagnostics.Debug.WriteLine("!!!! " + classStr + " HWND: " + hWnd.ToInt32() + " CtrlID: " + ctrlId);
-            var text = WindowsFunction.GetRichEditText(hWnd);
-            System.Diagnostics.Debug.WriteLine("!!!! TEXT: " + text);
+            
 
             foreach (var keyValuePair in _needHwndCtrl)
             {
                 if (keyValuePair.Value.Contains(hWnd.ToInt32()))
                 {
-
+                    var text = WindowsFunction.GetRichEditText(hWnd);
+                    System.Diagnostics.Debug.WriteLine("!!!! TEXT: " + text);
                     switch ((Keys)Key)
                     {
                         case Keys.Down:
                             System.Diagnostics.Debug.WriteLine("!!!!!! Down pressed...");
-                            pluginBootStraper.PassAction(new OFAction(OFActionType.ShowSuggestEmail, hWnd));
+                            pluginBootStraper.PassAction(new OFAction(OFActionType.ShowSuggestEmail, new Tuple<IntPtr,string>(hWnd,text.ToString())));
                             break;
                         case Keys.Escape:
                             System.Diagnostics.Debug.WriteLine("!!!!!! Escape pressed...");

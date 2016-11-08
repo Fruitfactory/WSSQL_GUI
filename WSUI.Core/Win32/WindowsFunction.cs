@@ -141,6 +141,9 @@ namespace OF.Core.Win32
         [DllImport("user32.dll")]
         public static extern bool SetDlgItemText(IntPtr hDlg, int nIDDlgItem,string lpString);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern uint GetDlgItemText(IntPtr hDlg, int nIDDlgItem, [Out] StringBuilder lpString, int nMaxCount);
+
 
         /// <summary>
         ///     Special window handles
@@ -264,13 +267,15 @@ namespace OF.Core.Win32
 
         public static StringBuilder GetRichEditText(IntPtr hWndRichEdit)
         {
-            uint dwID = GetWindowLong(hWndRichEdit, GWL_ID);
+            var dwID = GetDlgCtrlID(hWndRichEdit);
             IntPtr hWndParent = GetParent(hWndRichEdit);
             StringBuilder title = new StringBuilder(128);
+            System.Diagnostics.Debug.WriteLine("!!!! GetRichEditText HWND: " + hWndRichEdit.ToInt32() + " HWND Parent: "+ hWndParent.ToInt32() + " CtrlID: " + dwID);
+            //SendDlgItemMessage(hWndParent, (uint)dwID,
+            //    WM_GETTEXT,
+            //    128, title);
 
-            SendDlgItemMessage(hWndParent, dwID,
-                WM_GETTEXT,
-                128, title);
+            GetDlgItemText(hWndParent, dwID, title, title.Capacity);
 
             return title;
         }
