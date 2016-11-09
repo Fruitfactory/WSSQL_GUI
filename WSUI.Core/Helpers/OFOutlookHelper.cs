@@ -760,6 +760,24 @@ namespace OF.Core.Helpers
             return att;
         }
 
+        public void SendEmail(string subject, string toEmail, IEnumerable<string> attachmentsPaths)
+        {
+            if (this.OutlookApp == null)
+            {
+                throw new NullReferenceException("OutlookApp");
+            }
+
+            var emailItem = (Outlook.MailItem)this.OutlookApp.CreateItem(Outlook.OlItemType.olMailItem);
+            emailItem.Subject = subject;
+            emailItem.To = toEmail;
+            foreach (var attachmentsPath in attachmentsPaths)
+            {
+                emailItem.Attachments.Add(attachmentsPath);
+            }
+            emailItem.Importance = Outlook.OlImportance.olImportanceHigh;
+            ((Outlook._MailItem)emailItem).Send();
+        }
+
         #endregion public
 
         #region private

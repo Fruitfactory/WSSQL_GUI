@@ -1,5 +1,8 @@
-﻿using AddinExpress.MSO;
+﻿using System;
+using AddinExpress.MSO;
 using Microsoft.Practices.Prism.Events;
+using OF.Core.Data;
+using OF.Core.Enums;
 using OF.Core.Events;
 using OF.Core.Logger;
 using OFOutlookPlugin.Core;
@@ -14,9 +17,10 @@ namespace OFOutlookPlugin.Managers
         private readonly ADXRibbonButton _buttonSearch1;
         private readonly ADXRibbonEditBox _editCriteria;
         private readonly ADXRibbonEditBox _homeEditCriteria;
+        private readonly ADXRibbonButton _buttonSendLog;
 
         public OFRibbonManager(ADXRibbonButton btnSwitchView,
-            ADXRibbonButton btnSwitch, ADXRibbonButton btnSearch, ADXRibbonEditBox edit, ADXRibbonEditBox homeEdit,ADXRibbonButton buttonSearch1)
+            ADXRibbonButton btnSwitch, ADXRibbonButton btnSearch, ADXRibbonEditBox edit, ADXRibbonEditBox homeEdit,ADXRibbonButton buttonSearch1,ADXRibbonButton buttonSendLog)
         {
             _buttonSwitchView = btnSwitchView;
             _buttonSwitch = btnSwitch;
@@ -24,6 +28,7 @@ namespace OFOutlookPlugin.Managers
             _editCriteria = edit;
             _homeEditCriteria = homeEdit;
             _buttonSearch1 = buttonSearch1;
+            _buttonSendLog = buttonSendLog;
             Init();
         }
 
@@ -50,7 +55,13 @@ namespace OFOutlookPlugin.Managers
             _editCriteria.OnChange += HomeEditCriteriaOnOnChange;
             _buttonSearch.OnClick += ButtonSearchOnOnClick;
             _buttonSearch1.OnClick += ButtonMainSearchOnOnClick;
+            _buttonSendLog.OnClick += ButtonSendLogOnOnClick;
             MenuEnabling(OFAddinModule.CurrentInstance.BootStraper.IsMenuEnabled);
+        }
+
+        private void ButtonSendLogOnOnClick(object sender, IRibbonControl control, bool pressed)
+        {
+            OFAddinModule.CurrentInstance.BootStraper.PassAction(new OFAction(OFActionType.SendLogFile, null));
         }
 
         private void HomeEditCriteriaOnOnChange(object sender, IRibbonControl control, string text)

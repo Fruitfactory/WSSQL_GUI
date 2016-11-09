@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Linq;
+using System.Windows;
+using OF.Core.Extensions;
 using OF.Module.Service.Dialogs.Interfaces;
 
 namespace OF.Module.Service.Dialogs.Message
@@ -20,7 +23,7 @@ namespace OF.Module.Service.Dialogs.Message
             InitView();
 
         }
-
+        
 
         private void InitView()
         {

@@ -18,6 +18,7 @@ using OF.Module.View;
 using OF.Module.View.Settings;
 using OF.Module.View.Windows;
 using OF.Module.ViewModel;
+using OF.Module.ViewModel.LogFileManager;
 using OF.Module.ViewModel.Settings;
 using Action = System.Action;
 
@@ -125,6 +126,8 @@ namespace OF.Module
             _unityContainer.RegisterType<IOutlookSecuritySettingsView, OFOutlookSecuritySettingsView>();
 
             _unityContainer.RegisterType<IOFElasticSearchRemovingClient, OFElasticSearchRemovingClient>();
+
+            _unityContainer.RegisterType<IOFLogFilesSenderManager, OFLogFilesSenderManager>();
             
             watch.Stop();
             OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));

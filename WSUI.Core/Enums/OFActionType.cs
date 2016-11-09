@@ -17,6 +17,7 @@ namespace OF.Core.Enums
         Settings,
         EnableMenu,
         DeleteMail,
-        DeleteStore
+        DeleteStore,
+        SendLogFile
     }
 }

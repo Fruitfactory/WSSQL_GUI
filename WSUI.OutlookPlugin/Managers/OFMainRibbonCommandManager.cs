@@ -13,7 +13,7 @@ using OFOutlookPlugin.Core;
 
 namespace OFOutlookPlugin.Managers
 {
-    public class OFAboutCommandManager : OFBaseCommandManager
+    public class OFMainRibbonCommandManager : OFBaseCommandManager
     {
         #region [needs]
 
@@ -24,10 +24,11 @@ namespace OFOutlookPlugin.Managers
         private ADXRibbonButton _buttonMainHelp;
         private ADXRibbonButton _buttonMainAbout;
         private ADXRibbonButton _buttonMainSettings;
+        private ADXRibbonButton _buttonMainSendLog;
 
         #endregion
 
-        public OFAboutCommandManager(ADXRibbonButton buttonHelp, ADXRibbonButton buttonAbout, ADXRibbonButton buttonSettings, ADXRibbonButton buttonMainHelp, ADXRibbonButton buttonMainAbout,ADXRibbonButton buttonMainSettings)
+        public OFMainRibbonCommandManager(ADXRibbonButton buttonHelp, ADXRibbonButton buttonAbout, ADXRibbonButton buttonSettings, ADXRibbonButton buttonMainHelp, ADXRibbonButton buttonMainAbout,ADXRibbonButton buttonMainSettings,ADXRibbonButton buttonSendLogMain)
         {
             _buttonHelp = buttonHelp;
             _buttonAbout = buttonAbout;
@@ -35,13 +36,20 @@ namespace OFOutlookPlugin.Managers
             _buttonMainAbout = buttonMainAbout;
             _buttonMainHelp = buttonMainHelp;
             _buttonMainSettings = buttonMainSettings;
+            _buttonMainSendLog = buttonSendLogMain;
             _buttonAbout.OnClick += ButtonAboutOnOnClick;
             _buttonHelp.OnClick += ButtonHelpOnOnClick;
             _buttonMainAbout.OnClick += ButtonAboutOnOnClick;
             _buttonMainHelp.OnClick += ButtonHelpOnOnClick;
             _buttonSettings.OnClick += ButtonSettingsOnOnClick;
             _buttonMainSettings.OnClick += ButtonSettingsOnOnClick;
+            _buttonMainSendLog.OnClick += ButtonMainSendLogOnOnClick;
             MenuEnabling(OFAddinModule.CurrentInstance.BootStraper.IsMenuEnabled);
+        }
+
+        private void ButtonMainSendLogOnOnClick(object sender, IRibbonControl control, bool pressed)
+        {
+            OFAddinModule.CurrentInstance.BootStraper.PassAction(new OFAction(OFActionType.SendLogFile, null));
         }
 
         protected override void MenuEnabling(bool b)
