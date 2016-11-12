@@ -705,14 +705,18 @@ namespace OF.Module.ViewModel
         private void ShowSettings()
         {
             var wnd = _container.Resolve<IMainSettingsWindow>();
-            
+
             wnd.ShowModal();
         }
 
         private void SendLogFiles()
         {
             var sendlogManager = _container.Resolve<IOFLogFilesSenderManager>();
-            if (sendlogManager.IsNotNull() && sendlogManager.SendLogFiles())
+            if (sendlogManager.IsNull())
+            {
+                throw new NullReferenceException("Sender LogSender Manager");
+            }
+            if (sendlogManager.SendLogFiles())
             {
                 OFLogger.Instance.LogDebug("Log files were sent...");
                 OFMessageBoxService.Instance.Show("Send Logs Files", "Log files were sent.");

@@ -772,7 +772,10 @@ namespace OF.Core.Helpers
             emailItem.To = toEmail;
             foreach (var attachmentsPath in attachmentsPaths)
             {
-                emailItem.Attachments.Add(attachmentsPath);
+                if (File.Exists(attachmentsPath))
+                {
+                    emailItem.Attachments.Add(attachmentsPath);
+                }
             }
             emailItem.Importance = Outlook.OlImportance.olImportanceHigh;
             ((Outlook._MailItem)emailItem).Send();

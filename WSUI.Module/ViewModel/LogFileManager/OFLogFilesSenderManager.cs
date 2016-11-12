@@ -4,16 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
+using OF.Core.Extensions;
 using OF.Core.Helpers;
 using OF.Core.Logger;
 using OF.Module.Interface.ViewModel;
 
 namespace OF.Module.ViewModel.LogFileManager
 {
-    public class OFLogFilesSenderManager  : IOFLogFilesSenderManager
+    public class OFLogFilesSenderManager : IOFLogFilesSenderManager
     {
         private IUnityContainer _container;
 
@@ -24,40 +26,50 @@ namespace OF.Module.ViewModel.LogFileManager
 
 
         #region [methods]
-        
+
         public bool SendLogFiles()
         {
             try
             {
+                OFLogger.Instance.LogDebug("Entering SendLogFiles...");
+
                 var esBinPath = OFRegistryHelper.Instance.GetElasticSearchpath();
                 var p = esBinPath.Substring(0, esBinPath.LastIndexOf('\\'));
+
+                OFLogger.Instance.LogDebug("esBinPath: {0}", esBinPath);
+                OFLogger.Instance.LogDebug("p: {0}", p);
 
                 var elasticSearchLogsPath = Path.Combine(p, "logs");
                 var outlookfinderlogPath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OutlookFinder", "Log");
+
+                OFLogger.Instance.LogDebug("elasticSearchLogsPath: {0}", elasticSearchLogsPath);
+                OFLogger.Instance.LogDebug("outlookfinderlogPath: {0}", outlookfinderlogPath);
+
+
 #if DEBUG
                 var toEmail = "iyariki.ya@gmail.com";
 #else
                 var toEmail = OF.Module.Properties.Settings.Default.LogFileEmail;
 #endif
-
-
                 var outlookfinderZipsPath =
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OutlookFinder");
 
-                ClearPreviousZipFiles(outlookfinderZipsPath);
+                OFLogger.Instance.LogDebug("outlookfinderZipsPath: {0}", outlookfinderZipsPath);
 
-                var elasticTask = CreateZipFileAsync(elasticSearchLogsPath,
-                    Path.Combine(outlookfinderZipsPath, OF.Module.Properties.Settings.Default.ElasticSearchZipFileName));
-                var outlookfinderTask = CreateZipFileAsync(outlookfinderlogPath,
+                CopyFiles(elasticSearchLogsPath, GetTempFolder(outlookfinderZipsPath));
+                CopyFiles(outlookfinderlogPath, GetTempFolder(outlookfinderZipsPath));
+
+                var outlookfinderTask = CreateZipFileAsync(GetTempFolder(outlookfinderZipsPath),
                     Path.Combine(outlookfinderZipsPath, OF.Module.Properties.Settings.Default.OutlookFinderZipFileName));
 
-                elasticTask.Wait();
                 outlookfinderTask.Wait();
 
-                var listZipFiles = new List<string>() { elasticTask.Result, outlookfinderTask.Result };
+                var listZipFiles = new List<string>() {outlookfinderTask.Result};
 
                 InternalSendLogs(listZipFiles, toEmail);
+
+                ClearTempFiles(outlookfinderZipsPath);
 
                 return true;
 
@@ -81,17 +93,52 @@ namespace OF.Module.ViewModel.LogFileManager
             return false;
         }
 
+        private void CopyFiles(string folder, string getTempFolder)
+        {
+            try
+            {
+                var di = new DirectoryInfo(folder);
+                var files = di.GetFiles();
+                foreach (var fileInfo in files)
+                {
+                    try
+                    {
+                        var destName = Path.GetFileName(fileInfo.FullName);
+                        fileInfo.CopyTo(Path.Combine(getTempFolder, destName));
+                    }
+                    catch (Exception ex)
+                    {
+                        OFLogger.Instance.LogError(ex.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.ToString());
+            }
+        }
+
         #endregion
 
 
         #region [private methods]
 
-        private void InternalSendLogs(List<string> listZipFiles, string toEmail)
+        private string GetTempFolder(string ofZippingFolder)
         {
-            OFOutlookHelper.Instance.SendEmail("Logs",toEmail,listZipFiles);
+            var path = Path.Combine(ofZippingFolder, "Temp");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            return path;
         }
 
-        private void ClearPreviousZipFiles(string outlookfinderZipsPath)
+        private void InternalSendLogs(List<string> listZipFiles, string toEmail)
+        {
+            OFOutlookHelper.Instance.SendEmail("Logs", toEmail, listZipFiles);
+        }
+
+        private void ClearTempFiles(string outlookfinderZipsPath)
         {
             if (!Directory.Exists(outlookfinderZipsPath))
             {
@@ -102,6 +149,11 @@ namespace OF.Module.ViewModel.LogFileManager
             foreach (var enumerateFile in dirInfo.EnumerateFiles("*.zip"))
             {
                 enumerateFile.Delete();
+            }
+            var tempFolder = GetTempFolder(outlookfinderZipsPath);
+            if (Directory.Exists(tempFolder))
+            {
+                Directory.Delete(tempFolder,true);
             }
         }
 
@@ -116,9 +168,80 @@ namespace OF.Module.ViewModel.LogFileManager
 
         private string CreateZipFile(string folder, string filename)
         {
-            var zip = new FastZip();
-            zip.CreateZip(filename, folder, false, null);
+
+            //FileStream fsOut = null;
+            //ZipOutputStream zipStream = null;
+
+            //try
+            //{
+            //    fsOut = File.Create(filename);
+            //    zipStream = new ZipOutputStream(fsOut);
+
+            //    int folderOffset = folder.Length + (folder.EndsWith("\\") ? 0 : 1);
+
+            //    CompressFolder(folder, zipStream, folderOffset);
+
+            //    zipStream.IsStreamOwner = true;
+            //    zipStream.Close();
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    OFLogger.Instance.LogError(ex.ToString());
+            //}
+            //finally
+            //{
+            //    if (zipStream.IsNotNull())
+            //    {
+            //        zipStream.Close();
+            //    }
+            //    if (fsOut.IsNotNull())
+            //    {
+            //        fsOut.Close();
+            //    }
+            //}
+            FastZip zip = null;
+            try
+            {
+                zip = new FastZip();
+                zip.CreateZip(filename, folder, false, null);
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.ToString());
+            }
             return filename;
+        }
+
+        private void CompressFolder(string folder, ZipOutputStream ZipStream, int folderOffset)
+        {
+            var files = Directory.GetFiles(folder);
+
+            foreach (var file in files)
+            {
+                try
+                {
+                    var fileInfo = new FileInfo(file);
+                    var entryName = file.Substring(folderOffset);
+                    entryName = ZipEntry.CleanName(entryName);
+                    var newEntry = new ZipEntry(entryName);
+                    newEntry.DateTime = fileInfo.LastWriteTime;
+                    newEntry.Size = fileInfo.Length;
+
+                    ZipStream.PutNextEntry(newEntry);
+
+                    var buffer = new byte[4096];
+                    using (var reader = File.OpenRead(file))
+                    {
+                        StreamUtils.Copy(reader, ZipStream, buffer);
+                    }
+                    ZipStream.CloseEntry();
+                }
+                catch (Exception ex)
+                {
+                    OFLogger.Instance.LogError(ex.ToString());
+                }
+            }
         }
 
 
