@@ -107,7 +107,8 @@ namespace OFOutlookPlugin
         private AddinExpress.OL.ADXOlFormsCollectionItem formRightSidebar;
         private ADXRibbonButton mnuSettings;
         private ADXRibbonButton mnuMainSettings;
-
+        private ADXRibbonButton adxSendLogOFTab;
+        private ADXRibbonButton adxSendLogMain;
         private const string DefaultNamespace = "MAPI";
 
         #endregion [const]
@@ -219,6 +220,8 @@ namespace OFOutlookPlugin
             this.btnMainMenuSeparatotr = new AddinExpress.MSO.ADXRibbonMenuSeparator(this.components);
             this.btnMainAbout = new AddinExpress.MSO.ADXRibbonButton(this.components);
             this.OutlookFinderEvents = new AddinExpress.MSO.ADXOutlookAppEvents(this.components);
+            this.adxSendLogOFTab = new AddinExpress.MSO.ADXRibbonButton(this.components);
+            this.adxSendLogMain = new AddinExpress.MSO.ADXRibbonButton(this.components);
             // 
             // outlookFormManager
             // 
@@ -231,12 +234,12 @@ namespace OFOutlookPlugin
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
             this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
-            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem)
+            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem) 
             | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
             this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
             this.formRightSidebar.FormClassName = "OFOutlookPlugin.OFSidebar";
@@ -318,6 +321,7 @@ namespace OFOutlookPlugin
             // menuHelp
             // 
             this.menuHelp.Controls.Add(this.mnuSettings);
+            this.menuHelp.Controls.Add(this.adxSendLogOFTab);
             this.menuHelp.Controls.Add(this.btnHelp);
             this.menuHelp.Controls.Add(this.adxRibbonMenuSeparator1);
             this.menuHelp.Controls.Add(this.btnAbout);
@@ -464,6 +468,7 @@ namespace OFOutlookPlugin
             // mnuMain
             // 
             this.mnuMain.Controls.Add(this.mnuMainSettings);
+            this.mnuMain.Controls.Add(this.adxSendLogMain);
             this.mnuMain.Controls.Add(this.btnMainHelp);
             this.mnuMain.Controls.Add(this.btnMainMenuSeparatotr);
             this.mnuMain.Controls.Add(this.btnMainAbout);
@@ -509,6 +514,20 @@ namespace OFOutlookPlugin
             this.OutlookFinderEvents.ExplorerActivate += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerActivate);
             this.OutlookFinderEvents.ExplorerClose += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerClose);
             this.OutlookFinderEvents.ExplorerSelectionChange += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerSelectionChange);
+            // 
+            // adxSendLogOFTab
+            // 
+            this.adxSendLogOFTab.Caption = "Send log files...";
+            this.adxSendLogOFTab.Id = "adxRibbonButton_a8c2fbe6e8a6444eb293329425e3d082";
+            this.adxSendLogOFTab.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.adxSendLogOFTab.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            // 
+            // adxSendLogMain
+            // 
+            this.adxSendLogMain.Caption = "Send log files...";
+            this.adxSendLogMain.Id = "adxRibbonButton_8aa9adf95aa842dc9066f039b4b67452";
+            this.adxSendLogMain.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.adxSendLogMain.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
             // 
             // OFAddinModule
             // 
@@ -844,10 +863,10 @@ namespace OFOutlookPlugin
                 _commandManager = adxMainPluginCommandBar.UseForRibbon
                                       ? (IOFCommandManager)new OFCommandBarManager(buttonShow2007, buttonHide2007, adxCommandBarEditSearchText,
                                           adxCommandBarButtonSearch)
-                                      : new OFRibbonManager(buttonShow, wsuiButtonSwitch, adxRibbonButtonSearch, adxRibbonEditBoxSearch, wsuiHomeSearch, wsuiButtonSearch);
+                                      : new OFRibbonManager(buttonShow, wsuiButtonSwitch, adxRibbonButtonSearch, adxRibbonEditBoxSearch, wsuiHomeSearch, wsuiButtonSearch,adxSendLogOFTab);
                 if (!adxMainPluginCommandBar.UseForRibbon)
                 {
-                    _aboutCommandManager = new OFAboutCommandManager(btnHelp, btnAbout, mnuSettings, btnMainHelp, btnMainAbout, mnuMainSettings);
+                    _aboutCommandManager = new OFMainRibbonCommandManager(btnHelp, btnAbout, mnuSettings, btnMainHelp, btnMainAbout, mnuMainSettings,adxSendLogMain);
                 }
                 else if (OFRegistryHelper.Instance.GetIsPluginUiVisible())
                 {

@@ -987,12 +987,12 @@ namespace OF.CA
         [CustomAction]
         public static ActionResult InstallApp(Session session)
         {
-            //var elasticSearchPath = session.CustomActionData["ESPATH"];
-            //var ofPath = session.CustomActionData["OFPATH"];
             try
             {
                 var esPath = GetElasticSearchBinFolder(session).TrimEnd(Path.DirectorySeparatorChar);
                 var ofPath = GetInstallationFolder(session).TrimEnd(Path.DirectorySeparatorChar);
+                OFRegistryHelper.Instance.SetElasticSearchPath(esPath);
+                OFRegistryHelper.Instance.SetOfPath(ofPath);
                 string fullname = string.Format("{0}\\{1}", GetInstallationFolder(session), InstallFile);
                 if (string.IsNullOrEmpty(fullname) || !File.Exists(fullname))
                 {

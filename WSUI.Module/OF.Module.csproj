@@ -77,6 +77,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Output\Elasticsearch.Net.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.2.329, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolkits\Log4Net\net40-client\log4net.dll</HintPath>
@@ -168,6 +172,7 @@
     <Compile Include="Interface\ViewModel\IElasticSearchViewModel.cs" />
     <Compile Include="Interface\ViewModel\ILoggingSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IMainSettingsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IOFLogFilesSenderManager.cs" />
     <Compile Include="Interface\ViewModel\IOutlookSecuritySettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IServiceApplicationSettingsViewModel.cs" />
     <Compile Include="Interface\View\IAllDataView.cs" />
@@ -198,6 +203,11 @@
     <Compile Include="Interface\View\IUIView.cs" />
     <Compile Include="Interface\Service\IOFCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Service\AdvancedSearch\OFAdvancedSearchTemplateSelector.cs" />
     <Compile Include="Service\OFAllFilesDataTemplateSelector.cs" />
     <Compile Include="Service\Behaviors\OFActualHeightBehavior.cs" />
@@ -233,6 +243,7 @@
     <Compile Include="ViewModel\ContactDetailsViewModel.cs" />
     <Compile Include="ViewModel\ContactViewModel.cs" />
     <Compile Include="ViewModel\ElasticSearchMonitoringViewModel.cs" />
+    <Compile Include="ViewModel\LogFileManager\OFLogFilesSenderManager.cs" />
     <Compile Include="ViewModel\Settings\OFElasticSearchRiverSettingsViewModel.cs" />
     <Compile Include="ViewModel\ElasticSearchViewModel.cs" />
     <Compile Include="ViewModel\EmailViewModel.cs" />
@@ -505,7 +516,12 @@
     <Resource Include="Images\replayall.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="OFModule.snk" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\minus.png" />

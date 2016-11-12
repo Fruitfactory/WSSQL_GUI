@@ -40,7 +40,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <RegisterForComInterop>false</RegisterForComInterop>
+    <RegisterForComInterop>true</RegisterForComInterop>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -182,7 +182,7 @@
     <Compile Include="Interfaces\IOFCommandManager.cs" />
     <Compile Include="Core\OFBaseCommandManager.cs" />
     <Compile Include="Interfaces\IOFOutlookItemEvents.cs" />
-    <Compile Include="Managers\OFAboutCommandManager.cs" />
+    <Compile Include="Managers\OFMainRibbonCommandManager.cs" />
     <Compile Include="Managers\OFCommandBarManager.cs" />
     <Compile Include="Managers\OFOutlookItemsRemovingManager.cs" />
     <Compile Include="Managers\OFRibbonManager.cs" />
