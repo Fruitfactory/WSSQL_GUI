@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OF.ServiceApp")]
+[assembly: AssemblyTitle("OutlookFinder Helper Application")]
 [assembly: AssemblyDescription("OutlookFinder Helper Application")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("FruitFactory")]
-[assembly: AssemblyProduct("OF.ServiceApp")]
+[assembly: AssemblyProduct("OutlookFinder Helper Application")]
 [assembly: AssemblyCopyright("Copyright © FruitFactory 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

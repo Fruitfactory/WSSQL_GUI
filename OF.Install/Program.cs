@@ -59,8 +59,6 @@ namespace OF.Install
 
                 var elasticSearchPath = espath;
                 var ofPath = ofpath;
-                OFRegistryHelper.Instance.SetElasticSearchPath(elasticSearchPath);
-                OFRegistryHelper.Instance.SetOfPath(ofPath);
                 OFRegistryHelper.Instance.SetMachineOfPath(ofPath);
                 if (!String.IsNullOrEmpty(elasticSearchPath))
                 {

@@ -687,11 +687,9 @@ namespace OF.Module.ViewModel
                         ShowSenderOfSelectedOutlookEmail(action);
                         break;
                     case OFActionType.Settings:
-                        var wnd = _container.Resolve<IMainSettingsWindow>();
-                        wnd.ShowModal();
+                        ShowSettings();
                         break;
                     case OFActionType.DeleteMail:
-                        OFLogger.Instance.LogDebug("!!!! Remove Email From ES " + action.Data);
                         RemoveEmail(action);
                         break;
                     case OFActionType.ShowSuggestEmail:
@@ -702,11 +700,40 @@ namespace OF.Module.ViewModel
                         OFLogger.Instance.LogDebug("Hide Suggested emails... " + action.Data);
                         _suggestViewModel.Hide();
                         break;
+                    case OFActionType.SendLogFile:
+                        SendLogFiles();
+                        break;
                 }
             }
             catch (Exception ex)
             {
                 OFLogger.Instance.LogError(ex.ToString());
+            }
+        }
+
+        private void ShowSettings()
+        {
+            var wnd = _container.Resolve<IMainSettingsWindow>();
+
+            wnd.ShowModal();
+        }
+
+        private void SendLogFiles()
+        {
+            var sendlogManager = _container.Resolve<IOFLogFilesSenderManager>();
+            if (sendlogManager.IsNull())
+            {
+                throw new NullReferenceException("Sender LogSender Manager");
+            }
+            if (sendlogManager.SendLogFiles())
+            {
+                OFLogger.Instance.LogDebug("Log files were sent...");
+                OFMessageBoxService.Instance.Show("Send Logs Files", "Log files were sent.");
+            }
+            else
+            {
+                OFLogger.Instance.LogDebug("Log files weren't sent...");
+                OFMessageBoxService.Instance.Show("Send Logs Files", "Log files weren't sent.");
             }
         }
 

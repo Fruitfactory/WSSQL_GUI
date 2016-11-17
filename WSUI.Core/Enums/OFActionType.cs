@@ -19,6 +19,7 @@ namespace OF.Core.Enums
         DeleteMail,
         DeleteStore,
         ShowSuggestEmail,
-        HideSuggestEmail
+        HideSuggestEmail,
+        SendLogFile
     }
 }
