@@ -78,10 +78,13 @@ namespace OF.Downloader.ViewModel
         private string TempFile(out string urlFile)
         {
             var tempFolder = Path.Combine(Path.GetTempPath(), TempFolder);
-            if (!Directory.Exists(tempFolder))
+            if (Directory.Exists(tempFolder))
             {
-                Directory.CreateDirectory(tempFolder);
+                var dirInfo = new DirectoryInfo(tempFolder);
+                dirInfo.Delete(true);
             }
+            Directory.CreateDirectory(tempFolder);
+
             var version = GetCurrentVersion();
 
             if (string.IsNullOrEmpty(version))

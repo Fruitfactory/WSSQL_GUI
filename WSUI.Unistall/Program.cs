@@ -15,31 +15,52 @@ namespace OF.Unistall
         private const string ParamName = "uninstall";
         private const string PstPluginName = "pstriver";
         private const string UnistallArguments = " --remove {0} \"{1}\"";
+        private static StreamWriter logWriter;
 
         private static void Main(string[] args)
         {
-            try
+
+            if (args == null || !args.Any())
+                return;
+
+            string param = args[0];
+            if (param != ParamName)
+                return;
+
+            //using (logWriter = File.CreateText("C:\\of_install.log"))
             {
-                if (args == null || !args.Any())
-                    return;
+                try
+                {
+                    TurboLimeActivate.Instance.Deactivate(true);
+                }
+                catch (Exception ex)
+                {
+                    Log(ex.ToString());
+                }
+                try
+                {
+                    StopServiceAndApplication();
+                    UnInstallElasticSearch();
+                    ApplyRules(ParamName, args[1], args[2]);
 
-                string param = args[0];
-                if (param != ParamName)
-                    return;
-                TurboLimeActivate.Instance.Deactivate(true);
+                    DeleteRegistrySettings();
 
-                StopServiceAndApplication();
-                UnInstallElasticSearch();
-                ApplyRules(ParamName,args[1],args[2]);
-
-                DeleteRegistrySettings();
-
-                Console.Out.WriteLine("Done...");
+                    Log("Done...");
+                }
+                catch (Exception ex)
+                {
+                    Log(ex.ToString());
+                }
             }
-            catch (Exception ex)
+        }
+
+        private static void Log(string message)
+        {
+            if (logWriter == null)
             {
-                Console.Out.WriteLine(ex.Message);
+                return;
             }
+            logWriter.WriteLine(message);
         }
 
         private static void DeleteRegistrySettings()
@@ -50,19 +71,26 @@ namespace OF.Unistall
 
         public static void StopServiceAndApplication()
         {
+            StopESService();
+            StopServiceApp();
+        }
+
+        private static void StopESService()
+        {
             try
             {
-                ServiceController sct = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName.IndexOf("elasticsearch", StringComparison.InvariantCultureIgnoreCase) > -1);
+                ServiceController sct =
+                    ServiceController.GetServices()
+                        .FirstOrDefault(
+                            s => s.ServiceName.IndexOf("elasticsearch", StringComparison.InvariantCultureIgnoreCase) > -1);
                 if (sct != null && sct.Status == ServiceControllerStatus.Running)
                 {
-
                     KillTask(sct.ServiceName + ".exe", "elasticsearch");
                 }
-                StopServiceApp();
             }
             catch (Exception ex)
             {
-                Console.Out.WriteLine(ex.ToString());
+                Log(ex.ToString());
             }
         }
 
@@ -74,14 +102,14 @@ namespace OF.Unistall
                     Process.GetProcesses().FirstOrDefault(p => p.ProcessName.ToUpperInvariant().Contains("SERVICEAPP"));
                 if (process != null)
                 {
-                    Console.Out.WriteLine("Stopping Service Application....");
+                    Log("Stopping Service Application....");
                     OFRegistryHelper.Instance.DeleteAutoRunHelperApplication();
                     KillTask("serviceapp.exe", "serviceapp");
                 }
             }
             catch (Exception ex)
             {
-                Console.Out.WriteLine(ex.ToString());
+                Log(ex.ToString());
             }
         }
 
@@ -92,11 +120,11 @@ namespace OF.Unistall
             {
                 ProcessStartInfo info = new ProcessStartInfo();
                 info.FileName = Path.Combine(Environment.SystemDirectory, "taskkill.exe");
-                Console.Out.WriteLine("!!!! Kill task ");
+                Log("!!!! Kill task ");
                 info.Verb = "runas";
                 info.Arguments = string.Format(" /F /IM {0}", taskName);
                 info.WindowStyle = ProcessWindowStyle.Hidden;
-                Console.Out.WriteLine(string.Format("!!!! {0}", info.Arguments));
+                Log(string.Format("!!!! {0}", info.Arguments));
                 Process p = new Process() { StartInfo = info };
                 p.Start();
                 p.WaitForExit();
@@ -110,14 +138,14 @@ namespace OF.Unistall
                     {
                         break;
                     }
-                    Console.Out.WriteLine(string.Format("!!!! Waiting for {0}", elasticProcess.ProcessName));
+                    Log(string.Format("!!!! Waiting for {0}", elasticProcess.ProcessName));
                     Thread.Sleep(100);
                 }
                 return result;
             }
             catch (Exception ex)
             {
-                Console.Out.WriteLine(ex.ToString());
+                Log(ex.ToString());
                 result = false;
             }
 
@@ -150,7 +178,7 @@ namespace OF.Unistall
             }
             catch (Exception ex)
             {
-                Console.Out.WriteLine(ex.ToString());
+                Log(ex.ToString());
             }
             finally
             {
@@ -172,11 +200,11 @@ namespace OF.Unistall
                 pInstall.StartInfo = si;
                 pInstall.Start();
                 pInstall.WaitForExit();
-                Console.Out.WriteLine("PST plugin was unistalled.");
+                Log("PST plugin was unistalled.");
             }
             catch (Exception exception)
             {
-                Console.Out.WriteLine(exception.Message);
+                Log(exception.Message);
             }
         }
 
