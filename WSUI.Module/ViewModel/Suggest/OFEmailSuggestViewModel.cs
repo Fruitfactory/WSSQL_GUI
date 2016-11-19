@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -43,11 +44,15 @@ namespace OF.Module.ViewModel.Suggest
             {
                 return;
             }
+            _contactSearchSystem.Reset();
             _contactSearchSystem.SetSearchCriteria(Data.Item2);
             _contactSearchSystem.Search();
-            _suggestWindow.ShowSuggestings(Data.Item1);
+            if (!_suggestWindow.IsVisible)
+            {
+                _suggestWindow.ShowSuggestings(Data.Item1);
+            }
         }
-
+        
         public void Hide()
         {
             if (_suggestWindow.IsNull())
@@ -63,22 +68,37 @@ namespace OF.Module.ViewModel.Suggest
             set { Set(() => SelectedItem, value); }
         }
 
-        public ObservableCollection<ISearchObject> Emails { get; set; }
-        
+        public IEnumerable<ISearchObject> Emails
+        {
+            get
+            {
+                return Get(() => Emails);
+            }
+            set
+            {
+                Set(() =>Emails,  value);
+            }
+        }
+
 
         private void ContactSearchSystemOnSearchFinished(object o)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                Emails.Clear();
+                Emails = null;
+                var collection = new ObservableCollection<ISearchObject>();
+                
                 var results = _contactSearchSystem.GetResult();
+                
                 results.OrderBy(r => r.Priority).ForEach(r =>
                 {
+                    System.Diagnostics.Debug.WriteLine(string.Format("!!!!! Results: {0}", r.Result.OperationResult.Count));
                     foreach (var systemSearchResult in r.Result.OperationResult)
                     {
-                        Emails.Add(systemSearchResult as OFBaseSearchObject);
+                        collection.Add(systemSearchResult as OFBaseSearchObject);
                     }
                 });
+                Emails = collection;
             }));
         }
     }

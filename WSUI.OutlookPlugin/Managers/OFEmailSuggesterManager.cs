@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using OF.Control;
 using OF.Core.Data;
 using OF.Core.Enums;
+using OF.Core.Extensions;
 using OF.Core.Win32;
 using OF.Infrastructure.Helpers.AttachedProperty;
 using OFOutlookPlugin.Hooks;
@@ -62,10 +63,10 @@ namespace OFOutlookPlugin.Managers
                 }
                 if (listControls.Any())
                 {
-                    foreach (var listChild in listControls)
-                    {
-                        System.Diagnostics.Debug.WriteLine(string.Format("{0} - {1}",intPtr,listChild));
-                    }
+                    //foreach (var listChild in listControls)
+                    //{
+                    //    System.Diagnostics.Debug.WriteLine(string.Format("{0} - {1}",intPtr,listChild));
+                    //}
                     if (_needHwndCtrl.ContainsKey(intPtr.ToInt32()))
                     {
                         var temp = _needHwndCtrl[intPtr.ToInt32()];
@@ -116,25 +117,31 @@ namespace OFOutlookPlugin.Managers
             //classStr = new StringBuilder(255);
             var ctrlId = WindowsFunction.GetDlgCtrlID(hWnd);
             WindowsFunction.GetClassName(hWnd, classStr, 255);
-            System.Diagnostics.Debug.WriteLine("!!!! " + classStr + " HWND: " + hWnd.ToInt32() + " CtrlID: " + ctrlId);
+            //System.Diagnostics.Debug.WriteLine("!!!! " + classStr + " HWND: " + hWnd.ToInt32() + " CtrlID: " + ctrlId);
             
 
             foreach (var keyValuePair in _needHwndCtrl)
             {
                 if (keyValuePair.Value.Contains(hWnd.ToInt32()))
                 {
+                    var key = (Keys) Key;
                     var text = WindowsFunction.GetRichEditText(hWnd);
-                    System.Diagnostics.Debug.WriteLine("!!!! TEXT: " + text);
-                    switch ((Keys)Key)
+                    if (key >= Keys.A && key <= Keys.Z)
                     {
-                        case Keys.Down:
-                            System.Diagnostics.Debug.WriteLine("!!!!!! Down pressed...");
-                            pluginBootStraper.PassAction(new OFAction(OFActionType.ShowSuggestEmail, new Tuple<IntPtr,string>(hWnd,text.ToString())));
-                            break;
-                        case Keys.Escape:
-                            System.Diagnostics.Debug.WriteLine("!!!!!! Escape pressed...");
-                            pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));
-                            break;
+                        var criteria = text.Append(key).ToString().ToLowerCase();
+                        if (criteria.Length > 2)
+                        {
+                            System.Diagnostics.Debug.WriteLine("!!!! TEXT: " + text);
+                            pluginBootStraper.PassAction(new OFAction(OFActionType.ShowSuggestEmail, new Tuple<IntPtr, string>(hWnd, text.ToString())));
+                        }
+                    }
+                    else if (key == Keys.Down)
+                    {
+                        pluginBootStraper.PassAction(new OFAction(OFActionType.ShowSuggestEmail, new Tuple<IntPtr, string>(hWnd, text.ToString())));
+                    }
+                    else if (key == Keys.Escape)
+                    {
+                        pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));
                     }
                 }
             }
