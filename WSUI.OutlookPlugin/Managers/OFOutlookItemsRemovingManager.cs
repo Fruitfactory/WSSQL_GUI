@@ -58,6 +58,10 @@ namespace OFOutlookPlugin.Managers
                         {
                             OFLogger.Instance.LogError(ex.ToString());
                         }
+                        catch (COMException comEx)
+                        {
+                            OFLogger.Instance.LogError(comEx.ToString());
+                        }
 
                         if (property == null)
                             continue;
