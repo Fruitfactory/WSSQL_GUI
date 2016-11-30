@@ -61,7 +61,7 @@
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.0" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
-    <orderEntry type="library" name="Maven: org.elasticsearch:elasticsearch:1.7.5" level="project" />
+    <orderEntry type="library" name="Maven: org.elasticsearch:elasticsearch:1.7.6" level="project" />
     <orderEntry type="library" name="Maven: org.apache.lucene:lucene-core:4.10.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.lucene:lucene-analyzers-common:4.10.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.lucene:lucene-queries:4.10.4" level="project" />

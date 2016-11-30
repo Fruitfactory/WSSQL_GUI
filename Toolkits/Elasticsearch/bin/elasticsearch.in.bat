@@ -59,5 +59,5 @@ set JAVA_OPTS=%JAVA_OPTS% -XX:+DisableExplicitGC
 REM Ensure UTF-8 encoding by default (e.g. filenames)
 set JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=UTF-8
 
-set ES_CLASSPATH=%ES_CLASSPATH%;%ES_HOME%/lib/elasticsearch-1.7.5.jar;%ES_HOME%/lib/*;%ES_HOME%/lib/sigar/*
+set ES_CLASSPATH=%ES_CLASSPATH%;%ES_HOME%/lib/elasticsearch-1.7.6.jar;%ES_HOME%/lib/*;%ES_HOME%/lib/sigar/*
 set ES_PARAMS=-Delasticsearch -Des-foreground=yes -Des.path.home="%ES_HOME%"

@@ -3,7 +3,7 @@ SETLOCAL
 
 set ES_JAVA_HOME=%~2
 
-TITLE Elasticsearch Service 1.7.0
+TITLE Elasticsearch Service 1.7.6
 
 set SCRIPT_DIR=%~dp0
 for %%I in ("%SCRIPT_DIR%..") do set ES_HOME=%%~dpfI
@@ -31,7 +31,7 @@ if EXIST "%EXECUTABLE%" goto okExe
 echo elasticsearch-service-(x86|x64).exe was not found...
 
 :okExe
-set ES_VERSION=1.7.5
+set ES_VERSION=1.7.6
 
 if "%LOG_DIR%" == "" set LOG_DIR=%ES_HOME%\logs
 
@@ -122,7 +122,7 @@ goto:eof
 
 :foundJVM
 if "%ES_MIN_MEM%" == "" set ES_MIN_MEM=256m
-if "%ES_MAX_MEM%" == "" set ES_MAX_MEM=512m
+if "%ES_MAX_MEM%" == "" set ES_MAX_MEM=1g
 
 if NOT "%ES_HEAP_SIZE%" == "" set ES_MIN_MEM=%ES_HEAP_SIZE%
 if NOT "%ES_HEAP_SIZE%" == "" set ES_MAX_MEM=%ES_HEAP_SIZE%
