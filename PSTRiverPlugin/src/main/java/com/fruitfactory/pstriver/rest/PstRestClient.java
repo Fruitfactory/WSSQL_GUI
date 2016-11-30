@@ -7,7 +7,9 @@ import us.monoid.json.JSONObject;
 import us.monoid.web.JSONResource;
 import us.monoid.web.Resty;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -84,17 +86,30 @@ public class PstRestClient implements IPstRestClient, IPstRestAttachmentClient{
     }
 
     private String getUrl(String cmd){
-        return ROOT_URL + cmd;
+        return ROOT_URL +  cmd;
     }
 
     private JSONResource sendSimpleCommand(String cmd){
         JSONResource response = null;
-        try{
+        try {
             response = restyClient.json(new URI(getUrl(cmd)));
+        }catch(IOException io){
+            logger.error("REST CLIENT: " + io.toString());
+            response = tryOneMoreTime(cmd);
         }catch(Exception ex){
             logger.error("REST CLIENT: " + ex.toString());
         }
         return response;
+    }
+
+    private JSONResource tryOneMoreTime(String cmd){
+        try {
+            restyClient = new Resty();
+            return restyClient.json(new URI(getUrl(cmd)));
+        }catch (Exception ex){
+            logger.error("REST CLIENT: " + ex.toString());
+        }
+        return null;
     }
 
     private void sendWithDate(String cmd, Date date){

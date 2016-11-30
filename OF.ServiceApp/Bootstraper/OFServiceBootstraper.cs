@@ -44,8 +44,6 @@ namespace OF.ServiceApp.Bootstraper
 
         public void Initialize()
         {
-            DisableAccessPrompt();
-
             _eventAggregator = new EventAggregator();
             _userActivityTracker = new OFUserActivityTracker();
             _restHosting = new OFRestHosting(new OFNancyBootstraper(_eventAggregator));
@@ -139,22 +137,7 @@ namespace OF.ServiceApp.Bootstraper
                 }    
             }
         }
-
-
-        private void DisableAccessPrompt()
-        {
-            try
-            {
-                var versions = (new OFOfficeVersionFinder()).GetOutlookVersion();
-                OFRegistryHelper.Instance.DisableOutlookSecurityWarning(versions);
-            }
-            catch (Exception ex)
-            {
-                OFLogger.Instance.LogError(ex.ToString());
-            }
-            
-        }
-
+        
         #endregion
 
 
