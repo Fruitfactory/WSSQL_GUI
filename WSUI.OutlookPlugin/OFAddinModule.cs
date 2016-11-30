@@ -1423,6 +1423,7 @@ namespace OFOutlookPlugin
 
         private void CheckAndStartServiceApp()
         {
+#if !DEBUG
             int count = Process.GetProcesses().Count(p => p.ProcessName.ToUpperInvariant().Contains(SERVICE_APP));
             if (count > 0)
             {
@@ -1441,6 +1442,7 @@ namespace OFOutlookPlugin
             {
                 OFLogger.Instance.LogError(ex.ToString());
             }
+#endif
         }
     }
 }
