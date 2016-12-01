@@ -290,6 +290,67 @@ namespace OF.Core.Helpers
             }
         }
 
+        public bool IsOutlookAutoCompleateDisabled(string officeVersion)
+        {
+            if (string.IsNullOrEmpty(officeVersion))
+            {
+                return false;
+            }
+            try
+            {
+                var registry = _baseRegistry;
+                var key = string.Format("Software\\Microsoft\\Office\\{0}\\Outlook\\Preferences", officeVersion);
+                var preferences = registry.OpenSubKey(key);
+                var valObj = preferences.GetValue("ShowAutoSug");
+                if (valObj == null)
+                {
+                    return false;
+                }
+                int valInt;
+                int.TryParse(valObj.ToString(), out valInt);
+                return valInt == 0;
+            }
+            catch (Exception)
+            {
+
+            }
+            return false;
+        }
+
+        public void DisableAutoCompleateEmailsToCcBcc(string officeVersion)
+        {
+            SetOutlookAutoCompleateValue(officeVersion,0);
+        }
+
+        public void EnableAutoCompleateEmailsToCcBcc(string officeVersion)
+        {
+            SetOutlookAutoCompleateValue(officeVersion, 1);
+        }
+
+        private void SetOutlookAutoCompleateValue(string officeVersion, int value)
+        {
+            if (string.IsNullOrEmpty(officeVersion))
+            {
+                return;
+            }
+            try
+            {
+                var registry = _baseRegistry;
+                var key = string.Format("Software\\Microsoft\\Office\\{0}\\Outlook\\Preferences", officeVersion);
+                var preferences = registry.OpenSubKey(key);
+                if (preferences == null)
+                {
+                    return;
+                }
+                preferences.SetValue("ShowAutoSug", value);
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+
         public bool IsSecurityWarningDisable(string officeVersion)
         {
             if (string.IsNullOrEmpty(officeVersion))
