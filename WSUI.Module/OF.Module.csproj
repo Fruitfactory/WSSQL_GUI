@@ -174,6 +174,7 @@
     <Compile Include="Interface\ViewModel\ILoggingSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IMainSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IOFLogFilesSenderManager.cs" />
+    <Compile Include="Interface\ViewModel\IOutlookAutoCompleteSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IOutlookSecuritySettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IServiceApplicationSettingsViewModel.cs" />
     <Compile Include="Interface\View\IAllDataView.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="Interface\View\IMainView.cs" />
     <Compile Include="Interface\ViewModel\IMainViewModel.cs" />
     <Compile Include="Interface\View\IOFEmailSuggestWindow.cs" />
+    <Compile Include="Interface\View\IOutlookAutoCompleteSettingsView.cs" />
     <Compile Include="Interface\View\IOutlookSecuritySettingsView.cs" />
     <Compile Include="Interface\View\IPreviewView.cs" />
     <Compile Include="Interface\View\IScrollableView.cs" />
@@ -252,6 +254,7 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFLoggingSettingsViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFMainSettingsViewModel.cs" />
+    <Compile Include="ViewModel\Settings\OFOutlookAutoCompleteSettingsViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFOutlookSecutirySettingsViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFServiceApplicationSettingsViewModel.cs" />
     <Compile Include="ViewModel\Suggest\OFEmailSuggestViewModel.cs" />
@@ -317,6 +320,9 @@
     </Compile>
     <Compile Include="View\PreviewView.xaml.cs">
       <DependentUpon>PreviewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Settings\OFOutlookAutoCompleteSettingsView.xaml.cs">
+      <DependentUpon>OFOutlookAutoCompleteSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Settings\OFOutlookSecuritySettingsView.xaml.cs">
       <DependentUpon>OFOutlookSecuritySettingsView.xaml</DependentUpon>
@@ -449,6 +455,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\PreviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Settings\OFOutlookAutoCompleteSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

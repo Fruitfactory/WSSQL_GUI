@@ -344,7 +344,7 @@ namespace OF.Core.Helpers
                 }
                 preferences.SetValue("ShowAutoSug", value);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
             }

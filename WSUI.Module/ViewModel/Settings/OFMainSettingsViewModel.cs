@@ -58,6 +58,7 @@ namespace OF.Module.ViewModel.Settings
             _detailsSettingsViewModels.Add(_unityContainer.Resolve<ILoggingSettingsViewModel>());
             _detailsSettingsViewModels.Add(_unityContainer.Resolve<IServiceApplicationSettingsViewModel>());
             _detailsSettingsViewModels.Add(_unityContainer.Resolve<IOutlookSecuritySettingsViewModel>());
+            _detailsSettingsViewModels.Add(_unityContainer.Resolve<IOutlookAutoCompleteSettingsViewModel>());
 
             if (_detailsSettingsViewModels[2].IsNotNull())
             {
@@ -96,6 +97,11 @@ namespace OF.Module.ViewModel.Settings
         public IOutlookSecuritySettingsViewModel OutlookSecuritySettingsViewModel
         {
             get { return _detailsSettingsViewModels[3] as IOutlookSecuritySettingsViewModel; }
+        }
+
+        public IOutlookAutoCompleteSettingsViewModel OutlookAutoCompleateSettingsViewModel
+        {
+            get { return _detailsSettingsViewModels[4] as IOutlookAutoCompleteSettingsViewModel;}
         }
 
         public int SelectedTab

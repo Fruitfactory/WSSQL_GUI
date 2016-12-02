@@ -131,6 +131,9 @@ namespace OF.Module
             _unityContainer.RegisterType<IOFEmailSuggestWindow, OFEmailSuggestWindow>();
             _unityContainer.RegisterType<IOFEmailSuggestViewModel, OFEmailSuggestViewModel>();
             _unityContainer.RegisterType<IOFLogFilesSenderManager, OFLogFilesSenderManager>();
+
+            _unityContainer.RegisterType<IOutlookAutoCompleteSettingsView, OFOutlookAutoCompleteSettingsView>();
+            _unityContainer.RegisterType<IOutlookAutoCompleteSettingsViewModel, OFOutlookAutoCompleteSettingsViewModel>();
             
             watch.Stop();
             OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));
