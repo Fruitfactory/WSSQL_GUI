@@ -43,7 +43,8 @@ namespace OF.Core.Core.LimeLM
         #endregion [fields const]
 
         // O_o
-        private const int DaysBetweenCheck = 90; // we should use 0. In this case TurboActive verify activation with the server every time when we call IsGenuine()
+        private const int DaysBetweenCheck = 90;
+            // we should use 0. In this case TurboActive verify activation with the server every time when we call IsGenuine()
 
         private const int GraceOfInerErr = 14;
         private const string VersionId = "4d6ed75a527c1957550015.01792667";
@@ -116,7 +117,8 @@ namespace OF.Core.Core.LimeLM
                 int c = iCount + 1;
                 if (!string.IsNullOrEmpty(pkeyid))
                 {
-                    var result = LimeLMApi.SetDetails(pkeyid, 0, null, new string[] { TimesUsed }, new string[] { c.ToString() });
+                    var result = LimeLMApi.SetDetails(pkeyid, 0, null, new string[] {TimesUsed},
+                        new string[] {c.ToString()});
                     OFLogger.Instance.LogDebug("Times used: {0}, Result: {1}", c, result);
                 }
             }
@@ -130,23 +132,11 @@ namespace OF.Core.Core.LimeLM
 
         #region [private property]
 
-        private bool IsActivated
-        {
-            get;
-            set;
-        }
+        private bool IsActivated { get; set; }
 
-        private bool IsTrialPeriodEnded
-        {
-            get;
-            set;
-        }
+        private bool IsTrialPeriodEnded { get; set; }
 
-        private bool IsInternetError
-        {
-            get;
-            set;
-        }
+        private bool IsInternetError { get; set; }
 
         #endregion [private property]
 
@@ -170,7 +160,7 @@ namespace OF.Core.Core.LimeLM
                     return true;
                 }
                 var activated = TurboActivate.IsActivated();
-                OFLogger.Instance.LogInfo("TurboActive.IsActivated() result: {0}",activated.ToString());
+                OFLogger.Instance.LogInfo("TurboActive.IsActivated() result: {0}", activated.ToString());
                 if (activated)
                 {
                     var result = TurboActivate.IsGenuine();
@@ -249,18 +239,25 @@ namespace OF.Core.Core.LimeLM
 
         private void InternalActivate()
         {
-            string path = Path.Combine(Path.GetDirectoryName(typeof(TurboLimeActivate).Assembly.Location), ActivationAppName);
-            OFLogger.Instance.LogDebug("Path Activate: {0}", path);
-            Process activationProcess = new Process()
+            try
             {
-                StartInfo =
+                string path = Path.Combine(Path.GetDirectoryName(typeof(TurboLimeActivate).Assembly.Location), ActivationAppName);
+                OFLogger.Instance.LogDebug("Path Activate: {0}", path);
+                Process activationProcess = new Process()
+                {
+                    StartInfo =
                 {
                     FileName = path
                 },
-                EnableRaisingEvents = true
-            };
-            activationProcess.Exited += ActivationProcessOnExited;
-            activationProcess.Start();
+                    EnableRaisingEvents = true
+                };
+                activationProcess.Exited += ActivationProcessOnExited;
+                activationProcess.Start();
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.ToString());
+            }
         }
 
         private void ActivationProcessOnExited(object sender, EventArgs eventArgs)
