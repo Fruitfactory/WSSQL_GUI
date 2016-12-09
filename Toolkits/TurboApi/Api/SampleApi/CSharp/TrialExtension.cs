@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Windows.Forms;
+using wyDay.TurboActivate;
 
 public partial class TrialExtension : Form
 {
-    public TrialExtension()
+    private readonly TurboActivate ta;
+    private readonly TA_Flags trialFlags;
+
+    public TrialExtension(TurboActivate ta, TA_Flags useTrialFlags)
     {
+        this.ta = ta;
+        this.trialFlags = useTrialFlags;
+
         InitializeComponent();
     }
 
@@ -18,7 +25,7 @@ public partial class TrialExtension : Form
         try
         {
             // try to extend the trial and close the form
-            TurboActivate.ExtendTrial(txtExtension.Text);
+            ta.ExtendTrial(txtExtension.Text, trialFlags);
             DialogResult = DialogResult.OK;
             Close();
         }

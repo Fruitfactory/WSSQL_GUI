@@ -2,31 +2,97 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace OF.Core.Core.LimeLM
+namespace wyDay.TurboActivate
 {
-    public static class TurboActivate
+    [Flags]
+    public enum TA_Flags : uint
     {
-        [Flags]
-        public enum TA_Flags : uint
-        {
-            TA_SYSTEM = 1,
-            TA_USER = 2,
+        TA_SYSTEM = 1,
+        TA_USER = 2,
 
-            /// <summary>
-            /// Use the TA_DISALLOW_VM in UseTrial() to disallow trials in virtual machines.
-            /// If you use this flag in UseTrial() and the customer's machine is a Virtual
-            /// Machine, then UseTrial() will throw VirtualMachineException.
-            /// </summary>
-            TA_DISALLOW_VM = 4,
+        /// <summary>
+        /// Use the TA_DISALLOW_VM in UseTrial() to disallow trials in virtual machines. 
+        /// If you use this flag in UseTrial() and the customer's machine is a Virtual
+        /// Machine, then UseTrial() will throw VirtualMachineException.
+        /// </summary>
+        TA_DISALLOW_VM = 4,
+
+        /// <summary>
+        /// Use this flag in TA_UseTrial() to tell TurboActivate to use client-side
+        /// unverified trials. For more information about verified vs. unverified trials,
+        /// see here: https://wyday.com/limelm/help/trials/
+        /// Note: unverified trials are unsecured and can be reset by malicious customers.
+        /// </summary>
+        TA_UNVERIFIED_TRIAL = 16,
+
+        /// <summary>
+        /// Use the TA_VERIFIED_TRIAL flag to use verified trials instead
+        /// of unverified trials. This means the trial is locked to a particular computer.
+        /// The customer can't reset the trial.
+        /// </summary>
+        TA_VERIFIED_TRIAL = 32
+    }
+
+    [Flags]
+    public enum TA_DateCheckFlags : uint
+    {
+        TA_HAS_NOT_EXPIRED = 1,
+    }
+
+
+    public class TurboActivate
+    {
+        readonly string versGUID;
+        readonly UInt32 handle = 0;
+
+        /// <summary>The GUID for this product version. This is found on the LimeLM site on the version overview.</summary>
+        public string VersionGUID
+        {
+            get { return versGUID; }
         }
 
-        [Flags]
-        public enum TA_DateCheckFlags : uint
+        /// <summary>Creates a TurboActivate object instance.</summary>
+        /// <param name="vGUID">The GUID for this product version. This is found on the LimeLM site on the version overview.</param>
+        /// <param name="pdetsFilename">The absolute location to the TurboActivate.dat file on the disk.</param>
+        public TurboActivate(string vGUID, string pdetsFilename = null)
         {
-            TA_HAS_NOT_EXPIRED = 1,
+            if (pdetsFilename != null)
+            {
+#if TF_BOTH_DLL
+                switch (IntPtr.Size == 8 ? Native64.TA_PDetsFromPath(pdetsFilename) : Native.TA_PDetsFromPath(pdetsFilename))
+#else
+                switch (Native.TA_PDetsFromPath(pdetsFilename))
+#endif
+                {
+                    case TA_OK: // successful
+                        break;
+                    case TA_E_PDETS:
+                        throw new ProductDetailsException();
+                    case TA_FAIL:
+                        // the TurboActivate.dat already loaded.
+                        break;
+                    default:
+                        throw new TurboActivateException("The TurboActivate.dat file failed to load.");
+                }
+            }
+
+            versGUID = vGUID;
+
+#if TA_BOTH_DLL
+            handle = IntPtr.Size == 8 ? Native64.TA_GetHandle(versGUID) : Native.TA_GetHandle(versGUID);
+#else
+            handle = Native.TA_GetHandle(versGUID);
+#endif
+
+            // if the handle is still unset then immediately throw an exception
+            // telling the user that they need to actually load the correct
+            // TurboActivate.dat and/or use the correct GUID for the TurboActivate.dat
+            if (handle == 0)
+                throw new ProductDetailsException();
         }
 
-        private static class Native
+
+        static class Native
         {
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
             public struct ACTIVATE_OPTIONS
@@ -54,276 +120,262 @@ namespace OF.Core.Core.LimeLM
             }
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int Activate();
+            public static extern UInt32 TA_GetHandle(string versionGUID);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int ActivateEx(ref ACTIVATE_OPTIONS options);
+            public static extern int TA_Activate(UInt32 handle, ref ACTIVATE_OPTIONS options);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int ActivationRequestToFile(string filename);
+            public static extern int TA_Activate(UInt32 handle, IntPtr options);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int ActivationRequestToFileEx(string filename, ref ACTIVATE_OPTIONS options);
+            public static extern int TA_ActivationRequestToFile(UInt32 handle, string filename, ref ACTIVATE_OPTIONS options);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int ActivateFromFile(string filename);
+            public static extern int TA_ActivationRequestToFile(UInt32 handle, string filename, IntPtr options);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int BlackListKeys([In] string[] keys, uint numKeys);
+            public static extern int TA_ActivateFromFile(UInt32 handle, string filename);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int CheckAndSavePKey(string productKey, TA_Flags flags);
+            public static extern int TA_CheckAndSavePKey(UInt32 handle, string productKey, TA_Flags flags);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int Deactivate(byte erasePkey);
+            public static extern int TA_Deactivate(UInt32 handle, byte erasePkey);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int DeactivationRequestToFile(string filename, byte erasePkey);
+            public static extern int TA_DeactivationRequestToFile(UInt32 handle, string filename, byte erasePkey);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int GetExtraData(StringBuilder lpValueStr, int cchValue);
+            public static extern int TA_GetExtraData(UInt32 handle, StringBuilder lpValueStr, int cchValue);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int GetFeatureValue(string featureName, StringBuilder lpValueStr, int cchValue);
+            public static extern int TA_GetFeatureValue(UInt32 handle, string featureName, StringBuilder lpValueStr, int cchValue);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int GetPKey(StringBuilder lpPKeyStr, int cchPKey);
+            public static extern int TA_GetPKey(UInt32 handle, StringBuilder lpPKeyStr, int cchPKey);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int IsActivated(string versionGUID);
+            public static extern int TA_IsActivated(UInt32 handle);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int IsDateValid(string date_time, TA_DateCheckFlags flags);
+            public static extern int TA_IsDateValid(UInt32 handle, string date_time, TA_DateCheckFlags flags);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int IsGenuine(string versionGUID);
+            public static extern int TA_IsGenuine(UInt32 handle);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int IsGenuineEx(string versionGUID, ref GENUINE_OPTIONS options);
+            public static extern int TA_IsGenuineEx(UInt32 handle, ref GENUINE_OPTIONS options);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int IsProductKeyValid(string versionGUID);
+            public static extern int TA_GenuineDays(UInt32 handle, uint nDaysBetweenChecks, uint nGraceDaysOnInetErr, ref uint DaysRemaining, ref char inGracePeriod);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int SetCustomProxy(string proxy);
+            public static extern int TA_IsProductKeyValid(UInt32 handle);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int TrialDaysRemaining(string versionGUID, ref uint DaysRemaining);
+            public static extern int TA_SetCustomProxy(string proxy);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int UseTrial(TA_Flags flags);
+            public static extern int TA_TrialDaysRemaining(UInt32 handle, TA_Flags useTrialFlags, ref uint DaysRemaining);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int ExtendTrial(string trialExtension);
+            public static extern int TA_UseTrial(UInt32 handle, TA_Flags flags, string extra_data);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int PDetsFromPath(string filename);
+            public static extern int TA_UseTrialVerifiedRequest(UInt32 handle, string filename, string extra_data);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int SetCurrentProduct(string versionGUID);
+            public static extern int TA_UseTrialVerifiedFromFile(UInt32 handle, string filename, TA_Flags flags);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int GetCurrentProduct(StringBuilder lpValueStr, int cchValue);
+            public static extern int TA_ExtendTrial(UInt32 handle, TA_Flags flags, string trialExtension);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int SetCustomActDataPath(string directory);
-
-            /* Obsolete functions: These will be removed in an upcoming version. */
+            public static extern int TA_PDetsFromPath(string filename);
 
             [DllImport("TurboActivate.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int GracePeriodDaysRemaining(string versionGUID, ref uint DaysRemaining);
+            public static extern int TA_SetCustomActDataPath(UInt32 handle, string directory);
         }
 
         /*
-     To use "AnyCPU" Target CPU type, first copy the x64 TurboActivate.dll and rename to TurboActivate64.dll
-     Then in your project properties go to the Build panel, and add the TA_BOTH_DLL conditional compilation symbol.
-    */
+         To use "AnyCPU" Target CPU type, first copy the x64 TurboActivate.dll and rename to TurboActivate64.dll
+         Then in your project properties go to the Build panel, and add the TA_BOTH_DLL conditional compilation symbol.
+        */
 
 #if TA_BOTH_DLL
-
-        private static class Native64
+        static class Native64
         {
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int Activate();
+            public static extern UInt32 TA_GetHandle(string versionGUID);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int ActivateEx(ref Native.ACTIVATE_OPTIONS options);
+            public static extern int TA_Activate(UInt32 handle, ref Native.ACTIVATE_OPTIONS options);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int ActivationRequestToFile(string filename);
+            public static extern int TA_Activate(UInt32 handle, IntPtr options);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int ActivationRequestToFileEx(string filename, ref Native.ACTIVATE_OPTIONS options);
+            public static extern int TA_ActivationRequestToFile(UInt32 handle, string filename, ref Native.ACTIVATE_OPTIONS options);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int ActivateFromFile(string filename);
+            public static extern int TA_ActivationRequestToFile(UInt32 handle, string filename, IntPtr options);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int BlackListKeys([In] string[] keys, uint numKeys);
+            public static extern int TA_ActivateFromFile(UInt32 handle, string filename);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int CheckAndSavePKey(string productKey, TA_Flags flags);
+            public static extern int TA_CheckAndSavePKey(UInt32 handle, string productKey, TA_Flags flags);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int Deactivate(byte erasePkey);
+            public static extern int TA_Deactivate(UInt32 handle, byte erasePkey);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int DeactivationRequestToFile(string filename, byte erasePkey);
+            public static extern int TA_DeactivationRequestToFile(UInt32 handle, string filename, byte erasePkey);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int GetExtraData(StringBuilder lpValueStr, int cchValue);
+            public static extern int TA_GetExtraData(UInt32 handle, StringBuilder lpValueStr, int cchValue);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int GetFeatureValue(string featureName, StringBuilder lpValueStr, int cchValue);
+            public static extern int TA_GetFeatureValue(UInt32 handle, string featureName, StringBuilder lpValueStr, int cchValue);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int GetPKey(StringBuilder lpPKeyStr, int cchPKey);
+            public static extern int TA_GetPKey(UInt32 handle, StringBuilder lpPKeyStr, int cchPKey);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int IsActivated(string versionGUID);
+            public static extern int TA_IsActivated(UInt32 handle);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int IsDateValid(string date_time, TA_DateCheckFlags flags);
+            public static extern int TA_IsDateValid(UInt32 handle, string date_time, TA_DateCheckFlags flags);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int IsGenuine(string versionGUID);
+            public static extern int TA_IsGenuine(UInt32 handle);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int IsGenuineEx(string versionGUID, ref Native.GENUINE_OPTIONS options);
+            public static extern int TA_IsGenuineEx(UInt32 handle, ref Native.GENUINE_OPTIONS options);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int IsProductKeyValid(string versionGUID);
+            public static extern int TA_GenuineDays(UInt32 handle, uint nDaysBetweenChecks, uint nGraceDaysOnInetErr, ref uint DaysRemaining, ref char inGracePeriod);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int SetCustomProxy(string proxy);
+            public static extern int TA_IsProductKeyValid(UInt32 handle);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int TrialDaysRemaining(string versionGUID, ref uint DaysRemaining);
+            public static extern int TA_SetCustomProxy(string proxy);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int UseTrial(TA_Flags flags);
+            public static extern int TA_TrialDaysRemaining(UInt32 handle, TA_Flags useTrialFlags, ref uint DaysRemaining);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int ExtendTrial(string trialExtension);
+            public static extern int TA_UseTrial(UInt32 handle, TA_Flags flags, string extra_data);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int PDetsFromPath(string filename);
+            public static extern int TA_UseTrialVerifiedRequest(UInt32 handle, string filename, string extra_data);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int SetCurrentProduct(string versionGUID);
+            public static extern int TA_UseTrialVerifiedFromFile(UInt32 handle, string filename, TA_Flags flags);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int GetCurrentProduct(StringBuilder lpValueStr, int cchValue);
+            public static extern int TA_ExtendTrial(UInt32 handle, TA_Flags flags, string trialExtension);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int SetCustomActDataPath(string directory);
-
-            /* Obsolete functions: These will be removed in an upcoming version. */
+            public static extern int TA_PDetsFromPath(string filename);
 
             [DllImport("TurboActivate64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int GracePeriodDaysRemaining(string versionGUID, ref uint DaysRemaining);
+            public static extern int TA_SetCustomActDataPath(UInt32 handle, string directory);
         }
-
 #endif
 
-        /// <summary>The GUID for this product version. This is found on the LimeLM site on the version overview.</summary>
-        public static string VersionGUID { get; set; }
+        const int TA_OK = 0x00;
+        const int TA_FAIL = 0x01;
+        const int TA_E_PKEY = 0x02;
+        const int TA_E_ACTIVATE = 0x03;
+        const int TA_E_INET = 0x04;
+        const int TA_E_INUSE = 0x05;
+        const int TA_E_REVOKED = 0x06;
+        const int TA_E_PDETS = 0x08;
+        const int TA_E_TRIAL = 0x09;
+        const int TA_E_COM = 0x0B;
+        const int TA_E_TRIAL_EUSED = 0x0C;
+        const int TA_E_TRIAL_EEXP = 0x0D;
+        const int TA_E_EXPIRED = 0x0D;
+        const int TA_E_INSUFFICIENT_BUFFER = 0x0E;
+        const int TA_E_PERMISSION = 0x0F;
+        const int TA_E_INVALID_FLAGS = 0x10;
+        const int TA_E_IN_VM = 0x11;
+        const int TA_E_EDATA_LONG = 0x12;
+        const int TA_E_INVALID_ARGS = 0x13;
+        const int TA_E_KEY_FOR_TURBOFLOAT = 0x14;
+        const int TA_E_INET_DELAYED = 0x15;
+        const int TA_E_FEATURES_CHANGED = 0x16;
+        const int TA_E_NO_MORE_DEACTIVATIONS = 0x18;
+        const int TA_E_ACCOUNT_CANCELED = 0x19;
+        const int TA_E_ALREADY_ACTIVATED = 0x1A;
+        const int TA_E_INVALID_HANDLE = 0x1B;
+        const int TA_E_ENABLE_NETWORK_ADAPTERS = 0x1C;
+        const int TA_E_ALREADY_VERIFIED_TRIAL = 0x1D;
+        const int TA_E_TRIAL_EXPIRED = 0x1E;
+        const int TA_E_MUST_SPECIFY_TRIAL_TYPE = 0x1F;
+        const int TA_E_MUST_USE_TRIAL = 0x20;
+        const int TA_E_NO_MORE_TRIALS_ALLOWED = 0x21;
 
-        /// <summary>Activates the product on this computer. You must call <see cref="CheckAndSavePKey(string)"/> with a valid product key or have used the TurboActivate wizard sometime before calling this function.</summary>
-        /// <exception cref="InvalidProductKeyException">The product key is invalid or there's no product key.</exception>
-        /// <exception cref="InternetException">Connection to the server failed.</exception>
-        /// <exception cref="PkeyMaxUsedException">The product key has already been activated with the maximum number of computers.</exception>
-        /// <exception cref="PkeyRevokedException">The product key has been revoked.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="COMException">CoInitializeEx failed.</exception>
-        /// <exception cref="TurboActivateException">Failed to activate.</exception>
-        /// <exception cref="DateTimeException">Failed because your system date and time settings are incorrect. Fix your date and time settings, restart your computer, and try to activate again.</exception>
-        /// <exception cref="VirtualMachineException">The function failed because this instance of your program if running inside a virtual machine / hypervisor and you've prevented the function from running inside a VM.</exception>
-        /// <exception cref="TurboFloatKeyException">The product key used is for TurboFloat, not TurboActivate.</exception>
-        public static void Activate()
-        {
-#if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.Activate() : Native.Activate())
-#else
-            switch (Native.Activate())
-#endif
-            {
-                case 2: // TA_E_PKEY
-                    throw new InvalidProductKeyException();
-                case 4: // TA_E_INET
-                    throw new InternetException();
-                case 5: // TA_E_INUSE
-                    throw new PkeyMaxUsedException();
-                case 6: // TA_E_REVOKED
-                    throw new PkeyRevokedException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 11: // TA_E_COM
-                    throw new COMException();
-                case 13: // TA_E_EXPIRED
-                    throw new DateTimeException(false);
-                case 17: // TA_E_IN_VM
-                    throw new VirtualMachineException();
-                case 20: // TA_E_KEY_FOR_TURBOFLOAT
-                    throw new TurboFloatKeyException();
-                case 0: // successful
-                    return;
-
-                default:
-                    throw new TurboActivateException("Failed to activate.");
-            }
-        }
 
         /// <summary>Activates the product on this computer. You must call <see cref="CheckAndSavePKey(string)"/> with a valid product key or have used the TurboActivate wizard sometime before calling this function.</summary>
         /// <param name="extraData">Extra data to pass to the LimeLM servers that will be visible for you to see and use. Maximum size is 255 UTF-8 characters.</param>
-        /// <exception cref="InvalidProductKeyException">The product key is invalid or there's no product key.</exception>
-        /// <exception cref="InternetException">Connection to the server failed.</exception>
-        /// <exception cref="PkeyMaxUsedException">The product key has already been activated with the maximum number of computers.</exception>
-        /// <exception cref="PkeyRevokedException">The product key has been revoked.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="COMException">CoInitializeEx failed.</exception>
-        /// <exception cref="TurboActivateException">Failed to activate.</exception>
-        /// <exception cref="DateTimeException">Failed because your system date and time settings are incorrect. Fix your date and time settings, restart your computer, and try to activate again.</exception>
-        /// <exception cref="VirtualMachineException">The function failed because this instance of your program if running inside a virtual machine / hypervisor and you've prevented the function from running inside a VM.</exception>
-        /// <exception cref="ExtraDataTooLongException">The "extra data" was too long. You're limited to 255 UTF-8 characters. Or, on Windows, a Unicode string that will convert into 255 UTF-8 characters or less.</exception>
-        /// <exception cref="InvalidArgsException">The arguments passed to the function are invalid. Double check your logic.</exception>
-        /// <exception cref="TurboFloatKeyException">The product key used is for TurboFloat, not TurboActivate.</exception>
-        public static void Activate(string extraData)
+        public void Activate(string extraData = null)
         {
-            Native.ACTIVATE_OPTIONS opts = new Native.ACTIVATE_OPTIONS { sExtraData = extraData };
-            opts.nLength = (uint)Marshal.SizeOf(opts);
+            int ret;
+
+            if (extraData != null)
+            {
+                Native.ACTIVATE_OPTIONS opts = new Native.ACTIVATE_OPTIONS {sExtraData = extraData};
+                opts.nLength = (uint)Marshal.SizeOf(opts);
 
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.ActivateEx(ref opts) : Native.ActivateEx(ref opts))
+                ret = IntPtr.Size == 8 ? Native64.TA_Activate(handle, ref opts) : Native.TA_Activate(handle, ref opts);
 #else
-            switch (Native.ActivateEx(ref opts))
+                ret = Native.TA_Activate(handle, ref opts);
 #endif
+            }
+            else
             {
-                case 2: // TA_E_PKEY
-                    throw new InvalidProductKeyException();
-                case 4: // TA_E_INET
-                    throw new InternetException();
-                case 5: // TA_E_INUSE
-                    throw new PkeyMaxUsedException();
-                case 6: // TA_E_REVOKED
-                    throw new PkeyRevokedException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 11: // TA_E_COM
-                    throw new COMException();
-                case 13: // TA_E_EXPIRED
-                    throw new DateTimeException(false);
-                case 17: // TA_E_IN_VM
-                    throw new VirtualMachineException();
-                case 18: // TA_E_EDATA_LONG
-                    throw new ExtraDataTooLongException();
-                case 19: // TA_E_INVALID_ARGS
-                    throw new InvalidArgsException();
-                case 20: // TA_E_KEY_FOR_TURBOFLOAT
-                    throw new TurboFloatKeyException();
-                case 0: // successful
-                    return;
+#if TA_BOTH_DLL
+                ret = IntPtr.Size == 8 ? Native64.TA_Activate(handle, IntPtr.Zero) : Native.TA_Activate(handle, IntPtr.Zero);
+#else
+                ret = Native.TA_Activate(handle, IntPtr.Zero);
+#endif
+            }
 
+            switch (ret)
+            {
+                case TA_E_PKEY:
+                    throw new InvalidProductKeyException();
+                case TA_E_INET:
+                    throw new InternetException();
+                case TA_E_INUSE:
+                    throw new PkeyMaxUsedException();
+                case TA_E_REVOKED:
+                    throw new PkeyRevokedException();
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_E_COM:
+                    throw new COMException();
+                case TA_E_ENABLE_NETWORK_ADAPTERS:
+                    throw new EnableNetworkAdaptersException();
+                case TA_E_EXPIRED:
+                    throw new DateTimeException(false);
+                case TA_E_IN_VM:
+                    throw new VirtualMachineException();
+                case TA_E_EDATA_LONG:
+                    throw new ExtraDataTooLongException();
+                case TA_E_INVALID_ARGS:
+                    throw new InvalidArgsException();
+                case TA_E_KEY_FOR_TURBOFLOAT:
+                    throw new TurboFloatKeyException();
+                case TA_E_ACCOUNT_CANCELED:
+                    throw new AccountCanceledException();
+                case TA_OK: // successful
+                    return;
                 default:
                     throw new TurboActivateException("Failed to activate.");
             }
@@ -331,65 +383,47 @@ namespace OF.Core.Core.LimeLM
 
         /// <summary>Get the "activation request" file for offline activation. You must call <see cref="CheckAndSavePKey(string)"/> with a valid product key or have used the TurboActivate wizard sometime before calling this function.</summary>
         /// <param name="filename">The location where you want to save the activation request file.</param>
-        /// <exception cref="InvalidProductKeyException">The product key is invalid or there's no product key.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="COMException">CoInitializeEx failed.</exception>
-        /// <exception cref="TurboActivateException">Failed to activate.</exception>
-        public static void ActivationRequestToFile(string filename)
-        {
-#if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.ActivationRequestToFile(filename) : Native.ActivationRequestToFile(filename))
-#else
-            switch (Native.ActivationRequestToFile(filename))
-#endif
-            {
-                case 2: // TA_E_PKEY
-                    throw new InvalidProductKeyException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 11: // TA_E_COM
-                    throw new COMException();
-                case 0: // successful
-                    return;
-
-                default:
-                    throw new TurboActivateException("Failed to save the activation request file.");
-            }
-        }
-
-        /// <summary>Get the "activation request" file for offline activation. You must call <see cref="CheckAndSavePKey(string)"/> with a valid product key or have used the TurboActivate wizard sometime before calling this function.</summary>
-        /// <param name="filename">The location where you want to save the activation request file.</param>
         /// <param name="extraData">Extra data to pass to the LimeLM servers that will be visible for you to see and use. Maximum size is 255 UTF-8 characters.</param>
-        /// <exception cref="InvalidProductKeyException">The product key is invalid or there's no product key.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="COMException">CoInitializeEx failed.</exception>
-        /// <exception cref="ExtraDataTooLongException">The "extra data" was too long. You're limited to 255 UTF-8 characters. Or, on Windows, a Unicode string that will convert into 255 UTF-8 characters or less.</exception>
-        /// <exception cref="InvalidArgsException">The arguments passed to the function are invalid. Double check your logic.</exception>
-        /// <exception cref="TurboActivateException">Failed to activate.</exception>
-        public static void ActivationRequestToFile(string filename, string extraData)
+        public void ActivationRequestToFile(string filename, string extraData)
         {
-            Native.ACTIVATE_OPTIONS opts = new Native.ACTIVATE_OPTIONS { sExtraData = extraData };
-            opts.nLength = (uint)Marshal.SizeOf(opts);
+            int ret;
+
+            if (extraData != null)
+            {
+                Native.ACTIVATE_OPTIONS opts = new Native.ACTIVATE_OPTIONS { sExtraData = extraData };
+                opts.nLength = (uint)Marshal.SizeOf(opts);
 
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.ActivationRequestToFileEx(filename, ref opts) : Native.ActivationRequestToFileEx(filename, ref opts))
+                ret = IntPtr.Size == 8 ? Native64.TA_ActivationRequestToFile(handle, filename, ref opts) : Native.TA_ActivationRequestToFile(handle, filename, ref opts);
 #else
-            switch (Native.ActivationRequestToFileEx(filename, ref opts))
+                ret = Native.TA_ActivationRequestToFile(handle, filename, ref opts);
 #endif
+            }
+            else
             {
-                case 2: // TA_E_PKEY
-                    throw new InvalidProductKeyException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 11: // TA_E_COM
-                    throw new COMException();
-                case 18: // TA_E_EDATA_LONG
-                    throw new ExtraDataTooLongException();
-                case 19: // TA_E_INVALID_ARGS
-                    throw new InvalidArgsException();
-                case 0: // successful
-                    return;
+#if TA_BOTH_DLL
+                ret = IntPtr.Size == 8 ? Native64.TA_ActivationRequestToFile(handle, filename, IntPtr.Zero) : Native.TA_ActivationRequestToFile(handle, filename, IntPtr.Zero);
+#else
+                ret = Native.TA_ActivationRequestToFile(handle, filename, IntPtr.Zero);
+#endif
+            }
 
+            switch (ret)
+            {
+                case TA_E_PKEY:
+                    throw new InvalidProductKeyException();
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_E_COM:
+                    throw new COMException();
+                case TA_E_ENABLE_NETWORK_ADAPTERS:
+                    throw new EnableNetworkAdaptersException();
+                case TA_E_EDATA_LONG:
+                    throw new ExtraDataTooLongException();
+                case TA_E_INVALID_ARGS:
+                    throw new InvalidArgsException();
+                case TA_OK: // successful
+                    return;
                 default:
                     throw new TurboActivateException("Failed to save the activation request file.");
             }
@@ -397,75 +431,57 @@ namespace OF.Core.Core.LimeLM
 
         /// <summary>Activate from the "activation response" file for offline activation.</summary>
         /// <param name="filename">The location of the activation response file.</param>
-        /// <exception cref="InvalidProductKeyException">The product key is invalid or there's no product key.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="COMException">CoInitializeEx failed.</exception>
-        /// <exception cref="TurboActivateException">Failed to activate.</exception>
-        /// <exception cref="DateTimeException">Either the activation response file has expired or your date and time settings are incorrect. Fix your date and time settings, restart your computer, and try to activate again.</exception>
-        /// <exception cref="VirtualMachineException">The function failed because this instance of your program if running inside a virtual machine / hypervisor and you've prevented the function from running inside a VM.</exception>
-        public static void ActivateFromFile(string filename)
+        public void ActivateFromFile(string filename)
         {
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.ActivateFromFile(filename) : Native.ActivateFromFile(filename))
+            switch (IntPtr.Size == 8 ? Native64.TA_ActivateFromFile(handle, filename) : Native.TA_ActivateFromFile(handle, filename))
 #else
-            switch (Native.ActivateFromFile(filename))
+            switch (Native.TA_ActivateFromFile(handle, filename))
 #endif
             {
-                case 2: // TA_E_PKEY
+                case TA_E_PKEY:
                     throw new InvalidProductKeyException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 11: // TA_E_COM
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_E_INVALID_ARGS:
+                    throw new InvalidArgsException();
+                case TA_E_COM:
                     throw new COMException();
-                case 13: // TA_E_EXPIRED
+                case TA_E_ENABLE_NETWORK_ADAPTERS:
+                    throw new EnableNetworkAdaptersException();
+                case TA_E_EXPIRED:
                     throw new DateTimeException(true);
-                case 17: // TA_E_IN_VM
+                case TA_E_IN_VM:
                     throw new VirtualMachineException();
-                case 0: // successful
+                case TA_OK: // successful
                     return;
-
                 default:
                     throw new TurboActivateException("Failed to activate.");
             }
-        }
-
-        /// <summary>Blacklists keys so they are no longer valid. Use "BlackListKeys" only if you're using the "Serial-only plan" in LimeLM. Otherwise revoke keys.</summary>
-        /// <param name="keys">A string array of the product keys to blacklist.</param>
-        /// <exception cref="TurboActivateException">Failed to add keys to the blacklist. Make sure the keys string array is not empty or null.</exception>
-        public static void BlackListKeys(string[] keys)
-        {
-#if TA_BOTH_DLL
-            if ((IntPtr.Size == 8 ? Native64.BlackListKeys(keys, (uint)keys.Length) : Native.BlackListKeys(keys, (uint)keys.Length)) != 0)
-#else
-            if (Native.BlackListKeys(keys, (uint) keys.Length) != 0)
-#endif
-                throw new TurboActivateException(
-                    "Failed to add keys to the blacklist. Make sure the keys string array is not empty or null.");
         }
 
         /// <summary>Checks and saves the product key.</summary>
         /// <param name="productKey">The product key you want to save.</param>
         /// <param name="flags">Whether to create the activation either user-wide or system-wide. Valid flags are <see cref="TA_Flags.TA_SYSTEM"/> and <see cref="TA_Flags.TA_USER"/>.</param>
         /// <returns>True if the product key is valid, false if it's not</returns>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="PermissionException">Insufficient system permission. Either start your process as an admin / elevated user or call the function again with the TA_USER flag.</exception>
-        /// <exception cref="InvalidFlagsException">The flags you passed to the function were invalid (or missing). Flags like "TA_SYSTEM" and "TA_USER" are mutually exclusive -- you can only use one or the other.</exception>
-        public static bool CheckAndSavePKey(string productKey, TA_Flags flags = TA_Flags.TA_USER)
+        public bool CheckAndSavePKey(string productKey, TA_Flags flags = TA_Flags.TA_SYSTEM)
         {
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.CheckAndSavePKey(productKey, flags) : Native.CheckAndSavePKey(productKey, flags))
+            switch (IntPtr.Size == 8 ? Native64.TA_CheckAndSavePKey(handle, productKey, flags) : Native.TA_CheckAndSavePKey(handle, productKey, flags))
 #else
-            switch (Native.CheckAndSavePKey(productKey, flags))
+            switch (Native.TA_CheckAndSavePKey(handle, productKey, flags))
 #endif
             {
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 0: // successful
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_OK: // successful
                     return true;
-                case 15: // TA_E_PERMISSION
+                case TA_E_PERMISSION:
                     throw new PermissionException();
-                case 16: // TA_E_INVALID_FLAGS
+                case TA_E_INVALID_FLAGS:
                     throw new InvalidFlagsException();
+                case TA_E_ALREADY_ACTIVATED:
+                    throw new AlreadyActivatedException();
                 default:
                     return false;
             }
@@ -473,33 +489,32 @@ namespace OF.Core.Core.LimeLM
 
         /// <summary>Deactivates the product on this computer.</summary>
         /// <param name="eraseProductKey">Erase the product key so the user will have to enter a new product key if they wish to reactivate.</param>
-        /// <exception cref="InvalidProductKeyException">The product key is invalid or there's no product key.</exception>
-        /// <exception cref="NotActivatedException">The product needs to be activated.</exception>
-        /// <exception cref="InternetException">Connection to the server failed.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="COMException">CoInitializeEx failed.</exception>
-        /// <exception cref="TurboActivateException">Failed to deactivate.</exception>
-        public static void Deactivate(bool eraseProductKey = false)
+        public void Deactivate(bool eraseProductKey = false)
         {
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.Deactivate((byte)(eraseProductKey ? 1 : 0)) : Native.Deactivate((byte)(eraseProductKey ? 1 : 0)))
+            switch (IntPtr.Size == 8 ? Native64.TA_Deactivate(handle, (byte)(eraseProductKey ? 1 : 0)) : Native.TA_Deactivate(handle, (byte)(eraseProductKey ? 1 : 0)))
 #else
-            switch (Native.Deactivate((byte) (eraseProductKey ? 1 : 0)))
-#endif
+            switch (Native.TA_Deactivate(handle, (byte)(eraseProductKey ? 1 : 0)))
+    #endif
             {
-                case 2: // TA_E_PKEY
+                case TA_E_PKEY:
                     throw new InvalidProductKeyException();
-                case 3: // TA_E_ACTIVATE
+                case TA_E_ACTIVATE:
                     throw new NotActivatedException();
-                case 4: // TA_E_INET
+                case TA_E_INET:
                     throw new InternetException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 11: // TA_E_COM
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_E_COM:
                     throw new COMException();
-                case 0: // successful
+                case TA_E_ENABLE_NETWORK_ADAPTERS:
+                    throw new EnableNetworkAdaptersException();
+                case TA_E_NO_MORE_DEACTIVATIONS:
+                    throw new NoMoreDeactivationsException();
+                case TA_E_INVALID_ARGS:
+                    throw new InvalidArgsException();
+                case TA_OK: // successful
                     return;
-
                 default:
                     throw new TurboActivateException("Failed to deactivate.");
             }
@@ -508,30 +523,28 @@ namespace OF.Core.Core.LimeLM
         /// <summary>Get the "deactivation request" file for offline deactivation.</summary>
         /// <param name="filename">The location where you want to save the deactivation request file.</param>
         /// <param name="eraseProductKey">Erase the product key so the user will have to enter a new product key if they wish to reactivate.</param>
-        /// <exception cref="InvalidProductKeyException">The product key is invalid or there's no product key.</exception>
-        /// <exception cref="NotActivatedException">The product needs to be activated.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="COMException">CoInitializeEx failed.</exception>
-        /// <exception cref="TurboActivateException">Failed to activate.</exception>
-        public static void DeactivationRequestToFile(string filename, bool eraseProductKey)
+        public void DeactivationRequestToFile(string filename, bool eraseProductKey = false)
         {
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.DeactivationRequestToFile(filename, (byte)(eraseProductKey ? 1 : 0)) : Native.DeactivationRequestToFile(filename, (byte)(eraseProductKey ? 1 : 0)))
+            switch (IntPtr.Size == 8 ? Native64.TA_DeactivationRequestToFile(handle, filename, (byte)(eraseProductKey ? 1 : 0)) : Native.TA_DeactivationRequestToFile(handle, filename, (byte)(eraseProductKey ? 1 : 0)))
 #else
-            switch (Native.DeactivationRequestToFile(filename, (byte) (eraseProductKey ? 1 : 0)))
+            switch (Native.TA_DeactivationRequestToFile(handle, filename, (byte)(eraseProductKey ? 1 : 0)))
 #endif
             {
-                case 2: // TA_E_PKEY
+                case TA_E_PKEY:
                     throw new InvalidProductKeyException();
-                case 3: // TA_E_ACTIVATE
+                case TA_E_ACTIVATE:
                     throw new NotActivatedException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 11: // TA_E_COM
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_E_COM:
                     throw new COMException();
-                case 0: // successful
+                case TA_E_ENABLE_NETWORK_ADAPTERS:
+                    throw new EnableNetworkAdaptersException();
+                case TA_E_INVALID_ARGS:
+                    throw new InvalidArgsException();
+                case TA_OK: // successful
                     return;
-
                 default:
                     throw new TurboActivateException("Failed to deactivate.");
             }
@@ -539,26 +552,25 @@ namespace OF.Core.Core.LimeLM
 
         /// <summary>Gets the extra data value you passed in when activating.</summary>
         /// <returns>Returns the extra data if it exists, otherwise it returns null.</returns>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        public static string GetExtraData()
+        public string GetExtraData()
         {
 #if TA_BOTH_DLL
-            int length = IntPtr.Size == 8 ? Native64.GetExtraData(null, 0) : Native.GetExtraData(null, 0);
+            int length = IntPtr.Size == 8 ? Native64.TA_GetExtraData(handle, null, 0) : Native.TA_GetExtraData(handle, null, 0);
 #else
-            int length = Native.GetExtraData(null, 0);
+            int length = Native.TA_GetExtraData(handle, null, 0);
 #endif
 
             StringBuilder sb = new StringBuilder(length);
 
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.GetExtraData(sb, length) : Native.GetExtraData(sb, length))
+            switch (IntPtr.Size == 8 ? Native64.TA_GetExtraData(handle, sb, length) : Native.TA_GetExtraData(handle, sb, length))
 #else
-            switch (Native.GetExtraData(sb, length))
+            switch (Native.TA_GetExtraData(handle, sb, length))
 #endif
             {
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 0: // success
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_OK: // success
                     return sb.ToString();
                 default:
                     return null;
@@ -568,9 +580,7 @@ namespace OF.Core.Core.LimeLM
         /// <summary>Gets the value of a feature.</summary>
         /// <param name="featureName">The name of the feature to retrieve the value for.</param>
         /// <returns>Returns the feature value.</returns>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="TurboActivateException">Failed to get feature value. The feature doesn't exist.</exception>
-        public static string GetFeatureValue(string featureName)
+        public string GetFeatureValue(string featureName)
         {
             string value = GetFeatureValue(featureName, null);
 
@@ -584,26 +594,25 @@ namespace OF.Core.Core.LimeLM
         /// <param name="featureName">The name of the feature to retrieve the value for.</param>
         /// <param name="defaultValue">The default value to return if the feature doesn't exist.</param>
         /// <returns>Returns the feature value if it exists, otherwise it returns the default value.</returns>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        public static string GetFeatureValue(string featureName, string defaultValue)
+        public string GetFeatureValue(string featureName, string defaultValue)
         {
 #if TA_BOTH_DLL
-            int length = IntPtr.Size == 8 ? Native64.GetFeatureValue(featureName, null, 0) : Native.GetFeatureValue(featureName, null, 0);
+            int length = IntPtr.Size == 8 ? Native64.TA_GetFeatureValue(handle, featureName, null, 0) : Native.TA_GetFeatureValue(handle, featureName, null, 0);
 #else
-            int length = Native.GetFeatureValue(featureName, null, 0);
+            int length = Native.TA_GetFeatureValue(handle, featureName, null, 0);
 #endif
 
             StringBuilder sb = new StringBuilder(length);
 
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.GetFeatureValue(featureName, sb, length) : Native.GetFeatureValue(featureName, sb, length))
+            switch (IntPtr.Size == 8 ? Native64.TA_GetFeatureValue(handle, featureName, sb, length) : Native.TA_GetFeatureValue(handle, featureName, sb, length))
 #else
-            switch (Native.GetFeatureValue(featureName, sb, length))
+            switch (Native.TA_GetFeatureValue(handle, featureName, sb, length))
 #endif
             {
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 0: // success
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_OK: // success
                     return sb.ToString();
                 default:
                     return defaultValue;
@@ -612,87 +621,48 @@ namespace OF.Core.Core.LimeLM
 
         /// <summary>Gets the stored product key. NOTE: if you want to check if a product key is valid simply call <see cref="IsProductKeyValid()"/>.</summary>
         /// <returns>string Product key.</returns>
-        /// <exception cref="InvalidProductKeyException">The product key is invalid or there's no product key.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="TurboActivateException">Failed to get the product key.</exception>
-        public static string GetPKey()
+        public string GetPKey()
         {
             // this makes the assumption that the PKey is 34+NULL characters long.
             // This may or may not be true in the future.
             StringBuilder sb = new StringBuilder(35);
 
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.GetPKey(sb, 35) : Native.GetPKey(sb, 35))
+            switch (IntPtr.Size == 8 ? Native64.TA_GetPKey(handle, sb, 35) : Native.TA_GetPKey(handle, sb, 35))
 #else
-            switch (Native.GetPKey(sb, 35))
+            switch (Native.TA_GetPKey(handle, sb, 35))
 #endif
             {
-                case 2: // TA_E_PKEY
+                case TA_E_PKEY:
                     throw new InvalidProductKeyException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 0: // success
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_OK: // success
                     return sb.ToString();
                 default:
                     throw new TurboActivateException("Failed to get the product key.");
             }
         }
 
-        /// <summary>Get the number of days left in the activation grace period.</summary>
-        /// <returns>The number of days remaining. 0 days if the grace period has expired. (E.g. 1 day means *at most* 1 day. That is it could be 30 seconds.)</returns>
-        /// <exception cref="GUIDMismatchException">The version GUID doesn't match that of the product details file. Make sure you set the GUID using TurboActivate.VersionGUID.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="TurboActivateException">Failed to get the activation grace period days remaining.</exception>
-        [Obsolete(
-            "This function is obsolete and will be removed in TurboActivate 4.0; use the UseTrial(), TrialDaysRemaining(), and ExtendTrial() functions instead."
-            )]
-        public static int GracePeriodDaysRemaining()
-        {
-            uint daysRemain = 0;
-
-#if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.GracePeriodDaysRemaining(VersionGUID, ref daysRemain) : Native.GracePeriodDaysRemaining(VersionGUID, ref daysRemain))
-#else
-            switch (Native.GracePeriodDaysRemaining(VersionGUID, ref daysRemain))
-#endif
-            {
-                case 7: // TA_E_GUID
-                    throw new GUIDMismatchException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 0: // successful
-                    break;
-
-                default:
-                    throw new TurboActivateException("Failed to get the activation grace period days remaining.");
-            }
-
-            return (int)daysRemain;
-        }
-
         /// <summary>Checks whether the computer has been activated.</summary>
         /// <returns>True if the computer is activated. False otherwise.</returns>
-        /// <exception cref="GUIDMismatchException">The version GUID doesn't match that of the product details file. Make sure you set the GUID using TurboActivate.VersionGUID.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="COMException">CoInitializeEx failed.</exception>
-        /// <exception cref="VirtualMachineException">The function failed because this instance of your program if running inside a virtual machine / hypervisor and you've prevented the function from running inside a VM.</exception>
-        public static bool IsActivated()
+        public bool IsActivated()
         {
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.IsActivated(VersionGUID) : Native.IsActivated(VersionGUID))
+            switch (IntPtr.Size == 8 ? Native64.TA_IsActivated(handle) : Native.TA_IsActivated(handle))
 #else
-            switch (Native.IsActivated(VersionGUID))
+            switch (Native.TA_IsActivated(handle))
 #endif
             {
-                case 7: // TA_E_GUID
-                    throw new GUIDMismatchException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 11: // TA_E_COM
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_E_COM:
                     throw new COMException();
-                case 17: // TA_E_IN_VM
+                case TA_E_ENABLE_NETWORK_ADAPTERS:
+                    throw new EnableNetworkAdaptersException();
+                case TA_E_IN_VM:
                     throw new VirtualMachineException();
-                case 0: // is activated
+                case TA_OK: // is activated
                     return true;
             }
 
@@ -703,21 +673,19 @@ namespace OF.Core.Core.LimeLM
         /// <param name="date_time">The date time string to check.</param>
         /// <param name="flags">The type of date time check. Valid flags are <see cref="TA_DateCheckFlags.TA_HAS_NOT_EXPIRED"/>.</param>
         /// <returns>True if the date is valid, false if it's not</returns>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="InvalidFlagsException">The flags you passed to the function were invalid (or missing). Flags like "TA_SYSTEM" and "TA_USER" are mutually exclusive -- you can only use one or the other.</exception>
-        public static bool IsDateValid(string date_time, TA_DateCheckFlags flags)
+        public bool IsDateValid(string date_time, TA_DateCheckFlags flags)
         {
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.IsDateValid(date_time, flags) : Native.IsDateValid(date_time, flags))
+            switch (IntPtr.Size == 8 ? Native64.TA_IsDateValid(handle, date_time, flags) : Native.TA_IsDateValid(handle, date_time, flags))
 #else
-            switch (Native.IsDateValid(date_time, flags))
+            switch (Native.TA_IsDateValid(handle, date_time, flags))
 #endif
             {
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 0: // successful
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_OK: // successful
                     return true;
-                case 16: // TA_E_INVALID_FLAGS
+                case TA_E_INVALID_FLAGS:
                     throw new InvalidFlagsException();
                 default:
                     return false;
@@ -725,79 +693,30 @@ namespace OF.Core.Core.LimeLM
         }
 
         /// <summary>Checks whether the computer is genuinely activated by verifying with the LimeLM servers.</summary>
-        /// <param name="needsReactivate">Whether this product needs to be reactivated by calling <see cref="Activate()"/></param>
-        /// <returns>True if this product is genuine, false otherwise.</returns>
-        /// <exception cref="NotActivatedException">The product needs to be activated.</exception>
-        /// <exception cref="InternetException">Connection to the server failed.</exception>
-        /// <exception cref="GUIDMismatchException">The version GUID doesn't match that of the product details file. Make sure you set the GUID using TurboActivate.VersionGUID.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="COMException">CoInitializeEx failed.</exception>
-        /// <exception cref="DateTimeException">Failed because your system date and time settings are incorrect. Fix your date and time settings, restart your computer, and try to activate again.</exception>
-        /// <exception cref="VirtualMachineException">The function failed because this instance of your program if running inside a virtual machine / hypervisor and you've prevented the function from running inside a VM.</exception>
-        [Obsolete(
-            "This particular override for the IsGenuine() function is obsolete; use the IsGenuine() with no arguments or IsGenuine(uint dayBetweenChecks, uint graceDaysOnInetErr, bool skipOffline = false, bool offlineShowInetErr = false)."
-            )]
-        public static bool IsGenuine(ref bool needsReactivate)
-        {
-#if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.IsGenuine(VersionGUID) : Native.IsGenuine(VersionGUID))
-#else
-            switch (Native.IsGenuine(VersionGUID))
-#endif
-            {
-                case 3: // TA_E_ACTIVATE
-                    throw new NotActivatedException();
-                case 4: // TA_E_INET
-                    throw new InternetException();
-                case 7: // TA_E_GUID
-                    throw new GUIDMismatchException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 11: // TA_E_COM
-                    throw new COMException();
-                case 13: // TA_E_EXPIRED
-                    throw new DateTimeException(false);
-                case 17: // TA_E_IN_VM
-                    throw new VirtualMachineException();
-                case 22: // TA_E_FEATURES_CHANGED
-                case 0: // is activated
-                    needsReactivate = false;
-                    return true;
-            }
-
-            // not genuine (TA_FAIL, TA_E_REVOKED)
-            return false;
-        }
-
-        /// <summary>Checks whether the computer is genuinely activated by verifying with the LimeLM servers.</summary>
         /// <returns>IsGenuineResult</returns>
-        /// <exception cref="GUIDMismatchException">The version GUID doesn't match that of the product details file. Make sure you set the GUID using TurboActivate.VersionGUID.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="COMException">CoInitializeEx failed.</exception>
-        /// <exception cref="DateTimeException">Failed because your system date and time settings are incorrect. Fix your date and time settings, restart your computer, and try to activate again.</exception>
-        public static IsGenuineResult IsGenuine()
+        public IsGenuineResult IsGenuine()
         {
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.IsGenuine(VersionGUID) : Native.IsGenuine(VersionGUID))
+            switch (IntPtr.Size == 8 ? Native64.TA_IsGenuine(handle) : Native.TA_IsGenuine(handle))
 #else
-            switch (Native.IsGenuine(VersionGUID))
+            switch (Native.TA_IsGenuine(handle))
 #endif
             {
-                case 4: // TA_E_INET
+                case TA_E_INET:
                     return IsGenuineResult.InternetError;
-                case 7: // TA_E_GUID
-                    throw new GUIDMismatchException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 11: // TA_E_COM
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_E_COM:
                     throw new COMException();
-                case 13: // TA_E_EXPIRED
+                case TA_E_ENABLE_NETWORK_ADAPTERS:
+                    throw new EnableNetworkAdaptersException();
+                case TA_E_EXPIRED:
                     throw new DateTimeException(false);
-                case 17: // TA_E_IN_VM
+                case TA_E_IN_VM:
                     return IsGenuineResult.NotGenuineInVM;
-                case 22: // TA_E_FEATURES_CHANGED
+                case TA_E_FEATURES_CHANGED:
                     return IsGenuineResult.GenuineFeaturesChanged;
-                case 0: // is activated
+                case TA_OK: // is activated
                     return IsGenuineResult.Genuine;
             }
 
@@ -808,15 +727,15 @@ namespace OF.Core.Core.LimeLM
         /// <summary>Checks whether the computer is activated, and every "daysBetweenChecks" days it check if the customer is genuinely activated by verifying with the LimeLM servers.</summary>
         /// <param name="daysBetweenChecks">How often to contact the LimeLM servers for validation. 90 days recommended.</param>
         /// <param name="graceDaysOnInetErr">If the call fails because of an internet error, how long, in days, should the grace period last (before returning deactivating and returning TA_FAIL).
-        ///
+        /// 
         /// 14 days is recommended.</param>
-        /// <param name="skipOffline">If the user activated using offline activation
+        /// <param name="skipOffline">If the user activated using offline activation 
         /// (ActivateRequestToFile(), ActivateFromFile() ), then with this
         /// option IsGenuineEx() will still try to validate with the LimeLM
         /// servers, however instead of returning <see cref="IsGenuineResult.InternetError"/> (when within the
         /// grace period) or <see cref="IsGenuineResult.NotGenuine"/> (when past the grace period) it will
         /// instead only return <see cref="IsGenuineResult.Genuine"/> (if IsActivated()).
-        ///
+        /// 
         /// If the user activated using online activation then this option
         /// is ignored.</param>
         /// <param name="offlineShowInetErr">If the user activated using offline activation, and you're
@@ -826,19 +745,9 @@ namespace OF.Core.Core.LimeLM
         /// If the user activated using online activation then this flag
         /// is ignored.</param>
         /// <returns>IsGenuineResult</returns>
-        /// <exception cref="GUIDMismatchException">The version GUID doesn't match that of the product details file. Make sure you set the GUID using TurboActivate.VersionGUID.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="COMException">CoInitializeEx failed.</exception>
-        /// <exception cref="DateTimeException">Failed because your system date and time settings are incorrect. Fix your date and time settings, restart your computer, and try to activate again.</exception>
-        public static IsGenuineResult IsGenuine(uint daysBetweenChecks, uint graceDaysOnInetErr,
-            bool skipOffline = false, bool offlineShowInetErr = false)
+        public IsGenuineResult IsGenuine(uint daysBetweenChecks, uint graceDaysOnInetErr, bool skipOffline = false, bool offlineShowInetErr = false)
         {
-            Native.GENUINE_OPTIONS opts = new Native.GENUINE_OPTIONS
-            {
-                nDaysBetweenChecks = daysBetweenChecks,
-                nGraceDaysOnInetErr = graceDaysOnInetErr,
-                flags = 0
-            };
+            Native.GENUINE_OPTIONS opts = new Native.GENUINE_OPTIONS { nDaysBetweenChecks = daysBetweenChecks, nGraceDaysOnInetErr = graceDaysOnInetErr, flags = 0 };
             opts.nLength = (uint)Marshal.SizeOf(opts);
 
             if (skipOffline)
@@ -850,29 +759,29 @@ namespace OF.Core.Core.LimeLM
             }
 
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.IsGenuineEx(VersionGUID, ref opts) : Native.IsGenuineEx(VersionGUID, ref opts))
+            switch (IntPtr.Size == 8 ? Native64.TA_IsGenuineEx(handle, ref opts) : Native.TA_IsGenuineEx(handle, ref opts))
 #else
-            switch (Native.IsGenuineEx(VersionGUID, ref opts))
+            switch (Native.TA_IsGenuineEx(handle, ref opts))
 #endif
             {
-                case 4: // TA_E_INET
-                case 21: // TA_E_INET_DELAYED
+                case TA_E_INET:
+                case TA_E_INET_DELAYED:
                     return IsGenuineResult.InternetError;
-                case 7: // TA_E_GUID
-                    throw new GUIDMismatchException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 11: // TA_E_COM
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_E_COM:
                     throw new COMException();
-                case 13: // TA_E_EXPIRED
+                case TA_E_ENABLE_NETWORK_ADAPTERS:
+                    throw new EnableNetworkAdaptersException();
+                case TA_E_EXPIRED:
                     throw new DateTimeException(false);
-                case 17: // TA_E_IN_VM
+                case TA_E_IN_VM:
                     return IsGenuineResult.NotGenuineInVM;
-                case 19: // TA_E_INVALID_ARGS
+                case TA_E_INVALID_ARGS:
                     throw new InvalidArgsException();
-                case 22: // TA_E_FEATURES_CHANGED
+                case TA_E_FEATURES_CHANGED:
                     return IsGenuineResult.GenuineFeaturesChanged;
-                case 0: // is activated and/or Genuine
+                case TA_OK: // is activated and/or Genuine
                     return IsGenuineResult.Genuine;
             }
 
@@ -880,23 +789,51 @@ namespace OF.Core.Core.LimeLM
             return IsGenuineResult.NotGenuine;
         }
 
-        /// <summary>Checks if the product key installed for this product is valid. This does NOT check if the product key is activated or genuine. Use <see cref="IsActivated()"/> and <see cref="IsGenuine(ref bool)"/> instead.</summary>
-        /// <returns>True if the product key is valid.</returns>
-        /// <exception cref="GUIDMismatchException">The version GUID doesn't match that of the product details file. Make sure you set the GUID using TurboActivate.VersionGUID.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        public static bool IsProductKeyValid()
+        /// <summary>Get the number of days until the next time that the <see cref="IsGenuine(uint, uint, bool, bool)"/> function contacts the LimeLM activation servers to reverify the activation.</summary>
+        /// <param name="daysBetweenChecks">How often to contact the LimeLM servers for validation. Use the exact same value as used in <see cref="IsGenuine(uint, uint, bool, bool)"/>.</param>
+        /// <param name="graceDaysOnInetErr">If the call fails because of an internet error, how long, in days, should the grace period last (before returning deactivating and returning TA_FAIL). Again, use the exact same value as used in <see cref="IsGenuine(uint, uint, bool, bool)"/>.</param>
+        /// <param name="inGracePeriod">Get whether the user is in the grace period.</param>
+        /// <returns>The number of days remaining. 0 days if both the days between checks and the grace period have expired. (E.g. 1 day means *at most* 1 day. That is, it could be 30 seconds.)</returns>
+        public uint GenuineDays(uint daysBetweenChecks, uint graceDaysOnInetErr, ref bool inGracePeriod)
         {
+            uint daysRemain = 0;
+            char inGrace = (char)0;
+
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.IsProductKeyValid(VersionGUID) : Native.IsProductKeyValid(VersionGUID))
+            switch (IntPtr.Size == 8 ? Native64.TA_GenuineDays(handle, daysBetweenChecks, graceDaysOnInetErr, ref daysRemain, ref inGrace) : Native.TA_GenuineDays(handle, daysBetweenChecks, graceDaysOnInetErr, ref daysRemain, ref inGrace))
 #else
-            switch (Native.IsProductKeyValid(VersionGUID))
+            switch (Native.TA_GenuineDays(handle, daysBetweenChecks, graceDaysOnInetErr, ref daysRemain, ref inGrace))
 #endif
             {
-                case 7: // TA_E_GUID
-                    throw new GUIDMismatchException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 0: // is valid
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_E_ACTIVATE:
+                    throw new NotActivatedException();
+                case TA_OK: // successful
+                    break;
+                default:
+                    throw new TurboActivateException("Failed to get the genuine days.");
+            }
+
+            // set whether we're in a grace period or not
+            inGracePeriod = inGrace == (char) 1;
+
+            return daysRemain;
+        }
+
+        /// <summary>Checks if the product key installed for this product is valid. This does NOT check if the product key is activated or genuine. Use <see cref="IsActivated()"/> and <see cref="IsGenuine(ref bool)"/> instead.</summary>
+        /// <returns>True if the product key is valid.</returns>
+        public bool IsProductKeyValid()
+        {
+#if TA_BOTH_DLL
+            switch (IntPtr.Size == 8 ? Native64.TA_IsProductKeyValid(handle) : Native.TA_IsProductKeyValid(handle))
+#else
+            switch (Native.TA_IsProductKeyValid(handle))
+#endif
+            {
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_OK: // is valid
                     return true;
             }
 
@@ -906,178 +843,182 @@ namespace OF.Core.Core.LimeLM
 
         /// <summary>Sets the custom proxy to be used by functions that connect to the internet.</summary>
         /// <param name="proxy">The proxy to use. Proxy must be in the form "http://username:password@host:port/".</param>
-        /// <exception cref="TurboActivateException">Failed to set the custom proxy.</exception>
         public static void SetCustomProxy(string proxy)
         {
 #if TA_BOTH_DLL
-            if ((IntPtr.Size == 8 ? Native64.SetCustomProxy(proxy) : Native.SetCustomProxy(proxy)) != 0)
+            if ((IntPtr.Size == 8 ? Native64.TA_SetCustomProxy(proxy) : Native.TA_SetCustomProxy(proxy)) != 0)
 #else
-            if (Native.SetCustomProxy(proxy) != 0)
+            if (Native.TA_SetCustomProxy(proxy) != TA_OK)
 #endif
                 throw new TurboActivateException("Failed to set the custom proxy.");
         }
 
         /// <summary>Get the number of trial days remaining. You must call <see cref="UseTrial()"/> at least once in the past before calling this function.</summary>
+        /// <param name="useTrialFlags">The same exact flags you passed to <see cref="UseTrial()"/>.</param>
         /// <returns>The number of days remaining. 0 days if the trial has expired. (E.g. 1 day means *at most* 1 day. That is it could be 30 seconds.)</returns>
-        /// <exception cref="GUIDMismatchException">The version GUID doesn't match that of the product details file. Make sure you set the GUID using TurboActivate.VersionGUID.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="TurboActivateException">Failed to get the trial data.</exception>
-        public static int TrialDaysRemaining()
+        public uint TrialDaysRemaining(TA_Flags useTrialFlags = TA_Flags.TA_SYSTEM | TA_Flags.TA_VERIFIED_TRIAL)
         {
             uint daysRemain = 0;
 
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.TrialDaysRemaining(VersionGUID, ref daysRemain) : Native.TrialDaysRemaining(VersionGUID, ref daysRemain))
+            switch (IntPtr.Size == 8 ? Native64.TA_TrialDaysRemaining(handle, useTrialFlags, ref daysRemain) : Native.TA_TrialDaysRemaining(handle, useTrialFlags, ref daysRemain))
 #else
-            switch (Native.TrialDaysRemaining(VersionGUID, ref daysRemain))
+            switch (Native.TA_TrialDaysRemaining(handle, useTrialFlags, ref daysRemain))
 #endif
             {
-                case 7: // TA_E_GUID
-                    throw new GUIDMismatchException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 0: // successful
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_OK: // successful
                     break;
-
+                case TA_E_ALREADY_VERIFIED_TRIAL:
+                    throw new AlreadyVerifiedTrialException();
+                case TA_E_MUST_SPECIFY_TRIAL_TYPE:
+                    throw new MustSpecifyTrialTypeException();
+                case TA_E_MUST_USE_TRIAL:
+                    throw new MustUseTrialException();
                 default:
                     throw new TurboActivateException("Failed to get the trial data.");
             }
 
-            return (int)daysRemain;
+            return daysRemain;
         }
 
         /// <summary>Begins the trial the first time it's called. Calling it again will validate the trial data hasn't been tampered with.</summary>
-        /// <param name="flags">Whether to create the trial either user-wide or system-wide and whether to allow trials in virtual machines. Valid flags are <see cref="TA_Flags.TA_SYSTEM"/>, <see cref="TA_Flags.TA_USER"/>, and <see cref="TA_Flags.TA_DISALLOW_VM"/>.</param>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="PermissionException">Insufficient system permission. Either start your process as an admin / elevated user or call the function again with the TA_USER flag.</exception>
-        /// <exception cref="InvalidFlagsException">The flags you passed to the function were invalid (or missing). Flags like "TA_SYSTEM" and "TA_USER" are mutually exclusive -- you can only use one or the other.</exception>
-        /// <exception cref="VirtualMachineException">The function failed because this instance of your program if running inside a virtual machine / hypervisor and you've prevented the function from running inside a VM.</exception>
-        /// <exception cref="TurboActivateException">Failed to save the trial data.</exception>
-        public static void UseTrial(TA_Flags flags = TA_Flags.TA_USER)
+        /// <param name="flags">Whether to create the trial (verified or unverified) either user-wide or system-wide and whether to allow trials in virtual machines. Valid flags are <see cref="TA_Flags.TA_SYSTEM"/>, <see cref="TA_Flags.TA_USER"/>, <see cref="TA_Flags.TA_DISALLOW_VM"/>, <see cref="TA_Flags.TA_VERIFIED_TRIAL"/>, and <see cref="TA_Flags.TA_UNVERIFIED_TRIAL"/>.</param>
+        /// <param name="extraData">Extra data to pass to the LimeLM servers that will be visible for you to see and use. Maximum size is 255 UTF-8 characters.</param>
+        public void UseTrial(TA_Flags flags = TA_Flags.TA_SYSTEM | TA_Flags.TA_VERIFIED_TRIAL, string extraData = null)
         {
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.UseTrial(flags) : Native.UseTrial(flags))
+            switch (IntPtr.Size == 8 ? Native64.TA_UseTrial(handle, flags, extraData) : Native.TA_UseTrial(handle, flags, extraData))
 #else
-            switch (Native.UseTrial(flags))
+            switch (Native.TA_UseTrial(handle, flags, extraData))
 #endif
             {
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 0: // successful
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_E_INET:
+                    throw new InternetException();
+                case TA_OK: // successful
                     return;
-
-                case 15: // TA_E_PERMISSION
+                case TA_E_PERMISSION:
                     throw new PermissionException();
-                case 16: // TA_E_INVALID_FLAGS
+                case TA_E_COM:
+                    throw new COMException();
+                case TA_E_ENABLE_NETWORK_ADAPTERS:
+                    throw new EnableNetworkAdaptersException();
+                case TA_E_INVALID_FLAGS:
                     throw new InvalidFlagsException();
-                case 17: // TA_E_IN_VM
+                case TA_E_IN_VM:
                     throw new VirtualMachineException();
+                case TA_E_ACCOUNT_CANCELED:
+                    throw new AccountCanceledException();
+                case TA_E_ALREADY_VERIFIED_TRIAL:
+                    throw new AlreadyVerifiedTrialException();
+                case TA_E_TRIAL_EXPIRED:
+                    throw new TrialExpiredException();
+                case TA_E_MUST_SPECIFY_TRIAL_TYPE:
+                    throw new MustSpecifyTrialTypeException();
+                case TA_E_EDATA_LONG:
+                    throw new ExtraDataTooLongException();
+                case TA_E_NO_MORE_TRIALS_ALLOWED:
+                    throw new NoMoreTrialsAllowedException();
+                default:
+                    throw new TurboActivateException("Failed to save the trial data.");
+            }
+        }
+
+        /// <summary>Generate a "verified trial" offline request file. This file will then need to be submitted to LimeLM. You will then need to use the TA_UseTrialVerifiedFromFile() function with the response file from LimeLM to actually start the trial.</summary>
+        /// <param name="filename">The location where you want to save the trial request file.</param>
+        /// <param name="extraData">Extra data to pass to the LimeLM servers that will be visible for you to see and use. Maximum size is 255 UTF-8 characters.</param>
+        public void UseTrialVerifiedRequest(string filename, string extraData = null)
+        {
+#if TA_BOTH_DLL
+            switch (IntPtr.Size == 8 ? Native64.TA_UseTrialVerifiedRequest(handle, filename, extraData) : Native.TA_UseTrialVerifiedRequest(handle, filename, extraData))
+#else
+            switch (Native.TA_UseTrialVerifiedRequest(handle, filename, extraData))
+#endif
+            {
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_E_COM:
+                    throw new COMException();
+                case TA_E_ENABLE_NETWORK_ADAPTERS:
+                    throw new EnableNetworkAdaptersException();
+                case TA_E_EDATA_LONG:
+                    throw new ExtraDataTooLongException();
+                case TA_E_INVALID_ARGS:
+                    throw new InvalidArgsException();
+                case TA_OK: // successful
+                    return;
+                default:
+                    throw new TurboActivateException("Failed to save the verified trial request file.");
+            }
+        }
+
+        /// <summary>Use the "verified trial response" from LimeLM to start the verified trial.</summary>
+        /// <param name="filename">The location of the trial response file.</param>
+        /// <param name="flags">Whether to create the trial (verified or unverified) either user-wide or system-wide and whether to allow trials in virtual machines. Valid flags are <see cref="TA_Flags.TA_SYSTEM"/>, <see cref="TA_Flags.TA_USER"/>, <see cref="TA_Flags.TA_DISALLOW_VM"/>, <see cref="TA_Flags.TA_VERIFIED_TRIAL"/>, and <see cref="TA_Flags.TA_UNVERIFIED_TRIAL"/>.</param>
+        public void UseTrialVerifiedFromFile(string filename, TA_Flags flags = TA_Flags.TA_SYSTEM | TA_Flags.TA_VERIFIED_TRIAL)
+        {
+#if TA_BOTH_DLL
+            switch (IntPtr.Size == 8 ? Native64.TA_UseTrialVerifiedFromFile(handle, filename, flags) : Native.TA_UseTrialVerifiedFromFile(handle, filename, flags))
+#else
+            switch (Native.TA_UseTrialVerifiedFromFile(handle, filename, flags))
+#endif
+            {
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_E_PERMISSION:
+                    throw new PermissionException();
+                case TA_E_INVALID_FLAGS:
+                    throw new InvalidFlagsException();
+                case TA_E_INVALID_ARGS:
+                    throw new InvalidArgsException();
+                case TA_E_COM:
+                    throw new COMException();
+                case TA_E_ENABLE_NETWORK_ADAPTERS:
+                    throw new EnableNetworkAdaptersException();
+                case TA_E_MUST_SPECIFY_TRIAL_TYPE:
+                    throw new MustSpecifyTrialTypeException();
+                case TA_E_IN_VM:
+                    throw new VirtualMachineException();
+                case TA_OK: // successful
+                    return;
                 default:
                     throw new TurboActivateException("Failed to save the trial data.");
             }
         }
 
         /// <summary>Extends the trial using a trial extension created in LimeLM.</summary>
+        /// <param name="useTrialFlags">The same exact flags you passed to <see cref="UseTrial()"/>.</param>
         /// <param name="trialExtension">The trial extension generated from LimeLM.</param>
-        /// <exception cref="InternetException">Connection to the server failed.</exception>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="TrialExtUsedException">The trial extension has already been used.</exception>
-        /// <exception cref="TrialExtExpiredException">The trial extension has expired.</exception>
-        /// <exception cref="TurboActivateException">Failed to extend trial.</exception>
-        public static void ExtendTrial(string trialExtension)
+        public void ExtendTrial(string trialExtension, TA_Flags useTrialFlags = TA_Flags.TA_SYSTEM | TA_Flags.TA_VERIFIED_TRIAL)
         {
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.ExtendTrial(trialExtension) : Native.ExtendTrial(trialExtension))
+            switch (IntPtr.Size == 8 ? Native64.TA_ExtendTrial(handle, useTrialFlags, trialExtension) : Native.TA_ExtendTrial(handle, useTrialFlags, trialExtension))
 #else
-            switch (Native.ExtendTrial(trialExtension))
+            switch (Native.TA_ExtendTrial(handle, useTrialFlags, trialExtension))
 #endif
             {
-                case 4: // TA_E_INET
+                case TA_E_INET:
                     throw new InternetException();
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                case 12: // TA_E_TRIAL_EUSED
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
+                case TA_E_TRIAL_EUSED:
                     throw new TrialExtUsedException();
-                case 13: // TA_E_TRIAL_EEXP
+                case TA_E_TRIAL_EEXP:
                     throw new TrialExtExpiredException();
-                case 0: // successful
+                case TA_E_MUST_SPECIFY_TRIAL_TYPE:
+                    throw new MustSpecifyTrialTypeException();
+                case TA_E_MUST_USE_TRIAL:
+                    throw new MustUseTrialException();
+                case TA_OK: // successful
                     return;
-
                 default:
                     throw new TurboActivateException("Failed to extend trial.");
             }
         }
 
-        /// <summary>Loads the "TurboActivate.dat" file from a path rather than loading it from the same dir as TurboActivate.dll on Windows or the app that uses libTurboActivate.dylib / libTurboActivate.so on Mac / Linux.</summary>
-        /// <param name="filename">The full path to the TurboActivate.dat file.</param>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="TurboActivateException">The TurboActivate.dat file has already been loaded. You must call this function only once and before any other TurboActivate function.</exception>
-        public static void PDetsFromPath(string filename)
-        {
-#if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.PDetsFromPath(filename) : Native.PDetsFromPath(filename))
-#else
-            switch (Native.PDetsFromPath(filename))
-#endif
-            {
-                case 0: // successful
-                    return;
-
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
-                default:
-                    throw new TurboActivateException(
-                        "The TurboActivate.dat file has already been loaded. You must call this function only once and before any other TurboActivate function.");
-            }
-        }
-
-        /// <summary>Gets the "current product" previously set by <see cref="SetCurrentProduct(string)"/>.</summary>
-        /// <returns>string version GUID.</returns>
-        /// <exception cref="TurboActivateException">Failed to get the current product. Make sure you've loaded the product details file using <see cref="PDetsFromPath(string)"/>.</exception>
-        public static string GetCurrentProduct()
-        {
-#if TA_BOTH_DLL
-            int length = IntPtr.Size == 8 ? Native64.GetCurrentProduct(null, 0) : Native.GetCurrentProduct(null, 0);
-#else
-            int length = Native.GetCurrentProduct(null, 0);
-#endif
-
-            StringBuilder sb = new StringBuilder(length);
-
-#if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.GetCurrentProduct(sb, length) : Native.GetCurrentProduct(sb, length))
-#else
-            switch (Native.GetCurrentProduct(sb, length))
-#endif
-            {
-                case 0: // success
-                    return sb.ToString();
-                default:
-                    throw new TurboActivateException(
-                        "Failed to get the current product. Make sure you've loaded the product details file using PDetsFromPath().");
-            }
-        }
-
-        /// <summary>This functions allows you to use licensing for multiple products within the same running process. First load all the TurboActivate.dat files for all your products using the <see cref="PDetsFromPath(string)"/> function. Then, to use any of the licensing functions for a product you need to for any particular product, you must first call <see cref="SetCurrentProduct(string)"/> to "switch" to the product.</summary>
-        /// <param name="vGuid">The version GUID of the product to switch to.</param>
-        /// <exception cref="TurboActivateException">Failed to set the current product. Make sure you've loaded the product details file using PDetsFromPath().</exception>
-        public static void SetCurrentProduct(string vGuid)
-        {
-#if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.SetCurrentProduct(vGuid) : Native.SetCurrentProduct(vGuid))
-#else
-            switch (Native.SetCurrentProduct(vGuid))
-#endif
-            {
-                case 0: // successful
-                    VersionGUID = vGuid;
-                    return;
-
-                default:
-                    throw new TurboActivateException(
-                        "Failed to set the current product. Make sure you've loaded the product details file using PDetsFromPath().");
-            }
-        }
 
         /// <summary>This function allows you to set a custom folder to store the activation
         ///data files. For normal use we do not recommend you use this function.
@@ -1094,21 +1035,18 @@ namespace OF.Core.Core.LimeLM
         ///The directory you pass in must already exist. And the process using TurboActivate
         ///must have permission to create, write, and delete files in that directory.</summary>
         /// <param name="directory">The full directory to store the activation files.</param>
-        /// <exception cref="ProductDetailsException">The product details file "TurboActivate.dat" failed to load. It's either missing or corrupt.</exception>
-        /// <exception cref="TurboActivateException">The directory must exist and you must have access to it.</exception>
-        public static void SetCustomActDataPath(string directory)
+        public void SetCustomActDataPath(string directory)
         {
 #if TA_BOTH_DLL
-            switch (IntPtr.Size == 8 ? Native64.SetCustomActDataPath(directory) : Native.SetCustomActDataPath(directory))
+            switch (IntPtr.Size == 8 ? Native64.TA_SetCustomActDataPath(handle, directory) : Native.TA_SetCustomActDataPath(handle, directory))
 #else
-            switch (Native.SetCustomActDataPath(directory))
+            switch (Native.TA_SetCustomActDataPath(handle, directory))
 #endif
             {
-                case 0: // successful
+                case TA_OK: // successful
                     return;
-
-                case 8: // TA_E_PDETS
-                    throw new ProductDetailsException();
+                case TA_E_INVALID_HANDLE:
+                    throw new InvalidHandleException();
                 default:
                     throw new TurboActivateException("The directory must exist and you must have access to it.");
             }
@@ -1118,9 +1056,15 @@ namespace OF.Core.Core.LimeLM
     public class COMException : TurboActivateException
     {
         public COMException()
-            : base(
-                "CoInitializeEx failed. Re-enable Windows Management Instrumentation (WMI) service. Contact your system admin for more information."
-                )
+            : base("CoInitializeEx failed. Re-enable Windows Management Instrumentation (WMI) service. Contact your system admin for more information.")
+        {
+        }
+    }
+
+    public class AccountCanceledException : TurboActivateException
+    {
+        public AccountCanceledException()
+            : base("Can't activate because the LimeLM account is cancelled.")
         {
         }
     }
@@ -1144,7 +1088,7 @@ namespace OF.Core.Core.LimeLM
     public class InternetException : TurboActivateException
     {
         public InternetException()
-            : base("Connection to the server failed.")
+            : base("Connection to the servers failed.")
         {
         }
     }
@@ -1165,24 +1109,19 @@ namespace OF.Core.Core.LimeLM
         }
     }
 
-    public class GUIDMismatchException : TurboActivateException
-    {
-        public GUIDMismatchException()
-#if DEBUG
-        : base("The version GUID \"" + TurboActivate.VersionGUID + "\" doesn't match that of the product details file. Make sure you set the GUID using TurboActivate.VersionGUID.")
-#else
-            : base("The product details file \"TurboActivate.dat\" is corrupt.")
-#endif
-        {
-        }
-    }
-
     public class ProductDetailsException : TurboActivateException
     {
         public ProductDetailsException()
             : base("The product details file \"TurboActivate.dat\" failed to load. It's either missing or corrupt.")
         {
         }
+    }
+
+    public class InvalidHandleException : TurboActivateException
+    {
+        public InvalidHandleException()
+            : base("The handle is not valid. You must set the VersionGUID property.")
+        { }
     }
 
     public class TrialExtUsedException : TurboActivateException
@@ -1204,11 +1143,8 @@ namespace OF.Core.Core.LimeLM
     public class DateTimeException : TurboActivateException
     {
         public DateTimeException(bool either)
-            : base(
-                either
-                    ? "Either the activation response file has expired or your date and time settings are incorrect. Fix your date and time settings, restart your computer, and try to activate again."
-                    : "Failed because your system date and time settings are incorrect. Fix your date and time settings, restart your computer, and try to activate again."
-                )
+            : base(either ? "Either the activation response file has expired or your date and time settings are incorrect. Fix your date and time settings, restart your computer, and try to activate again."
+                    : "Failed because your system date and time settings are incorrect. Fix your date and time settings, restart your computer, and try to activate again.")
         {
         }
     }
@@ -1216,9 +1152,7 @@ namespace OF.Core.Core.LimeLM
     public class PermissionException : TurboActivateException
     {
         public PermissionException()
-            : base(
-                "Insufficient system permission. Either start your process as an admin / elevated user or call the function again with the TA_USER flag."
-                )
+            : base("Insufficient system permission. Either start your process as an admin / elevated user or call the function again with the TA_USER flag.")
         {
         }
     }
@@ -1226,9 +1160,7 @@ namespace OF.Core.Core.LimeLM
     public class InvalidFlagsException : TurboActivateException
     {
         public InvalidFlagsException()
-            : base(
-                "The flags you passed to the function were invalid (or missing). Flags like \"TA_SYSTEM\" and \"TA_USER\" are mutually exclusive -- you can only use one or the other."
-                )
+            : base("The flags you passed to the function were invalid (or missing). Flags like \"TA_SYSTEM\" and \"TA_USER\" are mutually exclusive -- you can only use one or the other.")
         {
         }
     }
@@ -1236,9 +1168,7 @@ namespace OF.Core.Core.LimeLM
     public class VirtualMachineException : TurboActivateException
     {
         public VirtualMachineException()
-            : base(
-                "The function failed because this instance of your program if running inside a virtual machine / hypervisor and you've prevented the function from running inside a VM."
-                )
+            : base("The function failed because this instance of your program is running inside a virtual machine / hypervisor and you've prevented the function from running inside a VM.")
         {
         }
     }
@@ -1246,9 +1176,7 @@ namespace OF.Core.Core.LimeLM
     public class ExtraDataTooLongException : TurboActivateException
     {
         public ExtraDataTooLongException()
-            : base(
-                "The \"extra data\" was too long. You're limited to 255 UTF-8 characters. Or, on Windows, a Unicode string that will convert into 255 UTF-8 characters or less."
-                )
+            : base("The \"extra data\" was too long. You're limited to 255 UTF-8 characters. Or, on Windows, a Unicode string that will convert into 255 UTF-8 characters or less.")
         {
         }
     }
@@ -1269,12 +1197,73 @@ namespace OF.Core.Core.LimeLM
         }
     }
 
-    public class TurboActivateException : Exception
+    public class NoMoreDeactivationsException : TurboActivateException
     {
-        public TurboActivateException(string message)
-            : base(message)
+        public NoMoreDeactivationsException()
+            : base("No more deactivations are allowed for the product key. This product is still activated on this computer.")
         {
         }
+    }
+
+    public class EnableNetworkAdaptersException : TurboActivateException
+    {
+        public EnableNetworkAdaptersException()
+            : base("There are network adapters on the system that are disabled and TurboActivate couldn't read their hardware properties (even after trying and failing to enable the adapters automatically). Enable the network adapters, re-run the function, and TurboActivate will be able to \"remember\" the adapters even if the adapters are disabled in the future.")
+        {
+        }
+    }
+
+    public class AlreadyActivatedException : TurboActivateException
+    {
+        public AlreadyActivatedException()
+            : base("You can't use a product key because your app is already activated with a product key. To use a new product key, then first deactivate using either the Deactivate() or DeactivationRequestToFile().")
+        {
+        }
+    }
+
+    public class AlreadyVerifiedTrialException : TurboActivateException
+    {
+        public AlreadyVerifiedTrialException()
+            : base("The trial is already a verified trial. You need to use the \"TA_VERIFIED_TRIAL\" flag. Can't \"downgrade\" a verified trial to an unverified trial.")
+        {
+        }
+    }
+
+    public class TrialExpiredException : TurboActivateException
+    {
+        public TrialExpiredException()
+            : base("The verified trial has expired. You must request a trial extension from the company.")
+        {
+        }
+    }
+
+    public class NoMoreTrialsAllowedException : TurboActivateException
+    {
+        public NoMoreTrialsAllowedException()
+            : base("In the LimeLM account either the trial days is set to 0, OR the account is set to not auto-upgrade and thus no more verified trials can be made.")
+        {
+        }
+    }
+
+    public class MustSpecifyTrialTypeException : TurboActivateException
+    {
+        public MustSpecifyTrialTypeException()
+            : base("You must specify the trial type (TA_UNVERIFIED_TRIAL or TA_VERIFIED_TRIAL). And you can't use both flags. Choose one or the other. We recommend TA_VERIFIED_TRIAL.")
+        {
+        }
+    }
+
+    public class MustUseTrialException : TurboActivateException
+    {
+        public MustUseTrialException()
+            : base("You must call TA_UseTrial() before you can get the number of trial days remaining.")
+        {
+        }
+    }
+
+    public class TurboActivateException : Exception
+    {
+        public TurboActivateException(string message) : base(message) { }
     }
 
     public enum IsGenuineResult
@@ -1293,5 +1282,5 @@ namespace OF.Core.Core.LimeLM
 
         /// <summary>Treat this error as a warning. That is, tell the user that the activation couldn't be validated with the servers and that they can manually recheck with the servers immediately.</summary>
         InternetError = 4
-    }
+    }   
 }

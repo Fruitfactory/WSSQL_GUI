@@ -80,11 +80,12 @@
             // 
             // txtMain
             // 
-            this.txtMain.Location = new System.Drawing.Point(12, 12);
+            this.txtMain.Location = new System.Drawing.Point(16, 15);
+            this.txtMain.Margin = new System.Windows.Forms.Padding(4);
             this.txtMain.Multiline = true;
             this.txtMain.Name = "txtMain";
             this.txtMain.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtMain.Size = new System.Drawing.Size(384, 140);
+            this.txtMain.Size = new System.Drawing.Size(511, 171);
             this.txtMain.TabIndex = 0;
             this.txtMain.Text = resources.GetString("txtMain.Text");
             // 
@@ -92,9 +93,10 @@
             // 
             this.lblTrialMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblTrialMessage.AutoSize = true;
-            this.lblTrialMessage.Location = new System.Drawing.Point(9, 169);
+            this.lblTrialMessage.Location = new System.Drawing.Point(12, 208);
+            this.lblTrialMessage.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTrialMessage.Name = "lblTrialMessage";
-            this.lblTrialMessage.Size = new System.Drawing.Size(95, 13);
+            this.lblTrialMessage.Size = new System.Drawing.Size(129, 17);
             this.lblTrialMessage.TabIndex = 1;
             this.lblTrialMessage.Text = "Your trial expires in";
             this.lblTrialMessage.Visible = false;
@@ -103,9 +105,10 @@
             // 
             this.btnExtendTrial.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExtendTrial.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnExtendTrial.Location = new System.Drawing.Point(315, 165);
+            this.btnExtendTrial.Location = new System.Drawing.Point(420, 203);
+            this.btnExtendTrial.Margin = new System.Windows.Forms.Padding(4);
             this.btnExtendTrial.Name = "btnExtendTrial";
-            this.btnExtendTrial.Size = new System.Drawing.Size(81, 25);
+            this.btnExtendTrial.Size = new System.Drawing.Size(108, 31);
             this.btnExtendTrial.TabIndex = 2;
             this.btnExtendTrial.Text = "Extend trial";
             this.btnExtendTrial.UseVisualStyleBackColor = true;
@@ -114,13 +117,14 @@
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(408, 199);
+            this.ClientSize = new System.Drawing.Size(544, 245);
             this.Controls.Add(this.btnExtendTrial);
             this.Controls.Add(this.lblTrialMessage);
             this.Controls.Add(this.txtMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Menu = this.mainMenu1;
             this.Name = "Form1";

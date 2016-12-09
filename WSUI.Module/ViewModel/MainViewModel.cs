@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -75,6 +76,7 @@ namespace OF.Module.ViewModel
         private ICommandStrategy _currentStrategy;
         private int _selectedUIItemIndex;
         private IElasticSearchViewModel _elasticSearchViewModel;
+        private IOFTurboLimeActivate _turboLimeActivate;
 
         public MainViewModel(IUnityContainer container, IKindsView kindView, IEventAggregator eventAggregator)
         {
@@ -95,6 +97,7 @@ namespace OF.Module.ViewModel
             _elasticSearchViewModel.IndexingFinished += ElasticSearchViewModelOnIndexingFinished;
             _elasticSearchViewModel.Closed += ElasticSearchViewModelOnIndexingFinished;
             Monitoring = _container.Resolve<IElasticSearchMonitoringViewModel>();
+            _turboLimeActivate = _container.Resolve<IOFTurboLimeActivate>();
 
             _eventAggregator.GetEvent<OFElasticsearchServiceStartedEvent>().Subscribe(OnElasticSearchServiceStarted);
         }
@@ -172,7 +175,6 @@ namespace OF.Module.ViewModel
                     SelectedLazyKind = _listItems.FirstOrDefault(k => k.IsVisibleByDefault);
                 }
                 OnPropertyChanged(() => KindsCollection);
-                UpdatedActivatedStatus();
                 InitCommandStrategies();
 
 
@@ -188,7 +190,8 @@ namespace OF.Module.ViewModel
             try
             {
                 _commandStrategies = new Dictionary<OFTypeSearchItem, ICommandStrategy>();
-                _commandStrategies.Add(OFTypeSearchItem.Email, CommadStrategyFactory.CreateStrategy(OFTypeSearchItem.Email, this));
+                _commandStrategies.Add(OFTypeSearchItem.Email,
+                    CommadStrategyFactory.CreateStrategy(OFTypeSearchItem.Email, this));
                 ICommandStrategy fileAttach = CommadStrategyFactory.CreateStrategy(OFTypeSearchItem.FileAll, this);
                 _commandStrategies.Add(OFTypeSearchItem.File, fileAttach);
                 _commandStrategies.Add(OFTypeSearchItem.Attachment, fileAttach);
@@ -215,7 +218,7 @@ namespace OF.Module.ViewModel
                 {
                     Command = wsCommand,
                     Header = wsCommand.Caption,
-                    Icon = new Image() { Source = new BitmapImage(new Uri(wsCommand.Icon)) }
+                    Icon = new Image() {Source = new BitmapImage(new Uri(wsCommand.Icon))}
                 }).ToList();
                 _menuItems.Add(OFTypeSearchItem.Email, list);
             }
@@ -225,7 +228,7 @@ namespace OF.Module.ViewModel
                 {
                     Command = wsCommand,
                     Header = wsCommand.Caption,
-                    Icon = new Image() { Source = new BitmapImage(new Uri(wsCommand.Icon)) }
+                    Icon = new Image() {Source = new BitmapImage(new Uri(wsCommand.Icon))}
                 }).ToList();
                 _menuItems.Add(OFTypeSearchItem.File, list);
                 _menuItems.Add(OFTypeSearchItem.Attachment, list);
@@ -239,8 +242,7 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                ActivateStatus = TurboLimeActivate.Instance.State;
-
+                ActivateStatus = _turboLimeActivate.State;
                 OFLogger.Instance.LogDebug("Activated Status: {0}", ActivateStatus.ToString());
                 OnPropertyChanged(() => ActivateStatus);
                 OnPropertyChanged(() => VisibleTrialLabel);
@@ -256,12 +258,12 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                TurboLimeActivate.Instance.TryCheckAgain();
-                ActivateStatus = TurboLimeActivate.Instance.State;
+                _turboLimeActivate.TryCheckAgain();
+                ActivateStatus = _turboLimeActivate.State;
                 switch (ActivateStatus)
                 {
 #if !TRIAL
-                    //case ActivationState.Trial:
+                        //case ActivationState.Trial:
 #endif
                     case OFActivationState.TrialEnded:
                     case OFActivationState.NonActivated:
@@ -273,7 +275,7 @@ namespace OF.Module.ViewModel
 
                         break;
                 }
-                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => TurboLimeActivate.Instance.IncreaseTimeUsedFlag()));
+                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => _turboLimeActivate.IncreaseTimeUsedFlag()));
             }
             catch (Exception ex)
             {
@@ -283,14 +285,46 @@ namespace OF.Module.ViewModel
 
         private void RunInternalActivate()
         {
-            TurboLimeActivate.Instance.Activate(UpdatedActivatedStatus);
+
+            try
+            {
+                _turboLimeActivate.Activate(UpdatedActivatedStatus);
+                //string path = Path.Combine(Path.GetDirectoryName(typeof(TurboLimeActivate).Assembly.Location), "TurboActivate.exe");
+                //OFLogger.Instance.LogDebug("Path Activate: {0}", path);
+                //Process activationProcess = new Process()
+                //{
+                //    StartInfo =
+                //                {
+                //                    FileName = path
+                //                },
+                //    EnableRaisingEvents = true
+                //};
+                //activationProcess.Exited += ActivationProcessOnExited;
+                //activationProcess.Start();
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogDebug("----- !!!! <<<<<< ERROR >>>>>>> !!! -----");
+                OFLogger.Instance.LogError(ex.ToString());
+            }
+
+            //TurboLimeActivate.Instance.Activate(UpdatedActivatedStatus);
+        }
+
+        private void ActivationProcessOnExited(object sender, EventArgs eventArgs)
+        {
+            ((Process) sender).Exited -= ActivationProcessOnExited;
+            UpdatedActivatedStatus();
         }
 
         private void GetAllKinds()
         {
             try
             {
-                IEnumerable<Type> types = this.GetType().Assembly.GetTypes().Where(t => !t.IsAbstract && t.IsClass && t.GetInterface(Interface, true) != null);
+                IEnumerable<Type> types =
+                    this.GetType()
+                        .Assembly.GetTypes()
+                        .Where(t => !t.IsAbstract && t.IsClass && t.GetInterface(Interface, true) != null);
                 foreach (Type type in types)
                 {
                     var kind = new OFLazyKind(_container, type, this, null, OnPropertyChanged);
@@ -370,12 +404,13 @@ namespace OF.Module.ViewModel
                 switch (data.TypeItem)
                 {
                     case OFTypeSearchItem.Contact:
-                        Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => ShowPreviewForPreviewObject(data, useTransaction)),
+                        Dispatcher.CurrentDispatcher.BeginInvoke(
+                            (Action) (() => ShowPreviewForPreviewObject(data, useTransaction)),
                             null);
                         break;
 
                     default:
-                        Dispatcher.CurrentDispatcher.BeginInvoke((Action)(ShowPreviewForCurrentItem));
+                        Dispatcher.CurrentDispatcher.BeginInvoke((Action) (ShowPreviewForCurrentItem));
                         break;
                 }
 
@@ -399,15 +434,18 @@ namespace OF.Module.ViewModel
                 }
                 System.Diagnostics.Debug.WriteLine("Preview " + previewView.GetHashCode());
                 previewView.Model = this;
-                previewView.SetSearchPattern(_navigationService.IsContactDetailsVisible ? _navigationService.ContactDetailsViewModel.SearchCriteria : _currentItem != null
-                    ? _currentItem.GetSearchPattern()
-                    : string.Empty);
+                previewView.SetSearchPattern(_navigationService.IsContactDetailsVisible
+                    ? _navigationService.ContactDetailsViewModel.SearchCriteria
+                    : _currentItem != null
+                        ? _currentItem.GetSearchPattern()
+                        : string.Empty);
                 switch (_currentData.TypeItem)
                 {
                     case OFTypeSearchItem.Email:
                         if (_currentData.TypeItem == OFTypeSearchItem.Email)
                         {
-                            previewView.SetFullFolderPath(OFSearchItemHelper.GetFullFolderPath(_currentData as OFEmailSearchObject));
+                            previewView.SetFullFolderPath(
+                                OFSearchItemHelper.GetFullFolderPath(_currentData as OFEmailSearchObject));
                         }
                         previewView.SetPreviewObject(_currentData);
                         break;
@@ -438,7 +476,7 @@ namespace OF.Module.ViewModel
             {
                 var contactDetails = _container.Resolve<IContactDetailsViewModel>();
                 MoveToLeft(contactDetails.View, useTransaction);
-                Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => contactDetails.SetDataObject(previewData)));
+                Dispatcher.CurrentDispatcher.BeginInvoke((Action) (() => contactDetails.SetDataObject(previewData)));
 
             }
             catch (Exception ex)
@@ -565,7 +603,7 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                TurboLimeActivate.Instance.TryCheckAgain();
+                _turboLimeActivate.TryCheckAgain();
                 UpdatedActivatedStatus();
             }
             catch (Exception ex)
@@ -578,13 +616,14 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                if (TurboLimeActivate.Instance.Deactivate(true))
+                if (_turboLimeActivate.Deactivate(true))
                 {
                     UpdatedActivatedStatus();
                 }
                 else
                 {
-                    OFMessageBoxService.Instance.Show("Warning", "Something wrong during Deactivate", MessageBoxButton.OK,
+                    OFMessageBoxService.Instance.Show("Warning", "Something wrong during Deactivate",
+                        MessageBoxButton.OK,
                         MessageBoxImage.Warning);
                 }
             }
@@ -613,7 +652,7 @@ namespace OF.Module.ViewModel
             get
             {
 #if !TRIAL
-                return TurboLimeActivate.Instance.DaysRemain.ToString(); //return string.Empty;
+                return _turboLimeActivate.DaysRemain.ToString(); //return string.Empty;
 #else
       return TurboLimeActivate.Instance.DaysRemain.ToString();
 #endif
@@ -766,7 +805,7 @@ namespace OF.Module.ViewModel
             try
             {
                 if (_navigationService != null && _navigationService.IsContactDetailsVisible &&
-                        !_navigationService.ContactDetailsViewModel.IsSameData(action.Data as ISearchObject))
+                    !_navigationService.ContactDetailsViewModel.IsSameData(action.Data as ISearchObject))
                 {
                     _navigationService.MoveToFirstDataView(false);
                     ShowContactPreview(action.Data, false);
@@ -801,10 +840,7 @@ namespace OF.Module.ViewModel
 
         public bool IsBusy
         {
-            get
-            {
-                return _isBusy;
-            }
+            get { return _isBusy; }
             private set
             {
                 _isBusy = value;
@@ -819,7 +855,8 @@ namespace OF.Module.ViewModel
             get
             {
 #if !TRIAL
-                return ActivateStatus == OFActivationState.Activated ? Visibility.Collapsed : Visibility.Visible; //return Visibility.Collapsed;
+                return ActivateStatus == OFActivationState.Activated ? Visibility.Collapsed : Visibility.Visible;
+                    //return Visibility.Collapsed;
 #else
       return ActivateStatus == ActivationState.Activated ? Visibility.Collapsed : Visibility.Visible;
 #endif
@@ -840,7 +877,9 @@ namespace OF.Module.ViewModel
         {
             get
             {
-                var visibility = _navigationService != null && _navigationService.IsBackButtonVisible ? Visibility.Visible : Visibility.Collapsed;
+                var visibility = _navigationService != null && _navigationService.IsBackButtonVisible
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
                 Debug.WriteLine(visibility);
                 return visibility;
             }
@@ -915,9 +954,18 @@ namespace OF.Module.ViewModel
         {
             try
             {
+                _turboLimeActivate.Init();
+            }
+            catch (Exception ex)
+            {
+                OFLogger.Instance.LogError(ex.ToString());
+            }
+            try
+            {
                 NotifyServerPluginRunning();
                 Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
                 OutlookPreviewHelper.Instance.PreviewHostType = OFHostType.Plugin;
+                UpdatedActivatedStatus();
                 InitializeCommands();
                 if (_elasticSearchViewModel.IsNotNull())
                 {

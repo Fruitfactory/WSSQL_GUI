@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
+using OF.Core.Core.LimeLM;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
@@ -128,6 +129,8 @@ namespace OF.Module
             _unityContainer.RegisterType<IOFElasticSearchRemovingClient, OFElasticSearchRemovingClient>();
 
             _unityContainer.RegisterType<IOFLogFilesSenderManager, OFLogFilesSenderManager>();
+
+            _unityContainer.RegisterType<IOFTurboLimeActivate, TurboLimeActivate>();
             
             watch.Stop();
             OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));

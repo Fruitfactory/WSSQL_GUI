@@ -328,6 +328,7 @@
     <Compile Include="Interfaces\IOFElasticSearchRemovingClient.cs" />
     <Compile Include="Interfaces\IOFElasticsearchStoreClient.cs" />
     <Compile Include="Interfaces\IOFQueryMatchPhrase.cs" />
+    <Compile Include="Interfaces\IOFTurboLimeActivate.cs" />
     <Compile Include="Interfaces\IOFWildcard.cs" />
     <Compile Include="Interfaces\IOutlookFolder.cs" />
     <Compile Include="Interfaces\IOutlookHelper.cs" />
