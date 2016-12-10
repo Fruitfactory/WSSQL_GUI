@@ -94,7 +94,7 @@ namespace OF.CA
                 }
                 DeleteRootFolder(session, path);
 
-                DeleteElasticSearchFiles(session, OFRegistryHelper.Instance.GetElasticSearchpath());
+                DeleteElasticSearchFiles(session, session[ElasticSearchInstallFolder]);
                 DeleteRegistryKeys();
                 DeleteUnistallInfo(session);
 
