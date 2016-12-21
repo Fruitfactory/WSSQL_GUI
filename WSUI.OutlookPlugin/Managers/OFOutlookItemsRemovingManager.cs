@@ -67,7 +67,7 @@ namespace OFOutlookPlugin.Managers
                             continue;
                         var id = pa.BinaryToString(property);
                         Outlook.MAPIFolder folder = null;
-                        if (!string.IsNullOrEmpty(id) && (folder = nm.GetFolderFromID(id)) != null)
+                        if (!string.IsNullOrEmpty(id) && (folder = nm.GetFolderFromID(id)) != null && !_dictionaryDeleteFolders.ContainsKey(folder.FullFolderPath))
                         {
                             _dictionaryDeleteFolders.Add(folder.FullFolderPath, null);
                         }
@@ -109,7 +109,7 @@ namespace OFOutlookPlugin.Managers
             if (!_folders.ContainsKey(Folder.EntryID))
             {
                 Outlook.Folder folder = _module.OutlookApp.Session.GetFolderFromID(Folder.EntryID) as Outlook.Folder;
-                if (folder != null)
+                if (folder != null && !_folders.ContainsKey(Folder.EntryID))
                 {
                     folder.BeforeItemMove += FolderOnBeforeItemMove;
                     _folders.Add(Folder.EntryID,folder);

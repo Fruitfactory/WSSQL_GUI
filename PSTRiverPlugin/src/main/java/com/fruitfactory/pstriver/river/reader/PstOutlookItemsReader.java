@@ -200,12 +200,38 @@ public class PstOutlookItemsReader extends PstBaseOutlookIndexer implements IPst
             long size = email.getSize();
             String conversationID = email.getConversationid();
 
-            PSTConversationIndexData indexData = new PSTConversationIndexData(email.getConversationindex().getBytes());
-            String conversationIndex = Integer.toString(indexData.getConversationIndex());
-            String outlookConversationId = indexData.getOutlookConversationId();
-            String body = new String(Base64.decode(email.getContent()));
-            String htmlBody = new String(Base64.decode(email.getHtmlcontent()));
-            String analyzedContent = _tika.parseToString(new BytesStreamInput(htmlBody.getBytes()),new Metadata());
+            String conversationIndex = null;
+            String outlookConversationId = null;
+            String body = null;
+            String htmlBody = null;
+            try{
+                PSTConversationIndexData indexData = new PSTConversationIndexData(email.getConversationindex().getBytes());
+                conversationIndex = Integer.toString(indexData.getConversationIndex());
+                outlookConversationId = indexData.getOutlookConversationId();
+
+            }catch (Exception ex){
+                _logger.error("Conversation Index: " + ex.getMessage());
+            }
+
+            try {
+                body = new String(Base64.decode(email.getContent()));
+
+            }catch(Exception ex){
+                _logger.error("Body: " + ex.getMessage() +" : "+ ex.toString());
+            }
+            try {
+                htmlBody = new String(Base64.decode(email.getHtmlcontent()));
+            }catch(Exception ex){
+                _logger.error("Html Body: " + ex.getMessage() +" : "+ ex.toString());
+            }
+
+            String analyzedContent = null;
+            if(body  != null && !body.isEmpty()){
+                analyzedContent = _tika.parseToString(new BytesStreamInput(htmlBody.getBytes()),new Metadata());
+             }else if (htmlBody != null && !htmlBody.isEmpty()){
+                analyzedContent = _tika.parseToString(new BytesStreamInput(htmlBody.getBytes()),new Metadata());
+            }
+
             String hasAttachments = email.getHasattachments();
             String fromName = email.getFromname();
             String fromAddress = email.getFromaddress();

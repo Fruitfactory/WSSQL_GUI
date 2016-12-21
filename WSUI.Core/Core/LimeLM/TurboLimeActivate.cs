@@ -47,7 +47,7 @@ namespace OF.Core.Core.LimeLM
 
         // O_o
         private const int DaysBetweenCheck = 90;
-            // we should use 0. In this case TurboActive verify activation with the server every time when we call IsGenuine()
+        // we should use 0. In this case TurboActive verify activation with the server every time when we call IsGenuine()
 
         private const int GraceOfInerErr = 14;
         private const string VersionId = "4d6ed75a527c1957550015.01792667";
@@ -62,13 +62,27 @@ namespace OF.Core.Core.LimeLM
             _turboActivate = new TurboActivate(VersionId);
         }
 
-        static TurboLimeActivate() { }
+        static TurboLimeActivate()
+        {
+        }
 
         #region [public]
 
         public int DaysRemain
         {
-            get { return (int)_turboActivate.TrialDaysRemaining(); }
+            get
+            {
+                try
+                {
+                    var daysRemain = (int) _turboActivate.TrialDaysRemaining();
+                    return daysRemain;
+                }
+                catch (Exception ex)
+                {
+                    OFLogger.Instance.LogError(ex.ToString());                    
+                }
+                return 0;
+            }
         }
 
         public OFActivationState State
