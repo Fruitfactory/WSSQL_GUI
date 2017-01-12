@@ -78,7 +78,7 @@ namespace WSGen
 
             XDocument doc = XDocument.Load(setupProject);
 
-            XElement program = !bootStrap ? doc.Root.FirstNode as XElement : doc.Root.LastNode as XElement;
+            XElement program = !bootStrap ? doc.Root.FirstNode as XElement : doc.Root.LastNode.PreviousNode as XElement;
             if (program != null)
             {
                 //XAttribute attr = program.Attribute("Id");

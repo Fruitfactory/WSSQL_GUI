@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:bal="http://schemas.microsoft.com/wix/BalExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
   <?define LibsDir="$(var.SolutionDir)/Toolkits/WixWPF/" ?>
-  <Bundle Name="OutlookFinder" Version="1.0.3.1232" Manufacturer="FruitFactory" UpgradeCode="DC120454-63AF-4DAA-87EC-215FECCA4A64" IconSourceFile="Image\logo_64.ico" DisableModify="yes" DisableRemove="yes">
+  <Bundle Name="OutlookFinder" Version="1.0.3.1241" Manufacturer="FruitFactory" UpgradeCode="DC120454-63AF-4DAA-87EC-215FECCA4A64" IconSourceFile="Image\logo_64.ico" DisableModify="yes" DisableRemove="yes">
     <BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
       <Payload SourceFile="BootstrapperCore.config" />
       <Payload SourceFile="$(var.LibsDir)WixWPF.dll" />
@@ -12,28 +12,10 @@
     <Chain>
       <PackageGroupRef Id="NetFx40ClientWeb" />
       <!--<PackageGroupRef Id="JavaRuntime"/>-->
-      <ExePackage Id="JavaRuntime86" Name="JavaRuntime86" DownloadUrl="http://javadl.oracle.com/webapps/download/AutoDL?BundleId=216432"
-                  DetectCondition='(JavaCurrentVersion&gt;="1.8") OR (JavaCurrentVersionWow&gt;="1.8")'
-                  InstallCondition="NOT VersionNT64"
-                  InstallCommand="/s"
-                  Cache="no"
-                  Compressed="no"
-                  PerMachine="yes"
-                  Permanent="yes"
-                  Vital="yes"
-                  SuppressSignatureVerification="yes">
+      <ExePackage Id="JavaRuntime86" Name="JavaRuntime86" DownloadUrl="http://javadl.oracle.com/webapps/download/AutoDL?BundleId=216432" DetectCondition="(JavaCurrentVersion&gt;=&quot;1.8&quot;) OR (JavaCurrentVersionWow&gt;=&quot;1.8&quot;)" InstallCondition="NOT VersionNT64" InstallCommand="/s" Cache="no" Compressed="no" PerMachine="yes" Permanent="yes" Vital="yes" SuppressSignatureVerification="yes">
         <RemotePayload ProductName="jre-8u111-windows-i586.exe" Description="Java Platform SE binary x86" Size="56134208" Version="8.0.1110.14" Hash="11D6A333A6D1B939A4D40082A4ACAB737071A7B8" />
       </ExePackage>
-      <ExePackage Id="JavaRuntime64" Name="JavaRuntime64" DownloadUrl="http://javadl.oracle.com/webapps/download/AutoDL?BundleId=216434"
-                  DetectCondition='(JavaCurrentVersion&gt;="1.8") OR (JavaCurrentVersionWow&gt;="1.8")'
-                  InstallCondition="VersionNT64"
-                  InstallCommand="/s"
-                  Cache="no"
-                  Compressed="no"
-                  PerMachine="yes"
-                  Permanent="yes"
-                  Vital="yes"
-                  SuppressSignatureVerification="yes">
+      <ExePackage Id="JavaRuntime64" Name="JavaRuntime64" DownloadUrl="http://javadl.oracle.com/webapps/download/AutoDL?BundleId=216434" DetectCondition="(JavaCurrentVersion&gt;=&quot;1.8&quot;) OR (JavaCurrentVersionWow&gt;=&quot;1.8&quot;)" InstallCondition="VersionNT64" InstallCommand="/s" Cache="no" Compressed="no" PerMachine="yes" Permanent="yes" Vital="yes" SuppressSignatureVerification="yes">
         <RemotePayload ProductName="jre-8u111-windows-x64.exe" Description="Java Platform SE binary x64" Size="63235648" Version="8.0.1110.14" Hash="12E9492F2F2066F5B9187ED00995EDE95491C445" />
       </ExePackage>
       <RollbackBoundary Id="Rollback"></RollbackBoundary>
@@ -41,12 +23,11 @@
     </Chain>
   </Bundle>
   <Fragment>
-    
     <!--<PackageGroup Id="JavaRuntime">
       <ExePackage Id="JavaRuntime86" 
                   Name="JavaRuntime86" 
                   SourceFile="$(var.SolutionDir)/Toolkits/Java/jre-8u111-windows-i586.exe"
-                  DetectCondition='(JavaCurrentVersion&lt;="1.7") OR (JavaCurrentVersionWow&lt;="1.7")'
+                  DetectCondition='(JavaCurrentVersion&gt;="1.8") OR (JavaCurrentVersionWow&gt;="1.8")'
                   InstallCondition="NOT VersionNT64" 
                   InstallCommand="/s" 
                   Cache="no"
@@ -59,7 +40,7 @@
       <ExePackage Id="JavaRuntime64" 
                   Name="JavaRuntime64" 
                   SourceFile="$(var.SolutionDir)/Toolkits/Java/jre-8u111-windows-x64.exe" 
-                  DetectCondition='(JavaCurrentVersion&lt;="1.7") OR (JavaCurrentVersionWow&lt;="1.7")'
+                  DetectCondition='(JavaCurrentVersion&gt;="1.8") OR (JavaCurrentVersionWow&gt;="1.8")'
                   InstallCondition="VersionNT64" 
                   InstallCommand="/s" 
                   Cache="no"
