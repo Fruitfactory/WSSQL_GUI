@@ -228,7 +228,7 @@ namespace OF.Core.Helpers
             }
             var registry = machineScope ? Registry.LocalMachine : _baseRegistry;
             var key = machineScope ? string.Format(@"SOFTWARE\Microsoft\Office\{0}\Outlook\Security", officeVersion) : string.Format("Software\\Policies\\Microsoft\\Office\\{0}\\Outlook\\Security", officeVersion);
-            var securityKey = registry.CreateSubKey(key);
+            var securityKey = registry.CreateSubKey(key,RegistryKeyPermissionCheck.ReadWriteSubTree);
             if (securityKey != null)
             {
                 foreach (var keyDisableWarningsValue in _keyDisableWarningsValues)
@@ -253,7 +253,7 @@ namespace OF.Core.Helpers
             try
             {
                 var key = string.Format(@"SOFTWARE\Microsoft\Office\{0}\Outlook\Security", officeVersion);
-                var preferenceKey = registry.CreateSubKey(key);
+                var preferenceKey = registry.CreateSubKey(key,RegistryKeyPermissionCheck.ReadWriteSubTree);
                 if (preferenceKey != null)
                 {
                     preferenceKey.SetValue("ReliableFolderMoveEvent", 1);
@@ -791,7 +791,7 @@ namespace OF.Core.Helpers
             try
             {
                 RegistryKey temp = _baseRegistry;
-                RegistryKey subKey = temp.CreateSubKey(IsProduct ? ProductSubKey : AddInOutlookSubKey);
+                RegistryKey subKey = temp.CreateSubKey(IsProduct ? ProductSubKey : AddInOutlookSubKey,RegistryKeyPermissionCheck.ReadWriteSubTree);
                 return subKey;
             }
             catch (Exception)
@@ -807,7 +807,7 @@ namespace OF.Core.Helpers
             try
             {
                 RegistryKey temp = Registry.LocalMachine;
-                RegistryKey subKey = temp.CreateSubKey(ProductSubKey);
+                RegistryKey subKey = temp.CreateSubKey(ProductSubKey,RegistryKeyPermissionCheck.ReadWriteSubTree);
                 return subKey;
             }
             catch (Exception)
@@ -816,8 +816,19 @@ namespace OF.Core.Helpers
             }
         }
 
+        #region java
 
         public String GetJavaInstallationPath()
+        {
+            return GetJavaInstallationSettings("JavaHome");
+        }
+
+        public string GetJavaRuntimeLibPath()
+        {
+            return GetJavaInstallationSettings("RuntimeLib");
+        }
+
+        private static string GetJavaInstallationSettings(string key)
         {
             String javaKey = "SOFTWARE\\JavaSoft\\Java Runtime Environment";
             String javaWow3264Node = "SOFTWARE\\Wow6432Node\\JavaSoft\\Java Runtime Environment";
@@ -831,12 +842,11 @@ namespace OF.Core.Helpers
 
             using (var baseKey = machineKey.OpenSubKey(javaKey))
             {
-
                 if (baseKey != null)
                 {
                     String currentVersion = baseKey.GetValue("CurrentVersion").ToString();
-                    using (var homeKey = baseKey.OpenSubKey(currentVersion))
-                        return homeKey.GetValue("JavaHome").ToString();
+                    using (var homeKey = baseKey.OpenSubKey(currentVersion,RegistryKeyPermissionCheck.ReadSubTree))
+                        return homeKey.GetValue(key).ToString();
                 }
             }
             using (var baseWowKey = machineKey.OpenSubKey(javaWow3264Node))
@@ -844,13 +854,91 @@ namespace OF.Core.Helpers
                 if (baseWowKey != null)
                 {
                     String currentVersion = baseWowKey.GetValue("CurrentVersion").ToString();
-                    using (var homeKey = baseWowKey.OpenSubKey(currentVersion))
-                        return homeKey.GetValue("JavaHome").ToString();
+                    using (var homeKey = baseWowKey.OpenSubKey(currentVersion,RegistryKeyPermissionCheck.ReadSubTree))
+                        return homeKey.GetValue(key).ToString();
                 }
             }
 
 
             return "";
         }
+
+
+        #endregion
+
+
+
+
+
+        #region es settings
+
+        private readonly List<string>  ESKeys = new List<string>()
+            {
+                "SOFTWARE\\Apache Software Foundation\\Procrun 2.0\\elasticsearch-service-x86\\Parameters\\Java",
+                "SOFTWARE\\WOW6432Node\\Apache Software Foundation\\Procrun 2.0\\elasticsearch-service-x86\\Parameters\\Java",
+                "SOFTWARE\\WOW6432Node\\Apache Software Foundation\\Procrun 2.0\\elasticsearch-service-x64\\Parameters\\Java"        
+            };
+
+        public string GetESJvmValue()
+        {
+            return GetESSettingsValue("Jvm");
+        }
+
+        public void SetESJvmValue(object value)
+        {
+            SetESSettinsValue("Jvm", value);
+        }
+
+        private void SetESSettinsValue(string key, object value)
+        {
+            var machineKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+
+            if (machineKey == null)
+            {
+                return;
+            }
+
+            foreach (var key1 in ESKeys)
+            {
+                using (var baseKey = machineKey.OpenSubKey(key1,true))
+                {
+                    if (baseKey != null)
+                    {
+                        baseKey.SetValue(key,value);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private string GetESSettingsValue(string key)
+        {
+
+            var machineKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+
+            if (machineKey == null)
+            {
+                return string.Empty;
+            }
+
+            foreach (var key1 in ESKeys)
+            {
+                using (var baseKey = machineKey.OpenSubKey(key1))
+                {
+                    if (baseKey != null)
+                    {
+                        String keyValue = baseKey.GetValue(key).ToString();
+                        return keyValue;
+                    }
+                }
+            }
+            return string.Empty;
+        }
+
+
+        #endregion
+
+
+
     }
 }

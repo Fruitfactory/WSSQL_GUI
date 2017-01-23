@@ -13,6 +13,6 @@ namespace OF.Core.Interfaces
 
         void WarmUp();
 
-        void CheckAndCreareWarms();
+        void CheckAndCreateWarms();
     }
 }

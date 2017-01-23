@@ -266,6 +266,7 @@
           <!--<fire:FirewallException Id="_serviceapp_exe_firewall" Name="Service Application for OutlookFinder" Port="11223" Protocol="tcp" Scope="any"></fire:FirewallException>-->
         </File>
         <File Id="_firewallrules_exe_" Name="firewallrules.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        <File Id="_ofinspection_exe_" Name="ofinspection.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nancy_dll_" Name="Nancy.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nancy_Hosting_Self_dll_" Name="Nancy.Hosting.Self.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
       </Component>

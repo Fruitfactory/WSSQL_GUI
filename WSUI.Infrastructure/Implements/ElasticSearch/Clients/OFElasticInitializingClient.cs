@@ -73,7 +73,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             return status.Count;
         }
 
-        public void CheckAndCreareWarms()
+        public void CheckAndCreateWarms()
         {
             var response = ElasticClient.GetWarmer("warm_contact_1");
             if (response.Indices != null && !response.Indices.Any())

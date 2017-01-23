@@ -29,6 +29,7 @@ using OF.Core.Interfaces;
 using OF.Core.Logger;
 using OF.Core.Utils.Dialog;
 using OF.Infrastructure;
+using OF.Infrastructure.Helpers;
 using OF.Infrastructure.MVVM.StatusItem;
 using OF.Module.Interface.Service;
 using OF.Module.Interface.View;
@@ -297,17 +298,43 @@ namespace OF.Module.ViewModel
 #endif
             if (IsServiceRunning)
             {
-                var resp = ElasticSearchClient.IndexExists(OFElasticSearchClientBase.DefaultInfrastructureName);
-                IsIndexExisted = resp.Exists;//false;//
-                var riverStatusResp = ElasticSearchClient.GetRiverStatus();
-                IsInitialIndexinginProgress = riverStatusResp.Response.IsNotNull() &&
-                                              riverStatusResp.Response.Status == OFRiverStatus.InitialIndexing;
-                OFLogger.Instance.LogInfo("STATUS: {0}",riverStatusResp.Response.Status);
-                _eventAggregator.GetEvent<OFMenuEnabling>().Publish(resp.Exists);
-                if (IsIndexExisted)
+                CheckIndexState();
+            }
+            else
+            {
+                OFLogger.Instance.LogInfo("Service is stopped...");
+                CheckServiceSettings();
+            }
+        }
+
+        private static void CheckServiceSettings()
+        {
+            try
+            {
+                if (!OFInspectionHelper.Instance.IsESServiceSettingsValid())
                 {
-                    ElasticSearchClient.CheckAndCreareWarms();
+                    OFLogger.Instance.LogInfo("Settings are different. We should fix it!!!!");
+                    OFInspectionHelper.Instance.RunFixSettings(new List<OFSettingsType>() { OFSettingsType.CheckAndFixJvmServivePath });
                 }
+            }
+            catch (Exception e)
+            {
+                OFLogger.Instance.LogError(e.ToString());
+            }
+        }
+
+        private void CheckIndexState()
+        {
+            var resp = ElasticSearchClient.IndexExists(OFElasticSearchClientBase.DefaultInfrastructureName);
+            IsIndexExisted = resp.Exists; //false;//
+            var riverStatusResp = ElasticSearchClient.GetRiverStatus();
+            IsInitialIndexinginProgress = riverStatusResp.Response.IsNotNull() &&
+                                          riverStatusResp.Response.Status == OFRiverStatus.InitialIndexing;
+            OFLogger.Instance.LogInfo("STATUS: {0}", riverStatusResp.Response.Status);
+            _eventAggregator.GetEvent<OFMenuEnabling>().Publish(resp.Exists);
+            if (IsIndexExisted)
+            {
+                ElasticSearchClient.CheckAndCreateWarms();
             }
         }
 
@@ -397,7 +424,7 @@ namespace OF.Module.ViewModel
             }
             catch (Exception ex)
             {
-                OFLogger.Instance.LogError(ex.Message);
+                OFLogger.Instance.LogError(ex.ToString());
             } 
         }
 

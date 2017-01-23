@@ -122,6 +122,7 @@
     <Compile Include="Core\Attributes\OFEnumPrefixAttribute.cs" />
     <Compile Include="Core\Attributes\OFFieldAttribute.cs" />
     <Compile Include="Core\Attributes\OFIgnoreAttribute.cs" />
+    <Compile Include="Core\Inspections\OFSettingInspection.cs" />
     <Compile Include="Core\Rules\OFPriceAnountRule.cs" />
     <Compile Include="Core\Rules\OFRuleToken.cs" />
     <Compile Include="Core\Suggest\OFBaseSuggester.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="Data\ElasticSearch\Response\OFStatusResponse.cs" />
     <Compile Include="Enums\OFOutlookItemsIndexProcess.cs" />
     <Compile Include="Enums\OFPluginStatus.cs" />
+    <Compile Include="Enums\OFSettingsType.cs" />
     <Compile Include="Events\OFMenuEnabling.cs" />
     <Compile Include="Extensions\EmailExtensions.cs" />
     <Compile Include="Extensions\FileExtensions.cs" />
@@ -328,6 +330,7 @@
     <Compile Include="Interfaces\IOFElasticSearchRemovingClient.cs" />
     <Compile Include="Interfaces\IOFElasticsearchStoreClient.cs" />
     <Compile Include="Interfaces\IOFQueryMatchPhrase.cs" />
+    <Compile Include="Interfaces\IOFSettingInspection.cs" />
     <Compile Include="Interfaces\IOFTurboLimeActivate.cs" />
     <Compile Include="Interfaces\IOFWildcard.cs" />
     <Compile Include="Interfaces\IOutlookFolder.cs" />
