@@ -178,17 +178,17 @@ namespace OF.Infrastructure.Service.Index
                 {
 
                     var listOutlookStores =
-                        ns.Stores.OfType<Outlook.Store>()
-                            .Select(s => new OFStore() {Name = s.DisplayName, Storeid = s.StoreID});
-                    var listESStores = _storeClient.GetStores();
+                        ns.Stores.OfType<Outlook.Store>().ToList()
+                            .Select(s => new OFStore() {Name = s.DisplayName, Storeid = s.StoreID}).ToList();
+                    var listEsStores = _storeClient.GetStores();
                     var listMustIndexStore =
-                        listOutlookStores.Select(s => s.Storeid).Except(listESStores.Select(s => s.Storeid)).ToList();
+                        listOutlookStores.Select(s => s.Storeid).Except(listEsStores.Select(s => s.Storeid)).ToList();
 
                     var listMustDeletedStore =
-                        listESStores.Select(s => s.Storeid).Except(listOutlookStores.Select(s => s.Storeid)).ToList();
+                        listEsStores.Select(s => s.Storeid).Except(listOutlookStores.Select(s => s.Storeid)).ToList();
 
                     var listMstUpdateStore =
-                        listOutlookStores.Select(s => s.Storeid).Intersect(listESStores.Select(s => s.Storeid)).ToList();
+                        listOutlookStores.Select(s => s.Storeid).Intersect(listEsStores.Select(s => s.Storeid)).ToList();
 
 
                     foreach (var indexStoreId in listMustIndexStore)

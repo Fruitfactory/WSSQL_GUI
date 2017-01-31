@@ -22,6 +22,7 @@ using OF.CA.DownloadInstallJava;
 using OF.CA.EmailValidate;
 using OF.Core.Core.LimeLM;
 using OF.Core.Helpers;
+using wyDay.TurboActivate;
 using Exception = System.Exception;
 using View = Microsoft.Deployment.WindowsInstaller.View;
 
@@ -84,11 +85,6 @@ namespace OF.CA
             try
             {
                 string path = GetInstallationFolder(session);
-                if (OFRegistryHelper.Instance.IsSilendUpdate())
-                {
-                    session.Log("Silent update...");
-                    return ActionResult.Success;
-                }
                 session.Log("Delete  files...");
                 DeleteUpdateFolder(session);
                 var list = new List<string> { LocFilename };
@@ -98,7 +94,7 @@ namespace OF.CA
                 }
                 DeleteRootFolder(session, path);
 
-                DeleteElasticSearchFiles(session, OFRegistryHelper.Instance.GetElasticSearchpath());
+                DeleteElasticSearchFiles(session, session[ElasticSearchInstallFolder]);
                 DeleteRegistryKeys();
                 DeleteUnistallInfo(session);
 
@@ -641,61 +637,7 @@ namespace OF.CA
             }
             return ActionResult.Success;
         }
-
-        [CustomAction]
-        public static ActionResult ActivatePlugin(Session session)
-        {
-            if (OFRegistryHelper.Instance.IsSilendUpdate())
-                return ActionResult.Success;
-            try
-            {
-                string path = Path.GetDirectoryName(typeof(CustomActions).Assembly.Location);
-                session.Log(string.Format("Path {0}", path));
-                ExtractFiles(session, path);
-                string email = session["EMAILVALUE"];
-
-                if (string.IsNullOrEmpty(email))
-                {
-                    session.Log("Email is empty");
-                    return ActionResult.Failure;
-                }
-                try
-                {
-                    var key = LimeLMApi.FindAndReturnKey(email);
-                    if (key == null)
-                    {
-                        session.Log("The key hasn't been generated.");
-                    }
-                    else
-                    {
-                        session.Log("ID - KEY: " + key.Item1 + " - " + key.Item2);
-                        OFRegistryHelper.Instance.SetPKetId(key.Item1.Trim());
-                        if (TurboActivate.CheckAndSavePKey(key.Item2.Trim(), TurboActivate.TA_Flags.TA_USER))
-                        {
-                            TurboActivate.Activate();
-                            session.Log("Activated.");
-                        }
-                        else
-                        {
-                            session.Log("Key wasn't saved");
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    session.Log(ex.Message);
-                }
-                CopyDatFileToInstallationFolder(session, path, GetInstallationFolder(session));
-                session.Log(string.Format("Success"));
-                return ActionResult.Success;
-            }
-            catch (Exception ex)
-            {
-                session.Log("Activate: {0}", ex.Message);
-                return ActionResult.Failure;
-            }
-        }
-
+        
         private static void ExtractFiles(Session session, string path)
         {
             if (!CopyFileFromDatabase(session, path, TurboActivateDatKey, TurboActivateDatFilename))

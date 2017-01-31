@@ -7,6 +7,7 @@ using System.Threading;
 using OF.Core.Core.LimeLM;
 using OF.Core.Enums;
 using OF.Core.Helpers;
+using OF.Core.Interfaces;
 
 namespace OF.Unistall
 {
@@ -26,12 +27,22 @@ namespace OF.Unistall
             string param = args[0];
             if (param != ParamName)
                 return;
-
+            IOFTurboLimeActivate turboLimeActivate = null;
+            try
+            {
+                turboLimeActivate = new TurboLimeActivate();
+                turboLimeActivate.Init();
+            }
+            catch (Exception ex)
+            {
+                Log(ex.ToString());
+            }
             //using (logWriter = File.CreateText("C:\\of_install.log"))
             {
                 try
                 {
-                    TurboLimeActivate.Instance.Deactivate(true);
+                     
+                    turboLimeActivate.Deactivate(true);
                 }
                 catch (Exception ex)
                 {

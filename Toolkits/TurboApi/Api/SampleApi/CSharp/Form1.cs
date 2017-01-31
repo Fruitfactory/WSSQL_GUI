@@ -2,53 +2,96 @@
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using wyDay.TurboActivate;
 
 namespace CSharp
 {
     public partial class Form1 : Form
     {
-        bool isActivated;
+        readonly TurboActivate ta;
+        bool isGenuine;
+
+        // Set the trial flags you want to use. Here we've selected that the
+        // trial data should be stored system-wide (TA_SYSTEM) and that we should
+        // use un-resetable verified trials (TA_VERIFIED_TRIAL).
+        readonly TA_Flags trialFlags = TA_Flags.TA_SYSTEM | TA_Flags.TA_VERIFIED_TRIAL;
+
+        // Don't use 0 for either of these values.
+        // We recommend 90, 14. But if you want to lower the values
+        // we don't recommend going below 7 days for each value.
+        // Anything lower and you're just punishing legit users.
+        const uint DaysBetweenChecks = 90;
+        const uint GracePeriodLength = 14;
 
         public Form1()
         {
             InitializeComponent();
 
-            //TODO: goto the version page at LimeLM and paste this GUID here
-            TurboActivate.VersionGUID = "4d6ed75a527c1957550015.01792667";
-
             try
             {
+                //TODO: goto the version page at LimeLM and paste this GUID here
+                ta = new TurboActivate("18324776654b3946fc44a5f3.49025204");
+
                 // Check if we're activated, and every 90 days verify it with the activation servers
                 // In this example we won't show an error if the activation was done offline
-                // (see the 3rd parameter of the IsGenuine() function) -- http://wyday.com/limelm/help/offline-activation/
-                IsGenuineResult gr = TurboActivate.IsGenuine(0, 14, true);
+                // (see the 3rd parameter of the IsGenuine() function)
+                // https://wyday.com/limelm/help/offline-activation/
+                IsGenuineResult gr = ta.IsGenuine(DaysBetweenChecks, GracePeriodLength, true);
 
-                isActivated = gr == IsGenuineResult.Genuine ||
-                              gr == IsGenuineResult.GenuineFeaturesChanged ||
+                isGenuine = gr == IsGenuineResult.Genuine ||
+                            gr == IsGenuineResult.GenuineFeaturesChanged ||
 
-                              // an internet error means the user is activated but
-                              // TurboActivate failed to contact the LimeLM servers
-                              gr == IsGenuineResult.InternetError;
+                            // an internet error means the user is activated but
+                            // TurboActivate failed to contact the LimeLM servers
+                            gr == IsGenuineResult.InternetError;
 
-                if (gr == IsGenuineResult.InternetError)
+
+                // If IsGenuineEx() is telling us we're not activated
+                // but the IsActivated() function is telling us that the activation
+                // data on the computer is valid (i.e. the crypto-signed-fingerprint matches the computer)
+                // then that means that the customer has passed the grace period and they must re-verify
+                // with the servers to continue to use your app.
+
+                //Note: DO NOT allow the customer to just continue to use your app indefinitely with absolutely
+                //      no reverification with the servers. If you want to do that then don't use IsGenuine() or
+                //      IsGenuineEx() at all -- just use IsActivated().
+                if (!isGenuine && ta.IsActivated())
                 {
-                    //TODO: give the user the option to retry the genuine checking immediately
-                    //      For example a dialog box. In the dialog call IsGenuine() to retry immediately
+                    // We're treating the customer as is if they aren't activated, so they can't use your app.
+
+                    // However, we show them a dialog where they can reverify with the servers immediately.
+
+                    ReVerifyNow frmReverify = new ReVerifyNow(ta, DaysBetweenChecks, GracePeriodLength);
+
+                    if (frmReverify.ShowDialog(this) == DialogResult.OK)
+                    {
+                        isGenuine = true;
+                    }
+                    else if (!frmReverify.noLongerActivated) // the user clicked cancel and the user is still activated
+                    {
+                        // Just bail out of your app
+                        Application.Exit();
+                        return;
+                    }
                 }
             }
             catch (TurboActivateException ex)
             {
+                // failed to check if activated, meaning the customer screwed
+                // something up so kill the app immediately
                 MessageBox.Show("Failed to check if activated: " + ex.Message);
+                Application.Exit();
+                return;
             }
 
-            ShowTrial(!isActivated);
+            ShowTrial(!isGenuine);
 
-            // if this app is activated then you can get a feature value
-            // See: http://wyday.com/limelm/help/license-features/
+            // If this app is activated then you can get custom license fields.
+            // See: https://wyday.com/limelm/help/license-features/
             /*
-            if (isActivated)
+            if (isGenuine)
             {
-                string featureValue = TurboActivate.GetFeatureValue("your feature name");
+                string featureValue = ta.GetFeatureValue("your feature name");
 
                 //TODO: do something with the featureValue
             }
@@ -57,24 +100,38 @@ namespace CSharp
 
         void mnuActDeact_Click(object sender, EventArgs e)
         {
-            if (isActivated)
+            if (isGenuine)
             {
                 // deactivate product without deleting the product key
                 // allows the user to easily reactivate
-                TurboActivate.Deactivate(false);
-                isActivated = false;
+                try
+                {
+                    ta.Deactivate(false);
+                }
+                catch (TurboActivateException ex)
+                {
+                    MessageBox.Show("Failed to deactivate: " + ex.Message);
+                    return;
+                }
+
+                isGenuine = false;
                 ShowTrial(true);
             }
             else
             {
-                //Note: you can launch the TurboActivate wizard or you can create you own interface
+                // Note: you can launch the TurboActivate wizard
+                //       or you can create you own interface
 
-                // launch TurboActivate.exe to get the product key from the user
+                // launch TurboActivate.exe to get the product key from
+                // the user, and activate.
                 Process TAProcess = new Process
                 {
                     StartInfo =
                     {
-                        FileName = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TurboActivate.exe")
+                        FileName = Path.Combine(
+                            Path.GetDirectoryName(Application.ExecutablePath),
+                                "TurboActivate.exe"
+                            )
                     },
                     EnableRaisingEvents = true
                 };
@@ -100,10 +157,22 @@ namespace CSharp
         /// <summary>Rechecks if we're activated -- if so enable the app features.</summary>
         void CheckIfActivated()
         {
-            // recheck if activated
-            if (TurboActivate.IsActivated())
+            bool isNowActivated = false;
+
+            try
             {
-                isActivated = true;
+                isNowActivated = ta.IsActivated();
+            }
+            catch (TurboActivateException ex)
+            {
+                MessageBox.Show("Failed to check if activated: " + ex.Message);
+                return;
+            }
+
+            // recheck if activated
+            if (isNowActivated)
+            {
+                isGenuine = true;
                 ReEnableAppFeatures();
                 ShowTrial(false);
             }
@@ -120,16 +189,19 @@ namespace CSharp
 
             if (show)
             {
-                int trialDaysRemaining = 0;
+                uint trialDaysRemaining = 0;
 
                 try
                 {
-                    TurboActivate.UseTrial();
+                    ta.UseTrial(trialFlags);
 
                     // get the number of remaining trial days
-                    trialDaysRemaining = TurboActivate.TrialDaysRemaining(); 
+                    trialDaysRemaining = ta.TrialDaysRemaining(trialFlags);
                 }
-                catch { }
+                catch (TurboActivateException ex)
+                {
+                    MessageBox.Show("Failed to start the trial: " + ex.Message);
+                }
 
                 // if no more trial days then disable all app features
                 if (trialDaysRemaining == 0)
@@ -157,18 +229,21 @@ namespace CSharp
 
         void btnExtendTrial_Click(object sender, EventArgs e)
         {
-            TrialExtension trialExt = new TrialExtension();
+            TrialExtension trialExt = new TrialExtension(ta, trialFlags);
 
             if (trialExt.ShowDialog(this) == DialogResult.OK)
             {
                 // get the number of remaining trial days
-                int trialDaysRemaining = 0;
+                uint trialDaysRemaining = 0;
 
                 try
                 {
-                    trialDaysRemaining = TurboActivate.TrialDaysRemaining();
+                    trialDaysRemaining = ta.TrialDaysRemaining(trialFlags);
                 }
-                catch { }
+                catch (TurboActivateException ex)
+                {
+                    MessageBox.Show("Failed to get the trial days remaining: " + ex.Message);
+                }
 
                 // if more trial days then re-enable all app features
                 if (trialDaysRemaining > 0)

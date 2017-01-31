@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
-  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.3.1197" Manufacturer="FruitFactory" UpgradeCode="602854f0-ede9-4eba-bd8c-b6f91822510a" Codepage="1252">
+  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.3.1241" Manufacturer="FruitFactory" UpgradeCode="602854f0-ede9-4eba-bd8c-b6f91822510a" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowDowngrades="no" />-->
     <Upgrade Id="602854f0-ede9-4eba-bd8c-b6f91822510a">
@@ -51,7 +51,6 @@
     <CustomAction Id="CancelMessage" BinaryKey="managedAction" DllEntry="CancelMessage" Execute="immediate" Return="check" />
     <CustomAction Id="ErrorMessage" BinaryKey="managedAction" DllEntry="ErrorMessage" Execute="immediate" Return="check" />
     <CustomAction Id="ClosePrompt" BinaryKey="managedAction" DllEntry="ClosePrompt" Execute="immediate" Return="check" />
-    <CustomAction Id="ActivatePlugin" BinaryKey="managedAction" DllEntry="ActivatePlugin" Execute="immediate" Return="check" />
     <CustomAction Id="SetInstallElasticSearchProperties" Property="InstallElasticSearch" Value="ESPATH=[ELASTICSEASRCHINSTALLFOLDER];OFPATH=[INSTALLFOLDER]"></CustomAction>
     <CustomAction Id="InstallApp" BinaryKey="managedAction" DllEntry="InstallApp" Execute="immediate" Return="check" />
     <CustomAction Id="CheckVersion" BinaryKey="managedAction" DllEntry="CheckVersion" Execute="immediate" Return="check" />
@@ -62,9 +61,9 @@
       <Custom Action="ResetRegistry" After="RegisterDll">NOT Installed</Custom>
       <Custom Action="UnregisterDll" After="SelfUnregModules">Installed</Custom>
       <Custom Action="CheckVersion" Before="InstallInitialize" />
-      <Custom Action="Deactivate" Before="InstallValidate">Installed  OR REMOVE="ALL"</Custom>
+      <Custom Action="Deactivate" Before="InstallValidate">Installed OR REMOVE="ALL"</Custom>
       <!--<Custom Action="StopServiceApp" After="UninstallRules">Installed</Custom>-->
-      <Custom Action="DeleteFiles" After="InstallFinalize">REMOVE="ALL"</Custom>
+      <Custom Action="DeleteFiles" After="InstallFinalize">Installed OR REMOVE="ALL"</Custom>
       <Custom Action="SetInstallElasticSearchProperties" Before="InstallFinalize">NOT Installed</Custom>
       <!--<Custom Action="InstallElasticSearch" After="SetInstallElasticSearchProperties">NOT Installed</Custom>-->
       <Custom Action="StartServiceApp" After="InstallFinalize">NOT Installed</Custom>
@@ -267,6 +266,7 @@
           <!--<fire:FirewallException Id="_serviceapp_exe_firewall" Name="Service Application for OutlookFinder" Port="11223" Protocol="tcp" Scope="any"></fire:FirewallException>-->
         </File>
         <File Id="_firewallrules_exe_" Name="firewallrules.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        <File Id="_ofinspection_exe_" Name="ofinspection.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nancy_dll_" Name="Nancy.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nancy_Hosting_Self_dll_" Name="Nancy.Hosting.Self.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
       </Component>

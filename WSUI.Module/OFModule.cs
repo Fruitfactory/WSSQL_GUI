@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
+using OF.Core.Core.LimeLM;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
@@ -131,6 +132,9 @@ namespace OF.Module
             _unityContainer.RegisterType<IOFEmailSuggestWindow, OFEmailSuggestWindow>();
             _unityContainer.RegisterType<IOFEmailSuggestViewModel, OFEmailSuggestViewModel>();
             _unityContainer.RegisterType<IOFLogFilesSenderManager, OFLogFilesSenderManager>();
+
+            _unityContainer.RegisterType<IOFTurboLimeActivate, TurboLimeActivate>();
+            
 
             _unityContainer.RegisterType<IOutlookAutoCompleteSettingsView, OFOutlookAutoCompleteSettingsView>();
             _unityContainer.RegisterType<IOutlookAutoCompleteSettingsViewModel, OFOutlookAutoCompleteSettingsViewModel>();

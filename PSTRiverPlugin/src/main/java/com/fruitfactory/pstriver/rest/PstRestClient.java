@@ -28,15 +28,12 @@ public class PstRestClient implements IPstRestClient, IPstRestAttachmentClient{
     private final String RESUME_READ_CMD = "resumeread";
     private final String SUSPEND_READ_CMD = "suspendread";
 
-
-    private Resty  restyClient;
     private ESLogger logger;
     private final Object lock = new Object();
     private boolean isStarted = false;
 
     public PstRestClient(ESLogger logger){
         this.logger = logger;
-        restyClient = new Resty();
     }
 
     @Override
@@ -92,6 +89,8 @@ public class PstRestClient implements IPstRestClient, IPstRestAttachmentClient{
     private JSONResource sendSimpleCommand(String cmd){
         JSONResource response = null;
         try {
+            Resty restyClient = new Resty();
+
             response = restyClient.json(new URI(getUrl(cmd)));
         }catch(IOException io){
             logger.error("REST CLIENT: " + io.toString());
@@ -104,7 +103,7 @@ public class PstRestClient implements IPstRestClient, IPstRestAttachmentClient{
 
     private JSONResource tryOneMoreTime(String cmd){
         try {
-            restyClient = new Resty();
+            Resty restyClient = new Resty();
             return restyClient.json(new URI(getUrl(cmd)));
         }catch (Exception ex){
             logger.error("REST CLIENT: " + ex.toString());
@@ -114,6 +113,7 @@ public class PstRestClient implements IPstRestClient, IPstRestAttachmentClient{
 
     private void sendWithDate(String cmd, Date date){
         try{
+            Resty restyClient = new Resty();
             if(date !=null){
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                 String frm = df.format(date);
