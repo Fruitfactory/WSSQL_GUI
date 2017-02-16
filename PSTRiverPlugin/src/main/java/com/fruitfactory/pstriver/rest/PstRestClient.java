@@ -2,14 +2,14 @@ package com.fruitfactory.pstriver.rest;
 
 import com.fruitfactory.pstriver.interfaces.IPstRestAttachmentClient;
 import com.fruitfactory.pstriver.interfaces.IPstRestClient;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import org.elasticsearch.common.logging.ESLogger;
-import us.monoid.json.JSONObject;
-import us.monoid.web.JSONResource;
-import us.monoid.web.Resty;
+
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -86,45 +86,36 @@ public class PstRestClient implements IPstRestClient, IPstRestAttachmentClient{
         return ROOT_URL +  cmd;
     }
 
-    private JSONResource sendSimpleCommand(String cmd){
-        JSONResource response = null;
+    private void sendSimpleCommand(String cmd){
         try {
-            Resty restyClient = new Resty();
-
-            response = restyClient.json(new URI(getUrl(cmd)));
-        }catch(IOException io){
-            logger.error("REST CLIENT: " + io.toString());
-            response = tryOneMoreTime(cmd);
+            Client client = Client.create();
+            WebResource webResource = client.resource(getUrl(cmd));
+            ClientResponse clientResponse = webResource.accept("application/json")
+                    .get(ClientResponse.class);
+            logger.info(String.format("Response for %s: %s",cmd,clientResponse.getStatus()));
+            logger.info(String.format("Entity: %s",clientResponse.getEntity(String.class)));
         }catch(Exception ex){
             logger.error("REST CLIENT: " + ex.toString());
         }
-        return response;
-    }
-
-    private JSONResource tryOneMoreTime(String cmd){
-        try {
-            Resty restyClient = new Resty();
-            return restyClient.json(new URI(getUrl(cmd)));
-        }catch (Exception ex){
-            logger.error("REST CLIENT: " + ex.toString());
-        }
-        return null;
     }
 
     private void sendWithDate(String cmd, Date date){
         try{
-            Resty restyClient = new Resty();
-            if(date !=null){
+            Client client = Client.create();
+            ClientResponse clientResponse = null;
+            if(date != null){
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                 String frm = df.format(date);
                 String url = java.lang.String.format("%s/%s", getUrl(cmd),frm);
-                JSONResource response = restyClient.json(new URI(url));
-                JSONObject obj = response.object();
-                System.out.println(obj);
+                WebResource webResource = client.resource(url);
+                clientResponse = webResource.accept("application/json").get(ClientResponse.class);
             }else{
-                JSONResource response = restyClient.json(new URI(getUrl(cmd)));
-                JSONObject obj = response.object();
-                System.out.println(obj);
+                WebResource webResource = client.resource(getUrl(cmd));
+                clientResponse = webResource.accept("application/json").get(ClientResponse.class);
+            }
+            if(clientResponse != null){
+                logger.info(String.format("Response for %s: %s",cmd,clientResponse.getStatus()));
+                logger.info(String.format("Entity: %s",clientResponse.getEntity(String.class)));
             }
         }catch(Exception ex){
             System.out.println(ex.getMessage());
