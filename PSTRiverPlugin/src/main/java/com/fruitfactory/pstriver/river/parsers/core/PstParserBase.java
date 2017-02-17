@@ -42,7 +42,6 @@ import org.elasticsearch.river.RiverName;
  */
 public abstract class PstParserBase implements IPstParser, IPstStatusTracker,IPstMonitorObjectHelper {
 
-    private Date _lastUpdatedDate;
     private PstFeedDefinition _def;
     private List<Thread> _readers;
     private ESLogger logger;
@@ -93,7 +92,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker,IPs
                 break;
             }
             try {
-                _lastUpdatedDate = getLastDateFromRiver();
+                Date lastUpdatedDate = getLastDateFromRiver();
                 initialriverStatus = getStatusFromRiver();
 
                 countEmails = getLastCountIndexedCountOfEmails();
@@ -104,19 +103,30 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker,IPs
                 }
                 setRiverStatus(initialriverStatus);
                 
-                outlookItemsReader = new PstOutlookItemsReader(_indexName,_lastUpdatedDate,_bulkProcessor,"pst_attachment",logger);
+                outlookItemsReader = new PstOutlookItemsReader(_indexName,lastUpdatedDate,_bulkProcessor,"pst_attachment",logger);
                 cleanerThread = new PstCleaner(_indexName,logger);
+
+                switch(initialriverStatus){
+                    case InitialIndexing:
+                        outlookItemsReader.setPriority(Thread.MAX_PRIORITY);
+                        cleanerThread.setPriority(Thread.MAX_PRIORITY);
+                        break;
+                    default:
+                        outlookItemsReader.setPriority(Thread.MIN_PRIORITY);
+                        cleanerThread.setPriority(Thread.MIN_PRIORITY);
+                        break;
+                }
 
                 int delayTimeOut = onProcess(_readers);
 
                 try {
-                    _lastUpdatedDate = new Date();
+                    lastUpdatedDate = new Date();
                     _readers.clear();
-                    updateLastDateRiver(_lastUpdatedDate);
+                    updateLastDateRiver(lastUpdatedDate);
                     setLastCountIndexedOfEmails(countEmails);
                     setLastCountIndexedOfAttachments(countAttachments);
                     PstRESTRepository.resetForcingIndexing();
-                    setRiverStatus(PstRiverStatus.StandBy);
+                    setRiverStatus(PstRiverStatus.StandBy,lastUpdatedDate);
                     flush();
                     
                     if(delayTimeOut > 0){
@@ -171,12 +181,16 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker,IPs
     protected PstRiverStatus getRiverStatus(){
         return this.riverStatus;
     }
-    
+
     protected void setRiverStatus(PstRiverStatus status){
+        setRiverStatus(status,getLastDateFromRiver());
+    }
+
+
+    protected void setRiverStatus(PstRiverStatus status,  Date lastUpdatedDate){
         this.riverStatus = status;
         updateStatusRiver(this.riverStatus);
-        PstRESTRepository.setRiverStatus(new PstRiverStatusInfo(riverStatus, _lastUpdatedDate, countEmails, countAttachments));
-
+        PstRESTRepository.setRiverStatus(new PstRiverStatusInfo(riverStatus, lastUpdatedDate, countEmails, countAttachments));
     }
     
     protected ESLogger getLogger(){
@@ -271,7 +285,7 @@ public abstract class PstParserBase implements IPstParser, IPstStatusTracker,IPs
                     .field("lastdate", scanDate)
                     .endObject()
                     .endObject();
-            logger.warn("Last Date Update : " + _lastUpdatedDate.toString());
+            logger.warn("Last Date Update : " + scanDate.toString());
 
             esIndex("_river", riverName.name(), PstGlobalConst.LAST_UPDATED_FIELD, xb);
 

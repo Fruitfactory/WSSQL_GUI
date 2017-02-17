@@ -384,9 +384,11 @@ discovery.zen.ping.multicast.enabled: false
 #
 #http.jsonp.enable: true
 
-# The indices.fielddata.cache.size controls how much heap space is allocated to fielddata. 
-# When you run a query that requires access to new field values, it will load the values into memory and then try to add them to fielddata. 
+# The indices.fielddata.cache.size controls how much heap space is allocated to fielddata.
+# When you run a query that requires access to new field values, it will load the values into memory and then try to add them to fielddata.
 # If the resulting fielddata size would exceed the specified size, other values would be evicted in order to make space.
-# By default, this setting is unbounded—Elasticsearch will never evict data from fielddata.
-indices.fielddata.cache.size:  25%
-
+# By default, this setting is unboundedï¿½Elasticsearch will never evict data from fielddata.
+indices.fielddata.cache.size:  10%
+indices.breaker.fielddata.limit: 15%
+indices.breaker.request.limit: 15%
+indices.breaker.total.limit: 15%

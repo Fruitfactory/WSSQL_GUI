@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:bal="http://schemas.microsoft.com/wix/BalExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
   <?define LibsDir="$(var.SolutionDir)/Toolkits/WixWPF/" ?>
-  <Bundle Name="OutlookFinder" Version="1.0.3.1257" Manufacturer="FruitFactory" UpgradeCode="DC120454-63AF-4DAA-87EC-215FECCA4A64" IconSourceFile="Image\logo_64.ico" DisableModify="yes" DisableRemove="yes">
+  <Bundle Name="OutlookFinder" Version="1.0.3.1277" Manufacturer="FruitFactory" UpgradeCode="DC120454-63AF-4DAA-87EC-215FECCA4A64" IconSourceFile="Image\logo_64.ico" DisableModify="yes" DisableRemove="yes">
     <BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
       <Payload SourceFile="BootstrapperCore.config" />
       <Payload SourceFile="$(var.LibsDir)WixWPF.dll" />

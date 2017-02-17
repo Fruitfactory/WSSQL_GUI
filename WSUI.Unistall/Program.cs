@@ -90,10 +90,7 @@ namespace OF.Unistall
         {
             try
             {
-                ServiceController sct =
-                    ServiceController.GetServices()
-                        .FirstOrDefault(
-                            s => s.ServiceName.IndexOf("elasticsearch", StringComparison.InvariantCultureIgnoreCase) > -1);
+                var sct = GetElasticSearchService();
                 if (sct != null && sct.Status == ServiceControllerStatus.Running)
                 {
                     KillTask(sct.ServiceName + ".exe", "elasticsearch");
@@ -103,6 +100,15 @@ namespace OF.Unistall
             {
                 Log(ex.ToString());
             }
+        }
+
+        private static ServiceController GetElasticSearchService()
+        {
+            ServiceController sct =
+                ServiceController.GetServices()
+                    .FirstOrDefault(
+                        s => s.ServiceName.IndexOf("elasticsearch", StringComparison.InvariantCultureIgnoreCase) > -1);
+            return sct;
         }
 
         public static void StopServiceApp()
@@ -168,6 +174,7 @@ namespace OF.Unistall
         {
             try
             {
+                
                 string javaHome = OFRegistryHelper.Instance.GetJavaInstallationPath();
                 var elasticSearchPath = OFRegistryHelper.Instance.GetElasticSearchpath();
                 if (!string.IsNullOrEmpty(elasticSearchPath))
@@ -186,6 +193,7 @@ namespace OF.Unistall
                     processRemove.Start();
                     processRemove.WaitForExit();
                 }
+                
             }
             catch (Exception ex)
             {
@@ -194,6 +202,25 @@ namespace OF.Unistall
             finally
             {
             }
+
+            try
+            {
+                var serviceESController = GetElasticSearchService();
+                if (serviceESController != null)
+                {
+                    var processInfo = new ProcessStartInfo();
+                    processInfo.FileName = Path.Combine(Environment.SystemDirectory, "sc.exe");
+                    processInfo.Arguments = string.Format(" delete {0}", serviceESController.ServiceName);
+                    var process = new Process() { StartInfo = processInfo };
+                    process.Start();
+                    process.WaitForExit();
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e.ToString());
+            }
+
         }
 
         private static void UnregisterPlugin(string elasticSearchPath, string javaHome)
