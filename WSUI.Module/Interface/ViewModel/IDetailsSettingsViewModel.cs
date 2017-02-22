@@ -4,6 +4,8 @@ namespace OF.Module.Interface.ViewModel
 {
     public interface IDetailsSettingsViewModel : INotifyPropertyChanged
     {
+        bool IsRequiredAdminRights { get; }
+
         void ApplySettings();
 
         object View { get; }
