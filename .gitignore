@@ -231,5 +231,5 @@ pip-log.txt
 /PSTRiverPlugin/target
 *.xml
 *.publish
-/Toolkits/Elasticsearch/data/outlookfinder/nodes/0
+/Toolkits/Elasticsearch/data
 /Toolkits/Elasticsearch/logs

@@ -240,23 +240,24 @@ namespace OF.Core.Core.LimeLM
 
         private bool CheckTrialPeriod()
         {
+            bool result = true;
             try
             {
                 OFLogger.Instance.LogInfo("UseTrial!!");
                 _turboActivate.UseTrial();
                 int days = DaysRemain;
+                result = days == 0;
                 OFLogger.Instance.LogInfo("DaysRemain = {0}", days);
-                return days == 0;
             }
             catch (TrialExpiredException te)
             {
-                OFLogger.Instance.LogError(te.Message);
+                OFLogger.Instance.LogError(te.ToString());
             }
             catch (Exception ex)
             {
                 OFLogger.Instance.LogError(ex.ToString());                
             }
-            return false;
+            return result;
         }
 
         private void InternalActivate()

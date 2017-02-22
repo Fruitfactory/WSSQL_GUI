@@ -101,6 +101,13 @@ public class PstRESTRepository {
 
     public static void setRiverStatus(PstRiverStatusInfo riverStatus){
         synchronized(_reposirotyRiverStatus){
+            PstRiverStatusInfo statusInfo = null;
+               if(_reposirotyRiverStatus.containsKey(PST_RIVER_STATUS) && _reposirotyRiverStatus.get(PST_RIVER_STATUS) !=  null){
+                   statusInfo = _reposirotyRiverStatus.get(PST_RIVER_STATUS);
+                   if(riverStatus.getLastDateUpdated() == null && statusInfo.getLastDateUpdated() != null) {
+                       riverStatus.setLastDateUpdated(statusInfo.getLastDateUpdated());
+                   }
+               }
             _reposirotyRiverStatus.put(PST_RIVER_STATUS, riverStatus);
         }
     }

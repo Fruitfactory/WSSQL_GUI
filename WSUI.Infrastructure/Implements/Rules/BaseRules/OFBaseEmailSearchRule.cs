@@ -92,9 +92,10 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
                 result.Add(data);
             }
             Result.Clear();
+            Result = null;
             if (result.Count > 0)
             {
-                Result = result;
+                Result = result.ToList();
                 LastDate = Result.Last().DateReceived;
             }
         }
