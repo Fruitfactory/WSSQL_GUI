@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using Newtonsoft.Json;
+using OF.Core.Data.Settings;
 using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
@@ -25,11 +27,11 @@ namespace OF.Inspection
             }
             try
             {
-                var listSettings = new List<OFSettingsType>();
+                var listSettings = new List<OFTypeInspectionPayloadSettings>();
 
                 foreach (var s in args)
                 {
-                    listSettings.Add((OFSettingsType)Enum.Parse(typeof(OFSettingsType), s));
+                    listSettings.Add( JsonConvert.DeserializeObject<OFTypeInspectionPayloadSettings>(s));
                 }
 
                 if (!listSettings.Any())
@@ -39,9 +41,9 @@ namespace OF.Inspection
 
                 foreach (var ofSettingsType in listSettings)
                 {
-                    if (InspectionInstances.ContainsKey(ofSettingsType) && !InspectionInstances[ofSettingsType].IsValidValueOfSetting)
+                    if (InspectionInstances.ContainsKey(ofSettingsType.Type) && !InspectionInstances[ofSettingsType.Type].IsValidValueOfSetting)
                     {
-                        InspectionInstances[ofSettingsType].FixSetting(null);
+                        InspectionInstances[ofSettingsType.Type].FixSetting(ofSettingsType.SettingsPayload);
                     }
                 }
             }

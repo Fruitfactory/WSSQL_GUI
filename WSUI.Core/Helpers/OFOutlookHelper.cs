@@ -804,12 +804,12 @@ namespace OF.Core.Helpers
             try
             {
                 var outlook = Process.GetProcesses().Where(p => p.ProcessName.ToUpper().StartsWith(OutlookProcessName));
-                if (outlook.Count() > 0 && WindowsFunction.IsOutlookRegisteredInROT())
+                if (outlook.IsNotNull() && outlook.Any() && WindowsFunction.IsOutlookRegisteredInROT())
                 {
                     OFLogger.Instance.LogInfo("Outlook is existing and have been registered in ROT...");
                     ret = Marshal.GetActiveObject(OutlookApplication) as Outlook._Application;
                 }
-                else if (outlook.Count() > 0)
+                else if (outlook.IsNotNull() && outlook.Any())
                 {
                     WindowsFunction.SetShellWindowActive();
                     Thread.Sleep(1000);

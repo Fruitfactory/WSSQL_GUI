@@ -21,6 +21,7 @@ using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
+using OF.Core.Data.Settings;
 using OF.Core.Enums;
 using OF.Core.Events;
 using OF.Core.Extensions;
@@ -305,6 +306,7 @@ namespace OF.Module.ViewModel
                 OFLogger.Instance.LogInfo("Service is stopped...");
                 CheckServiceSettings();
             }
+            CheckServiceSettings();
         }
 
         private static void CheckServiceSettings()
@@ -314,7 +316,10 @@ namespace OF.Module.ViewModel
                 if (!OFInspectionHelper.Instance.IsESServiceSettingsValid())
                 {
                     OFLogger.Instance.LogInfo("Settings are different. We should fix it!!!!");
-                    OFInspectionHelper.Instance.RunFixSettings(new List<OFSettingsType>() { OFSettingsType.CheckAndFixJvmServivePath });
+                    OFInspectionHelper.Instance.RunFixSettings(new List<OFTypeInspectionPayloadSettings>()
+                    {
+                        new OFTypeInspectionPayloadSettings() { Type =   OFSettingsType.CheckAndFixJvmServivePath}
+                    });
                 }
             }
             catch (Exception e)

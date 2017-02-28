@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security;
+using Newtonsoft.Json;
+using OF.Core.Data.Settings;
 using OF.Core.Enums;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
@@ -15,6 +17,9 @@ namespace OF.Infrastructure.Helpers
 {
     public class OFInspectionHelper
     {
+
+        private readonly JsonSerializerSettings Settings = new JsonSerializerSettings() {Formatting =   Formatting.Indented};
+
         #region [static]
 
         private static readonly Lazy<OFInspectionHelper> instance =  new Lazy<OFInspectionHelper>(() => new OFInspectionHelper());
@@ -34,7 +39,7 @@ namespace OF.Infrastructure.Helpers
             return esSettingsInspection.IsValidValueOfSetting;
         }
 
-        public void RunFixSettings(IEnumerable<OFSettingsType> types)
+        public void RunFixSettings(IEnumerable<OFTypeInspectionPayloadSettings> types)
         {
             try
             {
@@ -46,7 +51,7 @@ namespace OF.Infrastructure.Helpers
                 }
                 ProcessStartInfo si = new ProcessStartInfo();
                 si.FileName = path;
-                si.Arguments = string.Format(" {0}", string.Join(",", types.Select(t => Enum.GetName(typeof(OFSettingsType),t))));
+                si.Arguments = string.Format(" {0}", string.Join(",", types.Select(t => string.Format("\"{0}\"", JsonConvert.SerializeObject(t, Settings)))));
                 si.WindowStyle = ProcessWindowStyle.Hidden;
                 si.Verb = "runas";
                 Process process = new Process { StartInfo = si };
