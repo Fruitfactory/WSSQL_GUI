@@ -195,6 +195,7 @@
     <Compile Include="Data\ElasticSearch\Response\OFShardsRaw.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFStatusItem.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFStatusResponse.cs" />
+    <Compile Include="Data\Settings\OFTypeInspectionPayloadSettings.cs" />
     <Compile Include="Enums\OFOutlookItemsIndexProcess.cs" />
     <Compile Include="Enums\OFPluginStatus.cs" />
     <Compile Include="Enums\OFSettingsType.cs" />
@@ -413,7 +414,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Data\Settings\SettingsPayload\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
