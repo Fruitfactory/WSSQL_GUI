@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using OF.Core.Data.Settings;
 
 namespace OF.Module.Interface.ViewModel
 {
@@ -14,6 +15,8 @@ namespace OF.Module.Interface.ViewModel
 
         bool HasDetailsChanges { get; }
 
-            
+        OFTypeInspectionPayloadSettings GetAdminSettings();
+
+
     }
 }

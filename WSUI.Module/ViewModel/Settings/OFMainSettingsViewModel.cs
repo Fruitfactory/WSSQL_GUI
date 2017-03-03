@@ -9,6 +9,7 @@ using OF.Core.Core.MVVM;
 using OF.Core.Extensions;
 using OF.Core.Logger;
 using OF.Core.Utils.Dialog;
+using OF.Infrastructure.Helpers;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
 
@@ -140,7 +141,11 @@ namespace OF.Module.ViewModel.Settings
         {
             try
             {
-                _detailsSettingsViewModels.ForEach(d => d.ApplySettings());
+                _detailsSettingsViewModels.Where(s => !s.IsRequiredAdminRights).ForEach(d => d.ApplySettings());
+                var adminSettings =
+                    _detailsSettingsViewModels.Where(s => s.IsRequiredAdminRights).Select(s => s.GetAdminSettings());
+                OFInspectionHelper.Instance.RunFixSettings(adminSettings);
+
             }
             catch (Exception ex)
             {

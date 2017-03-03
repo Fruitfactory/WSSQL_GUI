@@ -1,5 +1,9 @@
 ﻿using Microsoft.Practices.Unity;
+using Newtonsoft.Json;
 using OF.Core.Core.MVVM;
+using OF.Core.Data.Settings;
+using OF.Core.Data.Settings.SettingsPayload;
+using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Helpers;
 using OF.Module.Interface.View;
@@ -7,7 +11,7 @@ using OF.Module.Interface.ViewModel;
 
 namespace OF.Module.ViewModel.Settings
 {
-    public class OFOutlookAutoCompleteSettingsViewModel : OFViewModelBase,IOutlookAutoCompleteSettingsViewModel
+    public class OFOutlookAutoCompleteSettingsViewModel : OFCoreSettingsViewModel, IOutlookAutoCompleteSettingsViewModel
     {
         private IUnityContainer _container;
         private IOutlookAutoCompleteSettingsView _view;
@@ -17,20 +21,25 @@ namespace OF.Module.ViewModel.Settings
             _container = container;
         }
 
-        public void ApplySettings()
+        public override bool IsRequiredAdminRights { get { return true; } }
+
+        public override OFTypeInspectionPayloadSettings GetAdminSettings()
         {
-            var officeVersion = OFRegistryHelper.Instance.GetOutlookVersion().Item1;
-            if (IsAutoCompleateDisabled)
+            return new OFTypeInspectionPayloadSettings()
             {
-                OFRegistryHelper.Instance.DisableAutoCompleateEmailsToCcBcc(officeVersion);
-            }
-            else
-            {
-                OFRegistryHelper.Instance.EnableAutoCompleateEmailsToCcBcc(officeVersion);
-            }
+                Type = OFSettingsType.AutoComplete,
+                SettingsPayload = JsonConvert.SerializeObject(new OFAutoCompleteSettingsPayload()
+                {
+                    IsAutoCompleateDisabled = this.IsAutoCompleateDisabled
+                }, 
+                new JsonSerializerSettings()
+                {
+                    Formatting = Formatting.None
+                })
+            };
         }
 
-        public object View
+        public override object View
         {
             get
             {
@@ -42,16 +51,16 @@ namespace OF.Module.ViewModel.Settings
                 return _view;
             }
         }
-        
-        public void Initialize()
+
+        public override void Initialize()
         {
-            Set(() => IsAutoCompleateDisabled,CheckAutoCompleateState());
+            Set(() => IsAutoCompleateDisabled, CheckAutoCompleateState());
         }
 
-        public bool HasDetailsChanges
+        public override bool HasDetailsChanges
         {
             get { return Get(() => HasDetailsChanges); }
-            set { Set(() => HasDetailsChanges,value);}
+            protected set { Set(() => HasDetailsChanges, value); }
         }
 
 

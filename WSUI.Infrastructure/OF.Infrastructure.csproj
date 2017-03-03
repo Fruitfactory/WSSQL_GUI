@@ -133,6 +133,7 @@
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticsearchStoreClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticTrackingClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticUpdateSettingsClient.cs" />
+    <Compile Include="Implements\Inspections\OFESAutoCompleteSettingsInspection.cs" />
     <Compile Include="Implements\Inspections\OFESServiceSettingInspection.cs" />
     <Compile Include="Implements\Service\IOutlookItemsReader.cs" />
     <Compile Include="MVVM\AdvancedSearch\OFSortByAdvancedSearchCriteria.cs" />

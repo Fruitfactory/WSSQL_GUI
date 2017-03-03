@@ -9,7 +9,7 @@ using OF.Module.Interface.ViewModel;
 
 namespace OF.Module.ViewModel.Settings
 {
-    public class OFLoggingSettingsViewModel : OFViewModelBase,ILoggingSettingsViewModel
+    public class OFLoggingSettingsViewModel : OFCoreSettingsViewModel,ILoggingSettingsViewModel
     {
 
         private IEventAggregator _eventAggregator;
@@ -25,7 +25,7 @@ namespace OF.Module.ViewModel.Settings
 
         private ILoggingSettingsView _view;
 
-        public object View
+        public override object View
         {
             get
             {
@@ -38,7 +38,7 @@ namespace OF.Module.ViewModel.Settings
             }
         }
 
-        public bool HasDetailsChanges { get {return HasChanges;} }
+        public override bool HasDetailsChanges { get {return HasChanges;} }
 
         public bool Info
         {
@@ -70,7 +70,7 @@ namespace OF.Module.ViewModel.Settings
 
         #region [methods]
 
-        public void ApplySettings()
+        public override void ApplySettings()
         {
             int settings = 0;
             if (Info)
@@ -93,7 +93,7 @@ namespace OF.Module.ViewModel.Settings
             OFRegistryHelper.Instance.SetLoggingsettings(settings);
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
             int settings = OFRegistryHelper.Instance.GetLoggingSettings();
             Info = OFLogger.LevelLogging.Info == (OFLogger.LevelLogging) ((int) OFLogger.LevelLogging.Info & settings);

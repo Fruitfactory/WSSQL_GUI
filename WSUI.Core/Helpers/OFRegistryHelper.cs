@@ -337,7 +337,7 @@ namespace OF.Core.Helpers
             {
                 var registry = _baseRegistry;
                 var key = string.Format("Software\\Microsoft\\Office\\{0}\\Outlook\\Preferences", officeVersion);
-                var preferences = registry.OpenSubKey(key);
+                var preferences = registry.OpenSubKey(key,true);
                 if (preferences == null)
                 {
                     return;

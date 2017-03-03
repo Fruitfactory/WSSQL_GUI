@@ -248,6 +248,7 @@
     <Compile Include="ViewModel\ContactViewModel.cs" />
     <Compile Include="ViewModel\ElasticSearchMonitoringViewModel.cs" />
     <Compile Include="ViewModel\LogFileManager\OFLogFilesSenderManager.cs" />
+    <Compile Include="ViewModel\Settings\OFCoreSettingsViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFElasticSearchRiverSettingsViewModel.cs" />
     <Compile Include="ViewModel\ElasticSearchViewModel.cs" />
     <Compile Include="ViewModel\EmailViewModel.cs" />
