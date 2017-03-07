@@ -10,9 +10,6 @@ namespace OF.Core.Logger
 
         private static readonly string SOURCE = "OutlookFinder";
         private static readonly string LOG = "Application";
-        private static readonly string ERROR_EVENT = "Error";
-        private static readonly string WARNING_EVENT = "Warning";
-        private static readonly string Info_EVENT = "Info";
 
         #endregion
 

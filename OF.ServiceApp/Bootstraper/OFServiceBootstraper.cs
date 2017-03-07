@@ -26,7 +26,6 @@ namespace OF.ServiceApp.Bootstraper
         private IOutlookItemsReader _outlookItemsReader;
         private OFRestHosting _restHosting;
         private AutoResetEvent _stopEvent;
-        private DateTime? _lastDateTime;
 
         private readonly object _lock = new object();
 
