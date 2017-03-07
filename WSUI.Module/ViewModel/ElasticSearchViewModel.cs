@@ -306,7 +306,6 @@ namespace OF.Module.ViewModel
                 OFLogger.Instance.LogInfo("Service is stopped...");
                 CheckServiceSettings();
             }
-            CheckServiceSettings();
         }
 
         private static void CheckServiceSettings()
