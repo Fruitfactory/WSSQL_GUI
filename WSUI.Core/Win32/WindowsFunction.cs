@@ -117,7 +117,7 @@ namespace OF.Core.Win32
         static extern IntPtr SetActiveWindow(IntPtr hWnd);
 
         [DllImport("user32.dll", EntryPoint = "SetFocus", SetLastError = true)]
-        static extern IntPtr SetFocus(IntPtr hWnd);
+        public static extern IntPtr SetFocus(IntPtr hWnd);
 
         [DllImport("User32.dll")]
         public static extern IntPtr SendDlgItemMessage(IntPtr hWnd, uint IDDlgItem, int uMsg, int nMaxCount, StringBuilder lpString);
@@ -140,6 +140,9 @@ namespace OF.Core.Win32
 
         [DllImport("user32.dll")]
         public static extern bool SetDlgItemText(IntPtr hDlg, int nIDDlgItem,string lpString);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool SetCaretPos(int x, int y);
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetDlgItemText(IntPtr hDlg, int nIDDlgItem, [Out] StringBuilder lpString, int nMaxCount);
@@ -254,6 +257,14 @@ namespace OF.Core.Win32
         }
 
 
+        public enum EM : int
+        {
+            GETSEL = 0x00B0,
+            SETSEL = 0x00B1,
+        }
+
+
+
         public static IntPtr GetFocusedControl(IntPtr thisHandle)
         {
             var activeWnd = GetForegroundWindow();
@@ -270,28 +281,16 @@ namespace OF.Core.Win32
             var dwID = GetDlgCtrlID(hWndRichEdit);
             IntPtr hWndParent = GetParent(hWndRichEdit);
             StringBuilder title = new StringBuilder(128);
-            System.Diagnostics.Debug.WriteLine("!!!! GetRichEditText HWND: " + hWndRichEdit.ToInt32() + " HWND Parent: "+ hWndParent.ToInt32() + " CtrlID: " + dwID);
-            //SendDlgItemMessage(hWndParent, (uint)dwID,
-            //    WM_GETTEXT,
-            //    128, title);
-
             GetDlgItemText(hWndParent, dwID, title, title.Capacity);
-
             return title;
         }
 
-        public static void SetEditText(IntPtr hWndRichEdit, string text)
+        public static void SetRichEditText(IntPtr hWndRichEdit, string text)
         {
             uint dwID = GetWindowLong(hWndRichEdit, GWL_ID);
             IntPtr hWndParent = GetParent(hWndRichEdit);
 
-            StringBuilder result = GetRichEditText(hWndRichEdit);
-            if (result != null)
-            {
-                result.Append(";").Append(text);
-            }
-
-            SendDlgItemMessage(hWndParent, dwID, WM_SETTEXT, 0, result);
+            SendDlgItemMessage(hWndParent, dwID, WM_SETTEXT, 0, new StringBuilder(text));
         }
 
         public static void GetAllObjectWithClass(string wndClass, List<IntPtr> listObjects)

@@ -220,7 +220,7 @@ namespace OF.Module.ViewModel
                 {
                     Command = wsCommand,
                     Header = wsCommand.Caption,
-                    Icon = new Image() {Source = new BitmapImage(new Uri(wsCommand.Icon))}
+                    Icon = new Image() { Source = new BitmapImage(new Uri(wsCommand.Icon)) }
                 }).ToList();
                 _menuItems.Add(OFTypeSearchItem.Email, list);
             }
@@ -230,7 +230,7 @@ namespace OF.Module.ViewModel
                 {
                     Command = wsCommand,
                     Header = wsCommand.Caption,
-                    Icon = new Image() {Source = new BitmapImage(new Uri(wsCommand.Icon))}
+                    Icon = new Image() { Source = new BitmapImage(new Uri(wsCommand.Icon)) }
                 }).ToList();
                 _menuItems.Add(OFTypeSearchItem.File, list);
                 _menuItems.Add(OFTypeSearchItem.Attachment, list);
@@ -265,7 +265,7 @@ namespace OF.Module.ViewModel
                 switch (ActivateStatus)
                 {
 #if !TRIAL
-                        //case ActivationState.Trial:
+                    //case ActivationState.Trial:
 #endif
                     case OFActivationState.TrialEnded:
                     case OFActivationState.NonActivated:
@@ -315,7 +315,7 @@ namespace OF.Module.ViewModel
 
         private void ActivationProcessOnExited(object sender, EventArgs eventArgs)
         {
-            ((Process) sender).Exited -= ActivationProcessOnExited;
+            ((Process)sender).Exited -= ActivationProcessOnExited;
             UpdatedActivatedStatus();
         }
 
@@ -407,12 +407,12 @@ namespace OF.Module.ViewModel
                 {
                     case OFTypeSearchItem.Contact:
                         Dispatcher.CurrentDispatcher.BeginInvoke(
-                            (Action) (() => ShowPreviewForPreviewObject(data, useTransaction)),
+                            (Action)(() => ShowPreviewForPreviewObject(data, useTransaction)),
                             null);
                         break;
 
                     default:
-                        Dispatcher.CurrentDispatcher.BeginInvoke((Action) (ShowPreviewForCurrentItem));
+                        Dispatcher.CurrentDispatcher.BeginInvoke((Action)(ShowPreviewForCurrentItem));
                         break;
                 }
 
@@ -478,7 +478,7 @@ namespace OF.Module.ViewModel
             {
                 var contactDetails = _container.Resolve<IContactDetailsViewModel>();
                 MoveToLeft(contactDetails.View, useTransaction);
-                Dispatcher.CurrentDispatcher.BeginInvoke((Action) (() => contactDetails.SetDataObject(previewData)));
+                Dispatcher.CurrentDispatcher.BeginInvoke((Action)(() => contactDetails.SetDataObject(previewData)));
 
             }
             catch (Exception ex)
@@ -734,11 +734,16 @@ namespace OF.Module.ViewModel
                         break;
                     case OFActionType.ShowSuggestEmail:
                         OFLogger.Instance.LogDebug("Show Suggested emails... " + action.Data);
-                        _suggestViewModel.Show((Tuple<IntPtr,string>)action.Data);
+                        _suggestViewModel.Show((Tuple<IntPtr, string>)action.Data);
                         break;
                     case OFActionType.HideSuggestEmail:
                         OFLogger.Instance.LogDebug("Hide Suggested emails... " + action.Data);
                         _suggestViewModel.Hide();
+                        break;
+                    case OFActionType.UpSuggestEmail:
+                    case OFActionType.DownSuggestEmail:
+                    case OFActionType.SelectSuggestEmail:
+                        _suggestViewModel.ProcessSelection(action.Action);
                         break;
                     case OFActionType.SendLogFile:
                         SendLogFiles();
@@ -866,7 +871,7 @@ namespace OF.Module.ViewModel
             {
 #if !TRIAL
                 return ActivateStatus == OFActivationState.Activated ? Visibility.Collapsed : Visibility.Visible;
-                    //return Visibility.Collapsed;
+                //return Visibility.Collapsed;
 #else
       return ActivateStatus == ActivationState.Activated ? Visibility.Collapsed : Visibility.Visible;
 #endif

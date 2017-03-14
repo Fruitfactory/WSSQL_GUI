@@ -1,4 +1,5 @@
 ﻿using System;
+using OF.Core.Enums;
 
 namespace OF.Module.Interface.ViewModel
 {
@@ -6,5 +7,7 @@ namespace OF.Module.Interface.ViewModel
     {
         void Show(Tuple<IntPtr,string> hWndParent);
         void Hide();
+        
+        void ProcessSelection(OFActionType type);
     }
 }

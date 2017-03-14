@@ -4,8 +4,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:local="clr-namespace:OF.Module.View.Windows"
+             xmlns:behaviors="clr-namespace:OF.Infrastructure.Behaviors;assembly=OF.Infrastructure"
              ShowMinButton="False"         
              ShowCloseButton="False"
              ShowMaxRestoreButton="False"
@@ -14,9 +16,6 @@
              MinWidth="150" MinHeight="150"
              >
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -24,7 +23,8 @@
 
         <ListBox ItemsSource="{Binding Emails,UpdateSourceTrigger=PropertyChanged}"
                  SelectedItem="{Binding SelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                 ></ListBox>
+                 >
+        </ListBox>
 
 
     </Grid>

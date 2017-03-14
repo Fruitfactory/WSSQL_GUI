@@ -121,6 +121,8 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Behaviors\OFEventToComandBehavior.cs" />
+    <Compile Include="Events\OFSuggestedEmailEvent.cs" />
     <Compile Include="Helpers\OFEmailCommandPreviewHelper.cs" />
     <Compile Include="Helpers\OFInspectionHelper.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticInitializingClient.cs" />
@@ -207,6 +209,7 @@
     <Compile Include="Interfaces\Search\IContactSearchSystem.cs" />
     <Compile Include="MVVM\StatusItem\OFStatusItemViewModel.cs" />
     <Compile Include="Payloads\OFSearchObjectPayload.cs" />
+    <Compile Include="Payloads\OFSuggestedEmailPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

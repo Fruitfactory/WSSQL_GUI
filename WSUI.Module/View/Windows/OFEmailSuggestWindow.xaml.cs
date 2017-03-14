@@ -12,7 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Practices.Prism.Events;
 using OF.Core.Win32;
+using OF.Infrastructure.Events;
+using OF.Infrastructure.Payloads;
 using OF.Module.Interface.View;
 
 namespace OF.Module.View.Windows
@@ -52,10 +55,11 @@ namespace OF.Module.View.Windows
             };
             WindowsFunction.RECT rect;
             WindowsFunction.GetWindowRect(hWnd, out rect);
-            Focus();
             Show();
             Left = rect.Left;
             Top = rect.Bottom;
+            WindowsFunction.SetFocus(hWnd);
+
         }
 
 

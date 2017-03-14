@@ -32,7 +32,9 @@ using Microsoft.Win32;
 using OF.Core;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Interfaces;
+using OF.Infrastructure.Events;
 using OF.Infrastructure.Implements.ElasticSearch.Clients;
+using OF.Infrastructure.Payloads;
 
 namespace OFOutlookPlugin
 {
@@ -764,6 +766,15 @@ namespace OFOutlookPlugin
             _eventAggregator.GetEvent<OFHideWindow>().Subscribe(HideUi);
             _eventAggregator.GetEvent<OFSearch>().Subscribe(StartSearch);
             _eventAggregator.GetEvent<OFShowFolder>().Subscribe(ShowOutlookFolder);
+            _eventAggregator.GetEvent<OFSuggestedEmailEvent>().Subscribe(OnSuggestedEmail);
+        }
+        private void OnSuggestedEmail(OFSuggestedEmailPayload ofSuggestedEmailPayload)
+        {
+            if (_emailSuggesterManager.IsNull() || ofSuggestedEmailPayload.IsNull() || ofSuggestedEmailPayload.Data.IsNull())
+            {
+                return;
+            }
+            _emailSuggesterManager.SuggestedEmail(ofSuggestedEmailPayload.Data);
         }
 
         private void ShowOutlookFolder(string s)
@@ -1148,7 +1159,7 @@ namespace OFOutlookPlugin
                 }
                 if (_emailSuggesterManager.IsNotNull())
                 {
-                    _emailSuggesterManager.ProcessKeyDown(e.VirtualKey);
+                    _emailSuggesterManager.ProcessKeyDown(e);
                 }
             }
             catch (Exception ex)
@@ -1436,7 +1447,7 @@ namespace OFOutlookPlugin
         private void CheckAndStartServiceApp()
         {
 #if !DEBUG
-            int count = Process.GetProcesses().Count(p => p.ProcessName.ToUpperInvariant().Contains(SERVICE_APP));
+            int count = Process.GetProcesses().Count(p => p.ProcessName.Invariant().Contains(SERVICE_APP));
             if (count > 0)
             {
                 return;
