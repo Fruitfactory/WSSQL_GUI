@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
+using Newtonsoft.Json;
 using OF.Core.Core.MVVM;
 using OF.Core.Data;
 using OF.Core.Enums;
@@ -132,7 +133,7 @@ namespace OF.Module.ViewModel.Suggest
                         collection.Add(systemSearchResult as OFBaseSearchObject);
                     }
                 });
-                Emails = collection;
+                Emails = collection.Where(so  => so is OFContactSearchObject ? !string.IsNullOrEmpty((so as OFContactSearchObject).EmailAddress1) : so is OFEmailContactSearchObject ? !string.IsNullOrEmpty((so as OFEmailContactSearchObject).EMail) : false).ToList();
                 if (!_suggestWindow.IsVisible)
                 {
                     _suggestWindow.ShowSuggestings(_hWnd);

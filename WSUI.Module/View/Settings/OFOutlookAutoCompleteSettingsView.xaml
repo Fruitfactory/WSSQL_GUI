@@ -32,9 +32,16 @@
         </Grid>
 
 
-        <CheckBox Grid.Row="1" Margin="5" IsChecked="{Binding IsAutoCompleateDisabled,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">Disable Outlook Auto-Complete Emails. The OutlookFinder's auto-complete functionality will be used.</CheckBox>
+        <CheckBox 
+            Grid.Row="1" 
+            Margin="5" 
+            IsChecked="{Binding IsAutoCompleateDisabled,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">Disable Outlook Auto-Complete Emails. The OutlookFinder's auto-complete functionality will be used.</CheckBox>
 
-        <TextBlock Grid.Row="3">These changes will take effect when you restart the Outlook aplication.</TextBlock>
+        <Label 
+            Margin="3" 
+            Grid.Row="3"
+            Background="Red" 
+            Foreground="White" >These changes will take effect when you restart the Outlook aplication.</Label>
 
     </Grid>
 </UserControl>

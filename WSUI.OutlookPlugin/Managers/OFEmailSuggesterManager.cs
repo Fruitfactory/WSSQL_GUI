@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Concurrency;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Automation;
 using System.Windows.Documents;
 using System.Windows.Forms;
@@ -37,6 +39,9 @@ namespace OFOutlookPlugin.Managers
         private readonly char EmailSeparator = ';';
 
         private readonly string TemplateInsert = "{0}; ";
+
+        private IDisposable _token;
+
 
         #endregion
 
@@ -122,7 +127,7 @@ namespace OFOutlookPlugin.Managers
                 {
                     var key = (Keys)Args.VirtualKey;
                     var text = WindowsFunction.GetRichEditText(hWnd);
-                    if (key >= Keys.A && key <= Keys.Z)
+                    if ((key >= Keys.A && key <= Keys.Z) || key == Keys.Back || key == Keys.Delete)
                     {
                         var criteria = text.Append(key).ToString().ToLowerCase();
 
@@ -131,10 +136,18 @@ namespace OFOutlookPlugin.Managers
                             var arr = criteria.Split(EmailSeparator);
                             criteria = arr[arr.Length - 1];
                         }
-                        if (criteria.Length > 2)
+                        if (_token.IsNotNull())
                         {
-                            pluginBootStraper.PassAction(new OFAction(OFActionType.ShowSuggestEmail, new Tuple<IntPtr, string>(hWnd, criteria)));
+                            _token.Dispose();
+                            _token = null;
+                            Debug.WriteLine("Canceling... " + DateTime.Now.ToString("T") );
                         }
+                        _token = Scheduler.ThreadPool.Schedule(() =>
+                        {
+                            pluginBootStraper.PassAction(new OFAction(OFActionType.ShowSuggestEmail,
+                                new Tuple<IntPtr, string>(hWnd, criteria)));
+                            Debug.WriteLine("Processing... " + DateTime.Now.ToString("T"));
+                        }, TimeSpan.FromMilliseconds(250));
                     }
                     else if (key == Keys.Escape)
                     {

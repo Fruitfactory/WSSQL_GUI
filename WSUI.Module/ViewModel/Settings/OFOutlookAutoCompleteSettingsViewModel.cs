@@ -54,7 +54,7 @@ namespace OF.Module.ViewModel.Settings
 
         public override void Initialize()
         {
-            Set(() => IsAutoCompleateDisabled, CheckAutoCompleateState());
+            Set(() => IsAutoCompleateDisabled, OFRegistryHelper.Instance.CheckAutoCompleateState());
         }
 
         public override bool HasDetailsChanges
@@ -74,11 +74,7 @@ namespace OF.Module.ViewModel.Settings
             }
         }
 
-        private bool CheckAutoCompleateState()
-        {
-            var officeVersion = OFRegistryHelper.Instance.GetOutlookVersion().Item1;
-            return OFRegistryHelper.Instance.IsOutlookAutoCompleateDisabled(officeVersion);
-        }
+        
 
     }
 }

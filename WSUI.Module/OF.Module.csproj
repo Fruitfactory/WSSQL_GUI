@@ -213,6 +213,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Service\AdvancedSearch\OFAdvancedSearchTemplateSelector.cs" />
+    <Compile Include="Service\Behaviors\OFListBoxAutoScrollBehavior.cs" />
     <Compile Include="Service\OFAllFilesDataTemplateSelector.cs" />
     <Compile Include="Service\Behaviors\OFActualHeightBehavior.cs" />
     <Compile Include="Service\Behaviors\OFListboxSelectOnClickBehavior.cs" />
@@ -227,6 +228,7 @@
       <DependentUpon>OFMessageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Service\OFDoubleClickBehavior.cs" />
+    <Compile Include="Service\OFEmailSuggestingTemplateSelector.cs" />
     <Compile Include="Service\OFFileExestensionsHelper.cs" />
     <Compile Include="Service\OFGridLengthAnimation.cs" />
     <Compile Include="Service\OFHelperConst.cs" />

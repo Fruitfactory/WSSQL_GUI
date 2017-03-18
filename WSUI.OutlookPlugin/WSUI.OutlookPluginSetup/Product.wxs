@@ -269,6 +269,14 @@
         <File Id="_ofinspection_exe_" Name="ofinspection.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nancy_dll_" Name="Nancy.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nancy_Hosting_Self_dll_" Name="Nancy.Hosting.Self.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+
+        <File Id="_System_CoreEx_dll_" Name="System.CoreEx.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        <File Id="_System_Interactive_dll_" Name="System.Interactive.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        <File Id="_System_Linq.Async_dll_" Name="System.Linq.Async.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        <File Id="_System_Reactive_dll_" Name="System.Reactive.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        <File Id="_System_Reactive_ClientProfile_dll_" Name="System.Reactive.ClientProfile.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        
+        
       </Component>
     </ComponentGroup>
   </Fragment>

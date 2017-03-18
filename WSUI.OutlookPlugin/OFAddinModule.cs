@@ -1157,7 +1157,7 @@ namespace OFOutlookPlugin
                 {
                     _sidebarForm.SendAction(OFActionType.Copy);
                 }
-                if (_emailSuggesterManager.IsNotNull())
+                if (_emailSuggesterManager.IsNotNull()  && OFRegistryHelper.Instance.CheckAutoCompleateState())
                 {
                     _emailSuggesterManager.ProcessKeyDown(e);
                 }

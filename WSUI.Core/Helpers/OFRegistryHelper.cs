@@ -350,6 +350,12 @@ namespace OF.Core.Helpers
             }
         }
 
+        public bool CheckAutoCompleateState()
+        {
+            var officeVersion = Instance.GetOutlookVersion().Item1;
+            return Instance.IsOutlookAutoCompleateDisabled(officeVersion);
+        }
+
 
         public bool IsSecurityWarningDisable(string officeVersion)
         {

@@ -113,8 +113,23 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.CoreEx">
+      <HintPath>..\Toolkits\RxNet\System.CoreEx.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Interactive">
+      <HintPath>..\Toolkits\RxNet\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Async">
+      <HintPath>..\Toolkits\RxNet\System.Linq.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive">
+      <HintPath>..\Toolkits\RxNet\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.ClientProfile">
+      <HintPath>..\Toolkits\RxNet\System.Reactive.ClientProfile.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
