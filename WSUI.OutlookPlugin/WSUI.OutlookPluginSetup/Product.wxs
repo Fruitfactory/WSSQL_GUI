@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
-  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.3.1284" Manufacturer="FruitFactory" UpgradeCode="602854f0-ede9-4eba-bd8c-b6f91822510a" Codepage="1252">
+  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.3.1308" Manufacturer="FruitFactory" UpgradeCode="602854f0-ede9-4eba-bd8c-b6f91822510a" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowDowngrades="no" />-->
     <Upgrade Id="602854f0-ede9-4eba-bd8c-b6f91822510a">
@@ -269,14 +269,11 @@
         <File Id="_ofinspection_exe_" Name="ofinspection.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nancy_dll_" Name="Nancy.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nancy_Hosting_Self_dll_" Name="Nancy.Hosting.Self.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
-
         <File Id="_System_CoreEx_dll_" Name="System.CoreEx.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_System_Interactive_dll_" Name="System.Interactive.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_System_Linq.Async_dll_" Name="System.Linq.Async.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_System_Reactive_dll_" Name="System.Reactive.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_System_Reactive_ClientProfile_dll_" Name="System.Reactive.ClientProfile.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
-        
-        
       </Component>
     </ComponentGroup>
   </Fragment>

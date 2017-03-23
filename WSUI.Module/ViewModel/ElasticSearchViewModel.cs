@@ -330,7 +330,7 @@ namespace OF.Module.ViewModel
         private void CheckIndexState()
         {
             var resp = ElasticSearchClient.IndexExists(OFElasticSearchClientBase.DefaultInfrastructureName);
-            IsIndexExisted = resp.Exists; //false;//
+            IsIndexExisted = resp.Exists;
             var riverStatusResp = ElasticSearchClient.GetRiverStatus();
             IsInitialIndexinginProgress = riverStatusResp.Response.IsNotNull() &&
                                           riverStatusResp.Response.Status == OFRiverStatus.InitialIndexing;

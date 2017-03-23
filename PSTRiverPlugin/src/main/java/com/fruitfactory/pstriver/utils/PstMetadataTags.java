@@ -372,7 +372,6 @@ public class PstMetadataTags {
     private static void addSuggestString(XContentBuilder xcb, String fieldName) throws IOException {
         xcb.startObject(fieldName)
                 .field("type", "string")
-                .field("analyzer","shingle_analyzer")
                 .endObject();
     }
 

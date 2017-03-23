@@ -79,7 +79,7 @@
 "$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p yar1k1 /f "$(SolutionDir)Toolkits\Certificate\new_outlookfinder.pfx"   /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  "$(TargetFileName)"
 "$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p yar1k1 /f "$(SolutionDir)Toolkits\Certificate\new_outlookfinder.pfx"   /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  "$(SolutionDir)Toolkits\Elasticsearch\bin\elasticsearch-service-x64.exe"
 "$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p yar1k1 /f "$(SolutionDir)Toolkits\Certificate\new_outlookfinder.pfx"   /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  "$(SolutionDir)Toolkits\Elasticsearch\bin\elasticsearch-service-x86.exe"
-"$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p Yar1k1 /f "$(SolutionDir)Toolkits\Certificate\outlookfinder_1.pfx"   /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  "$(SolutionDir)Toolkits\Elasticsearch\bin\elasticsearch-service-mgr.exe"</PostBuildEvent>
+"$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p yar1k1 /f "$(SolutionDir)Toolkits\Certificate\new_outlookfinder.pfx"   /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  "$(SolutionDir)Toolkits\Elasticsearch\bin\elasticsearch-service-mgr.exe"</PostBuildEvent>
   </PropertyGroup>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.

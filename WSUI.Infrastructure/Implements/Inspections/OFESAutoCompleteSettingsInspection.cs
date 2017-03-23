@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using OF.Core.Core.Inspections;
 using OF.Core.Data.Settings.SettingsPayload;
 using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Helpers;
+using OF.Core.Logger;
 
 namespace OF.Infrastructure.Implements.Inspections
 {
@@ -37,7 +39,7 @@ namespace OF.Infrastructure.Implements.Inspections
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                OFLogger.Instance.LogError(e.ToString());
             }
         }
 

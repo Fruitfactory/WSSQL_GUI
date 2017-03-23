@@ -304,6 +304,12 @@ namespace OF.Core.Helpers
                 var valObj = preferences.GetValue("ShowAutoSug");
                 if (valObj == null)
                 {
+                    key = string.Format("Software\\Microsoft\\Office\\{0}\\Outlook\\Preferences", officeVersion);
+                    preferences = registry.CreateSubKey(key);
+                    if (preferences != null)
+                    {
+                        preferences.SetValue("ShowAutoSug", 0);
+                    }
                     return false;
                 }
                 int valInt;
