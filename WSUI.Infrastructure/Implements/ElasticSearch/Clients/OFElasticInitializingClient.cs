@@ -47,7 +47,8 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             }
             catch (Exception exception)
             {
-                OFLogger.Instance.LogError(exception.Message);
+                OFLogger.Instance.LogError("Creating Infrastructure was failed... Error below:");
+                OFLogger.Instance.LogError(exception.ToString());
             }
 
         }
