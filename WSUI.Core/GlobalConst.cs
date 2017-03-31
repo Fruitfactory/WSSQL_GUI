@@ -28,5 +28,7 @@ namespace OF.Core
 
         public static readonly string SettingsRiverFile = "riversettings";
 
+        public static readonly string RiverMetaMutex = "RiverMetaMutex";
+
     }
 }

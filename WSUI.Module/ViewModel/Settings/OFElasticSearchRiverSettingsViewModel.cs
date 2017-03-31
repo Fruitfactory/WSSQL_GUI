@@ -10,6 +10,7 @@ using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
+using OF.Core.Data.Settings.ControllerSettings;
 using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Helpers;
@@ -28,39 +29,14 @@ namespace OF.Module.ViewModel.Settings
         private readonly IUnityContainer _unityContainer;
         private OFRiverMeta _settingsMeta;
         private bool _canForce = true;
+        private IOFRiverMetaSettingsProvider _metaSettingsProvider;
 
-        #region [local classes]
-
-        class OnlyAtSettings
-        {
-            [JsonProperty("hour_only_at")]
-            public int HourOnlyAt { get; set; }
-
-            [JsonProperty("hour_type")]
-            public string HourType { get; set; }
-        }
-
-        class EveryHourPeriodSettings
-        {
-            [JsonProperty("hour_period")]
-            public int HourPeriod { get; set; }
-        }
-
-
-        class NightIdleSettings
-        {
-            [JsonProperty("idle_time")]
-            public int IdleTime { get; set; }
-        }
-
-
-        #endregion
-
-
-        public OFElasticSearchRiverSettingsViewModel(IEventAggregator eventAggregator, IUnityContainer unityContainer)
+        
+        public OFElasticSearchRiverSettingsViewModel(IEventAggregator eventAggregator, IUnityContainer unityContainer,IOFRiverMetaSettingsProvider metaSettingsProvider)
         {
             _eventAggregator = eventAggregator;
             _unityContainer = unityContainer;
+            _metaSettingsProvider = metaSettingsProvider;
         }
 
 
@@ -219,12 +195,8 @@ namespace OF.Module.ViewModel.Settings
         {
             try
             {
-                _settingsMeta =
-                    OFObjectJsonSaveReadHelper.Instance.Read<OFRiverMeta>(GlobalConst.SettingsRiverFile);
-                if (_settingsMeta.IsNull())
-                {
-                    _settingsMeta = new OFRiverMeta(OFElasticSearchClientBase.DefaultInfrastructureName);
-                }
+                _settingsMeta = _metaSettingsProvider.GetCurrentSettings();
+
                 if (_settingsMeta.IsNotNull())
                 {
                     switch (_settingsMeta.Pst.Schedule.ScheduleType)
@@ -233,7 +205,7 @@ namespace OF.Module.ViewModel.Settings
                             EveryNightOrIdle = true;
                             var nightIdleTimeSettings =
                                 JsonConvert.DeserializeObject(_settingsMeta.Pst.Schedule.Settings,
-                                    typeof (NightIdleSettings)) as NightIdleSettings;
+                                    typeof(OFNightIdleSettings)) as OFNightIdleSettings;
                             if (nightIdleTimeSettings.IsNotNull())
                             {
                                 IdleTime = nightIdleTimeSettings.IdleTime  / 60;
@@ -241,7 +213,7 @@ namespace OF.Module.ViewModel.Settings
                             break;
                         case OFRiverSchedule.EveryHours:
                             EveryHours = true;
-                            var periodSettings = JsonConvert.DeserializeObject(_settingsMeta.Pst.Schedule.Settings, typeof(EveryHourPeriodSettings)) as EveryHourPeriodSettings;
+                            var periodSettings = JsonConvert.DeserializeObject(_settingsMeta.Pst.Schedule.Settings, typeof(OFEveryHourPeriodSettings)) as OFEveryHourPeriodSettings;
                             if (periodSettings.IsNotNull())
                             {
                                 RepeatHours = periodSettings.HourPeriod;
@@ -250,7 +222,7 @@ namespace OF.Module.ViewModel.Settings
                         case OFRiverSchedule.OnlyAt:
                             OnlyAt = true;
                             var onlyAtSettings =
-                                JsonConvert.DeserializeObject(_settingsMeta.Pst.Schedule.Settings, typeof(OnlyAtSettings)) as OnlyAtSettings;
+                                JsonConvert.DeserializeObject(_settingsMeta.Pst.Schedule.Settings, typeof(OFOnlyAtSettings)) as OFOnlyAtSettings;
                             if (onlyAtSettings.IsNotNull())
                             {
                                 HourOnlyAt = onlyAtSettings.HourOnlyAt;
@@ -282,17 +254,17 @@ namespace OF.Module.ViewModel.Settings
             if (EveryNightOrIdle)
             {
                 _settingsMeta.Pst.Schedule.ScheduleType = OFRiverSchedule.EveryNightOrIdle; 
-                _settingsMeta.Pst.Schedule.Settings = JsonConvert.SerializeObject(new NightIdleSettings(){IdleTime  = (IdleTime * 60)});
+                _settingsMeta.Pst.Schedule.Settings = JsonConvert.SerializeObject(new OFNightIdleSettings(){IdleTime  = (IdleTime * 60)});
             }
             if (OnlyAt)
             {
                 _settingsMeta.Pst.Schedule.ScheduleType = OFRiverSchedule.OnlyAt;
-                _settingsMeta.Pst.Schedule.Settings = JsonConvert.SerializeObject(new OnlyAtSettings(){HourOnlyAt = HourOnlyAt,HourType = HourType});
+                _settingsMeta.Pst.Schedule.Settings = JsonConvert.SerializeObject(new OFOnlyAtSettings(){HourOnlyAt = HourOnlyAt,HourType = HourType});
             }
             if (EveryHours)
             {
                 _settingsMeta.Pst.Schedule.ScheduleType = OFRiverSchedule.EveryHours;
-                _settingsMeta.Pst.Schedule.Settings = JsonConvert.SerializeObject(new EveryHourPeriodSettings(){HourPeriod = RepeatHours});
+                _settingsMeta.Pst.Schedule.Settings = JsonConvert.SerializeObject(new OFEveryHourPeriodSettings(){HourPeriod = RepeatHours});
             }
             if (Never)
             {

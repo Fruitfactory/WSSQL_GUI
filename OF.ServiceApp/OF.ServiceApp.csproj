@@ -77,6 +77,7 @@
     <Reference Include="Nancy.Hosting.Self">
       <HintPath>..\Toolkits\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -95,6 +96,11 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Bootstraper\OFServiceBootstraper.cs" />
+    <Compile Include="Controllers\OFControllerFactory.cs" />
+    <Compile Include="Controllers\OFNightOrIdleTrackingController.cs" />
+    <Compile Include="Controllers\OFOnlyAtParseController.cs" />
+    <Compile Include="Controllers\OFRepeatController.cs" />
+    <Compile Include="Core\OFBaseController.cs" />
     <Compile Include="Events\OFResumeReadEvent.cs" />
     <Compile Include="Events\OFStartReadEvent.cs" />
     <Compile Include="Events\OFStopEvent.cs" />
@@ -144,6 +150,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p yar1k1 /f "$(SolutionDir)Toolkits\Certificate\new_outlookfinder.pfx"   /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  $(TargetFileName)</PostBuildEvent>

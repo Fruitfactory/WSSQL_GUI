@@ -1,7 +1,7 @@
 ﻿using System;
 using OF.Core.Enums;
 
-namespace OF.Infrastructure.Implements.Service
+namespace OF.Core.Interfaces
 {
     public interface IOutlookItemsReader
     {
@@ -12,6 +12,8 @@ namespace OF.Infrastructure.Implements.Service
         void Suspend();
 
         void Resume(DateTime? lastUpdated);
+
+        void Join();
 
         void Close();
 

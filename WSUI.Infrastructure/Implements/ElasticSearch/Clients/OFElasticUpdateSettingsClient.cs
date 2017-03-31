@@ -21,7 +21,8 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
             var response = Raw.IndexPut("_river", DefaultInfrastructureName, "_meta", body);
 
-            OFObjectJsonSaveReadHelper.Instance.Save(settings, GlobalConst.SettingsRiverFile);
+            var riverMetaProvider = new OFRiverMetaSettingsProvider();
+            riverMetaProvider.UpdateRiverMetaSettings(settings);
 
             OFLogger.Instance.LogDebug("Update River...");
             OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.HttpStatusCode, response.Success);

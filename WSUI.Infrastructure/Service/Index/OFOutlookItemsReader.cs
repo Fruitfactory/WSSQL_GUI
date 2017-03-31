@@ -21,7 +21,6 @@ using OF.Core.Interfaces;
 using OF.Core.Logger;
 using OF.Core.Win32;
 using OF.Infrastructure.Implements.ElasticSearch.Clients;
-using OF.Infrastructure.Implements.Service;
 using Exception = System.Exception;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
@@ -100,6 +99,14 @@ namespace OF.Infrastructure.Service.Index
                     Status = PstReaderStatus.Busy;
                     _thread.Start();
                 }
+            }
+        }
+
+        public void Join()
+        {
+            if (_thread != null)
+            {
+                _thread.Join();
             }
         }
 

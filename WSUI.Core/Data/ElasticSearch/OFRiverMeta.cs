@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using OF.Core.Enums;
@@ -21,6 +22,9 @@ namespace OF.Core.Data.ElasticSearch
 
         [JsonProperty("pst")]
         public OFPstMeta Pst { get; set; }
+
+        [JsonProperty("lastdate")]
+        public DateTime? LastDate { get; set; }
 
     }
 

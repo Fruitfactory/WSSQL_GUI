@@ -131,6 +131,8 @@ namespace OF.Module
             _unityContainer.RegisterType<IOFLogFilesSenderManager, OFLogFilesSenderManager>();
 
             _unityContainer.RegisterType<IOFTurboLimeActivate, TurboLimeActivate>();
+
+            _unityContainer.RegisterType<IOFRiverMetaSettingsProvider, OFRiverMetaSettingsProvider>();
             
             watch.Stop();
             OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));

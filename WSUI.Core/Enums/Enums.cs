@@ -49,4 +49,13 @@ namespace OF.Core.Enums
         Price
     }
 
+    public enum ofUserActivityState
+    {
+        Unknown,
+        Online,
+        Idle,
+        Away,
+        Night
+    }
+
 }

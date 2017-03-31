@@ -195,6 +195,9 @@
     <Compile Include="Data\ElasticSearch\Response\OFShardsRaw.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFStatusItem.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFStatusResponse.cs" />
+    <Compile Include="Data\Settings\ControllerSettings\OFEveryHourPeriodSettings.cs" />
+    <Compile Include="Data\Settings\ControllerSettings\OFNightIdleSettings.cs" />
+    <Compile Include="Data\Settings\ControllerSettings\OFOnlyAtSettings.cs" />
     <Compile Include="Data\Settings\OFTypeInspectionPayloadSettings.cs" />
     <Compile Include="Enums\OFOutlookItemsIndexProcess.cs" />
     <Compile Include="Enums\OFPluginStatus.cs" />
@@ -205,6 +208,7 @@
     <Compile Include="Helpers\OFIsolatedStorageHelper.cs" />
     <Compile Include="Helpers\OFObjectJsonSaveReadHelper.cs" />
     <Compile Include="Helpers\OFOfficeVersion.cs" />
+    <Compile Include="Helpers\OFRiverMetaSettingsProvider.cs" />
     <Compile Include="Interfaces\IElasticSearchForceClient.cs" />
     <Compile Include="Interfaces\IElasticSearchIndexOutlookItemsClient.cs" />
     <Compile Include="Interfaces\IElasticSearchItemsCount.cs" />
@@ -331,11 +335,13 @@
     <Compile Include="Interfaces\IOFElasticSearchRemovingClient.cs" />
     <Compile Include="Interfaces\IOFElasticsearchStoreClient.cs" />
     <Compile Include="Interfaces\IOFQueryMatchPhrase.cs" />
+    <Compile Include="Interfaces\IOFRiverMetaSettingsProvider.cs" />
     <Compile Include="Interfaces\IOFSettingInspection.cs" />
     <Compile Include="Interfaces\IOFTurboLimeActivate.cs" />
     <Compile Include="Interfaces\IOFWildcard.cs" />
     <Compile Include="Interfaces\IOutlookFolder.cs" />
     <Compile Include="Interfaces\IOutlookHelper.cs" />
+    <Compile Include="Interfaces\IOutlookItemsReader.cs" />
     <Compile Include="Interfaces\IQueryGenerator.cs" />
     <Compile Include="Interfaces\IQueryReader.cs" />
     <Compile Include="Interfaces\IRawSearchResult.cs" />

@@ -2,7 +2,7 @@
 {
     public interface IUserActivityTracker
     {
-        void Start();
+        void Start(IOutlookItemsReader reader);
         void Stop();
     }
 }

@@ -134,7 +134,6 @@
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticTrackingClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticUpdateSettingsClient.cs" />
     <Compile Include="Implements\Inspections\OFESServiceSettingInspection.cs" />
-    <Compile Include="Implements\Service\IOutlookItemsReader.cs" />
     <Compile Include="MVVM\AdvancedSearch\OFSortByAdvancedSearchCriteria.cs" />
     <Compile Include="MVVM\AdvancedSearch\OFStringAdvancedSearchCriteria.cs" />
     <Compile Include="Attributes\OFFieldIndexAttribute.cs" />
@@ -267,6 +266,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Implements\Rules\Helpers\" />
+    <Folder Include="Implements\Service\" />
     <Folder Include="Service\Enums\" />
   </ItemGroup>
   <ItemGroup>
