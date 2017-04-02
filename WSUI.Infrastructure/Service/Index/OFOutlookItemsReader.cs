@@ -21,6 +21,7 @@ using OF.Core.Interfaces;
 using OF.Core.Logger;
 using OF.Core.Win32;
 using OF.Infrastructure.Implements.ElasticSearch.Clients;
+using RestSharp;
 using Exception = System.Exception;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
@@ -39,6 +40,8 @@ namespace OF.Infrastructure.Service.Index
         private readonly object _lock = new object();
         private static readonly int COUNT_ITEMS_FOR_COLLECT = 20;
 
+        private  readonly List<IOFIOutlookItemsReaderObserver> _observers = new List<IOFIOutlookItemsReaderObserver>();
+        
         private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
 
         private static readonly long ContentMaxSize = 5 * 1024 * 1024;
@@ -60,7 +63,11 @@ namespace OF.Infrastructure.Service.Index
         public PstReaderStatus Status
         {
             get { return Get(() => Status); }
-            private set { Set(() => Status, value); }
+            private set
+            {
+                Set(() => Status, value);
+                InternalNofity(value);
+            }
         }
 
         public void Close()
@@ -167,16 +174,14 @@ namespace OF.Infrastructure.Service.Index
                 CollectCOMItems();
                 try
                 {
-                    int count = GetItemCount(_application);
-                    _indexOutlookItemsClient.SendOutlookItemsCount(count);
+                    Count = GetItemCount(_application);
                 }
                 catch (System.UnauthorizedAccessException exception)
                 {
                     OFLogger.Instance.LogError(exception.ToString());
                     OFLogger.Instance.LogWarning("Try to set counts one more time...");
                     CollectCOMItems();
-                    int count = GetItemCount(_application);
-                    _indexOutlookItemsClient.SendOutlookItemsCount(count);
+                    Count = GetItemCount(_application);
                 }
 
                 CollectCOMItems();
@@ -699,7 +704,6 @@ namespace OF.Infrastructure.Service.Index
             {
                 OFOutlookItemsIndexingContainer container = new OFOutlookItemsIndexingContainer() { Email = email, Attachments = attachments, Contact = contact, Process = process };
                 _indexOutlookItemsClient.SendOutlookItemsToIndex(container);
-                Count += attachments.IsNotNull() ? attachments.Count() : 0;
             }
         }
 
@@ -786,6 +790,22 @@ namespace OF.Infrastructure.Service.Index
         {
             var process = Process.GetProcessesByName("outlook".ToUpperInvariant()).FirstOrDefault();
             return process != null && process.MainWindowHandle != IntPtr.Zero;
+        }
+
+        public void Attach(IOFIOutlookItemsReaderObserver observer)
+        {
+            lock (_lock)
+            {
+                _observers.Add(observer);
+            }
+        }
+
+        private void InternalNofity(PstReaderStatus newStatus)
+        {
+            lock (_lock)
+            {
+                _observers.ForEach(o => o.UpdateStatus(newStatus));
+            }
         }
     }
 }

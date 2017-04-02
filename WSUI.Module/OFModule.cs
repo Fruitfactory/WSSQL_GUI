@@ -118,7 +118,7 @@ namespace OF.Module
             _unityContainer.RegisterType<IElasticSearchIndexOutlookItemsClient, OFElasticSeachIndexOutlookItemsClient>();
 
             _unityContainer.RegisterType<IElasticSearchOFPluginStatusClient, OFElasticSearchOFPluginStatusClient>();
-            _unityContainer.RegisterType<IElasticSearchForceClient, OFElasticSearchForceClient>();
+            _unityContainer.RegisterType<IForceClient, OFForceClient>();
 
             _unityContainer.RegisterType<IServiceApplicationSettingsViewModel, OFServiceApplicationSettingsViewModel>();
             _unityContainer.RegisterType<IServiceApplicationSettingsView, OFServiceApplicationSettingsView>();

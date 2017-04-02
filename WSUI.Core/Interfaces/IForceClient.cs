@@ -1,6 +1,6 @@
 ﻿namespace OF.Core.Interfaces
 {
-    public interface IElasticSearchForceClient
+    public interface IForceClient
     {
         void Force();
     }

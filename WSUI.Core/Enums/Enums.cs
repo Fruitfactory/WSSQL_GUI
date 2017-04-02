@@ -58,4 +58,11 @@ namespace OF.Core.Enums
         Night
     }
 
+    public enum ofServiceApplicationMessageType
+    {
+        None, 
+        StartIndexing,
+        ForceIndexing
+    }
+
 }

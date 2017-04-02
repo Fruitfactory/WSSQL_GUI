@@ -1,36 +1,72 @@
 ﻿using System;
 using System.Threading;
+using OF.Core;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
+using OF.Core.Data.NamedPipeMessages;
+using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 using OF.Infrastructure.Helpers.AttachedProperty;
+using OF.Infrastructure.NamedPipes;
 using OF.Infrastructure.Service.Index;
+using Microsoft.Practices.Prism.Events;
+using OF.ServiceApp.Events;
 
 namespace OF.ServiceApp.Core
 {
-    public abstract class OFBaseController : IDisposable
+    public abstract class OFBaseController : IDisposable, IOFIOutlookItemsReaderObserver
     {
         private Thread _thread;
-        private IOFRiverMetaSettingsProvider _metaSettingsProvider;
+        private readonly IOFRiverMetaSettingsProvider _metaSettingsProvider;
         private IOutlookItemsReader _outlookItemsReader;
+        private readonly IEventAggregator _eventAggregator;
 
-        private object LOCK = new object();
+        private readonly object LOCK = new object();
         private volatile bool _stoped = false;
 
         protected OFBaseController(IOFRiverMetaSettingsProvider metaSettingsProvider)
         {
             _metaSettingsProvider = metaSettingsProvider;
             _outlookItemsReader = new OFOutlookItemsReader();
+            _outlookItemsReader.Attach(this);
         }
 
+        protected OFBaseController(IOFRiverMetaSettingsProvider metaSettingsProvider, IEventAggregator eventAggregator) 
+            :this(metaSettingsProvider)
+        {
+            _eventAggregator = eventAggregator;
+        }
+        
         public void Initialize()
         {
             Status = OFRiverStatus.None;
             var settings = _metaSettingsProvider.GetCurrentSettings();
             ParseSettings(settings);
+            SubscribeEvents(_eventAggregator);
             Status = !settings.LastDate.HasValue ? OFRiverStatus.InitialIndexing : OFRiverStatus.StandBy;
+        }
+
+        protected virtual void SubscribeEvents(IEventAggregator eventAggregator)
+        {
+            _eventAggregator.GetEvent<OFForcedEvent>().Subscribe(OnForsedEvent);
+        }
+
+        protected virtual void OnEventProcessing()
+        {
+            
+        }
+
+        private void OnForsedEvent(object o)
+        {
+
+            var isForsed = o as OFIsForcedMessage;
+            if (isForsed.IsNotNull())
+            {
+                IsForced = isForsed.IsForced;
+            }
+            OnEventProcessing();
         }
 
         public void Start()
@@ -80,7 +116,21 @@ namespace OF.ServiceApp.Core
             }
         }
 
-        protected OFRiverStatus Status { get; set; }
+        protected bool IsForced { get; private set; }
+
+        private OFRiverStatus _status;
+        public OFRiverStatus Status
+        {
+            get
+            {
+                return _status;
+            }
+            protected set
+            {
+                _status = value;
+                SendStatus(value,_outlookItemsReader.Status,_outlookItemsReader.Count);
+            }
+        }
 
         protected IOutlookItemsReader GetReader()
         {
@@ -156,5 +206,29 @@ namespace OF.ServiceApp.Core
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        public void UpdateStatus(PstReaderStatus newStatus)
+        {
+            SendStatus(Status,newStatus,_outlookItemsReader.Count);            
+        }
+
+
+        private void SendStatus(OFRiverStatus ctrlStatus, PstReaderStatus readerStatus, int count)
+        {
+            try
+            {
+                var status = new OFReaderStatus()
+                {
+                    ControllerStatus = ctrlStatus, ReaderStatus = readerStatus, Count  = count
+                };
+                OFNamedPipeClient<OFReaderStatus> client = new OFNamedPipeClient<OFReaderStatus>(GlobalConst.PluginServer);
+                client.Send(status);
+            }
+            catch (Exception e)
+            {
+                OFLogger.Instance.LogError(e.ToString());
+            }
+        }
+
     }
 }

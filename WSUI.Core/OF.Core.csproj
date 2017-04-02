@@ -195,6 +195,9 @@
     <Compile Include="Data\ElasticSearch\Response\OFShardsRaw.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFStatusItem.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFStatusResponse.cs" />
+    <Compile Include="Data\NamedPipeMessages\OFIsForcedMessage.cs" />
+    <Compile Include="Data\NamedPipeMessages\OFReaderStatus.cs" />
+    <Compile Include="Data\NamedPipeMessages\OFServiceApplicationMessage.cs" />
     <Compile Include="Data\Settings\ControllerSettings\OFEveryHourPeriodSettings.cs" />
     <Compile Include="Data\Settings\ControllerSettings\OFNightIdleSettings.cs" />
     <Compile Include="Data\Settings\ControllerSettings\OFOnlyAtSettings.cs" />
@@ -209,7 +212,7 @@
     <Compile Include="Helpers\OFObjectJsonSaveReadHelper.cs" />
     <Compile Include="Helpers\OFOfficeVersion.cs" />
     <Compile Include="Helpers\OFRiverMetaSettingsProvider.cs" />
-    <Compile Include="Interfaces\IElasticSearchForceClient.cs" />
+    <Compile Include="Interfaces\IForceClient.cs" />
     <Compile Include="Interfaces\IElasticSearchIndexOutlookItemsClient.cs" />
     <Compile Include="Interfaces\IElasticSearchItemsCount.cs" />
     <Compile Include="Interfaces\IElasticSearchOFPluginStatusClient.cs" />
@@ -334,6 +337,10 @@
     <Compile Include="Interfaces\INavigationView.cs" />
     <Compile Include="Interfaces\IOFElasticSearchRemovingClient.cs" />
     <Compile Include="Interfaces\IOFElasticsearchStoreClient.cs" />
+    <Compile Include="Interfaces\IOFIOutlookItemsReaderObserver.cs" />
+    <Compile Include="Interfaces\IOFNamedPipeClient.cs" />
+    <Compile Include="Interfaces\IOFNamedPipeObserver.cs" />
+    <Compile Include="Interfaces\IOFNamedPipeServer.cs" />
     <Compile Include="Interfaces\IOFQueryMatchPhrase.cs" />
     <Compile Include="Interfaces\IOFRiverMetaSettingsProvider.cs" />
     <Compile Include="Interfaces\IOFSettingInspection.cs" />

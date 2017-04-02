@@ -1,20 +1,23 @@
 ﻿using System;
 using Newtonsoft.Json;
+using OF.Core;
 using OF.Core.Data.ElasticSearch;
+using OF.Core.Data.NamedPipeMessages;
 using OF.Core.Data.Settings.ControllerSettings;
 using OF.Core.Interfaces;
+using OF.Infrastructure.NamedPipes;
 using OF.Infrastructure.Service.Helpers;
 using OF.ServiceApp.Core;
+using Microsoft.Practices.Prism.Events;
 
 namespace OF.ServiceApp.Controllers
 {
     public class OFNightOrIdleTrackingController : OFBaseController
     {
         private OFNightIdleSettings _localSettings;
-
         private IUserActivityTracker _activityTracker;
 
-        public OFNightOrIdleTrackingController(IOFRiverMetaSettingsProvider metaSettingsProvider) : base(metaSettingsProvider)
+        public OFNightOrIdleTrackingController(IOFRiverMetaSettingsProvider metaSettingsProvider,IEventAggregator eventAggregator) : base(metaSettingsProvider,eventAggregator)
         {
         }
 
@@ -25,7 +28,6 @@ namespace OF.ServiceApp.Controllers
 
         protected override int OnRun(DateTime? lastDateTime)
         {
-            // TODO: need to pass items reader
             _activityTracker = new OFUserActivityTracker(_localSettings.IdleTime,lastDateTime);
             _activityTracker.Start(GetReader());
             GetReader().Start(lastDateTime);
@@ -34,6 +36,12 @@ namespace OF.ServiceApp.Controllers
             _activityTracker.Stop();
 
             return 1;
+        }
+
+        protected override void OnEventProcessing()
+        {
+            base.OnEventProcessing();
+            _activityTracker.Update(IsForced);
         }
 
         protected override void OnStop()

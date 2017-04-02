@@ -1,5 +1,7 @@
 ﻿using System;
+using Microsoft.Practices.Prism.Events;
 using OF.Core.Enums;
+using OF.Core.Extensions;
 using OF.Core.Interfaces;
 using OF.ServiceApp.Core;
 
@@ -17,18 +19,26 @@ namespace OF.ServiceApp.Controllers
         }
 
         public OFBaseController GetController(OFRiverSchedule riverSchedule,
-            IOFRiverMetaSettingsProvider metaSettingsProvider)
+            IOFRiverMetaSettingsProvider metaSettingsProvider, IEventAggregator eventAggregator)
         {
+            OFBaseController controller = null;
             switch (riverSchedule)
             {
                 case OFRiverSchedule.EveryNightOrIdle:
-                    return new OFNightOrIdleTrackingController(metaSettingsProvider);
+                    controller = new OFNightOrIdleTrackingController(metaSettingsProvider,eventAggregator);
+                    break;
                 case OFRiverSchedule.OnlyAt:
-                    return new OFOnlyAtParseController(metaSettingsProvider);
+                    controller = new OFOnlyAtParseController(metaSettingsProvider);
+                    break;
                 case OFRiverSchedule.EveryHours:
-                    return new OFRepeatController(metaSettingsProvider);
+                    controller = new OFRepeatController(metaSettingsProvider);
+                    break;
             }
-            return null;
+            if (controller.IsNotNull())
+            {
+                controller.Initialize();
+            }
+            return controller;
         }
     }
 }

@@ -9,6 +9,7 @@ using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
+using OF.Core.Data.NamedPipeMessages;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
 using OF.Infrastructure;
@@ -19,7 +20,7 @@ using Timer = System.Timers.Timer;
 
 namespace OF.Module.ViewModel
 {
-    public class ElasticSearchMonitoringViewModel : OFViewModelBase, IElasticSearchMonitoringViewModel
+    public class ElasticSearchMonitoringViewModel : OFViewModelBase, IElasticSearchMonitoringViewModel, IOFNamedPipeObserver<OFReaderStatus>
     {
 
         private static string UPDATING = "Updating...";
@@ -31,6 +32,8 @@ namespace OF.Module.ViewModel
         private IRegionManager _regionManager;
 
         private readonly  object _lock = new object();
+
+        private OFReaderStatus _currentStatus;
 
         private Timer _timer;
 
@@ -121,22 +124,23 @@ namespace OF.Module.ViewModel
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
-            var response = _riverStatusClient.GetRiverStatus();
-            var emailCount = _riverStatusClient.GetTypeCount<OFEmail>();
-            var attachmentCount = _riverStatusClient.GetTypeCount<OFAttachmentContent>();
-            if (response.IsNull() || !response.Success)
+            OFReaderStatus current = null;
+            lock (_lock)
             {
-                return;
+                current = _currentStatus;
             }
-            var result = response.Response;
-            if (result.IsNull() || !result.Success)
+
+            if (current.IsNull())
             {
                 return;
             }
 
-            Status = result.Status;
+            var emailCount = _riverStatusClient.GetTypeCount<OFEmail>();
+            var attachmentCount = _riverStatusClient.GetTypeCount<OFAttachmentContent>();
+
+            Status = current.ControllerStatus;
             StatusText = Status == OFRiverStatus.Busy || Status == OFRiverStatus.InitialIndexing ? UPDATING : READY;
-            LastUpdated = result.Lastupdated;
+            LastUpdated = current.LastUpdated;
             EmailCount = emailCount;
             AttachmentCount = attachmentCount;
         }
@@ -166,5 +170,13 @@ namespace OF.Module.ViewModel
 
         #endregion
 
+        public void Update(OFReaderStatus message)
+        {
+            lock (_lock)
+            {
+                _currentStatus = message;
+            }
+            
+        }
     }
 }

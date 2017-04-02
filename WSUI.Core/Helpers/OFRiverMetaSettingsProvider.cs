@@ -10,9 +10,7 @@ namespace OF.Core.Helpers
 {
     public class OFRiverMetaSettingsProvider : IOFRiverMetaSettingsProvider
     {
-
-
-
+        
         public OFRiverMeta GetCurrentSettings()
         {
             try

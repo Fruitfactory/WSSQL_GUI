@@ -3,6 +3,7 @@ using System.Runtime.ExceptionServices;
 using System.Threading;
 using Nest;
 using OF.Core.Core.ElasticSearch;
+using OF.Core.Data.NamedPipeMessages;
 using OF.Core.Data.Settings.ControllerSettings;
 using OF.Core.Enums;
 using OF.Core.Extensions;
@@ -22,7 +23,7 @@ namespace OF.Infrastructure.Service.Helpers
         private readonly int _onlineTime;
         private DateTime? _lastDate;
         private ofUserActivityState oldState;
-        private bool _isForce;
+        private volatile bool _isForce;
 
         private readonly object LOCK = new object();
 
@@ -52,6 +53,11 @@ namespace OF.Infrastructure.Service.Helpers
             }
             _stop = true;
             _userActivityThread.Join();
+        }
+
+        public void Update(bool isForced)
+        {
+            _isForce = isForced;
         }
 
         private void UserActivityProcess(object arg)

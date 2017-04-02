@@ -30,5 +30,8 @@ namespace OF.Core
 
         public static readonly string RiverMetaMutex = "RiverMetaMutex";
 
+        public static readonly string PluginServer = "OFPluginSever";
+
+        public static readonly string ServiceApplicationServer = "OFServiceApplicationServer";
     }
 }

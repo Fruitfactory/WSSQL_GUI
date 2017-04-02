@@ -4,5 +4,6 @@
     {
         void Start(IOutlookItemsReader reader);
         void Stop();
+        void Update(bool isForced);
     }
 }

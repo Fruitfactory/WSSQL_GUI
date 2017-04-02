@@ -24,5 +24,7 @@ namespace OF.Core.Interfaces
 
         int Count { get; }
 
+        void Attach(IOFIOutlookItemsReaderObserver observer);
+
     }
 }

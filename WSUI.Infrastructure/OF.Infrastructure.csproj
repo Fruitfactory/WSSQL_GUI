@@ -101,6 +101,9 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RestSharp">
+      <HintPath>..\Toolkits\RestSharp\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -127,7 +130,7 @@
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticRiverStatus.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSeachIndexOutlookItemsClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchClient.cs" />
-    <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchForceClient.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFForceClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchOFPluginStatusClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchRemovingClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticsearchStoreClient.cs" />
@@ -204,6 +207,8 @@
     <Compile Include="Implements\Rules\OFFileFilenameSearchRule.cs" />
     <Compile Include="Interfaces\Search\IContactSearchSystem.cs" />
     <Compile Include="MVVM\StatusItem\OFStatusItemViewModel.cs" />
+    <Compile Include="NamedPipes\OFNamedPipeClient.cs" />
+    <Compile Include="NamedPipes\OFNamedPipeServer.cs" />
     <Compile Include="Payloads\OFSearchObjectPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

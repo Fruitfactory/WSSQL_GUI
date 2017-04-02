@@ -17,10 +17,12 @@ using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using Nest;
+using OF.Core;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
+using OF.Core.Data.NamedPipeMessages;
 using OF.Core.Data.Settings;
 using OF.Core.Enums;
 using OF.Core.Events;
@@ -32,13 +34,14 @@ using OF.Core.Utils.Dialog;
 using OF.Infrastructure;
 using OF.Infrastructure.Helpers;
 using OF.Infrastructure.MVVM.StatusItem;
+using OF.Infrastructure.NamedPipes;
 using OF.Module.Interface.Service;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
 
 namespace OF.Module.ViewModel
 {
-    public class ElasticSearchViewModel : OFViewModelBase, IElasticSearchViewModel
+    public class ElasticSearchViewModel : OFViewModelBase, IElasticSearchViewModel, IOFNamedPipeObserver<OFReaderStatus>
     {
 
         private const string ElasticSearchService = "elasticsearch";
@@ -47,6 +50,8 @@ namespace OF.Module.ViewModel
         private IUnityContainer _unityContainer;
         private IRegionManager _regionManager;
         private Timer _timer;
+
+        private OFReaderStatus _currentStatus;
 
         private readonly object _lock = new object();
 
@@ -382,12 +387,19 @@ namespace OF.Module.ViewModel
             InitElasticSearch();
             CreateIndexVisibility = Visibility.Collapsed;
             ShowProgress = Visibility.Visible;
-            //CheckServicesAndIndex();
+            StartIndexing();
+        }
+
+        private void StartIndexing()
+        {
+            OFNamedPipeClient<OFServiceApplicationMessage> client =
+                            new OFNamedPipeClient<OFServiceApplicationMessage>(GlobalConst.ServiceApplicationServer);
+            client.Send(new OFServiceApplicationMessage() { MessageType = ofServiceApplicationMessageType.StartIndexing });
         }
 
         private void ForceCommandExecute(object arg)
         {
-            var forceClient = _unityContainer.Resolve<IElasticSearchForceClient>();
+            var forceClient = _unityContainer.Resolve<IForceClient>();
             if (forceClient.IsNull())
             {
                 return;
@@ -451,17 +463,22 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                var response = ElasticSearchClient.GetIndexingProgress();
-                if (response.Response.IsNull() || response.Response.Items.IsNull() || !response.Response.Items.Any())
+                OFReaderStatus response = null;
+                lock (_lock)
+                {
+                    response = _currentStatus;
+                }
+                
+                if (response.IsNull())
                 {
                     return;
                 }
 
-                if (response.Response.Items.All(i => i.Status == PstReaderStatus.NonStarted))
+                if (response.ReaderStatus == PstReaderStatus.NonStarted)
                 {
                     return;
                 }
-                if (response.Response.Items.All(s => s.Status == PstReaderStatus.Finished))
+                if (response.ReaderStatus == PstReaderStatus.Finished)
                 {
                     _timer.Change(Timeout.Infinite, Timeout.Infinite);
                     IsIndexExisted = true;
@@ -470,20 +487,19 @@ namespace OF.Module.ViewModel
                     OnIndexingFinished();
                     return;
                 }
-                if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Busy))
+                if (response.ReaderStatus == PstReaderStatus.Busy)
                 {
                     IsBusy = true;
                     ShowProgress = Visibility.Visible;
                     var emailCount = ElasticSearchClient.GetTypeCount<OFEmail>();
                     var attachmentCount = ElasticSearchClient.GetTypeCount<OFAttachmentContent>();
-                    double sumAll = (double)response.Response.Items.Sum(s => s.Count);
+                    double sumAll = response.Count;
                     double sumProcessing = emailCount + attachmentCount;
-                    var busyReader = response.Response.Items.FirstOrDefault(r => r.Status == PstReaderStatus.Busy);
-                    CurrentFolder = busyReader.IsNotNull() ? busyReader.Folder : "";
+                    CurrentFolder = response.Folder;
                     CurrentProgress = (sumProcessing / sumAll) * 100.0;
                     CountEmailsAttachments = string.Format("{0} / {1}", emailCount, attachmentCount);
                 }
-                if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Suspended))
+                if (response.ReaderStatus == PstReaderStatus.Suspended)
                 {
                     IsBusy = false;
                 }
@@ -498,8 +514,13 @@ namespace OF.Module.ViewModel
             }
         }
 
-       
-
+        public void Update(OFReaderStatus message)
+        {
+            lock (_lock)
+            {
+                _currentStatus = message;
+            }
+        }
 
         #endregion
 

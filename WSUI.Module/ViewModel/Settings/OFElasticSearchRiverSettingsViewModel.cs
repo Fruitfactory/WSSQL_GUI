@@ -303,7 +303,7 @@ namespace OF.Module.ViewModel.Settings
 
         private void ForceCommandExecute(object o)
         {
-            var force = _unityContainer.Resolve<IElasticSearchForceClient>();
+            var force = _unityContainer.Resolve<IForceClient>();
             if (force == null)
             {
                 return;
