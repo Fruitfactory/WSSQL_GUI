@@ -31,7 +31,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                     q => q.Query(d => d.Term(a => a.Storeid, Store.Storeid)));
 
             var result = ElasticClient.DeleteByQuery<OFStore>(q => q.Query(d => d.Term(s => s.Storeid, Store.Storeid)));
-            return resultEmail.Found && resultContact.Found && resultAttach.Found && result.Found;
+            return resultEmail.IsValid && resultContact.IsValid && resultAttach.IsValid && result.IsValid;
         }
 
         public IEnumerable<OFStore> GetStores()

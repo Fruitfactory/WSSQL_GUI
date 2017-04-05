@@ -274,11 +274,7 @@ namespace OF.Module.ViewModel.Settings
                 _settingsMeta.Pst.Schedule.ScheduleType = OFRiverSchedule.Never;
                 _settingsMeta.Pst.Schedule.Settings = String.Empty;
             }
-            var updateClient = _unityContainer.Resolve<IElasticUpdateSettingsClient>();
-            if (updateClient.IsNotNull())
-            {
-                updateClient.UpdateSettings(_settingsMeta);
-            }
+            // TODO: save settings in isolated storage. Should check if they are saved.            
         }
 
 

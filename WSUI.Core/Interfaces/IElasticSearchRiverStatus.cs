@@ -8,7 +8,6 @@ namespace OF.Core.Interfaces
     public interface IElasticSearchRiverStatus : IElasticSearchItemsCount
     {
         OFNamedServerResponse GetRiverStatus();
-        IndexStatus GetIndexStatus(string indexName);
         
     }
 }

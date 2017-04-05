@@ -11,7 +11,6 @@ using System.Threading;
 using System.Windows.Documents.DocumentStructures;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Elasticsearch.Net.Serialization;
 using MahApps.Metro.Controls;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
@@ -346,10 +345,6 @@ namespace OF.Module.ViewModel
                 && status.First().ControllerStatus == OFRiverStatus.InitialIndexing;
             
             _eventAggregator.GetEvent<OFMenuEnabling>().Publish(resp.Exists);
-            if (IsIndexExisted)
-            {
-                ElasticSearchClient.CheckAndCreateWarms();
-            }
         }
 
         private void InstallServiceCommandExecute(object arg)

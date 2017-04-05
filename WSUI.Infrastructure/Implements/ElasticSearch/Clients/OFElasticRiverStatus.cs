@@ -30,16 +30,6 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             return response;
         }
 
-        public IndexStatus GetIndexStatus(string indexName)
-        {
-            var status = ElasticClient.Status(new IndicesStatusRequest());
-            if (status.IsNotNull() && status.Indices.IsNotNull()  && status.Indices.ContainsKey(indexName))
-            {
-                return status.Indices[indexName];
-            }
-            return null;
-        }
-
         public long GetTypeCount<T>() where T : class 
         {
             var status = ElasticClient.Count<T>();

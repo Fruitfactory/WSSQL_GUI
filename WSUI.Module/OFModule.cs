@@ -92,7 +92,7 @@ namespace OF.Module
             _unityContainer.RegisterType<IDataView<AdvancedSearchViewModel>, AdvancedSearchDataView>();
 
             _unityContainer.RegisterType<IElasticSearchInitializationIndex, OFElasticInitializingClient>();
-            _unityContainer.RegisterType<IElasticTrackingClient, OFElasticTrackingClient>();
+            
             _unityContainer.RegisterType<IElasticSearchClient, OFElasticSearchClient>();
             _unityContainer.RegisterType<IElasticSearchRiverStatus, OFElasticRiverStatus>();           
            
@@ -105,8 +105,7 @@ namespace OF.Module
             _unityContainer.RegisterType<IMainSettingsWindow, OFMainSettingsWindow>();
             _unityContainer.RegisterType<IElasticSearchRiverSettingsView, ElasticSearchRiverSettingsView>();
             _unityContainer.RegisterType<IElasticSearchRiverSettingsViewModel, OFElasticSearchRiverSettingsViewModel>();
-            _unityContainer.RegisterType<IElasticUpdateSettingsClient, OFElasticUpdateSettingsClient>();
-
+            
             _unityContainer.RegisterType<IElasticSearchMonitoringView, ElasticSearchMonitoringView>();
             _unityContainer.RegisterType<IElasticSearchMonitoringViewModel, ElasticSearchMonitoringViewModel>();
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
-using Elasticsearch.Net.Serialization;
 using Microsoft.Practices.Unity;
 using Nest;
 using Newtonsoft.Json;
@@ -27,10 +26,6 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
         private const string Somevalue = "outlook";
 
-        private static readonly String WARM_NAME_CONTACT = "warm_contact";
-        private static readonly String WARM_NAME_EMAIL = "warm_email";
-        private static readonly String WARM_NAME_ATTACHMENT = "warm_attachment";
-
         private static readonly int WARM_UP_SIZER = 1000;
 
 
@@ -46,7 +41,6 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                 if (CreateIndex())
                 {
                     CreateRiver();
-                    CreateWarms();
                 }
             }
             catch (Exception exception)
@@ -75,25 +69,12 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
         }
 
-        public IndexStatus GetIndexStatus(string indexName)
-        {
-            throw new NotImplementedException();
-        }
-
         public long GetTypeCount<T>() where T : class
         {
             var status = ElasticClient.Count<T>();
             return status.Count;
         }
 
-        public void CheckAndCreateWarms()
-        {
-            var response = ElasticClient.GetWarmer("warm_contact_1");
-            if (response.Indices != null && !response.Indices.Any())
-            {
-                CreateWarms();
-            }
-        }
 
         public void WarmUp()
         {
@@ -102,7 +83,6 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
         private void WarmUpAll()
         {
-            ElasticClient.Warmup();
             WarmUpContact();
             WarmUpEmail();
             WarmUpAttachment();
@@ -184,34 +164,26 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
         private bool CreateIndex()
         {
-            var response = ElasticClient.CreateIndex(DefaultInfrastructureName, c => c.NumberOfShards(1).NumberOfReplicas(0).Analysis(
-                ad =>
-                {
-                    ad.TokenFilters(d =>
-                    {
-                        d.Add("shingle_filter", new ShingleTokenFilter() {MinShingleSize = 2, MaxShingleSize = 10});
-                        d.Add("edgeNGram", new EdgeNGramTokenFilter() {MinGram = 2, MaxGram = 15});
-                        return d;
-                    });
-                    ad.Analyzers(
-                        d =>
-                            d.Add("shingle_analyzer",
-                                new CustomAnalyzer()
-                                {
-                                    Tokenizer = "whitespace",
-                                    Filter = new List<string>() { "lowercase", "shingle_filter"}
-                                }));
-                    return ad;
-                }
-                )
-                .AddMapping<OFEmail>(m => m.MapFromAttributes())
-                .AddMapping<OFContact>(m => m.MapFromAttributes())
-                .AddMapping<OFAttachmentContent>(m => m.MapFromAttributes())
-                );
-            OFLogger.Instance.LogDebug("Create Index...");
-            OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.ConnectionStatus.HttpStatusCode, response.ConnectionStatus.Success);
 
-            return response.ConnectionStatus.HttpStatusCode == 200;
+            var descriptor = new CreateIndexDescriptor(DefaultInfrastructureName)
+                .Settings(s => s
+                    .NumberOfShards(1)
+                    .NumberOfReplicas(0)
+                )
+                .Mappings(ms => ms
+                    .Map<OFEmail>(m => m.AutoMap())
+                    .Map<OFContact>(m => m.AutoMap())
+                    .Map<OFAttachmentContent>(m => m.AutoMap())
+                    .Map<OFStore>(m => m.AutoMap())
+                );
+
+            var response = ElasticClient.CreateIndex(descriptor);
+
+            OFLogger.Instance.LogDebug("Create Index...");
+            OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.ApiCall.HttpStatusCode, response.ApiCall.Success);
+            OFLogger.Instance.LogDebug("Debug Info: {0}",response.DebugInformation);
+
+            return response.ApiCall.HttpStatusCode == 200;
 
         }
 
@@ -223,81 +195,6 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
             OFLogger.Instance.LogDebug("Create Settings for service contoroller...");
         }
-
-        private void CreateWarms()
-        {
-            try
-            {
-                OFLogger.Instance.LogDebug("Create warms...");
-                var value = "a";
-                ElasticClient.PutWarmer("warm_contact_1", wd =>
-                    wd.Type<OFContact>().Index(DefaultInfrastructureName)
-                        .Search<OFContact>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
-                            q.Bool(bd => bd.Should(t => t.Term(c => c.Firstname, value),
-                                t => t.Term(c => c.Lastname, value),
-                                t => t.Term(c => c.Emailaddress1, value),
-                                t => t.Term(c => c.Emailaddress2, value),
-                                t => t.Term(c => c.Emailaddress3, value)))))
-                    );
-
-                var email1 = "outlook";
-                var email2 = "@";
-                ElasticClient.PutWarmer("warm_email_1", wd =>
-                    wd.Type<OFEmail>().Index(DefaultInfrastructureName)
-                    .Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
-                        q.Term(e => e.Subject, email1))));
-
-                ElasticClient.PutWarmer("warm_email_2", wd =>
-                                    wd.Type<OFEmail>().Index(DefaultInfrastructureName)
-                                    .Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
-                                        q.Term(e => e.Analyzedcontent, email1))));
-
-                ElasticClient.PutWarmer("warm_email_3", wd =>
-                                    wd.Type<OFEmail>().Index(DefaultInfrastructureName)
-                                    .Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(queryDescriptor => queryDescriptor.Bool(bd => bd.Should(
-                                                                                                                                qd => qd.Term("to.name", email2),
-                                                                                                                                qd => qd.Term("to.address", email2),
-                                                                                                                                qd => qd.Term("cc.name", email2),
-                                                                                                                                qd => qd.Term("cc.address", email2),
-                                                                                                                                qd => qd.Term("fromname", email2),
-                                                                                                                                qd => qd.Term("fromaddress", email2)
-                                                                                                                                )))));
-                var image = "png";
-                var content = "a";
-                ElasticClient.PutWarmer("warm_attachment_1", wd =>
-                    wd.Type<OFAttachmentContent>().Index(DefaultInfrastructureName)
-                        .Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
-                            q.Term(a => a.Filename, image))));
-
-                ElasticClient.PutWarmer("warm_attachment_2", wd =>
-                    wd.Type<OFAttachmentContent>().Index(DefaultInfrastructureName)
-                        .Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
-                            q.Term(a => a.Analyzedcontent, content))));
-
-
-
-                ElasticClient.PutWarmer(WARM_NAME_CONTACT, wd =>
-                    wd
-                   .Type<OFContact>().Index(DefaultInfrastructureName)
-                   .Search<OFContact>(s => s.From(0).Size(WARM_UP_SIZER)));
-
-                ElasticClient.PutWarmer(WARM_NAME_EMAIL, wd =>
-                   wd
-                       .Type<OFEmail>().Index(DefaultInfrastructureName)
-                       .Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER)));
-                ElasticClient.PutWarmer(WARM_NAME_ATTACHMENT, wd =>
-                wd
-                    .Type<OFAttachmentContent>().Index(DefaultInfrastructureName)
-                    .Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER)));
-            }
-            catch (Exception ex)
-            {
-                OFLogger.Instance.LogError(ex.ToString());
-            }
-
-        }
-
-
 
     }
 }

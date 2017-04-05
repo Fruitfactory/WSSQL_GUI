@@ -2,7 +2,7 @@
 
 namespace OF.Core.Data.ElasticSearch
 {
-    [ElasticType(Name = "store")]
+    [ElasticsearchType(Name = "store")]
     public class OFStore
     {
         public string Name { get; set; }

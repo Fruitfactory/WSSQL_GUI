@@ -24,12 +24,12 @@ namespace OF.Infrastructure.NamedPipes
         private NamedPipeServerStream _pipeServer;
         private StreamReader _reader;
         private StreamWriter _writer;
-        private static readonly int BufferSize = 1024;
+        
         private readonly Thread _serverThread;
         private readonly string _pipeName;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        private volatile bool _close = false;
+
 
         public OFNamedPipeServer(string pipeName)
         {

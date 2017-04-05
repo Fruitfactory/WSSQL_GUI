@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
-using Elasticsearch.Net.Serialization;
 using Microsoft.Practices.Unity;
 using Nest;
 using Newtonsoft.Json;
@@ -26,7 +25,6 @@ namespace OF.Core.Core.ElasticSearch
         public static readonly string ElasticSearchHost = "http://127.0.0.1:9200";
         public static readonly string DefaultInfrastructureName = "outlookfinder";
 
-        private ElasticClient _internalElasticClient;
         private JsonSerializerSettings _settings;
 
         [InjectionConstructor]
@@ -50,11 +48,13 @@ namespace OF.Core.Core.ElasticSearch
             try
             {
                 var node = new Uri(host);
-                var settings = new ConnectionSettings(node, defaultIndexName);
-                settings.SetJsonSerializerSettingsModifier(jsonSettings =>
-                {
-                    jsonSettings.DateFormatString = "yyyy-MM-ddTHH:mm:ss.fff";
-                });
+                var settings = new ConnectionSettings(node).DefaultIndex(DefaultInfrastructureName);
+
+                //settings.SetJsonSerializerSettingsModifier(jsonSettings =>
+                //{
+                //    jsonSettings.DateFormatString = "yyyy-MM-ddTHH:mm:ss.fff";
+                //});
+                
                 ElasticClient = new ElasticClient(settings);
                 _settings = new JsonSerializerSettings();
                 _settings.Converters.Add(new OFConditionCollectionConverter());
@@ -66,13 +66,9 @@ namespace OF.Core.Core.ElasticSearch
             }
         }
 
-        public ElasticClient ElasticClient
-        {
-            get { return _internalElasticClient; }
-            set { _internalElasticClient = value; }
-        }
+        public ElasticClient ElasticClient { get; private set; }
 
-        protected INestSerializer Serializer
+        protected IElasticsearchSerializer Serializer
         {
             get
             {
@@ -80,9 +76,9 @@ namespace OF.Core.Core.ElasticSearch
             }
         }
 
-        protected IElasticsearchClient Raw
+        protected IElasticLowLevelClient Raw
         {
-            get { return ElasticClient.Raw; }
+            get { return ElasticClient.LowLevel; }
         }
 
         public IExistsResponse IndexExists(string name)

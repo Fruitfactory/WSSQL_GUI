@@ -166,7 +166,7 @@ namespace OF.Core.Core.Search
                     if (resultAdvance.IsNotNull() && resultAdvance.Documents.IsNotNull())
                     {
 #if DEBUG
-                        var str = Encoding.Default.GetString(resultAdvance.RequestInformation.Request);
+                        var str = Encoding.Default.GetString(resultAdvance.ApiCall.RequestBodyInBytes);
 #endif
                         Documents = resultAdvance.Documents;
                         total = resultAdvance.Total;
@@ -231,7 +231,7 @@ namespace OF.Core.Core.Search
                 Event.Set();
             }
         }
-
+        
         private IEnumerable<E> GetAlternativeResult(out int took, out long total)
         {
             IEnumerable<E> Documents = new List<E>();
@@ -268,12 +268,12 @@ namespace OF.Core.Core.Search
             return default(IFieldSort);
         }
 
-        protected virtual IFieldSort BuildAdvancedFieldSortSortSelector(SortFieldDescriptor<E> sortFieldDescriptor)
+        protected virtual IPromise<IList<ISort>> BuildAdvancedFieldSortSortSelector(SortDescriptor<E> arg)
         {
-            return default(IFieldSort);
+            return default(IPromise<IList<ISort>>);
         }
 
-        protected virtual QueryContainer BuildAdvancedQuery(QueryDescriptor<E> queryDescriptor)
+        protected virtual QueryContainer BuildAdvancedQuery(QueryContainerDescriptor<E> queryDescriptor)
         {
             return default(QueryContainer);
         }

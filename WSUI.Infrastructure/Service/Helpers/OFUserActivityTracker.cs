@@ -16,7 +16,7 @@ namespace OF.Infrastructure.Service.Helpers
 {
     public class OFUserActivityTracker : IUserActivityTracker
     {
-        private readonly OFElasticTrackingClient _elasticSearchClient;
+        
         private IOutlookItemsReader _reader;
         private readonly Thread _userActivityThread;
         private volatile bool _stop;
@@ -32,7 +32,6 @@ namespace OF.Infrastructure.Service.Helpers
 
         public OFUserActivityTracker(int onlineTime, DateTime? lastDate)
         {
-            _elasticSearchClient = new OFElasticTrackingClient();
             _userActivityThread = new Thread(UserActivityProcess);
             _onlineTime = onlineTime;
             _lastDate = lastDate;
@@ -68,13 +67,7 @@ namespace OF.Infrastructure.Service.Helpers
             {
                 try
                 {
-                    var resp = _elasticSearchClient.IndexExists(request);
-                    if (!resp.Exists)
-                    {
-                        OFLogger.Instance.LogDebug("ES Exist = " + resp.Exists);
-                        Thread.Sleep(2000);
-                        continue;
-                    }
+
                     var idle = WindowsFunction.GetIdleTime();
                     uint idleTimeSec = idle / 1000;
                     System.Diagnostics.Debug.WriteLine(string.Format("{0} - {1}", idle, idleTimeSec));

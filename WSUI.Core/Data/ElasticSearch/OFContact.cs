@@ -4,7 +4,7 @@ using Nest;
 
 namespace OF.Core.Data.ElasticSearch
 {
-    [ElasticType(Name = "contact")]
+    [ElasticsearchType(Name = "contact")]
     public class OFContact : OFElasticSearchBaseEntity
     {
 

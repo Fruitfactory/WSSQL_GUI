@@ -61,7 +61,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
 
         protected override IFieldSort BuildSortSelector(SortFieldDescriptor<OFEmail> sortFieldDescriptor)
         {
-            return sortFieldDescriptor.OnField(e => e.Datecreated).Descending();
+            return sortFieldDescriptor.Field(e => e.Datecreated).Descending();
         }
 
         protected abstract Expression<Func<OFEmail, string>> GetSearchedProperty();

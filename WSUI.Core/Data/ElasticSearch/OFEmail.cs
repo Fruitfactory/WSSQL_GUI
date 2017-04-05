@@ -3,7 +3,7 @@ using Nest;
 
 namespace OF.Core.Data.ElasticSearch
 {
-    [ElasticType(Name = "email")]
+    [ElasticsearchType(Name = "email")]
     public class OFEmail : OFElasticSearchBaseEntity
     {
         public OFEmail()

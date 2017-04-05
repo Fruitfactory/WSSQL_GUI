@@ -2,6 +2,7 @@
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Interfaces;
+using OF.Core.Logger;
 
 namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
@@ -16,7 +17,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
         public void RemoveEmail(string entryId)
         {
             var result = ElasticClient.DeleteByQuery<OFEmail>(q => q.Query(rq => rq.Term(e => e.Entryid, entryId)));
-            System.Diagnostics.Debug.WriteLine(result.Found);            
+            OFLogger.Instance.LogInfo("Remove Email: {0}",result.ApiCall.Success);
         }
 
     }

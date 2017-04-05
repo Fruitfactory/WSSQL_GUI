@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Net;
 using System.Text;
-using Elasticsearch.Net.Serialization;
 using Microsoft.Practices.Unity;
+using Newtonsoft.Json;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 using RestSharp;
+using Newtonsoft.Json.Serialization;
 
 namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
@@ -26,10 +27,9 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
         {
             try
             {
-                var attachmentsList = Serializer.Serialize(outlookItemsContainer, SerializationFormatting.Indented);
-                var str = Encoding.UTF8.GetString(attachmentsList);
+                var attachmentsList = JsonConvert.SerializeObject(outlookItemsContainer);
                 var request = new RestRequest("parse/items", Method.POST);
-                request.AddBody(str);
+                request.AddBody(attachmentsList);
                 var response = _restClient.Execute(request);
                 return response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted;
             }

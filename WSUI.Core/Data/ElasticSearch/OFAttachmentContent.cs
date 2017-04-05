@@ -5,7 +5,7 @@ using OF.Core.Core.Attributes;
 
 namespace OF.Core.Data.ElasticSearch
 {
-    [ElasticType(Name = "attachment")]
+    [ElasticsearchType(Name = "attachment")]
     public class OFAttachmentContent : OFElasticSearchBaseEntity
     {
         public OFAttachmentContent()

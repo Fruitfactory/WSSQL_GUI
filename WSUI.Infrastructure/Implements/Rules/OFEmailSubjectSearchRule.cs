@@ -108,34 +108,34 @@ namespace OF.Infrastructure.Implements.Rules
             body.query = new OFWildcard<OFSubjectWildcard>(Query);
             return body;
         }
-
-
-        protected override IFieldSort BuildAdvancedFieldSortSortSelector(SortFieldDescriptor<OFEmail> sortFieldDescriptor)
+        
+        protected override IPromise<IList<ISort>> BuildAdvancedFieldSortSortSelector(SortDescriptor<OFEmail> sortFieldDescriptor)
         {
             if (AdvancedSearchCriterias.IsNull() ||
-               AdvancedSearchCriterias.All(c => c.CriteriaType != AdvancedSearchCriteriaType.SortBy))
-                return sortFieldDescriptor.OnField(e => e.Datereceived);
+                AdvancedSearchCriterias.All(c => c.CriteriaType != AdvancedSearchCriteriaType.SortBy))
+                return sortFieldDescriptor.Ascending(email => email.Datereceived);
 
             var sortingCriteria = AdvancedSearchCriterias.First(c => c.CriteriaType == AdvancedSearchCriteriaType.SortBy);
             var sort = (AdvancedSearchSortByType)sortingCriteria.Value;
             switch (sort)
             {
                 case AdvancedSearchSortByType.NewestToOldest:
-                    return sortFieldDescriptor.OnField(e => e.Datereceived).Descending();
+                    return sortFieldDescriptor.Descending(email => email.Datereceived);
                 case AdvancedSearchSortByType.OldestToNewest:
-                    return sortFieldDescriptor.OnField(e => e.Datereceived).Ascending();
+                    return sortFieldDescriptor.Ascending(email => email.Datereceived);
                 default:
-                    return sortFieldDescriptor.OnField(e => e.Datereceived);
+                    return sortFieldDescriptor.Descending(email => email.Datereceived);
             }
         }
 
-        protected override QueryContainer BuildAdvancedQuery(QueryDescriptor<OFEmail> queryDescriptor)
+
+        protected override QueryContainer BuildAdvancedQuery(QueryContainerDescriptor<OFEmail> queryDescriptor)
         {
             if (AdvancedSearchCriterias.IsEmpty())
             {
                 return new QueryContainer();
             }
-            var listCriterias = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
+            var listCriterias = new List<Func<QueryContainerDescriptor<OFEmail>, QueryContainer>>();
             foreach (var advancedSearchCriteria in AdvancedSearchCriterias)
             {
                 if (advancedSearchCriteria.Value.IsNull() || advancedSearchCriteria.Value.IsStringEmptyOrNull())
@@ -144,31 +144,31 @@ namespace OF.Infrastructure.Implements.Rules
                 switch (temp.CriteriaType)
                 {
                     case AdvancedSearchCriteriaType.To:
-                        var listShould = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
-                        listShould.Add(d => d.Wildcard("to.address",string.Format("*{0}*",temp.Value.ToLowerCase())));
-                        listShould.Add(d => d.Wildcard("to.name", string.Format("*{0}*", temp.Value.ToLowerCase())));
+                        var listShould = new List<Func<QueryContainerDescriptor<OFEmail>, QueryContainer>>();
+                        listShould.Add(d => d.Wildcard(w => w.Field("to.address").Value(string.Format("*{0}*",temp.Value.ToLowerCase()))));
+                        listShould.Add(d => d.Wildcard(w => w.Field("to.name").Value(string.Format("*{0}*", temp.Value.ToLowerCase()))));
 
                         listCriterias.Add(desc => desc.Bool(bd => bd.Should(listShould.ToArray())));
 
                         break;
                     case AdvancedSearchCriteriaType.Folder:
-                        listCriterias.Add(d => d.Wildcard(e => e.Folder, string.Format("*{0}*", temp.Value.ToLowerCase())));
+                        listCriterias.Add(d => d.Wildcard( w=> w.Field(e => e.Folder).Value(string.Format("*{0}*", temp.Value.ToLowerCase()))));
                         break;
                     case AdvancedSearchCriteriaType.Body:
 
                         var listTokens = GetProcessingSearchCriteria((string)temp.Value.ToLowerCase());
 
-                        var listShouldBody = new List<Func<QueryDescriptor<OFEmail>, QueryContainer>>();
+                        var listShouldBody = new List<Func<QueryContainerDescriptor<OFEmail>, QueryContainer>>();
 
                         foreach (var ofRuleToken in listTokens)
                         {
                             switch (ofRuleToken.Type)
                             {
                                 case ofRuleType.Quote:
-                                    listShouldBody.Add(d => d.MatchPhrase(m => m.OnField(e => e.Analyzedcontent).Query(ofRuleToken.Result)));
+                                    listShouldBody.Add(d => d.MatchPhrase(m => m.Field(e => e.Analyzedcontent).Query(ofRuleToken.Result)));
                                     break;
                                 default:
-                                    listShouldBody.Add(d => d.Wildcard(e => e.Analyzedcontent, string.Format("*{0}*",ofRuleToken.Result.ToLowerInvariant())));
+                                    listShouldBody.Add(d => d.Wildcard(w => w.Field(e => e.Analyzedcontent).Value(string.Format("*{0}*",ofRuleToken.Result.ToLowerInvariant()))));
                                     break;
                             }
                         }
