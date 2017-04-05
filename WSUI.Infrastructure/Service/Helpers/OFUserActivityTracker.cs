@@ -23,12 +23,12 @@ namespace OF.Infrastructure.Service.Helpers
         private readonly int _onlineTime;
         private DateTime? _lastDate;
         private ofUserActivityState oldState;
-        private volatile bool _isForce;
+        private volatile bool _isForce = false;
 
         private readonly object LOCK = new object();
 
-        private readonly DateTime _startNight = new DateTime(0, 0, 0, 0, 0, 0);
-        private readonly DateTime _finishNight = new DateTime(0, 0, 0, 6, 0, 0);
+        private readonly DateTime _startNight = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 0, 0, 0);
+        private readonly DateTime _finishNight = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 6, 0, 0);
 
         public OFUserActivityTracker(int onlineTime, DateTime? lastDate)
         {

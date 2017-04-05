@@ -10,16 +10,18 @@ namespace OF.Core.Helpers
 {
     public class OFRiverMetaSettingsProvider : IOFRiverMetaSettingsProvider
     {
-        
+
         public OFRiverMeta GetCurrentSettings()
         {
             try
             {
                 bool created;
-                Mutex mutex = new Mutex(true, GlobalConst.RiverMetaMutex, out created);
-                var settingsMeta =
-                        OFObjectJsonSaveReadHelper.Instance.Read<OFRiverMeta>(GlobalConst.SettingsRiverFile);
-                mutex.ReleaseMutex();
+                OFRiverMeta settingsMeta = null;
+                using (Mutex mutex = new Mutex(true, GlobalConst.RiverMetaMutex, out created))
+                {
+                    settingsMeta = OFObjectJsonSaveReadHelper.Instance.Read<OFRiverMeta>(GlobalConst.SettingsRiverFile);
+                    mutex.ReleaseMutex();
+                }
                 if (settingsMeta.IsNull())
                 {
                     settingsMeta = new OFRiverMeta(OFElasticSearchClientBase.DefaultInfrastructureName);
@@ -45,9 +47,13 @@ namespace OF.Core.Helpers
             try
             {
                 bool created;
-                Mutex mutex = new Mutex(true, GlobalConst.RiverMetaMutex, out created);
-                OFObjectJsonSaveReadHelper.Instance.Save(settings, GlobalConst.SettingsRiverFile);
-                mutex.ReleaseMutex();
+                using (Mutex mutex = new Mutex(true, GlobalConst.RiverMetaMutex, out created))
+                {
+
+                    OFObjectJsonSaveReadHelper.Instance.Save(settings, GlobalConst.SettingsRiverFile);
+                    mutex.ReleaseMutex();
+                }
+                
             }
             catch (Exception e)
             {

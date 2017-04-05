@@ -1,9 +1,14 @@
 ﻿using Elasticsearch.Net;
 using Nest;
+using OF.Core;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
+using OF.Core.Data.NamedPipeMessages;
+using OF.Core.Data.NamedPipeMessages.Response;
+using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
+using OF.Infrastructure.NamedPipes;
 
 namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
@@ -14,9 +19,15 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
         {   
         }
 
-        public ElasticsearchResponse<OFRiverStatusInfo> GetRiverStatus()
+        public OFNamedServerResponse GetRiverStatus()
         {
-            return Raw.Get<OFRiverStatusInfo>("_river", DefaultInfrastructureName, "pstriverstatus");
+            OFNamedPipeClient<OFServiceApplicationMessage> client = new OFNamedPipeClient<OFServiceApplicationMessage>(GlobalConst.ServiceApplicationServer);
+            var response =
+                client.Send(new OFServiceApplicationMessage()
+                {
+                    MessageType = ofServiceApplicationMessageType.ControllerStatus
+                });
+            return response;
         }
 
         public IndexStatus GetIndexStatus(string indexName)

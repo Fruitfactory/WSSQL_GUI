@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Events;
@@ -10,6 +12,7 @@ using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
+using OF.Core.Data.NamedPipeMessages;
 using OF.Core.Data.Settings.ControllerSettings;
 using OF.Core.Enums;
 using OF.Core.Extensions;
@@ -291,8 +294,9 @@ namespace OF.Module.ViewModel.Settings
                 }
 
                 var status = restElasticSearchClient.GetRiverStatus();
-                return _canForce && status != null && status.Response != null &&
-                       status.Response.Status == OFRiverStatus.StandBy;
+                var st = status.Body as IEnumerable<OFReaderStatus>;
+                return _canForce && st != null && st.Any() &&
+                       st.First().ControllerStatus == OFRiverStatus.StandBy;
             }
             catch (WebException we)
             {

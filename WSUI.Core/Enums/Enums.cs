@@ -62,7 +62,15 @@ namespace OF.Core.Enums
     {
         None, 
         StartIndexing,
-        ForceIndexing
+        ForceIndexing,
+        ControllerStatus
+    }
+
+    public enum ofServerResponseStatus
+    {
+        None, 
+        Ok,
+        Failed
     }
 
 }

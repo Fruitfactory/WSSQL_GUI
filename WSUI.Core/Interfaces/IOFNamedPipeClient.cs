@@ -1,9 +1,10 @@
 ﻿using System.Net.Mail;
+using OF.Core.Data.NamedPipeMessages.Response;
 
 namespace OF.Core.Interfaces
 {
     public interface IOFNamedPipeClient<in T>
     {
-        void Send(T message);
+        OFNamedServerResponse Send(T message);
     }
 }

@@ -198,6 +198,7 @@
     <Compile Include="Data\NamedPipeMessages\OFIsForcedMessage.cs" />
     <Compile Include="Data\NamedPipeMessages\OFReaderStatus.cs" />
     <Compile Include="Data\NamedPipeMessages\OFServiceApplicationMessage.cs" />
+    <Compile Include="Data\NamedPipeMessages\Response\OFNamedServerResponse.cs" />
     <Compile Include="Data\Settings\ControllerSettings\OFEveryHourPeriodSettings.cs" />
     <Compile Include="Data\Settings\ControllerSettings\OFNightIdleSettings.cs" />
     <Compile Include="Data\Settings\ControllerSettings\OFOnlyAtSettings.cs" />

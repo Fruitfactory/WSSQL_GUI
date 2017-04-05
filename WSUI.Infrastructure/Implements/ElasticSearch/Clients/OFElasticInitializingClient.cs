@@ -11,10 +11,14 @@ using OF.Core;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
+using OF.Core.Data.NamedPipeMessages;
+using OF.Core.Data.NamedPipeMessages.Response;
+using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
+using OF.Infrastructure.NamedPipes;
 
 namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
@@ -58,9 +62,17 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             return Raw.Get<OFStatusResponse>("_river", DefaultInfrastructureName, "status");
         }
 
-        public ElasticsearchResponse<OFRiverStatusInfo> GetRiverStatus()
+        public OFNamedServerResponse GetRiverStatus()
         {
-            return Raw.Get<OFRiverStatusInfo>("_river", DefaultInfrastructureName, "pstriverstatus");
+
+            OFNamedPipeClient<OFServiceApplicationMessage> client = new OFNamedPipeClient<OFServiceApplicationMessage>(GlobalConst.ServiceApplicationServer);
+            var response =
+                client.Send(new OFServiceApplicationMessage()
+                {
+                    MessageType = ofServiceApplicationMessageType.ControllerStatus
+                });
+            return response;
+
         }
 
         public IndexStatus GetIndexStatus(string indexName)
@@ -191,7 +203,11 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                                 }));
                     return ad;
                 }
-                ));
+                )
+                .AddMapping<OFEmail>(m => m.MapFromAttributes())
+                .AddMapping<OFContact>(m => m.MapFromAttributes())
+                .AddMapping<OFAttachmentContent>(m => m.MapFromAttributes())
+                );
             OFLogger.Instance.LogDebug("Create Index...");
             OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.ConnectionStatus.HttpStatusCode, response.ConnectionStatus.Success);
 
@@ -202,14 +218,10 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
         private void CreateRiver()
         {
             var riverMeta = new OFRiverMeta(DefaultInfrastructureName);
-            var body = Serializer.Serialize(riverMeta, SerializationFormatting.Indented);
-
-            var response = Raw.IndexPut("_river", DefaultInfrastructureName, "_meta", body);
 
             OFObjectJsonSaveReadHelper.Instance.Save(riverMeta, GlobalConst.SettingsRiverFile);
 
-            OFLogger.Instance.LogDebug("Create River...");
-            OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.HttpStatusCode, response.Success);
+            OFLogger.Instance.LogDebug("Create Settings for service contoroller...");
         }
 
         private void CreateWarms()

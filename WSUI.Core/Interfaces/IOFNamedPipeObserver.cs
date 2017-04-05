@@ -2,6 +2,6 @@
 {
     public interface IOFNamedPipeObserver<in T>
     {
-        void Update(T message);
+        object Update(T message);
     }
 }

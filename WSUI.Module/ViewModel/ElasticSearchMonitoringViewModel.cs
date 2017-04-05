@@ -170,13 +170,13 @@ namespace OF.Module.ViewModel
 
         #endregion
 
-        public void Update(OFReaderStatus message)
+        public object Update(OFReaderStatus message)
         {
             lock (_lock)
             {
                 _currentStatus = message;
             }
-            
+            return new object();
         }
     }
 }

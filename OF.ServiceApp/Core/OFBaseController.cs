@@ -132,6 +132,16 @@ namespace OF.ServiceApp.Core
             }
         }
 
+        public PstReaderStatus ReaderStatus
+        {
+            get { return _outlookItemsReader.Status; }
+        }
+
+        public int Count
+        {
+            get { return _outlookItemsReader.Count; }
+        }
+
         protected IOutlookItemsReader GetReader()
         {
             return _outlookItemsReader;

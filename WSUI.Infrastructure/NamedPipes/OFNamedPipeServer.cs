@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Documents;
 using Newtonsoft.Json;
+using OF.Core.Data.NamedPipeMessages.Response;
+using OF.Core.Enums;
+using OF.Core.Extensions;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 
@@ -17,15 +22,17 @@ namespace OF.Infrastructure.NamedPipes
         private readonly object LOCK = new object();
 
         private NamedPipeServerStream _pipeServer;
+        private StreamReader _reader;
+        private StreamWriter _writer;
         private static readonly int BufferSize = 1024;
-        private readonly  Thread _serverThread;
-        private readonly  string _pipeName;
-        private readonly  CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly Thread _serverThread;
+        private readonly string _pipeName;
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         private volatile bool _close = false;
 
         public OFNamedPipeServer(string pipeName)
-        {   
+        {
             _serverThread = new Thread(run);
             _serverThread.Name = "Thread Pipe: " + pipeName;
             _serverThread.Priority = ThreadPriority.BelowNormal;
@@ -37,7 +44,7 @@ namespace OF.Infrastructure.NamedPipes
         {
             lock (LOCK)
             {
-                _observers.Add(observer);    
+                _observers.Add(observer);
             }
         }
 
@@ -45,7 +52,7 @@ namespace OF.Infrastructure.NamedPipes
         {
             lock (LOCK)
             {
-                if(_observers.Contains(observer))
+                if (_observers.Contains(observer))
                     _observers.Remove(observer);
             }
         }
@@ -66,7 +73,7 @@ namespace OF.Infrastructure.NamedPipes
                 }
                 catch (Exception e)
                 {
-                    OFLogger.Instance.LogError(e.ToString());                        
+                    OFLogger.Instance.LogError(e.ToString());
                 }
             }
         }
@@ -76,12 +83,9 @@ namespace OF.Infrastructure.NamedPipes
         {
             try
             {
-                Decoder decoder = Encoding.Default.GetDecoder();
-                Byte[] bytes = new Byte[BufferSize];
-                char[] chars = new char[BufferSize];
-                int numBytes = 0;
-                StringBuilder msg = new StringBuilder();
-                _pipeServer = new NamedPipeServerStream(_pipeName, PipeDirection.In, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
+                _pipeServer = new NamedPipeServerStream(_pipeName, PipeDirection.InOut, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
+                _writer = new StreamWriter(_pipeServer);
+                _reader = new StreamReader(_pipeServer);
                 var cancelToken = _cancellationTokenSource.Token;
                 while (true)
                 {
@@ -90,26 +94,30 @@ namespace OF.Infrastructure.NamedPipes
                         break;
                     }
                     _pipeServer.WaitForConnection();
-
-                    do
+                    try
                     {
-                        msg.Length = 0;
-                        do
+                        var request = _reader.ReadLine();
+                        if (request.IsNotNull())
                         {
-                            numBytes = _pipeServer.Read(bytes, 0, BufferSize);
-                            if (numBytes > 0)
-                            {
-                                int numChars = decoder.GetCharCount(bytes, 0, numBytes);
-                                decoder.GetChars(bytes, 0, numBytes, chars, 0, false);
-                                msg.Append(chars, 0, numChars);
-                            }
-                        } while (numBytes > 0 && !_pipeServer.IsMessageComplete);
-                        decoder.Reset();
-                        if (numBytes > 0)
-                        {
-                            DeserializeAndUpdateObservers(msg.ToString());
+                            var responses = DeserializeAndUpdateObservers(request);
+                            var response =
+                                new OFNamedServerResponse() {Status = ofServerResponseStatus.Ok, Body = responses};
+                            SerializeAndSend(response);
                         }
-                    } while (numBytes != 0);
+                    }
+                    catch (Exception e)
+                    {
+                        SerializeAndSend(
+                            new OFNamedServerResponse()
+                            {
+                                Status = ofServerResponseStatus.Failed,
+                                Message = e.ToString()
+                            });
+                    }
+                    finally
+                    {
+                        _pipeServer.Disconnect();
+                    }
                 }
             }
             catch (Exception e)
@@ -118,28 +126,38 @@ namespace OF.Infrastructure.NamedPipes
             }
         }
 
-        private void DeserializeAndUpdateObservers(string toString)
+        private void SerializeAndSend(OFNamedServerResponse response)
+        {
+            if (_writer.IsNull())
+            {
+                return;
+            }
+            var serialized = JsonConvert.SerializeObject(response);
+            _writer.WriteLine(serialized);
+            _writer.Flush();
+        }
+
+        private IEnumerable<object> DeserializeAndUpdateObservers(string toString)
         {
             if (string.IsNullOrEmpty(toString))
             {
-                return;
+                return null;
             }
             try
             {
                 T message = (T)JsonConvert.DeserializeObject<T>(toString);
-
+                IEnumerable<object> list = null;
                 lock (LOCK)
                 {
-                    foreach (var ofNamedPipeObserver in _observers)
-                    {
-                        ofNamedPipeObserver.Update(message);
-                    }
+                    list = _observers.Select(o => o.Update(message)).ToList();
                 }
+                return list;
             }
             catch (Exception e)
             {
                 OFLogger.Instance.LogError(e.ToString());
             }
+            return null;
         }
     }
 }

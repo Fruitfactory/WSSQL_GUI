@@ -17,6 +17,7 @@ using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using Nest;
+using Newtonsoft.Json;
 using OF.Core;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
@@ -337,9 +338,13 @@ namespace OF.Module.ViewModel
             var resp = ElasticSearchClient.IndexExists(OFElasticSearchClientBase.DefaultInfrastructureName);
             IsIndexExisted = resp.Exists; //false;//
             var riverStatusResp = ElasticSearchClient.GetRiverStatus();
-            IsInitialIndexinginProgress = riverStatusResp.Response.IsNotNull() &&
-                                          riverStatusResp.Response.Status == OFRiverStatus.InitialIndexing;
-            OFLogger.Instance.LogInfo("STATUS: {0}", riverStatusResp.Response.Status);
+            var status = JsonConvert.DeserializeObject<IEnumerable<OFReaderStatus>>(riverStatusResp.Body.ToString());
+
+            IsInitialIndexinginProgress = status.IsNotNull() 
+                && status.Any() 
+                && IsIndexExisted 
+                && status.First().ControllerStatus == OFRiverStatus.InitialIndexing;
+            
             _eventAggregator.GetEvent<OFMenuEnabling>().Publish(resp.Exists);
             if (IsIndexExisted)
             {
@@ -466,7 +471,9 @@ namespace OF.Module.ViewModel
                 OFReaderStatus response = null;
                 lock (_lock)
                 {
-                    response = _currentStatus;
+                    var riverStatusResp = ElasticSearchClient.GetRiverStatus();
+                    var status = JsonConvert.DeserializeObject<IEnumerable<OFReaderStatus>>(riverStatusResp.Body.ToString());
+                    response = status.FirstOrDefault() ?? _currentStatus;
                 }
                 
                 if (response.IsNull())
@@ -514,12 +521,13 @@ namespace OF.Module.ViewModel
             }
         }
 
-        public void Update(OFReaderStatus message)
+        public object Update(OFReaderStatus message)
         {
             lock (_lock)
             {
                 _currentStatus = message;
             }
+            return new object();
         }
 
         #endregion

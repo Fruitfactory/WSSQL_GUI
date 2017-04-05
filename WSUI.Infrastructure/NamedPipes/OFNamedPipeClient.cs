@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Pipes;
 using Newtonsoft.Json;
+using OF.Core.Data.NamedPipeMessages.Response;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 
@@ -16,27 +17,30 @@ namespace OF.Infrastructure.NamedPipes
             _pipeName = pipeName;
         }
 
-        public void Send(T message)
+        public OFNamedServerResponse Send(T message)
         {
             try
             {
                 string strMessage = JsonConvert.SerializeObject(message);
                 if (string.IsNullOrEmpty(strMessage))
                 {
-                    return;
+                    return null;
                 }
-                InternalSend(strMessage);
+                return InternalSend(strMessage);
             }
             catch (Exception e)
             {
                 OFLogger.Instance.LogError(e.ToString());
             }
+            return null;
         }
 
-        private void InternalSend(string message)
+        private OFNamedServerResponse InternalSend(string message)
         {
-            using (NamedPipeClientStream client = new NamedPipeClientStream(".",_pipeName,PipeDirection.Out,PipeOptions.Asynchronous))
+            using (NamedPipeClientStream client = new NamedPipeClientStream(".", _pipeName, PipeDirection.InOut, PipeOptions.Asynchronous))
             {
+                var writer = new StreamWriter(client);
+                var reader = new StreamReader(client);
                 try
                 {
                     client.Connect(2000);
@@ -45,10 +49,14 @@ namespace OF.Infrastructure.NamedPipes
                 {
                     OFLogger.Instance.LogError(e.ToString());
                 }
-                using (StreamWriter sw = new StreamWriter(client))
+                writer.WriteLine(message);
+                writer.Flush();
+                var response = reader.ReadLine();
+                if (response != null)
                 {
-                    sw.WriteLine(message);
+                    return JsonConvert.DeserializeObject<OFNamedServerResponse>(response);
                 }
+                return null;
             }
         }
     }

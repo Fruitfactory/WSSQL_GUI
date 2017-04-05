@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel.Configuration;
 using System.Threading;
+using System.Windows.Documents;
 using Microsoft.Practices.Prism.Events;
 using OF.Core;
 using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Data.NamedPipeMessages;
+using OF.Core.Data.NamedPipeMessages.Response;
 using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Helpers;
@@ -60,8 +63,9 @@ namespace OF.ServiceApp.Bootstraper
             _stopEvent = new AutoResetEvent(false);
         }
 
-        public void Update(OFServiceApplicationMessage message)
+        public object Update(OFServiceApplicationMessage message)
         {
+            OFReaderStatus response = new OFReaderStatus();
             switch (message.MessageType)
             {
                 case ofServiceApplicationMessageType.StartIndexing:
@@ -73,7 +77,13 @@ namespace OF.ServiceApp.Bootstraper
                 case ofServiceApplicationMessageType.ForceIndexing:
                     _eventAggregator.GetEvent<OFForcedEvent>().Publish(message.Payload);
                     break;
+                case ofServiceApplicationMessageType.ControllerStatus:
+                    response.ControllerStatus = _controller.Status;
+                    response.ReaderStatus = _controller.ReaderStatus;
+                    response.Count = _controller.Count;
+                    break;
             }
+            return response;
         }
 
         public void Run()
