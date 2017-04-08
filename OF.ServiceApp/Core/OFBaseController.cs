@@ -12,6 +12,7 @@ using OF.Infrastructure.Helpers.AttachedProperty;
 using OF.Infrastructure.NamedPipes;
 using OF.Infrastructure.Service.Index;
 using Microsoft.Practices.Prism.Events;
+using Newtonsoft.Json;
 using OF.ServiceApp.Events;
 
 namespace OF.ServiceApp.Core
@@ -60,8 +61,7 @@ namespace OF.ServiceApp.Core
 
         private void OnForsedEvent(object o)
         {
-
-            var isForsed = o as OFIsForcedMessage;
+            var isForsed = JsonConvert.DeserializeObject<OFIsForcedMessage>(o.ToString());
             if (isForsed.IsNotNull())
             {
                 IsForced = isForsed.IsForced;
@@ -134,7 +134,7 @@ namespace OF.ServiceApp.Core
 
         public PstReaderStatus ReaderStatus
         {
-            get { return _outlookItemsReader.Status; }
+            get { return _outlookItemsReader.IsSuspended ? PstReaderStatus.Suspended :_outlookItemsReader.Status; }
         }
 
         public int Count

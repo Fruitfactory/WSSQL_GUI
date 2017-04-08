@@ -20,8 +20,10 @@ namespace OF.Core.Data.ElasticSearch
 
         public string Storagename { get; set; }
 
+        [Date(Format = "yyyy-MM-dd'T'HH:mm:ss.SSS")]
         public DateTime? Datecreated { get; set; }
 
+        [Date(Format = "yyyy-MM-dd'T'HH:mm:ss.SSS")]
         public DateTime? Datereceived { get; set; }
 
         public long Size { get; set; }

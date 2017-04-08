@@ -81,6 +81,8 @@ namespace OF.Core.Data.ElasticSearch
 
         public string OtherAddress { get; set; }
 
+
+        [Date(Format = "yyyy-MM-dd'T'HH:mm:ss.SSS")]
         public DateTime? Birthday { get; set; }
 
         public string Addresstype { get; set; }

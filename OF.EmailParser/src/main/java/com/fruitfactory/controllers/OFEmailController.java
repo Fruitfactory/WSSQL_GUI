@@ -44,6 +44,7 @@ public class OFEmailController {
     public OFEmailResponse putEmailContainer(@RequestBody String body){
         OFEmailResponse response = new OFEmailResponse(false,"");
         try {
+            logger.info(body);
             OFItemsContainer container = reader.parseContainer(body);
             if(container != null){
                 dataIncome.pushData(container);

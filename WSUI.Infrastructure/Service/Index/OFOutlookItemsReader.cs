@@ -139,6 +139,7 @@ namespace OF.Infrastructure.Service.Index
         public void Suspend()
         {
             IsSuspended = true;
+            Status = PstReaderStatus.Suspended;
             OFLogger.Instance.LogDebug("Reader Attachment has been Suspended");
         }
 
@@ -147,6 +148,7 @@ namespace OF.Infrastructure.Service.Index
             _lastUpdated = lastUpdated;
             _eventPause.Set();
             IsSuspended = false;
+            Status = PstReaderStatus.Busy;
             OFLogger.Instance.LogDebug("Reader Attachment has been Resumed");
             OFLogger.Instance.LogDebug("Last Updated Date: {0}", lastUpdated.HasValue ? lastUpdated.Value.ToString() : "N/a");
         }

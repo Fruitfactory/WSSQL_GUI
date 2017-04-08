@@ -81,7 +81,7 @@ public class OFDataSender extends OFDataProcess implements ResponseListener {
                     .add(OFMetadataTags.Contact.ITEM_HOME_ADDRESS, contact.getHomeaddress())
                     .add(OFMetadataTags.Contact.ITEM_WORK_ADDRESS, contact.getWorkaddress())
                     .add(OFMetadataTags.Contact.ITEM_OTHER_ADDRESS, contact.getOtheraddress())
-                    .add(OFMetadataTags.Contact.ITEM_BIRTHDAY, String.valueOf(contact.getBirthday()))
+                    .add(OFMetadataTags.Contact.ITEM_BIRTHDAY, formatDate(contact.getBirthday()))
                     .add(OFMetadataTags.Contact.ENTRY_ID, contact.getEntryid())
                     .add(OFMetadataTags.Contact.ADDRESS_TYPE,contact.getAddresstype())
                     .add(OFMetadataTags.Contact.ITEM_FIRST_NAME_SUGGEST, contact.getFirstname())
@@ -128,7 +128,7 @@ public class OFDataSender extends OFDataProcess implements ResponseListener {
                     .add(OFMetadataTags.Attachment.CONTENT, attachment.getContent())
                     .add(OFMetadataTags.Attachment.EMAIL_ID, attachment.getEmailid())
                     .add(OFMetadataTags.Attachment.ENTRYID, attachment.getEntryid())
-                    .add(OFMetadataTags.Attachment.CREATED_DATE,String.valueOf(attachment.getDatecreated()))
+                    .add(OFMetadataTags.Attachment.CREATED_DATE,formatDate(attachment.getDatecreated()))
                     .add(OFMetadataTags.Attachment.OUTLOOK_EMAIL_ID, attachment.getOutlookemailid())
                     .add(OFMetadataTags.Attachment.FILENAME_SUGGEST,attachment.getFilename())
                     .add(OFMetadataTags.Attachment.STORE_ID,attachment.getStoreid())
@@ -239,6 +239,6 @@ public class OFDataSender extends OFDataProcess implements ResponseListener {
 
     @Override
     public void onFailure(Exception e) {
-        getLogger().error(e.getMessage());
+        getLogger().error(String.format("Index Error: %s",  e.getMessage()));
     }
 }

@@ -14,6 +14,7 @@ using OF.Core.Data.ElasticSearch.Converter;
 using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
+using OF.Core.JsonSettings;
 using OF.Core.Logger;
 using Exception = System.Exception;
 
@@ -57,6 +58,8 @@ namespace OF.Core.Core.ElasticSearch
                 
                 ElasticClient = new ElasticClient(settings);
                 _settings = new JsonSerializerSettings();
+                _settings.DateFormatString = "yyyy-MM-ddTHH:mm:ss.fff";
+                _settings.ContractResolver = new OFLowercaseContractResolver();
                 _settings.Converters.Add(new OFConditionCollectionConverter());
                 _settings.Formatting = Formatting.Indented;
             }
@@ -114,6 +117,11 @@ namespace OF.Core.Core.ElasticSearch
                 return null;
             }
             return Encoding.UTF8.GetBytes(strResult);
+        }
+
+        protected JsonSerializerSettings GetJsonSettings()
+        {
+            return _settings;
         }
 
 

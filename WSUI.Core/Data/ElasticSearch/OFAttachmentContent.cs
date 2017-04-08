@@ -31,6 +31,7 @@ namespace OF.Core.Data.ElasticSearch
 
         public string Outlookemailid { get; set; }
 
+        [Date(Format = "yyyy-MM-dd'T'HH:mm:ss.SSS")]
         public DateTime? Datecreated { get; set; }
 
         public string Storeid { get; set; }

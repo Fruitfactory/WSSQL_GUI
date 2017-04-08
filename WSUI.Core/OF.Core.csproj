@@ -372,6 +372,7 @@
     <Compile Include="Interfaces\IWildcard.cs" />
     <Compile Include="Interfaces\IWSAction.cs" />
     <Compile Include="Interfaces\IWSUIAttribute.cs" />
+    <Compile Include="JsonSettings\OFLowercaseContractResolver.cs" />
     <Compile Include="Logger\OFEventLogger.cs" />
     <Compile Include="Logger\OFLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
