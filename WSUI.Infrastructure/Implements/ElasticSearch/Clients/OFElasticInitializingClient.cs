@@ -172,7 +172,14 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                 )
                 .Mappings(ms => ms
                     .Map<OFEmail>(m => m.AutoMap())
-                    .Map<OFContact>(m => m.AutoMap())
+                    .Map<OFContact>(m => m
+                                    .AutoMap()
+                                    .Properties(pd => pd
+                                        .Date(dd => dd
+                                            .Name(c => c.Birthday)
+                                            .Format("yyyy-MM-dd'T'HH:mm:ss.SSS")
+                                            .NullValue(new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, DateTime.MinValue.Hour, DateTime.MinValue.Minute, DateTime.MinValue.Second, 111))))
+                                   )
                     .Map<OFAttachmentContent>(m => m.AutoMap())
                     .Map<OFStore>(m => m.AutoMap())
                 );

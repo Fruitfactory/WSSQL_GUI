@@ -12,6 +12,7 @@ namespace OF.Core.Data.ElasticSearch
         {
             
         }
+
         public string Firstname { get; set; }
         
         public string Lastname { get; set; }

@@ -30,6 +30,7 @@ namespace OF.Module.ViewModel
         private IEventAggregator _eventAggregator;
         private IUnityContainer _unityContainer;
         private IRegionManager _regionManager;
+        private IOFRiverMetaSettingsProvider _metaSettingsProvider;
 
         private readonly  object _lock = new object();
 
@@ -41,12 +42,14 @@ namespace OF.Module.ViewModel
             IEventAggregator eventAggregator, 
             IRegionManager regionManager,
             IUnityContainer unityContainer,
+            IOFRiverMetaSettingsProvider metaSettingsProvider,
             IElasticSearchMonitoringView view)
         {
             _riverStatusClient = riverStatusClient;
             _eventAggregator = eventAggregator;
             _regionManager = regionManager;
             _unityContainer = unityContainer;
+            _metaSettingsProvider = metaSettingsProvider;
             View = view;
             view.Model = this;
         }
@@ -129,7 +132,7 @@ namespace OF.Module.ViewModel
             {
                 current = _currentStatus;
             }
-
+            var metaSettings = _metaSettingsProvider.GetCurrentSettings();
             if (current.IsNull())
             {
                 return;
@@ -140,7 +143,7 @@ namespace OF.Module.ViewModel
 
             Status = current.ControllerStatus;
             StatusText = Status == OFRiverStatus.Busy || Status == OFRiverStatus.InitialIndexing ? UPDATING : READY;
-            LastUpdated = current.LastUpdated;
+            LastUpdated = metaSettings.LastDate ?? DateTime.MinValue;
             EmailCount = emailCount;
             AttachmentCount = attachmentCount;
         }

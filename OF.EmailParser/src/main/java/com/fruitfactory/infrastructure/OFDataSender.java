@@ -81,7 +81,7 @@ public class OFDataSender extends OFDataProcess implements ResponseListener {
                     .add(OFMetadataTags.Contact.ITEM_HOME_ADDRESS, contact.getHomeaddress())
                     .add(OFMetadataTags.Contact.ITEM_WORK_ADDRESS, contact.getWorkaddress())
                     .add(OFMetadataTags.Contact.ITEM_OTHER_ADDRESS, contact.getOtheraddress())
-                    .add(OFMetadataTags.Contact.ITEM_BIRTHDAY, formatDate(contact.getBirthday()))
+                    .add(OFMetadataTags.Contact.ITEM_BIRTHDAY,  formatDate(contact.getBirthday()))
                     .add(OFMetadataTags.Contact.ENTRY_ID, contact.getEntryid())
                     .add(OFMetadataTags.Contact.ADDRESS_TYPE,contact.getAddresstype())
                     .add(OFMetadataTags.Contact.ITEM_FIRST_NAME_SUGGEST, contact.getFirstname())
@@ -202,7 +202,7 @@ public class OFDataSender extends OFDataProcess implements ResponseListener {
     }
 
     private String formatDate(Date date){
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").format(date);
+        return date == null ? null : new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").format(date);
     }
 
     private void AddArrayOfEmail(JsonObjectBuilder builder, List<OFRecipient> list, String objectName,String nameTag, String addresssTag,String addressTypeTag){
