@@ -80,6 +80,7 @@ namespace OF.ServiceApp.Bootstraper
                 case ofServiceApplicationMessageType.ControllerStatus:
                     response.ControllerStatus = _controller.Status;
                     response.ReaderStatus = _controller.ReaderStatus;
+                    response.Folder = _controller.CurrentFolder;
                     response.Count = _controller.Count;
                     break;
             }

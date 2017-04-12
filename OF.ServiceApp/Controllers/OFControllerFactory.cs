@@ -28,10 +28,10 @@ namespace OF.ServiceApp.Controllers
                     controller = new OFNightOrIdleTrackingController(metaSettingsProvider,eventAggregator);
                     break;
                 case OFRiverSchedule.OnlyAt:
-                    controller = new OFOnlyAtParseController(metaSettingsProvider);
+                    controller = new OFOnlyAtParseController(metaSettingsProvider,eventAggregator);
                     break;
                 case OFRiverSchedule.EveryHours:
-                    controller = new OFRepeatController(metaSettingsProvider);
+                    controller = new OFRepeatController(metaSettingsProvider,eventAggregator);
                     break;
             }
             if (controller.IsNotNull())

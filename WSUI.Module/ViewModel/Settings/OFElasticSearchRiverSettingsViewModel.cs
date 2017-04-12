@@ -274,7 +274,8 @@ namespace OF.Module.ViewModel.Settings
                 _settingsMeta.Pst.Schedule.ScheduleType = OFRiverSchedule.Never;
                 _settingsMeta.Pst.Schedule.Settings = String.Empty;
             }
-            // TODO: save settings in isolated storage. Should check if they are saved.            
+            // TODO: save settings in isolated storage. Should check if they are saved.     
+            _metaSettingsProvider.UpdateServiceAplicationSettings(_settingsMeta);  
         }
 
 

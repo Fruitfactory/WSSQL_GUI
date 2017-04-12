@@ -28,10 +28,10 @@ namespace OF.ServiceApp.Controllers
 
         protected override int OnRun(DateTime? lastDateTime)
         {
+            GetReader().Start(lastDateTime);
             _activityTracker = new OFUserActivityTracker(_localSettings.IdleTime,lastDateTime);
             _activityTracker.Start(GetReader());
-            GetReader().Start(lastDateTime);
-
+            
             GetReader().Join();
             _activityTracker.Stop();
 

@@ -137,6 +137,11 @@ namespace OF.ServiceApp.Core
             get { return _outlookItemsReader.IsSuspended ? PstReaderStatus.Suspended :_outlookItemsReader.Status; }
         }
 
+        public string CurrentFolder
+        {
+            get { return _outlookItemsReader.Folder; }
+        }
+
         public int Count
         {
             get { return _outlookItemsReader.Count; }

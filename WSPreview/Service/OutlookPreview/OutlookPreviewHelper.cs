@@ -422,7 +422,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
                     result.Documents.FirstOrDefault(
                         a =>
                             string.Equals(a.Filename.ToUpperInvariant(),
-                                ofAttachment.FileName.ToUpperInvariant()));
+                                ofAttachment.Filename.ToUpperInvariant()));
                 if (attachment.IsNull())
                 {
                     continue;
@@ -589,7 +589,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             page += string.Format(SendRow, email.DateReceived.ToString());
             if(email.IsAttachmentPresent)
                 page += GetFormatedAttachmentRow(email);
-            string temp = GetHtmlBodyHightlight(email.HtmlContent);
+            string temp = GetHtmlBodyHightlight(email.GetContent());
             page += string.Format(EmailRow, temp);
             page += TableEnd + PageEnd;
             return page;

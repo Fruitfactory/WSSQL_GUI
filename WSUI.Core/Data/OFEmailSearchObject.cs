@@ -6,8 +6,11 @@
 //  Original author: Yariki
 ///////////////////////////////////////////////////////////
 
+using System;
+using System.Text;
 using OF.Core.Core.Attributes;
 using OF.Core.Enums;
+using OF.Core.Extensions;
 
 namespace OF.Core.Data
 {
@@ -30,6 +33,17 @@ namespace OF.Core.Data
             get { return Get(() => HtmlContent); }
             set { Set(() => HtmlContent, value); }
         }
+
+        public string GetContent()
+        {
+            var content = !HtmlContent.IsStringEmptyOrNull()
+                ? Encoding.UTF8.GetString(Convert.FromBase64String(HtmlContent))
+                : !Content.IsStringEmptyOrNull()
+                    ? Encoding.UTF8.GetString(Convert.FromBase64String(Content))
+                    : "";
+            return content;
+        }
+
 
         public OFEmailSearchObject()
         {

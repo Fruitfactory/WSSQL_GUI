@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Practices.Prism.Events;
 using Newtonsoft.Json;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
@@ -14,7 +15,7 @@ namespace OF.ServiceApp.Controllers
     {
         private OFEveryHourPeriodSettings _localSettings;
 
-        public OFRepeatController(IOFRiverMetaSettingsProvider metaSettingsProvider) : base(metaSettingsProvider)
+        public OFRepeatController(IOFRiverMetaSettingsProvider metaSettingsProvider, IEventAggregator eventAggregator) : base(metaSettingsProvider,eventAggregator)
         {
         }
 

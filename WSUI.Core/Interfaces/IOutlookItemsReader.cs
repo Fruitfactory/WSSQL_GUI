@@ -26,5 +26,7 @@ namespace OF.Core.Interfaces
 
         void Attach(IOFIOutlookItemsReaderObserver observer);
 
+        string Folder { get; }
+
     }
 }

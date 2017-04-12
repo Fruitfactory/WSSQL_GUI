@@ -13,5 +13,6 @@ namespace OF.Core.Interfaces
 
         void UpdateRiverMetaSettings(OFRiverMeta settings);
 
+        void UpdateServiceAplicationSettings(OFRiverMeta settings);
     }
 }

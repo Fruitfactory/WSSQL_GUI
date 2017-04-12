@@ -8,10 +8,10 @@ import com.carrotsearch.ant.tasks.junit4.dependencies.com.google.gson.annotation
 public class OFAttachmentSimple {
 
     @SerializedName("entryid")
-    public String entryId;
+    public String entryid;
 
     @SerializedName("filename")
-    public String fileName;
+    public String filename;
 
     @SerializedName("path")
     public String path;
@@ -20,25 +20,25 @@ public class OFAttachmentSimple {
     public long size;
 
     @SerializedName("mimetag")
-    public String mimeTag;
+    public String mimetag;
 
     public OFAttachmentSimple() {
     }
 
-    public String getEntryId() {
-        return entryId;
+    public String getEntryid() {
+        return entryid;
     }
 
-    public void setEntryId(String entryId) {
-        this.entryId = entryId;
+    public void setEntryid(String entryid) {
+        this.entryid = entryid;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getFilename() {
+        return filename;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
     public String getPath() {
@@ -57,11 +57,11 @@ public class OFAttachmentSimple {
         this.size = size;
     }
 
-    public String getMimeTag() {
-        return mimeTag;
+    public String getMimetag() {
+        return mimetag;
     }
 
-    public void setMimeTag(String mimeTag) {
-        this.mimeTag = mimeTag;
+    public void setMimetag(String mimetag) {
+        this.mimetag = mimetag;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Microsoft.Practices.Prism.Events;
 using Newtonsoft.Json;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
@@ -22,8 +23,8 @@ namespace OF.ServiceApp.Controllers
 
         private bool _isForce;
 
-        public OFOnlyAtParseController(IOFRiverMetaSettingsProvider metaSettingsProvider)
-            : base(metaSettingsProvider)
+        public OFOnlyAtParseController(IOFRiverMetaSettingsProvider metaSettingsProvider, IEventAggregator eventAggregator)
+            : base(metaSettingsProvider,eventAggregator)
         {
         }
 

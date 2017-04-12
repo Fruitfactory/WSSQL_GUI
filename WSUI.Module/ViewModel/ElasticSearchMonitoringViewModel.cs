@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
 using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
+using Newtonsoft.Json;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
 using OF.Core.Data.ElasticSearch;
@@ -55,6 +58,9 @@ namespace OF.Module.ViewModel
         }
 
         #region [properties]
+
+        [Dependency]
+        public IElasticSearchInitializationIndex ElasticSearchClient { get; set; }
 
         public OFRiverStatus Status
         {
@@ -135,13 +141,14 @@ namespace OF.Module.ViewModel
             var metaSettings = _metaSettingsProvider.GetCurrentSettings();
             if (current.IsNull())
             {
-                return;
+                var response = ElasticSearchClient.GetRiverStatus();
+                current = JsonConvert.DeserializeObject<IEnumerable<OFReaderStatus>>(response.Body.ToString()).FirstOrDefault();
             }
 
             var emailCount = _riverStatusClient.GetTypeCount<OFEmail>();
             var attachmentCount = _riverStatusClient.GetTypeCount<OFAttachmentContent>();
 
-            Status = current.ControllerStatus;
+            Status =  current.IsNotNull() ? current.ControllerStatus : OFRiverStatus.None;
             StatusText = Status == OFRiverStatus.Busy || Status == OFRiverStatus.InitialIndexing ? UPDATING : READY;
             LastUpdated = metaSettings.LastDate ?? DateTime.MinValue;
             EmailCount = emailCount;

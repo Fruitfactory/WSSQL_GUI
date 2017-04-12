@@ -20,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -183,10 +182,10 @@ public class OFDataSender extends OFDataProcess implements ResponseListener {
                         email.getAttachments()) {
                     JsonObjectBuilder object = array.addObject();
                     object
-                            .add(OFMetadataTags.Email.Attachments.FILENAME,attachment.getFileName())
+                            .add(OFMetadataTags.Email.Attachments.FILENAME,attachment.getFilename())
                             .add(OFMetadataTags.Email.Attachments.PATH,attachment.getPath())
                             .add(OFMetadataTags.Email.Attachments.SIZE,attachment.getSize())
-                            .add(OFMetadataTags.Email.Attachments.MIME_TAG,attachment.getMimeTag())
+                            .add(OFMetadataTags.Email.Attachments.MIME_TAG,attachment.getMimetag())
                             .end();
                 }
                 array.end();

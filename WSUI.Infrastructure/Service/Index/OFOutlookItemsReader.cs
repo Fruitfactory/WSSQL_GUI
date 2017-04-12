@@ -75,6 +75,8 @@ namespace OF.Infrastructure.Service.Index
 
         }
 
+        public string Folder { get; private set; }
+
         public bool IsSuspended
         {
             get { return Get(() => IsSuspended); }
@@ -162,6 +164,7 @@ namespace OF.Infrastructure.Service.Index
             Outlook.NameSpace ns = null;
             try
             {
+                TryToWait();
                 Status = PstReaderStatus.Busy;
                 var resultApplication = OFOutlookHelper.Instance.GetApplication();
                 _application = resultApplication.Item1 as Outlook.Application;
@@ -187,6 +190,9 @@ namespace OF.Infrastructure.Service.Index
                 }
 
                 CollectCOMItems();
+
+
+                TryToWait();
 
                 try
                 {
@@ -328,6 +334,7 @@ namespace OF.Infrastructure.Service.Index
             try
             {
                 OFLogger.Instance.LogDebug("Attachment Reader => Folder name: {0}", mapiFolder.Name);
+                Folder = $"{mapiFolder.Name}({mapiFolder.FolderPath})";
                 int count = 0;
                 foreach (var result in mapiFolder.Items)
                 {
@@ -588,8 +595,8 @@ namespace OF.Infrastructure.Service.Index
                 try
                 {
                     var attachment = new OFAttachment();
-                    attachment.FileName = att.FileName;
-                    attachment.MimeTag = att.PropertyAccessor.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x370E001E");
+                    attachment.Filename = att.FileName;
+                    attachment.Mimetag = att.PropertyAccessor.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x370E001E");
                     attachment.Path = string.Empty; // sometimes it craches on this string, so I had commented it for now. We don't use path.
                     attachment.Size = att.Size;
                     attachment.Entryid = result.EntryID;

@@ -16,7 +16,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
     public class OFElasticSeachIndexOutlookItemsClient : OFElasticSearchClientBase, IElasticSearchIndexOutlookItemsClient
     {
 
-        private RestClient _restClient = new RestClient("http://localhost:8080");
+        private RestClient _restClient = new RestClient("http://localhost:11223");
 
 
         [InjectionConstructor]

@@ -49,7 +49,7 @@ namespace OF.Core.Core.ElasticSearch
             try
             {
                 var node = new Uri(host);
-                var settings = new ConnectionSettings(node).DefaultIndex(DefaultInfrastructureName);
+                var settings = new ConnectionSettings(node).DefaultIndex(DefaultInfrastructureName).DisableDirectStreaming();
 
                 //settings.SetJsonSerializerSettingsModifier(jsonSettings =>
                 //{

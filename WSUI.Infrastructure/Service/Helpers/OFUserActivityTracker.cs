@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using Nest;
@@ -70,18 +71,17 @@ namespace OF.Infrastructure.Service.Helpers
 
                     var idle = WindowsFunction.GetIdleTime();
                     uint idleTimeSec = idle / 1000;
-                    System.Diagnostics.Debug.WriteLine(string.Format("{0} - {1}", idle, idleTimeSec));
+                    System.Diagnostics.Debug.WriteLine(string.Format("{0}: {1} < {2}", idle, idleTimeSec,_onlineTime));
 
                     var newState = IsNight() || _isForce
                         ? ofUserActivityState.Night
                         : idleTimeSec < _onlineTime ? ofUserActivityState.Online : ofUserActivityState.Away;
+                    System.Diagnostics.Debug.WriteLine(string.Format("Status: {0}\nOld Status: {1}", newState, oldState));
                     if (newState != oldState)
                     {
-                        lock (LOCK)
-                        {
-                            ProcessState(newState);    
-                        }
+                        ProcessState(newState);
                     }
+                    
                     oldState = newState;
                 }
                 catch (Exception ex)
@@ -109,7 +109,7 @@ namespace OF.Infrastructure.Service.Helpers
                     break;
                 case ofUserActivityState.Away:
                 case ofUserActivityState.Night:
-                    if (_reader.Status == PstReaderStatus.Busy && _reader.IsSuspended)
+                    if (_reader.Status ==  PstReaderStatus.Suspended || (_reader.Status == PstReaderStatus.Busy && _reader.IsSuspended))
                     {
                         _reader.Resume(_lastDate);
                     }

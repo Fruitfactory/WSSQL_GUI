@@ -171,7 +171,17 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                     .NumberOfReplicas(0)
                 )
                 .Mappings(ms => ms
-                    .Map<OFEmail>(m => m.AutoMap())
+                    .Map<OFEmail>(m => m
+                                   .AutoMap()
+                                   .Properties(pd => pd
+                                        .Keyword(kd => kd.Name(e => e.ItemName).IgnoreAbove(Int32.MaxValue))
+                                        .Keyword(kd => kd.Name(e => e.ItemUrl).IgnoreAbove(Int32.MaxValue))
+                                        .Keyword(kd => kd.Name(e => e.Folder))
+                                        .Text(td => td.Name(e => e.Content))
+                                        .Text(td => td.Name(e => e.Htmlcontent))
+                                        .Text(td => td.Name(e => e.Analyzedcontent).Index())
+                                        .Keyword(kd => kd.Name(e => e.Subject).IgnoreAbove(Int32.MaxValue))
+                                    ))
                     .Map<OFContact>(m => m
                                     .AutoMap()
                                     .Properties(pd => pd
@@ -180,7 +190,14 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                                             .Format("yyyy-MM-dd'T'HH:mm:ss.SSS")
                                             .NullValue(new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, DateTime.MinValue.Hour, DateTime.MinValue.Minute, DateTime.MinValue.Second, 111))))
                                    )
-                    .Map<OFAttachmentContent>(m => m.AutoMap())
+                    .Map<OFAttachmentContent>(m => m
+                                                .AutoMap()
+                                                .Properties(pd => pd
+                                                    .Text(td => td.Name(a => a.Analyzedcontent).Index())
+                                                    .Text(td => td.Name(a => a.Content))
+                                                    .Keyword(kd => kd.Name(a => a.Filename).IgnoreAbove(Int32.MaxValue))
+
+                                                ))
                     .Map<OFStore>(m => m.AutoMap())
                 );
 
