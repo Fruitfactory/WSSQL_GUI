@@ -123,6 +123,7 @@
     <Compile Include="Rest\OFNancyBootstraper.cs" />
     <Compile Include="Rest\OFRestHosting.cs" />
     <Compile Include="Rest\OFRestModule.cs" />
+    <Compile Include="Service\OFParserApplicationHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

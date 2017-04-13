@@ -14,6 +14,7 @@ using OF.Infrastructure.Service.Index;
 using Microsoft.Practices.Prism.Events;
 using Newtonsoft.Json;
 using OF.ServiceApp.Events;
+using OF.ServiceApp.Service;
 
 namespace OF.ServiceApp.Core
 {
@@ -176,10 +177,11 @@ namespace OF.ServiceApp.Core
                     break;
                 }
                 var settings = _metaSettingsProvider.GetCurrentSettings();
+                OFParserApplicationHandler.Instance.StartParser();
                 var delay = OnRun(settings.LastDate);
                 _metaSettingsProvider.UpdateLastIndexingDateTime(DateTime.Now);
                 Status = OFRiverStatus.StandBy;
-
+                OFParserApplicationHandler.Instance.StopParser();
                 if (IsStoped)
                 {
                     OFLogger.Instance.LogInfo("Controller was closed...");

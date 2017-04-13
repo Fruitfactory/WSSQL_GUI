@@ -23,6 +23,7 @@ using OF.ServiceApp.Core;
 using OF.ServiceApp.Events;
 using OF.ServiceApp.Interfaces;
 using OF.ServiceApp.Rest;
+using OF.ServiceApp.Service;
 
 namespace OF.ServiceApp.Bootstraper
 {

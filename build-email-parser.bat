@@ -11,7 +11,9 @@ cd OF.EmailParser\
 
 rem %maven% -Dmaven.ext.class.path=%netspy% -Dfile.encoding=UTF-8 install
 
-%maven% package
+rem ====== Build ======
+
+%maven% package 
 
 ENDLOCAL
 
