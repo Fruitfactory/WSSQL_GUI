@@ -23,15 +23,28 @@
       <ComponentRef Id="INSTALLFOLDER" />
       <ComponentRef Id="INSTALLFOLDERLIB" />
       <ComponentRef Id="INSTALLFOLDERLIB64" />
+      <ComponentRef Id="INSTALLFOLDERJAVA"/>
       <ComponentGroupRef Id="ProductComponents" />
     </Feature>
     <Feature Id="ElasticSearchProductFeature" Title="Elastic Search" Level="1" Absent="disallow" TypicalDefault="install" AllowAdvertise="no" ConfigurableDirectory="ELASTICSEASRCHINSTALLFOLDER" InstallDefault="local">
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDER" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERBIN" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERCONFIG" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERSCRIPTS" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLIB" />
-      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERPLUGINS" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLIBSIGAR" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERMODULES" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERAGGSMATRIXSTATS" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERINGESTCOMMON" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLANGEXPRESSION" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLANGGROOVY" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLANGMUSTACHE" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLANGPAINLESS" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERPERCOLATOR" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERREINDEX" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERTRANSPORTNETTY3" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERTRANSPORTNETTY4" />
       <ComponentGroupRef Id="ElasticSearchComponents" />
     </Feature>
     <Binary Id="Turbo_Activate_dat" SourceFile="$(var.OF.OutlookPlugin.TargetDir)TurboActivate.dat" />
@@ -136,6 +149,12 @@
             <Component Id="INSTALLFOLDERLIB64" Guid="564C4477-7148-40C6-B90E-3C42DF281BD3">
               <RemoveFolder On="uninstall" Id="INSTALLFOLDERLIB64" />
               <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="lib64" />
+            </Component>
+          </Directory>
+          <Directory Id="INSTALLFOLDERJAVA" Name="java">
+            <Component Id="INSTALLFOLDERJAVA" Guid="5F702B7D-387B-4F5A-832B-2163819A66C0">
+              <RemoveFolder On="uninstall" Id="INSTALLFOLDERJAVA" />
+              <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="java" />
             </Component>
           </Directory>
         </Directory>
@@ -268,7 +287,7 @@
 
             <Directory Id="ELASTICSEASRCHINSTALLFOLDERTRANSPORTNETTY4" Name="transport-netty4">
               <Component Id="ELASTICSEASRCHINSTALLFOLDERTRANSPORTNETTY4" Guid="9989F1CB-B6C6-4602-B457-317C1BF45FED">
-                <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERTRANSPORTNETTY3" />
+                <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERTRANSPORTNETTY4" />
                 <RemoveFile Id="transportNetty4File" Name="*.*" On="uninstall" />
                 <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="transport-netty4" />
               </Component>
@@ -299,6 +318,12 @@
         <File Id="_libgfl340_dll_2" Name="libgfl340.dll" Source="$(var.OF.OutlookPlugin.TargetDir)lib64\" />
         <File Id="_libgfle340_dll_2" Name="libgfle340.dll" Source="$(var.OF.OutlookPlugin.TargetDir)lib64\" />
         <File Id="_PDFLibNet_dll_2" Name="PDFLibNet.dll" Source="$(var.OF.OutlookPlugin.TargetDir)lib\" />
+      </Component>
+      <Component Id="ProductComponentJava" Guid="C3F6835F-2DC0-4E80-93FD-1902D1EC2775" DiskId="1" Directory="INSTALLFOLDERJAVA">
+        <RegistryKey Root="HKCU" Key="Software\[Manufacturer]\[ProductName]">
+          <RegistryValue Type="string" Name="Installed" Value="[INSTALLFOLDERJAVA]" KeyPath="yes" />
+        </RegistryKey>
+        <File Id="emailparser_1_0_SNAPSHOT_jar" Name="emailparser-1.0-SNAPSHOT.jar" Source="$(var.OF.OutlookPlugin.TargetDir)java\" />
       </Component>
       <!-- main components -->
       <Component Id="ProductComponent" Guid="515bb330-8d0b-4160-b5e2-a41f32a1c0d5" DiskId="1" Directory="INSTALLFOLDER">
@@ -356,14 +381,10 @@
         <File Id="_Elasticsearch_Net_dll" Name="Elasticsearch.Net.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Nest_dll" Name="Nest.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_Newtonsoft_Json_dll" Name="Newtonsoft.Json.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
-        <File Id="pstriver_1_0_SNAPSHOT_zip" Name="pstriver-1.0-SNAPSHOT.zip" Source="$(var.SolutionDir)PSTRiverPlugin\target\releases\" />
-        <File Id="_serviceapp_exe_" Name="serviceapp.exe" Source="$(var.OF.OutlookPlugin.TargetDir)">
-          <!--<fire:FirewallException Id="_serviceapp_exe_firewall" Name="Service Application for OutlookFinder" Port="11223" Protocol="tcp" Scope="any"></fire:FirewallException>-->
-        </File>
+        <File Id="_serviceapp_exe_" Name="serviceapp.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_firewallrules_exe_" Name="firewallrules.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
         <File Id="_ofinspection_exe_" Name="ofinspection.exe" Source="$(var.OF.OutlookPlugin.TargetDir)" />
-        <File Id="_Nancy_dll_" Name="Nancy.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
-        <File Id="_Nancy_Hosting_Self_dll_" Name="Nancy.Hosting.Self.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
+        <File Id="RestSharp_dll" Name="RestSharp.dll" Source="$(var.OF.OutlookPlugin.TargetDir)" />
       </Component>
     </ComponentGroup>
   </Fragment>
@@ -414,6 +435,12 @@
         <File Id="_log4j2_properties_" Name="log4j2.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\config\" />
         <File Id="_elasticsearch_yml" Name="elasticsearch.yml" Source="$(var.SolutionDir)Toolkits\Elasticsearch\config\" />
       </Component>
+      <Component Id="ElasticSearchScriptsProductComponent" Guid="05D8D29B-DF72-4F9D-A7CD-8B66717EA36B" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERSCRIPTS">
+        <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
+          <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERSCRIPTS]" KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+      
       <!--lib-->
       <Component Id="ElasticSearchLibProductComponent" Guid="F3D1954B-7861-41C6-98A4-3D21E2A3CB32" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERLIB">
         <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
@@ -461,7 +488,7 @@
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERAGGSMATRIXSTATS]" KeyPath="yes" />
         </RegistryKey>
         <File Id="aggs_matrix_stats_5_3_0_jar" Name="aggs-matrix-stats-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\aggs-matrix-stats\" />
-        <File Id="plugin_descriptor_properties" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\aggs-matrix-stats\" />
+        <File Id="plugin_descriptor_properties_1" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\aggs-matrix-stats\" />
       </Component>
       
       <!--<File Id="" Name="" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\\" />-->
@@ -473,21 +500,21 @@
         <File Id="ingest_common_5_3_0_jar" Name="ingest-common-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\ingest-common\" />
         <File Id="jcodings_1_0_12_jar" Name="jcodings-1.0.12.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\ingest-common\" />
         <File Id="joni_2_1_6_jar" Name="joni-2.1.6.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\ingest-common\" />
-        <File Id="plugin_descriptor_properties" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\ingest-common\" />
+        <File Id="plugin_descriptor_properties_2" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\ingest-common\" />
       </Component>
       
       <Component Id="ElasticSearchModulesLangExpressionProductComponent" Guid="DDAACF93-6C3F-4C78-A1BE-431C3C6F89BE" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERLANGEXPRESSION">
         <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERLANGEXPRESSION]" KeyPath="yes" />
         </RegistryKey>
-        <File Id="antlr4_runtime_4_5_1_1_jar" Name="antlr4-runtime-4.5.1-1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
+        <File Id="antlr4_runtime_4_5_1_1_jar_1" Name="antlr4-runtime-4.5.1-1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
         <File Id="asm_5_0_4_jar" Name="asm-5.0.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
         <File Id="asm_commons_5_0_4_jar" Name="asm-commons-5.0.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
         <File Id="asm_tree_5_0_4_jar" Name="asm-tree-5.0.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
         <File Id="lang_expression_5_3_0_jar" Name="lang-expression-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
         <File Id="lucene_expressions_6_4_1_jar" Name="lucene-expressions-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
-        <File Id="plugin_security_policy" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
-        <File Id="plugin_descriptor_properties" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
+        <File Id="plugin_security_policy_1" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
+        <File Id="plugin_descriptor_properties_3" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
       </Component>
       
       <Component Id="ElasticSearchModulesLangGroovyProductComponent" Guid="E7DE71D5-FB0D-47F7-8F47-BE55810CE86D" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERLANGGROOVY">
@@ -496,8 +523,8 @@
         </RegistryKey>
         <File Id="groovy_2_4_6_indy_jar" Name="groovy-2.4.6-indy.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-groovy\" />
         <File Id="lang_groovy_5_3_0_jar" Name="lang-groovy-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-groovy\" />
-        <File Id="plugin_security_policy" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-groovy\" />
-        <File Id="plugin_descriptor_properties" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-groovy\" />
+        <File Id="plugin_security_policy_2" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-groovy\" />
+        <File Id="plugin_descriptor_properties_4" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-groovy\" />
       </Component>
       
       <Component Id="ElasticSearchModulesLangMustacheProductComponent" Guid="9D805153-3EE4-4A8D-ACFB-0236DCD07966" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERLANGMUSTACHE">
@@ -506,19 +533,19 @@
         </RegistryKey>
         <File Id="compiler_0_9_3_jar" Name="compiler-0.9.3.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-mustache\" />
         <File Id="lang_mustache_5_3_0_jar" Name="lang-mustache-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-mustache\" />
-        <File Id="plugin_security_policy" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-mustache\" />
-        <File Id="plugin_descriptor_properties" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-mustache\" />
+        <File Id="plugin_security_policy_3" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-mustache\" />
+        <File Id="plugin_descriptor_properties_5" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-mustache\" />
       </Component>
       
       <Component Id="ElasticSearchModulesLangPainlessProductComponent" Guid="3CC3B360-FB9E-4E22-94B9-81BEB07CF296" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERLANGPAINLESS">
         <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERLANGPAINLESS]" KeyPath="yes" />
         </RegistryKey>
-        <File Id="antlr4_runtime_4_5_1_1_jar" Name="antlr4-runtime-4.5.1-1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
+        <File Id="antlr4_runtime_4_5_1_1_jar_2" Name="antlr4-runtime-4.5.1-1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
         <File Id="asm_debug_all_5_1_jar" Name="asm-debug-all-5.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
         <File Id="lang_painless_5_3_0_jar" Name="lang-painless-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
-        <File Id="plugin_security_policy" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
-        <File Id="plugin_descriptor_properties" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
+        <File Id="plugin_security_policy_4" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
+        <File Id="plugin_descriptor_properties_6" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
       </Component>
     
       <Component Id="ElasticSearchModulesPercolatorProductComponent" Guid="B25F1E02-E5B9-41F4-96D5-2B014371569F" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERPERCOLATOR">
@@ -526,7 +553,7 @@
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERPERCOLATOR]" KeyPath="yes" />
         </RegistryKey>
         <File Id="percolator_5_3_0_jar" Name="percolator-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\percolator\" />  
-        <File Id="plugin_descriptor_properties" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\percolator\" />
+        <File Id="plugin_descriptor_properties_7" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\percolator\" />
       </Component>
       
       <Component Id="ElasticSearchModulesReindexProductComponent" Guid="D28EDDCE-47E7-4C26-BDF1-8641202E29C3" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERREINDEX">
@@ -541,7 +568,7 @@
         <File Id="httpcore_nio_4_4_5_jar" Name="httpcore-nio-4.4.5.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\reindex\" />
         <File Id="reindex_5_3_0_jar" Name="reindex-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\reindex\" />
         <File Id="rest_5_3_0_jar" Name="rest-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\reindex\" />
-        <File Id="plugin_descriptor_properties" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\reindex\" />
+        <File Id="plugin_descriptor_properties_8" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\reindex\" />
       </Component>
 
       <Component Id="ElasticSearchModulesTransportNetty3ProductComponent" Guid="5A1F6C12-4A09-4696-96E9-5087A73F1105" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERTRANSPORTNETTY3">
@@ -550,8 +577,8 @@
         </RegistryKey>
         <File Id="netty_3_10_6_Final_jar" Name="netty-3.10.6.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty3\" />
         <File Id="transport_netty3_5_3_0_jar" Name="transport-netty3-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty3\" />
-        <File Id="plugin_security_policy" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty3\" />
-        <File Id="plugin_descriptor_properties" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty3\" />
+        <File Id="plugin_security_policy_5" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty3\" />
+        <File Id="plugin_descriptor_properties_9" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty3\" />
       </Component>
       
       <Component Id="ElasticSearchModulesTransportNetty4ProductComponent" Guid="F551EDB6-DC3A-4B25-A57D-789B8B93F243" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERTRANSPORTNETTY4">
@@ -566,8 +593,8 @@
         <File Id="netty_resolver_4_1_7_Final_jar" Name="netty-resolver-4.1.7.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
         <File Id="netty_transport_4_1_7_Final_jar" Name="netty-transport-4.1.7.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
         <File Id="transport_netty4_5_3_0_jar" Name="transport-netty4-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
-        <File Id="plugin_security_policy" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
-        <File Id="plugin_descriptor_properties" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
+        <File Id="plugin_security_policy_6" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
+        <File Id="plugin_descriptor_properties_10" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
   
       </Component>
     </ComponentGroup>

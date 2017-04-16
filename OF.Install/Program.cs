@@ -11,13 +11,33 @@ namespace OF.Install
 {
     class Program
     {
-        private const string JavaHomeVar = "JAVA_HOME";
+        private static readonly string JavaHomeVar = "JAVA_HOME";
+
+        private static readonly string ElasticsearchServiceBat = "elasticsearch-service.bat";
 
         static void Main(string[] args)
         {
+            AddEnviromentVariable();
             InstallElasticSearch(args[0], args[1]);
             ApplyRules("install", args[0], args[1]);
             RegistrySettings(args[1]);
+        }
+
+        private static void AddEnviromentVariable()
+        {
+            string javaHome = OFRegistryHelper.Instance.GetJavaInstallationPath();
+            try
+            {
+                var jvm = System.Environment.GetEnvironmentVariable(JavaHomeVar);
+                if (string.IsNullOrEmpty(jvm))
+                {
+                    System.Environment.SetEnvironmentVariable(JavaHomeVar,javaHome);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private static void RegistrySettings(string ofpath)
@@ -63,7 +83,7 @@ namespace OF.Install
                 if (!String.IsNullOrEmpty(elasticSearchPath))
                 {
                     ProcessStartInfo si = new ProcessStartInfo();
-                    si.FileName = Path.Combine(elasticSearchPath,  "service.bat");
+                    si.FileName = Path.Combine(elasticSearchPath, ElasticsearchServiceBat);
                     if (!File.Exists(si.FileName))
                     {
                         Console.Out.WriteLine("File not Exits: " + si.FileName);
@@ -84,8 +104,6 @@ namespace OF.Install
 
                     Console.Out.WriteLine("Install Elastic Search: install service");
 
-                    RegisterPlugin(elasticSearchPath, ofPath, javaHome);
-
                     si.Arguments = String.Format(" {0} \"{1}\"", "start", javaHome);
                     Process pStart = new Process { StartInfo = si };
                     pStart.Start();
@@ -102,42 +120,7 @@ namespace OF.Install
                 Console.Out.WriteLine("Install Elastis Search: " + exception.Message + "  => path : " + espath);
             }
         }
-
-        private const string PstPluginKey = "pstriver_1_0_SNAPSHOT_zip";
-        private const string PstPluginFilename = "pstriver-1.0-SNAPSHOT.zip";
-        private const string PstPluginName = "pstriver";
-        private const string InstallArguments = "-i {0} -u \"file:///{1}\" \"{2}\"";
-
-        private static void RegisterPlugin(string elasticSearchPath, string ofPath, string javaHome)
-        {
-            try
-            {
-                string fullpath = Path.Combine(ofPath, PstPluginFilename);
-                Console.Out.WriteLine("Full path: " + fullpath);
-
-                if (File.Exists(fullpath) && !String.IsNullOrEmpty(elasticSearchPath))
-                {
-                    ProcessStartInfo si = new ProcessStartInfo();
-                    si.FileName = Path.Combine(elasticSearchPath, "plugin.bat");
-                    si.Arguments = String.Format(InstallArguments, PstPluginName, fullpath, javaHome);
-                    si.UseShellExecute = false;
-                    si.Verb = "runas";
-                    si.CreateNoWindow = true;
-                    si.WorkingDirectory = String.Format("{0}", elasticSearchPath);
-                    Process pInstall = new Process();
-                    pInstall.StartInfo = si;
-                    pInstall.Start();
-
-                    pInstall.WaitForExit();
-                    Console.Out.WriteLine("PST plugin was installed.");
-                }
-            }
-            catch (Exception exception)
-            {
-                Console.Out.WriteLine(exception.Message);
-            }
-        }
-
+        
         #endregion
 
 

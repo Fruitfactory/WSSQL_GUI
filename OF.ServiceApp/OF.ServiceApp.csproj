@@ -74,12 +74,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolkits\Prism\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy">
-      <HintPath>..\Toolkits\Nancy.1.4.2\lib\net40\Nancy.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy.Hosting.Self">
-      <HintPath>..\Toolkits\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolkits\Newtonsoft.Json.9.0.1\Newtonsoft.Json.dll</HintPath>
@@ -120,9 +114,6 @@
     <Compile Include="Interfaces\IOFServiceBootstraper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rest\OFNancyBootstraper.cs" />
-    <Compile Include="Rest\OFRestHosting.cs" />
-    <Compile Include="Rest\OFRestModule.cs" />
     <Compile Include="Service\OFParserApplicationHandler.cs" />
   </ItemGroup>
   <ItemGroup>
