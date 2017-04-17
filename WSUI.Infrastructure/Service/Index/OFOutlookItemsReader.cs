@@ -334,7 +334,7 @@ namespace OF.Infrastructure.Service.Index
             try
             {
                 OFLogger.Instance.LogDebug("Attachment Reader => Folder name: {0}", mapiFolder.Name);
-                Folder = $"{mapiFolder.Name}({mapiFolder.FolderPath})";
+                Folder = $"{mapiFolder.Name} ({mapiFolder.Store.DisplayName})";
                 int count = 0;
                 foreach (var result in mapiFolder.Items)
                 {
