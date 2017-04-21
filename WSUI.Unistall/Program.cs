@@ -48,11 +48,10 @@ namespace OF.Unistall
                 }
                 try
                 {
+                    DeleteRegistrySettings();
                     StopServiceAndApplication();
                     UnInstallElasticSearch();
                     ApplyRules(ParamName, args[1], args[2]);
-
-                    DeleteRegistrySettings();
 
                     Log("Done...");
                 }
@@ -77,7 +76,7 @@ namespace OF.Unistall
             var versions = OFRegistryHelper.Instance.GetOutlookVersion();
             OFRegistryHelper.Instance.DeleteOutlookSecuritySettings(versions.Item1);
         }
-
+        
         public static void StopServiceAndApplication()
         {
             StopESService();

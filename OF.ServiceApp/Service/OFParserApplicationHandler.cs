@@ -12,7 +12,6 @@ namespace OF.ServiceApp.Service
     {
 
         private readonly string ParserApplicationFileName = "emailparser-1.0-SNAPSHOT.jar";
-        private readonly string ParserApplicationPathTemplate = "{0}\\java\\{1}";
         private readonly int MinMemory = 125;
         private readonly int MaxMemory = 256;
 
@@ -38,9 +37,10 @@ namespace OF.ServiceApp.Service
         {
             var currentpath = CurrentPath;
             var fullPathOFApplication = $"{currentpath}\\java\\{ParserApplicationFileName}";
+            OFLogger.Instance.LogInfo($"Parser application: {fullPathOFApplication}");
             if (!File.Exists(fullPathOFApplication))
             {
-                OFLogger.Instance.LogWarning($"Parser application is not exist...");
+                OFLogger.Instance.LogError($"Application {fullPathOFApplication} is not exist...");
                 return;
             }
             try
@@ -63,6 +63,7 @@ namespace OF.ServiceApp.Service
         {
             if (_parserProcess.IsNotNull())
             {
+                OFLogger.Instance.LogInfo($"Stopping email parser process {_parserProcess.ProcessName}");
                 try
                 {
                     _parserProcess.Kill();

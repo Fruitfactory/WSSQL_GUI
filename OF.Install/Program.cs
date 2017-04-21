@@ -17,12 +17,20 @@ namespace OF.Install
 
         static void Main(string[] args)
         {
-            AddEnviromentVariable();
-            InstallElasticSearch(args[0], args[1]);
-            ApplyRules("install", args[0], args[1]);
-            RegistrySettings(args[1]);
+            try
+            {
+                AddEnviromentVariable();
+                InstallElasticSearch(args[0], args[1]);
+                ApplyRules("install", args[0], args[1]);
+                RegistrySettings(args[1]);
+            }
+            catch (Exception e)
+            {
+                
+                Console.Out.WriteLine(e.ToString());
+            }
         }
-
+        
         private static void AddEnviromentVariable()
         {
             string javaHome = OFRegistryHelper.Instance.GetJavaInstallationPath();

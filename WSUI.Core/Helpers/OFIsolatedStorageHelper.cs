@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.IO.IsolatedStorage;
+using System.Windows.Media;
+using OF.Core.Extensions;
+using OF.Core.Logger;
 
 namespace OF.Core.Helpers
 {
@@ -66,17 +69,27 @@ namespace OF.Core.Helpers
                 }
             }
         }
+        
+        public void DeleteSettings()
+        {
+            using (IsolatedStorageFile isolatedStorage = GetIsolatedStorage())
+            {
+                var fileNames = isolatedStorage.GetFileNames("*");
+                foreach (var fileName in fileNames)
+                {
+                    isolatedStorage.DeleteFile(fileName);
+                }
+            }
+        } 
 
         private IsolatedStorageFile GetIsolatedStorage()
         {
-            return IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly,null,null);
+            var isolatedStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.Assembly | IsolatedStorageScope.User, null, null);
+            OFLogger.Instance.LogInfo($"Isolated Storage: {isolatedStore.GetPrivateValue<string>("RootDirectory")}");
+            return isolatedStore;
         }
 
         #endregion
-
-
-
-
 
     }
 }

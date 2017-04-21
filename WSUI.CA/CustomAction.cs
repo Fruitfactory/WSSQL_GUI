@@ -805,6 +805,7 @@ namespace OF.CA
                     session.Log("Couldn't call unistall.exe");
                     return ActionResult.Success;
                 }
+                DeleteRiverSettings(session);
                 var startinfo = new ProcessStartInfo(fullname, "uninstall");
                 startinfo.Arguments = string.Format(" {0} \"{1}\" \"{2}\"", "uninstall", esPath, ofPath);
                 startinfo.Verb = "runas";
@@ -935,12 +936,14 @@ namespace OF.CA
                 var ofPath = GetInstallationFolder(session).TrimEnd(Path.DirectorySeparatorChar);
                 OFRegistryHelper.Instance.SetElasticSearchPath(esPath);
                 OFRegistryHelper.Instance.SetOfPath(ofPath);
+                
                 string fullname = string.Format("{0}\\{1}", GetInstallationFolder(session), InstallFile);
                 if (string.IsNullOrEmpty(fullname) || !File.Exists(fullname))
                 {
                     session.Log("Couldn't call install.exe");
                     return ActionResult.Success;
                 }
+                DeleteRiverSettings(session);
                 var args = string.Format(" \"{0}\"  \"{1}\" ", esPath, ofPath);
                 var startinfo = new ProcessStartInfo(fullname,args);
                 startinfo.Verb = "runas";
@@ -957,6 +960,64 @@ namespace OF.CA
             return ActionResult.Success;
         }
 
+        #endregion
+
+        #region [delete river settings - isolated storage]
+
+        static string Filename = "riversettings.json".ToUpperInvariant();
+
+        private static void DeleteRiverSettings(Session session)
+        {
+            var isolatedFolder = "IsolatedStorage";
+            var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+            var fullIsolatedParh = Path.Combine(localAppData, isolatedFolder);
+            if (Directory.Exists(fullIsolatedParh))
+            {
+                ScanDirectory(fullIsolatedParh,session);
+            }
+        }
+
+        private static void ScanDirectory(string path, Session session)
+        {
+
+            var dirInfo = new DirectoryInfo(path);
+
+            try
+            {
+                var dirs = dirInfo.GetDirectories();
+                if (dirs.Length > 0)
+                {
+                    foreach (var dir in dirs)
+                    {
+                        ScanDirectory(dir.FullName, session);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                session.Log(e.ToString());
+            }
+            try
+            {
+                var files = dirInfo.GetFiles();
+                if (files.Length > 0)
+                {
+                    foreach (var fileInfo in files)
+                    {
+                        if (fileInfo.Name.ToUpperInvariant().Equals(Filename))
+                        {
+                            fileInfo.Delete();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                session.Log(e.ToString());
+            }
+        }
+        
         #endregion
     }
 }
