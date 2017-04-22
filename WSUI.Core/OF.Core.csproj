@@ -222,7 +222,7 @@
     <Compile Include="Interfaces\IForceClient.cs" />
     <Compile Include="Interfaces\IElasticSearchIndexOutlookItemsClient.cs" />
     <Compile Include="Interfaces\IElasticSearchItemsCount.cs" />
-    <Compile Include="Interfaces\IElasticSearchOFPluginStatusClient.cs" />
+    <Compile Include="Interfaces\IServiceAppOFPluginStatusClient.cs" />
     <Compile Include="Interfaces\IElasticSearchRiverStatus.cs" />
     <Compile Include="Interfaces\IElasticTrackingClient.cs" />
     <Compile Include="Interfaces\IElasticSearchClient.cs" />

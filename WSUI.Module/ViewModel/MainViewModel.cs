@@ -1138,12 +1138,12 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                var ofPluginStatus = _container.Resolve<IElasticSearchOFPluginStatusClient>();
+                var ofPluginStatus = _container.Resolve<IServiceAppOFPluginStatusClient>();
                 if (ofPluginStatus.IsNull())
                 {
                     return;
                 }
-                ofPluginStatus.OFPluginStatus(OFPluginStatus.Running);
+                ofPluginStatus.OFPluginStatus(true);
             }
             catch (WebException we)
             {
@@ -1154,12 +1154,12 @@ namespace OF.Module.ViewModel
 
         private void NotifyServerPluginShutdown()
         {
-            var ofPluginStatus = _container.Resolve<IElasticSearchOFPluginStatusClient>();
+            var ofPluginStatus = _container.Resolve<IServiceAppOFPluginStatusClient>();
             if (ofPluginStatus.IsNull())
             {
                 return;
             }
-            ofPluginStatus.OFPluginStatus(OFPluginStatus.Shotdown);
+            ofPluginStatus.OFPluginStatus(false);
         }
 
         private void OnElasticSearchServiceStarted(bool b)

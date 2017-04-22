@@ -24,9 +24,10 @@ namespace OF.ServiceApp.Core
         private readonly IOFRiverMetaSettingsProvider _metaSettingsProvider;
         private IOutlookItemsReader _outlookItemsReader;
         private readonly IEventAggregator _eventAggregator;
-
+        
         private readonly object LOCK = new object();
-        private volatile bool _stoped = false;
+        private bool _stoped = false;
+        private bool _isOFPluginStarted = false;
 
         protected OFBaseController(IOFRiverMetaSettingsProvider metaSettingsProvider)
         {
@@ -91,7 +92,7 @@ namespace OF.ServiceApp.Core
         {
             lock (LOCK)
             {
-                _stoped = true;
+                Volatile.Write(ref _stoped,true);
                 OnStop();
                 if (_outlookItemsReader.IsNotNull())
                 {
@@ -106,13 +107,18 @@ namespace OF.ServiceApp.Core
             }
         }
 
+        public void SetOfPluginStatus(bool status)
+        {
+            Volatile.Write(ref _isOFPluginStarted,status);
+        }
+
         protected bool IsStoped
         {
             get
             {
                 bool isStoped;
                 lock (LOCK)
-                    isStoped = _stoped;
+                    isStoped = Volatile.Read(ref _stoped);
                 return isStoped;
             }
         }
@@ -232,6 +238,11 @@ namespace OF.ServiceApp.Core
 
         private void SendStatus(OFRiverStatus ctrlStatus, PstReaderStatus readerStatus, int count)
         {
+            var ofstatus = Volatile.Read(ref _isOFPluginStarted);
+            if (!ofstatus)
+            {
+                return;
+            }
             try
             {
                 var status = new OFReaderStatus()

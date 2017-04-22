@@ -83,6 +83,12 @@ namespace OF.ServiceApp.Bootstraper
                     response.Folder = _controller.CurrentFolder;
                     response.Count = _controller.Count;
                     break;
+                case ofServiceApplicationMessageType.OfPluginState:
+                    if (_controller.IsNotNull())
+                    {
+                        _controller.SetOfPluginStatus((bool)message.Payload);
+                    }
+                    break;
             }
             return response;
         }

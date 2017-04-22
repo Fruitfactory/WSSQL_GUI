@@ -63,7 +63,8 @@ namespace OF.Core.Enums
         None, 
         StartIndexing,
         ForceIndexing,
-        ControllerStatus
+        ControllerStatus,
+        OfPluginState
     }
 
     public enum ofServerResponseStatus
