@@ -87,8 +87,10 @@
       <Custom Action="ErrorMessage" OnExit="error">NOT Installed</Custom>
     </InstallExecuteSequence>
     <!-- Properties for all current versions of the .NET Framework are available here: http://wix.sourceforge.net/manual-wix3/wixnetfxextension.htm -->
-    <PropertyRef Id="NETFRAMEWORK40CLIENT" />
-    <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again."><![CDATA[Installed OR NETFRAMEWORK40CLIENT]]></Condition>
+    <PropertyRef Id="NETFRAMEWORK45"/>
+    <Condition Message="This application requires .NET Framework 4.5. Please install the .NET Framework then run this installer again.">
+      <![CDATA[Installed OR NETFRAMEWORK45]]>
+    </Condition>
     <!-- Check some requirements ONLY on "install", but not on modify or uninstall. -->
     <Property Id="JAVA_CURRENT_VERSION">
       <RegistrySearch Id="JRE_CURRENT_VERSION_REGSEARCH" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Name="CurrentVersion" Type="raw" Win64="yes" />
