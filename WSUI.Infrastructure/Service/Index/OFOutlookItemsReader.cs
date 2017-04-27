@@ -219,7 +219,9 @@ namespace OF.Infrastructure.Service.Index
                         if (store.IsNotNull())
                         {
                             ProcessFolders(store.GetRootFolder(),true);
-                            _storeClient.SaveStore(new OFStore() {Name = store.DisplayName, Storeid = store.StoreID});
+                            var s = new OFStore() { Name = store.DisplayName, Storeid = store.StoreID };
+                            _storeClient.SaveStore(s);
+                            OFLogger.Instance.LogDebug($"Index Store = {s}");
                         }
                         Marshal.ReleaseComObject(store);
                     }
@@ -227,13 +229,17 @@ namespace OF.Infrastructure.Service.Index
                     {
                         CheckCancellation();
                         TryToWait();
-                        _storeClient.DeleteStore(new OFStore() {Storeid = deletedStoreId});
+                        var s = new OFStore() { Storeid = deletedStoreId };
+                        _storeClient.DeleteStore(s);
+                        OFLogger.Instance.LogDebug($"Delete store = {s}");
                     }
                     foreach (var updateStoreId in listMstUpdateStore)
                     {
                         CheckCancellation();
                         TryToWait();
                         var store = ns.Stores.OfType<Outlook.Store>().FirstOrDefault(s => s.StoreID == updateStoreId);
+                        var s = new OFStore() { Name = store.DisplayName, Storeid = store.StoreID };
+                        OFLogger.Instance.LogDebug($"Update store = {s}");
                         if (store.IsNotNull())
                         {
                             ProcessFolders(store.GetRootFolder());
