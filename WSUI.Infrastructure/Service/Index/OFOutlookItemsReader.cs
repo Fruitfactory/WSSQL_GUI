@@ -238,8 +238,8 @@ namespace OF.Infrastructure.Service.Index
                         CheckCancellation();
                         TryToWait();
                         var store = ns.Stores.OfType<Outlook.Store>().FirstOrDefault(s => s.StoreID == updateStoreId);
-                        var s = new OFStore() { Name = store.DisplayName, Storeid = store.StoreID };
-                        OFLogger.Instance.LogDebug($"Update store = {s}");
+                        var st = new OFStore() { Name = store.DisplayName, Storeid = store.StoreID };
+                        OFLogger.Instance.LogDebug($"Update store = {st}");
                         if (store.IsNotNull())
                         {
                             ProcessFolders(store.GetRootFolder());
