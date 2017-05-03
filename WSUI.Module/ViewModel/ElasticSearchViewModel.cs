@@ -8,6 +8,7 @@ using System.Net;
 using System.Windows;
 using System.ServiceProcess;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Documents.DocumentStructures;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -385,9 +386,15 @@ namespace OF.Module.ViewModel
         private void CreateIndexCommandExecute(object arg)
         {
             InitElasticSearch();
-            CreateIndexVisibility = Visibility.Collapsed;
-            ShowProgress = Visibility.Visible;
-            StartIndexing();
+            
+            Task.Factory.StartNew(async () =>
+            {
+                await Task.Delay(1000); // warm up the index.
+                StartIndexing();
+                await Task.Delay(1000); // starting
+                CreateIndexVisibility = Visibility.Collapsed;
+                ShowProgress = Visibility.Visible;
+            });
         }
 
         private void StartIndexing()
@@ -449,7 +456,6 @@ namespace OF.Module.ViewModel
             try
             {
                 ElasticSearchClient.CreateInfrastructure();
-                Thread.Sleep(1000);
                 _timer = new Timer(TimerProgressCallback,null,1000,2000);
                 OnIndexingStarted();
             }

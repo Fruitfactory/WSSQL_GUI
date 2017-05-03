@@ -41,19 +41,13 @@ namespace OF.ServiceApp.Controllers
         protected override void OnEventProcessing()
         {
             base.OnEventProcessing();
-            if (_activityTracker != null)
-            {
-                _activityTracker.Update(IsForced);
-            }
+            _activityTracker?.Update(IsForced);
         }
 
         protected override void OnStop()
         {
             base.OnStop();
-            if (_activityTracker != null)
-            {
-                _activityTracker.Stop();
-            }
+            _activityTracker?.Stop();
         }
     }
 }
