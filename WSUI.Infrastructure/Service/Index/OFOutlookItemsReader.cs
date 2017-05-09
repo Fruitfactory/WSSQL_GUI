@@ -198,7 +198,7 @@ namespace OF.Infrastructure.Service.Index
                 {
 
                     var listOutlookStores =
-                        ns.Stores.OfType<Outlook.Store>().ToList()
+                        ns.Stores.OfType<Outlook.Store>().Where(s => s.DisplayName.Contains("metajure")).ToList()
                             .Select(s => new OFStore() {Name = s.DisplayName, Storeid = s.StoreID}).ToList();
                     var listEsStores = _storeClient.GetStores();
                     var listMustIndexStore =
