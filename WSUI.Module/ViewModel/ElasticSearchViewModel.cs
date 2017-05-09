@@ -441,9 +441,7 @@ namespace OF.Module.ViewModel
                 p.WaitForExit();
                 OFLogger.Instance.LogDebug(p.StandardOutput != null ? p.StandardOutput.ReadToEnd() : "");
                 OFLogger.Instance.LogDebug(p.StandardError != null ? p.StandardError.ReadToEnd() : "");
-
-                Debug.WriteLine(string.Format("!!!!!!!! {0}", p.StandardOutput != null ? p.StandardOutput.ReadToEnd() : ""));
-                Debug.WriteLine(string.Format("!!!!!!!! {0}", p.StandardError != null ? p.StandardError.ReadToEnd() : ""));
+                
             }
             catch (Exception ex)
             {

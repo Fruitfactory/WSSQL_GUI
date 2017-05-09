@@ -40,8 +40,7 @@ namespace OF.Infrastructure.Service.Index
         private readonly object _lock = new object();
         private static readonly int COUNT_ITEMS_FOR_COLLECT = 20;
 
-        private  readonly List<IOFIOutlookItemsReaderObserver> _observers = new List<IOFIOutlookItemsReaderObserver>();
-        
+
         private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
 
         private static readonly long ContentMaxSize = 5 * 1024 * 1024;
@@ -199,7 +198,7 @@ namespace OF.Infrastructure.Service.Index
 
                     var listOutlookStores =
                         ns.Stores.OfType<Outlook.Store>().Where(s => s.DisplayName.Contains("metajure")).ToList()
-                            .Select(s => new OFStore() {Name = s.DisplayName, Storeid = s.StoreID}).ToList();
+                            .Select(s => new OFStore() { Name = s.DisplayName, Storeid = s.StoreID }).ToList();
                     var listEsStores = _storeClient.GetStores();
                     var listMustIndexStore =
                         listOutlookStores.Select(s => s.Storeid).Except(listEsStores.Select(s => s.Storeid)).ToList();
@@ -218,7 +217,7 @@ namespace OF.Infrastructure.Service.Index
                         var store = ns.Stores.OfType<Outlook.Store>().FirstOrDefault(s => s.StoreID == indexStoreId);
                         if (store.IsNotNull())
                         {
-                            ProcessFolders(store.GetRootFolder(),true);
+                            ProcessFolders(store.GetRootFolder(), true);
                             var s = new OFStore() { Name = store.DisplayName, Storeid = store.StoreID };
                             _storeClient.SaveStore(s);
                             OFLogger.Instance.LogDebug($"Index Store = {s}");
@@ -297,13 +296,13 @@ namespace OF.Infrastructure.Service.Index
             {
                 if (mapiFolder.Items.Count > 0)
                 {
-                    ProcessItems(mapiFolder,ignoreUpdating);
+                    ProcessItems(mapiFolder, ignoreUpdating);
                 }
                 foreach (Outlook.MAPIFolder folder in mapiFolder.Folders)
                 {
                     try
                     {
-                        ProcessFolders(folder,ignoreUpdating);
+                        ProcessFolders(folder, ignoreUpdating);
                     }
                     catch (COMException com)
                     {
@@ -355,7 +354,7 @@ namespace OF.Infrastructure.Service.Index
                         {
                             if (_processedItems.ContainsKey(email.EntryID))
                                 continue;
-                            ProcessEmailItem(email, mapiFolder,ignoreUpdating);
+                            ProcessEmailItem(email, mapiFolder, ignoreUpdating);
                             _processedItems.Add(email.EntryID, null);
                         }
                         else if (contact != null)
@@ -471,7 +470,7 @@ namespace OF.Infrastructure.Service.Index
         }
 
 
-        private void ProcessEmailItem(Outlook.MailItem emailItem, Outlook.MAPIFolder mapiFolder,bool ignoreUpdating)
+        private void ProcessEmailItem(Outlook.MailItem emailItem, Outlook.MAPIFolder mapiFolder, bool ignoreUpdating)
         {
             try
             {
@@ -564,25 +563,28 @@ namespace OF.Infrastructure.Service.Index
             {
                 return;
             }
-            email.ItemName = result.Subject;
-            email.ItemUrl = result.Subject;
-            email.Folder = folder.Name;
-            email.Foldermessagestoreidpart = folder.EntryID;
-            email.Storagename = folder.Name;
-            email.Datecreated = result.CreationTime;
-            var recev = result.ReceivedTime;
-            email.Datereceived = new DateTime(recev.Year, recev.Month, recev.Day, recev.Hour, recev.Minute, recev.Second, 111);
-            email.Size = result.Size;
-            email.Entryid = result.EntryID;
-            email.Conversationid = result.EntryID;
-            email.Conversationindex = result.ConversationIndex;
-            email.Outlookconversationid = result.ConversationIndex;
-            email.Subject = result.Subject;
-            email.Content = !string.IsNullOrEmpty(result.Body) ? Convert.ToBase64String(Encoding.UTF8.GetBytes(result.Body)) : "";
-            email.Htmlcontent = !string.IsNullOrEmpty(result.HTMLBody) ? Convert.ToBase64String(Encoding.UTF8.GetBytes(result.HTMLBody)) : "";
-            email.Fromname = result.SenderName;
-            email.Fromaddress = result.GetSenderSMTPAddress();
-            email.Storeid = folder.Store.StoreID;
+            try { email.ItemName = result.Subject; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.ItemUrl = result.Subject; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Folder = folder.Name; } catch(Exception ex){ OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Foldermessagestoreidpart = folder.EntryID; } catch(Exception ex){ OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Storagename = folder.Name; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Datecreated = result.CreationTime; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try {
+                var recev = result.ReceivedTime;
+                email.Datereceived = new DateTime(recev.Year, recev.Month, recev.Day, recev.Hour, recev.Minute, recev.Second, 111);
+            } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Size = result.Size; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Entryid = result.EntryID; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Conversationid = result.EntryID; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Conversationindex = result.ConversationIndex; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Outlookconversationid = result.ConversationIndex; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Subject = result.Subject; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Content = !string.IsNullOrEmpty(result.Body) ? Convert.ToBase64String(Encoding.UTF8.GetBytes(result.Body)) : ""; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Htmlcontent = !string.IsNullOrEmpty(result.HTMLBody) ? Convert.ToBase64String(Encoding.UTF8.GetBytes(result.HTMLBody)) : ""; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Fromname = result.SenderName; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Fromaddress = result.GetSenderSMTPAddress(); } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { email.Storeid = folder.Store.StoreID; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            
             ProcessRecipients(email, result);
             ProcessEmailAttachments(email, result);
             email.Hasattachments = (email.Attachments != null && email.Attachments.Length > 0).ToString();
@@ -598,20 +600,33 @@ namespace OF.Infrastructure.Service.Index
             var listAttachments = new List<OFAttachment>();
             foreach (var att in result.Attachments.OfType<Outlook.Attachment>())
             {
-                try
-                {
-                    var attachment = new OFAttachment();
-                    attachment.Filename = att.FileName;
-                    attachment.Mimetag = att.PropertyAccessor.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x370E001E");
-                    attachment.Path = string.Empty; // sometimes it craches on this string, so I had commented it for now. We don't use path.
-                    attachment.Size = att.Size;
-                    attachment.Entryid = result.EntryID;
-                    listAttachments.Add(attachment);
-                }
+                var attachment = new OFAttachment();
+                try { attachment.Filename = att.FileName; }
                 catch (Exception ex)
                 {
                     OFLogger.Instance.LogError(ex.ToString());
                 }
+                try { attachment.Mimetag = att.PropertyAccessor.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x370E001E"); }
+                catch (Exception ex)
+                {
+                    OFLogger.Instance.LogError(ex.ToString());
+                }
+                try { attachment.Path = string.Empty; }// sometimes it craches on this string, so I had commented it for now. We don't use path.
+                catch (Exception ex)
+                {
+                    OFLogger.Instance.LogError(ex.ToString());
+                }
+                try { attachment.Size = att.Size; }
+                catch (Exception ex)
+                {
+                    OFLogger.Instance.LogError(ex.ToString());
+                }
+                try { attachment.Entryid = result.EntryID; }
+                catch (Exception ex)
+                {
+                    OFLogger.Instance.LogError(ex.ToString());
+                }
+                listAttachments.Add(attachment);
             }
             email.Attachments = listAttachments.ToArray();
         }
@@ -692,21 +707,25 @@ namespace OF.Infrastructure.Service.Index
         {
             OFAttachmentContent indexAttach = new OFAttachmentContent();
             indexAttach.Storeid = storeId;
-            indexAttach.Size = attachment.Size;
-            indexAttach.Emailid = email.EntryID;
-            indexAttach.Outlookemailid = email.EntryID;
-            var recev = email.ReceivedTime;
-            indexAttach.Datecreated = new DateTime(recev.Year, recev.Month, recev.Day, recev.Hour, recev.Minute, recev.Second, 111);
-            OFLogger.Instance.LogDebug("---- Attachment => {0}", attachment.FileName);
-            indexAttach.Filename = attachment.FileName;
-            if (content != null)
-            {
-                indexAttach.Content = Convert.ToBase64String(content);
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine(string.Format("--- Skip Attachment (by size): {0}", email.Subject));
-            }
+            try { indexAttach.Size = attachment.Size; } catch(Exception ex){ OFLogger.Instance.LogError(ex.ToString()); }
+            try { indexAttach.Emailid = email.EntryID; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { indexAttach.Outlookemailid = email.EntryID; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try {
+                var recev = email.ReceivedTime;
+                indexAttach.Datecreated = new DateTime(recev.Year, recev.Month, recev.Day, recev.Hour, recev.Minute, recev.Second, 111);
+            } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try { indexAttach.Filename = attachment.FileName; } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
+            try {
+                if (content != null)
+                {
+                    indexAttach.Content = Convert.ToBase64String(content);
+                    OFLogger.Instance.LogDebug("---- Attachment => {0}", attachment.FileName);
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine(string.Format("--- Skip Attachment (by size): {0}", email.Subject));
+                }
+            } catch (Exception ex) { OFLogger.Instance.LogError(ex.ToString()); }
 
             attachments.Add(indexAttach);
         }
