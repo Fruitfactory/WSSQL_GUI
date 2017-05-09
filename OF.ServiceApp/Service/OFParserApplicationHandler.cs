@@ -45,13 +45,19 @@ namespace OF.ServiceApp.Service
             }
             try
             {
-                ProcessStartInfo psi = new ProcessStartInfo("java.exe ", $" -jar -Xms{MinMemory}m -Xmx{MaxMemory}m {fullPathOFApplication}");
+                ProcessStartInfo psi = new ProcessStartInfo("java.exe ", $" -jar -Xms{MinMemory}m -Xmx{MaxMemory}m \"{fullPathOFApplication}\"");
                 psi.CreateNoWindow = true;
                 psi.WindowStyle = ProcessWindowStyle.Hidden;
+                //psi.UseShellExecute = false;
+                //psi.RedirectStandardError = true;
 
                 _parserProcess = Process.Start(psi);
+                _parserProcess.ErrorDataReceived += ParserProcessOnErrorDataReceived;
 
                 Thread.Sleep(1000);
+
+                OFLogger.Instance.LogInfo($"Parser application was started: {fullPathOFApplication}");
+
             }
             catch (Exception e)
             {
@@ -59,14 +65,22 @@ namespace OF.ServiceApp.Service
             }
         }
 
+        private void ParserProcessOnErrorDataReceived(object sender, DataReceivedEventArgs dataReceivedEventArgs)
+        {
+            OFLogger.Instance.LogError($"Error Received: {dataReceivedEventArgs.Data}");
+        }
+
         public void StopParser()
         {
             if (_parserProcess.IsNotNull())
             {
-                OFLogger.Instance.LogInfo($"Stopping email parser process {_parserProcess.ProcessName}");
+                
                 try
                 {
+                    OFLogger.Instance.LogInfo($"Stopping email parser process {_parserProcess.ProcessName}");
+                    _parserProcess.ErrorDataReceived -= ParserProcessOnErrorDataReceived;
                     _parserProcess.Kill();
+                    _parserProcess = null;
                 }
                 catch (Exception e)
                 {

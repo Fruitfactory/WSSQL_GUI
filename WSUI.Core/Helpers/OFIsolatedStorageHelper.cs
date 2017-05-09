@@ -44,7 +44,7 @@ namespace OF.Core.Helpers
                 {
                     using (
                         IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(RiverSettingsFile,
-                            FileMode.Open,isolatedStorage))
+                            FileMode.Open, FileAccess.Read,FileShare.ReadWrite,isolatedStorage))
                     {
                         using (StreamReader reader = new StreamReader(isoStream))
                         {
@@ -60,7 +60,7 @@ namespace OF.Core.Helpers
         {
             using (IsolatedStorageFile isolatedStorage = GetIsolatedStorage())
             {
-                using (IsolatedStorageFileStream stream = new IsolatedStorageFileStream(RiverSettingsFile,isolatedStorage.FileExists(RiverSettingsFile) ? FileMode.Create : FileMode.CreateNew,isolatedStorage))
+                using (IsolatedStorageFileStream stream = new IsolatedStorageFileStream(RiverSettingsFile,isolatedStorage.FileExists(RiverSettingsFile) ? FileMode.Create : FileMode.CreateNew,FileAccess.ReadWrite,FileShare.Read,isolatedStorage))
                 {
                     using (StreamWriter writer = new StreamWriter(stream))
                     {

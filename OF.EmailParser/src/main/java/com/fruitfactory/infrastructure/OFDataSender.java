@@ -238,6 +238,7 @@ public class OFDataSender extends OFDataProcess implements ResponseListener {
 
     @Override
     public void onFailure(Exception e) {
-        getLogger().error(String.format("Index Error: %s",  e.getMessage()));
+        getLogger().error(String.format("Index Error: %s", e.getMessage()));
+        getLogger().error(String.format("Index Error: %s", e.toString()));
     }
 }
