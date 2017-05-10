@@ -40,6 +40,7 @@ namespace OF.Infrastructure.Service.Index
         private readonly object _lock = new object();
         private static readonly int COUNT_ITEMS_FOR_COLLECT = 20;
 
+        private readonly List<IOFIOutlookItemsReaderObserver> _observers = new List<IOFIOutlookItemsReaderObserver>();
 
         private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
 
