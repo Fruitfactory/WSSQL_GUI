@@ -198,8 +198,7 @@ namespace OF.Infrastructure.Service.Index
                 {
 
                     var listOutlookStores =
-                        ns.Stores.OfType<Outlook.Store>().Where(s => s.DisplayName.Contains("metajure")).ToList()
-                            .Select(s => new OFStore() { Name = s.DisplayName, Storeid = s.StoreID }).ToList();
+                        ns.Stores.OfType<Outlook.Store>().Select(s => new OFStore() { Name = s.DisplayName, Storeid = s.StoreID }).ToList();
                     var listEsStores = _storeClient.GetStores();
                     var listMustIndexStore =
                         listOutlookStores.Select(s => s.Storeid).Except(listEsStores.Select(s => s.Storeid)).ToList();
@@ -219,9 +218,13 @@ namespace OF.Infrastructure.Service.Index
                         if (store.IsNotNull())
                         {
                             ProcessFolders(store.GetRootFolder(), true);
-                            var s = new OFStore() { Name = store.DisplayName, Storeid = store.StoreID };
+                            var s = new OFStore() {Name = store.DisplayName, Storeid = store.StoreID};
                             _storeClient.SaveStore(s);
                             OFLogger.Instance.LogDebug($"Index Store = {s}");
+                        }
+                        else
+                        {
+                            OFLogger.Instance.LogDebug($"Store is null for id {indexStoreId}");
                         }
                         Marshal.ReleaseComObject(store);
                     }
@@ -293,12 +296,20 @@ namespace OF.Infrastructure.Service.Index
 
         private void ProcessFolders(Outlook.MAPIFolder mapiFolder, bool ignoreUpdating = false)
         {
+
+            if (mapiFolder.IsNull())
+            {
+                OFLogger.Instance.LogDebug($"Folder is null");
+                return;
+            }
             try
             {
+                OFLogger.Instance.LogDebug($"Folder '{mapiFolder.FullFolderPath}' Items Count: {mapiFolder.Items.Count}");
                 if (mapiFolder.Items.Count > 0)
                 {
                     ProcessItems(mapiFolder, ignoreUpdating);
                 }
+                
                 foreach (Outlook.MAPIFolder folder in mapiFolder.Folders)
                 {
                     try
@@ -339,7 +350,7 @@ namespace OF.Infrastructure.Service.Index
         {
             try
             {
-                OFLogger.Instance.LogDebug("Attachment Reader => Folder name: {0}", mapiFolder.Name);
+                OFLogger.Instance.LogDebug("OutlookItems Reader => Folder name: {0}", mapiFolder.Name);
                 Folder = $"{mapiFolder.Name} ({mapiFolder.Store.DisplayName})";
                 int count = 0;
                 foreach (var result in mapiFolder.Items)
@@ -589,6 +600,9 @@ namespace OF.Infrastructure.Service.Index
             ProcessRecipients(email, result);
             ProcessEmailAttachments(email, result);
             email.Hasattachments = (email.Attachments != null && email.Attachments.Length > 0).ToString();
+
+            OFLogger.Instance.LogDebug($"Folder: {folder?.FullFolderPath} Email Subject: {result?.Subject}");
+
         }
 
         private void ProcessEmailAttachments(OFEmail email, Outlook.MailItem result)

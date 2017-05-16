@@ -12,8 +12,8 @@ namespace OF.ServiceApp.Service
     {
 
         private readonly string ParserApplicationFileName = "emailparser-1.0-SNAPSHOT.jar";
-        private readonly int MinMemory = 125;
-        private readonly int MaxMemory = 256;
+        private readonly int MinMemory = 64;
+        private readonly int MaxMemory = 126;
 
         private Process _parserProcess;
         
