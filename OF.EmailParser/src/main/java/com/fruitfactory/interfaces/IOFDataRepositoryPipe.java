@@ -9,8 +9,10 @@ public interface IOFDataRepositoryPipe {
 
     void pushData(OFItemsContainer container) throws InterruptedException;
 
-    OFItemsContainer popData();
+    OFItemsContainer popData() throws InterruptedException;
 
     void stopNotify();
+
+    int count();
 
 }

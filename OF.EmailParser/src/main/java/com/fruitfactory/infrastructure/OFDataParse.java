@@ -31,6 +31,9 @@ public class OFDataParse extends OFDataProcess {
             processEmail(container);
             processAttachments(container);
             dataTarget.pushData(container);
+            if(container != null && container.getEmail() != null){
+                getLogger().info(String.format("Parse: %s",container.getEmail().getSubject()));
+            }
         }catch (Exception ex){
             getLogger().error(ex.toString());
         }

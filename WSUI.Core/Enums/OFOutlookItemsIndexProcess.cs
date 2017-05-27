@@ -2,7 +2,7 @@
 {
     public enum OFOutlookItemsIndexProcess
     {
-        None,
+        None ,
         Chunk,
         End
     }

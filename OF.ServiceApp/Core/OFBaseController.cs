@@ -13,6 +13,7 @@ using OF.Infrastructure.NamedPipes;
 using OF.Infrastructure.Service.Index;
 using Microsoft.Practices.Prism.Events;
 using Newtonsoft.Json;
+using OF.Infrastructure.Implements.ElasticSearch.Clients;
 using OF.ServiceApp.Events;
 using OF.ServiceApp.Service;
 
@@ -23,6 +24,7 @@ namespace OF.ServiceApp.Core
         private Thread _thread;
         private readonly IOFRiverMetaSettingsProvider _metaSettingsProvider;
         private IOutlookItemsReader _outlookItemsReader;
+        private IElasticSearchCloseJavaClient _elasticSearchCloseJavaClient;
         private readonly IEventAggregator _eventAggregator;
         
         private readonly object LOCK = new object();
@@ -34,6 +36,7 @@ namespace OF.ServiceApp.Core
             _metaSettingsProvider = metaSettingsProvider;
             _outlookItemsReader = new OFOutlookItemsReader();
             _outlookItemsReader.Attach(this);
+            _elasticSearchCloseJavaClient = new OFElasticSeachIndexOutlookItemsClient();
         }
 
         protected OFBaseController(IOFRiverMetaSettingsProvider metaSettingsProvider, IEventAggregator eventAggregator) 
@@ -183,11 +186,13 @@ namespace OF.ServiceApp.Core
                     break;
                 }
                 var settings = _metaSettingsProvider.GetCurrentSettings();
-                OFParserApplicationHandler.Instance.StartParser();
+                //OFParserApplicationHandler.Instance.StartParser();
                 var delay = OnRun(settings.LastDate);
                 _metaSettingsProvider.UpdateLastIndexingDateTime(DateTime.Now);
+
                 Status = OFRiverStatus.StandBy;
-                OFParserApplicationHandler.Instance.StopParser();
+                OFLogger.Instance.LogDebug($"Parser/Sender has been finshed: {_elasticSearchCloseJavaClient.Stop()}");
+                //OFParserApplicationHandler.Instance.StopParser();
                 if (IsStoped)
                 {
                     OFLogger.Instance.LogInfo("Controller was closed...");

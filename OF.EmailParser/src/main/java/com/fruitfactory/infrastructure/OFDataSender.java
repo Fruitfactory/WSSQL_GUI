@@ -39,7 +39,13 @@ public class OFDataSender extends OFDataProcess implements ResponseListener {
         indexEmail(container);
         indexAttachments(container);
         indexContact(container);
-
+        if(container != null && container.getEmail() != null){
+            getLogger().info(String.format("Send: %s",container.getEmail().getSubject()));
+        }else if(container != null && container.getAttachments() != null && container.getAttachments().size() > 0){
+            getLogger().info(String.format("Send: %s",container.getAttachments().get(0).getFilename()));
+        }else if(container != null && container.getContact() != null){
+            getLogger().info(String.format("Send: %s",container.getContact().getEmailaddress1()));
+        }
     }
 
     private void indexContact(OFItemsContainer container) {

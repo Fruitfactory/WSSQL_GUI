@@ -23,6 +23,10 @@ public class OFItemsContainer {
     public OFItemsContainer() {
     }
 
+    public OFItemsContainer(int process){
+        setProcess(process);
+    }
+
     public OFContact getContact() {
         return contact;
     }

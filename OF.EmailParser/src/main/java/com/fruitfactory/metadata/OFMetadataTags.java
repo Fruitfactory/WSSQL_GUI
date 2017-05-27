@@ -5,6 +5,8 @@ package com.fruitfactory.metadata;
  */
 public class OFMetadataTags {
 
+    public static final int END_PROCESS = -1;
+
     private static final String PROPERTIES = "properties";
 
     public static final String INDEX_NAME = "outlookfinder";

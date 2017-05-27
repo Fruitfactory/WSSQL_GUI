@@ -219,6 +219,7 @@
     <Compile Include="Helpers\OFObjectJsonSaveReadHelper.cs" />
     <Compile Include="Helpers\OFOfficeVersion.cs" />
     <Compile Include="Helpers\OFRiverMetaSettingsProvider.cs" />
+    <Compile Include="Interfaces\IElasticSearchCloseJavaClient.cs" />
     <Compile Include="Interfaces\IForceClient.cs" />
     <Compile Include="Interfaces\IElasticSearchIndexOutlookItemsClient.cs" />
     <Compile Include="Interfaces\IElasticSearchItemsCount.cs" />

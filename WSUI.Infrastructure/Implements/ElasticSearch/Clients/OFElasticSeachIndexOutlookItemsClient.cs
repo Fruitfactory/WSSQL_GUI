@@ -13,7 +13,7 @@ using OF.Core.JsonSettings;
 
 namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
-    public class OFElasticSeachIndexOutlookItemsClient : OFElasticSearchClientBase, IElasticSearchIndexOutlookItemsClient
+    public class OFElasticSeachIndexOutlookItemsClient : OFElasticSearchClientBase, IElasticSearchIndexOutlookItemsClient, IElasticSearchCloseJavaClient
     {
 
         private RestClient _restClient = new RestClient("http://localhost:11223");
@@ -40,6 +40,23 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             catch (Exception ex)
             {
                 OFLogger.Instance.LogError(ex.ToString());
+            }
+            return false;
+        }
+
+        public bool Stop()
+        {
+            try
+            {
+                var request = new RestRequest("parse/close", Method.POST);
+                request.AddHeader("Accept", "application/json");
+                request.RequestFormat = DataFormat.Json;
+                var response = _restClient.Execute(request);
+                return response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted;
+            }
+            catch (Exception e)
+            {
+                OFLogger.Instance.LogError(e.ToString());
             }
             return false;
         }

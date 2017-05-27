@@ -14,12 +14,14 @@ public class OFDateRepositoryPipe implements IOFDataRepositoryPipe {
     private LinkedBlockingQueue<OFItemsContainer> dataContainer;
     private final Object syncObject = new Object();
     private volatile boolean available = false;
+    private String name;
 
     private final Logger logger = Logger.getLogger(OFDateRepositoryPipe.class);
 
 
-    public OFDateRepositoryPipe() {
+    public OFDateRepositoryPipe(String name) {
         dataContainer = new LinkedBlockingQueue<>();
+        this.name = name;
     }
 
     @Override
@@ -29,6 +31,8 @@ public class OFDateRepositoryPipe implements IOFDataRepositoryPipe {
                 dataContainer.put(container);
                 available = true;
                 syncObject.notifyAll();
+                logger.info(String.format("Push data into '%s'",name));
+                logger.info(String.format("Count ('%s') after push: %s",name,dataContainer.size()));
             }
         }catch(InterruptedException ie){
             logger.error(ie.getMessage());
@@ -45,7 +49,7 @@ public class OFDateRepositoryPipe implements IOFDataRepositoryPipe {
     }
 
     @Override
-    public OFItemsContainer popData() {
+    public OFItemsContainer popData() throws InterruptedException {
         if(!available){
             synchronized (syncObject){
                 try {
@@ -55,8 +59,15 @@ public class OFDateRepositoryPipe implements IOFDataRepositoryPipe {
                 }
             }
         }
-        OFItemsContainer container = dataContainer.poll();
+        logger.info(String.format("Pop data: %s",name));
+        OFItemsContainer container = dataContainer.take();
+        logger.info(String.format("Count ('%s') after pop: %s, Available (%s)",name,dataContainer.size(),available));
         available = !dataContainer.isEmpty();
         return container;
+    }
+
+    @Override
+    public int count() {
+        return dataContainer.size();
     }
 }

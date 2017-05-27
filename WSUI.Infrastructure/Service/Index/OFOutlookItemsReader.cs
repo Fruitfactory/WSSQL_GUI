@@ -198,7 +198,7 @@ namespace OF.Infrastructure.Service.Index
                 {
 
                     var listOutlookStores =
-                        ns.Stores.OfType<Outlook.Store>().Select(s => new OFStore() { Name = s.DisplayName, Storeid = s.StoreID }).ToList();
+                        ns.Stores.OfType<Outlook.Store>().Where(s => s.DisplayName.Contains("outlook")).Select(s => new OFStore() { Name = s.DisplayName, Storeid = s.StoreID }).ToList();
                     var listEsStores = _storeClient.GetStores();
                     var listMustIndexStore =
                         listOutlookStores.Select(s => s.Storeid).Except(listEsStores.Select(s => s.Storeid)).ToList();
@@ -305,7 +305,7 @@ namespace OF.Infrastructure.Service.Index
             try
             {
                 OFLogger.Instance.LogDebug($"Folder '{mapiFolder.FullFolderPath}' Items Count: {mapiFolder.Items.Count}");
-                if (mapiFolder.Items.Count > 0)
+                if (mapiFolder.Items.Count > 0 )
                 {
                     ProcessItems(mapiFolder, ignoreUpdating);
                 }

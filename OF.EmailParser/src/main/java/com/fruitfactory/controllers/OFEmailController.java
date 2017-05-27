@@ -31,8 +31,8 @@ public class OFEmailController {
     private IOFDataRepositoryPipe dataOutcome = null;
 
     public OFEmailController() {
-        dataIncome = new OFDateRepositoryPipe();
-        dataOutcome = new OFDateRepositoryPipe();
+        dataIncome = new OFDateRepositoryPipe("income");
+        dataOutcome = new OFDateRepositoryPipe("outcome");
         dataParser = new OFDataParse(dataIncome,dataOutcome,"dataParser");
         dataSender = new OFDataSender(dataOutcome,"dataSender");
         dataParser.start();
@@ -53,6 +53,24 @@ public class OFEmailController {
         }catch(Exception ex){
             response.setMessage(ex.getMessage());
             logger.error(ex.getMessage());
+        }
+        return response;
+    }
+
+    @RequestMapping(value = "/close",method = RequestMethod.POST,produces = "application/json")
+    @ResponseBody
+    public OFEmailResponse stopAndCloseApplication(){
+        OFEmailResponse response = new OFEmailResponse(false,"");
+        try {
+            if(dataParser != null){
+                dataParser.close();
+            }
+            if(dataSender != null){
+                dataSender.close();
+            }
+        }catch (Exception e){
+            response.setMessage(e.getMessage());
+            logger.error(e.getMessage());
         }
         return response;
     }
