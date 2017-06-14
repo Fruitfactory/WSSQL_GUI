@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using OF.Core.Core.LimeLM;
 using OF.Core.Enums;
@@ -57,6 +58,9 @@ namespace OF.Core.Extensions
             return addressEntry.GetEmailAddress();
         }
 
+        
+        private static readonly Dictionary<int,string> cacheExEmails = new Dictionary<int, string>();
+
         public static string GetEmailAddress(this Outlook.AddressEntry sender)
         {
             if (sender == null)
@@ -72,9 +76,16 @@ namespace OF.Core.Extensions
                 {
                     try
                     {
+                        int key = $"{sender.Name}{sender.Address}".GetHashCode();
+                        if (cacheExEmails.ContainsKey(key))
+                        {
+                            return cacheExEmails[key];
+                        }
                         //Use the ExchangeUser object PrimarySMTPAddress
                         Outlook.ExchangeUser exchUser = sender.GetExchangeUser();
-                        return exchUser != null ? exchUser.PrimarySmtpAddress : null;
+                        cacheExEmails[key] = exchUser != null ? exchUser.PrimarySmtpAddress : null;
+                        OFLogger.Instance.LogDebug($"EX: {cacheExEmails[key]}");
+                        return cacheExEmails[key];
                     }
                     catch (Exception ex)
                     {

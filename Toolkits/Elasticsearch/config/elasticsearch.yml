@@ -45,10 +45,16 @@ node.name: OutlookFinder_Node
 # Make sure that the heap size is set to about half the memory available
 # on the system and that the owner of the process is allowed to use this
 # limit.
+
+#indices.fielddata.cache.size:  75%
+#indices.breaker.fielddata.limit: 85%
+
+# ----------------------------------- Index -----------------------------------
+
+#index.merge.scheduler.max_thread_count: 1
 #
 # Elasticsearch performs poorly when the system is swapping the memory.
 
-indices.fielddata.cache.size:  20%
 
 #
 # ---------------------------------- Network -----------------------------------

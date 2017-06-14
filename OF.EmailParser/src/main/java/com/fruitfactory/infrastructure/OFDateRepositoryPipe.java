@@ -5,6 +5,7 @@ import com.fruitfactory.models.OFItemsContainer;
 import org.apache.log4j.Logger;
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Yariki on 1/29/2017.
@@ -27,13 +28,12 @@ public class OFDateRepositoryPipe implements IOFDataRepositoryPipe {
     @Override
     public  void pushData(OFItemsContainer container)  {
         try{
-            synchronized (syncObject){
+            //synchronized (syncObject){
                 dataContainer.put(container);
                 available = true;
-                syncObject.notifyAll();
-                logger.info(String.format("Push data into '%s'",name));
-                logger.info(String.format("Count ('%s') after push: %s",name,dataContainer.size()));
-            }
+                //syncObject.notifyAll();
+                logger.info(String.format("Push data: '%s'; Count: %s",name,dataContainer.size()));
+            //}
         }catch(InterruptedException ie){
             logger.error(ie.getMessage());
         }catch (Exception ex){
@@ -50,18 +50,18 @@ public class OFDateRepositoryPipe implements IOFDataRepositoryPipe {
 
     @Override
     public OFItemsContainer popData() throws InterruptedException {
-        if(!available){
-            synchronized (syncObject){
-                try {
-                    syncObject.wait();
-                } catch (InterruptedException e) {
-                    logger.error(e.getMessage());
-                }
-            }
-        }
-        logger.info(String.format("Pop data: %s",name));
+//        if(!available){
+//            synchronized (syncObject){
+//                try {
+//                    logger.debug(String.format("Wait popData for '%s'",name));
+//                    syncObject.wait();
+//                } catch (InterruptedException e) {
+//                    logger.error(e.getMessage());
+//                }
+//            }
+//        }
         OFItemsContainer container = dataContainer.take();
-        logger.info(String.format("Count ('%s') after pop: %s, Available (%s)",name,dataContainer.size(),available));
+        logger.info(String.format("Pop data: '%s'; Count: %s",name,dataContainer.size()));
         available = !dataContainer.isEmpty();
         return container;
     }

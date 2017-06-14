@@ -1,51 +1,76 @@
 package com.fruitfactory.infrastructure;
 
-import com.fruitfactory.infrastructure.core.OFDataProcess;
-import com.fruitfactory.interfaces.IOFDataRepositoryPipe;
 import com.fruitfactory.metadata.OFMetadataTags;
 import com.fruitfactory.models.*;
 import com.google.gson.JsonObject;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.nio.entity.NStringEntity;
-import org.elasticsearch.client.Response;
-import org.elasticsearch.client.ResponseListener;
-import org.elasticsearch.client.RestClient;
+import io.searchbox.action.Action;
+import io.searchbox.action.BulkableAction;
+import io.searchbox.client.JestClient;
+import io.searchbox.client.config.ClientConfig;
+import io.searchbox.client.*;
+import io.searchbox.client.config.HttpClientConfig;
+import io.searchbox.core.Bulk;
+import io.searchbox.core.BulkResult;
+import io.searchbox.core.Index;
 import org.jglue.fluentjson.JsonArrayBuilder;
 import org.jglue.fluentjson.JsonBuilderFactory;
 import org.jglue.fluentjson.JsonObjectBuilder;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.log4j.Logger;
+import org.springframework.cglib.beans.BulkBean;
 
 /**
  * Created by Yariki on 2/5/2017.
  */
-public class OFDataSender extends OFDataProcess implements ResponseListener {
+public class OFDataSender {
 
-    RestClient client;
+    private final int COUNT_DOCUMENTS = 100;
 
-    public OFDataSender(IOFDataRepositoryPipe dataSource, String name) {
-        super(dataSource, name);
-        client = RestClient.builder(new HttpHost("localhost",9200,"http")).build();
+    private JestClient client;
+    private Logger logger;
+
+    private Bulk.Builder bulkBuilder;
+    
+    private int countDocs = 0;
+    
+
+    public OFDataSender(String name, Logger logger) {
+        
+        JestClientFactory factory = new JestClientFactory();
+        factory.setHttpClientConfig(
+                new HttpClientConfig
+                        .Builder("http://localhost:9200")
+                .multiThreaded(true)
+                .build()
+        );
+        client = factory.getObject();
+        this.logger = logger;
+        bulkBuilder = getBulkBuilder();
     }
 
-    @Override
-    protected void processData(OFItemsContainer container) {
+    public void sendData(OFItemsContainer container) {
         indexEmail(container);
         indexAttachments(container);
         indexContact(container);
-        if(container != null && container.getEmail() != null){
-            getLogger().info(String.format("Send: %s",container.getEmail().getSubject()));
-        }else if(container != null && container.getAttachments() != null && container.getAttachments().size() > 0){
-            getLogger().info(String.format("Send: %s",container.getAttachments().get(0).getFilename()));
-        }else if(container != null && container.getContact() != null){
-            getLogger().info(String.format("Send: %s",container.getContact().getEmailaddress1()));
+        try{
+            if(container != null && container.getEmail() != null){
+                logger.info(String.format("Send: %s",container.getEmail().getSubject()));
+            }else if(container != null && container.getAttachments() != null && container.getAttachments().size() > 0){
+                logger.info(String.format("Send: %s",container.getAttachments().get(0).getFilename()));
+            }else if(container != null && container.getContact() != null){
+                logger.info(String.format("Send: %s",container.getContact().getEmailaddress1()));
+            }    
+        }catch(Exception e){
+            logger.error(e.toString());
         }
+
     }
 
     private void indexContact(OFItemsContainer container) {
@@ -101,7 +126,7 @@ public class OFDataSender extends OFDataProcess implements ResponseListener {
             index(OFMetadataTags.INDEX_TYPE_CONTACT,json.toString());
 
         }catch (Exception ex){
-            getLogger().error(ex.toString());
+            logger.error(ex.toString());
         }
     }
 
@@ -115,7 +140,7 @@ public class OFDataSender extends OFDataProcess implements ResponseListener {
                 saveAttachment(attachment);
             }
         }catch (Exception ex){
-            getLogger().error(ex.toString());
+            logger.error(ex.toString());
         }
     }
 
@@ -142,7 +167,7 @@ public class OFDataSender extends OFDataProcess implements ResponseListener {
             index(OFMetadataTags.INDEX_TYPE_ATTACHMENT,json.toString());
 
         }catch(Exception e){
-            getLogger().error(e.toString());
+            logger.error(e.toString());
         }
     }
 
@@ -202,7 +227,7 @@ public class OFDataSender extends OFDataProcess implements ResponseListener {
             index(OFMetadataTags.INDEX_TYPE_EMAIL_MESSAGE,objectJson.toString());
 
         }catch (Exception ex){
-            getLogger().error(ex.toString());
+            logger.error(ex.toString());
         }
     }
 
@@ -229,22 +254,44 @@ public class OFDataSender extends OFDataProcess implements ResponseListener {
 
     private void index(String type, String json){
         try {
-            String path = String.format("/%s/%s",OFMetadataTags.INDEX_NAME,type);
-            HttpEntity entity = new NStringEntity(json, ContentType.APPLICATION_JSON);
-            client.performRequestAsync("POST",path,Collections.<String, String>emptyMap(),entity,this);
+            processDocuments(type, json);
+            sendIndexRequest();
         }catch (Exception ex){
-            getLogger().error(ex.toString());
+            logger.error(ex.toString());
         }
     }
 
-    @Override
-    public void onSuccess(Response response) {
-        getLogger().info(String.format("Index Entity:  %s",response.getEntity()));
+    private void sendIndexRequest() throws IOException {
+        if(countDocs == COUNT_DOCUMENTS){
+            send(bulkBuilder);
+            bulkBuilder = getBulkBuilder();
+            countDocs = 0;
+        }
     }
 
-    @Override
-    public void onFailure(Exception e) {
-        getLogger().error(String.format("Index Error: %s", e.getMessage()));
-        getLogger().error(String.format("Index Error: %s", e.toString()));
+    private void send(Bulk.Builder builder ) throws IOException {
+        if(builder == null){
+            return;
+        }
+        try {
+            Bulk bulkEmail = builder.build();
+            BulkResult execute = client.execute(bulkEmail);
+            if(execute != null){
+                logger.error(execute.getJsonString());
+            }
+        }catch(Exception ex){
+            logger.error(ex.toString());
+        }
     }
+
+    private void processDocuments(String type, String json) {
+        bulkBuilder.addAction(new Index.Builder(json).type(type).build());
+        countDocs++;
+    }
+
+
+    private Bulk.Builder getBulkBuilder(){
+        return new Bulk.Builder().defaultIndex(OFMetadataTags.INDEX_NAME);
+    }
+
 }

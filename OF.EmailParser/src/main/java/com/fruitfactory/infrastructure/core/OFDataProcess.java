@@ -22,19 +22,23 @@ public abstract class OFDataProcess  extends Thread  implements IOFDataProcessTh
     }
 
     @Override
-    public synchronized void run() {
+    public void run() {
         while (true){
             OFItemsContainer container = null;
             try {
                 container = dataSource.popData();
-                if(container.getProcess() == OFMetadataTags.END_PROCESS){
+                if(container != null && container.getProcess() == OFMetadataTags.END_PROCESS){
+                    logger.info(String.format("Exit Thread (by closing): '%s'", this.getName()));
                     break;
                 }
-                processData(container);
+                if(container != null){
+                    processData(container);
+                }
             }catch(Exception ex){
                 logger.error(ex.toString());
             }
         }
+        logger.info(String.format("Exit Thread (another reason): '%s'", this.getName()));
     }
 
     protected abstract void processData(OFItemsContainer container);
@@ -45,14 +49,13 @@ public abstract class OFDataProcess  extends Thread  implements IOFDataProcessTh
 
     @Override
     public void close() {
-
         try {
-
+            logger.info("Close thread...");
             dataSource.pushData(new OFItemsContainer(OFMetadataTags.END_PROCESS));
+            dataSource.stopNotify();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        dataSource.stopNotify();
         try{
             join();
         }catch (InterruptedException e){

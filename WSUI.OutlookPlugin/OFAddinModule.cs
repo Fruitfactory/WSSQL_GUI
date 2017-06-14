@@ -142,7 +142,7 @@ namespace OFOutlookPlugin
                     adxMainPluginCommandBar.UseForRibbon = false;
                 }
                 //TODO !!!!
-                //CheckAndStartServiceApp();
+                CheckAndStartServiceApp();
                 this.OutlookApp.Session.Stores.BeforeStoreRemove += StoresOnBeforeStoreRemove;
 
             }

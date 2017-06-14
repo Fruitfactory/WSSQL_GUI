@@ -186,13 +186,13 @@ namespace OF.ServiceApp.Core
                     break;
                 }
                 var settings = _metaSettingsProvider.GetCurrentSettings();
-                //OFParserApplicationHandler.Instance.StartParser();
+                OFParserApplicationHandler.Instance.StartParser();
                 var delay = OnRun(settings.LastDate);
                 _metaSettingsProvider.UpdateLastIndexingDateTime(DateTime.Now);
 
                 Status = OFRiverStatus.StandBy;
-                OFLogger.Instance.LogDebug($"Parser/Sender has been finshed: {_elasticSearchCloseJavaClient.Stop()}");
-                //OFParserApplicationHandler.Instance.StopParser();
+                //OFLogger.Instance.LogDebug($"Parser/Sender has been finished: {_elasticSearchCloseJavaClient.Stop()}");
+                OFParserApplicationHandler.Instance.StopParser();
                 if (IsStoped)
                 {
                     OFLogger.Instance.LogInfo("Controller was closed...");

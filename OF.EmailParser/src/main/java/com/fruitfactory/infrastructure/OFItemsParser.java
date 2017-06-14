@@ -1,45 +1,29 @@
 package com.fruitfactory.infrastructure;
 
-import com.fasterxml.jackson.databind.deser.Deserializers;
-import com.fruitfactory.infrastructure.core.OFDataProcess;
-import com.fruitfactory.interfaces.IOFDataRepositoryPipe;
 import com.fruitfactory.models.OFAttachment;
 import com.fruitfactory.models.OFEmail;
 import com.fruitfactory.models.OFItemsContainer;
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
-import org.apache.tika.Tika;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
+import java.util.concurrent.TimeUnit;
+import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
+import org.apache.log4j.Logger;
 
 /**
- * Created by Yariki on 2/1/2017.
+ * Created by Yariki on 6/2/2017.
  */
-public class OFDataParse extends OFDataProcess {
-
-    private final IOFDataRepositoryPipe dataTarget;
+public class OFItemsParser {
 
     private final Tika tika = new Tika();
+    private Logger logger = null;
 
-    public OFDataParse(IOFDataRepositoryPipe dataSource, IOFDataRepositoryPipe dataTarget, String name) {
-        super(dataSource, name);
-        this.dataTarget = dataTarget;
+    public OFItemsParser(Logger logger){
+        this.logger = logger;
     }
 
-    @Override
-    protected void processData(OFItemsContainer container) {
-        try {
-            processEmail(container);
-            processAttachments(container);
-            dataTarget.pushData(container);
-            if(container != null && container.getEmail() != null){
-                getLogger().info(String.format("Parse: %s",container.getEmail().getSubject()));
-            }
-        }catch (Exception ex){
-            getLogger().error(ex.toString());
-        }
-    }
 
-    private void processAttachments(OFItemsContainer container) {
+    public void processAttachments(OFItemsContainer container) {
         if(container.getAttachments() == null || container.getAttachments().isEmpty()){
             return;
         }
@@ -48,7 +32,7 @@ public class OFDataParse extends OFDataProcess {
                 processAttachment(attachment);
             }
         }catch (Exception ex){
-            getLogger().error(ex.toString());
+            logger.error(ex.toString());
         }
     }
 
@@ -59,14 +43,17 @@ public class OFDataParse extends OFDataProcess {
         try{
             String parsedContent = "";
             byte[] byteBuffer = Base64.decode(attachment.getContent());
+            OFTimeWatch watch = new OFTimeWatch();
+            logger.info("Start parsing...");
             parsedContent = tika.parseToString(new ByteInputStream(byteBuffer,byteBuffer.length), new Metadata());
+            logger.info(String.format("Parsed time: %s ms", watch.timeInMiliSeconds()));
             attachment.setAnalyzedcontent(parsedContent);
         }catch (Exception ex){
-            getLogger().error(ex.toString());
+            logger.error(ex.toString());
         }
     }
 
-    private void processEmail(OFItemsContainer container){
+    public void processEmail(OFItemsContainer container){
         if(container.getEmail() == null){
             return;
         }
@@ -80,12 +67,12 @@ public class OFDataParse extends OFDataProcess {
             try {
                 body = new String(Base64.decode(email.getContent()));
             }catch (Exception ex){
-                getLogger().error(ex.toString());
+                logger.error(ex.toString());
             }
             try {
                 htmlBody = new String(Base64.decode(email.getHtmlcontent()));
             }catch(Exception ex){
-                getLogger().error(ex.toString());
+                logger.error(ex.toString());
             }
             String analyzedContent = null;
 
@@ -99,8 +86,11 @@ public class OFDataParse extends OFDataProcess {
             email.setAnalyzedcontent(analyzedContent);
 
         }catch (Exception ex){
-            getLogger().error(ex.toString());
+            logger.error(ex.toString());
         }
     }
+
+
+
 
 }

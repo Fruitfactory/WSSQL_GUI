@@ -1,7 +1,6 @@
 package com.fruitfactory.controllers;
 
-import com.fruitfactory.infrastructure.OFDataParse;
-import com.fruitfactory.infrastructure.OFDataSender;
+import com.fruitfactory.infrastructure.OFDataParser;
 import com.fruitfactory.infrastructure.OFDateRepositoryPipe;
 import com.fruitfactory.infrastructure.OFItemsReader;
 import com.fruitfactory.interfaces.IOFDataProcessThread;
@@ -26,17 +25,12 @@ public class OFEmailController {
     private final IOFItemsReader reader = new OFItemsReader();
     private final Logger logger = Logger.getLogger(OFEmailController.class);
     private IOFDataProcessThread dataParser = null;
-    private IOFDataProcessThread dataSender = null;
     private IOFDataRepositoryPipe dataIncome = null;
-    private IOFDataRepositoryPipe dataOutcome = null;
 
     public OFEmailController() {
-        dataIncome = new OFDateRepositoryPipe("income");
-        dataOutcome = new OFDateRepositoryPipe("outcome");
-        dataParser = new OFDataParse(dataIncome,dataOutcome,"dataParser");
-        dataSender = new OFDataSender(dataOutcome,"dataSender");
+        dataIncome = new OFDateRepositoryPipe("pipe");
+        dataParser = new OFDataParser(dataIncome,"dataProcessor");
         dataParser.start();
-        dataSender.start();
     }
 
     @RequestMapping(value = "/items",method = RequestMethod.POST,produces = "application/json")
@@ -64,9 +58,6 @@ public class OFEmailController {
         try {
             if(dataParser != null){
                 dataParser.close();
-            }
-            if(dataSender != null){
-                dataSender.close();
             }
         }catch (Exception e){
             response.setMessage(e.getMessage());
