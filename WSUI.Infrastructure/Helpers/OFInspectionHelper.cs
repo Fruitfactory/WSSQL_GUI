@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security;
-using System.Text;
 using Newtonsoft.Json;
 using OF.Core.Data.Settings;
 using OF.Core.Enums;
@@ -19,11 +18,11 @@ namespace OF.Infrastructure.Helpers
     public class OFInspectionHelper
     {
 
-        private readonly JsonSerializerSettings Settings = new JsonSerializerSettings() {Formatting = Formatting.None};
+        private readonly JsonSerializerSettings Settings = new JsonSerializerSettings() { Formatting = Formatting.Indented };
 
         #region [static]
 
-        private static readonly Lazy<OFInspectionHelper> instance =  new Lazy<OFInspectionHelper>(() => new OFInspectionHelper());
+        private static readonly Lazy<OFInspectionHelper> instance = new Lazy<OFInspectionHelper>(() => new OFInspectionHelper());
 
         public static OFInspectionHelper Instance
         {
@@ -50,11 +49,9 @@ namespace OF.Infrastructure.Helpers
                 {
                     throw new FileNotFoundException(path);
                 }
-
-                OFObjectJsonSaveReadHelper.Instance.SaveApplicationSettings(types);
-
                 ProcessStartInfo si = new ProcessStartInfo();
                 si.FileName = path;
+                si.Arguments = string.Format(" {0}", string.Join(",", types.Select(t => string.Format("\"{0}\"", JsonConvert.SerializeObject(t, Settings)))));
                 si.WindowStyle = ProcessWindowStyle.Hidden;
                 si.Verb = "runas";
                 Process process = new Process { StartInfo = si };
@@ -63,7 +60,7 @@ namespace OF.Infrastructure.Helpers
             catch (Exception e)
             {
                 OFLogger.Instance.LogError(e.ToString());
-            }    
+            }
         }
 
         #endregion

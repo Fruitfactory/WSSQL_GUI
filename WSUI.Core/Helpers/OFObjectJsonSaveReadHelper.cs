@@ -23,8 +23,8 @@ namespace OF.Core.Helpers
         }
 
         #endregion
-        
-        public bool SaveElasticSearchSettings(object obj)
+
+        public bool Save(object obj, string filename)
         {
             bool result = false;
             try
@@ -39,8 +39,13 @@ namespace OF.Core.Helpers
             }
             return result;
         }
-        
-        public T ReadElasticSearchSettings<T>() where T : class
+
+        public T Read<T>() where T : class
+        {
+            return Read<T>(typeof(T).Name);
+        }
+
+        public T Read<T>(string filename) where T : class
         {
             try
             {
@@ -49,7 +54,7 @@ namespace OF.Core.Helpers
                 {
                     return default(T);
                 }
-                return JsonConvert.DeserializeObject(strObject,typeof(T)) as T;
+                return JsonConvert.DeserializeObject(strObject, typeof(T)) as T;
             }
             catch (Exception ex)
             {
@@ -58,38 +63,7 @@ namespace OF.Core.Helpers
             return default(T);
         }
 
-        public bool SaveApplicationSettings(object obj)
-        {
-            var result = false;
-            try
-            {
-                OFIsolatedStorageHelper.Instance.SetApplicationSettings(JsonConvert.SerializeObject(obj));
-                result = true;
-            }
-            catch (Exception e)
-            {
-                OFLogger.Instance.LogError(e.ToString());
-            }
-            return result;
-        }
 
-        public T ReadApplicationSettings<T>() where T : class
-        {
-            try
-            {
-                var str = OFIsolatedStorageHelper.Instance.GetApplicationSettings();
-                if (string.IsNullOrEmpty(str))
-                {
-                    return default(T);
-                }
-                return JsonConvert.DeserializeObject(str, typeof(T)) as T;
-            }
-            catch (Exception e)
-            {
-                OFLogger.Instance.LogError(e.ToString());
-            }
-            return default(T);
-        }
-        
+
     }
 }
