@@ -2,7 +2,8 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -38,6 +39,7 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -48,7 +50,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OF.Infrastructure</RootNamespace>
     <AssemblyName>OF.Infrastructure</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -61,6 +63,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -71,11 +74,12 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Elasticsearch.Net, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Toolkits\Elasticsearch.Net.1.3.1\Elasticsearch.Net.dll</HintPath>
+      <HintPath>..\Toolkits\Elasticsearch.Net.5.3.0\Elasticsearch.Net.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -94,13 +98,19 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolkits\Prism\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
-    <Reference Include="Nest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL" />
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Nest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Toolkits\Newtonsoft.Json.6.0.1\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\Toolkits\NEST.5.3.0\Nest.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolkits\Newtonsoft.Json.9.0.1\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RestSharp">
+      <HintPath>..\Toolkits\RestSharp\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -129,15 +139,14 @@
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticRiverStatus.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSeachIndexOutlookItemsClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchClient.cs" />
-    <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchForceClient.cs" />
-    <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchOFPluginStatusClient.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFForceClient.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OfServiceAppOfPluginStatusClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchRemovingClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticsearchStoreClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticTrackingClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticUpdateSettingsClient.cs" />
     <Compile Include="Implements\Inspections\OFESAutoCompleteSettingsInspection.cs" />
     <Compile Include="Implements\Inspections\OFESServiceSettingInspection.cs" />
-    <Compile Include="Implements\Service\IOutlookItemsReader.cs" />
     <Compile Include="MVVM\AdvancedSearch\OFSortByAdvancedSearchCriteria.cs" />
     <Compile Include="MVVM\AdvancedSearch\OFStringAdvancedSearchCriteria.cs" />
     <Compile Include="Attributes\OFFieldIndexAttribute.cs" />
@@ -208,6 +217,8 @@
     <Compile Include="Implements\Rules\OFFileFilenameSearchRule.cs" />
     <Compile Include="Interfaces\Search\IContactSearchSystem.cs" />
     <Compile Include="MVVM\StatusItem\OFStatusItemViewModel.cs" />
+    <Compile Include="NamedPipes\OFNamedPipeClient.cs" />
+    <Compile Include="NamedPipes\OFNamedPipeServer.cs" />
     <Compile Include="Payloads\OFSearchObjectPayload.cs" />
     <Compile Include="Payloads\OFSuggestedEmailPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -271,6 +282,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Implements\Rules\Helpers\" />
+    <Folder Include="Implements\Service\" />
     <Folder Include="Service\Enums\" />
   </ItemGroup>
   <ItemGroup>

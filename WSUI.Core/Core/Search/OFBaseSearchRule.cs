@@ -163,10 +163,10 @@ namespace OF.Core.Core.Search
                         .Query(BuildAdvancedQuery)
                         .Sort(BuildAdvancedFieldSortSortSelector)
                         );
-                    if (resultAdvance.IsNotNull())
+                    if (resultAdvance.IsNotNull() && resultAdvance.Documents.IsNotNull())
                     {
 #if DEBUG
-                        var str = Encoding.Default.GetString(resultAdvance.RequestInformation.Request);
+                        var str = Encoding.Default.GetString(resultAdvance.ApiCall.RequestBodyInBytes);
 #endif
                         Documents = resultAdvance.Documents;
                         total = resultAdvance.Total;
@@ -180,7 +180,7 @@ namespace OF.Core.Core.Search
                     if (body.IsNotNull())
                     {
                         result = GetMainResult(body, result);
-                        if (result.IsNotNull() && result.Documents.Any())
+                        if (result.IsNotNull() && result.Documents.IsNotNull() && result.Documents.Any())
                         {
                             Documents = result.Documents;
                             took = result.Took;
@@ -194,7 +194,7 @@ namespace OF.Core.Core.Search
                 }
 
                 // additional process
-                if (!NeedStop && Documents.Any())
+                if (!NeedStop && Documents.IsNotNull() &&  Documents.Any())
                 {
                     _total = total;
                     _from += Documents.Count() == TopQueryResult ? TopQueryResult : Documents.Count();
@@ -231,7 +231,7 @@ namespace OF.Core.Core.Search
                 Event.Set();
             }
         }
-
+        
         private IEnumerable<E> GetAlternativeResult(out int took, out long total)
         {
             IEnumerable<E> Documents = new List<E>();
@@ -268,12 +268,12 @@ namespace OF.Core.Core.Search
             return default(IFieldSort);
         }
 
-        protected virtual IFieldSort BuildAdvancedFieldSortSortSelector(SortFieldDescriptor<E> sortFieldDescriptor)
+        protected virtual IPromise<IList<ISort>> BuildAdvancedFieldSortSortSelector(SortDescriptor<E> arg)
         {
-            return default(IFieldSort);
+            return default(IPromise<IList<ISort>>);
         }
 
-        protected virtual QueryContainer BuildAdvancedQuery(QueryDescriptor<E> queryDescriptor)
+        protected virtual QueryContainer BuildAdvancedQuery(QueryContainerDescriptor<E> queryDescriptor)
         {
             return default(QueryContainer);
         }

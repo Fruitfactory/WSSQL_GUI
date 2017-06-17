@@ -18,6 +18,20 @@ namespace OF.Core.Extensions
             return list;
         }
 
+        public static T GetPrivateValue<T>(this object source, string propertyName)
+        {
+            if (source == null || string.IsNullOrEmpty(propertyName))
+            {
+                return default(T);
+            }
+            var type = source.GetType();
+            var prop = type.GetProperties(BindingFlags.Public |
+                                          BindingFlags.NonPublic |
+                                          BindingFlags.Instance).FirstOrDefault(p => p.Name.ToUpperInvariant() == propertyName.ToUpperInvariant());
+
+            return prop == null ? default(T) : (T) prop.GetValue(source);
+        }
+
         public static bool HasProperty(this Type t, string name)
         {
             return t.GetAllPublicProperties().Any(pi => String.Equals(pi.Name, name, StringComparison.CurrentCultureIgnoreCase));

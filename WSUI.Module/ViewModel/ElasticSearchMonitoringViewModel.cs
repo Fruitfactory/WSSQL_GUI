@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
 using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
+using Newtonsoft.Json;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
+using OF.Core.Data.NamedPipeMessages;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
 using OF.Infrastructure;
@@ -19,7 +23,7 @@ using Timer = System.Timers.Timer;
 
 namespace OF.Module.ViewModel
 {
-    public class ElasticSearchMonitoringViewModel : OFViewModelBase, IElasticSearchMonitoringViewModel
+    public class ElasticSearchMonitoringViewModel : OFViewModelBase, IElasticSearchMonitoringViewModel, IOFNamedPipeObserver<OFReaderStatus>
     {
 
         private static string UPDATING = "Updating...";
@@ -29,8 +33,11 @@ namespace OF.Module.ViewModel
         private IEventAggregator _eventAggregator;
         private IUnityContainer _unityContainer;
         private IRegionManager _regionManager;
+        private IOFRiverMetaSettingsProvider _metaSettingsProvider;
 
         private readonly  object _lock = new object();
+
+        private OFReaderStatus _currentStatus;
 
         private Timer _timer;
 
@@ -38,17 +45,22 @@ namespace OF.Module.ViewModel
             IEventAggregator eventAggregator, 
             IRegionManager regionManager,
             IUnityContainer unityContainer,
+            IOFRiverMetaSettingsProvider metaSettingsProvider,
             IElasticSearchMonitoringView view)
         {
             _riverStatusClient = riverStatusClient;
             _eventAggregator = eventAggregator;
             _regionManager = regionManager;
             _unityContainer = unityContainer;
+            _metaSettingsProvider = metaSettingsProvider;
             View = view;
             view.Model = this;
         }
 
         #region [properties]
+
+        [Dependency]
+        public IElasticSearchInitializationIndex ElasticSearchClient { get; set; }
 
         public OFRiverStatus Status
         {
@@ -121,22 +133,24 @@ namespace OF.Module.ViewModel
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
-            var response = _riverStatusClient.GetRiverStatus();
-            var emailCount = _riverStatusClient.GetTypeCount<OFEmail>();
-            var attachmentCount = _riverStatusClient.GetTypeCount<OFAttachmentContent>();
-            if (response.IsNull() || !response.Success)
+            OFReaderStatus current = null;
+            lock (_lock)
             {
-                return;
+                current = _currentStatus;
             }
-            var result = response.Response;
-            if (result.IsNull() || !result.Success)
+            var metaSettings = _metaSettingsProvider.GetCurrentSettings();
+            if (current.IsNull())
             {
-                return;
+                var response = ElasticSearchClient.GetRiverStatus();
+                current = JsonConvert.DeserializeObject<IEnumerable<OFReaderStatus>>(response.Body.ToString()).FirstOrDefault();
             }
 
-            Status = result.Status;
+            var emailCount = _riverStatusClient.GetTypeCount<OFEmail>();
+            var attachmentCount = _riverStatusClient.GetTypeCount<OFAttachmentContent>();
+
+            Status =  current.IsNotNull() ? current.ControllerStatus : OFRiverStatus.None;
             StatusText = Status == OFRiverStatus.Busy || Status == OFRiverStatus.InitialIndexing ? UPDATING : READY;
-            LastUpdated = result.Lastupdated;
+            LastUpdated = metaSettings.LastDate ?? DateTime.MinValue;
             EmailCount = emailCount;
             AttachmentCount = attachmentCount;
         }
@@ -166,5 +180,13 @@ namespace OF.Module.ViewModel
 
         #endregion
 
+        public object Update(OFReaderStatus message)
+        {
+            lock (_lock)
+            {
+                _currentStatus = message;
+            }
+            return new object();
+        }
     }
 }

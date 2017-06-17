@@ -49,4 +49,29 @@ namespace OF.Core.Enums
         Price
     }
 
+    public enum ofUserActivityState
+    {
+        Unknown,
+        Online,
+        Idle,
+        Away,
+        Night
+    }
+
+    public enum ofServiceApplicationMessageType
+    {
+        None, 
+        StartIndexing,
+        ForceIndexing,
+        ControllerStatus,
+        OfPluginState
+    }
+
+    public enum ofServerResponseStatus
+    {
+        None, 
+        Ok,
+        Failed
+    }
+
 }

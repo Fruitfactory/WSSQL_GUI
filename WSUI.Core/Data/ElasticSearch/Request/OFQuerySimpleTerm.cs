@@ -1,5 +1,4 @@
-﻿using Nest.Resolvers;
-using OF.Core.Data.ElasticSearch.Request.Base;
+﻿using OF.Core.Data.ElasticSearch.Request.Base;
 
 namespace OF.Core.Data.ElasticSearch.Request
 {

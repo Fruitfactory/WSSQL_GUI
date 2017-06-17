@@ -229,6 +229,7 @@ pip-log.txt
 /WSUI.Site/WordPressVersion/wp-content/cache/page_enhanced/outlookfinder.com/try/_index.html_gzip.old
 /ROutput
 /PSTRiverPlugin/target
+/OF.EmailParser/target
 *.xml
 *.publish
 /Toolkits/Elasticsearch/data

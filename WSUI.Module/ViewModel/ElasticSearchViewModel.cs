@@ -8,19 +8,22 @@ using System.Net;
 using System.Windows;
 using System.ServiceProcess;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Documents.DocumentStructures;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Elasticsearch.Net.Serialization;
 using MahApps.Metro.Controls;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using Nest;
+using Newtonsoft.Json;
+using OF.Core;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Core.MVVM;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
+using OF.Core.Data.NamedPipeMessages;
 using OF.Core.Data.Settings;
 using OF.Core.Enums;
 using OF.Core.Events;
@@ -32,13 +35,14 @@ using OF.Core.Utils.Dialog;
 using OF.Infrastructure;
 using OF.Infrastructure.Helpers;
 using OF.Infrastructure.MVVM.StatusItem;
+using OF.Infrastructure.NamedPipes;
 using OF.Module.Interface.Service;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
 
 namespace OF.Module.ViewModel
 {
-    public class ElasticSearchViewModel : OFViewModelBase, IElasticSearchViewModel
+    public class ElasticSearchViewModel : OFViewModelBase, IElasticSearchViewModel, IOFNamedPipeObserver<OFReaderStatus>
     {
 
         private const string ElasticSearchService = "elasticsearch";
@@ -47,6 +51,8 @@ namespace OF.Module.ViewModel
         private IUnityContainer _unityContainer;
         private IRegionManager _regionManager;
         private Timer _timer;
+
+        private OFReaderStatus _currentStatus;
 
         private readonly object _lock = new object();
 
@@ -332,14 +338,14 @@ namespace OF.Module.ViewModel
             var resp = ElasticSearchClient.IndexExists(OFElasticSearchClientBase.DefaultInfrastructureName);
             IsIndexExisted = resp.Exists;
             var riverStatusResp = ElasticSearchClient.GetRiverStatus();
-            IsInitialIndexinginProgress = riverStatusResp.Response.IsNotNull() &&
-                                          riverStatusResp.Response.Status == OFRiverStatus.InitialIndexing;
-            OFLogger.Instance.LogInfo("STATUS: {0}", riverStatusResp.Response.Status);
+            var status = JsonConvert.DeserializeObject<IEnumerable<OFReaderStatus>>(riverStatusResp.Body.ToString());
+
+            IsInitialIndexinginProgress = status.IsNotNull() 
+                && status.Any() 
+                && IsIndexExisted 
+                && status.First().ControllerStatus == OFRiverStatus.InitialIndexing;
+            
             _eventAggregator.GetEvent<OFMenuEnabling>().Publish(resp.Exists);
-            if (IsIndexExisted)
-            {
-                ElasticSearchClient.CheckAndCreateWarms();
-            }
         }
 
         private void InstallServiceCommandExecute(object arg)
@@ -380,14 +386,27 @@ namespace OF.Module.ViewModel
         private void CreateIndexCommandExecute(object arg)
         {
             InitElasticSearch();
-            CreateIndexVisibility = Visibility.Collapsed;
-            ShowProgress = Visibility.Visible;
-            //CheckServicesAndIndex();
+            
+            Task.Factory.StartNew(async () =>
+            {
+                await Task.Delay(1000); // warm up the index.
+                StartIndexing();
+                await Task.Delay(1000); // starting
+                CreateIndexVisibility = Visibility.Collapsed;
+                ShowProgress = Visibility.Visible;
+            });
+        }
+
+        private void StartIndexing()
+        {
+            OFNamedPipeClient<OFServiceApplicationMessage> client =
+                            new OFNamedPipeClient<OFServiceApplicationMessage>(GlobalConst.ServiceApplicationServer);
+            client.Send(new OFServiceApplicationMessage() { MessageType = ofServiceApplicationMessageType.StartIndexing });
         }
 
         private void ForceCommandExecute(object arg)
         {
-            var forceClient = _unityContainer.Resolve<IElasticSearchForceClient>();
+            var forceClient = _unityContainer.Resolve<IForceClient>();
             if (forceClient.IsNull())
             {
                 return;
@@ -422,9 +441,7 @@ namespace OF.Module.ViewModel
                 p.WaitForExit();
                 OFLogger.Instance.LogDebug(p.StandardOutput != null ? p.StandardOutput.ReadToEnd() : "");
                 OFLogger.Instance.LogDebug(p.StandardError != null ? p.StandardError.ReadToEnd() : "");
-
-                Debug.WriteLine(string.Format("!!!!!!!! {0}", p.StandardOutput != null ? p.StandardOutput.ReadToEnd() : ""));
-                Debug.WriteLine(string.Format("!!!!!!!! {0}", p.StandardError != null ? p.StandardError.ReadToEnd() : ""));
+                
             }
             catch (Exception ex)
             {
@@ -437,7 +454,6 @@ namespace OF.Module.ViewModel
             try
             {
                 ElasticSearchClient.CreateInfrastructure();
-                Thread.Sleep(1000);
                 _timer = new Timer(TimerProgressCallback,null,1000,2000);
                 OnIndexingStarted();
             }
@@ -451,17 +467,24 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                var response = ElasticSearchClient.GetIndexingProgress();
-                if (response.Response.IsNull() || response.Response.Items.IsNull() || !response.Response.Items.Any())
+                OFReaderStatus response = null;
+                lock (_lock)
+                {
+                    var riverStatusResp = ElasticSearchClient.GetRiverStatus();
+                    var status = JsonConvert.DeserializeObject<IEnumerable<OFReaderStatus>>(riverStatusResp.Body.ToString());
+                    response = status.FirstOrDefault() ?? _currentStatus;
+                }
+                
+                if (response.IsNull())
                 {
                     return;
                 }
 
-                if (response.Response.Items.All(i => i.Status == PstReaderStatus.NonStarted))
+                if (response.ReaderStatus == PstReaderStatus.NonStarted)
                 {
                     return;
                 }
-                if (response.Response.Items.All(s => s.Status == PstReaderStatus.Finished))
+                if (response.ReaderStatus == PstReaderStatus.Finished)
                 {
                     _timer.Change(Timeout.Infinite, Timeout.Infinite);
                     IsIndexExisted = true;
@@ -470,20 +493,19 @@ namespace OF.Module.ViewModel
                     OnIndexingFinished();
                     return;
                 }
-                if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Busy))
+                if (response.ReaderStatus == PstReaderStatus.Busy)
                 {
                     IsBusy = true;
                     ShowProgress = Visibility.Visible;
                     var emailCount = ElasticSearchClient.GetTypeCount<OFEmail>();
                     var attachmentCount = ElasticSearchClient.GetTypeCount<OFAttachmentContent>();
-                    double sumAll = (double)response.Response.Items.Sum(s => s.Count);
+                    double sumAll = response.Count;
                     double sumProcessing = emailCount + attachmentCount;
-                    var busyReader = response.Response.Items.FirstOrDefault(r => r.Status == PstReaderStatus.Busy);
-                    CurrentFolder = busyReader.IsNotNull() ? busyReader.Folder : "";
+                    CurrentFolder = response.Folder;
                     CurrentProgress = (sumProcessing / sumAll) * 100.0;
                     CountEmailsAttachments = string.Format("{0} / {1}", emailCount, attachmentCount);
                 }
-                if (response.Response.Items.Any(i => i.Status == PstReaderStatus.Suspended))
+                if (response.ReaderStatus == PstReaderStatus.Suspended)
                 {
                     IsBusy = false;
                 }
@@ -498,8 +520,14 @@ namespace OF.Module.ViewModel
             }
         }
 
-       
-
+        public object Update(OFReaderStatus message)
+        {
+            lock (_lock)
+            {
+                _currentStatus = message;
+            }
+            return new object();
+        }
 
         #endregion
 

@@ -75,9 +75,10 @@ namespace OF.Core.Core.Suggest
             {
                 var response = _elasticSearchClient.ElasticClient.Search<T>(GetSearchDescriptor);
                 _cancelToken.Value.ThrowIfCancellationRequested();
-                if (response != null && response.ConnectionStatus.Success)
+                if (response != null && response.ApiCall.Success)
                 {
-                    _result = ProcessResponse(response.Suggest);
+                    // TODO: investigate suggesting in ES - NEST 5.3
+                    //_result = ProcessResponse(response.);
                 }
             }
             catch (OperationCanceledException c)
@@ -97,17 +98,17 @@ namespace OF.Core.Core.Suggest
 
         protected abstract SearchDescriptor<T> GetSearchDescriptor(SearchDescriptor<T> arg);
 
-
-        private IEnumerable<string> ProcessResponse(IDictionary<string,Nest.Suggest[]> suggest)
-        {
-            if (suggest == null)
-            {
-                return null;
-            }
-            var result = new List<string>();
-            result.AddRange(suggest.SelectMany(s => s.Value).SelectMany(s => s.Options).Select(o => o.Text));
-            return result;
-        }
+        // TODO: investigate suggesting in ES - NEST 5.3
+        //private IEnumerable<string> ProcessResponse(IDictionary<string,Nest.Suggest[]> suggest)
+        //{
+        //    if (suggest == null)
+        //    {
+        //        return null;
+        //    }
+        //    var result = new List<string>();
+        //    result.AddRange(suggest.SelectMany(s => s.Value).SelectMany(s => s.Options).Select(o => o.Text));
+        //    return result;
+        //}
 
     }
 }

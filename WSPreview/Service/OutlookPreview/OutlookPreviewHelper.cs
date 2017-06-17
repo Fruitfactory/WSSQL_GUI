@@ -389,7 +389,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
         public IEnumerable<string> GetAttachments(OFEmailSearchObject searchObj)
         {
             var esClient = new OFElasticSearchClient();
-            var result = esClient.Search<OFAttachmentContent>(s => s.Query(c => c.Match(descriptor => descriptor.OnField("emailid").Query(searchObj.EntryID))).Take(20));
+            var result = esClient.Search<OFAttachmentContent>(s => s.Query(c => c.Match(descriptor => descriptor.Field("emailid").Query(searchObj.EntryID))).Take(20));
             if (result.Documents.Any())
             {
                 var tempFolder = OFTempFileManager.Instance.GenerateTempFolderForObject(searchObj);
@@ -422,7 +422,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
                     result.Documents.FirstOrDefault(
                         a =>
                             string.Equals(a.Filename.ToUpperInvariant(),
-                                ofAttachment.FileName.ToUpperInvariant()));
+                                ofAttachment.Filename.ToUpperInvariant()));
                 if (attachment.IsNull())
                 {
                     continue;
@@ -589,7 +589,7 @@ namespace OFPreview.PreviewHandler.Service.OutlookPreview
             page += string.Format(SendRow, email.DateReceived.ToString());
             if(email.IsAttachmentPresent)
                 page += GetFormatedAttachmentRow(email);
-            string temp = GetHtmlBodyHightlight(email.HtmlContent);
+            string temp = GetHtmlBodyHightlight(email.GetContent());
             page += string.Format(EmailRow, temp);
             page += TableEnd + PageEnd;
             return page;

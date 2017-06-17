@@ -16,11 +16,13 @@ using MahApps.Metro;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
+using OF.Core;
 using Transitionals;
 using OFPreview.PreviewHandler.Service.OutlookPreview;
 using OF.Core.Core.LimeLM;
 using OF.Core.Core.MVVM;
 using OF.Core.Data;
+using OF.Core.Data.NamedPipeMessages;
 using OF.Core.Data.UI;
 using OF.Core.Enums;
 using OF.Core.Events;
@@ -30,6 +32,7 @@ using OF.Core.Interfaces;
 using OF.Core.Logger;
 using OF.Core.Utils.Dialog;
 using OF.Infrastructure.Events;
+using OF.Infrastructure.NamedPipes;
 using OF.Infrastructure.Payloads;
 using OF.Infrastructure.Service.Helpers;
 using OF.Infrastructure.Services;
@@ -77,7 +80,9 @@ namespace OF.Module.ViewModel
         private int _selectedUIItemIndex;
         private IElasticSearchViewModel _elasticSearchViewModel;
         private IOFTurboLimeActivate _turboLimeActivate;
+        private OFNamedPipeServer<OFReaderStatus> _readerStatusServer;
         private IOFEmailSuggestViewModel _suggestViewModel;
+
 
         public MainViewModel(IUnityContainer container, IKindsView kindView, IEventAggregator eventAggregator)
         {
@@ -102,9 +107,13 @@ namespace OF.Module.ViewModel
 
             _suggestViewModel = _container.Resolve<IOFEmailSuggestViewModel>();
             _eventAggregator.GetEvent<OFElasticsearchServiceStartedEvent>().Subscribe(OnElasticSearchServiceStarted);
+
+            _readerStatusServer = new OFNamedPipeServer<OFReaderStatus>(GlobalConst.PluginServer);
+            _readerStatusServer.Attach(_elasticSearchViewModel as IOFNamedPipeObserver<OFReaderStatus>);
+            _readerStatusServer.Attach(Monitoring as IOFNamedPipeObserver<OFReaderStatus>);
+
         }
-
-
+        
 
         public IElasticSearchMonitoringViewModel Monitoring { get; private set; }
 
@@ -977,6 +986,7 @@ namespace OF.Module.ViewModel
             }
             try
             {
+                _readerStatusServer.Start();
                 NotifyServerPluginRunning();
                 Application.Current.Dispatcher.BeginInvoke(new Action(InitializeInThread), null);
                 OutlookPreviewHelper.Instance.PreviewHostType = OFHostType.Plugin;
@@ -1134,6 +1144,7 @@ namespace OF.Module.ViewModel
                     Monitoring.Start();
                 }
                 NotifyServerPluginRunning();
+                _readerStatusServer.Deattach(_elasticSearchViewModel as IOFNamedPipeObserver<OFReaderStatus>);
             }
         }
 
@@ -1142,12 +1153,12 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                var ofPluginStatus = _container.Resolve<IElasticSearchOFPluginStatusClient>();
+                var ofPluginStatus = _container.Resolve<IServiceAppOFPluginStatusClient>();
                 if (ofPluginStatus.IsNull())
                 {
                     return;
                 }
-                ofPluginStatus.OFPluginStatus(OFPluginStatus.Running);
+                ofPluginStatus.OFPluginStatus(true);
             }
             catch (WebException we)
             {
@@ -1158,12 +1169,12 @@ namespace OF.Module.ViewModel
 
         private void NotifyServerPluginShutdown()
         {
-            var ofPluginStatus = _container.Resolve<IElasticSearchOFPluginStatusClient>();
+            var ofPluginStatus = _container.Resolve<IServiceAppOFPluginStatusClient>();
             if (ofPluginStatus.IsNull())
             {
                 return;
             }
-            ofPluginStatus.OFPluginStatus(OFPluginStatus.Shotdown);
+            ofPluginStatus.OFPluginStatus(false);
         }
 
         private void OnElasticSearchServiceStarted(bool b)

@@ -144,6 +144,7 @@ namespace OFOutlookPlugin
                 {
                     adxMainPluginCommandBar.UseForRibbon = false;
                 }
+                //TODO !!!!
                 CheckAndStartServiceApp();
 
             }

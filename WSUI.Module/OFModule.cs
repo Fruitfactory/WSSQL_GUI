@@ -93,7 +93,7 @@ namespace OF.Module
             _unityContainer.RegisterType<IDataView<AdvancedSearchViewModel>, AdvancedSearchDataView>();
 
             _unityContainer.RegisterType<IElasticSearchInitializationIndex, OFElasticInitializingClient>();
-            _unityContainer.RegisterType<IElasticTrackingClient, OFElasticTrackingClient>();
+            
             _unityContainer.RegisterType<IElasticSearchClient, OFElasticSearchClient>();
             _unityContainer.RegisterType<IElasticSearchRiverStatus, OFElasticRiverStatus>();           
            
@@ -106,8 +106,7 @@ namespace OF.Module
             _unityContainer.RegisterType<IMainSettingsWindow, OFMainSettingsWindow>();
             _unityContainer.RegisterType<IElasticSearchRiverSettingsView, ElasticSearchRiverSettingsView>();
             _unityContainer.RegisterType<IElasticSearchRiverSettingsViewModel, OFElasticSearchRiverSettingsViewModel>();
-            _unityContainer.RegisterType<IElasticUpdateSettingsClient, OFElasticUpdateSettingsClient>();
-
+            
             _unityContainer.RegisterType<IElasticSearchMonitoringView, ElasticSearchMonitoringView>();
             _unityContainer.RegisterType<IElasticSearchMonitoringViewModel, ElasticSearchMonitoringViewModel>();
 
@@ -118,8 +117,8 @@ namespace OF.Module
 
             _unityContainer.RegisterType<IElasticSearchIndexOutlookItemsClient, OFElasticSeachIndexOutlookItemsClient>();
 
-            _unityContainer.RegisterType<IElasticSearchOFPluginStatusClient, OFElasticSearchOFPluginStatusClient>();
-            _unityContainer.RegisterType<IElasticSearchForceClient, OFElasticSearchForceClient>();
+            _unityContainer.RegisterType<IServiceAppOFPluginStatusClient, OfServiceAppOfPluginStatusClient>();
+            _unityContainer.RegisterType<IForceClient, OFForceClient>();
 
             _unityContainer.RegisterType<IServiceApplicationSettingsViewModel, OFServiceApplicationSettingsViewModel>();
             _unityContainer.RegisterType<IServiceApplicationSettingsView, OFServiceApplicationSettingsView>();
@@ -134,6 +133,8 @@ namespace OF.Module
             _unityContainer.RegisterType<IOFLogFilesSenderManager, OFLogFilesSenderManager>();
 
             _unityContainer.RegisterType<IOFTurboLimeActivate, TurboLimeActivate>();
+
+            _unityContainer.RegisterType<IOFRiverMetaSettingsProvider, OFRiverMetaSettingsProvider>();
             
 
             _unityContainer.RegisterType<IOutlookAutoCompleteSettingsView, OFOutlookAutoCompleteSettingsView>();

@@ -14,8 +14,6 @@ namespace OF.Unistall
     internal class Program
     {
         private const string ParamName = "uninstall";
-        private const string PstPluginName = "pstriver";
-        private const string UnistallArguments = " --remove {0} \"{1}\"";
         private static StreamWriter logWriter;
 
         private static void Main(string[] args)
@@ -50,11 +48,10 @@ namespace OF.Unistall
                 }
                 try
                 {
+                    DeleteRegistrySettings();
                     StopServiceAndApplication();
                     UnInstallElasticSearch();
                     ApplyRules(ParamName, args[1], args[2]);
-
-                    DeleteRegistrySettings();
 
                     Log("Done...");
                 }
@@ -79,7 +76,7 @@ namespace OF.Unistall
             var versions = OFRegistryHelper.Instance.GetOutlookVersion();
             OFRegistryHelper.Instance.DeleteOutlookSecuritySettings(versions.Item1);
         }
-
+        
         public static void StopServiceAndApplication()
         {
             StopESService();
@@ -179,10 +176,9 @@ namespace OF.Unistall
                 var elasticSearchPath = OFRegistryHelper.Instance.GetElasticSearchpath();
                 if (!string.IsNullOrEmpty(elasticSearchPath))
                 {
-                    UnregisterPlugin(elasticSearchPath, javaHome);
-
+                    
                     ProcessStartInfo si = new ProcessStartInfo();
-                    si.FileName = Path.Combine(elasticSearchPath, "service.bat");
+                    si.FileName = Path.Combine(elasticSearchPath, "elasticsearch-service.bat");
                     si.UseShellExecute = false;
                     si.Verb = "runas";
                     si.CreateNoWindow = true;
@@ -222,30 +218,7 @@ namespace OF.Unistall
             }
 
         }
-
-        private static void UnregisterPlugin(string elasticSearchPath, string javaHome)
-        {
-            try
-            {
-                ProcessStartInfo si = new ProcessStartInfo();
-                si.FileName = Path.Combine(elasticSearchPath, "removeplugin.bat");
-                si.Arguments = string.Format(UnistallArguments, PstPluginName, javaHome);
-                si.UseShellExecute = false;
-                si.Verb = "runas";
-                si.CreateNoWindow = true;
-                si.WorkingDirectory = elasticSearchPath;
-                Process pInstall = new Process();
-                pInstall.StartInfo = si;
-                pInstall.Start();
-                pInstall.WaitForExit();
-                Log("PST plugin was unistalled.");
-            }
-            catch (Exception exception)
-            {
-                Log(exception.Message);
-            }
-        }
-
+        
         private static void ApplyRules(string action,string esBinFolder, string installFolder)
         {
             var es86 = Path.Combine(esBinFolder, "elasticsearch-service-x86.exe");

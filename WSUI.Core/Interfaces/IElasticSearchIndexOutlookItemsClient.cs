@@ -6,7 +6,6 @@ namespace OF.Core.Interfaces
     public interface IElasticSearchIndexOutlookItemsClient
     {
         bool SendOutlookItemsToIndex(OFOutlookItemsIndexingContainer outlookItemsContainer);
-
-        bool SendOutlookItemsCount(int count);
+        
     }
 }

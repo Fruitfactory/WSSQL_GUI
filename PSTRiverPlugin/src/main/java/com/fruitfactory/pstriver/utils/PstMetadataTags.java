@@ -368,7 +368,7 @@ public class PstMetadataTags {
                 .field("store", "yes")
                 .endObject();
     }
-    
+
     private static void addSuggestString(XContentBuilder xcb, String fieldName) throws IOException {
         xcb.startObject(fieldName)
                 .field("type", "string")

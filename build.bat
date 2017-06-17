@@ -1,6 +1,6 @@
 @echo off
 
-set DEVENV="%VS100COMNTOOLS%..\IDE\devenv.com"
+set DEVENV="%VS140COMNTOOLS%..\IDE\devenv.com"
 
 set CONFIG=%1
 if "%CONFIG%" == "" set CONFIG=Debug
@@ -24,7 +24,8 @@ rem ============================= Build ==================================
 del /q "%OUT_DIR%\*.log" >nul 2>&1
 
 call gen_build_num.bat
-call build-plugin.bat
+call build-email-parser.bat %CONFIG%
+call build-copy-java-app.bat %CONFIG%
 %DEVENV% Build.sln /Build "%CONFIG%|Mixed Platforms" /Out "%OUT_DIR%\_Build_OutlookFinder.log" 
 if ERRORLEVEL 1 goto FAILED
 

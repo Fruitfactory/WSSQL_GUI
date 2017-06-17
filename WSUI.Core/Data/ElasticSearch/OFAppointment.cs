@@ -3,7 +3,7 @@ using Nest;
 
 namespace OF.Core.Data.ElasticSearch
 {
-    [ElasticType(Name = "calendar")]
+    [ElasticsearchType(Name = "calendar")]
     public class OFAppointment : OFElasticSearchBaseEntity
     {
         public string Location { get; set; }

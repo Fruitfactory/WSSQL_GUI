@@ -4,7 +4,7 @@ using Nest;
 
 namespace OF.Core.Data.ElasticSearch
 {
-    [ElasticType(Name = "contact")]
+    [ElasticsearchType(Name = "contact")]
     public class OFContact : OFElasticSearchBaseEntity
     {
 
@@ -12,6 +12,7 @@ namespace OF.Core.Data.ElasticSearch
         {
             
         }
+
         public string Firstname { get; set; }
         
         public string Lastname { get; set; }
@@ -81,6 +82,8 @@ namespace OF.Core.Data.ElasticSearch
 
         public string OtherAddress { get; set; }
 
+
+        [Date(Format = "yyyy-MM-dd'T'HH:mm:ss.SSS")]
         public DateTime? Birthday { get; set; }
 
         public string Addresstype { get; set; }
