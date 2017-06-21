@@ -2,10 +2,12 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using OF.Core.Core.LimeLM;
 using OF.Core.Enums;
 using OF.Core.Helpers;
+using OF.Core.Win32;
 
 namespace OF.Install
 {
@@ -14,6 +16,8 @@ namespace OF.Install
         private static readonly string JavaHomeVar = "JAVA_HOME";
 
         private static readonly string ElasticsearchServiceBat = "elasticsearch-service.bat";
+
+        private static readonly string filename = "jvm.options";
 
         static void Main(string[] args)
         {
@@ -90,6 +94,8 @@ namespace OF.Install
                 OFRegistryHelper.Instance.SetMachineOfPath(ofPath);
                 if (!String.IsNullOrEmpty(elasticSearchPath))
                 {
+                    ApplyMemoryForElasticSearch(elasticSearchPath);
+
                     ProcessStartInfo si = new ProcessStartInfo();
                     si.FileName = Path.Combine(elasticSearchPath, ElasticsearchServiceBat);
                     if (!File.Exists(si.FileName))
@@ -165,6 +171,58 @@ namespace OF.Install
             var process = Process.Start(si);
             process.WaitForExit();
         }
+
+        private static ulong GetAvailableMemory()
+        {
+            var mem = new WindowsFunction.MEMORYSTATUSEX();
+            WindowsFunction.GlobalMemoryStatusEx(mem);
+
+            var memoryInMb = mem.ullTotalPhys / (1024 * 1024);
+            return memoryInMb/3;
+        }
+
+
+        private static void ApplyMemoryForElasticSearch(string espath)
+        {
+            try
+            {
+                string path = espath;
+                var startIndex = path.IndexOf(@"\bin");
+                path = path.Remove(startIndex, @"\bin".Length);
+
+
+                var memoryInMb = GetAvailableMemory();
+
+                var strings = System.IO.File.ReadAllLines(Path.Combine(path, "config\\") + filename);
+
+                Regex regs = new Regex("-Xms.*");
+                Regex regx = new Regex("-Xmx.*");
+                for (int i = 0; i < strings.Length; i++)
+                {
+                    if (!strings[i].StartsWith("##") && regs.IsMatch(strings[i]))
+                    {
+                        strings[i] = $"-Xms{memoryInMb / 3}m";
+                    }
+                    if (!strings[i].StartsWith("##") && regx.IsMatch(strings[i]))
+                    {
+                        strings[i] = $"-Xmx{memoryInMb / 3}m";
+                    }
+                }
+
+                using (var writer = new StreamWriter(Path.Combine(path, "config\\") + filename))
+                {
+                    foreach (var s in strings)
+                    {
+                        writer.WriteLine(s);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
 
         #endregion
     }
