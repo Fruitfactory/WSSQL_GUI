@@ -19,6 +19,8 @@ namespace OF.Install
 
         private static readonly string filename = "jvm.options";
 
+        private static readonly ulong PAGE_VALUE = 4;
+
         static void Main(string[] args)
         {
             try
@@ -201,11 +203,11 @@ namespace OF.Install
                 {
                     if (!strings[i].StartsWith("##") && regs.IsMatch(strings[i]))
                     {
-                        strings[i] = $"-Xms{memoryInMb / 3}m";
+                        strings[i] = $"-Xms{memoryInMb / PAGE_VALUE}m";
                     }
                     if (!strings[i].StartsWith("##") && regx.IsMatch(strings[i]))
                     {
-                        strings[i] = $"-Xmx{memoryInMb / 3}m";
+                        strings[i] = $"-Xmx{memoryInMb / PAGE_VALUE}m";
                     }
                 }
 

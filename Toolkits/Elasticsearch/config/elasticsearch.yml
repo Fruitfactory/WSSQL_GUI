@@ -46,8 +46,8 @@ node.name: OutlookFinder_Node
 # on the system and that the owner of the process is allowed to use this
 # limit.
 
-#indices.fielddata.cache.size:  75%
-#indices.breaker.fielddata.limit: 85%
+indices.fielddata.cache.size:  75%
+indices.breaker.fielddata.limit: 85%
 
 # ----------------------------------- Index -----------------------------------
 
