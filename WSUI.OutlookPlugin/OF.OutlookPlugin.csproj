@@ -215,6 +215,7 @@
     <Compile Include="Managers\OFEmailSuggesterManager.cs" />
     <Compile Include="Managers\OFOutlookItemsRemovingManager.cs" />
     <Compile Include="Managers\OFRibbonManager.cs" />
+    <Compile Include="Managers\OFWindowPositionManager.cs" />
     <Compile Include="Managers\OutlookEventsManagers\OFOutlookItemEvents.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

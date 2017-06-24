@@ -15,6 +15,7 @@ using OF.Control;
 using OF.Core.Data;
 using OF.Core.Enums;
 using OF.Core.Extensions;
+using OF.Core.Logger;
 using OF.Core.Win32;
 using OF.Infrastructure.Helpers.AttachedProperty;
 using OFOutlookPlugin.Hooks;
@@ -31,6 +32,7 @@ namespace OFOutlookPlugin.Managers
 
         private IntPtr _hook;
         private IPluginBootStraper pluginBootStraper;
+        private OFWindowPositionManager _positionManager;
 
         private WindowsFunction.LowLevelKeyboardProc _callback = null;
 
@@ -42,6 +44,7 @@ namespace OFOutlookPlugin.Managers
 
         private IDisposable _token;
 
+        private readonly WindowsFunction.WinEventDelegate _proc ;
 
         #endregion
 
@@ -50,6 +53,9 @@ namespace OFOutlookPlugin.Managers
         public OFEmailSuggesterManager(IPluginBootStraper pluginBootStraper)
         {
             this.pluginBootStraper = pluginBootStraper;
+            _proc = new WindowsFunction.WinEventDelegate(WinEventProc);
+            _positionManager = new OFWindowPositionManager(_proc);
+            _positionManager.Subscribe();
         }
 
         #endregion
@@ -111,6 +117,10 @@ namespace OFOutlookPlugin.Managers
 
         public void Dispose()
         {
+            if (_positionManager.IsNotNull())
+            {
+                _positionManager.Dispose();
+            }
         }
 
 
@@ -243,6 +253,23 @@ namespace OFOutlookPlugin.Managers
                     }
                 }
             }
+        }
+
+        private void WinEventProc(IntPtr hWinEventHook, uint eventType,
+            IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+        {
+            // filter out non-HWND namechanges... (eg. items within a listbox)
+            if (idObject != 0 || idChild != 0)
+            {
+                return;
+            }
+            if (_needHwndCtrl.ContainsKey(hwnd.ToInt32()))
+            {
+                OFLogger.Instance.LogDebug($"!!!!! Window was moved: {hwnd.ToInt32()}");
+                
+                pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));
+            }
+            
         }
 
     }

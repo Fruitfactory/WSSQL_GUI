@@ -1195,5 +1195,23 @@ namespace OF.Core.Win32
 
         #endregion
 
+
+        #region [win event hook]
+
+        public delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType,
+            IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr
+                hmodWinEventProc, WinEventDelegate lpfnWinEventProc, uint idProcess,
+            uint idThread, uint dwFlags);
+
+        [DllImport("user32.dll")]
+        public static extern bool UnhookWinEvent(IntPtr hWinEventHook);
+        
+        public const uint WINEVENT_OUTOFCONTEXT = 0;
+        
+        #endregion
+
     }
 }
