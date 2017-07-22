@@ -14,13 +14,14 @@
              ShowCloseButton="False"
              ShowMaxRestoreButton="False"
              ShowTitleBar="False"
-             Width="350" Height="200" 
-             MinWidth="150" MinHeight="150"
+             Width="350" Height="260" 
+             MinWidth="150" MinHeight="260"
+             Background="White"
              >
     <Controls:MetroWindow.Resources>
 
         <DataTemplate x:Key="NameTemplate" >
-            <Grid>
+            <Grid Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
@@ -48,7 +49,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="EmailContactTemplate">
-            <Grid>
+            <Grid Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
@@ -84,11 +85,58 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
 
         <ListBox ItemsSource="{Binding Emails,UpdateSourceTrigger=PropertyChanged}"
                  SelectedItem="{Binding SelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  ItemTemplateSelector="{StaticResource EmailSuggestingTemplateSelector}"
+                 
+                 Grid.Column="0" 
+                 Grid.ColumnSpan="2"
+                 Grid.Row="0"
+                 Grid.RowSpan="2"
                  >
+            <ListBox.Template>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                    <Border x:Name="Bd" SnapsToDevicePixels="true"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="1">
+                        <Grid>
+                            <Image HorizontalAlignment="Right"
+                                   VerticalAlignment="Bottom"
+                                   Stretch="None"
+                                   Source="../../Images/logo.png"
+                                   Margin="0,100,-140,-50"
+                                   Opacity="0.25">
+                                <Image.RenderTransform>
+                                    <RotateTransform Angle="-90"></RotateTransform>
+                                </Image.RenderTransform>
+                            </Image>
+                            <ScrollViewer Padding="{TemplateBinding Padding}"
+                                          Focusable="false">
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background"
+                                    TargetName="Bd"
+                                    Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsGrouping" Value="true">
+                            <Setter Property="ScrollViewer.CanContentScroll"
+                                    Value="false"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </ListBox.Template>
+
             <i:Interaction.Behaviors>
                 <behaviors2:OFListBoxAutoScrollBehavior></behaviors2:OFListBoxAutoScrollBehavior>
             </i:Interaction.Behaviors>
@@ -97,3 +145,4 @@
 
     </Grid>
 </Controls:MetroWindow>
+

@@ -1,5 +1,7 @@
 package com.fruitfactory.infrastructure;
 
+import com.fruitfactory.infrastructure.core.OFDataProcess;
+import com.fruitfactory.interfaces.IOFDataRepositoryPipe;
 import com.fruitfactory.metadata.OFMetadataTags;
 import com.fruitfactory.models.*;
 import com.google.gson.JsonObject;
@@ -29,7 +31,7 @@ import org.springframework.cglib.beans.BulkBean;
 /**
  * Created by Yariki on 2/5/2017.
  */
-public class OFDataSender {
+public class OFDataSender extends OFDataProcess {
 
     private final int COUNT_DOCUMENTS = 100;
 
@@ -41,8 +43,8 @@ public class OFDataSender {
     private int countDocs = 0;
     
 
-    public OFDataSender(String name, Logger logger) {
-        
+    public OFDataSender(IOFDataRepositoryPipe dataSource, String name, Logger logger) {
+        super(dataSource,name);
         JestClientFactory factory = new JestClientFactory();
         factory.setHttpClientConfig(
                 new HttpClientConfig
@@ -55,11 +57,13 @@ public class OFDataSender {
         bulkBuilder = getBulkBuilder();
     }
 
-    public void sendData(OFItemsContainer container) {
+    @Override
+    protected void processData(OFItemsContainer container) {
         indexEmail(container);
         indexAttachments(container);
         indexContact(container);
         try{
+
             if(container != null && container.getEmail() != null){
                 logger.info(String.format("Send: %s",container.getEmail().getSubject()));
             }else if(container != null && container.getAttachments() != null && container.getAttachments().size() > 0){

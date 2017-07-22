@@ -28,12 +28,11 @@ public class OFDateRepositoryPipe implements IOFDataRepositoryPipe {
     @Override
     public  void pushData(OFItemsContainer container)  {
         try{
-            //synchronized (syncObject){
+            synchronized (syncObject){
                 dataContainer.put(container);
                 available = true;
-                //syncObject.notifyAll();
-                logger.info(String.format("Push data: '%s'; Count: %s",name,dataContainer.size()));
-            //}
+                syncObject.notifyAll();
+            }
         }catch(InterruptedException ie){
             logger.error(ie.getMessage());
         }catch (Exception ex){
@@ -49,19 +48,17 @@ public class OFDateRepositoryPipe implements IOFDataRepositoryPipe {
     }
 
     @Override
-    public OFItemsContainer popData() throws InterruptedException {
-//        if(!available){
-//            synchronized (syncObject){
-//                try {
-//                    logger.debug(String.format("Wait popData for '%s'",name));
-//                    syncObject.wait();
-//                } catch (InterruptedException e) {
-//                    logger.error(e.getMessage());
-//                }
-//            }
-//        }
-        OFItemsContainer container = dataContainer.take();
-        logger.info(String.format("Pop data: '%s'; Count: %s",name,dataContainer.size()));
+    public OFItemsContainer popData() {
+        if(!available){
+            synchronized (syncObject){
+                try {
+                    syncObject.wait();
+                } catch (InterruptedException e) {
+                    logger.error(e.getMessage());
+                }
+            }
+        }
+        OFItemsContainer container = dataContainer.poll();
         available = !dataContainer.isEmpty();
         return container;
     }

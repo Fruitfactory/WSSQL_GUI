@@ -586,6 +586,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\logo.png" />
     <Resource Include="Images\Advanced.png" />
     <Resource Include="Images\application-plus-red.png" />
     <Content Include="Images\cross-button.png" />

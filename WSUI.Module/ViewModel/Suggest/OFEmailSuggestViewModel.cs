@@ -90,9 +90,15 @@ namespace OF.Module.ViewModel.Suggest
                     break;
                 case OFActionType.SelectSuggestEmail:
                     var contact = SelectedItem as OFContactSearchObject;
+                    var emailContact = SelectedItem as OFEmailContactSearchObject;
                     if (contact.IsNotNull())
                     {
                         _eventAggregator.GetEvent<OFSuggestedEmailEvent>().Publish(new OFSuggestedEmailPayload(new Tuple<IntPtr, string>(_hWnd, contact.EmailAddress1)));
+                        Hide();
+                    }
+                    else if (emailContact.IsNotNull())
+                    {
+                        _eventAggregator.GetEvent<OFSuggestedEmailEvent>().Publish(new OFSuggestedEmailPayload(new Tuple<IntPtr, string>(_hWnd, emailContact.EMail)));
                         Hide();
                     }
                     break;
