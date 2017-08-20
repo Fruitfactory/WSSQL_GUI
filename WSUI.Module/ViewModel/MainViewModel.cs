@@ -31,6 +31,7 @@ using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
 using OF.Core.Utils.Dialog;
+using OF.Core.Win32;
 using OF.Infrastructure.Events;
 using OF.Infrastructure.NamedPipes;
 using OF.Infrastructure.Payloads;
@@ -963,6 +964,7 @@ namespace OF.Module.ViewModel
         {
             try
             {
+                var mem = WindowsFunction.GetAvailableMemory();
                 _turboLimeActivate.Init();
             }
             catch (Exception ex)

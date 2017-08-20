@@ -11,6 +11,26 @@
     <Window.Resources>
         <mba:ConvertBoolToVisibility x:Key="BoolToVis" />
         <mba:ConvertBoolToVisibility x:Key="BoolToVisNeg" TrueValue="Collapsed" FalseValue="Visible" />
+        
+        
+        <Style x:Key="MessageStyle" TargetType="TextBlock">
+            <Setter Property="Visibility" Value="Collapsed"></Setter>
+            <Setter Property="Foreground" Value="Black"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsMemoryEnough,UpdateSourceTrigger=PropertyChanged}" Value="False">
+                    <Setter Property="Foreground" Value="Red"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsBusy,UpdateSourceTrigger=PropertyChanged}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsMessageVisible,UpdateSourceTrigger=PropertyChanged}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"></Setter>
+                </DataTrigger>
+                
+                
+            </Style.Triggers>
+        </Style>
+        
     </Window.Resources>
     <Grid x:Name="LayoutRoot" >
         <Grid.RowDefinitions>
@@ -37,13 +57,13 @@
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}" Margin="5 0 0 0">
+            <Grid Grid.Column="0"  Margin="5 0 0 0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="{Binding Message, StringFormat='Process: {0}'}" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <ProgressBar Grid.Row="1" Value="{Binding Progress,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Maximum="100" Height="10"/>
+                <TextBlock Grid.Row="0" Text="{Binding Message, StringFormat='Process: {0}'}" VerticalAlignment="Center" HorizontalAlignment="Left"  Style="{StaticResource MessageStyle}" />
+                <ProgressBar Grid.Row="1" Value="{Binding Progress,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Maximum="100" Height="10" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
             </Grid>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" >
@@ -54,8 +74,8 @@
                     </Style>
                 </StackPanel.Resources>
                 <Button x:Name="ButtonQuit" Content="{Binding CancelButtonName,UpdateSourceTrigger=PropertyChanged}" Click="OnButtonClick" IsEnabled="{Binding IsEnabled,UpdateSourceTrigger=PropertyChanged}"/>
-                <Button x:Name="ButtonInstall" Content="Install" Visibility="{Binding InstallVisibility,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled,UpdateSourceTrigger=PropertyChanged}"  Click="OnButtonClick" />
-                <Button x:Name="ButtonUninstall" Content="Uninstall" Visibility="{Binding UnistallVisibility,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled,UpdateSourceTrigger=PropertyChanged}" Click="OnButtonClick" />
+                <Button x:Name="ButtonInstall" Content="Install" Visibility="{Binding InstallVisibility,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabledInstall,UpdateSourceTrigger=PropertyChanged}"  Click="OnButtonClick" />
+                <Button x:Name="ButtonUninstall" Content="Uninstall" Visibility="{Binding UnistallVisibility,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabledInstall,UpdateSourceTrigger=PropertyChanged}" Click="OnButtonClick" />
             </StackPanel>
         </Grid>
         

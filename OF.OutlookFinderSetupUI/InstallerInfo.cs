@@ -15,6 +15,9 @@ namespace OF.OutlookFinderSetupUI
         /// <summary>Indicates if the installer is busy.</summary>
         private bool _isBusy = false;
 
+        private bool _isMemoryEnough = false;
+        private bool _isMessageVisible = false;
+
         /// <summary>The progress message.</summary>
         private string _message = string.Empty;
 
@@ -72,7 +75,7 @@ namespace OF.OutlookFinderSetupUI
             get { return _isInstalled; }
             set
             {
-                _isInstalled = value; 
+                _isInstalled = value;
                 OnPropertiesChanged("IsInstalled", "CanInstall", "CanUninstall", "InstallVisibility", "UnistallVisibility", "CancelButtonName");
             }
         }
@@ -80,12 +83,35 @@ namespace OF.OutlookFinderSetupUI
 
         #region IsBusy
         /// <summary>Indicates if the installer is busy.</summary>
-        public bool IsBusy { get { return _isBusy; } set { _isBusy = value; OnPropertiesChanged("IsBusy", "IsEnabled"); } }
+        public bool IsBusy { get { return _isBusy; } set { _isBusy = value; OnPropertiesChanged("IsBusy", "IsEnabled", "IsEnabledInstall"); } }
         #endregion IsBusy
 
         public bool IsEnabled { get { return !IsBusy; } }
 
-        public string CancelButtonName { get { return (InstallVisibility == Visibility.Visible || UnistallVisibility == Visibility.Visible ) ? "Cancel" : "Done"; } }
+        public bool IsEnabledInstall { get { return IsEnabled && IsMemoryEnough; } }
+
+        public string CancelButtonName { get { return (InstallVisibility == Visibility.Visible || UnistallVisibility == Visibility.Visible) ? "Cancel" : "Done"; } }
+
+        public bool IsMemoryEnough
+        {
+            get { return _isMemoryEnough; }
+            set
+            {
+                _isMemoryEnough = value;
+                OnPropertyChanged("IsEnabledInstall");
+            }
+        }
+
+        public bool IsMessageVisible
+        {
+            get { return _isMessageVisible; }
+            set
+            {
+                _isMessageVisible = value;
+                OnPropertyChanged("IsMessageVisible");
+            }
+        }
+
 
 
         #region Message

@@ -173,17 +173,7 @@ namespace OF.Install
             var process = Process.Start(si);
             process.WaitForExit();
         }
-
-        private static ulong GetAvailableMemory()
-        {
-            var mem = new WindowsFunction.MEMORYSTATUSEX();
-            WindowsFunction.GlobalMemoryStatusEx(mem);
-
-            var memoryInMb = mem.ullTotalPhys / (1024 * 1024);
-            return memoryInMb/3;
-        }
-
-
+        
         private static void ApplyMemoryForElasticSearch(string espath)
         {
             try
@@ -193,7 +183,7 @@ namespace OF.Install
                 path = path.Remove(startIndex, @"\bin".Length);
 
 
-                var memoryInMb = GetAvailableMemory();
+                var memoryInMb = WindowsFunction.GetAvailableMemory();
 
                 var strings = System.IO.File.ReadAllLines(Path.Combine(path, "config\\") + filename);
 

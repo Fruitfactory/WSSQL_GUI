@@ -86,7 +86,7 @@ namespace OF.Module.ViewModel
             {
                 ElasticSearchClient.WarmUp();
             }
-            
+
         }
 
         public object View
@@ -97,19 +97,19 @@ namespace OF.Module.ViewModel
         public bool IsServiceInstalled
         {
             get { return Get(() => IsServiceInstalled); }
-            private set { Set(() => IsServiceInstalled,value); }
+            private set { Set(() => IsServiceInstalled, value); }
         }
 
         public bool IsServiceRunning
         {
             get { return Get(() => IsServiceRunning); }
-            private set { Set(() => IsServiceRunning,value); }
+            private set { Set(() => IsServiceRunning, value); }
         }
 
         public bool IsIndexExisted
         {
             get { return Get(() => IsIndexExisted); }
-            private set { Set(() => IsIndexExisted,value);}
+            private set { Set(() => IsIndexExisted, value); }
         }
 
         public bool IsInitialIndexinginProgress
@@ -130,7 +130,7 @@ namespace OF.Module.ViewModel
             set { Set(() => IsVisible, value); }
         }
 
-        public void Show( bool showJustProgress = false)
+        public void Show(bool showJustProgress = false)
         {
             IRegion region = _regionManager.Regions[RegionNames.ElasticSearchRegion];
             if (region == null || region.Views.Contains(View))
@@ -227,19 +227,19 @@ namespace OF.Module.ViewModel
         public ICommand InstallServiceCommand
         {
             get { return Get(() => InstallServiceCommand); }
-            private set {Set(() => InstallServiceCommand,value);}
+            private set { Set(() => InstallServiceCommand, value); }
         }
 
         public ICommand RunServiceCommand
         {
             get { return Get(() => RunServiceCommand); }
-            private set { Set(() => RunServiceCommand,value);}
+            private set { Set(() => RunServiceCommand, value); }
         }
 
         public ICommand CreateIndexCommand
         {
-            get { return Get(() => CreateIndexCommand); } 
-            private set {Set(() => CreateIndexCommand,value);}
+            get { return Get(() => CreateIndexCommand); }
+            private set { Set(() => CreateIndexCommand, value); }
         }
 
 
@@ -266,7 +266,7 @@ namespace OF.Module.ViewModel
             var temp = this.IndexingStarted;
             if (temp != null)
             {
-                temp(this,EventArgs.Empty);
+                temp(this, EventArgs.Empty);
             }
         }
 
@@ -284,13 +284,13 @@ namespace OF.Module.ViewModel
             var temp = this.Closed;
             if (temp != null)
             {
-                temp(this,EventArgs.Empty);
+                temp(this, EventArgs.Empty);
             }
         }
 
         private void CheckServicesAndIndex()
         {
-            ServiceController sct = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName.IndexOf(ElasticSearchService,StringComparison.InvariantCultureIgnoreCase) > -1);
+            ServiceController sct = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName.IndexOf(ElasticSearchService, StringComparison.InvariantCultureIgnoreCase) > -1);
             if (sct == null)
             {
                 IsServiceInstalled = false;
@@ -301,7 +301,7 @@ namespace OF.Module.ViewModel
                 IsServiceRunning = sct.Status == ServiceControllerStatus.Running;
             }
 #if DEBUG
-            IsServiceRunning = IsServiceInstalled = true;
+            //IsServiceRunning = IsServiceInstalled = true;
 #endif
             if (IsServiceRunning)
             {
@@ -310,7 +310,11 @@ namespace OF.Module.ViewModel
             else
             {
                 OFLogger.Instance.LogInfo("Service is stopped...");
+                var stopWath = new Stopwatch();
+                stopWath.Start();
                 CheckServiceSettings();
+                stopWath.Stop();
+                OFLogger.Instance.LogDebug($"Check Service Settings: {stopWath.ElapsedMilliseconds}");
             }
         }
 
@@ -340,18 +344,18 @@ namespace OF.Module.ViewModel
             var riverStatusResp = ElasticSearchClient.GetRiverStatus();
             var status = JsonConvert.DeserializeObject<IEnumerable<OFReaderStatus>>(riverStatusResp.Body.ToString());
 
-            IsInitialIndexinginProgress = status.IsNotNull() 
-                && status.Any() 
-                && IsIndexExisted 
+            IsInitialIndexinginProgress = status.IsNotNull()
+                && status.Any()
+                && IsIndexExisted
                 && status.First().ControllerStatus == OFRiverStatus.InitialIndexing;
-            
+
             _eventAggregator.GetEvent<OFMenuEnabling>().Publish(resp.Exists);
         }
 
         private void InstallServiceCommandExecute(object arg)
         {
             ExecuteCommandForService("install");
-            CheckServicesAndIndex();                
+            CheckServicesAndIndex();
         }
 
         private void RunServiceCommandExecute(object arg)
@@ -360,7 +364,7 @@ namespace OF.Module.ViewModel
             WarmingVisibility = Visibility.Visible;
 
             Dispatcher disp = Dispatcher.CurrentDispatcher;
-            
+
 
             var backGround = new BackgroundWorker();
             backGround.DoWork += (sender, args) =>
@@ -370,14 +374,14 @@ namespace OF.Module.ViewModel
                     WarmSecond = i + 1;
                     Thread.Sleep(1000);
                 }
-                disp.BeginInvoke((Action) (() =>
-                {
-                    CheckServicesAndIndex();
-                    if (IsServiceRunning && IsIndexExisted && !IsInitialIndexinginProgress)
-                    {
-                        Close();
-                    }
-                }));
+                disp.BeginInvoke((Action)(() =>
+               {
+                       CheckServicesAndIndex();
+                       if (IsServiceRunning && IsIndexExisted && !IsInitialIndexinginProgress)
+                       {
+                           Close();
+                       }
+                   }));
             };
             backGround.RunWorkerAsync();
 
@@ -386,13 +390,13 @@ namespace OF.Module.ViewModel
         private void CreateIndexCommandExecute(object arg)
         {
             InitElasticSearch();
-            
+
             Task.Factory.StartNew(async () =>
             {
                 await Task.Delay(1000); // warm up the index.
-                StartIndexing();
+          StartIndexing();
                 await Task.Delay(1000); // starting
-                CreateIndexVisibility = Visibility.Collapsed;
+          CreateIndexVisibility = Visibility.Collapsed;
                 ShowProgress = Visibility.Visible;
             });
         }
@@ -423,12 +427,16 @@ namespace OF.Module.ViewModel
                 OFLogger.Instance.LogDebug("Path or Command or JavaHome was empty");
                 return;
             }
-            const string serviceBat = "service.bat";
+            const string serviceBat = "elasticsearch-service.bat";
             try
             {
+
+                OFLogger.Instance.LogInfo($"ES path: {path}");
+                OFLogger.Instance.LogInfo($"Java Home: {javaHome}");
                 Process p = new Process();
                 p.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
                 p.StartInfo.FileName = Path.Combine(path, serviceBat);
+                OFLogger.Instance.LogDebug($"Service batch file: {p.StartInfo.FileName}");
                 p.StartInfo.Arguments = string.Format(" {0} \"{1}\"", command, javaHome);
                 p.StartInfo.CreateNoWindow = true;
                 p.StartInfo.Verb = "runas";
@@ -441,12 +449,12 @@ namespace OF.Module.ViewModel
                 p.WaitForExit();
                 OFLogger.Instance.LogDebug(p.StandardOutput != null ? p.StandardOutput.ReadToEnd() : "");
                 OFLogger.Instance.LogDebug(p.StandardError != null ? p.StandardError.ReadToEnd() : "");
-                
+
             }
             catch (Exception ex)
             {
                 OFLogger.Instance.LogError(ex.ToString());
-            } 
+            }
         }
 
         private void InitElasticSearch()
@@ -454,7 +462,7 @@ namespace OF.Module.ViewModel
             try
             {
                 ElasticSearchClient.CreateInfrastructure();
-                _timer = new Timer(TimerProgressCallback,null,1000,2000);
+                _timer = new Timer(TimerProgressCallback, null, 1000, 2000);
                 OnIndexingStarted();
             }
             catch (Exception ex)
@@ -474,7 +482,7 @@ namespace OF.Module.ViewModel
                     var status = JsonConvert.DeserializeObject<IEnumerable<OFReaderStatus>>(riverStatusResp.Body.ToString());
                     response = status.FirstOrDefault() ?? _currentStatus;
                 }
-                
+
                 if (response.IsNull())
                 {
                     return;

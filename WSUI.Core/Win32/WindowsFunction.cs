@@ -407,5 +407,14 @@ namespace OF.Core.Win32
             }
         }
 
+        public static ulong GetAvailableMemory()
+        {
+            var mem = new WindowsFunction.MEMORYSTATUSEX();
+            WindowsFunction.GlobalMemoryStatusEx(mem);
+
+            var memoryInMb = mem.ullTotalPhys / (1024 * 1024);
+            return memoryInMb;
+        }
+
     }
 }

@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using OF.Core.Helpers;
+using OF.Core.Win32;
 using WixWPF;
 using Wix = Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
 
@@ -20,6 +21,8 @@ namespace OF.OutlookFinderSetupUI
         private Dictionary<string, Wix.PackageState> _packageStates = new Dictionary<string, Wix.PackageState>();
         private static readonly string DisableMSIKey = "DisableMSI";
 
+        private readonly ulong MIM_MEMORY = 8191;
+
         #endregion Member Variables
 
         #region Constructors
@@ -33,6 +36,18 @@ namespace OF.OutlookFinderSetupUI
             //System.Diagnostics.Debugger.Launch();
             DeleteUnistallInfo();
             //SetDisableMSIKey(false);
+            CheckRamMemory();
+        }
+
+        private void CheckRamMemory()
+        {
+            var mem = WindowsFunction.GetAvailableMemory();
+            InstallData.IsMemoryEnough = mem >= MIM_MEMORY;
+            if (!InstallData.IsMemoryEnough)
+            {
+                InstallData.Message = "The PC must have at least 8Gb RAM.";
+                InstallData.IsMessageVisible = true;
+            }
         }
 
         private void SetDisableMSIKey(bool b)
