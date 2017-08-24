@@ -21,7 +21,7 @@ namespace OF.OutlookFinderSetupUI
         private Dictionary<string, Wix.PackageState> _packageStates = new Dictionary<string, Wix.PackageState>();
         private static readonly string DisableMSIKey = "DisableMSI";
 
-        private readonly ulong MIM_MEMORY = 8191;
+        private readonly ulong MIN_MEMORY = 4096;
 
         #endregion Member Variables
 
@@ -42,7 +42,7 @@ namespace OF.OutlookFinderSetupUI
         private void CheckRamMemory()
         {
             var mem = WindowsFunction.GetAvailableMemory();
-            InstallData.IsMemoryEnough = mem >= MIM_MEMORY;
+            InstallData.IsMemoryEnough = mem > MIN_MEMORY;
             if (!InstallData.IsMemoryEnough)
             {
                 InstallData.Message = "The PC must have at least 8Gb RAM.";
