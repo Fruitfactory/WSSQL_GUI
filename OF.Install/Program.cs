@@ -19,7 +19,7 @@ namespace OF.Install
 
         private static readonly string filename = "jvm.options";
 
-        private static readonly ulong PAGE_VALUE = 4;
+        private static readonly double PAGE_VALUE = 4;
 
         static void Main(string[] args)
         {
@@ -189,15 +189,16 @@ namespace OF.Install
 
                 Regex regs = new Regex("-Xms.*");
                 Regex regx = new Regex("-Xmx.*");
+                var pageValue = (int)(memoryInMb / PAGE_VALUE);
                 for (int i = 0; i < strings.Length; i++)
                 {
                     if (!strings[i].StartsWith("##") && regs.IsMatch(strings[i]))
                     {
-                        strings[i] = $"-Xms{memoryInMb / PAGE_VALUE}m";
+                        strings[i] = $"-Xms{pageValue}m";
                     }
                     if (!strings[i].StartsWith("##") && regx.IsMatch(strings[i]))
                     {
-                        strings[i] = $"-Xmx{memoryInMb / PAGE_VALUE}m";
+                        strings[i] = $"-Xmx{pageValue}m";
                     }
                 }
 
