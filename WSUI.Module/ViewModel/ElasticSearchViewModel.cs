@@ -301,7 +301,7 @@ namespace OF.Module.ViewModel
                 IsServiceRunning = sct.Status == ServiceControllerStatus.Running;
             }
 #if DEBUG
-            //IsServiceRunning = IsServiceInstalled = true;
+            IsServiceRunning = IsServiceInstalled = true;
 #endif
             if (IsServiceRunning)
             {
@@ -342,7 +342,7 @@ namespace OF.Module.ViewModel
             var resp = ElasticSearchClient.IndexExists(OFElasticSearchClientBase.DefaultInfrastructureName);
             IsIndexExisted = resp.Exists; //false;//
             var riverStatusResp = ElasticSearchClient.GetRiverStatus();
-            var status = JsonConvert.DeserializeObject<IEnumerable<OFReaderStatus>>(riverStatusResp.Body.ToString());
+            var status = riverStatusResp.IsNotNull() ? JsonConvert.DeserializeObject<IEnumerable<OFReaderStatus>>(riverStatusResp.Body.ToString()) : null;
 
             IsInitialIndexinginProgress = status.IsNotNull()
                 && status.Any()

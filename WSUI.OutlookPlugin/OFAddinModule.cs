@@ -645,6 +645,9 @@ namespace OFOutlookPlugin
             {
                 var folder = args.FolderObj as Outlook.Folder;
                 _mailRemovingManager.ConnectTo(folder);
+                if (IsLoading)
+                    return;
+                HideSidebarDuringSwitching();
             }
             catch (Exception ex)
             {
