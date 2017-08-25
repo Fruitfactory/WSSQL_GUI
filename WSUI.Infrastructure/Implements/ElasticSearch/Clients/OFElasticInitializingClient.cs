@@ -215,7 +215,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
         {
             var riverMeta = new OFRiverMeta(DefaultInfrastructureName);
 
-            OFObjectJsonSaveReadHelper.Instance.Save(riverMeta, GlobalConst.SettingsRiverFile);
+            OFObjectJsonSaveReadHelper.Instance.SaveElasticSearchSettings(riverMeta);
 
             OFLogger.Instance.LogDebug("Create Settings for service contoroller...");
         }

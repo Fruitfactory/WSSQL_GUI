@@ -30,11 +30,11 @@ namespace OF.Infrastructure.Implements.Inspections
                 var officeVersion = OFRegistryHelper.Instance.GetOutlookVersion().Item1;
                 if (payload.IsAutoCompleateDisabled)
                 {
-                    OFRegistryHelper.Instance.DisableAutoCompleateEmailsToCcBcc(officeVersion);
+                    OFRegistryHelper.Instance.DisableOutlookAutoCompleateEmailsToCcBcc(officeVersion);
                 }
                 else
                 {
-                    OFRegistryHelper.Instance.EnableAutoCompleateEmailsToCcBcc(officeVersion);
+                    OFRegistryHelper.Instance.EnableOutlookAutoCompleateEmailsToCcBcc(officeVersion);
                 }
             }
             catch (Exception e)

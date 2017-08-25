@@ -323,12 +323,12 @@ namespace OF.Core.Helpers
             return false;
         }
 
-        public void DisableAutoCompleateEmailsToCcBcc(string officeVersion)
+        public void DisableOutlookAutoCompleateEmailsToCcBcc(string officeVersion)
         {
             SetOutlookAutoCompleateValue(officeVersion,0);
         }
 
-        public void EnableAutoCompleateEmailsToCcBcc(string officeVersion)
+        public void EnableOutlookAutoCompleateEmailsToCcBcc(string officeVersion)
         {
             SetOutlookAutoCompleateValue(officeVersion, 1);
         }

@@ -30,7 +30,7 @@ namespace OF.Inspection
             try
             {
                 var listSettings =
-                    OFObjectJsonSaveReadHelper.Instance.Read<List<OFTypeInspectionPayloadSettings>>();
+                    OFObjectJsonSaveReadHelper.Instance.ReadApplicationSettings<List<OFTypeInspectionPayloadSettings>>();
                 if (listSettings.IsNull() || !listSettings.Any())
                 {
                     Console.WriteLine("There is no arguments...");
