@@ -59,6 +59,9 @@
     <Compile Include="..\WSUI.Core\Helpers\OFRegistryHelper.cs">
       <Link>OFRegistryHelper.cs</Link>
     </Compile>
+    <Compile Include="..\WSUI.Core\Win32\WindowsFunction.cs">
+      <Link>WindowsFunction.cs</Link>
+    </Compile>
     <Compile Include="InstallerInfo.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

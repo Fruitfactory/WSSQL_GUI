@@ -19,7 +19,7 @@ namespace OF.Install
 
         private static readonly string filename = "jvm.options";
 
-        private static readonly ulong PAGE_VALUE = 4;
+        private static readonly double PAGE_VALUE = 4;
 
         static void Main(string[] args)
         {
@@ -173,17 +173,7 @@ namespace OF.Install
             var process = Process.Start(si);
             process.WaitForExit();
         }
-
-        private static ulong GetAvailableMemory()
-        {
-            var mem = new WindowsFunction.MEMORYSTATUSEX();
-            WindowsFunction.GlobalMemoryStatusEx(mem);
-
-            var memoryInMb = mem.ullTotalPhys / (1024 * 1024);
-            return memoryInMb/3;
-        }
-
-
+        
         private static void ApplyMemoryForElasticSearch(string espath)
         {
             try
@@ -193,21 +183,22 @@ namespace OF.Install
                 path = path.Remove(startIndex, @"\bin".Length);
 
 
-                var memoryInMb = GetAvailableMemory();
+                var memoryInMb = WindowsFunction.GetAvailableMemory();
 
                 var strings = System.IO.File.ReadAllLines(Path.Combine(path, "config\\") + filename);
 
                 Regex regs = new Regex("-Xms.*");
                 Regex regx = new Regex("-Xmx.*");
+                var pageValue = (int)(memoryInMb / PAGE_VALUE);
                 for (int i = 0; i < strings.Length; i++)
                 {
                     if (!strings[i].StartsWith("##") && regs.IsMatch(strings[i]))
                     {
-                        strings[i] = $"-Xms{memoryInMb / PAGE_VALUE}m";
+                        strings[i] = $"-Xms{pageValue}m";
                     }
                     if (!strings[i].StartsWith("##") && regx.IsMatch(strings[i]))
                     {
-                        strings[i] = $"-Xmx{memoryInMb / PAGE_VALUE}m";
+                        strings[i] = $"-Xmx{pageValue}m";
                     }
                 }
 
