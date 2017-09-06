@@ -22,6 +22,7 @@ using OFPreview.PreviewHandler.Service.OutlookPreview;
 using OF.Core.Core.LimeLM;
 using OF.Core.Core.MVVM;
 using OF.Core.Data;
+using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Data.NamedPipeMessages;
 using OF.Core.Data.UI;
 using OF.Core.Enums;
@@ -104,6 +105,7 @@ namespace OF.Module.ViewModel
             _elasticSearchViewModel.IndexingFinished += ElasticSearchViewModelOnIndexingFinished;
             _elasticSearchViewModel.Closed += ElasticSearchViewModelOnIndexingFinished;
             Monitoring = _container.Resolve<IElasticSearchMonitoringViewModel>();
+            Monitoring.StatusChanged += MonitoringOnStatusChanged;
             _turboLimeActivate = _container.Resolve<IOFTurboLimeActivate>();
 
             _suggestViewModel = _container.Resolve<IOFEmailSuggestViewModel>();
@@ -114,7 +116,9 @@ namespace OF.Module.ViewModel
             _readerStatusServer.Attach(Monitoring as IOFNamedPipeObserver<OFReaderStatus>);
 
         }
+
         
+
 
         public IElasticSearchMonitoringViewModel Monitoring { get; private set; }
 
@@ -1194,6 +1198,14 @@ namespace OF.Module.ViewModel
                 Monitoring.Start();
             }
             NotifyServerPluginRunning();
+        }
+
+        private void MonitoringOnStatusChanged(object sender, EventArgs<OFRiverStatus> eventArgs)
+        {
+            if (eventArgs.Value != OFRiverStatus.Busy && eventArgs.Value != OFRiverStatus.InitialIndexing)
+            {
+                _suggestViewModel.UpdateSuggectingList();
+            }
         }
 
     }

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Automation;
 using System.Windows.Documents;
 using System.Windows.Forms;
+using System.Windows.Threading;
 using AddinExpress.MSO;
 using OF.Control;
 using OF.Core.Data;
@@ -44,7 +45,7 @@ namespace OFOutlookPlugin.Managers
 
         private IDisposable _token;
 
-        private readonly WindowsFunction.WinEventDelegate _proc ;
+        private readonly WindowsFunction.WinEventDelegate _proc;
 
         #endregion
 
@@ -59,7 +60,7 @@ namespace OFOutlookPlugin.Managers
         }
 
         #endregion
-        
+
 
         public void SubscribeMailWindow()
         {
@@ -131,15 +132,29 @@ namespace OFOutlookPlugin.Managers
             var ctrlId = WindowsFunction.GetDlgCtrlID(hWnd);
             WindowsFunction.GetClassName(hWnd, classStr, 255);
 
+            Dispatcher.CurrentDispatcher.BeginInvoke((Action) (() =>
+            {
+                ProcessKeyPressing(Args,hWnd);
+
+            }));
+        }
+
+        private void ProcessKeyPressing(ADXKeyDownEventArgs Args, IntPtr hWnd)
+        {
             foreach (var keyValuePair in _needHwndCtrl)
             {
                 if (keyValuePair.Value.Contains(hWnd.ToInt32()))
                 {
-                    var key = (Keys)Args.VirtualKey;
+                    var key = (Keys) Args.VirtualKey;
                     var text = WindowsFunction.GetRichEditText(hWnd);
+
                     if ((key >= Keys.A && key <= Keys.Z) || key == Keys.Back || key == Keys.Delete)
                     {
-                        var criteria = text.Append(key).ToString().ToLowerCase();
+                        //var criteria = key != Keys.Back && key != Keys.Delete
+                        //    ? text.Append(key).ToString().ToLowerCase()
+                        //    : text.ToString().ToLowerCase();
+
+                        var criteria = text.ToString();
 
                         if (criteria.IndexOf(EmailSeparator) > -1)
                         {
@@ -150,14 +165,12 @@ namespace OFOutlookPlugin.Managers
                         {
                             _token.Dispose();
                             _token = null;
-                            Debug.WriteLine("Canceling... " + DateTime.Now.ToString("T") );
                         }
                         _token = Scheduler.ThreadPool.Schedule(() =>
                         {
                             pluginBootStraper.PassAction(new OFAction(OFActionType.ShowSuggestEmail,
-                                new Tuple<IntPtr, string>(hWnd, criteria)));
-                            Debug.WriteLine("Processing... " + DateTime.Now.ToString("T"));
-                        }, TimeSpan.FromMilliseconds(250));
+                                new Tuple<IntPtr, string>(hWnd, criteria.Trim())));
+                        }, TimeSpan.FromMilliseconds(50));
                     }
                     else if (key == Keys.Escape)
                     {
@@ -183,7 +196,6 @@ namespace OFOutlookPlugin.Managers
                     }
                 }
             }
-
         }
 
         private static IEnumerable<string> GetTextFromFocusedTextControl(IntPtr hWnd)
@@ -234,18 +246,18 @@ namespace OFOutlookPlugin.Managers
                             {
                                 arr[arr.Length - 1] = data.Item2;
                             }
-                            str = String.Join(EmailSeparator.ToString() + ' ' , arr);
+                            str = String.Join(EmailSeparator.ToString() + ' ', arr);
                             str = string.Format(TemplateInsert, str);
                             WindowsFunction.SetRichEditText(data.Item1, str);
                             WindowsFunction.SendMessage(data.Item1.ToInt32(), (int)WindowsFunction.EM.SETSEL, str.Length,
                                 new IntPtr(str.Length));
-                            
+
                         }
                         else
                         {
 
                             var email = string.Format(TemplateInsert, data.Item2);
-                            WindowsFunction.SetRichEditText(data.Item1,email);
+                            WindowsFunction.SetRichEditText(data.Item1, email);
                             WindowsFunction.SendMessage(data.Item1.ToInt32(), (int)WindowsFunction.EM.SETSEL, email.Length,
                                 new IntPtr(email.Length));
 
@@ -266,10 +278,10 @@ namespace OFOutlookPlugin.Managers
             if (_needHwndCtrl.ContainsKey(hwnd.ToInt32()))
             {
                 OFLogger.Instance.LogDebug($"!!!!! Window was moved: {hwnd.ToInt32()}");
-                
+
                 pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));
             }
-            
+
         }
 
     }

@@ -199,6 +199,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
                         ))
                     .Map<OFStore>(m => m.AutoMap())
+                    .Map<OFShortContact>(m => m.AutoMap())
                 );
 
             var response = ElasticClient.CreateIndex(descriptor);

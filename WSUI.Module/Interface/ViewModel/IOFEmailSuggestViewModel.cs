@@ -9,5 +9,7 @@ namespace OF.Module.Interface.ViewModel
         void Hide();
         
         void ProcessSelection(OFActionType type);
+
+        void UpdateSuggectingList();
     }
 }

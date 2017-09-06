@@ -90,7 +90,7 @@ namespace OF.Core.Helpers
                 if (isolatedStorage.FileExists(filename))
                 {
                     using (
-                        IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(RiverSettingsFile,
+                        IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(filename,
                             FileMode.Open, FileAccess.Read,FileShare.ReadWrite,isolatedStorage))
                     {
                         using (StreamReader reader = new StreamReader(isoStream))
@@ -107,7 +107,7 @@ namespace OF.Core.Helpers
         {
             using (IsolatedStorageFile isolatedStorage = GetIsolatedStorage())
             {
-                using (IsolatedStorageFileStream stream = new IsolatedStorageFileStream(RiverSettingsFile,isolatedStorage.FileExists(RiverSettingsFile) ? FileMode.Create : FileMode.CreateNew,FileAccess.ReadWrite,FileShare.Read,isolatedStorage))
+                using (IsolatedStorageFileStream stream = new IsolatedStorageFileStream(filename, isolatedStorage.FileExists(filename) ? FileMode.Create : FileMode.CreateNew,FileAccess.ReadWrite,FileShare.Read,isolatedStorage))
                 {
                     using (StreamWriter writer = new StreamWriter(stream))
                     {

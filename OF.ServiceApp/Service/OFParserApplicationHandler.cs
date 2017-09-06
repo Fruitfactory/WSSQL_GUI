@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using OF.Core.Extensions;
+using OF.Core.Helpers;
 using OF.Core.Logger;
 
 namespace OF.ServiceApp.Service
@@ -37,6 +38,8 @@ namespace OF.ServiceApp.Service
         {
             var currentpath = CurrentPath;
             var fullPathOFApplication = $"{currentpath}\\java\\{ParserApplicationFileName}";
+            var javaPath = Path.Combine(OFRegistryHelper.Instance.GetJavaInstallationPath(), "bin\\java.exe");
+            
             OFLogger.Instance.LogInfo($"Parser application: {fullPathOFApplication}");
             if (!File.Exists(fullPathOFApplication))
             {
@@ -45,7 +48,7 @@ namespace OF.ServiceApp.Service
             }
             try
             {
-                ProcessStartInfo psi = new ProcessStartInfo("java.exe ", $" -jar -Xms{MinMemory}m -Xmx{MaxMemory}m \"{fullPathOFApplication}\"");
+                ProcessStartInfo psi = new ProcessStartInfo($"{javaPath} ", $" -jar -Xms{MinMemory}m -Xmx{MaxMemory}m \"{fullPathOFApplication}\"");
                 psi.CreateNoWindow = true;
                 psi.WindowStyle = ProcessWindowStyle.Hidden;
                 //psi.UseShellExecute = false;

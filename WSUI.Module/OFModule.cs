@@ -139,6 +139,8 @@ namespace OF.Module
 
             _unityContainer.RegisterType<IOutlookAutoCompleteSettingsView, OFOutlookAutoCompleteSettingsView>();
             _unityContainer.RegisterType<IOutlookAutoCompleteSettingsViewModel, OFOutlookAutoCompleteSettingsViewModel>();
+
+            _unityContainer.RegisterType<IOFElasticsearchShortContactClient, OFElasticsearchShortContactClient>();
             
             watch.Stop();
             OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));

@@ -12,18 +12,18 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
     {
         public void UpdateSettings(OFRiverMeta settings)
         {
-            if (settings.IsNull())
-            {
-                return;
-            }
-            var body = Serializer.Serialize(settings, SerializationFormatting.Indented);
+            //if (settings.IsNull())
+            //{
+            //    return;
+            //}
+            //var body = Serializer.Serialize(settings, SerializationFormatting.Indented);
 
-            var response = Raw.IndexPut("_river", DefaultInfrastructureName, "_meta", body);
+            //var response = Raw.IndexPut("_river", DefaultInfrastructureName, "_meta", body);
 
-            OFObjectJsonSaveReadHelper.Instance.SaveElasticSearchSettings(settings);
+            //OFObjectJsonSaveReadHelper.Instance.SaveElasticSearchSettings(settings);
 
-            OFLogger.Instance.LogDebug("Update River...");
-            OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.HttpStatusCode, response.Success);
+            //OFLogger.Instance.LogDebug("Update River...");
+            //OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.HttpStatusCode, response.Success);
         }
 
     }

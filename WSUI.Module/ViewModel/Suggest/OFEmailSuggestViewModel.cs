@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Events;
@@ -9,8 +10,10 @@ using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using OF.Core.Core.MVVM;
 using OF.Core.Data;
+using OF.Core.Data.ElasticSearch;
 using OF.Core.Enums;
 using OF.Core.Extensions;
+using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Utils.Dialog;
 using OF.Core.Win32;
@@ -28,34 +31,45 @@ namespace OF.Module.ViewModel.Suggest
     {
         private IEventAggregator _eventAggregator;
         private IUnityContainer _unityContainer;
-        private OFContactSearchSystem _contactSearchSystem;
         private IOFEmailSuggestWindow _suggestWindow;
         private IntPtr _hWnd;
+        private IOFElasticsearchShortContactClient _contactClient;
+        private List<OFShortContact> _contacts;
 
 
 
-        public OFEmailSuggestViewModel(IEventAggregator eventAggregator, IUnityContainer container)
+
+        public OFEmailSuggestViewModel(IEventAggregator eventAggregator, IUnityContainer container, IOFElasticsearchShortContactClient contactClient)
         {
             _eventAggregator = eventAggregator;
             _unityContainer = container;
-            _contactSearchSystem = new OFContactSearchSystem();
-            _contactSearchSystem.Init(_unityContainer);
-            _contactSearchSystem.SearchFinished += ContactSearchSystemOnSearchFinished;
-            Emails = new ObservableCollection<ISearchObject>();
+            _contactClient = contactClient;
+            Emails = null;
             _suggestWindow = _unityContainer.Resolve<IOFEmailSuggestWindow>();
             _suggestWindow.Model = this;
+            LoadContacts();
         }
 
+        
         public void Show(Tuple<IntPtr, string> Data)
         {
-            if (_suggestWindow.IsNull())
+            if (_suggestWindow.IsNull() || _contacts.IsNull() || !_contacts.Any())
             {
                 return;
             }
-            _contactSearchSystem.Reset();
-            _contactSearchSystem.SetSearchCriteria(Data.Item2);
-            _contactSearchSystem.Search();
+            var criteria = Data.Item2.ToLowerInvariant();
+            Emails = new ObservableCollection<OFShortContact>(_contacts.Where(c => c.Email.Contains(Data.Item2) || c.Name.ToLowerInvariant().Contains(criteria)));
+            
+
             _hWnd = Data.Item1;
+            
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (!_suggestWindow.IsVisible)
+                {
+                    _suggestWindow.ShowSuggestings(_hWnd);
+                }
+            }));
         }
 
         public void Hide()
@@ -89,29 +103,27 @@ namespace OF.Module.ViewModel.Suggest
                     }
                     break;
                 case OFActionType.SelectSuggestEmail:
-                    var contact = SelectedItem as OFContactSearchObject;
-                    var emailContact = SelectedItem as OFEmailContactSearchObject;
-                    if (contact.IsNotNull())
+                    if (SelectedItem.IsNotNull())
                     {
-                        _eventAggregator.GetEvent<OFSuggestedEmailEvent>().Publish(new OFSuggestedEmailPayload(new Tuple<IntPtr, string>(_hWnd, contact.EmailAddress1)));
-                        Hide();
-                    }
-                    else if (emailContact.IsNotNull())
-                    {
-                        _eventAggregator.GetEvent<OFSuggestedEmailEvent>().Publish(new OFSuggestedEmailPayload(new Tuple<IntPtr, string>(_hWnd, emailContact.EMail)));
+                        _eventAggregator.GetEvent<OFSuggestedEmailEvent>().Publish(new OFSuggestedEmailPayload(new Tuple<IntPtr, string>(_hWnd, SelectedItem.Email)));
                         Hide();
                     }
                     break;
             }
         }
 
-        public ISearchObject SelectedItem
+        public void UpdateSuggectingList()
+        {
+            LoadContacts();
+        }
+
+        public OFShortContact SelectedItem
         {
             get { return Get(() => SelectedItem); }
             set { Set(() => SelectedItem, value); }
         }
 
-        public IList<ISearchObject> Emails
+        public ObservableCollection<OFShortContact> Emails
         {
             get
             {
@@ -123,29 +135,17 @@ namespace OF.Module.ViewModel.Suggest
             }
         }
 
-        private void ContactSearchSystemOnSearchFinished(object o)
+        private void LoadContacts()
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            if (!OFRegistryHelper.Instance.CheckAutoCompleateState())
             {
-                Emails = null;
-                var collection = new ObservableCollection<ISearchObject>();
-
-                var results = _contactSearchSystem.GetResult();
-
-                results.OrderBy(r => r.Priority).ForEach(r =>
-                {
-                    foreach (var systemSearchResult in r.Result.OperationResult)
-                    {
-                        collection.Add(systemSearchResult as OFBaseSearchObject);
-                    }
-                });
-                Emails = collection.Where(so  => so is OFContactSearchObject ? !string.IsNullOrEmpty((so as OFContactSearchObject).EmailAddress1) : so is OFEmailContactSearchObject ? !string.IsNullOrEmpty((so as OFEmailContactSearchObject).EMail) : false).ToList();
-                if (!_suggestWindow.IsVisible)
-                {
-                    _suggestWindow.ShowSuggestings(_hWnd);
-                }
-            }));
+                return;
+            }
+            Task.Factory.StartNew(() =>
+            {
+                _contacts = new List<OFShortContact>(_contactClient.GetAllSuggestionContacts());
+            });
         }
-
+        
     }
 }

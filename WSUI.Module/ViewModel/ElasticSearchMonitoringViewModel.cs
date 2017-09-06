@@ -16,6 +16,7 @@ using OF.Core.Data.NamedPipeMessages;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
 using OF.Infrastructure;
+using OF.Infrastructure.Services;
 using OF.Module.Interface.Service;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
@@ -40,6 +41,9 @@ namespace OF.Module.ViewModel
         private OFReaderStatus _currentStatus;
 
         private Timer _timer;
+
+
+        public event EventHandler<EventArgs<OFRiverStatus>> StatusChanged;
 
         public ElasticSearchMonitoringViewModel(IElasticSearchRiverStatus riverStatusClient, 
             IEventAggregator eventAggregator, 
@@ -148,7 +152,18 @@ namespace OF.Module.ViewModel
             var emailCount = _riverStatusClient.GetTypeCount<OFEmail>();
             var attachmentCount = _riverStatusClient.GetTypeCount<OFAttachmentContent>();
 
-            Status =  current.IsNotNull() ? current.ControllerStatus : OFRiverStatus.None;
+            if (current.IsNotNull())
+            {
+                if (Status != current.ControllerStatus)
+                {
+                    Status = current.ControllerStatus;
+                    OnStatusChanged(Status);
+                }
+            }
+            else
+            {
+                Status = OFRiverStatus.None;
+            }
             StatusText = Status == OFRiverStatus.Busy || Status == OFRiverStatus.InitialIndexing ? UPDATING : READY;
             LastUpdated = metaSettings.LastDate ?? DateTime.MinValue;
             EmailCount = emailCount;
@@ -187,6 +202,15 @@ namespace OF.Module.ViewModel
                 _currentStatus = message;
             }
             return new object();
+        }
+
+        private void OnStatusChanged(OFRiverStatus status)
+        {
+            var temp = StatusChanged;
+            if (temp.IsNotNull())
+            {
+                temp(this,new EventArgs<OFRiverStatus>(status));
+            }
         }
     }
 }

@@ -20,7 +20,7 @@
              >
     <Controls:MetroWindow.Resources>
 
-        <DataTemplate x:Key="NameTemplate" >
+        <DataTemplate x:Key="ShortContactTemplate">
             <Grid Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
@@ -28,40 +28,12 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0">
-          <Run Text="{Binding FirstName}"></Run>
-          <Run Text="{Binding LastName}"></Run>
-                </TextBlock>
-
-                <TextBlock Grid.Column="1" Margin="2 0 0 0">
-          <Run Text="("></Run>
-          <Run Text="{Binding EmailAddress1}"></Run>
-          <Run Text=")"></Run>
-                </TextBlock>
-
-            </Grid>
-        </DataTemplate>
-
-
-        <DataTemplate x:Key="EmailTemplate">
-            <Grid>
-                <TextBlock Text="{Binding EmailAddress1}"></TextBlock>
-            </Grid>
-        </DataTemplate>
-
-        <DataTemplate x:Key="EmailContactTemplate">
-            <Grid Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0">
-                    <Run Text="{Binding ContactName}"></Run>
+                    <Run Text="{Binding Name}"></Run>
                 </TextBlock>
 
                 <TextBlock Grid.Column="1" Margin="2 0 0 0">
                   <Run Text="("></Run>
-                  <Run Text="{Binding EMail}"></Run>
+                  <Run Text="{Binding Email}"></Run>
                   <Run Text=")"></Run>
                 </TextBlock>
 
@@ -70,13 +42,6 @@
 
 
 
-        <service:OFEmailSuggestingTemplateSelector 
-          x:Key="EmailSuggestingTemplateSelector"
-          ContactNameTemplate="{StaticResource NameTemplate}"
-          ContactEmailTemplate="{StaticResource EmailTemplate}"
-          EmailContactTemplate="{StaticResource EmailContactTemplate}"
-      
-      ></service:OFEmailSuggestingTemplateSelector>
 
 
     </Controls:MetroWindow.Resources>
@@ -92,7 +57,7 @@
 
         <ListBox ItemsSource="{Binding Emails,UpdateSourceTrigger=PropertyChanged}"
                  SelectedItem="{Binding SelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                 ItemTemplateSelector="{StaticResource EmailSuggestingTemplateSelector}"
+                 ItemTemplate="{StaticResource ShortContactTemplate}"
                  
                  Grid.Column="0" 
                  Grid.ColumnSpan="2"

@@ -138,6 +138,7 @@
     <Compile Include="Data\ElasticSearch\OFPluginStatusContainer.cs" />
     <Compile Include="Data\ElasticSearch\OFQueryBoolConditions.cs" />
     <Compile Include="Data\ElasticSearch\OFRiverMeta.cs" />
+    <Compile Include="Data\ElasticSearch\OFShortContact.cs" />
     <Compile Include="Data\ElasticSearch\OFStore.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleContentMatchPhrase.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleContentTerm.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="Interfaces\IForceClient.cs" />
     <Compile Include="Interfaces\IElasticSearchIndexOutlookItemsClient.cs" />
     <Compile Include="Interfaces\IElasticSearchItemsCount.cs" />
+    <Compile Include="Interfaces\IOFElasticsearchShortContactClient.cs" />
     <Compile Include="Interfaces\IServiceAppOFPluginStatusClient.cs" />
     <Compile Include="Interfaces\IElasticSearchRiverStatus.cs" />
     <Compile Include="Interfaces\IElasticTrackingClient.cs" />

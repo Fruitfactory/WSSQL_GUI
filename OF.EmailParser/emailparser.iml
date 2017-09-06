@@ -14,7 +14,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-web:1.4.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:1.4.4.RELEASE" level="project" />
@@ -125,7 +125,7 @@
     <orderEntry type="module-library">
       <library name="Maven: groupid:artifiactId:1.0">
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.8.0_131/jre/lib/rt.jar!/" />
+          <root url="jar://$APPLICATION_HOME_DIR$/jre64/lib/rt.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

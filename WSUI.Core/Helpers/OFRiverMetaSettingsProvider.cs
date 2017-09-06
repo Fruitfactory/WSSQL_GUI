@@ -21,7 +21,7 @@ namespace OF.Core.Helpers
             OFRiverMeta settingsMeta = null;
             try
             {
-                settingsMeta = OFObjectJsonSaveReadHelper.Instance.Read<OFRiverMeta>(GlobalConst.SettingsRiverFile);
+                settingsMeta = OFObjectJsonSaveReadHelper.Instance.ReadElasticSearchSettings<OFRiverMeta>();
             }
             catch (Exception e)
             {
@@ -45,7 +45,7 @@ namespace OF.Core.Helpers
             try
             {
 
-                OFObjectJsonSaveReadHelper.Instance.Save(settings, GlobalConst.SettingsRiverFile);
+                OFObjectJsonSaveReadHelper.Instance.SaveElasticSearchSettings(settings);
             }
             catch (Exception e)
             {
@@ -59,7 +59,7 @@ namespace OF.Core.Helpers
             {
                 var riverMeta = GetCurrentSettings();
                 riverMeta.LastDate = lastDateTime;
-                OFObjectJsonSaveReadHelper.Instance.Save(riverMeta, GlobalConst.SettingsRiverFile);
+                OFObjectJsonSaveReadHelper.Instance.SaveElasticSearchSettings(riverMeta);
             }
             catch (Exception e)
             {
@@ -73,7 +73,7 @@ namespace OF.Core.Helpers
             {
                 var riverMeta = GetCurrentSettings();
                 riverMeta.Pst.Schedule = settings.Pst.Schedule;
-                OFObjectJsonSaveReadHelper.Instance.Save(riverMeta, GlobalConst.SettingsRiverFile);
+                OFObjectJsonSaveReadHelper.Instance.SaveElasticSearchSettings(riverMeta);
             }
             catch (Exception e)
             {
