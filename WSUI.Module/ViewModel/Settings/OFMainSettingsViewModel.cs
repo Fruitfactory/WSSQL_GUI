@@ -115,8 +115,7 @@ namespace OF.Module.ViewModel.Settings
         {
             get
             {
-                return ServiceApplicationSettingsViewModel.IsElasticSearchServiceRunning &&
-                       ServiceApplicationSettingsViewModel.IsElasticSearchServiceInstalled;
+                return ServiceApplicationSettingsViewModel.IsElasticSearchServiceRunning && ServiceApplicationSettingsViewModel.IsElasticSearchServiceInstalled;
             }
         }
 

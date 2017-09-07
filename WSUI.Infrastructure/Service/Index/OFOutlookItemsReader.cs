@@ -342,6 +342,10 @@ namespace OF.Infrastructure.Service.Index
             try
             {
                 _contactClient.SaveShortContacts(new List<OFShortContact>(_contacts.Values));
+                if (_existingContacts.IsNotNull())
+                {
+                    _existingContacts.AddRange(_contacts.Keys);
+                }
             }
             catch (Exception e)
             {

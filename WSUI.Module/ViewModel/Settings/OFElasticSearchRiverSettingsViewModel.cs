@@ -292,8 +292,7 @@ namespace OF.Module.ViewModel.Settings
 
                 var status = restElasticSearchClient.GetRiverStatus();
                 var st = status.Body as IEnumerable<OFReaderStatus>;
-                return _canForce && st != null && st.Any() &&
-                       st.First().ControllerStatus == OFRiverStatus.StandBy;
+                return _canForce && st != null && st.Any() && st.First().ControllerStatus == OFRiverStatus.StandBy;
             }
             catch (WebException we)
             {
