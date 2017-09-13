@@ -871,7 +871,7 @@ namespace OFOutlookPlugin
 
         private void CreateEmailSuggesterManager()
         {
-            _emailSuggesterManager = new OFEmailSuggesterManager(_wsuiBootStraper);
+            _emailSuggesterManager = new OFEmailSuggesterManager(_wsuiBootStraper,_eventAggregator);
         }
 
         private void CreateCommandManager()
@@ -1166,6 +1166,7 @@ namespace OFOutlookPlugin
                 {
                     _sidebarForm.SendAction(OFActionType.Copy);
                 }
+                
                 if (System.Windows.Application.Current != null)
                 {
                    System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)(() =>
@@ -1175,6 +1176,10 @@ namespace OFOutlookPlugin
                            _emailSuggesterManager.ProcessKeyDown(e);
                        }
                    }));
+                }
+                if (e.VirtualKey == (int)Keys.Escape && _emailSuggesterManager.IsSuggestWindowVisible())
+                {
+                    e.Handled = true;
                 }
             }
             catch (Exception ex)

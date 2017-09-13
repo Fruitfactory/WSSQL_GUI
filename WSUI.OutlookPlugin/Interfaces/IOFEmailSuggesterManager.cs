@@ -12,5 +12,7 @@ namespace OFOutlookPlugin.Interfaces
         void ProcessKeyDown(ADXKeyDownEventArgs Key);
 
         void SuggestedEmail(Tuple<IntPtr, string> data);
+
+        bool IsSuggestWindowVisible();
     }
 }

@@ -12,6 +12,7 @@ using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using AddinExpress.MSO;
+using Microsoft.Practices.Prism.Events;
 using OF.Control;
 using OF.Core.Data;
 using OF.Core.Enums;
@@ -19,6 +20,8 @@ using OF.Core.Extensions;
 using OF.Core.Logger;
 using OF.Core.Win32;
 using OF.Infrastructure.Helpers.AttachedProperty;
+using OF.Module.Data;
+using OF.Module.Events;
 using OFOutlookPlugin.Hooks;
 using OFOutlookPlugin.Interfaces;
 
@@ -32,7 +35,8 @@ namespace OFOutlookPlugin.Managers
         private readonly IDictionary<int, List<int>> _needHwndCtrl = new Dictionary<int, List<int>>();
 
         private IntPtr _hook;
-        private IPluginBootStraper pluginBootStraper;
+        private IPluginBootStraper _pluginBootStraper;
+        private IEventAggregator _eventAggregator;
         private OFWindowPositionManager _positionManager;
 
         private WindowsFunction.LowLevelKeyboardProc _callback = null;
@@ -51,9 +55,10 @@ namespace OFOutlookPlugin.Managers
 
         #region [ctor]
 
-        public OFEmailSuggesterManager(IPluginBootStraper pluginBootStraper)
+        public OFEmailSuggesterManager(IPluginBootStraper pluginBootStraper, IEventAggregator eventAggregator)
         {
-            this.pluginBootStraper = pluginBootStraper;
+            this._pluginBootStraper = pluginBootStraper;
+            this._eventAggregator = eventAggregator;
             _proc = new WindowsFunction.WinEventDelegate(WinEventProc);
             _positionManager = new OFWindowPositionManager(_proc);
             _positionManager.Subscribe();
@@ -139,6 +144,13 @@ namespace OFOutlookPlugin.Managers
             }));
         }
 
+        public bool IsSuggestWindowVisible()
+        {
+            var data = new OFSuggestWindowData();
+            _eventAggregator.GetEvent<OFSuggestWindowVisible>().Publish(data);
+            return data.IsVisible;
+        }
+
         private void ProcessKeyPressing(ADXKeyDownEventArgs Args, IntPtr hWnd)
         {
             foreach (var keyValuePair in _needHwndCtrl)
@@ -168,13 +180,13 @@ namespace OFOutlookPlugin.Managers
                         }
                         _token = Scheduler.ThreadPool.Schedule(() =>
                         {
-                            pluginBootStraper.PassAction(new OFAction(OFActionType.ShowSuggestEmail,
+                            _pluginBootStraper.PassAction(new OFAction(OFActionType.ShowSuggestEmail,
                                 new Tuple<IntPtr, string>(hWnd, criteria.Trim())));
                         }, TimeSpan.FromMilliseconds(50));
                     }
                     else if (key == Keys.Escape)
                     {
-                        pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));
+                        _pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));
                     }
                     else
                     {
@@ -192,7 +204,7 @@ namespace OFOutlookPlugin.Managers
                                 actionType = OFActionType.UpSuggestEmail;
                                 break;
                         }
-                        pluginBootStraper.PassAction(new OFAction(actionType, null));
+                        _pluginBootStraper.PassAction(new OFAction(actionType, null));
                     }
                 }
             }
@@ -279,7 +291,7 @@ namespace OFOutlookPlugin.Managers
             {
                 OFLogger.Instance.LogDebug($"!!!!! Window was moved: {hwnd.ToInt32()}");
 
-                pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));
+                _pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));
             }
 
         }

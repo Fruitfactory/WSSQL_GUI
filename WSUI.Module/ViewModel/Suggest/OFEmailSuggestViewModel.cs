@@ -20,6 +20,8 @@ using OF.Core.Win32;
 using OF.Infrastructure.Events;
 using OF.Infrastructure.Implements.Systems;
 using OF.Infrastructure.Payloads;
+using OF.Module.Data;
+using OF.Module.Events;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
 using Application = System.Windows.Application;
@@ -36,6 +38,8 @@ namespace OF.Module.ViewModel.Suggest
         private IOFElasticsearchShortContactClient _contactClient;
         private List<OFShortContact> _contacts;
 
+        private SubscriptionToken _tokenSuggestData;
+
 
 
 
@@ -48,9 +52,15 @@ namespace OF.Module.ViewModel.Suggest
             _suggestWindow = _unityContainer.Resolve<IOFEmailSuggestWindow>();
             _suggestWindow.Model = this;
             LoadContacts();
+            _tokenSuggestData = _eventAggregator.GetEvent<OFSuggestWindowVisible>().Subscribe(OnSuggestWindowVisible);
         }
 
-        
+        private void OnSuggestWindowVisible(OFSuggestWindowData ofSuggestWindowData)
+        {
+            ofSuggestWindowData.IsVisible = _suggestWindow.IsVisible;
+        }
+
+
         public void Show(Tuple<IntPtr, string> Data)
         {
             if (_suggestWindow.IsNull() || _contacts.IsNull() || !_contacts.Any())
@@ -78,6 +88,7 @@ namespace OF.Module.ViewModel.Suggest
             {
                 return;
             }
+            SelectedItem = null;
             _suggestWindow.HideSuggestings();
         }
 
@@ -146,6 +157,14 @@ namespace OF.Module.ViewModel.Suggest
                 _contacts = new List<OFShortContact>(_contactClient.GetAllSuggestionContacts());
             });
         }
-        
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (_tokenSuggestData.IsNotNull())
+            {
+                _eventAggregator.GetEvent<OFSuggestWindowVisible>().Unsubscribe(_tokenSuggestData);
+            }
+        }
     }
 }

@@ -15,6 +15,7 @@ using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Data.NamedPipeMessages;
 using OF.Core.Extensions;
 using OF.Core.Interfaces;
+using OF.Core.Logger;
 using OF.Infrastructure;
 using OF.Infrastructure.Services;
 using OF.Module.Interface.Service;
@@ -164,6 +165,9 @@ namespace OF.Module.ViewModel
             {
                 Status = OFRiverStatus.None;
             }
+
+            OFLogger.Instance.LogDebug($"Current Status: {Status.ToString()}");
+
             StatusText = Status == OFRiverStatus.Busy || Status == OFRiverStatus.InitialIndexing ? UPDATING : READY;
             LastUpdated = metaSettings.LastDate ?? DateTime.MinValue;
             EmailCount = emailCount;

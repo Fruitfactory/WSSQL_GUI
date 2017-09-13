@@ -132,7 +132,6 @@ namespace OF.Core.Helpers
         private IsolatedStorageFile GetIsolatedStorage()
         {
             var isolatedStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.Assembly | IsolatedStorageScope.User, null, null);
-            OFLogger.Instance.LogInfo($"Isolated Storage: {isolatedStore.GetPrivateValue<string>("RootDirectory")}");
             return isolatedStore;
         }
 

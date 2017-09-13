@@ -13,6 +13,7 @@
              ShowMinButton="False"         
              ShowCloseButton="False"
              ShowMaxRestoreButton="False"
+             ShowInTaskbar="False"
              ShowTitleBar="False"
              Width="350" Height="260" 
              MinWidth="150" MinHeight="260"

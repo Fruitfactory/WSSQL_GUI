@@ -171,14 +171,17 @@ namespace OF.Infrastructure.Service.Index
             {
                 return;
             }
+            OFLogger.Instance.LogDebug("Loading existing contacts...");
             var contacts = _contactClient.GetAllSuggestionContacts();
             if (contacts.IsNull() || !contacts.Any())
             {
                 _existingContacts = new List<string>();
+                OFLogger.Instance.LogDebug("Contact list is empty...");
             }
             else
             {
                 _existingContacts = new List<string>(contacts.Select(c => c.Email));
+                OFLogger.Instance.LogDebug($"Contact list has {_existingContacts.Count} items...");
             }
         }
 
@@ -320,8 +323,7 @@ namespace OF.Infrastructure.Service.Index
                 Status = PstReaderStatus.Finished;
                 CloseApplication(_application, isExistingProcess);
                 _application = null;
-                OFLogger.Instance.LogInfo("!!!!!!!! Exit From Attachment Reader");
-                System.Diagnostics.Debug.WriteLine("!!!!!!!! Exit From Attachment Reader");
+                OFLogger.Instance.LogInfo("Exit From Attachment Reader...");
                 IsStarted = false;
                 _thread = null;
                 if (_cancellationSource != null)
@@ -337,10 +339,12 @@ namespace OF.Infrastructure.Service.Index
         {
             if (!_contacts.Any())
             {
+                OFLogger.Instance.LogDebug($"There is nothing to save. Contact list is empty...");
                 return;
             }
             try
             {
+                OFLogger.Instance.LogDebug($"Save contacts: {_contacts.Count} items...");
                 _contactClient.SaveShortContacts(new List<OFShortContact>(_contacts.Values));
                 if (_existingContacts.IsNotNull())
                 {

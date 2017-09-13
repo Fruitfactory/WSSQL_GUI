@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
-  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.3.1478" Manufacturer="FruitFactory" UpgradeCode="602854f0-ede9-4eba-bd8c-b6f91822510a" Codepage="1252">
+  <Product Id="*" Name="OutlookFinder" Language="1033" Version="1.0.3.1482" Manufacturer="FruitFactory" UpgradeCode="602854f0-ede9-4eba-bd8c-b6f91822510a" Codepage="1252">
     <Package InstallerVersion="200" Compressed="yes" Description="OutlookFinder" Manufacturer="FruitFactory" Languages="1033" SummaryCodepage="1252" InstallScope="perUser" InstallPrivileges="limited" />
     <!--<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowDowngrades="no" />-->
     <Upgrade Id="602854f0-ede9-4eba-bd8c-b6f91822510a">
@@ -41,6 +41,7 @@
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLANGGROOVY" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLANGMUSTACHE" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERLANGPAINLESS" />
+      <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERPARENTJOIN" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERPERCOLATOR" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERREINDEX" />
       <ComponentRef Id="ELASTICSEASRCHINSTALLFOLDERTRANSPORTNETTY3" />
@@ -254,6 +255,13 @@
                 <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="lang-painless" />
               </Component>
             </Directory>
+            <Directory Id="ELASTICSEASRCHINSTALLFOLDERPARENTJOIN" Name="parent-join">
+              <Component Id="ELASTICSEASRCHINSTALLFOLDERPARENTJOIN" Guid="6EE72CC8-B918-4627-BF55-0A55E6F174EF">
+                <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERPARENTJOIN" />
+                <RemoveFile Id="parentJoinFile" Name="*.*" On="uninstall" />
+                <RegistryValue Root="HKCU" Key="Software\ElasticSearch" Type="string" Value="percolator" />
+              </Component>
+            </Directory>
             <Directory Id="ELASTICSEASRCHINSTALLFOLDERPERCOLATOR" Name="percolator">
               <Component Id="ELASTICSEASRCHINSTALLFOLDERPERCOLATOR" Guid="878879D3-BCAF-4342-A6A1-ECCF47B3BB04">
                 <RemoveFolder On="uninstall" Id="ELASTICSEASRCHINSTALLFOLDERPERCOLATOR" />
@@ -429,36 +437,37 @@
         <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERLIB]" KeyPath="yes" />
         </RegistryKey>
-        <File Id="elasticsearch_5_3_0_jar" Name="elasticsearch-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="HdrHistogram_2_1_6_jar" Name="HdrHistogram-2.1.6.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="elasticsearch_5_5_2_jar" Name="elasticsearch-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="HdrHistogram_2_1_9_jar" Name="HdrHistogram-2.1.9.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="hppc_0_7_1_jar" Name="hppc-0.7.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="jackson_core_2_8_6_jar" Name="jackson-core-2.8.6.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="jackson_dataformat_cbor_2_8_6_jar" Name="jackson-dataformat-cbor-2.8.6.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="jackson_dataformat_smile_2_8_6_jar" Name="jackson-dataformat-smile-2.8.6.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="jackson_dataformat_yaml_2_8_6_jar" Name="jackson-dataformat-yaml-2.8.6.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="java_version_checker_5_3_0_jar" Name="java-version-checker-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="jna_4_2_2_jar" Name="jna-4.2.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="java_version_checker_5_5_2_jar" Name="java-version-checker-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="jna_4_4_0_jar" Name="jna-4.4.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="joda_time_2_9_5_jar" Name="joda-time-2.9.5.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="jopt_simple_5_0_2_jar" Name="jopt-simple-5.0.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="jts_1_13_jar" Name="jts-1.13.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="log4j_1_2_api_2_7_jar" Name="log4j-1.2-api-2.7.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="log4j_api_2_7_jar" Name="log4j-api-2.7.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="log4j_core_2_7_jar" Name="log4j-core-2.7.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_analyzers_common_6_4_1_jar" Name="lucene-analyzers-common-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_backward_codecs_6_4_1_jar" Name="lucene-backward-codecs-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_core_6_4_1_jar" Name="lucene-core-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_grouping_6_4_1_jar" Name="lucene-grouping-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_highlighter_6_4_1_jar" Name="lucene-highlighter-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_join_6_4_1_jar" Name="lucene-join-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_memory_6_4_1_jar" Name="lucene-memory-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_misc_6_4_1_jar" Name="lucene-misc-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_queries_6_4_1_jar" Name="lucene-queries-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_queryparser_6_4_1_jar" Name="lucene-queryparser-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_sandbox_6_4_1_jar" Name="lucene-sandbox-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_spatial3d_6_4_1_jar" Name="lucene-spatial3d-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_spatial_6_4_1_jar" Name="lucene-spatial-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_spatial_extras_6_4_1_jar" Name="lucene-spatial-extras-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
-        <File Id="lucene_suggest_6_4_1_jar" Name="lucene-suggest-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="log4j_1_2_api_2_8_2_jar" Name="log4j-1.2-api-2.8.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="log4j_api_2_8_2_jar" Name="log4j-api-2.8.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="log4j_core_2_8_2_jar" Name="log4j-core-2.8.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_analyzers_common_6_6_0_jar" Name="lucene-analyzers-common-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_backward_codecs_6_6_0_jar" Name="lucene-backward-codecs-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_core_6_6_0_jar" Name="lucene-core-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_grouping_6_6_0_jar" Name="lucene-grouping-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_highlighter_6_6_0_jar" Name="lucene-highlighter-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_join_6_6_0_jar" Name="lucene-join-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_memory_6_6_0_jar" Name="lucene-memory-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_misc_6_6_0_jar" Name="lucene-misc-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_queries_6_6_0_jar" Name="lucene-queries-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_queryparser_6_6_0_jar" Name="lucene-queryparser-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_sandbox_6_6_0_jar" Name="lucene-sandbox-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_spatial3d_6_6_0_jar" Name="lucene-spatial3d-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_spatial_6_6_0_jar" Name="lucene-spatial-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_spatial_extras_6_6_0_jar" Name="lucene-spatial-extras-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="lucene_suggest_6_6_0_jar" Name="lucene-suggest-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
+        <File Id="plugin_cli_5_5_2_jar" Name="plugin-cli-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="securesm_1_1_jar" Name="securesm-1.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="snakeyaml_1_15_jar" Name="snakeyaml-1.15.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
         <File Id="spatial4j_0_6_jar" Name="spatial4j-0.6.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\lib\" />
@@ -468,7 +477,7 @@
         <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERAGGSMATRIXSTATS]" KeyPath="yes" />
         </RegistryKey>
-        <File Id="aggs_matrix_stats_5_3_0_jar" Name="aggs-matrix-stats-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\aggs-matrix-stats\" />
+        <File Id="aggs_matrix_stats_5_5_2_jar" Name="aggs-matrix-stats-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\aggs-matrix-stats\" />
         <File Id="plugin_descriptor_properties_1" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\aggs-matrix-stats\" />
       </Component>
       <!--<File Id="" Name="" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\\" />-->
@@ -476,7 +485,7 @@
         <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERINGESTCOMMON]" KeyPath="yes" />
         </RegistryKey>
-        <File Id="ingest_common_5_3_0_jar" Name="ingest-common-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\ingest-common\" />
+        <File Id="ingest_common_5_5_2_jar" Name="ingest-common-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\ingest-common\" />
         <File Id="jcodings_1_0_12_jar" Name="jcodings-1.0.12.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\ingest-common\" />
         <File Id="joni_2_1_6_jar" Name="joni-2.1.6.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\ingest-common\" />
         <File Id="plugin_descriptor_properties_2" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\ingest-common\" />
@@ -489,8 +498,8 @@
         <File Id="asm_5_0_4_jar" Name="asm-5.0.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
         <File Id="asm_commons_5_0_4_jar" Name="asm-commons-5.0.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
         <File Id="asm_tree_5_0_4_jar" Name="asm-tree-5.0.4.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
-        <File Id="lang_expression_5_3_0_jar" Name="lang-expression-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
-        <File Id="lucene_expressions_6_4_1_jar" Name="lucene-expressions-6.4.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
+        <File Id="lang_expression_5_5_2_jar" Name="lang-expression-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
+        <File Id="lucene_expressions_6_6_0_jar" Name="lucene-expressions-6.6.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
         <File Id="plugin_security_policy_1" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
         <File Id="plugin_descriptor_properties_3" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-expression\" />
       </Component>
@@ -499,7 +508,7 @@
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERLANGGROOVY]" KeyPath="yes" />
         </RegistryKey>
         <File Id="groovy_2_4_6_indy_jar" Name="groovy-2.4.6-indy.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-groovy\" />
-        <File Id="lang_groovy_5_3_0_jar" Name="lang-groovy-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-groovy\" />
+        <File Id="lang_groovy_5_5_2_jar" Name="lang-groovy-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-groovy\" />
         <File Id="plugin_security_policy_2" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-groovy\" />
         <File Id="plugin_descriptor_properties_4" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-groovy\" />
       </Component>
@@ -508,7 +517,7 @@
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERLANGMUSTACHE]" KeyPath="yes" />
         </RegistryKey>
         <File Id="compiler_0_9_3_jar" Name="compiler-0.9.3.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-mustache\" />
-        <File Id="lang_mustache_5_3_0_jar" Name="lang-mustache-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-mustache\" />
+        <File Id="lang_mustache_5_5_2_jar" Name="lang-mustache-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-mustache\" />
         <File Id="plugin_security_policy_3" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-mustache\" />
         <File Id="plugin_descriptor_properties_5" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-mustache\" />
       </Component>
@@ -518,15 +527,22 @@
         </RegistryKey>
         <File Id="antlr4_runtime_4_5_1_1_jar_2" Name="antlr4-runtime-4.5.1-1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
         <File Id="asm_debug_all_5_1_jar" Name="asm-debug-all-5.1.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
-        <File Id="lang_painless_5_3_0_jar" Name="lang-painless-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
+        <File Id="lang_painless_5_5_2_jar" Name="lang-painless-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
         <File Id="plugin_security_policy_4" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
         <File Id="plugin_descriptor_properties_6" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\lang-painless\" />
+      </Component>
+      <Component Id="ElasticSearchModulesParentJoinProductComponent" Guid="24EF58D5-E922-42C1-8F31-2E5C31D65C9E" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERPARENTJOIN">
+        <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
+          <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERPARENTJOIN]" KeyPath="yes" />
+        </RegistryKey>
+        <File Id="parent_join_5_5_2_jar" Name="parent-join-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\parent-join\" />
+        <File Id="plugin_descriptor_properties_11" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\parent-join\" />
       </Component>
       <Component Id="ElasticSearchModulesPercolatorProductComponent" Guid="B25F1E02-E5B9-41F4-96D5-2B014371569F" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERPERCOLATOR">
         <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERPERCOLATOR]" KeyPath="yes" />
         </RegistryKey>
-        <File Id="percolator_5_3_0_jar" Name="percolator-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\percolator\" />
+        <File Id="percolator_5_5_2_jar" Name="percolator-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\percolator\" />
         <File Id="plugin_descriptor_properties_7" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\percolator\" />
       </Component>
       <Component Id="ElasticSearchModulesReindexProductComponent" Guid="D28EDDCE-47E7-4C26-BDF1-8641202E29C3" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERREINDEX">
@@ -539,8 +555,8 @@
         <File Id="httpclient_4_5_2_jar" Name="httpclient-4.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\reindex\" />
         <File Id="httpcore_4_4_5_jar" Name="httpcore-4.4.5.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\reindex\" />
         <File Id="httpcore_nio_4_4_5_jar" Name="httpcore-nio-4.4.5.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\reindex\" />
-        <File Id="reindex_5_3_0_jar" Name="reindex-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\reindex\" />
-        <File Id="rest_5_3_0_jar" Name="rest-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\reindex\" />
+        <File Id="reindex_5_5_2_jar" Name="reindex-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\reindex\" />
+        <File Id="rest_5_5_2_jar" Name="rest-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\reindex\" />
         <File Id="plugin_descriptor_properties_8" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\reindex\" />
       </Component>
       <Component Id="ElasticSearchModulesTransportNetty3ProductComponent" Guid="5A1F6C12-4A09-4696-96E9-5087A73F1105" DiskId="1" Directory="ELASTICSEASRCHINSTALLFOLDERTRANSPORTNETTY3">
@@ -548,7 +564,7 @@
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERTRANSPORTNETTY3]" KeyPath="yes" />
         </RegistryKey>
         <File Id="netty_3_10_6_Final_jar" Name="netty-3.10.6.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty3\" />
-        <File Id="transport_netty3_5_3_0_jar" Name="transport-netty3-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty3\" />
+        <File Id="transport_netty3_5_5_2_jar" Name="transport-netty3-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty3\" />
         <File Id="plugin_security_policy_5" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty3\" />
         <File Id="plugin_descriptor_properties_9" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty3\" />
       </Component>
@@ -556,14 +572,14 @@
         <RegistryKey Root="HKCU" Key="Software\ElasticSearch">
           <RegistryValue Type="string" Name="Installed" Value="[ELASTICSEASRCHINSTALLFOLDERTRANSPORTNETTY4]" KeyPath="yes" />
         </RegistryKey>
-        <File Id="netty_buffer_4_1_7_Final_jar" Name="netty-buffer-4.1.7.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
-        <File Id="netty_codec_4_1_7_Final_jar" Name="netty-codec-4.1.7.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
-        <File Id="netty_codec_http_4_1_7_Final_jar" Name="netty-codec-http-4.1.7.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
-        <File Id="netty_common_4_1_7_Final_jar" Name="netty-common-4.1.7.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
-        <File Id="netty_handler_4_1_7_Final_jar" Name="netty-handler-4.1.7.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
-        <File Id="netty_resolver_4_1_7_Final_jar" Name="netty-resolver-4.1.7.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
-        <File Id="netty_transport_4_1_7_Final_jar" Name="netty-transport-4.1.7.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
-        <File Id="transport_netty4_5_3_0_jar" Name="transport-netty4-5.3.0.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
+        <File Id="netty_buffer_4_1_11_Final_jar" Name="netty-buffer-4.1.11.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
+        <File Id="netty_codec_4_1_11_Final_jar" Name="netty-codec-4.1.11.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
+        <File Id="netty_codec_http_4_1_11_Final_jar" Name="netty-codec-http-4.1.11.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
+        <File Id="netty_common_4_1_11_Final_jar" Name="netty-common-4.1.11.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
+        <File Id="netty_handler_4_1_11_Final_jar" Name="netty-handler-4.1.11.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
+        <File Id="netty_resolver_4_1_11_Final_jar" Name="netty-resolver-4.1.11.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
+        <File Id="netty_transport_4_1_11_Final_jar" Name="netty-transport-4.1.11.Final.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
+        <File Id="transport_netty4_5_5_2_jar" Name="transport-netty4-5.5.2.jar" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
         <File Id="plugin_security_policy_6" Name="plugin-security.policy" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
         <File Id="plugin_descriptor_properties_10" Name="plugin-descriptor.properties" Source="$(var.SolutionDir)Toolkits\Elasticsearch\modules\transport-netty4\" />
       </Component>
