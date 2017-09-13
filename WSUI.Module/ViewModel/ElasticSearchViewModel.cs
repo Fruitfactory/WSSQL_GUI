@@ -86,7 +86,7 @@ namespace OF.Module.ViewModel
             {
                 ElasticSearchClient.WarmUp();
             }
-
+            IsNeedForcing = !IsIndexExisted;
         }
 
         public object View
@@ -122,6 +122,12 @@ namespace OF.Module.ViewModel
         {
             get { return Get(() => IsBusy); }
             private set { Set(() => IsBusy, value); }
+        }
+
+        public bool IsNeedForcing
+        {
+            get { return Get(() => IsNeedForcing); }
+            private set { Set(() => IsNeedForcing,value);}
         }
 
         public bool IsVisible
@@ -416,6 +422,7 @@ namespace OF.Module.ViewModel
                 return;
             }
             forceClient.Force();
+            IsNeedForcing = false;
         }
 
         private void ExecuteCommandForService(string command)

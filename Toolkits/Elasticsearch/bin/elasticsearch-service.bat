@@ -1,7 +1,7 @@
 @echo off
 SETLOCAL enabledelayedexpansion
 
-TITLE Elasticsearch Service 5.5.2
+TITLE Elasticsearch Service 5.6.0
 
 set ES_JAVA_HOME=%~2
 set JAVA_HOME=%~2
@@ -75,7 +75,7 @@ if EXIST "%EXECUTABLE%" goto okExe
 echo elasticsearch-service-(x86|x64).exe was not found...
 
 :okExe
-set ES_VERSION=5.5.2
+set ES_VERSION=5.6.0
 
 if "%LOG_DIR%" == "" set LOG_DIR=%ES_HOME%\logs
 

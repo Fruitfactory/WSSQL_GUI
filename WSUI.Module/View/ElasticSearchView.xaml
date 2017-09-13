@@ -104,7 +104,7 @@
                     Maximum="100" 
                     Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}"></controls:MetroProgressBar>
                 <TextBlock FontSize="12" Foreground="ForestGreen" Visibility="{Binding IsBusy,Mode=OneWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">Indexing Folders.</TextBlock>
-                <StackPanel Orientation="Vertical" Visibility="{Binding IsBusy,Mode=OneWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource InvertBoolToVisibilityConverter}}">
+                <StackPanel Orientation="Vertical" Visibility="{Binding IsNeedForcing,Mode=OneWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVisibilityConverter}}">
                     <TextBlock FontSize="12" Foreground="OrangeRed" TextWrapping="Wrap">Indexing paused due to user activity. Do you want to force indexing?</TextBlock>
                     <Button Command="{Binding ForceCommand}" Width="75">Force</Button>
                 </StackPanel>
