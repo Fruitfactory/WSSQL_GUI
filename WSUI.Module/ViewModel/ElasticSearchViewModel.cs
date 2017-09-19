@@ -127,7 +127,7 @@ namespace OF.Module.ViewModel
         public bool IsNeedForcing
         {
             get { return Get(() => IsNeedForcing); }
-            private set { Set(() => IsNeedForcing,value);}
+            private set { Set(() => IsNeedForcing, value); }
         }
 
         public bool IsVisible
@@ -382,12 +382,12 @@ namespace OF.Module.ViewModel
                 }
                 disp.BeginInvoke((Action)(() =>
                {
-                       CheckServicesAndIndex();
-                       if (IsServiceRunning && IsIndexExisted && !IsInitialIndexinginProgress)
-                       {
-                           Close();
-                       }
-                   }));
+                   CheckServicesAndIndex();
+                   if (IsServiceRunning && IsIndexExisted && !IsInitialIndexinginProgress)
+                   {
+                       Close();
+                   }
+               }));
             };
             backGround.RunWorkerAsync();
 
@@ -400,9 +400,9 @@ namespace OF.Module.ViewModel
             Task.Factory.StartNew(async () =>
             {
                 await Task.Delay(1000); // warm up the index.
-          StartIndexing();
+                StartIndexing();
                 await Task.Delay(1000); // starting
-          CreateIndexVisibility = Visibility.Collapsed;
+                CreateIndexVisibility = Visibility.Collapsed;
                 ShowProgress = Visibility.Visible;
             });
         }

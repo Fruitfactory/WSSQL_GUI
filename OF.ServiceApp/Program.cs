@@ -20,7 +20,7 @@ namespace OF.ServiceApp
                 Console.WriteLine("Another copy is running...");
                 return;
             }
-
+            
             bootstraper.Initialize();
             bootstraper.Run();
 

@@ -19,28 +19,27 @@ namespace OF.Infrastructure.Service.Helpers
     {
         
         private IOutlookItemsReader _reader;
-        private readonly Thread _userActivityThread;
+        private Thread _userActivityThread;
         private volatile bool _stop;
         private readonly int _onlineTime;
         private DateTime? _lastDate;
         private ofUserActivityState oldState;
-        private volatile bool _isForce = false;
+        private bool _isForce = false;
 
         private readonly object LOCK = new object();
 
         private readonly DateTime _startNight = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 0, 0, 0);
         private readonly DateTime _finishNight = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 6, 0, 0);
 
-        public OFUserActivityTracker(int onlineTime, DateTime? lastDate)
+        public OFUserActivityTracker(int onlineTime)
         {
-            _userActivityThread = new Thread(UserActivityProcess);
             _onlineTime = onlineTime;
-            _lastDate = lastDate;
         }
 
 
         public void Start(IOutlookItemsReader reader)
         {
+            _userActivityThread = new Thread(UserActivityProcess);
             _reader = reader;
             _userActivityThread.Start();
         }
@@ -53,17 +52,23 @@ namespace OF.Infrastructure.Service.Helpers
             }
             _stop = true;
             _userActivityThread.Join();
+            _userActivityThread = null;
         }
+
+        public void SetLastDate(DateTime? lastDateTime)
+        {
+            _lastDate = lastDateTime;
+        }
+
 
         public void Update(bool isForced)
         {
-            _isForce = isForced;
+            OFLogger.Instance.LogDebug($"Update Force: {isForced}");
+            Volatile.Write(ref _isForce, isForced);
         }
 
         private void UserActivityProcess(object arg)
         {
-            IIndexExistsRequest request = new IndexExistsRequest(OFElasticSearchClientBase.DefaultInfrastructureName);
-
             while (!_stop)
             {
                 try
@@ -72,8 +77,8 @@ namespace OF.Infrastructure.Service.Helpers
                     var idle = WindowsFunction.GetIdleTime();
                     uint idleTimeSec = idle / 1000;
                     System.Diagnostics.Debug.WriteLine(string.Format("{0}: {1} < {2}", idle, idleTimeSec,_onlineTime));
-
-                    var newState = IsNight() || _isForce
+                    var isForce = Volatile.Read(ref _isForce);
+                    var newState = IsNight() || isForce
                         ? ofUserActivityState.Night
                         : idleTimeSec < _onlineTime ? ofUserActivityState.Online : ofUserActivityState.Away;
                     System.Diagnostics.Debug.WriteLine(string.Format("Status: {0}\nOld Status: {1}", newState, oldState));

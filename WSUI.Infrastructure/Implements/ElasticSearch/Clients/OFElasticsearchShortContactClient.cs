@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Practices.Unity;
 using Nest;
+using OF.Core;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Extensions;
@@ -42,11 +43,18 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
         
         public IEnumerable<OFShortContact> GetAllSuggestionContacts()
         {
-            var countResponce = ElasticClient.Count<OFShortContact>();
-            var count = (int)(countResponce.IsNotNull() ? countResponce.Count : 10000);
-            
-            var result = ElasticClient.Search<OFShortContact>(qd => qd.From(0).Size(count).MatchAll());
-            return result.Documents;
+            var scanResult = ElasticClient.Search<OFShortContact>(qd => qd.From(0).Size(GlobalConst.DefaultCountOfContacts).MatchAll().Scroll(GlobalConst.DefaultScrollScanTime));
+            var documents= new List<OFShortContact>();
+
+            var result = ElasticClient.Scroll<OFShortContact>(GlobalConst.DefaultScrollingTime, scanResult.ScrollId);
+
+            while (result.Documents.Any())
+            {
+                documents.AddRange(result.Documents);
+                result = ElasticClient.Scroll<OFShortContact>(GlobalConst.DefaultScrollingTime, result.ScrollId);
+            }
+
+            return documents;
         }
     }
 }

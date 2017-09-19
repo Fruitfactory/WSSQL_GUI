@@ -1090,7 +1090,7 @@ namespace OFOutlookPlugin
             {
                 _wsuiBootStraper.PassAction(new OFAction(OFActionType.Quit, null));
             }
-#if !DEBUG
+#if DEBUG
             CheckAndCloseServiceApp();
 #endif
             SetOutlookFolderProperties(string.Empty, string.Empty);
