@@ -15,6 +15,7 @@ using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
+using OF.Core.Logger;
 using OF.Core.Utils.Dialog;
 using OF.Core.Win32;
 using OF.Infrastructure.Events;
@@ -65,6 +66,7 @@ namespace OF.Module.ViewModel.Suggest
         {
             if (_suggestWindow.IsNull() || _contacts.IsNull() || !_contacts.Any())
             {
+                OFLogger.Instance.LogDebug("Suggested window is null || contacts is null || contacts is empty");
                 return;
             }
             var criteria = Data.Item2.ToLowerInvariant();
@@ -155,6 +157,10 @@ namespace OF.Module.ViewModel.Suggest
             Task.Factory.StartNew(() =>
             {
                 _contacts = new List<OFShortContact>(_contactClient.GetAllSuggestionContacts());
+                if (_contacts.IsNotNull())
+                {
+                    OFLogger.Instance.LogDebug($"Loaded suggested contacts: {_contacts.Count}");
+                }
             });
         }
 
