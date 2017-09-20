@@ -221,6 +221,8 @@ namespace OF.CA
                                 var result = form.PromtDeleteFolder();
                                 if (!result)
                                     continue;
+                                session.Log("!! Delete river settings...");
+                                DeleteRiverSettings(session);
                             }
                         }
                         session.Log("Deleting " + enumerateDirectory.Name + "...");
@@ -805,7 +807,6 @@ namespace OF.CA
                     session.Log("Couldn't call unistall.exe");
                     return ActionResult.Success;
                 }
-                DeleteRiverSettings(session);
                 var startinfo = new ProcessStartInfo(fullname, "uninstall");
                 startinfo.Arguments = string.Format(" {0} \"{1}\" \"{2}\"", "uninstall", esPath, ofPath);
                 startinfo.Verb = "runas";
@@ -943,7 +944,6 @@ namespace OF.CA
                     session.Log("Couldn't call install.exe");
                     return ActionResult.Success;
                 }
-                DeleteRiverSettings(session);
                 var args = string.Format(" \"{0}\"  \"{1}\" ", esPath, ofPath);
                 var startinfo = new ProcessStartInfo(fullname,args);
                 startinfo.Verb = "runas";
