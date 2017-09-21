@@ -52,6 +52,7 @@ namespace OF.Unistall
                     StopServiceAndApplication();
                     UnInstallElasticSearch();
                     ApplyRules(ParamName, args[1], args[2]);
+                    EnableOutlooAutoComplete();
 
                     Log("Done...");
                 }
@@ -234,6 +235,12 @@ namespace OF.Unistall
             };
             var process = Process.Start(si);
             process.WaitForExit();
+        }
+
+        private static void EnableOutlooAutoComplete()
+        {
+            var officeVersion = OFRegistryHelper.Instance.GetOutlookVersion().Item1;
+            OFRegistryHelper.Instance.EnableOutlookAutoCompleateEmailsToCcBcc(officeVersion);
         }
     }
 }

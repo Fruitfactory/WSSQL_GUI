@@ -29,10 +29,10 @@ namespace OF.Install
                 InstallElasticSearch(args[0], args[1]);
                 ApplyRules("install", args[0], args[1]);
                 RegistrySettings(args[1]);
+                DisableOutlookAutoComplete();
             }
             catch (Exception e)
             {
-                
                 Console.Out.WriteLine(e.ToString());
             }
         }
@@ -139,7 +139,6 @@ namespace OF.Install
         
         #endregion
 
-
         #region [firewall]
         
         public static void InstallRules(string espath, string ofpath)
@@ -218,5 +217,16 @@ namespace OF.Install
 
 
         #endregion
+
+        #region [disable outlook auto-complete]
+
+        private static void DisableOutlookAutoComplete()
+        {
+            var officeVersion = OFRegistryHelper.Instance.GetOutlookVersion().Item1;
+            OFRegistryHelper.Instance.DisableOutlookAutoCompleateEmailsToCcBcc(officeVersion);
+        }
+        
+        #endregion
+
     }
 }
