@@ -1173,6 +1173,7 @@ namespace OFOutlookPlugin
                    {
                        if (_emailSuggesterManager.IsNotNull() && OFRegistryHelper.Instance.CheckAutoCompleateState())
                        {
+                           System.Diagnostics.Debug.WriteLine($"Key Down: {Enum.GetName(typeof(Keys),e.VirtualKey)}");
                            _emailSuggesterManager.ProcessKeyDown(e);
                        }
                    }));

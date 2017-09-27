@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Practices.Prism.Events;
+using OF.Core.Data.ElasticSearch;
+using OF.Core.Extensions;
 using OF.Core.Win32;
 using OF.Infrastructure.Events;
 using OF.Infrastructure.Payloads;
@@ -26,20 +28,13 @@ namespace OF.Module.View.Windows
     /// </summary>
     public partial class OFEmailSuggestWindow : IOFEmailSuggestWindow
     {
-        public OFEmailSuggestWindow()
-        {
-            InitializeComponent();
-            this.PreviewKeyDown += OFEmailSuggestWindow_PreviewKeyDown;
-        }
+        private readonly IEventAggregator _eventAggregator;
 
-        private void OFEmailSuggestWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+
+        public OFEmailSuggestWindow(IEventAggregator eventAggregator)
         {
-            switch (e.Key)
-            {
-                case Key.Escape:
-                    Hide();
-                    break;
-            }
+            _eventAggregator = eventAggregator;
+            InitializeComponent();
         }
 
         public object Model
@@ -60,7 +55,6 @@ namespace OF.Module.View.Windows
             Left = rect.Left;
             Top = rect.Bottom;
             WindowsFunction.SetFocus(hWnd);
-
         }
 
 
@@ -69,9 +63,46 @@ namespace OF.Module.View.Windows
             Hide();
         }
 
+        public void JumpToEmailList()
+        {
+            ListBox.Focus();
+            ListBox.SelectedIndex = 0;
+            var container = ListBox.ItemContainerGenerator.ContainerFromItem(ListBox.SelectedItem) as ListBoxItem;
+            if (container.IsNotNull())
+            {
+                container.Focus();
+            }
+        }
+
         public new bool IsVisible
         {
             get { return base.IsVisible; }
         }
+
+        private void ListBox_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            ProcessKeyDown(e);
+        }
+
+        private void ListBox_OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            ProcessKeyDown(e);
+        }
+
+        private void ProcessKeyDown(KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Escape:
+                    ListBox.SelectedItem = null;
+                    Hide();
+                    break;
+                case Key.Return:
+                    _eventAggregator.GetEvent<OFSelectSuggestEmailEvent>().Publish(true);
+                    Hide();
+                    break;
+            }
+        }
+   
     }
 }

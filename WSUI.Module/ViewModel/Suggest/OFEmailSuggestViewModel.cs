@@ -40,6 +40,7 @@ namespace OF.Module.ViewModel.Suggest
         private List<OFShortContact> _contacts;
 
         private SubscriptionToken _tokenSuggestData;
+        private SubscriptionToken _tokenSelectEmail;
 
 
 
@@ -54,6 +55,15 @@ namespace OF.Module.ViewModel.Suggest
             _suggestWindow.Model = this;
             LoadContacts();
             _tokenSuggestData = _eventAggregator.GetEvent<OFSuggestWindowVisible>().Subscribe(OnSuggestWindowVisible);
+            _tokenSelectEmail = _eventAggregator.GetEvent<OFSelectSuggestEmailEvent>().Subscribe(OnSelectSuggestEmail);
+        }
+
+        private void OnSelectSuggestEmail(bool b)
+        {
+            if (SelectedItem.IsNotNull())
+            {
+                _eventAggregator.GetEvent<OFSuggestedEmailEvent>().Publish(new OFSuggestedEmailPayload(new Tuple<IntPtr, string>(_hWnd, SelectedItem.Email)));
+            }
         }
 
         private void OnSuggestWindowVisible(OFSuggestWindowData ofSuggestWindowData)
@@ -96,31 +106,10 @@ namespace OF.Module.ViewModel.Suggest
 
         public void ProcessSelection(OFActionType type)
         {
-            int index = -1;
             switch (type)
             {
-                case OFActionType.UpSuggestEmail:
-                    index = Emails.IndexOf(SelectedItem);
-                    index--;
-                    if (index >= 0)
-                    {
-                        SelectedItem = Emails[index];
-                    }
-                    break;
                 case OFActionType.DownSuggestEmail:
-                    index = Emails.IndexOf(SelectedItem);
-                    index++;
-                    if (index < Emails.Count)
-                    {
-                        SelectedItem = Emails[index];
-                    }
-                    break;
-                case OFActionType.SelectSuggestEmail:
-                    if (SelectedItem.IsNotNull())
-                    {
-                        _eventAggregator.GetEvent<OFSuggestedEmailEvent>().Publish(new OFSuggestedEmailPayload(new Tuple<IntPtr, string>(_hWnd, SelectedItem.Email)));
-                        Hide();
-                    }
+                    _suggestWindow.JumpToEmailList();
                     break;
             }
         }

@@ -9,5 +9,6 @@ namespace OF.Module.Interface.View
         void HideSuggestings();
 
         bool IsVisible { get; }
+        void JumpToEmailList();
     }
 }

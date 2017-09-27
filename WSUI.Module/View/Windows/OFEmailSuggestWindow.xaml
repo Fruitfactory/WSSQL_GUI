@@ -15,36 +15,110 @@
              ShowMaxRestoreButton="False"
              ShowInTaskbar="False"
              ShowTitleBar="False"
-             Width="350" Height="260" 
+             Width="400" Height="260" 
              MinWidth="150" MinHeight="260"
              Background="White"
+             Focusable="False"
+             FocusVisualStyle="{x:Null}"
              >
     <Controls:MetroWindow.Resources>
 
-        <DataTemplate x:Key="ShortContactTemplate">
-            <Grid Background="Transparent">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\..\Service\ResourceTemplate.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-                <TextBlock Grid.Column="0">
+            <Style x:Key="FocusVisual">
+                <Setter Property="Control.Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <SolidColorBrush x:Key="Item.MouseOver.Background" Color="#1F26A0DA"/>
+            <SolidColorBrush x:Key="Item.MouseOver.Border" Color="{StaticResource AccentColor2}"/>
+            <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="#3DDADADA"/>
+            <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="#FFDADADA"/>
+            <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="{StaticResource AccentColor4}"/>
+            <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="{StaticResource AccentColor2}"/>
+            <Style x:Key="ListBoxItemStyle1" TargetType="{x:Type ListBoxItem}">
+
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
+                <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+                <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="MinHeight" Value="22" />
+                <Setter Property="Padding" Value="5 0 0 0" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"></Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                            <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Foreground" Value="{DynamicResource GrayBrush7}" />
+                                </Trigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsEnabled" Value="False" />
+                                        <Condition Property="IsSelected" Value="True" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Foreground" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource GrayBrush7}" />
+                                </MultiTrigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsSelected" Value="True" />
+                                        <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource AccentColorBrush2}" />
+                                </MultiTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+
+            </Style>
+
+            <DataTemplate x:Key="ShortContactTemplate">
+                <Grid Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0">
                     <Run Text="{Binding Name}"></Run>
-                </TextBlock>
+                    </TextBlock>
 
-                <TextBlock Grid.Column="1" Margin="2 0 0 0">
+                    <TextBlock Grid.Column="1" Margin="2 0 0 0">
                   <Run Text="("></Run>
                   <Run Text="{Binding Email}"></Run>
                   <Run Text=")"></Run>
-                </TextBlock>
+                    </TextBlock>
 
-            </Grid>
-        </DataTemplate>
+                </Grid>
+            </DataTemplate>
 
-
-
-
-
+        </ResourceDictionary>
     </Controls:MetroWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -56,15 +130,22 @@
             <ColumnDefinition Width="Auto"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <ListBox ItemsSource="{Binding Emails,UpdateSourceTrigger=PropertyChanged}"
-                 SelectedItem="{Binding SelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                 ItemTemplate="{StaticResource ShortContactTemplate}"
-                 
-                 Grid.Column="0" 
-                 Grid.ColumnSpan="2"
-                 Grid.Row="0"
-                 Grid.RowSpan="2"
-                 >
+        <ListBox 
+            x:Name="ListBox"
+            ItemsSource="{Binding Emails,UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{Binding SelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+            ItemTemplate="{StaticResource ShortContactTemplate}"
+            ItemContainerStyle="{StaticResource ListBoxItemStyle1}"
+            KeyDown="ListBox_OnKeyDown"
+            PreviewKeyDown="ListBox_OnPreviewKeyDown"
+            BorderBrush="{StaticResource Item.SelectedInactive.Border}"
+            BorderThickness="1"                 
+            Grid.Column="0" 
+            Grid.ColumnSpan="2"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            FocusVisualStyle="{x:Null}"
+            >
             <ListBox.Template>
                 <ControlTemplate TargetType="{x:Type ListBox}">
                     <Border x:Name="Bd" SnapsToDevicePixels="true"

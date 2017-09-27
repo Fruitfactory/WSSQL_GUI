@@ -132,6 +132,7 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Behaviors\OFEventToComandBehavior.cs" />
+    <Compile Include="Events\OFSelectSuggestEmailEvent.cs" />
     <Compile Include="Events\OFSuggestedEmailEvent.cs" />
     <Compile Include="Helpers\OFEmailCommandPreviewHelper.cs" />
     <Compile Include="Helpers\OFInspectionHelper.cs" />

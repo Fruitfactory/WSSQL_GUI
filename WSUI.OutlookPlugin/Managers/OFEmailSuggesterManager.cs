@@ -153,19 +153,22 @@ namespace OFOutlookPlugin.Managers
 
         private void ProcessKeyPressing(ADXKeyDownEventArgs Args, IntPtr hWnd)
         {
+            var key = (Keys)Args.VirtualKey;
+            if (key == Keys.Escape)
+            {
+                _pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));
+                return;
+            }
+
             foreach (var keyValuePair in _needHwndCtrl)
             {
                 if (keyValuePair.Value.Contains(hWnd.ToInt32()))
                 {
-                    var key = (Keys) Args.VirtualKey;
+                    
                     var text = WindowsFunction.GetRichEditText(hWnd);
 
                     if ((key >= Keys.A && key <= Keys.Z) || key == Keys.Back || key == Keys.Delete)
                     {
-                        //var criteria = key != Keys.Back && key != Keys.Delete
-                        //    ? text.Append(key).ToString().ToLowerCase()
-                        //    : text.ToString().ToLowerCase();
-
                         var criteria = text.ToString();
 
                         if (criteria.IndexOf(EmailSeparator) > -1)
@@ -193,15 +196,8 @@ namespace OFOutlookPlugin.Managers
                         OFActionType actionType = OFActionType.None;
                         switch (key)
                         {
-                            case Keys.Return:
-                                actionType = OFActionType.SelectSuggestEmail;
-                                Args.Handled = true;
-                                break;
                             case Keys.Down:
                                 actionType = OFActionType.DownSuggestEmail;
-                                break;
-                            case Keys.Up:
-                                actionType = OFActionType.UpSuggestEmail;
                                 break;
                         }
                         _pluginBootStraper.PassAction(new OFAction(actionType, null));

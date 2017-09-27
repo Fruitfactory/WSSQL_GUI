@@ -350,6 +350,7 @@ namespace OF.Infrastructure.Service.Index
                 {
                     _existingContacts.AddRange(_contacts.Keys);
                 }
+                _contacts.Clear();
             }
             catch (Exception e)
             {
