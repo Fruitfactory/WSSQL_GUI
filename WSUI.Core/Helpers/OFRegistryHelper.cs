@@ -325,6 +325,7 @@ namespace OF.Core.Helpers
 
         public void DisableOutlookAutoCompleateEmailsToCcBcc(string officeVersion)
         {
+            Console.WriteLine($"DisableOutlookAutoCompleateEmailsToCcBcc...");
             SetOutlookAutoCompleateValue(officeVersion,0);
         }
 
@@ -335,6 +336,7 @@ namespace OF.Core.Helpers
 
         private void SetOutlookAutoCompleateValue(string officeVersion, int value)
         {
+            Console.WriteLine($"Office version: {officeVersion}, value {value}...");
             if (string.IsNullOrEmpty(officeVersion))
             {
                 return;
@@ -343,16 +345,21 @@ namespace OF.Core.Helpers
             {
                 var registry = _baseRegistry;
                 var key = string.Format("Software\\Microsoft\\Office\\{0}\\Outlook\\Preferences", officeVersion);
+                Console.WriteLine(key);
                 var preferences = registry.OpenSubKey(key,true);
                 if (preferences == null)
                 {
+                    Console.WriteLine("Preferences was found...");
                     return;
                 }
+                Console.WriteLine("Write 'ShowAutoSug' {0}",value);
+                preferences.DeleteValue("ShowAutoSug");
                 preferences.SetValue("ShowAutoSug", value);
+                Console.WriteLine("Wrote 'ShowAutoSug' {0}", value);
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.ToString());
             }
         }
 
