@@ -861,6 +861,8 @@ namespace OF.Module.ViewModel
 
         public OFActivationState ActivateStatus { get; private set; }
 
+        public bool IsActivated => ActivateStatus == OFActivationState.Activated || ActivateStatus == OFActivationState.Trial;
+
         public ICommand BuyCommand { get; private set; }
 
         public ICommand ActivateCommand { get; private set; }
