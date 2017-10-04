@@ -11,5 +11,6 @@ namespace OF.Module.Interface.ViewModel
         void ProcessSelection(OFActionType type);
 
         void UpdateSuggectingList();
+        IMainViewModel MainViewModel { get; set; }
     }
 }

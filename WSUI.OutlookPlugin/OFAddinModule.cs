@@ -237,12 +237,12 @@ namespace OFOutlookPlugin
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
             this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
-            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem)
+            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem) 
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem) 
             | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
             this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
             this.formRightSidebar.FormClassName = "OFOutlookPlugin.OFSidebar";
@@ -531,6 +531,9 @@ namespace OFOutlookPlugin
             this.OutlookFinderEvents.ExplorerActivate += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerActivate);
             this.OutlookFinderEvents.ExplorerClose += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerClose);
             this.OutlookFinderEvents.ExplorerSelectionChange += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerSelectionChange);
+            this.OutlookFinderEvents.ExplorerInlineResponse += new AddinExpress.MSO.ADXOlExplorerInlineResponse_EventHandler(this.OutlookFinderEvents_ExplorerInlineResponse);
+            this.OutlookFinderEvents.ExplorerInlineResponseEx += new AddinExpress.MSO.ADXOlExplorerInlineResponseEx_EventHandler(this.OutlookFinderEvents_ExplorerInlineResponseEx);
+            this.OutlookFinderEvents.ExplorerInlineResponseCloseEx += new AddinExpress.MSO.ADXOlExplorerInlineResponseCloseEx_EventHandler(this.OutlookFinderEvents_ExplorerInlineResponseCloseEx);
             // 
             // OFAddinModule
             // 
@@ -1506,5 +1509,25 @@ namespace OFOutlookPlugin
             return outlook.IsNotNull() ? outlook.MainWindowHandle : IntPtr.Zero;
         }
 
+        private void OutlookFinderEvents_ExplorerInlineResponse(object sender, object itemObject)
+        {
+            if (_emailSuggesterManager.IsNotNull())
+            {
+                _emailSuggesterManager.SubscribeMailWindow();
+            }
+        }
+
+        private void OutlookFinderEvents_ExplorerInlineResponseEx(object sender, object itemObject, object sourceObject)
+        {
+
+        }
+
+        private void OutlookFinderEvents_ExplorerInlineResponseCloseEx(object sender, object sourceObject)
+        {
+            if (_emailSuggesterManager.IsNotNull())
+            {
+                _emailSuggesterManager.UnsubscribeMailWindow();
+            }
+        }
     }
 }

@@ -109,6 +109,7 @@ namespace OF.Module.ViewModel
             _turboLimeActivate = _container.Resolve<IOFTurboLimeActivate>();
 
             _suggestViewModel = _container.Resolve<IOFEmailSuggestViewModel>();
+            _suggestViewModel.MainViewModel = this;
             _eventAggregator.GetEvent<OFElasticsearchServiceStartedEvent>().Subscribe(OnElasticSearchServiceStarted);
 
             _readerStatusServer = new OFNamedPipeServer<OFReaderStatus>(GlobalConst.PluginServer);

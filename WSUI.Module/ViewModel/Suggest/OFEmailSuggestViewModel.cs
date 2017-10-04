@@ -35,7 +35,6 @@ namespace OF.Module.ViewModel.Suggest
         private IEventAggregator _eventAggregator;
         private IUnityContainer _unityContainer;
         private IOFEmailSuggestWindow _suggestWindow;
-        private IMainViewModel _mainViewModel;
 
         private IntPtr _hWnd;
         private IOFElasticsearchShortContactClient _contactClient;
@@ -47,12 +46,11 @@ namespace OF.Module.ViewModel.Suggest
 
 
 
-        public OFEmailSuggestViewModel(IEventAggregator eventAggregator, IUnityContainer container, IOFElasticsearchShortContactClient contactClient, IMainViewModel mainViewModel)
+        public OFEmailSuggestViewModel(IEventAggregator eventAggregator, IUnityContainer container, IOFElasticsearchShortContactClient contactClient)
         {
             _eventAggregator = eventAggregator;
             _unityContainer = container;
             _contactClient = contactClient;
-            _mainViewModel = mainViewModel;
             Emails = null;
             _suggestWindow = _unityContainer.Resolve<IOFEmailSuggestWindow>();
             _suggestWindow.Model = this;
@@ -77,7 +75,7 @@ namespace OF.Module.ViewModel.Suggest
 
         public void Show(Tuple<IntPtr, string> Data)
         {
-            if (!_mainViewModel.IsActivated)
+            if (!MainViewModel.IsActivated)
             {
                 OFLogger.Instance.LogInfo($"Outlookfinder is not activated.");
                 return;
@@ -127,6 +125,9 @@ namespace OF.Module.ViewModel.Suggest
         {
             LoadContacts();
         }
+
+        public IMainViewModel MainViewModel { get; set; }
+
 
         public OFShortContact SelectedItem
         {
