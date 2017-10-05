@@ -31,7 +31,7 @@ namespace OFOutlookPlugin.Managers
     {
         #region [needs]
 
-        private readonly List<int> _needIdList = new List<int>() { 4099, 4100, 4103 };
+        private readonly List<int> _needIdList = new List<int>() { 4099, 4100, 4103,4106 };
         private readonly IDictionary<int, List<int>> _needHwndCtrl = new Dictionary<int, List<int>>();
 
         private IntPtr _hook;
