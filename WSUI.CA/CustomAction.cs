@@ -222,7 +222,7 @@ namespace OF.CA
                                 if (!result)
                                     continue;
                                 session.Log("!! Delete river settings...");
-                                DeleteRiverSettings(session);
+                                DeleteIsolatedStorageFiles(session,RiverSettingsFilename);
                             }
                         }
                         session.Log("Deleting " + enumerateDirectory.Name + "...");
@@ -807,6 +807,7 @@ namespace OF.CA
                     session.Log("Couldn't call unistall.exe");
                     return ActionResult.Success;
                 }
+                DeleteIsolatedStorageFiles(session,ApplicationSettingsFilename);
                 var startinfo = new ProcessStartInfo(fullname, "uninstall");
                 startinfo.Arguments = string.Format(" {0} \"{1}\" \"{2}\"", "uninstall", esPath, ofPath);
                 startinfo.Verb = "runas";
@@ -964,9 +965,10 @@ namespace OF.CA
 
         #region [delete river settings - isolated storage]
 
-        static string Filename = "riversettings.json".ToUpperInvariant();
+        static string RiverSettingsFilename = "riversettings.json".ToUpperInvariant();
+        private static string ApplicationSettingsFilename = "settingsapplication.json".ToUpperInvariant();
 
-        private static void DeleteRiverSettings(Session session)
+        private static void DeleteIsolatedStorageFiles(Session session,string filename)
         {
             var isolatedFolder = "IsolatedStorage";
             var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -974,11 +976,11 @@ namespace OF.CA
             var fullIsolatedParh = Path.Combine(localAppData, isolatedFolder);
             if (Directory.Exists(fullIsolatedParh))
             {
-                ScanDirectory(fullIsolatedParh,session);
+                ScanDirectory(fullIsolatedParh,session,filename);
             }
         }
 
-        private static void ScanDirectory(string path, Session session)
+        private static void ScanDirectory(string path, Session session,string filename)
         {
 
             var dirInfo = new DirectoryInfo(path);
@@ -990,7 +992,7 @@ namespace OF.CA
                 {
                     foreach (var dir in dirs)
                     {
-                        ScanDirectory(dir.FullName, session);
+                        ScanDirectory(dir.FullName, session,filename);
                     }
                 }
             }
@@ -1005,7 +1007,7 @@ namespace OF.CA
                 {
                     foreach (var fileInfo in files)
                     {
-                        if (fileInfo.Name.ToUpperInvariant().Equals(Filename))
+                        if (fileInfo.Name.ToUpperInvariant().Equals(filename))
                         {
                             fileInfo.Delete();
                         }
