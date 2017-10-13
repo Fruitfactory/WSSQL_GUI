@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,9 @@ namespace OF.Module.View.Windows
         {
             _eventAggregator = eventAggregator;
             InitializeComponent();
+            ListBox.KeyDown += ListBox_OnKeyDown;
+            ListBox.PreviewKeyDown += ListBox_OnPreviewKeyDown;
+
         }
 
         public object Model
@@ -49,6 +53,7 @@ namespace OF.Module.View.Windows
             {
                 Owner = hWnd
             };
+            
             WindowsFunction.RECT rect;
             WindowsFunction.GetWindowRect(hWnd, out rect);
             Show();
@@ -74,11 +79,19 @@ namespace OF.Module.View.Windows
             }
         }
 
+        public bool IsClosed { get; private set; }
+
         public new bool IsVisible
         {
             get { return base.IsVisible; }
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            IsClosed = true;
+            base.OnClosed(e);
+        }
+        
         private void ListBox_OnKeyDown(object sender, KeyEventArgs e)
         {
             ProcessKeyDown(e);
@@ -103,6 +116,16 @@ namespace OF.Module.View.Windows
                     break;
             }
         }
-   
+
+
+        public void Dispose()
+        {
+            if (ListBox.IsNotNull())
+            {
+                ListBox.KeyDown -= ListBox_OnKeyDown;
+                ListBox.PreviewKeyDown -= ListBox_OnPreviewKeyDown;
+            }
+            
+        }
     }
 }

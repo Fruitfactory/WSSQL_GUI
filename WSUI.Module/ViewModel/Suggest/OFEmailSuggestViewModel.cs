@@ -52,8 +52,7 @@ namespace OF.Module.ViewModel.Suggest
             _unityContainer = container;
             _contactClient = contactClient;
             Emails = null;
-            _suggestWindow = _unityContainer.Resolve<IOFEmailSuggestWindow>();
-            _suggestWindow.Model = this;
+            InstantionateSuggestWindow();
             LoadContacts();
             _tokenSuggestData = _eventAggregator.GetEvent<OFSuggestWindowVisible>().Subscribe(OnSuggestWindowVisible);
             _tokenSelectEmail = _eventAggregator.GetEvent<OFSelectSuggestEmailEvent>().Subscribe(OnSelectSuggestEmail);
@@ -63,6 +62,7 @@ namespace OF.Module.ViewModel.Suggest
         {
             if (SelectedItem.IsNotNull())
             {
+                OFLogger.Instance.LogDebug($"Selected suggested item {SelectedItem}...");
                 _eventAggregator.GetEvent<OFSuggestedEmailEvent>().Publish(new OFSuggestedEmailPayload(new Tuple<IntPtr, string>(_hWnd, SelectedItem.Email)));
             }
         }
@@ -86,6 +86,7 @@ namespace OF.Module.ViewModel.Suggest
                 OFLogger.Instance.LogDebug("Suggested window is null || contacts is null || contacts is empty");
                 return;
             }
+            
             var criteria = Data.Item2.ToLowerInvariant();
             Emails = new ObservableCollection<OFShortContact>(_contacts.Where(c => c.Email.Contains(Data.Item2) || c.Name.ToLowerInvariant().Contains(criteria)));
             
@@ -101,6 +102,12 @@ namespace OF.Module.ViewModel.Suggest
             }));
         }
 
+        private void InstantionateSuggestWindow()
+        {
+            _suggestWindow = _unityContainer.Resolve<IOFEmailSuggestWindow>();
+            _suggestWindow.Model = this;
+        }
+
         public void Hide()
         {
             if (_suggestWindow.IsNull())
@@ -108,6 +115,7 @@ namespace OF.Module.ViewModel.Suggest
                 return;
             }
             SelectedItem = null;
+            Emails = null;
             _suggestWindow.HideSuggestings();
         }
 

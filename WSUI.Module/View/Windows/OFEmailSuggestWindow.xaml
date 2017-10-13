@@ -20,6 +20,7 @@
              Background="White"
              Focusable="False"
              FocusVisualStyle="{x:Null}"
+             
              >
     <Controls:MetroWindow.Resources>
 
@@ -136,8 +137,7 @@
             SelectedItem="{Binding SelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
             ItemTemplate="{StaticResource ShortContactTemplate}"
             ItemContainerStyle="{StaticResource ListBoxItemStyle1}"
-            KeyDown="ListBox_OnKeyDown"
-            PreviewKeyDown="ListBox_OnPreviewKeyDown"
+          
             BorderBrush="{StaticResource Item.SelectedInactive.Border}"
             BorderThickness="1"                 
             Grid.Column="0" 

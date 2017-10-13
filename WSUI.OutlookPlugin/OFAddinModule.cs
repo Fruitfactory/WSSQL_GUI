@@ -237,12 +237,12 @@ namespace OFOutlookPlugin
             this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
             this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
             this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
-            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem) 
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem) 
+            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem)
+            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem)
             | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
             this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
             this.formRightSidebar.FormClassName = "OFOutlookPlugin.OFSidebar";
@@ -874,7 +874,7 @@ namespace OFOutlookPlugin
 
         private void CreateEmailSuggesterManager()
         {
-            _emailSuggesterManager = new OFEmailSuggesterManager(_wsuiBootStraper,_eventAggregator);
+            _emailSuggesterManager = new OFEmailSuggesterManager(_wsuiBootStraper, _eventAggregator);
         }
 
         private void CreateCommandManager()
@@ -1169,17 +1169,17 @@ namespace OFOutlookPlugin
                 {
                     _sidebarForm.SendAction(OFActionType.Copy);
                 }
-                
+
                 if (System.Windows.Application.Current != null)
                 {
-                   System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)(() =>
-                   {
-                       if (_emailSuggesterManager.IsNotNull() && OFRegistryHelper.Instance.CheckAutoCompleateState())
-                       {
-                           System.Diagnostics.Debug.WriteLine($"Key Down: {Enum.GetName(typeof(Keys),e.VirtualKey)}");
-                           _emailSuggesterManager.ProcessKeyDown(e);
-                       }
-                   }));
+                    System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        if (_emailSuggesterManager.IsNotNull() && OFRegistryHelper.Instance.CheckAutoCompleateState())
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Key Down: {Enum.GetName(typeof(Keys), e.VirtualKey)}");
+                            _emailSuggesterManager.ProcessKeyDown(e);
+                        }
+                    }));
                 }
                 if (e.VirtualKey == (int)Keys.Escape && _emailSuggesterManager.IsSuggestWindowVisible())
                 {
@@ -1462,9 +1462,15 @@ namespace OFOutlookPlugin
 
         private void OutlookFinderEvents_InspectorClose(object sender, object inspector, string folderName)
         {
+            StopProcessSuggestings();
+        }
+
+        private void StopProcessSuggestings()
+        {
             if (_emailSuggesterManager.IsNotNull())
             {
                 _emailSuggesterManager.UnsubscribeMailWindow();
+                _wsuiBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));
             }
         }
 
@@ -1524,10 +1530,7 @@ namespace OFOutlookPlugin
 
         private void OutlookFinderEvents_ExplorerInlineResponseCloseEx(object sender, object sourceObject)
         {
-            if (_emailSuggesterManager.IsNotNull())
-            {
-                _emailSuggesterManager.UnsubscribeMailWindow();
-            }
+            StopProcessSuggestings();
         }
     }
 }

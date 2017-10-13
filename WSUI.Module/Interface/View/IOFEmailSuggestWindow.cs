@@ -2,7 +2,7 @@
 
 namespace OF.Module.Interface.View
 {
-    public interface IOFEmailSuggestWindow
+    public interface IOFEmailSuggestWindow : IDisposable
     {
         object Model { get; set; }
         void ShowSuggestings(IntPtr hWnd);
@@ -10,5 +10,7 @@ namespace OF.Module.Interface.View
 
         bool IsVisible { get; }
         void JumpToEmailList();
+
+        bool IsClosed { get; }
     }
 }
