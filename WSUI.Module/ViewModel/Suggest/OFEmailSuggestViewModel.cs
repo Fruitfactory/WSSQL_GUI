@@ -95,9 +95,16 @@ namespace OF.Module.ViewModel.Suggest
             
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (!_suggestWindow.IsVisible)
+                try
                 {
-                    _suggestWindow.ShowSuggestings(_hWnd);
+                    if (!_suggestWindow.IsVisible)
+                    {
+                        _suggestWindow.ShowSuggestings(_hWnd);
+                    }
+                }
+                catch (Exception e)
+                {
+                    OFLogger.Instance.LogError(e.ToString());
                 }
             }));
         }

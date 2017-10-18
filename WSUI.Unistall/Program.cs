@@ -36,7 +36,6 @@ namespace OF.Unistall
             {
                 Log(ex.ToString());
             }
-            //using (logWriter = File.CreateText("C:\\of_install.log"))
             {
                 try
                 {
@@ -49,12 +48,11 @@ namespace OF.Unistall
                 }
                 try
                 {
+                    EnableOutlooAutoComplete();
                     DeleteRegistrySettings();
                     StopServiceAndApplication();
                     UnInstallElasticSearch();
                     ApplyRules(ParamName, args[1], args[2]);
-                    EnableOutlooAutoComplete();
-
                     Log("Done...");
                 }
                 catch (Exception ex)

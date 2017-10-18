@@ -26,11 +26,11 @@ namespace OF.Install
             Console.WriteLine("Install settings...");
             try
             {
+                DisableOutlookAutoComplete();
                 AddEnviromentVariable();
                 InstallElasticSearch(args[0], args[1]);
                 ApplyRules("install", args[0], args[1]);
                 RegistrySettings(args[1]);
-                DisableOutlookAutoComplete();
                 Console.WriteLine("Installing has been done...");
             }
             catch (Exception e)
