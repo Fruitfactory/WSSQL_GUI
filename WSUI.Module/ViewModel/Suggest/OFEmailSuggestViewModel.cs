@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -87,9 +89,9 @@ namespace OF.Module.ViewModel.Suggest
                 return;
             }
             
-            var criteria = Data.Item2.ToLowerInvariant();
-            Emails = new ObservableCollection<OFShortContact>(_contacts.Where(c => c.Email.Contains(Data.Item2) || c.Name.ToLowerInvariant().Contains(criteria)));
+            var criterias = Data.Item2.ToLowerInvariant().Split(' ');
             
+            Emails = new ObservableCollection<OFShortContact>(_contacts.Where(c => criterias.All(cr => c.Name.ToLowerInvariant().Contains(cr))));
 
             _hWnd = Data.Item1;
             

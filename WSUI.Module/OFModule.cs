@@ -7,6 +7,7 @@ using OF.Core.Core.LimeLM;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
+using OF.Core.Pool;
 using OF.Core.Utils;
 using OF.Infrastructure;
 using OF.Infrastructure.Implements.ElasticSearch.Clients;
@@ -66,6 +67,8 @@ namespace OF.Module
             watch.Start();
             //TODO add interfaces and classes
             _unityContainer.RegisterType<IMainViewModel, MainViewModel>(new ContainerControlledLifetimeManager());
+            _unityContainer.RegisterType<IOFSearchThreadPool, OFSearchThreadPool>(
+                new ContainerControlledLifetimeManager());
 
             _unityContainer.RegisterType<IKindsView, KindsView>();
             //_unityContainer.RegisterType<IPreviewView, PreviewView>(new ContainerControlledLifetimeManager());

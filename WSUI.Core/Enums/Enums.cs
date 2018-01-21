@@ -74,4 +74,12 @@ namespace OF.Core.Enums
         Failed
     }
 
+    public enum OFWorkThreadState
+    {
+        None,
+        Working,
+        Stoped,
+        Waiting
+    }
+
 }
