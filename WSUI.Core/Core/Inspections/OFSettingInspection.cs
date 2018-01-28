@@ -5,7 +5,8 @@ namespace OF.Core.Core.Inspections
 {
     public abstract class OFSettingInspection : IOFSettingInspection
     {
-        public virtual bool IsValidValueOfSetting { get { return true; } }
+
+        public virtual bool? IsValidValueOfSetting { get { return (bool?)null; }  }
 
         public abstract void FixSetting(object value);
 

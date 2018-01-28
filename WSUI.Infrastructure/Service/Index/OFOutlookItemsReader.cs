@@ -34,6 +34,7 @@ namespace OF.Infrastructure.Service.Index
         private CancellationTokenSource _cancellationSource;
         private CancellationToken _cancellationToken;
         private IElasticSearchIndexOutlookItemsClient _indexOutlookItemsClient;
+        private IOFElasticsearchShortContactClient _contactClient;
         private IOFElasticsearchStoreClient _storeClient;
         private readonly Dictionary<string, object> _processedItems = new Dictionary<string, object>();
         private DateTime? _lastUpdated;
@@ -41,6 +42,10 @@ namespace OF.Infrastructure.Service.Index
         private static readonly int COUNT_ITEMS_FOR_COLLECT = 20;
 
         private readonly List<IOFIOutlookItemsReaderObserver> _observers = new List<IOFIOutlookItemsReaderObserver>();
+
+
+        private readonly Dictionary<string,OFShortContact> _contacts = new Dictionary<string, OFShortContact>();
+        private List<string> _existingContacts = null;
 
         private readonly AutoResetEvent _eventPause = new AutoResetEvent(false);
 
@@ -58,6 +63,7 @@ namespace OF.Infrastructure.Service.Index
             Status = PstReaderStatus.None;
             _indexOutlookItemsClient = new OFElasticSeachIndexOutlookItemsClient();
             _storeClient = new OFElasticsearchStoreClient();
+            _contactClient = new OFElasticsearchShortContactClient();
         }
 
         public PstReaderStatus Status
@@ -96,6 +102,8 @@ namespace OF.Infrastructure.Service.Index
         {
             lock (_lock)
             {
+                LoadExistingCntacts();
+
                 if (_thread == null)
                 {
                     _thread = new Thread(ProcessOutlookItems);
@@ -110,6 +118,8 @@ namespace OF.Infrastructure.Service.Index
                 }
             }
         }
+
+        
 
         public void Join()
         {
@@ -154,6 +164,36 @@ namespace OF.Infrastructure.Service.Index
             OFLogger.Instance.LogDebug("Reader Attachment has been Resumed");
             OFLogger.Instance.LogDebug("Last Updated Date: {0}", lastUpdated.HasValue ? lastUpdated.Value.ToString() : "N/a");
         }
+
+        private void LoadExistingCntacts()
+        {
+            if (_contactClient.IsNull())
+            {
+                return;
+            }
+            OFLogger.Instance.LogDebug("Loading existing contacts...");
+            var contacts = _contactClient.GetAllSuggestionContacts();
+            if (contacts.IsNull() || !contacts.Any())
+            {
+                _existingContacts = new List<string>();
+                OFLogger.Instance.LogDebug("Contact list is empty...");
+            }
+            else
+            {
+                _existingContacts = new List<string>(contacts.Select(c => c.Email));
+                OFLogger.Instance.LogDebug($"Contact list has {_existingContacts.Count} items...");
+            }
+        }
+
+        private bool CheckIfContactExist(string email)
+        {
+            if (_existingContacts.IsNull() || !_existingContacts.Any())
+            {
+                return false;
+            }
+            return _existingContacts.Contains(email);
+        }
+
 
         private void ProcessOutlookItems(object arg)
         {
@@ -249,6 +289,8 @@ namespace OF.Infrastructure.Service.Index
                         }
                         Marshal.ReleaseComObject(store);
                     }
+
+                    SaveShortContacts();
                 }
                 catch (COMException com)
                 {
@@ -281,8 +323,7 @@ namespace OF.Infrastructure.Service.Index
                 Status = PstReaderStatus.Finished;
                 CloseApplication(_application, isExistingProcess);
                 _application = null;
-                OFLogger.Instance.LogInfo("!!!!!!!! Exit From Attachment Reader");
-                System.Diagnostics.Debug.WriteLine("!!!!!!!! Exit From Attachment Reader");
+                OFLogger.Instance.LogInfo("Exit From Attachment Reader...");
                 IsStarted = false;
                 _thread = null;
                 if (_cancellationSource != null)
@@ -291,6 +332,29 @@ namespace OF.Infrastructure.Service.Index
                     _cancellationSource = null;
                 }
                 OFMessageFilter.Revoke();
+            }
+        }
+
+        private void SaveShortContacts()
+        {
+            if (!_contacts.Any())
+            {
+                OFLogger.Instance.LogDebug($"There is nothing to save. Contact list is empty...");
+                return;
+            }
+            try
+            {
+                OFLogger.Instance.LogDebug($"Save contacts: {_contacts.Count} items...");
+                _contactClient.SaveShortContacts(new List<OFShortContact>(_contacts.Values));
+                if (_existingContacts.IsNotNull())
+                {
+                    _existingContacts.AddRange(_contacts.Keys);
+                }
+                _contacts.Clear();
+            }
+            catch (Exception e)
+            {
+                OFLogger.Instance.LogError(e.ToString());
             }
         }
 
@@ -474,11 +538,29 @@ namespace OF.Infrastructure.Service.Index
 
             contact.Addresstype = "";
 
+            ProcessShortContact(contact);
 
             CheckCancellation();
             TryToWait();
 
             SendOutlookItems(null, null, contact, OFOutlookItemsIndexProcess.Chunk);
+        }
+
+        private void ProcessShortContact(OFContact ofRecipient)
+        {
+            if (ofRecipient.Emailaddress1.IsNull())
+            {
+                return;
+            }
+
+            var email = ofRecipient.Emailaddress1.ToLowerInvariant();
+            if (!email.IsEmail() || _contacts.ContainsKey(email) || CheckIfContactExist(email))
+            {
+                OFLogger.Instance.LogDebug($"Skip contact with email: {email}");
+                return;
+            }
+
+            _contacts.Add(email,new OFShortContact() {Email = email, Name = $"{ofRecipient.Firstname} {ofRecipient.Lastname}"});
         }
 
 
@@ -616,6 +698,9 @@ namespace OF.Infrastructure.Service.Index
             foreach (var att in result.Attachments.OfType<Outlook.Attachment>())
             {
                 var attachment = new OFAttachment();
+
+                OFLogger.Instance.LogInfo($"Attachment type: {att.Type.ToString()}");
+
                 try { attachment.Filename = att.FileName; }
                 catch (Exception ex)
                 {
@@ -674,10 +759,49 @@ namespace OF.Infrastructure.Service.Index
                         break;
                 }
             }
-
+            ProcessShortContact(email.Fromaddress,email.Fromname);
+            listTo.ForEach(ProcessShortContact);
+            listCC.ForEach(ProcessShortContact);
+            listBCC.ForEach(ProcessShortContact);
+            
             email.To = listTo.ToArray();
             email.Cc = listCC.ToArray();
             email.Bcc = listBCC.ToArray();
+        }
+
+
+        private void ProcessShortContact(string email, string name)
+        {
+            if (email.IsNull())
+            {
+                return;
+            }
+            email = email.ToLowerInvariant();
+            if (!email.IsEmail() || _contacts.ContainsKey(email) || CheckIfContactExist(email))
+            {
+                OFLogger.Instance.LogDebug($"Skip contact with email: {email}");
+                return;
+            }
+
+            _contacts.Add(email, new OFShortContact() { Email = email, Name = name.IsNotNull() ? name : "" });
+        }
+
+
+        private void ProcessShortContact(OFRecipient ofRecipient)
+        {
+            if (ofRecipient.Address.IsNull())
+            {
+                return;
+            }
+
+            var email = ofRecipient.Address.ToLowerInvariant();
+            if (!email.IsEmail() || _contacts.ContainsKey(email) || CheckIfContactExist(email))
+            {
+                OFLogger.Instance.LogDebug($"Skip contact with email: {email}");
+                return;
+            }
+
+            _contacts.Add(email,new OFShortContact() {Email = email,Name = ofRecipient.Name.IsNotNull() ? ofRecipient.Name : ""});
         }
 
         private void TryToWait()

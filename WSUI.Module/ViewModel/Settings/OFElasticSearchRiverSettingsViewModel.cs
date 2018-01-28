@@ -25,7 +25,7 @@ using OF.Module.Interface.ViewModel;
 
 namespace OF.Module.ViewModel.Settings
 {
-    public class OFElasticSearchRiverSettingsViewModel : OFViewModelBase, IElasticSearchRiverSettingsViewModel
+    public class OFElasticSearchRiverSettingsViewModel : OFCoreSettingsViewModel, IElasticSearchRiverSettingsViewModel
     {
         private IElasticSearchRiverSettingsView _view = null;
         private readonly IEventAggregator _eventAggregator;
@@ -129,12 +129,12 @@ namespace OF.Module.ViewModel.Settings
         }
 
 
-        public void ApplySettings()
+        public override void ApplySettings()
         {
             Save();
         }
 
-        public object View
+        public override object View
         {
             get
             {
@@ -147,7 +147,7 @@ namespace OF.Module.ViewModel.Settings
             }
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
             ForceCommand = new OFRelayCommand(ForceCommandExecute,CanForceCommandExecute);
             HoursSource = new ObservableCollection<int>()
@@ -159,7 +159,7 @@ namespace OF.Module.ViewModel.Settings
             HasChanges = false;
         }
 
-        public bool HasDetailsChanges { get { return HasChanges; } }
+        public override bool HasDetailsChanges { get { return HasChanges; } }
 
         #endregion
 
@@ -291,9 +291,16 @@ namespace OF.Module.ViewModel.Settings
                 }
 
                 var status = restElasticSearchClient.GetRiverStatus();
+                if (status == null)
+                {
+                    return false;
+                }
                 var st = status.Body as IEnumerable<OFReaderStatus>;
-                return _canForce && st != null && st.Any() &&
-                       st.First().ControllerStatus == OFRiverStatus.StandBy;
+                if (st == null)
+                {
+                    return false;
+                }
+                return _canForce && st != null && st.Any() && st.First().ControllerStatus == OFRiverStatus.StandBy;
             }
             catch (WebException we)
             {

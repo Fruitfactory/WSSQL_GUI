@@ -123,8 +123,23 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.CoreEx">
+      <HintPath>..\Toolkits\RxNet\System.CoreEx.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Interactive">
+      <HintPath>..\Toolkits\RxNet\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Async">
+      <HintPath>..\Toolkits\RxNet\System.Linq.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive">
+      <HintPath>..\Toolkits\RxNet\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.ClientProfile">
+      <HintPath>..\Toolkits\RxNet\System.Reactive.ClientProfile.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
@@ -134,7 +149,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="UIAutomationClient" />
     <Reference Include="UIAutomationProvider" />
+    <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
@@ -186,6 +203,7 @@
     <Compile Include="Hooks\MouseEventExtArgs.cs" />
     <Compile Include="Interfaces\ICommandManager.cs" />
     <Compile Include="Interfaces\IMainForm.cs" />
+    <Compile Include="Interfaces\IOFEmailSuggesterManager.cs" />
     <Compile Include="Interfaces\IOFMailRemovingManager.cs" />
     <Compile Include="Interfaces\ISidebarForm.cs" />
     <Compile Include="Interfaces\IUpdatable.cs" />
@@ -194,8 +212,10 @@
     <Compile Include="Interfaces\IOFOutlookItemEvents.cs" />
     <Compile Include="Managers\OFMainRibbonCommandManager.cs" />
     <Compile Include="Managers\OFCommandBarManager.cs" />
+    <Compile Include="Managers\OFEmailSuggesterManager.cs" />
     <Compile Include="Managers\OFOutlookItemsRemovingManager.cs" />
     <Compile Include="Managers\OFRibbonManager.cs" />
+    <Compile Include="Managers\OFWindowPositionManager.cs" />
     <Compile Include="Managers\OutlookEventsManagers\OFOutlookItemEvents.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

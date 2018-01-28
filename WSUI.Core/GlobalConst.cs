@@ -33,5 +33,12 @@ namespace OF.Core
         public static readonly string PluginServer = "OFPluginSever";
 
         public static readonly string ServiceApplicationServer = "OFServiceApplicationServer";
+        public static readonly string SettingsApplication = "settingsapplication";
+
+        public static readonly int DefaultCountOfContacts = 100;
+
+        public static readonly string DefaultScrollScanTime = "2s";
+        public static readonly string DefaultScrollingTime = "4s";
+
     }
 }

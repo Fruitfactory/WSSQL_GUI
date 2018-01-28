@@ -7,6 +7,7 @@ using OF.Core.Core.LimeLM;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
+using OF.Core.Pool;
 using OF.Core.Utils;
 using OF.Infrastructure;
 using OF.Infrastructure.Implements.ElasticSearch.Clients;
@@ -21,6 +22,7 @@ using OF.Module.View.Windows;
 using OF.Module.ViewModel;
 using OF.Module.ViewModel.LogFileManager;
 using OF.Module.ViewModel.Settings;
+using OF.Module.ViewModel.Suggest;
 using Action = System.Action;
 
 namespace OF.Module
@@ -65,6 +67,8 @@ namespace OF.Module
             watch.Start();
             //TODO add interfaces and classes
             _unityContainer.RegisterType<IMainViewModel, MainViewModel>(new ContainerControlledLifetimeManager());
+            _unityContainer.RegisterType<IOFSearchThreadPool, OFSearchThreadPool>(
+                new ContainerControlledLifetimeManager());
 
             _unityContainer.RegisterType<IKindsView, KindsView>();
             //_unityContainer.RegisterType<IPreviewView, PreviewView>(new ContainerControlledLifetimeManager());
@@ -127,11 +131,19 @@ namespace OF.Module
 
             _unityContainer.RegisterType<IOFElasticSearchRemovingClient, OFElasticSearchRemovingClient>();
 
+            _unityContainer.RegisterType<IOFEmailSuggestWindow, OFEmailSuggestWindow>();
+            _unityContainer.RegisterType<IOFEmailSuggestViewModel, OFEmailSuggestViewModel>();
             _unityContainer.RegisterType<IOFLogFilesSenderManager, OFLogFilesSenderManager>();
 
             _unityContainer.RegisterType<IOFTurboLimeActivate, TurboLimeActivate>();
 
             _unityContainer.RegisterType<IOFRiverMetaSettingsProvider, OFRiverMetaSettingsProvider>();
+            
+
+            _unityContainer.RegisterType<IOutlookAutoCompleteSettingsView, OFOutlookAutoCompleteSettingsView>();
+            _unityContainer.RegisterType<IOutlookAutoCompleteSettingsViewModel, OFOutlookAutoCompleteSettingsViewModel>();
+
+            _unityContainer.RegisterType<IOFElasticsearchShortContactClient, OFElasticsearchShortContactClient>();
             
             watch.Stop();
             OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));

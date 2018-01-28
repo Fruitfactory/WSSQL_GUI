@@ -22,7 +22,6 @@ namespace OF.Core.Core.Search
 {
     public abstract class OFBaseSearchSystem : ISearchSystem
     {
-        private Thread _mainSearchThread;
         private IList<ISearch> _listRules;
         
         private bool _isAdvancedMode = false;
@@ -32,6 +31,7 @@ namespace OF.Core.Core.Search
         protected readonly object Lock1 = new object();
         protected readonly object Lock2 = new object();
         protected volatile bool _needStop = false;
+        private IOFSearchThreadPool searchThreadPool;
 
         protected OFBaseSearchSystem()
         {
@@ -50,6 +50,7 @@ namespace OF.Core.Core.Search
         {
             _IsSearching = false;
             _listRules.ForEach(item => item.Init());
+            searchThreadPool = container.Resolve<IOFSearchThreadPool>();
         }
 
         public virtual void Reset()
@@ -78,8 +79,7 @@ namespace OF.Core.Core.Search
             if (_IsSearching)
                 return;
             InitBeforeSearch();
-            _mainSearchThread = new Thread(DoSearch) { Priority = ThreadPriority.Highest, Name = "MainSearchSystem" };
-            _mainSearchThread.Start();
+            searchThreadPool.AddAction(DoSearch);
             RaiseSearchStarted();
         }
 

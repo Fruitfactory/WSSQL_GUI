@@ -2,6 +2,7 @@
 using System.CodeDom;
 using Microsoft.Practices.Unity;
 using OF.Core.Core.MVVM;
+using OF.Core.Data.Settings;
 using OF.Core.Extensions;
 using OF.Core.Helpers;
 using OF.Core.Logger;
@@ -10,7 +11,7 @@ using OF.Module.Interface.ViewModel;
 
 namespace OF.Module.ViewModel.Settings
 {
-    public class OFOutlookSecutirySettingsViewModel : OFViewModelBase, IOutlookSecuritySettingsViewModel
+    public class OFOutlookSecutirySettingsViewModel : OFCoreSettingsViewModel, IOutlookSecuritySettingsViewModel
     {
         private IUnityContainer _container;
         private IOutlookSecuritySettingsView _view;
@@ -19,8 +20,8 @@ namespace OF.Module.ViewModel.Settings
         {
             _container = container;
         }
-
-        public void ApplySettings()
+        
+        public override void ApplySettings()
         {
             try
             {
@@ -40,7 +41,7 @@ namespace OF.Module.ViewModel.Settings
             }
         }
 
-        public object View
+        public override object View
         {
             get
             {
@@ -53,15 +54,15 @@ namespace OF.Module.ViewModel.Settings
             }
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Set(() => IsSecurityWindowDisabled,CheckSecuritySettings());
         }
 
-        public bool HasDetailsChanges
+        public override bool HasDetailsChanges
         {
             get { return Get(() => HasDetailsChanges); }
-            private set { Set(() => HasDetailsChanges,value); }
+            protected set { Set(() => HasDetailsChanges,value); }
         }
 
 

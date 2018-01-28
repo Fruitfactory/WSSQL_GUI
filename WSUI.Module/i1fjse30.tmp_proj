@@ -1,0 +1,447 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>OFModule.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trial|AnyCPU'">
+    <OutputPath>..\Routput\</OutputPath>
+    <DefineConstants>TRACE;TRIAL</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>..\Routput\WSUI.Module.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EDCE3394-18B5-40A8-AE43-E6A8E23C9A7F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OF.Module</RootNamespace>
+    <AssemblyName>OF.Module</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Output\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;TA_BOTH_DLL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Routput\</OutputPath>
+    <DefineConstants>TRACE;TA_BOTH_DLL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
+    <Compile Include="Commands\OFEmailCommand.cs" />
+    <Compile Include="Commands\OFForwardCommand.cs" />
+    <Compile Include="Commands\OFOpenEmailCommand.cs" />
+    <Compile Include="Commands\OFOpenFolderCommand.cs" />
+    <Compile Include="Commands\OFOpenPreviewCommad.cs" />
+    <Compile Include="Commands\OFReplyAllCommand.cs" />
+    <Compile Include="Commands\OFReplyCommand.cs" />
+    <Compile Include="Core\OFBaseCommandStrategy.cs" />
+    <Compile Include="Core\OFBaseEmailPreviewCommand.cs" />
+    <Compile Include="Core\OFBaseFilePreviewCommand.cs" />
+    <Compile Include="Core\OFBasePreviewCommand.cs" />
+    <Compile Include="Core\OFContactKindDetailsViewModelBase.cs" />
+    <Compile Include="Core\OFKindNameAttribute.cs" />
+    <Compile Include="Core\OFKindsConstName.cs" />
+    <Compile Include="Core\OFKindViewModelBase.cs" />
+    <Compile Include="Core\OFLazyKind.cs" />
+    <Compile Include="Data\OFSuggestWindowData.cs" />
+    <Compile Include="Enums\Enums.cs" />
+    <Compile Include="Events\OFElasticsearchServiceStartedEvent.cs" />
+    <Compile Include="Events\OFSuggestWindowVisible.cs" />
+    <Compile Include="Interface\Service\ICommandStrategy.cs" />
+    <Compile Include="Interface\Service\IMainSettingsWindow.cs" />
+    <Compile Include="Interface\Service\INavigationService.cs" />
+    <Compile Include="Interface\ViewModel\IAdvancedSearchViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IContactAttachmentDetailsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IContactDetailsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IContactEmailDetailsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IContactKindDetailsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IDetailsSettingsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IElasticSearchMonitoringViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IElasticSearchRiverSettingsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IElasticSearchViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IOFEmailSuggestViewModel.cs" />
+    <Compile Include="Interface\ViewModel\ILoggingSettingsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IMainSettingsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IOFLogFilesSenderManager.cs" />
+    <Compile Include="Interface\ViewModel\IOutlookAutoCompleteSettingsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IOutlookSecuritySettingsViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IServiceApplicationSettingsViewModel.cs" />
+    <Compile Include="Interface\View\IAllDataView.cs" />
+    <Compile Include="Interface\View\IContactAttachmentDetailsView.cs" />
+    <Compile Include="Interface\View\IContactDetailsView.cs" />
+    <Compile Include="Interface\View\IContactEmailDetailsView.cs" />
+    <Compile Include="Interface\View\IContactKindDetailsView.cs" />
+    <Compile Include="Interface\View\IDataKindView.cs" />
+    <Compile Include="Interface\View\IDataView.cs" />
+    <Compile Include="Interface\ViewModel\IKindItem.cs" />
+    <Compile Include="Interface\View\IElasticSearchMonitoringView.cs" />
+    <Compile Include="Interface\View\IElasticSearchRiverSettingsView.cs" />
+    <Compile Include="Interface\View\IElasticSearchView.cs" />
+    <Compile Include="Interface\View\IKindsView.cs" />
+    <Compile Include="Interface\ViewModel\ILazyKind.cs" />
+    <Compile Include="Interface\View\ILoggingSettingsView.cs" />
+    <Compile Include="Interface\View\IMainSettingsView.cs" />
+    <Compile Include="Interface\View\IMainView.cs" />
+    <Compile Include="Interface\ViewModel\IMainViewModel.cs" />
+    <Compile Include="Interface\View\IOFEmailSuggestWindow.cs" />
+    <Compile Include="Interface\View\IOutlookAutoCompleteSettingsView.cs" />
+    <Compile Include="Interface\View\IOutlookSecuritySettingsView.cs" />
+    <Compile Include="Interface\View\IPreviewView.cs" />
+    <Compile Include="Interface\View\IScrollableView.cs" />
+    <Compile Include="Interface\Service\IScrollBehavior.cs" />
+    <Compile Include="Interface\Service\ISearchData.cs" />
+    <Compile Include="Interface\View\IServiceApplicationSettingsView.cs" />
+    <Compile Include="Interface\View\ISettingsView.cs" />
+    <Compile Include="Interface\View\ISidebarView.cs" />
+    <Compile Include="Interface\View\IUIView.cs" />
+    <Compile Include="Interface\Service\IOFCommand.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Service\AdvancedSearch\OFAdvancedSearchTemplateSelector.cs" />
+    <Compile Include="Service\Behaviors\OFListBoxAutoScrollBehavior.cs" />
+    <Compile Include="Service\OFAllFilesDataTemplateSelector.cs" />
+    <Compile Include="Service\Behaviors\OFActualHeightBehavior.cs" />
+    <Compile Include="Service\Behaviors\OFListboxSelectOnClickBehavior.cs" />
+    <Compile Include="Service\OFContactDataTemplateSelector.cs" />
+    <Compile Include="Service\OFContactHelpers.cs" />
+    <Compile Include="Service\OFDateToStringConverter.cs" />
+    <Compile Include="Service\Dialogs\Interfaces\IMessageModel.cs" />
+    <Compile Include="Service\Dialogs\Message\OFMessageBoxService.cs" />
+    <Compile Include="Service\Dialogs\Message\OFMessageImageToPictureConvert.cs" />
+    <Compile Include="Service\Dialogs\Message\OFMessageModel.cs" />
+    <Compile Include="Service\Dialogs\Message\OFMessageView.xaml.cs">
+      <DependentUpon>OFMessageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Service\OFDoubleClickBehavior.cs" />
+    <Compile Include="Service\OFEmailSuggestingTemplateSelector.cs" />
+    <Compile Include="Service\OFFileExestensionsHelper.cs" />
+    <Compile Include="Service\OFGridLengthAnimation.cs" />
+    <Compile Include="Service\OFHelperConst.cs" />
+    <Compile Include="Service\OFContactSuggestingService.cs" />
+    <Compile Include="Service\OFKeyDownBehavior.cs" />
+    <Compile Include="Service\OFMainWindowInfo.cs" />
+    <Compile Include="Service\OFNameToImageConvert.cs" />
+    <Compile Include="Service\OFNavigationService.cs" />
+    <Compile Include="Service\OFScrollBehavior.cs" />
+    <Compile Include="Service\OFSlideDirectionEventArgs.cs" />
+    <Compile Include="Service\OFTransitionElementAdaptor.cs" />
+    <Compile Include="Strategy\CommadStrategyFactory.cs" />
+    <Compile Include="Strategy\EmailCommandStrategy.cs" />
+    <Compile Include="Strategy\FileCommandStrategy.cs" />
+    <Compile Include="ViewModel\AdvancedSearchViewModel.cs" />
+    <Compile Include="ViewModel\AllFilesViewModel.cs" />
+    <Compile Include="ViewModel\AttachmentViewModel.cs" />
+    <Compile Include="ViewModel\ContactDetailsViewModel.cs" />
+    <Compile Include="ViewModel\ContactViewModel.cs" />
+    <Compile Include="ViewModel\ElasticSearchMonitoringViewModel.cs" />
+    <Compile Include="ViewModel\LogFileManager\OFLogFilesSenderManager.cs" />
+    <Compile Include="ViewModel\Settings\OFCoreSettingsViewModel.cs" />
+    <Compile Include="ViewModel\Settings\OFElasticSearchRiverSettingsViewModel.cs" />
+    <Compile Include="ViewModel\ElasticSearchViewModel.cs" />
+    <Compile Include="ViewModel\EmailViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\Settings\OFLoggingSettingsViewModel.cs" />
+    <Compile Include="ViewModel\Settings\OFMainSettingsViewModel.cs" />
+    <Compile Include="ViewModel\Settings\OFOutlookAutoCompleteSettingsViewModel.cs" />
+    <Compile Include="ViewModel\Settings\OFOutlookSecutirySettingsViewModel.cs" />
+    <Compile Include="ViewModel\Settings\OFServiceApplicationSettingsViewModel.cs" />
+    <Compile Include="ViewModel\Suggest\OFEmailSuggestViewModel.cs" />
+    <Compile Include="View\AdvancedSearchSettingsView.xaml.cs">
+      <DependentUpon>AdvancedSearchSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AdvancedSearchDataView.xaml.cs">
+      <DependentUpon>AdvancedSearchDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AllFilesDataView.xaml.cs">
+      <DependentUpon>AllFilesDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AllFilesSettingsView.xaml.cs">
+      <DependentUpon>AllFilesSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AttachmentDataView.xaml.cs">
+      <DependentUpon>AttachmentDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AttachmentSettingsView.xaml.cs">
+      <DependentUpon>AttachmentSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ContactDataView.xaml.cs">
+      <DependentUpon>ContactDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ContactDetailsView.xaml.cs">
+      <DependentUpon>ContactDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ContactEmailDetailsView.xaml.cs">
+      <DependentUpon>ContactEmailDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ContactFileDetailsView.xaml.cs">
+      <DependentUpon>ContactFileDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ContactSettingsView.xaml.cs">
+      <DependentUpon>ContactSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Controls\TextboxAutoComplete.xaml.cs">
+      <DependentUpon>TextboxAutoComplete.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ElasticSearchMonitoringView.xaml.cs">
+      <DependentUpon>ElasticSearchMonitoringView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Settings\ElasticSearchRiverSettingsView.xaml.cs">
+      <DependentUpon>ElasticSearchRiverSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ElasticSearchView.xaml.cs">
+      <DependentUpon>ElasticSearchView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\EmailDataView.xaml.cs">
+      <DependentUpon>EmailDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\EmailSettingsView.xaml.cs">
+      <DependentUpon>EmailSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\KindsView.xaml.cs">
+      <DependentUpon>KindsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Settings\OFLoggingSettingsView.xaml.cs">
+      <DependentUpon>OFLoggingSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Settings\OFMainSettingsView.xaml.cs">
+      <DependentUpon>OFMainSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PreviewView.xaml.cs">
+      <DependentUpon>PreviewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Settings\OFOutlookAutoCompleteSettingsView.xaml.cs">
+      <DependentUpon>OFOutlookAutoCompleteSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Settings\OFOutlookSecuritySettingsView.xaml.cs">
+      <DependentUpon>OFOutlookSecuritySettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Settings\OFServiceApplicationSettingsView.xaml.cs">
+      <DependentUpon>OFServiceApplicationSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SidebarKindsView.xaml.cs">
+      <DependentUpon>SidebarKindsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Windows\OFEmailSuggestWindow.xaml.cs">
+      <DependentUpon>OFEmailSuggestWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Windows\OFMainSettingsWindow.xaml.cs">
+      <DependentUpon>OFMainSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OFModule.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WSPreview\OF.Preview.csproj">
+      <Project>{3e9f9f18-b9ad-4dde-a5d6-f71b75c737d2}</Project>
+      <Name>OF.Preview</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WSUI.Core\OF.Core.csproj">
+      <Project>{D650F4E9-99FE-46EC-A59D-BF3A99652255}</Project>
+      <Name>OF.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WSUI.Infrastructure\OF.Infrastructure.csproj">
+      <Project>{0c9d56f2-fc4f-4677-a33e-e3e9e09c30c0}</Project>
+      <Name>OF.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="OFModule.snk" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\cross-button.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Toolkits\Elasticsearch.Net.5.3.0\Elasticsearch.Net.dll" />
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Toolkits\ZipLib\ICSharpCode.SharpZipLib.dll" />
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Toolkits\Log4Net\net40-client\log4net.dll" />
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Toolkits\MahAppMetro\MahApps.Metro.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Microsoft.CSharp.dll" />
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Toolkits\Interop\Outlook\Microsoft.Office.Interop.Outlook.dll">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </ReferencePath>
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Toolkits\Prism\Microsoft.Practices.Prism.dll" />
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Toolkits\Prism\Microsoft.Practices.Prism.UnityExtensions.dll" />
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Toolkits\Prism\Microsoft.Practices.Unity.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\mscorlib.dll" />
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Toolkits\NEST.5.3.0\Nest.dll" />
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Toolkits\Newtonsoft.Json.9.0.1\Newtonsoft.Json.dll" />
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Output\OF.Core.dll" />
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Output\OF.Infrastructure.dll" />
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Output\OF.Preview.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\PresentationCore.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\PresentationFramework.Aero.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\PresentationFramework.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Configuration.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Core.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Data.DataSetExtensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Data.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Drawing.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.ServiceProcess.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Windows.Forms.dll" />
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Toolkits\MahAppMetro\System.Windows.Interactivity.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Xaml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Xml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Xml.Linq.dll" />
+    <ReferencePath Include="E:\Sources\WSSQL_GUI\Toolkits\Transitions\Transitionals.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\WindowsBase.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\WindowsFormsIntegration.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\Service\Dialogs\Message\OFMessageView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\AdvancedSearchSettingsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\AdvancedSearchDataView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\AllFilesDataView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\AllFilesSettingsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\AttachmentDataView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\AttachmentSettingsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\ContactDataView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\ContactDetailsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\ContactEmailDetailsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\ContactFileDetailsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\ContactSettingsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\Controls\TextboxAutoComplete.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\ElasticSearchMonitoringView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\Settings\ElasticSearchRiverSettingsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\ElasticSearchView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\EmailDataView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\EmailSettingsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\KindsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\Settings\OFLoggingSettingsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\Settings\OFMainSettingsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\PreviewView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\Settings\OFOutlookAutoCompleteSettingsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\Settings\OFOutlookSecuritySettingsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\Settings\OFServiceApplicationSettingsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\SidebarKindsView.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\Windows\OFEmailSuggestWindow.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\View\Windows\OFMainSettingsWindow.g.cs" />
+    <Compile Include="E:\Sources\WSSQL_GUI\WSUI.Module\obj\Debug\GeneratedInternalTypeHelper.g.cs" />
+  </ItemGroup>
+</Project>

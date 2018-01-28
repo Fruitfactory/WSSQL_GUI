@@ -86,7 +86,7 @@ namespace OF.Module.ViewModel
             {
                 ElasticSearchClient.WarmUp();
             }
-
+            IsNeedForcing = !IsIndexExisted;
         }
 
         public object View
@@ -122,6 +122,12 @@ namespace OF.Module.ViewModel
         {
             get { return Get(() => IsBusy); }
             private set { Set(() => IsBusy, value); }
+        }
+
+        public bool IsNeedForcing
+        {
+            get { return Get(() => IsNeedForcing); }
+            private set { Set(() => IsNeedForcing, value); }
         }
 
         public bool IsVisible
@@ -301,7 +307,7 @@ namespace OF.Module.ViewModel
                 IsServiceRunning = sct.Status == ServiceControllerStatus.Running;
             }
 #if DEBUG
-            //IsServiceRunning = IsServiceInstalled = true;
+            IsServiceRunning = IsServiceInstalled = true;
 #endif
             if (IsServiceRunning)
             {
@@ -340,9 +346,9 @@ namespace OF.Module.ViewModel
         private void CheckIndexState()
         {
             var resp = ElasticSearchClient.IndexExists(OFElasticSearchClientBase.DefaultInfrastructureName);
-            IsIndexExisted = resp.Exists; //false;//
+            IsIndexExisted = resp.Exists;
             var riverStatusResp = ElasticSearchClient.GetRiverStatus();
-            var status = JsonConvert.DeserializeObject<IEnumerable<OFReaderStatus>>(riverStatusResp.Body.ToString());
+            var status = riverStatusResp.IsNotNull() ? JsonConvert.DeserializeObject<IEnumerable<OFReaderStatus>>(riverStatusResp.Body.ToString()) : null;
 
             IsInitialIndexinginProgress = status.IsNotNull()
                 && status.Any()
@@ -376,12 +382,12 @@ namespace OF.Module.ViewModel
                 }
                 disp.BeginInvoke((Action)(() =>
                {
-                       CheckServicesAndIndex();
-                       if (IsServiceRunning && IsIndexExisted && !IsInitialIndexinginProgress)
-                       {
-                           Close();
-                       }
-                   }));
+                   CheckServicesAndIndex();
+                   if (IsServiceRunning && IsIndexExisted && !IsInitialIndexinginProgress)
+                   {
+                       Close();
+                   }
+               }));
             };
             backGround.RunWorkerAsync();
 
@@ -394,9 +400,9 @@ namespace OF.Module.ViewModel
             Task.Factory.StartNew(async () =>
             {
                 await Task.Delay(1000); // warm up the index.
-          StartIndexing();
+                StartIndexing();
                 await Task.Delay(1000); // starting
-          CreateIndexVisibility = Visibility.Collapsed;
+                CreateIndexVisibility = Visibility.Collapsed;
                 ShowProgress = Visibility.Visible;
             });
         }
@@ -416,6 +422,7 @@ namespace OF.Module.ViewModel
                 return;
             }
             forceClient.Force();
+            IsNeedForcing = false;
         }
 
         private void ExecuteCommandForService(string command)

@@ -2,27 +2,20 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.ServiceModel.Configuration;
 using System.Threading;
-using System.Windows.Documents;
 using Microsoft.Practices.Prism.Events;
 using OF.Core;
 using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Data.NamedPipeMessages;
-using OF.Core.Data.NamedPipeMessages.Response;
 using OF.Core.Enums;
 using OF.Core.Extensions;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
-using OF.Core.Logger;
 using OF.Infrastructure.NamedPipes;
-using OF.Infrastructure.Service.Helpers;
-using OF.Infrastructure.Service.Index;
 using OF.ServiceApp.Controllers;
 using OF.ServiceApp.Core;
 using OF.ServiceApp.Events;
 using OF.ServiceApp.Interfaces;
-using OF.ServiceApp.Service;
 
 namespace OF.ServiceApp.Bootstraper
 {
@@ -87,7 +80,7 @@ namespace OF.ServiceApp.Bootstraper
                     if (_controller.IsNotNull())
                     {
                         _controller.SetOfPluginStatus((bool)message.Payload);
-                    }
+                    } 
                     break;
             }
             return response;

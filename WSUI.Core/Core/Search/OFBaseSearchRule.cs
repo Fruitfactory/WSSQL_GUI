@@ -41,7 +41,6 @@ namespace OF.Core.Core.Search
     {
         #region [needs private]
 
-        private Thread _ruleThread;
         private volatile bool _isSearching = false;
         private bool _exludeIgnored = false;
         private IElasticSearchClient _elasticSearchClient;
@@ -50,6 +49,7 @@ namespace OF.Core.Core.Search
         private long _total = 0;
         private List<OFRuleToken> _keywords;
         private IUnityContainer _unityContainer;
+        private IOFSearchThreadPool _searchThreadPool;
 
         #endregion [needs private]
 
@@ -99,6 +99,7 @@ namespace OF.Core.Core.Search
             _unityContainer = unityContainer;
             _elasticSearchClient = _unityContainer.Resolve<IElasticSearchClient>();
             _create = New<T>.Instance;
+            _searchThreadPool = _unityContainer.Resolve<IOFSearchThreadPool>();
         }
 
         public ISearchResult GetResults()
@@ -129,8 +130,7 @@ namespace OF.Core.Core.Search
                 return;
             }
             InitBeforeSearching();
-            _ruleThread = new Thread(DoQuery) { Priority = ThreadPriority.Highest, Name = string.Format("{0}({1})", this.GetType().Name, typeof(T).Name) };
-            _ruleThread.Start();
+            _searchThreadPool.AddAction(DoQuery);
         }
 
         public virtual void Stop()

@@ -138,6 +138,7 @@
     <Compile Include="Data\ElasticSearch\OFPluginStatusContainer.cs" />
     <Compile Include="Data\ElasticSearch\OFQueryBoolConditions.cs" />
     <Compile Include="Data\ElasticSearch\OFRiverMeta.cs" />
+    <Compile Include="Data\ElasticSearch\OFShortContact.cs" />
     <Compile Include="Data\ElasticSearch\OFStore.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleContentMatchPhrase.cs" />
     <Compile Include="Data\ElasticSearch\Request\Attachment\OFAttachmentSimpleContentTerm.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Data\Settings\ControllerSettings\OFNightIdleSettings.cs" />
     <Compile Include="Data\Settings\ControllerSettings\OFOnlyAtSettings.cs" />
     <Compile Include="Data\Settings\OFTypeInspectionPayloadSettings.cs" />
+    <Compile Include="Data\Settings\SettingsPayload\OFAutoCompleteSettingsPayload.cs" />
     <Compile Include="Enums\OFOutlookItemsIndexProcess.cs" />
     <Compile Include="Enums\OFPluginStatus.cs" />
     <Compile Include="Enums\OFSettingsType.cs" />
@@ -223,6 +225,9 @@
     <Compile Include="Interfaces\IForceClient.cs" />
     <Compile Include="Interfaces\IElasticSearchIndexOutlookItemsClient.cs" />
     <Compile Include="Interfaces\IElasticSearchItemsCount.cs" />
+    <Compile Include="Interfaces\IOFElasticsearchShortContactClient.cs" />
+    <Compile Include="Interfaces\IOFSearchThreadPool.cs" />
+    <Compile Include="Interfaces\IOFWorkThread.cs" />
     <Compile Include="Interfaces\IServiceAppOFPluginStatusClient.cs" />
     <Compile Include="Interfaces\IElasticSearchRiverStatus.cs" />
     <Compile Include="Interfaces\IElasticTrackingClient.cs" />
@@ -376,6 +381,8 @@
     <Compile Include="JsonSettings\OFLowercaseContractResolver.cs" />
     <Compile Include="Logger\OFEventLogger.cs" />
     <Compile Include="Logger\OFLogger.cs" />
+    <Compile Include="Pool\OFSearchThreadPool.cs" />
+    <Compile Include="Pool\OFWorkThread.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Dialog\Interfaces\IOFEmailViewModel.cs" />
     <Compile Include="Utils\Dialog\Interfaces\IOFView.cs" />
@@ -436,9 +443,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\Settings\SettingsPayload\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

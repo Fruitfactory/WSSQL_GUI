@@ -9,6 +9,7 @@ using OF.Core.Core.MVVM;
 using OF.Core.Extensions;
 using OF.Core.Logger;
 using OF.Core.Utils.Dialog;
+using OF.Infrastructure.Helpers;
 using OF.Module.Interface.View;
 using OF.Module.Interface.ViewModel;
 
@@ -58,6 +59,7 @@ namespace OF.Module.ViewModel.Settings
             _detailsSettingsViewModels.Add(_unityContainer.Resolve<ILoggingSettingsViewModel>());
             _detailsSettingsViewModels.Add(_unityContainer.Resolve<IServiceApplicationSettingsViewModel>());
             _detailsSettingsViewModels.Add(_unityContainer.Resolve<IOutlookSecuritySettingsViewModel>());
+            _detailsSettingsViewModels.Add(_unityContainer.Resolve<IOutlookAutoCompleteSettingsViewModel>());
 
             if (_detailsSettingsViewModels[2].IsNotNull())
             {
@@ -98,6 +100,11 @@ namespace OF.Module.ViewModel.Settings
             get { return _detailsSettingsViewModels[3] as IOutlookSecuritySettingsViewModel; }
         }
 
+        public IOutlookAutoCompleteSettingsViewModel OutlookAutoCompleateSettingsViewModel
+        {
+            get { return _detailsSettingsViewModels[4] as IOutlookAutoCompleteSettingsViewModel;}
+        }
+
         public int SelectedTab
         {
             get { return Get(() => SelectedTab); }
@@ -108,8 +115,7 @@ namespace OF.Module.ViewModel.Settings
         {
             get
             {
-                return ServiceApplicationSettingsViewModel.IsElasticSearchServiceRunning &&
-                       ServiceApplicationSettingsViewModel.IsElasticSearchServiceInstalled;
+                return ServiceApplicationSettingsViewModel.IsElasticSearchServiceRunning && ServiceApplicationSettingsViewModel.IsElasticSearchServiceInstalled;
             }
         }
 
@@ -134,7 +140,11 @@ namespace OF.Module.ViewModel.Settings
         {
             try
             {
-                _detailsSettingsViewModels.ForEach(d => d.ApplySettings());
+                _detailsSettingsViewModels.Where(s => !s.IsRequiredAdminRights).ForEach(d => d.ApplySettings());
+                var adminSettings =
+                    _detailsSettingsViewModels.Where(s => s.IsRequiredAdminRights).Select(s => s.GetAdminSettings());
+                OFInspectionHelper.Instance.RunFixSettings(adminSettings);
+
             }
             catch (Exception ex)
             {

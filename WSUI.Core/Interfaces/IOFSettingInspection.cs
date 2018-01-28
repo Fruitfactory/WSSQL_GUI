@@ -4,7 +4,7 @@ namespace OF.Core.Interfaces
 {
     public interface IOFSettingInspection
     {
-        bool IsValidValueOfSetting { get; }
+        bool? IsValidValueOfSetting { get; }
 
         OFSettingsType SettingsType { get; }
 

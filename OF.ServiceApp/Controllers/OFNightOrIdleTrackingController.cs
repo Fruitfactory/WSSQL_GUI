@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Newtonsoft.Json;
 using OF.Core;
 using OF.Core.Data.ElasticSearch;
@@ -9,6 +10,8 @@ using OF.Infrastructure.NamedPipes;
 using OF.Infrastructure.Service.Helpers;
 using OF.ServiceApp.Core;
 using Microsoft.Practices.Prism.Events;
+using OF.Core.Extensions;
+using OF.Core.Logger;
 
 namespace OF.ServiceApp.Controllers
 {
@@ -24,12 +27,18 @@ namespace OF.ServiceApp.Controllers
         protected override void ParseSettings(OFRiverMeta settings)
         {
             _localSettings = JsonConvert.DeserializeObject(settings.Pst.Schedule.Settings, typeof(OFNightIdleSettings)) as OFNightIdleSettings;
+            if (_localSettings.IsNotNull())
+            {
+                _activityTracker = new OFUserActivityTracker(_localSettings.IdleTime);
+            }
         }
 
         protected override int OnRun(DateTime? lastDateTime)
         {
+            OFLogger.Instance.LogDebug($"Run controller...");
+
+            _activityTracker.SetLastDate(lastDateTime);
             GetReader().Start(lastDateTime);
-            _activityTracker = new OFUserActivityTracker(_localSettings.IdleTime,lastDateTime);
             _activityTracker.Start(GetReader());
             
             GetReader().Join();
@@ -41,6 +50,7 @@ namespace OF.ServiceApp.Controllers
         protected override void OnEventProcessing()
         {
             base.OnEventProcessing();
+            OFLogger.Instance.LogDebug($"Update Activity Tracker...");
             _activityTracker?.Update(IsForced);
         }
 

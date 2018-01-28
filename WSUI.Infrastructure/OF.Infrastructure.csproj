@@ -131,16 +131,22 @@
     <Compile Include="..\Version.cs">
       <Link>Properties\Version.cs</Link>
     </Compile>
+    <Compile Include="Behaviors\OFEventToComandBehavior.cs" />
+    <Compile Include="Events\OFSelectSuggestEmailEvent.cs" />
+    <Compile Include="Events\OFSuggestedEmailEvent.cs" />
     <Compile Include="Helpers\OFEmailCommandPreviewHelper.cs" />
     <Compile Include="Helpers\OFInspectionHelper.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticInitializingClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticRiverStatus.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSeachIndexOutlookItemsClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchClient.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFElasticsearchShortContactClient.cs" />
+    <Compile Include="Implements\ElasticSearch\Clients\OFElasticUpdateSettingsClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFForceClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OfServiceAppOfPluginStatusClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticSearchRemovingClient.cs" />
     <Compile Include="Implements\ElasticSearch\Clients\OFElasticsearchStoreClient.cs" />
+    <Compile Include="Implements\Inspections\OFESAutoCompleteSettingsInspection.cs" />
     <Compile Include="Implements\Inspections\OFESServiceSettingInspection.cs" />
     <Compile Include="MVVM\AdvancedSearch\OFSortByAdvancedSearchCriteria.cs" />
     <Compile Include="MVVM\AdvancedSearch\OFStringAdvancedSearchCriteria.cs" />
@@ -215,6 +221,7 @@
     <Compile Include="NamedPipes\OFNamedPipeClient.cs" />
     <Compile Include="NamedPipes\OFNamedPipeServer.cs" />
     <Compile Include="Payloads\OFSearchObjectPayload.cs" />
+    <Compile Include="Payloads\OFSuggestedEmailPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

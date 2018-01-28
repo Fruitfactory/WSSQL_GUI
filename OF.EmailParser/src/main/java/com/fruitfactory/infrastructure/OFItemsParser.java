@@ -46,7 +46,7 @@ public class OFItemsParser {
             OFTimeWatch watch = new OFTimeWatch();
             logger.info("Start parsing...");
             parsedContent = tika.parseToString(new ByteInputStream(byteBuffer,byteBuffer.length), new Metadata());
-            logger.info(String.format("Parsed time: %s ms", watch.timeInMiliSeconds()));
+            logger.info(String.format("Parsed time: %s ms", watch.timeInSeconds()));
             attachment.setAnalyzedcontent(parsedContent);
         }catch (Exception ex){
             logger.error(ex.toString());

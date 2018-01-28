@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel;
+using OF.Core.Data.Settings;
 
 namespace OF.Module.Interface.ViewModel
 {
     public interface IDetailsSettingsViewModel : INotifyPropertyChanged
     {
+        bool IsRequiredAdminRights { get; }
+
         void ApplySettings();
 
         object View { get; }
@@ -12,6 +15,8 @@ namespace OF.Module.Interface.ViewModel
 
         bool HasDetailsChanges { get; }
 
-            
+        OFTypeInspectionPayloadSettings GetAdminSettings();
+
+
     }
 }

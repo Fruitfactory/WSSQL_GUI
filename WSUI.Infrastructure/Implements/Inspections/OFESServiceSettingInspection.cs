@@ -7,7 +7,7 @@ namespace OF.Infrastructure.Implements.Inspections
 {
     public sealed class OFESServiceSettingInspection : OFSettingInspection
     {
-        public override bool IsValidValueOfSetting
+        public override bool? IsValidValueOfSetting
         {
             get { return CheckSetting(); }
         }

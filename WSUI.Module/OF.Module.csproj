@@ -160,8 +160,10 @@
     <Compile Include="Core\OFKindsConstName.cs" />
     <Compile Include="Core\OFKindViewModelBase.cs" />
     <Compile Include="Core\OFLazyKind.cs" />
+    <Compile Include="Data\OFSuggestWindowData.cs" />
     <Compile Include="Enums\Enums.cs" />
     <Compile Include="Events\OFElasticsearchServiceStartedEvent.cs" />
+    <Compile Include="Events\OFSuggestWindowVisible.cs" />
     <Compile Include="Interface\Service\ICommandStrategy.cs" />
     <Compile Include="Interface\Service\IMainSettingsWindow.cs" />
     <Compile Include="Interface\Service\INavigationService.cs" />
@@ -174,9 +176,11 @@
     <Compile Include="Interface\ViewModel\IElasticSearchMonitoringViewModel.cs" />
     <Compile Include="Interface\ViewModel\IElasticSearchRiverSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IElasticSearchViewModel.cs" />
+    <Compile Include="Interface\ViewModel\IOFEmailSuggestViewModel.cs" />
     <Compile Include="Interface\ViewModel\ILoggingSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IMainSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IOFLogFilesSenderManager.cs" />
+    <Compile Include="Interface\ViewModel\IOutlookAutoCompleteSettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IOutlookSecuritySettingsViewModel.cs" />
     <Compile Include="Interface\ViewModel\IServiceApplicationSettingsViewModel.cs" />
     <Compile Include="Interface\View\IAllDataView.cs" />
@@ -196,6 +200,8 @@
     <Compile Include="Interface\View\IMainSettingsView.cs" />
     <Compile Include="Interface\View\IMainView.cs" />
     <Compile Include="Interface\ViewModel\IMainViewModel.cs" />
+    <Compile Include="Interface\View\IOFEmailSuggestWindow.cs" />
+    <Compile Include="Interface\View\IOutlookAutoCompleteSettingsView.cs" />
     <Compile Include="Interface\View\IOutlookSecuritySettingsView.cs" />
     <Compile Include="Interface\View\IPreviewView.cs" />
     <Compile Include="Interface\View\IScrollableView.cs" />
@@ -213,6 +219,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Service\AdvancedSearch\OFAdvancedSearchTemplateSelector.cs" />
+    <Compile Include="Service\Behaviors\OFListBoxAutoScrollBehavior.cs" />
     <Compile Include="Service\OFAllFilesDataTemplateSelector.cs" />
     <Compile Include="Service\Behaviors\OFActualHeightBehavior.cs" />
     <Compile Include="Service\Behaviors\OFListboxSelectOnClickBehavior.cs" />
@@ -227,6 +234,7 @@
       <DependentUpon>OFMessageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Service\OFDoubleClickBehavior.cs" />
+    <Compile Include="Service\OFEmailSuggestingTemplateSelector.cs" />
     <Compile Include="Service\OFFileExestensionsHelper.cs" />
     <Compile Include="Service\OFGridLengthAnimation.cs" />
     <Compile Include="Service\OFHelperConst.cs" />
@@ -248,14 +256,17 @@
     <Compile Include="ViewModel\ContactViewModel.cs" />
     <Compile Include="ViewModel\ElasticSearchMonitoringViewModel.cs" />
     <Compile Include="ViewModel\LogFileManager\OFLogFilesSenderManager.cs" />
+    <Compile Include="ViewModel\Settings\OFCoreSettingsViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFElasticSearchRiverSettingsViewModel.cs" />
     <Compile Include="ViewModel\ElasticSearchViewModel.cs" />
     <Compile Include="ViewModel\EmailViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFLoggingSettingsViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFMainSettingsViewModel.cs" />
+    <Compile Include="ViewModel\Settings\OFOutlookAutoCompleteSettingsViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFOutlookSecutirySettingsViewModel.cs" />
     <Compile Include="ViewModel\Settings\OFServiceApplicationSettingsViewModel.cs" />
+    <Compile Include="ViewModel\Suggest\OFEmailSuggestViewModel.cs" />
     <Compile Include="View\AdvancedSearchSettingsView.xaml.cs">
       <DependentUpon>AdvancedSearchSettingsView.xaml</DependentUpon>
     </Compile>
@@ -319,6 +330,9 @@
     <Compile Include="View\PreviewView.xaml.cs">
       <DependentUpon>PreviewView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Settings\OFOutlookAutoCompleteSettingsView.xaml.cs">
+      <DependentUpon>OFOutlookAutoCompleteSettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Settings\OFOutlookSecuritySettingsView.xaml.cs">
       <DependentUpon>OFOutlookSecuritySettingsView.xaml</DependentUpon>
     </Compile>
@@ -327,6 +341,9 @@
     </Compile>
     <Compile Include="View\SidebarKindsView.xaml.cs">
       <DependentUpon>SidebarKindsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Windows\OFEmailSuggestWindow.xaml.cs">
+      <DependentUpon>OFEmailSuggestWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Windows\OFMainSettingsWindow.xaml.cs">
       <DependentUpon>OFMainSettingsWindow.xaml</DependentUpon>
@@ -450,6 +467,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Settings\OFOutlookAutoCompleteSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Settings\OFOutlookSecuritySettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -459,6 +480,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SidebarKindsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Windows\OFEmailSuggestWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -563,6 +588,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\logo.png" />
     <Resource Include="Images\Advanced.png" />
     <Resource Include="Images\application-plus-red.png" />
     <Content Include="Images\cross-button.png" />

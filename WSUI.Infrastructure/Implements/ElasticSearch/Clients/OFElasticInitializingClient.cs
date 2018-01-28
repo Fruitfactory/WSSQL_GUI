@@ -94,11 +94,11 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             {
                 var value = "a";
                 var result = ElasticClient.Search<OFContact>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
-                            q.Bool(bd => bd.Should(t => t.Term(c => c.Firstname, value),
-                                t => t.Term(c => c.Lastname, value),
-                                t => t.Term(c => c.Emailaddress1, value),
-                                t => t.Term(c => c.Emailaddress2, value),
-                                t => t.Term(c => c.Emailaddress3, value)))));
+                    q.Bool(bd => bd.Should(t => t.Term(c => c.Firstname, value),
+                        t => t.Term(c => c.Lastname, value),
+                        t => t.Term(c => c.Emailaddress1, value),
+                        t => t.Term(c => c.Emailaddress2, value),
+                        t => t.Term(c => c.Emailaddress3, value)))));
                 if (result.IsNotNull() && result.Documents.Any())
                 {
                     OFLogger.Instance.LogDebug("Warm Up Contact: {0} contacts", result.Documents.Count());
@@ -118,17 +118,17 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                 var value = "outlook";
                 var email = "@";
                 var result = ElasticClient.Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
-                        q.Term(e => e.Subject, value)));
+                    q.Term(e => e.Subject, value)));
                 result = ElasticClient.Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
-                                        q.Term(e => e.Analyzedcontent, value)));
+                    q.Term(e => e.Analyzedcontent, value)));
                 result = ElasticClient.Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(queryDescriptor => queryDescriptor.Bool(bd => bd.Should(
-                                                                                                                                qd => qd.Term("to.name", email),
-                                                                                                                                qd => qd.Term("to.address", email),
-                                                                                                                                qd => qd.Term("cc.name", email),
-                                                                                                                                qd => qd.Term("cc.address", email),
-                                                                                                                                qd => qd.Term("fromname", email),
-                                                                                                                                qd => qd.Term("fromaddress", email)
-                                                                                                                                ))));
+                    qd => qd.Term("to.name", email),
+                    qd => qd.Term("to.address", email),
+                    qd => qd.Term("cc.name", email),
+                    qd => qd.Term("cc.address", email),
+                    qd => qd.Term("fromname", email),
+                    qd => qd.Term("fromaddress", email)
+                ))));
                 if (result.IsNotNull() && result.Documents.Any())
                 {
                     OFLogger.Instance.LogDebug("Warm Up EMail: {0} emails", result.Documents.Count());
@@ -147,9 +147,9 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                 var image = "png";
                 var content = "a";
                 var result = ElasticClient.Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
-                            q.Term(a => a.Filename, image)));
+                    q.Term(a => a.Filename, image)));
                 result = ElasticClient.Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
-                            q.Term(a => a.Analyzedcontent, content)));
+                    q.Term(a => a.Analyzedcontent, content)));
                 if (result.IsNotNull() && result.Documents.Any())
                 {
                     OFLogger.Instance.LogDebug("Warm Up attachment: {0} attachments", result.Documents.Count());
@@ -172,40 +172,41 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                 )
                 .Mappings(ms => ms
                     .Map<OFEmail>(m => m
-                                   .AutoMap()
-                                   .Properties(pd => pd
-                                        .Keyword(kd => kd.Name(e => e.ItemName).IgnoreAbove(Int32.MaxValue))
-                                        .Keyword(kd => kd.Name(e => e.ItemUrl).IgnoreAbove(Int32.MaxValue))
-                                        .Keyword(kd => kd.Name(e => e.Folder))
-                                        .Text(td => td.Name(e => e.Content))
-                                        .Text(td => td.Name(e => e.Htmlcontent))
-                                        .Text(td => td.Name(e => e.Analyzedcontent).Index())
-                                        .Keyword(kd => kd.Name(e => e.Subject).IgnoreAbove(Int32.MaxValue))
-                                    ))
+                        .AutoMap()
+                        .Properties(pd => pd
+                            .Keyword(kd => kd.Name(e => e.ItemName).IgnoreAbove(Int32.MaxValue))
+                            .Keyword(kd => kd.Name(e => e.ItemUrl).IgnoreAbove(Int32.MaxValue))
+                            .Keyword(kd => kd.Name(e => e.Folder))
+                            .Text(td => td.Name(e => e.Content))
+                            .Text(td => td.Name(e => e.Htmlcontent))
+                            .Text(td => td.Name(e => e.Analyzedcontent).Index())
+                            .Keyword(kd => kd.Name(e => e.Subject).IgnoreAbove(Int32.MaxValue))
+                        ))
                     .Map<OFContact>(m => m
-                                    .AutoMap()
-                                    .Properties(pd => pd
-                                        .Date(dd => dd
-                                            .Name(c => c.Birthday)
-                                            .Format("yyyy-MM-dd'T'HH:mm:ss.SSS")
-                                            .NullValue(new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, DateTime.MinValue.Hour, DateTime.MinValue.Minute, DateTime.MinValue.Second, 111))))
-                                   )
+                        .AutoMap()
+                        .Properties(pd => pd
+                            .Date(dd => dd
+                                .Name(c => c.Birthday)
+                                .Format("yyyy-MM-dd'T'HH:mm:ss.SSS")
+                                .NullValue(new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, DateTime.MinValue.Hour, DateTime.MinValue.Minute, DateTime.MinValue.Second, 111))))
+                    )
                     .Map<OFAttachmentContent>(m => m
-                                                .AutoMap()
-                                                .Properties(pd => pd
-                                                    .Text(td => td.Name(a => a.Analyzedcontent).Index())
-                                                    .Text(td => td.Name(a => a.Content))
-                                                    .Keyword(kd => kd.Name(a => a.Filename).IgnoreAbove(Int32.MaxValue))
+                        .AutoMap()
+                        .Properties(pd => pd
+                            .Text(td => td.Name(a => a.Analyzedcontent).Index())
+                            .Text(td => td.Name(a => a.Content))
+                            .Keyword(kd => kd.Name(a => a.Filename).IgnoreAbove(Int32.MaxValue))
 
-                                                ))
+                        ))
                     .Map<OFStore>(m => m.AutoMap())
+                    .Map<OFShortContact>(m => m.AutoMap())
                 );
 
             var response = ElasticClient.CreateIndex(descriptor);
 
             OFLogger.Instance.LogDebug("Create Index...");
             OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.ApiCall.HttpStatusCode, response.ApiCall.Success);
-            OFLogger.Instance.LogDebug("Debug Info: {0}",response.DebugInformation);
+            OFLogger.Instance.LogDebug("Debug Info: {0}", response.DebugInformation);
 
             return response.ApiCall.HttpStatusCode == 200;
 
@@ -215,7 +216,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
         {
             var riverMeta = new OFRiverMeta(DefaultInfrastructureName);
 
-            OFObjectJsonSaveReadHelper.Instance.Save(riverMeta, GlobalConst.SettingsRiverFile);
+            OFObjectJsonSaveReadHelper.Instance.SaveElasticSearchSettings(riverMeta);
 
             OFLogger.Instance.LogDebug("Create Settings for service contoroller...");
         }

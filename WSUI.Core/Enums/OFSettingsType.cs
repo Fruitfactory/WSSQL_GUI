@@ -3,6 +3,7 @@
     public enum OFSettingsType
     {
         None,
-        CheckAndFixJvmServivePath
+        CheckAndFixJvmServivePath,
+        AutoComplete
     }
 }

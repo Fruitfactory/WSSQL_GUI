@@ -67,5 +67,14 @@ namespace OF.Core.Extensions
             return hresult & 0x0000FFFF;
         }
 
+        public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> list, int size)
+        {
+            while (list.Any())
+            {
+                yield return list.Take(size);
+                list = list.Skip(size);
+            }
+        }
+
     }
 }

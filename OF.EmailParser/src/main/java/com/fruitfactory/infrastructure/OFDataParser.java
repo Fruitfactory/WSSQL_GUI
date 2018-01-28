@@ -9,14 +9,12 @@ import com.fruitfactory.models.OFItemsContainer;
 public class OFDataParser extends com.fruitfactory.infrastructure.core.OFDataProcess {
 
     private OFItemsParser itemsParser;
-    private OFDataSender dataSender;
+    private IOFDataRepositoryPipe dataTarget;
 
-
-
-    public OFDataParser(IOFDataRepositoryPipe dataSource, String name) {
+    public OFDataParser(IOFDataRepositoryPipe dataSource, IOFDataRepositoryPipe dataTarget, String name) {
         super(dataSource, name);
         itemsParser = new OFItemsParser(getLogger());
-        dataSender = new OFDataSender("sender",getLogger());
+        this.dataTarget = dataTarget;
     }
 
     @Override
@@ -26,7 +24,10 @@ public class OFDataParser extends com.fruitfactory.infrastructure.core.OFDataPro
             itemsParser.processEmail(container);
             itemsParser.processAttachments(container);
 
-            dataSender.sendData(container);
+            dataTarget.pushData(container);
+            if(container != null && container.getEmail()  != null){
+                getLogger().info(String.format("Parse: %s",container.getEmail().getSubject()));
+            }
 
         }catch (Exception ex){
             getLogger().error(ex.toString());

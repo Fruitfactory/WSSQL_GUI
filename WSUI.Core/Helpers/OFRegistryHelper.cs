@@ -290,6 +290,86 @@ namespace OF.Core.Helpers
             }
         }
 
+        public bool IsOutlookAutoCompleateDisabled(string officeVersion)
+        {
+            if (string.IsNullOrEmpty(officeVersion))
+            {
+                return false;
+            }
+            try
+            {
+                var registry = _baseRegistry;
+                var key = string.Format("Software\\Microsoft\\Office\\{0}\\Outlook\\Preferences", officeVersion);
+                var preferences = registry.OpenSubKey(key);
+                var valObj = preferences.GetValue("ShowAutoSug");
+                if (valObj == null)
+                {
+                    key = string.Format("Software\\Microsoft\\Office\\{0}\\Outlook\\Preferences", officeVersion);
+                    preferences = registry.CreateSubKey(key);
+                    if (preferences != null)
+                    {
+                        preferences.SetValue("ShowAutoSug", 0);
+                    }
+                    return false;
+                }
+                int valInt;
+                int.TryParse(valObj.ToString(), out valInt);
+                return valInt == 0;
+            }
+            catch (Exception)
+            {
+
+            }
+            return false;
+        }
+
+        public void DisableOutlookAutoCompleateEmailsToCcBcc(string officeVersion)
+        {
+            Console.WriteLine($"DisableOutlookAutoCompleateEmailsToCcBcc...");
+            SetOutlookAutoCompleateValue(officeVersion,0);
+        }
+
+        public void EnableOutlookAutoCompleateEmailsToCcBcc(string officeVersion)
+        {
+            SetOutlookAutoCompleateValue(officeVersion, 1);
+        }
+
+        private void SetOutlookAutoCompleateValue(string officeVersion, int value)
+        {
+            Console.WriteLine($"Office version: {officeVersion}, value {value}...");
+            if (string.IsNullOrEmpty(officeVersion))
+            {
+                return;
+            }
+            try
+            {
+                var registry = _baseRegistry;
+                var key = string.Format("Software\\Microsoft\\Office\\{0}\\Outlook\\Preferences", officeVersion);
+                Console.WriteLine(key);
+                var preferences = registry.OpenSubKey(key,true);
+                if (preferences == null)
+                {
+                    Console.WriteLine("Preferences was found...");
+                    return;
+                }
+                Console.WriteLine("Write 'ShowAutoSug' {0}",value);
+                preferences.DeleteValue("ShowAutoSug");
+                preferences.SetValue("ShowAutoSug", value);
+                Console.WriteLine("Wrote 'ShowAutoSug' {0}", value);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        public bool CheckAutoCompleateState()
+        {
+            var officeVersion = Instance.GetOutlookVersion().Item1;
+            return Instance.IsOutlookAutoCompleateDisabled(officeVersion);
+        }
+
+
         public bool IsSecurityWarningDisable(string officeVersion)
         {
             if (string.IsNullOrEmpty(officeVersion))

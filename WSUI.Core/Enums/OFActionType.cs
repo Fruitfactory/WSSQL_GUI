@@ -4,6 +4,7 @@ namespace OF.Core.Enums
     
     public enum OFActionType
     {
+        None,
         Copy,
         Cut,
         Paste,
@@ -18,6 +19,11 @@ namespace OF.Core.Enums
         EnableMenu,
         DeleteMail,
         DeleteStore,
+        ShowSuggestEmail,
+        DownSuggestEmail,
+        UpSuggestEmail,
+        SelectSuggestEmail,
+        HideSuggestEmail,
         SendLogFile
     }
 }

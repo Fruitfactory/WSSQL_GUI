@@ -24,7 +24,7 @@ using OF.Module.Service.Dialogs.Message;
 
 namespace OF.Module.ViewModel.Settings
 {
-    public class OFServiceApplicationSettingsViewModel : OFViewModelBase, IServiceApplicationSettingsViewModel
+    public class OFServiceApplicationSettingsViewModel : OFCoreSettingsViewModel, IServiceApplicationSettingsViewModel
     {
         private readonly string ELASTICSEARCH_SERVICE = "elasticsearch";
         private readonly string SERVICE_APP = "serviceapp";
@@ -40,14 +40,7 @@ namespace OF.Module.ViewModel.Settings
             View = view;
         }
 
-        public void ApplySettings()
-        {
-            
-        }
-
-        public object View { get; private set; }
-
-        public void Initialize()
+        public override void Initialize()
         {
             IsServiceAppRunning = CheckServiceAppIsRunning();
             IsServiceAppAutoStartExist = OFRegistryHelper.Instance.IsServiceApplicationAutoRunExist();
@@ -61,11 +54,6 @@ namespace OF.Module.ViewModel.Settings
             WarmingVisibility = Visibility.Collapsed;
             WarmSecond = 10;
         }
-
-       
-
-
-        public bool HasDetailsChanges { get; private set; }
 
         public ICommand ServiceAppAutoStartCommand { get; private set; }
 

@@ -36,7 +36,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
         public IEnumerable<OFStore> GetStores()
         {
-            var result = ElasticClient.Search<OFStore>(qd => qd.From(0));
+            var result = ElasticClient.Search<OFStore>(qd => qd.From(0).Size(100));
             return result.Documents;
         }
         

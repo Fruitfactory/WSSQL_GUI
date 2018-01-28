@@ -23,16 +23,19 @@ namespace OF.Install
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Install settings...");
             try
             {
+                DisableOutlookAutoComplete();
                 AddEnviromentVariable();
                 InstallElasticSearch(args[0], args[1]);
                 ApplyRules("install", args[0], args[1]);
                 RegistrySettings(args[1]);
+                Console.WriteLine("Installing has been done...");
             }
             catch (Exception e)
             {
-                
+                Console.WriteLine(e.ToString());
                 Console.Out.WriteLine(e.ToString());
             }
         }
@@ -62,6 +65,7 @@ namespace OF.Install
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 Console.Out.WriteLine(ex.ToString());
             }
         }
@@ -133,12 +137,12 @@ namespace OF.Install
             }
             catch (Exception exception)
             {
+                Console.WriteLine(exception.ToString());
                 Console.Out.WriteLine("Install Elastis Search: " + exception.Message + "  => path : " + espath);
             }
         }
         
         #endregion
-
 
         #region [firewall]
         
@@ -150,6 +154,7 @@ namespace OF.Install
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 Console.Out.WriteLine(ex.ToString());
             }
         }
@@ -218,5 +223,23 @@ namespace OF.Install
 
 
         #endregion
+
+        #region [disable outlook auto-complete]
+
+        private static void DisableOutlookAutoComplete()
+        {
+            try
+            {
+                var officeVersion = OFRegistryHelper.Instance.GetOutlookVersion().Item1;
+                OFRegistryHelper.Instance.DisableOutlookAutoCompleateEmailsToCcBcc(officeVersion);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+        
+        #endregion
+
     }
 }

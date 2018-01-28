@@ -154,7 +154,9 @@
         
         <Label 
             Margin="3" 
-            Grid.Row="2">
+            Grid.Row="2"
+            Background="Red"
+            Foreground="White">
             These changes will take effect when you restart your computer.</Label>
     </Grid>
 

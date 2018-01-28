@@ -39,6 +39,9 @@
             <controls:MetroTabItem Header="Security">
                 <ContentControl Margin="5" Content="{Binding OutlookSecuritySettingsViewModel.View}"></ContentControl>
             </controls:MetroTabItem>
+            <controls:MetroTabItem Header="Auto-Compleate">
+                <ContentControl Margin="5" Content="{Binding OutlookAutoCompleateSettingsViewModel.View}"></ContentControl>
+            </controls:MetroTabItem>
             
 
         </TabControl>
