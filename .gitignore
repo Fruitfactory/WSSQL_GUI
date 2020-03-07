@@ -234,3 +234,4 @@ pip-log.txt
 *.publish
 /Toolkits/Elasticsearch/data
 /Toolkits/Elasticsearch/logs
+/.vs
