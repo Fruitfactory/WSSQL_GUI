@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using AddinExpress.MSO;
 using OF.Control;
 using OF.Core.Data;
 using OF.Core.Enums;
@@ -22,7 +21,7 @@ namespace OFOutlookPlugin.Managers
         private readonly IDictionary<string,object> _dictionaryDeleteFolders = new Dictionary<string, object>();
 
 
-        private OFAddinModule _module;
+        private ThisAddIn _module;
         private IDictionary<string,Outlook.Folder> _folders = new Dictionary<string, Outlook.Folder>();
         private OFOutlookItemEvents _itemEvents;
         
@@ -30,10 +29,10 @@ namespace OFOutlookPlugin.Managers
 
         #endregion
 
-        public OFOutlookItemsRemovingManager(OFAddinModule Module)
+        public OFOutlookItemsRemovingManager( ThisAddIn Module )
         {
             _module = Module;
-            _itemEvents = new OFOutlookItemEvents(_module,this);
+            _itemEvents = new OFOutlookItemEvents(this);
         }
 
         public void Initialize()
@@ -119,12 +118,13 @@ namespace OFOutlookPlugin.Managers
 
         public void RemoveConnection()
         {
-            _itemEvents.RemoveConnection();
+            //TODO
+            //_itemEvents.RemoveConnection();
         }
 
         public void ConnectTo(Outlook.MailItem MailItem)
         {
-            _itemEvents.ConnectTo(MailItem, true);
+            //_itemEvents.ConnectTo(MailItem, true);
         }
 
 
@@ -159,9 +159,9 @@ namespace OFOutlookPlugin.Managers
                 _folders.Clear();
             }
 
-
-            _itemEvents.RemoveConnection();
-            _itemEvents.Dispose();
+            // TODO
+            //_itemEvents.RemoveConnection();
+            //_itemEvents.Dispose();
         }
     }
 }

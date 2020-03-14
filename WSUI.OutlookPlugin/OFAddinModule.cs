@@ -8,8 +8,6 @@ using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Threading;
-using AddinExpress.MSO;
-using AddinExpress.OL;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using OFPreview.PreviewHandler.Service.OutlookPreview;
@@ -40,11 +38,7 @@ using OFOutlookPlugin.Hooks;
 
 namespace OFOutlookPlugin
 {
-    /// <summary>
-    ///   Add-in Express Add-in Module
-    /// </summary>
-    [GuidAttribute("E854FABB-353C-4B9A-8D18-F66E61F6FCA5"), ProgId(ProgIdDefault)]
-    public class OFAddinModule : AddinExpress.MSO.ADXAddinModule
+    public class OFAddinModule 
     {
         #region [need]
 
@@ -76,48 +70,8 @@ namespace OFOutlookPlugin
         private const int WM_CLOSE = 0x0010;
         private const int WM_QUIT = 0x0012;
         private const int WM_DESTROY = 0x0002;
-        private ADXOlExplorerCommandBar adxMainPluginCommandBar;
-
-        // Outlook 2007
-        private ADXCommandBarButton buttonShow2007;
-
-        private ADXCommandBarButton buttonHide2007;
-        private ADXCommandBarEdit adxCommandBarEditSearchText;
-        private ADXCommandBarButton adxCommandBarButtonSearch;
-
-        //Outlook 2010
-        private ADXRibbonGroup groupSearch;
-
-        private ADXRibbonEditBox adxRibbonEditBoxSearch;
-        private ADXRibbonButton adxRibbonButtonSearch;
-        private ADXRibbonBox adxRibbonBoxSearch;
-        private ADXRibbonTab wsuiTab;
-        private ADXRibbonButton buttonShow;
-        private ADXRibbonTab wsuiMainTab;
-        private ADXRibbonGroup wsuiMainGroup;
-        private ADXRibbonButton wsuiButtonSwitch;
-        private ADXRibbonEditBox wsuiHomeSearch;
-
         private const int WM_LOADED = WM_USER + 1001;
         private ImageList wsuiImageList;
-        private ADXRibbonBox adxMainBox;
-        private ADXRibbonButton wsuiButtonSearch;
-        private ADXRibbonSplitButton btnSplit;
-        private ADXRibbonMenu menuHelp;
-        private ADXRibbonButton btnHelp;
-        private ADXRibbonMenuSeparator adxRibbonMenuSeparator1;
-        private ADXRibbonButton btnAbout;
-        private ADXRibbonSplitButton btnMainSplit;
-        private ADXRibbonMenu mnuMain;
-        private ADXRibbonButton btnMainHelp;
-        private ADXRibbonMenuSeparator btnMainMenuSeparatotr;
-        private ADXRibbonButton btnMainAbout;
-        private ADXOutlookAppEvents OutlookFinderEvents;
-        private AddinExpress.OL.ADXOlFormsCollectionItem formRightSidebar;
-        private ADXRibbonButton mnuSettings;
-        private ADXRibbonButton mnuMainSettings;
-        private ADXRibbonButton adxSendLogOFTab;
-        private ADXRibbonButton adxSendLogMain;
         private const string DefaultNamespace = "MAPI";
 
         #endregion [const]
@@ -128,28 +82,24 @@ namespace OFOutlookPlugin
             Application.EnableVisualStyles();
             InitializeComponent();
             Init();
-            this.OnSendMessage += OFAddinModule_OnSendMessage;
-            this.AddinInitialize += OnAddinInitialize;
-            this.AddinBeginShutdown += OnAddinBeginShutdown;
+            //this.OnSendMessage += OFAddinModule_OnSendMessage;
+            //this.AddinInitialize += OnAddinInitialize;
+            //this.AddinBeginShutdown += OnAddinBeginShutdown;
             _mailRemovingManager = new OFOutlookItemsRemovingManager(this);
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
         }
 
-        private void OnAddinBeginShutdown(object sender, EventArgs eventArgs)
+        public void AddinBeginShutdown(object sender, EventArgs eventArgs)
         {
 
         }
 
-        private void OnAddinInitialize(object sender, EventArgs eventArgs)
+        public void AddinInitialize(object sender, EventArgs eventArgs)
         {
             try
             {
-                if (adxMainPluginCommandBar.UseForRibbon && this.HostMajorVersion > 12)
-                {
-                    adxMainPluginCommandBar.UseForRibbon = false;
-                }
                 //TODO !!!!
                 CheckAndStartServiceApp();
 
@@ -160,437 +110,57 @@ namespace OFOutlookPlugin
             }
         }
 
-        private void OFAddinModule_OnSendMessage(object sender, ADXSendMessageEventArgs e)
+        // TODO: change EventArgs to something particular which transfer the message itself
+        private void OFAddinModuleOnSendMessage(object sender, EventArgs e)
         {
-            switch (e.Message)
-            {
-                case WM_LOADED:
-                    lock (this)
-                    {
-                        RunPluginUI();
-                    }
-                    break;
-            }
+            //switch(e.Message)
+            //{
+            //    case WM_LOADED:
+            //        lock(this)
+            //        {
+            //            RunPluginUI();
+            //        }
+            //        break;
+            //}
         }
-
-        private AddinExpress.OL.ADXOlFormsManager outlookFormManager;
-
         #region Component Designer generated code
 
-        /// <summary>
-        /// Required by designer
-        /// </summary>
-        private System.ComponentModel.IContainer components;
-
-        /// <summary>
-        /// Required by designer support - do not modify
-        /// the following method
-        /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OFAddinModule));
-            this.outlookFormManager = new AddinExpress.OL.ADXOlFormsManager(this.components);
-            this.formRightSidebar = new AddinExpress.OL.ADXOlFormsCollectionItem(this.components);
-            this.wsuiTab = new AddinExpress.MSO.ADXRibbonTab(this.components);
-            this.groupSearch = new AddinExpress.MSO.ADXRibbonGroup(this.components);
-            this.adxRibbonBoxSearch = new AddinExpress.MSO.ADXRibbonBox(this.components);
-            this.adxRibbonEditBoxSearch = new AddinExpress.MSO.ADXRibbonEditBox(this.components);
-            this.adxRibbonButtonSearch = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.buttonShow = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.wsuiImageList = new System.Windows.Forms.ImageList(this.components);
-            this.btnSplit = new AddinExpress.MSO.ADXRibbonSplitButton(this.components);
-            this.menuHelp = new AddinExpress.MSO.ADXRibbonMenu(this.components);
-            this.mnuSettings = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.adxSendLogOFTab = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.btnHelp = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.adxRibbonMenuSeparator1 = new AddinExpress.MSO.ADXRibbonMenuSeparator(this.components);
-            this.btnAbout = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.adxMainPluginCommandBar = new AddinExpress.MSO.ADXOlExplorerCommandBar(this.components);
-            this.buttonShow2007 = new AddinExpress.MSO.ADXCommandBarButton(this.components);
-            this.buttonHide2007 = new AddinExpress.MSO.ADXCommandBarButton(this.components);
-            this.adxCommandBarEditSearchText = new AddinExpress.MSO.ADXCommandBarEdit(this.components);
-            this.adxCommandBarButtonSearch = new AddinExpress.MSO.ADXCommandBarButton(this.components);
-            this.wsuiMainTab = new AddinExpress.MSO.ADXRibbonTab(this.components);
-            this.wsuiMainGroup = new AddinExpress.MSO.ADXRibbonGroup(this.components);
-            this.adxMainBox = new AddinExpress.MSO.ADXRibbonBox(this.components);
-            this.wsuiHomeSearch = new AddinExpress.MSO.ADXRibbonEditBox(this.components);
-            this.wsuiButtonSearch = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.wsuiButtonSwitch = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.btnMainSplit = new AddinExpress.MSO.ADXRibbonSplitButton(this.components);
-            this.mnuMain = new AddinExpress.MSO.ADXRibbonMenu(this.components);
-            this.mnuMainSettings = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.adxSendLogMain = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.btnMainHelp = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.btnMainMenuSeparatotr = new AddinExpress.MSO.ADXRibbonMenuSeparator(this.components);
-            this.btnMainAbout = new AddinExpress.MSO.ADXRibbonButton(this.components);
-            this.OutlookFinderEvents = new AddinExpress.MSO.ADXOutlookAppEvents(this.components);
-            // 
-            // outlookFormManager
-            // 
-            this.outlookFormManager.Items.Add(this.formRightSidebar);
-            this.outlookFormManager.OnInitialize += new AddinExpress.OL.ADXOlFormsManager.OnComponentInitialize_EventHandler(this.outlookFormManager_OnInitialize);
-            this.outlookFormManager.SetOwner(this);
-            // 
-            // formRightSidebar
-            // 
-            this.formRightSidebar.Cached = AddinExpress.OL.ADXOlCachingStrategy.OneInstanceForAllFolders;
-            this.formRightSidebar.DefaultRegionState = AddinExpress.OL.ADXRegionState.Hidden;
-            this.formRightSidebar.ExplorerAllowedDropRegions = AddinExpress.OL.ADXOlExplorerAllowedDropRegions.DockRight;
-            this.formRightSidebar.ExplorerItemTypes = ((AddinExpress.OL.ADXOlExplorerItemTypes)((((((((AddinExpress.OL.ADXOlExplorerItemTypes.olMailItem | AddinExpress.OL.ADXOlExplorerItemTypes.olAppointmentItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olContactItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olTaskItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olJournalItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olNoteItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olPostItem)
-            | AddinExpress.OL.ADXOlExplorerItemTypes.olDistributionListItem)));
-            this.formRightSidebar.ExplorerLayout = AddinExpress.OL.ADXOlExplorerLayout.DockRight;
-            this.formRightSidebar.FormClassName = "OFOutlookPlugin.OFSidebar";
-            this.formRightSidebar.IsMinimizedStateAllowed = false;
-            this.formRightSidebar.RegionBorder = AddinExpress.OL.ADXRegionBorderStyle.None;
-            this.formRightSidebar.UseOfficeThemeForBackground = true;
-            // 
-            // wsuiTab
-            // 
-            this.wsuiTab.Caption = "Outlook Finder";
-            this.wsuiTab.Controls.Add(this.groupSearch);
-            this.wsuiTab.Id = "adxRibbonTab_500b5beadf3a45d9b11245e305940d6c";
-            this.wsuiTab.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            this.wsuiTab.PropertyChanging += new AddinExpress.MSO.ADXRibbonPropertyChanging_EventHandler(this.wsuiTab_PropertyChanging);
-            // 
-            // groupSearch
-            // 
-            this.groupSearch.AutoScale = true;
-            this.groupSearch.Caption = "Outlook Finder";
-            this.groupSearch.Controls.Add(this.adxRibbonBoxSearch);
-            this.groupSearch.Controls.Add(this.buttonShow);
-            this.groupSearch.Controls.Add(this.btnSplit);
-            this.groupSearch.Id = "adxRibbonGroup_c94173390d39441fa25cda51a851cd7a";
-            this.groupSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.groupSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // adxRibbonBoxSearch
-            // 
-            this.adxRibbonBoxSearch.Controls.Add(this.adxRibbonEditBoxSearch);
-            this.adxRibbonBoxSearch.Controls.Add(this.adxRibbonButtonSearch);
-            this.adxRibbonBoxSearch.Id = "adxRibbonBox_dc294efeac8340e788f9e0ebd39ab866";
-            this.adxRibbonBoxSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // adxRibbonEditBoxSearch
-            // 
-            this.adxRibbonEditBoxSearch.Id = "adxRibbonEditBox_decd82b7448b4bbe9853a4a4dee51263";
-            this.adxRibbonEditBoxSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.adxRibbonEditBoxSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            this.adxRibbonEditBoxSearch.ShowCaption = false;
-            this.adxRibbonEditBoxSearch.SizeString = "This is the width";
-            this.adxRibbonEditBoxSearch.Tag = 200121;
-            // 
-            // adxRibbonButtonSearch
-            // 
-            this.adxRibbonButtonSearch.Caption = "Search";
-            this.adxRibbonButtonSearch.Id = "adxRibbonButton_f0ca75ee177a4886a26d3c9246518516";
-            this.adxRibbonButtonSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.adxRibbonButtonSearch.ParseMsoXmlTypeAs = AddinExpress.MSO.ADXParseMsoXmlTypeAs.pxtControl;
-            this.adxRibbonButtonSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // buttonShow
-            // 
-            this.buttonShow.Caption = "Show/Hide";
-            this.buttonShow.Id = "adxRibbonButton_dcb0aa6e6fd442c79ea44b4006d84643";
-            this.buttonShow.Image = 1;
-            this.buttonShow.ImageList = this.wsuiImageList;
-            this.buttonShow.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.buttonShow.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
+            this.wsuiImageList = new System.Windows.Forms.ImageList(null);
             // 
             // wsuiImageList
             // 
-            this.wsuiImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("wsuiImageList.ImageStream")));
+            this.wsuiImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(Properties.Resources.ResourceManager.GetObject("wsuiImageList.ImageStream")));            
             this.wsuiImageList.TransparentColor = System.Drawing.Color.Transparent;
             this.wsuiImageList.Images.SetKeyName(0, "application-plus-red.png");
             this.wsuiImageList.Images.SetKeyName(1, "logo_64.png");
             this.wsuiImageList.Images.SetKeyName(2, "gear.png");
             this.wsuiImageList.Images.SetKeyName(3, "question.png");
             // 
-            // btnSplit
-            // 
-            this.btnSplit.Caption = "More";
-            this.btnSplit.Controls.Add(this.menuHelp);
-            this.btnSplit.Id = "adxRibbonSplitButton_54dfcdd5b26847d19e5fb423558dbdcd";
-            this.btnSplit.Image = 2;
-            this.btnSplit.ImageList = this.wsuiImageList;
-            this.btnSplit.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnSplit.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // menuHelp
-            // 
-            this.menuHelp.Controls.Add(this.mnuSettings);
-            this.menuHelp.Controls.Add(this.adxSendLogOFTab);
-            this.menuHelp.Controls.Add(this.btnHelp);
-            this.menuHelp.Controls.Add(this.adxRibbonMenuSeparator1);
-            this.menuHelp.Controls.Add(this.btnAbout);
-            this.menuHelp.Id = "adxRibbonMenu_0e49baf968b443deaa578f34388228fc";
-            this.menuHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.menuHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            this.menuHelp.ShowCaption = false;
-            // 
-            // mnuSettings
-            // 
-            this.mnuSettings.Caption = "Settings...";
-            this.mnuSettings.Id = "adxRibbonButton_479736670ccc428b8fc2782bc97ca1f1";
-            this.mnuSettings.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.mnuSettings.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // adxSendLogOFTab
-            // 
-            this.adxSendLogOFTab.Caption = "Send log files...";
-            this.adxSendLogOFTab.Id = "adxRibbonButton_a8c2fbe6e8a6444eb293329425e3d082";
-            this.adxSendLogOFTab.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.adxSendLogOFTab.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // btnHelp
-            // 
-            this.btnHelp.Caption = "Help";
-            this.btnHelp.Id = "adxRibbonButton_32e3a315cb2240e690bd8a996bff0ffc";
-            this.btnHelp.Image = 3;
-            this.btnHelp.ImageList = this.wsuiImageList;
-            this.btnHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // adxRibbonMenuSeparator1
-            // 
-            this.adxRibbonMenuSeparator1.Id = "adxRibbonMenuSeparator_0f5aee07dd7b4c2689f6d1e780c9f15a";
-            this.adxRibbonMenuSeparator1.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // btnAbout
-            // 
-            this.btnAbout.Caption = "About";
-            this.btnAbout.Id = "adxRibbonButton_ca1899db162c46dca40d0d2791d231c7";
-            this.btnAbout.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnAbout.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // adxMainPluginCommandBar
-            // 
-            this.adxMainPluginCommandBar.CommandBarName = "adxMainPluginCommandBar";
-            this.adxMainPluginCommandBar.CommandBarTag = "674128a0-9ce1-485c-b1a5-f5ff6897bfc8";
-            this.adxMainPluginCommandBar.Controls.Add(this.buttonShow2007);
-            this.adxMainPluginCommandBar.Controls.Add(this.buttonHide2007);
-            this.adxMainPluginCommandBar.Controls.Add(this.adxCommandBarEditSearchText);
-            this.adxMainPluginCommandBar.Controls.Add(this.adxCommandBarButtonSearch);
-            this.adxMainPluginCommandBar.Temporary = true;
-            this.adxMainPluginCommandBar.UpdateCounter = 21;
-            // 
-            // buttonShow2007
-            // 
-            this.buttonShow2007.Caption = "Show OutlookFinder";
-            this.buttonShow2007.ControlTag = "e314f48a-f1c6-4e22-9e96-2f526c649798";
-            this.buttonShow2007.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.buttonShow2007.Temporary = true;
-            this.buttonShow2007.UpdateCounter = 7;
-            // 
-            // buttonHide2007
-            // 
-            this.buttonHide2007.Caption = "Close OutlookFinder";
-            this.buttonHide2007.ControlTag = "2a1559ac-9958-47f2-bae7-141679f598e8";
-            this.buttonHide2007.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.buttonHide2007.Temporary = true;
-            this.buttonHide2007.UpdateCounter = 5;
-            // 
-            // adxCommandBarEditSearchText
-            // 
-            this.adxCommandBarEditSearchText.BeginGroup = true;
-            this.adxCommandBarEditSearchText.Caption = "Enter search string:";
-            this.adxCommandBarEditSearchText.ControlTag = "84fc0dcb-c517-428b-a63f-73b7340c923a";
-            this.adxCommandBarEditSearchText.Style = AddinExpress.MSO.ADXMsoComboStyle.adxMsoComboLabel;
-            this.adxCommandBarEditSearchText.Temporary = true;
-            this.adxCommandBarEditSearchText.UpdateCounter = 16;
-            this.adxCommandBarEditSearchText.Width = 350;
-            // 
-            // adxCommandBarButtonSearch
-            // 
-            this.adxCommandBarButtonSearch.Caption = "Start search";
-            this.adxCommandBarButtonSearch.ControlTag = "0c750b68-d191-4eec-9745-ff30dbac7360";
-            this.adxCommandBarButtonSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.adxCommandBarButtonSearch.Temporary = true;
-            this.adxCommandBarButtonSearch.UpdateCounter = 3;
-            // 
-            // wsuiMainTab
-            // 
-            this.wsuiMainTab.Caption = "Main Tab";
-            this.wsuiMainTab.Controls.Add(this.wsuiMainGroup);
-            this.wsuiMainTab.Id = "adxRibbonTab_9bda0e619ca1438d9effcf3f083e92e8";
-            this.wsuiMainTab.IdMso = "TabMail";
-            this.wsuiMainTab.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // wsuiMainGroup
-            // 
-            this.wsuiMainGroup.Caption = "Outlook Finder";
-            this.wsuiMainGroup.Controls.Add(this.adxMainBox);
-            this.wsuiMainGroup.Controls.Add(this.wsuiButtonSwitch);
-            this.wsuiMainGroup.Controls.Add(this.btnMainSplit);
-            this.wsuiMainGroup.Id = "adxRibbonGroup_f065ec953c074c6a9e1ba8cae6b9b786";
-            this.wsuiMainGroup.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.wsuiMainGroup.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            this.wsuiMainGroup.PropertyChanging += new AddinExpress.MSO.ADXRibbonPropertyChanging_EventHandler(this.wsuiMainGroup_PropertyChanging);
-            // 
-            // adxMainBox
-            // 
-            this.adxMainBox.Controls.Add(this.wsuiHomeSearch);
-            this.adxMainBox.Controls.Add(this.wsuiButtonSearch);
-            this.adxMainBox.Id = "adxRibbonBox_650813691cb74c5db775e919c877f3ff";
-            this.adxMainBox.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // wsuiHomeSearch
-            // 
-            this.wsuiHomeSearch.Id = "adxRibbonEditBox_8043c3682f36418996476af3affdd7e5";
-            this.wsuiHomeSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.wsuiHomeSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            this.wsuiHomeSearch.ScreenTip = "Search";
-            this.wsuiHomeSearch.ShowCaption = false;
-            this.wsuiHomeSearch.SizeString = "This is the width";
-            this.wsuiHomeSearch.SuperTip = "Enter search criteria";
-            // 
-            // wsuiButtonSearch
-            // 
-            this.wsuiButtonSearch.Caption = "Search";
-            this.wsuiButtonSearch.Id = "adxRibbonButton_c993f00bdccb44988791d19e0e30e00a";
-            this.wsuiButtonSearch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.wsuiButtonSearch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // wsuiButtonSwitch
-            // 
-            this.wsuiButtonSwitch.Caption = "Show/Hide";
-            this.wsuiButtonSwitch.Id = "adxRibbonButton_295c2b7151ed437382c104f4c3d542ce";
-            this.wsuiButtonSwitch.Image = 1;
-            this.wsuiButtonSwitch.ImageList = this.wsuiImageList;
-            this.wsuiButtonSwitch.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.wsuiButtonSwitch.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // btnMainSplit
-            // 
-            this.btnMainSplit.Caption = "More";
-            this.btnMainSplit.Controls.Add(this.mnuMain);
-            this.btnMainSplit.Id = "adxRibbonSplitButton_9b5edc2e0af14b188c856fdddb98dcbe";
-            this.btnMainSplit.Image = 2;
-            this.btnMainSplit.ImageList = this.wsuiImageList;
-            this.btnMainSplit.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnMainSplit.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // mnuMain
-            // 
-            this.mnuMain.Controls.Add(this.mnuMainSettings);
-            this.mnuMain.Controls.Add(this.adxSendLogMain);
-            this.mnuMain.Controls.Add(this.btnMainHelp);
-            this.mnuMain.Controls.Add(this.btnMainMenuSeparatotr);
-            this.mnuMain.Controls.Add(this.btnMainAbout);
-            this.mnuMain.Id = "adxRibbonMenu_eef51eb086df4c2886195868fb76cef8";
-            this.mnuMain.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.mnuMain.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // mnuMainSettings
-            // 
-            this.mnuMainSettings.Caption = "Settings...";
-            this.mnuMainSettings.Id = "adxRibbonButton_bde112361dfb425b89e394ed664825cb";
-            this.mnuMainSettings.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.mnuMainSettings.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // adxSendLogMain
-            // 
-            this.adxSendLogMain.Caption = "Send log files...";
-            this.adxSendLogMain.Id = "adxRibbonButton_8aa9adf95aa842dc9066f039b4b67452";
-            this.adxSendLogMain.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.adxSendLogMain.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // btnMainHelp
-            // 
-            this.btnMainHelp.Caption = "Help";
-            this.btnMainHelp.Id = "adxRibbonButton_e8264c95d9934ff5a85549d2fbeecd7e";
-            this.btnMainHelp.Image = 3;
-            this.btnMainHelp.ImageList = this.wsuiImageList;
-            this.btnMainHelp.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnMainHelp.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // btnMainMenuSeparatotr
-            // 
-            this.btnMainMenuSeparatotr.Id = "adxRibbonMenuSeparator_1001098bd1ed42f7837be7469856176d";
-            this.btnMainMenuSeparatotr.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
-            // btnMainAbout
-            // 
-            this.btnMainAbout.Caption = "About";
-            this.btnMainAbout.Id = "adxRibbonButton_610ffe76131f40c3b097201812603434";
-            this.btnMainAbout.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.btnMainAbout.Ribbons = AddinExpress.MSO.ADXRibbons.msrOutlookExplorer;
-            // 
             // OutlookFinderEvents
             // 
-            this.OutlookFinderEvents.ItemSend += new AddinExpress.MSO.ADXOlItemSend_EventHandler(this.OutlookFinderEvents_ItemSend);
-            this.OutlookFinderEvents.Quit += new System.EventHandler(this.OutlookFinderEvents_Quit);
-            this.OutlookFinderEvents.InspectorActivate += new AddinExpress.MSO.ADXOlInspector_EventHandler(this.OutlookFinderEvents_InspectorActivate);
-            this.OutlookFinderEvents.InspectorClose += new AddinExpress.MSO.ADXOlInspector_EventHandler(this.OutlookFinderEvents_InspectorClose);
-            this.OutlookFinderEvents.NewExplorer += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_NewExplorer);
-            this.OutlookFinderEvents.ExplorerActivate += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerActivate);
-            this.OutlookFinderEvents.ExplorerClose += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerClose);
-            this.OutlookFinderEvents.ExplorerSelectionChange += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerSelectionChange);
-            this.OutlookFinderEvents.ExplorerInlineResponse += new AddinExpress.MSO.ADXOlExplorerInlineResponse_EventHandler(this.OutlookFinderEvents_ExplorerInlineResponse);
-            this.OutlookFinderEvents.ExplorerInlineResponseEx += new AddinExpress.MSO.ADXOlExplorerInlineResponseEx_EventHandler(this.OutlookFinderEvents_ExplorerInlineResponseEx);
-            this.OutlookFinderEvents.ExplorerInlineResponseCloseEx += new AddinExpress.MSO.ADXOlExplorerInlineResponseCloseEx_EventHandler(this.OutlookFinderEvents_ExplorerInlineResponseCloseEx);
-            // 
-            // OFAddinModule
-            // 
-            this.AddinName = "Outlook Finder";
-            this.HandleShortcuts = true;
-            this.SupportedApps = AddinExpress.MSO.ADXOfficeHostApp.ohaOutlook;
-            this.AddinStartupComplete += new AddinExpress.MSO.ADXEvents_EventHandler(this.OFAddinModule_AddinStartupComplete);
-            this.OnKeyDown += new AddinExpress.MSO.ADXKeyDown_EventHandler(this.OFAddinModule_OnKeyDown);
-
+            //this.OutlookFinderEvents.ItemSend += new AddinExpress.MSO.ADXOlItemSend_EventHandler(this.OutlookFinderEvents_ItemSend);
+            //this.OutlookFinderEvents.Quit += new System.EventHandler(this.OutlookFinderEvents_Quit);
+            //this.OutlookFinderEvents.InspectorActivate += new AddinExpress.MSO.ADXOlInspector_EventHandler(this.OutlookFinderEvents_InspectorActivate);
+            //this.OutlookFinderEvents.InspectorClose += new AddinExpress.MSO.ADXOlInspector_EventHandler(this.OutlookFinderEvents_InspectorClose);
+            //this.OutlookFinderEvents.NewExplorer += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_NewExplorer);
+            //this.OutlookFinderEvents.ExplorerActivate += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerActivate);
+            //this.OutlookFinderEvents.ExplorerClose += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerClose);
+            //this.OutlookFinderEvents.ExplorerSelectionChange += new AddinExpress.MSO.ADXOlExplorer_EventHandler(this.OutlookFinderEvents_ExplorerSelectionChange);
+            //this.OutlookFinderEvents.ExplorerInlineResponse += new AddinExpress.MSO.ADXOlExplorerInlineResponse_EventHandler(this.OutlookFinderEvents_ExplorerInlineResponse);
+            //this.OutlookFinderEvents.ExplorerInlineResponseEx += new AddinExpress.MSO.ADXOlExplorerInlineResponseEx_EventHandler(this.OutlookFinderEvents_ExplorerInlineResponseEx);
+            //this.OutlookFinderEvents.ExplorerInlineResponseCloseEx += new AddinExpress.MSO.ADXOlExplorerInlineResponseCloseEx_EventHandler(this.OutlookFinderEvents_ExplorerInlineResponseCloseEx);
         }
 
         #endregion Component Designer generated code
 
-        #region Add-in Express automatic code
-
-        // Required by Add-in Express - do not modify
-        // the methods within this region
-
-        public override System.ComponentModel.IContainer GetContainer()
-        {
-            if (components == null)
-                components = new System.ComponentModel.Container();
-            return components;
-        }
-
-        [ComRegisterFunctionAttribute]
-        public static void AddinRegister(Type t)
-        {
-            AddinExpress.MSO.ADXAddinModule.ADXRegister(t);
-        }
-
-        [ComUnregisterFunctionAttribute]
-        public static void AddinUnregister(Type t)
-        {
-            AddinExpress.MSO.ADXAddinModule.ADXUnregister(t);
-        }
-
-        public override void UninstallControls()
-        {
-            base.UninstallControls();
-        }
-
-        #endregion Add-in Express automatic code
-
-        public static new OFAddinModule CurrentInstance
-        {
-            get
-            {
-                return AddinExpress.MSO.ADXAddinModule.CurrentInstance as OFAddinModule;
-            }
-        }
 
         public Outlook._Application OutlookApp
         {
             get
             {
-                return (HostApplication as Outlook._Application);
+                return null; // TODO: we will get this instance from constructor or somehow else
             }
         }
 
@@ -617,7 +187,7 @@ namespace OFOutlookPlugin
             {
                 //StartWatch();
                 OFLogger.Instance.LogDebug("Plugin is loading...");
-                outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
+                //outlookFormManager.ADXFolderSwitchEx += OutlookFormManagerOnAdxFolderSwitchEx;
                 OFRegistryHelper.Instance.ResetShutdownNotification();
                 new OFAppEmpty();
                 if (System.Windows.Application.Current != null)
@@ -640,13 +210,13 @@ namespace OFOutlookPlugin
             }
         }
 
-
-        private void OutlookFormManagerOnAdxFolderSwitchEx(object sender, FolderSwitchExEventArgs args)
+        // TODO: change EventArgs to something particular
+        public void FolderSwitch(object sender, EventArgs args)
         {
             try
             {
-                var folder = args.FolderObj as Outlook.Folder;
-                _mailRemovingManager.ConnectTo(folder);
+                //var folder = args.FolderObj as Outlook.Folder;
+                //_mailRemovingManager.ConnectTo(folder);
                 if (IsLoading)
                     return;
                 HideSidebarDuringSwitching();
@@ -680,20 +250,6 @@ namespace OFOutlookPlugin
             }));
         }
 
-        //#endregion my own initialization
-
-        //private void CheckUpdate()
-        //{
-        //    Stopwatch watch = new Stopwatch();
-        //    watch.Start();
-        //    if (!ReferenceEquals(_updatable, null))
-        //    {
-        //        _updatable.Update();
-        //    }
-        //    watch.Stop();
-        //    OFLogger.Instance.LogInfo(string.Format("Check for update: {0}ms", watch.ElapsedMilliseconds));
-        //}
-
         private void RunPluginUI()
         {
             try
@@ -718,14 +274,6 @@ namespace OFOutlookPlugin
                 CreateEmailSuggesterManager();
                 SetEventAggregatorToManager();
                 SubscribeToEvents();
-
-                var fieldINfo = typeof(ADXAddinModule).GetField("disconnectMode",
-                    BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static);
-                if (fieldINfo.IsNotNull())
-                {
-                    fieldINfo.SetValue(this, ADXDisconnectMode.adx_dm_UISetupComplete);
-                }
-
                 LogVersions();
 
                 IsLoading = false;
@@ -753,14 +301,14 @@ namespace OFOutlookPlugin
             try
             {
                 ISidebarForm form = null;
-                for (int i = 0; i < formRightSidebar.FormInstanceCount; i++)
-                {
-                    form = formRightSidebar.FormInstances(i) as ISidebarForm;
-                    if (form != null)
-                    {
-                        break;
-                    }
-                }
+                //for (int i = 0; i < formRightSidebar.FormInstanceCount; i++)
+                //{
+                //    form = formRightSidebar.FormInstances(i) as ISidebarForm;
+                //    if (form != null)
+                //    {
+                //        break;
+                //    }
+                //}
                 return form;
             }
             catch (Exception ex)
@@ -877,27 +425,28 @@ namespace OFOutlookPlugin
             _emailSuggesterManager = new OFEmailSuggesterManager(_wsuiBootStraper, _eventAggregator);
         }
 
+        //TODO: this will be ractored when I will add command bars
         private void CreateCommandManager()
         {
-            try
-            {
-                _commandManager = adxMainPluginCommandBar.UseForRibbon
-                                      ? (IOFCommandManager)new OFCommandBarManager(buttonShow2007, buttonHide2007, adxCommandBarEditSearchText,
-                                          adxCommandBarButtonSearch)
-                                      : new OFRibbonManager(buttonShow, wsuiButtonSwitch, adxRibbonButtonSearch, adxRibbonEditBoxSearch, wsuiHomeSearch, wsuiButtonSearch, adxSendLogOFTab);
-                if (!adxMainPluginCommandBar.UseForRibbon)
-                {
-                    _aboutCommandManager = new OFMainRibbonCommandManager(btnHelp, btnAbout, mnuSettings, btnMainHelp, btnMainAbout, mnuMainSettings, adxSendLogMain);
-                }
-                else if (OFRegistryHelper.Instance.GetIsPluginUiVisible())
-                {
-                    _commandManager.SetShowHideButtonsEnabling(false, true);
-                }
-            }
-            catch (Exception ex)
-            {
-                OFLogger.Instance.LogError(ex.ToString());
-            }
+            //try
+            //{
+            //    _commandManager = adxMainPluginCommandBar.UseForRibbon
+            //                          ? (IOFCommandManager)new OFCommandBarManager(buttonShow2007, buttonHide2007, adxCommandBarEditSearchText,
+            //                              adxCommandBarButtonSearch)
+            //                          : new OFRibbonManager(buttonShow, wsuiButtonSwitch, adxRibbonButtonSearch, adxRibbonEditBoxSearch, wsuiHomeSearch, wsuiButtonSearch, adxSendLogOFTab);
+            //    if (!adxMainPluginCommandBar.UseForRibbon)
+            //    {
+            //        _aboutCommandManager = new OFMainRibbonCommandManager(btnHelp, btnAbout, mnuSettings, btnMainHelp, btnMainAbout, mnuMainSettings, adxSendLogMain);
+            //    }
+            //    else if (OFRegistryHelper.Instance.GetIsPluginUiVisible())
+            //    {
+            //        _commandManager.SetShowHideButtonsEnabling(false, true);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    OFLogger.Instance.LogError(ex.ToString());
+            //}
         }
 
         private void SetEventAggregatorToManager()
@@ -951,14 +500,15 @@ namespace OFOutlookPlugin
 
         //#endregion Outlook Object Model routines
 
-        private void OFAddinModule_AddinStartupComplete(object sender, EventArgs e)
+        public void AddInStartupComplete(object sender, EventArgs e)
         {
             try
             {
                 //StartWatch();
                 //RestoreOutlookFolder();
                 //CheckUpdate(); // TODO: just for testing
-                this.SendMessage(WM_LOADED, IntPtr.Zero, IntPtr.Zero);
+
+                //this.SendMessage(WM_LOADED, IntPtr.Zero, IntPtr.Zero);
                 OutlookPreviewHelper.Instance.OutlookApp = OutlookApp;
                 OFOutlookHelper.Instance.OutlookApp = OutlookApp;
                 _mailRemovingManager.Initialize();
@@ -1002,7 +552,7 @@ namespace OFOutlookPlugin
             {
                 if (string.IsNullOrEmpty(text) || _wsuiBootStraper.IsPluginBusy)
                     return;
-                if (!OFAddinModule.CurrentInstance.IsMainUIVisible)
+                if (!IsMainUIVisible)
                 {
                     ShowMainUiAfterSearchAction();
                 }
@@ -1014,14 +564,15 @@ namespace OFOutlookPlugin
             }
         }
 
+        //TODO: refatore after adding UI
         private void ShowMainUiAfterSearchAction()
         {
 
-            if (!adxMainPluginCommandBar.UseForRibbon && this.HostMajorVersion > 12)
-            {
-                buttonShow2007.Enabled = false;
-                buttonHide2007.Enabled = true;
-            }
+            //if (!adxMainPluginCommandBar.UseForRibbon && this.HostMajorVersion > 12)
+            //{
+            //    buttonShow2007.Enabled = false;
+            //    buttonHide2007.Enabled = true;
+            //}
         }
 
         //#endregion [event handlers for ribbon]
@@ -1078,7 +629,7 @@ namespace OFOutlookPlugin
             }
         }
 
-        private void OutlookFinderEvents_Quit(object sender, EventArgs e)
+        private void Quit(object sender, EventArgs e)
         {
             FinalizeComponents();
 
@@ -1100,14 +651,14 @@ namespace OFOutlookPlugin
             OFLogger.Instance.LogInfo("Shutdown...");
         }
 
-
+        // TODO: refactor after adding UI
         private void FinalizeComponents()
         {
-            if (adxMainPluginCommandBar.IsNotNull())
-            {
-                adxMainPluginCommandBar.Dispose();
-                adxCommandBarButtonSearch = null;
-            }
+            //if (adxMainPluginCommandBar.IsNotNull())
+            //{
+            //    adxMainPluginCommandBar.Dispose();
+            //    adxCommandBarButtonSearch = null;
+            //}
         }
 
         private void SetOutlookFolderProperties(string folderName, string folderWebUrl)
@@ -1157,34 +708,34 @@ namespace OFOutlookPlugin
         //    }
         //}
 
-        //// TODO: uncomment
-        private void OFAddinModule_OnKeyDown(object sender, ADXKeyDownEventArgs e)
+        //// TODO: refactore and add support key events after adding hooks
+        private void KeyDown(object sender, EventArgs e)
         {
             try
             {
-                _sidebarForm = GetSidebarForm();
-                if (_sidebarForm == null)
-                    return;
-                if (e.Ctrl && e.VirtualKey == (int)Keys.C)
-                {
-                    _sidebarForm.SendAction(OFActionType.Copy);
-                }
+                //_sidebarForm = GetSidebarForm();
+                //if (_sidebarForm == null)
+                //    return;
+                //if (e.Ctrl && e.VirtualKey == (int)Keys.C)
+                //{
+                //    _sidebarForm.SendAction(OFActionType.Copy);
+                //}
 
-                if (System.Windows.Application.Current != null)
-                {
-                    System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)(() =>
-                    {
-                        if (_emailSuggesterManager.IsNotNull() && OFRegistryHelper.Instance.CheckAutoCompleateState())
-                        {
-                            System.Diagnostics.Debug.WriteLine($"Key Down: {Enum.GetName(typeof(Keys), e.VirtualKey)}");
-                            _emailSuggesterManager.ProcessKeyDown(e);
-                        }
-                    }));
-                }
-                if (e.VirtualKey == (int)Keys.Escape && _emailSuggesterManager.IsSuggestWindowVisible())
-                {
-                    e.Handled = true;
-                }
+                //if (System.Windows.Application.Current != null)
+                //{
+                //    System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+                //    {
+                //        if (_emailSuggesterManager.IsNotNull() && OFRegistryHelper.Instance.CheckAutoCompleateState())
+                //        {
+                //            System.Diagnostics.Debug.WriteLine($"Key Down: {Enum.GetName(typeof(Keys), e.VirtualKey)}");
+                //            _emailSuggesterManager.ProcessKeyDown(e);
+                //        }
+                //    }));
+                //}
+                //if (e.VirtualKey == (int)Keys.Escape && _emailSuggesterManager.IsSuggestWindowVisible())
+                //{
+                //    e.Handled = true;
+                //}
             }
             catch (Exception ex)
             {
@@ -1255,21 +806,21 @@ namespace OFOutlookPlugin
             //StopWatch("OutlookFinderEvents_NewExplorer");
         }
 
-        private void wsuiTab_PropertyChanging(object sender, ADXRibbonPropertyChangingEventArgs e)
-        {
-            if (IsMainUIVisible && e.PropertyType == ADXRibbonControlPropertyType.Visible && e.Context.GetHashCode() != _initHashCode)
-            {
-                e.Value = false;
-            }
-        }
+        //private void wsuiTab_PropertyChanging(object sender, ADXRibbonPropertyChangingEventArgs e)
+        //{
+        //    if (IsMainUIVisible && e.PropertyType == ADXRibbonControlPropertyType.Visible && e.Context.GetHashCode() != _initHashCode)
+        //    {
+        //        e.Value = false;
+        //    }
+        //}
 
-        private void wsuiMainGroup_PropertyChanging(object sender, ADXRibbonPropertyChangingEventArgs e)
-        {
-            if (IsMainUIVisible && e.PropertyType == ADXRibbonControlPropertyType.Visible && e.Context.GetHashCode() != _initHashCode)
-            {
-                e.Value = false;
-            }
-        }
+        //private void wsuiMainGroup_PropertyChanging(object sender, ADXRibbonPropertyChangingEventArgs e)
+        //{
+        //    if (IsMainUIVisible && e.PropertyType == ADXRibbonControlPropertyType.Visible && e.Context.GetHashCode() != _initHashCode)
+        //    {
+        //        e.Value = false;
+        //    }
+        //}
 
         //private void StartWatch()
         //{
@@ -1283,7 +834,7 @@ namespace OFOutlookPlugin
         //}
 
 
-        private void OutlookFinderEvents_ExplorerSelectionChange(object sender, object explorer)
+        private void ExplorerSelectionChange(object sender, object explorer)
         {
             ConnectToSelectedItem(explorer);
         }
@@ -1454,10 +1005,6 @@ namespace OFOutlookPlugin
         private void OutlookFinderEvents_ExplorerActivate(object sender, object explorer)
         {
             ConnectToSelectedItem(explorer);
-        }
-
-        private void OutlookFinderEvents_ItemSend(object sender, ADXOlItemSendEventArgs e)
-        {
         }
 
         private void OutlookFinderEvents_InspectorClose(object sender, object inspector, string folderName)

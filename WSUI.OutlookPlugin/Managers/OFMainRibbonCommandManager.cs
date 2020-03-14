@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using AddinExpress.MSO;
+using Microsoft.Office.Core;
 using Microsoft.Practices.Prism.Events;
 using OF.Core.Data;
 using OF.Core.Enums;
@@ -17,45 +17,45 @@ namespace OFOutlookPlugin.Managers
     {
         #region [needs]
 
-        private ADXRibbonButton _buttonHelp;
-        private ADXRibbonButton _buttonAbout;
-        private ADXRibbonButton _buttonSettings;
-        //main toolbar
-        private ADXRibbonButton _buttonMainHelp;
-        private ADXRibbonButton _buttonMainAbout;
-        private ADXRibbonButton _buttonMainSettings;
-        private ADXRibbonButton _buttonMainSendLog;
+        //private ADXRibbonButton _buttonHelp;
+        //private ADXRibbonButton _buttonAbout;
+        //private ADXRibbonButton _buttonSettings;
+        ////main toolbar
+        //private ADXRibbonButton _buttonMainHelp;
+        //private ADXRibbonButton _buttonMainAbout;
+        //private ADXRibbonButton _buttonMainSettings;
+        //private ADXRibbonButton _buttonMainSendLog;
 
         #endregion
 
-        public OFMainRibbonCommandManager(ADXRibbonButton buttonHelp, ADXRibbonButton buttonAbout, ADXRibbonButton buttonSettings, ADXRibbonButton buttonMainHelp, ADXRibbonButton buttonMainAbout,ADXRibbonButton buttonMainSettings,ADXRibbonButton buttonSendLogMain)
+        public OFMainRibbonCommandManager()
         {
-            _buttonHelp = buttonHelp;
-            _buttonAbout = buttonAbout;
-            _buttonSettings = buttonSettings;
-            _buttonMainAbout = buttonMainAbout;
-            _buttonMainHelp = buttonMainHelp;
-            _buttonMainSettings = buttonMainSettings;
-            _buttonMainSendLog = buttonSendLogMain;
-            _buttonAbout.OnClick += ButtonAboutOnOnClick;
-            _buttonHelp.OnClick += ButtonHelpOnOnClick;
-            _buttonMainAbout.OnClick += ButtonAboutOnOnClick;
-            _buttonMainHelp.OnClick += ButtonHelpOnOnClick;
-            _buttonSettings.OnClick += ButtonSettingsOnOnClick;
-            _buttonMainSettings.OnClick += ButtonSettingsOnOnClick;
-            _buttonMainSendLog.OnClick += ButtonMainSendLogOnOnClick;
-            MenuEnabling(OFAddinModule.CurrentInstance.BootStraper.IsMenuEnabled);
+            //_buttonHelp = buttonHelp;
+            //_buttonAbout = buttonAbout;
+            //_buttonSettings = buttonSettings;
+            //_buttonMainAbout = buttonMainAbout;
+            //_buttonMainHelp = buttonMainHelp;
+            //_buttonMainSettings = buttonMainSettings;
+            //_buttonMainSendLog = buttonSendLogMain;
+            //_buttonAbout.OnClick += ButtonAboutOnOnClick;
+            //_buttonHelp.OnClick += ButtonHelpOnOnClick;
+            //_buttonMainAbout.OnClick += ButtonAboutOnOnClick;
+            //_buttonMainHelp.OnClick += ButtonHelpOnOnClick;
+            //_buttonSettings.OnClick += ButtonSettingsOnOnClick;
+            //_buttonMainSettings.OnClick += ButtonSettingsOnOnClick;
+            //_buttonMainSendLog.OnClick += ButtonMainSendLogOnOnClick;
+            //MenuEnabling(OFAddinModule.CurrentInstance.BootStraper.IsMenuEnabled);
         }
 
         private void ButtonMainSendLogOnOnClick(object sender, IRibbonControl control, bool pressed)
         {
-            OFAddinModule.CurrentInstance.BootStraper.PassAction(new OFAction(OFActionType.SendLogFile, null));
+            //OFAddinModule.CurrentInstance.BootStraper.PassAction(new OFAction(OFActionType.SendLogFile, null));
         }
 
         protected override void MenuEnabling(bool b)
         {
-            _buttonMainSettings.Enabled = b;
-            _buttonSettings.Enabled = b;
+            //_buttonMainSettings.Enabled = b;
+            //_buttonSettings.Enabled = b;
         }
 
         private void ButtonHelpOnOnClick(object sender, IRibbonControl control, bool pressed)
@@ -84,7 +84,7 @@ namespace OFOutlookPlugin.Managers
 
         private void ButtonSettingsOnOnClick(object sender, IRibbonControl control, bool pressed)
         {
-            OFAddinModule.CurrentInstance.BootStraper.PassAction(new OFAction(OFActionType.Settings, null));
+            //OFAddinModule.CurrentInstance.BootStraper.PassAction(new OFAction(OFActionType.Settings, null));
         }
     }
 }

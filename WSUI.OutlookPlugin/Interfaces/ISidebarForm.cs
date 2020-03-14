@@ -1,5 +1,5 @@
 ﻿using System;
-using AddinExpress.OL;
+
 using OF.Core.Enums;
 
 namespace OFOutlookPlugin.Interfaces

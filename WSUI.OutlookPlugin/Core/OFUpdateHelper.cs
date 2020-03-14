@@ -8,7 +8,7 @@ using System.Threading;
 using System.Timers;
 using System.Windows.Threading;
 using System.Xml.Linq;
-using AddinExpress.MSO;
+
 using OF.Core.Helpers;
 using OF.Core.Logger;
 using OFOutlookPlugin.Interfaces;
@@ -98,13 +98,13 @@ namespace OFOutlookPlugin.Core
 
         private void Init()
         {
-            _path = Assembly.GetAssembly(typeof(OFAddinModule)).Location;
+            _path = Assembly.GetAssembly(typeof(ThisAddIn)).Location;
             _path = _path.Substring(0, _path.LastIndexOf('\\') + 1);
         }
 
         #region Implementation of IUpdatable
 
-        public ADXAddinModule Module { get; set; }
+        public ThisAddIn Module { get; set; }
 
         public bool IsUpdating()
         {
@@ -120,12 +120,8 @@ namespace OFOutlookPlugin.Core
         public bool CanUpdate()
         {
             OFLogger.Instance.LogDebug("Module  != null: {0}",Module != null);
-            if (Module != null)
-            {
-                OFLogger.Instance.LogDebug("Module.IsMSINetworkDeployed(): {0}", Module.IsMSINetworkDeployed());
-                OFLogger.Instance.LogDebug("Module.IsMSIUpdatable(): {0}", Module.IsMSIUpdatable());    
-            }
-            return Module != null && Module.IsMSINetworkDeployed() && Module.IsMSIUpdatable();
+            
+            return Module != null;
         }
 
         public void Lock()
@@ -181,7 +177,7 @@ namespace OFOutlookPlugin.Core
             try
             {
                 OFLogger.Instance.LogDebug("Check for updates...");
-                string url = Module.CheckForMSIUpdates();
+                string url = "";
                 OFLogger.Instance.LogDebug("End checking updates...");
                 OFLogger.Instance.LogDebug("Url after checking: " + url);
                 if (String.IsNullOrEmpty(url))

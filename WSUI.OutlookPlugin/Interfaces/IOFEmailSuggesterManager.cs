@@ -1,5 +1,4 @@
 ﻿using System;
-using AddinExpress.MSO;
 
 namespace OFOutlookPlugin.Interfaces
 {
@@ -9,7 +8,7 @@ namespace OFOutlookPlugin.Interfaces
 
         void UnsubscribeMailWindow();
 
-        void ProcessKeyDown(ADXKeyDownEventArgs Key);
+        void ProcessKeyDown(EventArgs Key);
 
         void SuggestedEmail(Tuple<IntPtr, string> data);
 

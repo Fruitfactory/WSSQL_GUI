@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using AddinExpress.OL;
 using OF.Core.Logger;
 
 namespace OFOutlookPlugin.Core {

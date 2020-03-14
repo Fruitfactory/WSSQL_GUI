@@ -10,41 +10,41 @@ using OFOutlookPlugin.Interfaces;
 
 namespace OFOutlookPlugin
 {
-    public partial class OFSidebar : AddinExpress.OL.ADXOlForm, ISidebarForm
+    public partial class OFSidebar :  ISidebarForm
     {
         private IPluginBootStraper _wsuiBootStraper = null;
         private bool _isSecondInstance = false;
 
         public OFSidebar()
         {
-            InitializeComponent();
-            ADXAfterFormHide += OnAdxAfterFormHide;
+	        //ADXAfterFormHide += OnAdxAfterFormHide;
             OFLogger.Instance.LogDebug("Create OFSidebar");
         }
 
-        private void OnAdxAfterFormHide(object sender, ADXAfterFormHideEventArgs e)
+        private void OnAdxAfterFormHide(object sender, EventArgs e)
         {
             if (!_isSecondInstance)
-                OFAddinModule.CurrentInstance.IsMainUIVisible = false;
+                //OFAddinModule.CurrentInstance.IsMainUIVisible = false;
             _isSecondInstance = false;
         }
 
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
+        //TODO
+        //protected override void OnShown(EventArgs e)
+        //{
+        //    base.OnShown(e);
 
-            SetBootStraper(OFAddinModule.CurrentInstance.BootStraper);
-        }
+        //    SetBootStraper(OFAddinModule.CurrentInstance.BootStraper);
+        //}
 
+        //TODO:
         bool ISidebarForm.IsDisposed
         {
-            get { return this.IsDisposed; }
+            get { return true; }
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
-            DoubleBuffered = true;
+            //DoubleBuffered = true;
         }
 
         public void SetBootStraper(IPluginBootStraper bootStraper)
@@ -63,18 +63,18 @@ namespace OFOutlookPlugin
                 wpfSidebarHost.Child = el;
                 if (!OFRegistryHelper.Instance.GetIsPluginUiVisible())
                 {
-                    Hide();
-                    OFAddinModule.CurrentInstance.IsMainUIVisible = false;
+                    //Hide();
+                    //OFAddinModule.CurrentInstance.IsMainUIVisible = false;
                 }
                 else
                 {
-                    OFAddinModule.CurrentInstance.IsMainUIVisible = true;
+                    //OFAddinModule.CurrentInstance.IsMainUIVisible = true;
                 }
             }
             else
             {
                 _isSecondInstance = true;
-                Hide();
+                //Hide();
             }
         }
 
@@ -88,5 +88,14 @@ namespace OFOutlookPlugin
             _wsuiBootStraper.PassAction(new OFAction(actionType, null));
         }
 
+        public void Hide ( )
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Show ( )
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -11,7 +11,6 @@ using System.Windows.Automation;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Threading;
-using AddinExpress.MSO;
 using Microsoft.Practices.Prism.Events;
 using OF.Control;
 using OF.Core.Data;
@@ -130,7 +129,7 @@ namespace OFOutlookPlugin.Managers
         }
 
 
-        public void ProcessKeyDown(ADXKeyDownEventArgs Args)
+        public void ProcessKeyDown(EventArgs Args)
         {
             var classStr = new StringBuilder(255);
             var hWnd = WindowsFunction.GetFocus();
@@ -151,9 +150,9 @@ namespace OFOutlookPlugin.Managers
             return data.IsVisible;
         }
 
-        private void ProcessKeyPressing(ADXKeyDownEventArgs Args, IntPtr hWnd)
+        private void ProcessKeyPressing(EventArgs Args, IntPtr hWnd)
         {
-            var key = (Keys)Args.VirtualKey;
+	        var key = Keys.Control; //Args.VirtualKey; // TODO:
             if (key == Keys.Escape)
             {
                 _pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));

@@ -2,7 +2,7 @@
 {
     public interface IUpdatable
     {
-        AddinExpress.MSO.ADXAddinModule Module { get; set; }
+		ThisAddIn Module { get; set; }
         bool IsUpdating();
         void RunSilentUpdate();
         bool CanUpdate();
