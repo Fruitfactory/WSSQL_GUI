@@ -7,35 +7,23 @@ namespace OFOutlookPlugin.Core
 {
     public abstract class OFSearchCommandManager : OFBaseCommandManager, IOFCommandManager
     {
+	    protected OFSearchCommandManager(IEventAggregator eventAggregator) : base(eventAggregator)
+	    {
+	    }
 
-        public virtual void SetShowHideButtonsEnabling(bool isShowButtonEnable, bool isHideButtonEnable)
+	    public virtual void SetShowHideButtonsEnabling(bool isShowButtonEnable, bool isHideButtonEnable)
         {
 
         }
 
-        protected virtual void InternalShowPublish()
+        protected virtual void InternalShowHidePublish()
         {
-            var aggregator = GetAggregator();
-            if (aggregator == null)
-                return;
-            aggregator.GetEvent<OFOpenWindow>().Publish(true);
-        }
-
-        protected virtual void InternalHidePublish()
-        {
-            var aggregator = GetAggregator();
-            if (aggregator == null)
-                return;
-            aggregator.GetEvent<OFHideWindow>().Publish(true);
+            GetAggregator()?.GetEvent<OFShowHideWindow>().Publish(true);
         }
 
         protected virtual void InternalSearchPublich(string searchString)
         {
-            var aggregator = GetAggregator();
-            if (aggregator == null)
-                return;
-            OFLogger.Instance.LogDebug("Edit Criteria (toolbox):{0}", searchString);
-            aggregator.GetEvent<OFSearch>().Publish(searchString);
+            GetAggregator()?.GetEvent<OFSearch>().Publish(searchString);
         }
     }
 }

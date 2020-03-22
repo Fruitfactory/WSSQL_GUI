@@ -4,7 +4,7 @@ using Microsoft.Practices.Prism.Events;
 namespace OFOutlookPlugin.Events
 {
     [ClassInterface(ClassInterfaceType.None)]
-    public class OFOpenWindow : CompositePresentationEvent<bool>
+    public class OFShowHideWindow : CompositePresentationEvent<bool>
     {
     }
 }

@@ -240,6 +240,7 @@
     <Content Include="Images\question.png" />
     <Content Include="Loader\adxloader.dll" />
     <Content Include="Loader\adxloader64.dll" />
+    <Content Include="Ribbons\Ribbon.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Version.cs">
@@ -256,7 +257,7 @@
     <Compile Include="Core\OFSearchCommandManager.cs" />
     <Compile Include="Core\OFUpdateHelper.cs" />
     <Compile Include="Events\OFHideWindow.cs" />
-    <Compile Include="Events\OFOpenWindow.cs" />
+    <Compile Include="Events\OFShowHideWindow.cs" />
     <Compile Include="Events\OFSearch.cs" />
     <Compile Include="Hooks\GlobalEventProvider.cs">
       <SubType>Component</SubType>
@@ -275,11 +276,8 @@
     <Compile Include="Interfaces\IOFCommandManager.cs" />
     <Compile Include="Core\OFBaseCommandManager.cs" />
     <Compile Include="Interfaces\IOFOutlookItemEvents.cs" />
-    <Compile Include="Managers\OFMainRibbonCommandManager.cs" />
-    <Compile Include="Managers\OFCommandBarManager.cs" />
     <Compile Include="Managers\OFEmailSuggesterManager.cs" />
     <Compile Include="Managers\OFOutlookItemsRemovingManager.cs" />
-    <Compile Include="Managers\OFRibbonManager.cs" />
     <Compile Include="Managers\OFWindowPositionManager.cs" />
     <Compile Include="Managers\OutlookEventsManagers\OFOutlookItemEvents.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -362,6 +360,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ribbons\Ribbon.cs" />
     <Compile Include="ThisAddIn.cs">
       <SubType>Code</SubType>
     </Compile>

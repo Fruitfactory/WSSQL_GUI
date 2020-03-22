@@ -5,14 +5,14 @@ using OFOutlookPlugin.Interfaces;
 
 namespace OFOutlookPlugin.Core
 {
-    public abstract class OFBaseCommandManager : ICommandManager
+    public abstract class OFBaseCommandManager 
     {
         private IEventAggregator _eventAggregator;
-        
-        public void SetEventAggregator(IEventAggregator aggregator)
+
+        protected OFBaseCommandManager(IEventAggregator eventAggregator)
         {
-            _eventAggregator = aggregator;
-            _eventAggregator.GetEvent<OFMenuEnabling>().Subscribe(MenuEnabling);
+	        _eventAggregator = eventAggregator;
+	        _eventAggregator.GetEvent<OFMenuEnabling>().Subscribe(MenuEnabling);
         }
 
         protected virtual void MenuEnabling(bool obj)

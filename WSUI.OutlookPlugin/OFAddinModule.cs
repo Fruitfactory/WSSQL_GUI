@@ -85,7 +85,7 @@ namespace OFOutlookPlugin
             //this.OnSendMessage += OFAddinModule_OnSendMessage;
             //this.AddinInitialize += OnAddinInitialize;
             //this.AddinBeginShutdown += OnAddinBeginShutdown;
-            _mailRemovingManager = new OFOutlookItemsRemovingManager(this);
+            //_mailRemovingManager = new OFOutlookItemsRemovingManager(this);
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomainOnFirstChanceException;
@@ -200,7 +200,7 @@ namespace OFOutlookPlugin
                 if (_updatable == null)
                 {
                     _updatable = OFUpdateHelper.Instance;
-                    _updatable.Module = this;
+                    //_updatable.Module = this;
                 }
                 //StopWatch("Init");
             }
@@ -322,7 +322,7 @@ namespace OFOutlookPlugin
         {
             if (_eventAggregator == null)
                 return;
-            _eventAggregator.GetEvent<OFOpenWindow>().Subscribe(ShowUi);
+            _eventAggregator.GetEvent<OFShowHideWindow>().Subscribe(ShowUi);
             _eventAggregator.GetEvent<OFHideWindow>().Subscribe(HideUi);
             _eventAggregator.GetEvent<OFSearch>().Subscribe(StartSearch);
             _eventAggregator.GetEvent<OFShowFolder>().Subscribe(ShowOutlookFolder);

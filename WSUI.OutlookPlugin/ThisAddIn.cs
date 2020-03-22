@@ -28,6 +28,7 @@ using OFOutlookPlugin.Core;
 using OFOutlookPlugin.Events;
 using OFOutlookPlugin.Interfaces;
 using OFOutlookPlugin.Managers;
+using OFOutlookPlugin.Ribbons;
 using OFPreview.PreviewHandler.Service.OutlookPreview;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Office = Microsoft.Office.Core;
@@ -158,6 +159,16 @@ namespace OFOutlookPlugin
 
 		#endregion
 
+		#region protected
+
+		protected override Office.IRibbonExtensibility CreateRibbonExtensibilityObject()
+		{
+            if(_eventAggregator.IsNotNull())
+				return new Ribbon(_eventAggregator);
+            return null;
+		}
+
+		#endregion
 
 		#region private
 
@@ -233,7 +244,7 @@ namespace OFOutlookPlugin
 		{
 			if(_eventAggregator == null)
 				return;
-			_eventAggregator.GetEvent<OFOpenWindow>().Subscribe(ShowUi);
+			_eventAggregator.GetEvent<OFShowHideWindow>().Subscribe(ShowUi);
 			_eventAggregator.GetEvent<OFHideWindow>().Subscribe(HideUi);
 			_eventAggregator.GetEvent<OFSearch>().Subscribe(StartSearch);
 			_eventAggregator.GetEvent<OFShowFolder>().Subscribe(ShowOutlookFolder);
@@ -451,9 +462,9 @@ namespace OFOutlookPlugin
 
 		private void Init()
 		{
+			AppDomain.CurrentDomain.SetupInformation.ShadowCopyFiles = "false";
 			try
 			{
-				//StartWatch();
 				OFLogger.Instance.LogDebug("Plugin is loading...");
 				OFRegistryHelper.Instance.ResetShutdownNotification();
 				new OFAppEmpty();
@@ -470,8 +481,7 @@ namespace OFOutlookPlugin
 					_updatable = OFUpdateHelper.Instance;
 					_updatable.Module = this;
 				}
-
-				//StopWatch("Init");
+                RunPluginUI();
 			}
 			catch (Exception ex)
 			{
