@@ -195,8 +195,8 @@ namespace OFOutlookPlugin
 							_commandManager.SetShowHideButtonsEnabling(true,false);
 					};
 				}
-				CreateCommandManager();
 				CreateEmailSuggesterManager();
+                CreateSidebar();
 				SubscribeToEvents();
 				LogVersions();
 
@@ -218,28 +218,6 @@ namespace OFOutlookPlugin
 			OFLogger.Instance.LogInfo("OS x64 Version: {0}",Environment.Is64BitOperatingSystem);
 			OFLogger.Instance.LogInfo("Outlook x64 Version: {0}",Environment.Is64BitProcess);
 
-		}
-
-		private ISidebarForm GetSidebarForm ( )
-		{
-			try
-			{
-				ISidebarForm form = null;
-				//for (int i = 0; i < formRightSidebar.FormInstanceCount; i++)
-				//{
-				//    form = formRightSidebar.FormInstances(i) as ISidebarForm;
-				//    if (form != null)
-				//    {
-				//        break;
-				//    }
-				//}
-				return form;
-			}
-			catch(Exception ex)
-			{
-				OFLogger.Instance.LogError(ex.ToString());
-			}
-			return null;
 		}
 
 		private void SubscribeToEvents ( )
@@ -286,17 +264,15 @@ namespace OFOutlookPlugin
 
 		private void ShowUi ( bool show )
 		{
+			if (_sidebarForm.IsNull() || _sidebarForm.IsDisposed) return;
+
 			try
 			{
 				//StartWatch();
-				_sidebarForm = GetSidebarForm();
-				if(_sidebarForm != null && !_sidebarForm.IsDisposed)
-				{
-					_sidebarForm.Show();
-					_wsuiBootStraper.PassAction(new OFAction(OFActionType.Show,null));
-					IsMainUIVisible = true;
-					OFRegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
-				}
+				_sidebarForm.Show();
+				_wsuiBootStraper.PassAction(new OFAction(OFActionType.Show,null));
+				IsMainUIVisible = true;
+				OFRegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
 				//StopWatch("ShowUi");
 			}
 			catch(Exception ex)
@@ -307,16 +283,13 @@ namespace OFOutlookPlugin
 
 		private void HideUi ( bool hide )
 		{
+			if (_sidebarForm.IsNull() || _sidebarForm.IsDisposed) return;
 			try
 			{
 				//StartWatch();
-				_sidebarForm = GetSidebarForm();
-				if(_sidebarForm != null && !_sidebarForm.IsDisposed)
-				{
-					_sidebarForm.Hide();
-					IsMainUIVisible = false;
-					OFRegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
-				}
+				_sidebarForm.Hide();
+				IsMainUIVisible = false;
+				OFRegistryHelper.Instance.SetIsPluginUiVisible(IsMainUIVisible);
 				//StopWatch("HideUi");
 			}
 			catch(Exception ex)
@@ -329,7 +302,6 @@ namespace OFOutlookPlugin
 		{
 			try
 			{
-				_sidebarForm = GetSidebarForm();
 				PassSearchActionToSearchEngine(criteria);
 				if(!IsMainUIVisible)
 				{
@@ -349,29 +321,12 @@ namespace OFOutlookPlugin
 			_emailSuggesterManager = new OFEmailSuggesterManager(_wsuiBootStraper,_eventAggregator);
 		}
 
-		//TODO: this will be ractored when I will add command bars
-		private void CreateCommandManager ( )
-		{
-			//try
-			//{
-			//    _commandManager = adxMainPluginCommandBar.UseForRibbon
-			//                          ? (IOFCommandManager)new OFCommandBarManager(buttonShow2007, buttonHide2007, adxCommandBarEditSearchText,
-			//                              adxCommandBarButtonSearch)
-			//                          : new OFRibbonManager(buttonShow, wsuiButtonSwitch, adxRibbonButtonSearch, adxRibbonEditBoxSearch, wsuiHomeSearch, wsuiButtonSearch, adxSendLogOFTab);
-			//    if (!adxMainPluginCommandBar.UseForRibbon)
-			//    {
-			//        _aboutCommandManager = new OFMainRibbonCommandManager(btnHelp, btnAbout, mnuSettings, btnMainHelp, btnMainAbout, mnuMainSettings, adxSendLogMain);
-			//    }
-			//    else if (OFRegistryHelper.Instance.GetIsPluginUiVisible())
-			//    {
-			//        _commandManager.SetShowHideButtonsEnabling(false, true);
-			//    }
-			//}
-			//catch (Exception ex)
-			//{
-			//    OFLogger.Instance.LogError(ex.ToString());
-			//}
-		}
+
+
+        private void CreateSidebar()
+        {
+            _sidebarForm = new OFSidebar(_wsuiBootStraper);
+        }
 
 		//#region Outlook Object Model routines
 
@@ -411,7 +366,6 @@ namespace OFOutlookPlugin
 			{
 				try
 				{
-					_sidebarForm = GetSidebarForm();
 					if(!IsMainUIVisible)
 					{
 						HideUi(false);

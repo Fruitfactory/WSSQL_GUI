@@ -280,6 +280,12 @@
     <Compile Include="Managers\OFOutlookItemsRemovingManager.cs" />
     <Compile Include="Managers\OFWindowPositionManager.cs" />
     <Compile Include="Managers\OutlookEventsManagers\OFOutlookItemEvents.cs" />
+    <Compile Include="TaskPane\OFTaskPane.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TaskPane\OFTaskPane.Designer.cs">
+      <DependentUpon>OFTaskPane.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -293,13 +299,13 @@
     <Compile Include="OFAddinModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OFSidebar.cs" />
-    <Compile Include="OFSidebar.Designer.cs">
-      <DependentUpon>OFSidebar.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="About\OFAbout.resx">
       <DependentUpon>OFAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TaskPane\OFTaskPane.resx">
+      <DependentUpon>OFTaskPane.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -307,9 +313,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OFAddinModule.resx">
       <DependentUpon>OFAddinModule.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OFSidebar.resx">
-      <DependentUpon>OFSidebar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
