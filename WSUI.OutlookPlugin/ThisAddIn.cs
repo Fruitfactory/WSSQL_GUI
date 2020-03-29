@@ -48,7 +48,6 @@ namespace OFOutlookPlugin
 		private IPluginBootStraper _wsuiBootStraper = null;
 		private IEventAggregator _eventAggregator = null;
 		private IOFCommandManager _commandManager;
-		private ICommandManager _aboutCommandManager;
 		private ISidebarForm _sidebarForm;
 		private bool IsLoading = true;
 		private int _initHashCode;
@@ -164,7 +163,11 @@ namespace OFOutlookPlugin
 		protected override Office.IRibbonExtensibility CreateRibbonExtensibilityObject()
 		{
             if(_eventAggregator.IsNotNull())
-				return new Ribbon(_eventAggregator);
+            {
+                _commandManager = new Ribbon(_eventAggregator);
+                return _commandManager as Office.IRibbonExtensibility;
+            }
+
             return null;
 		}
 
@@ -194,7 +197,6 @@ namespace OFOutlookPlugin
 				}
 				CreateCommandManager();
 				CreateEmailSuggesterManager();
-				SetEventAggregatorToManager();
 				SubscribeToEvents();
 				LogVersions();
 
@@ -369,28 +371,6 @@ namespace OFOutlookPlugin
 			//{
 			//    OFLogger.Instance.LogError(ex.ToString());
 			//}
-		}
-
-		private void SetEventAggregatorToManager ( )
-		{
-			try
-			{
-				if(_eventAggregator == null)
-					return;
-				var manager = _commandManager as ICommandManager;
-				if(manager != null)
-				{
-					manager.SetEventAggregator(_eventAggregator);
-				}
-				if(_aboutCommandManager != null)
-				{
-					_aboutCommandManager.SetEventAggregator(_eventAggregator);
-				}
-			}
-			catch(Exception ex)
-			{
-				OFLogger.Instance.LogError(ex.ToString());
-			}
 		}
 
 		//#region Outlook Object Model routines

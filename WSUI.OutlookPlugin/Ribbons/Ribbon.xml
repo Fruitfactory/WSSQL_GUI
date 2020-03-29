@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<customUI onLoad="Ribbon_Load" xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+  <ribbon>
+    <tabs>
+      <tab idMso="TabAddIns">
+        <group id="group1" label="Outlook Finder">
+          <editBox id="editSearch" label="editBox2" showLabel="false" showImage="false" />
+          <button id="btnSHButton" label="Show/Hide" getImage="GetCustomImage" 
+                  onAction="OnShowHide"/>
+          <menu id="menuMore" label="More" getImage="GetCustomImage">
+            <button id="btnSettings" label="Settings..." onAction="OnSettings" />
+            <button id="btnSendLogFiles" label="Send log files" onAction="OnSendLogFiles" />
+            <button id="btnHelp" label="Help" getImage="GetCustomImage" onAction="OnHelp" />
+            <menuSeparator id="sep" />
+            <button id="btnAbout" label="About" onAction="OnAbout" />
+          </menu>
+        </group>
+      </tab>
+      <tab idMso="TabMail">
+        <group id="editSearch2" label="Outlook Finder">
+          <editBox id="editBox1" label="editBox1" showLabel="false" showImage="false" getImage="GetCustomImage" />
+          <button id="btnShowHide" label="Show/Hide" getImage="GetCustomImage" 
+                  onAction="OnShowHide" />
+          <menu id="menu1" label="More" getImage="GetCustomImage">
+            <button id="buttonSettings" label="Settings" onAction="OnSettings" />
+            <button id="buttonSend" label="Send log files..." onAction="OnSendLogFiles" />
+            <button id="buttonHelp" label="Help" getImage="GetCustomImage" onAction="OnHelp" />
+            <menuSeparator id="separator1" />
+            <button id="buttonAbout" label="About" onAction="OnAbout" />
+          </menu>
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>
