@@ -230,9 +230,13 @@ pip-log.txt
 /ROutput
 /PSTRiverPlugin/target
 /OF.EmailParser/target
-*.xml
 *.publish
 /Toolkits/Elasticsearch/data
 /Toolkits/Elasticsearch/logs
 /.vs
 /UpgradeLog2.htm
+/.idea/.idea.Plugin/.idea
+/Toolkits/Elasticsearch.Net.5.3.0/Elasticsearch.Net.XML
+/Toolkits/NEST.5.3.0/Nest.XML
+/Toolkits/Newtonsoft.Json.9.0.1/Newtonsoft.Json.xml
+/Toolkits/RestSharp/RestSharp.xml
