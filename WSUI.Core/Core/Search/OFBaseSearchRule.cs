@@ -263,7 +263,7 @@ namespace OF.Core.Core.Search
             return result;
         }
 
-        protected virtual IFieldSort BuildSortSelector(SortFieldDescriptor<E> sortFieldDescriptor)
+        protected virtual IFieldSort BuildSortSelector(FieldSortDescriptor<E> sortFieldDescriptor)
         {
             return default(IFieldSort);
         }

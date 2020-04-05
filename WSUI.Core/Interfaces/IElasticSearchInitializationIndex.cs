@@ -7,9 +7,9 @@ namespace OF.Core.Interfaces
 {
     public interface IElasticSearchInitializationIndex : IElasticSearchRiverStatus
     {
-        IExistsResponse IndexExists(string name);
+        ExistsResponse IndexExists(string name);
         void CreateInfrastructure();
-        ElasticsearchResponse<OFStatusResponse> GetIndexingProgress();
+        OFStatusResponse GetIndexingProgress();
 
         void WarmUp();
         

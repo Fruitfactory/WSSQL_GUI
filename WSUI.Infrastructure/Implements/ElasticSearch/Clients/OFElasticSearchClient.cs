@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Elasticsearch.Net;
 using Microsoft.Practices.Unity;
 using Nest;
 using Newtonsoft.Json;
@@ -41,15 +42,17 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                 var str = Encoding.Default.GetString(bodyBytes);
 #endif
 
-                var result = Raw.Search<byte[]>(DefaultInfrastructureName, GetSearchType(typeof(T)), bodyBytes);
-                using (var stream = new MemoryStream(result.ResponseBodyInBytes))
-                using (var reader = new StreamReader(stream))
-                {
-                    var rawResult = JsonSerializer.Create().Deserialize(reader, typeof(OFResponseRaw<T>)) as OFResponseRaw<T>;
-                    took = (int)rawResult.took;
-                    total = rawResult.hits.total;
-                    listResult = rawResult.hits.hits.Select(h => h._source);
-                }
+	            var postData = PostData.Bytes(bodyBytes);
+                //var result = Raw.Search<byte[]>(DefaultInfrastructureName, GetSearchType(typeof(T)), bodyBytes);
+                var result = Raw.Search<OFResponseRaw<T>>(DefaultInfrastructureName,postData);
+                //using (var stream = new MemoryStream(result.ResponseBodyInBytes))
+                //using (var reader = new StreamReader(stream))
+                //{
+                //    var rawResult = JsonSerializer.Create().Deserialize(reader, typeof(OFResponseRaw<T>)) as OFResponseRaw<T>;
+                took = (int)result.took;
+                total = result.hits.total;
+                listResult = result.hits.hits.Select(h => h._source);
+                //}
             }
             catch (Exception ex)
             {

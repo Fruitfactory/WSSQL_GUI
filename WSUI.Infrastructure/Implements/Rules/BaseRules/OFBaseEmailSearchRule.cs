@@ -59,7 +59,7 @@ namespace OF.Infrastructure.Implements.Rules.BaseRules
             base.Reset();
         }
 
-        protected override IFieldSort BuildSortSelector(SortFieldDescriptor<OFEmail> sortFieldDescriptor)
+        protected override IFieldSort BuildSortSelector(FieldSortDescriptor<OFEmail> sortFieldDescriptor)
         {
             return sortFieldDescriptor.Field(e => e.Datecreated).Descending();
         }

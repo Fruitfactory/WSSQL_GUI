@@ -71,28 +71,20 @@ namespace OF.Core.Core.ElasticSearch
 
         public ElasticClient ElasticClient { get; private set; }
 
-        protected IElasticsearchSerializer Serializer
+        //TODO: check carefully
+        protected IElasticsearchSerializer Serializer => ElasticClient.SourceSerializer;
+
+        protected IElasticLowLevelClient Raw => ElasticClient.LowLevel;
+
+        public ExistsResponse IndexExists(string name)
         {
-            get
-            {
-                return ElasticClient.Serializer;
-            }
+	        return ElasticClient.Indices.Exists(Indices.Index(name));
         }
 
-        protected IElasticLowLevelClient Raw
-        {
-            get { return ElasticClient.LowLevel; }
-        }
-
-        public IExistsResponse IndexExists(string name)
-        {
-            return ElasticClient.IndexExists(name);
-        }
-
-        public IExistsResponse IndexExists(IIndexExistsRequest indexExists)
-        {
-            return ElasticClient.IndexExists(indexExists);
-        }
+        //public ExistsResponse IndexExists(IIndexExistsRequest indexExists)
+        //{
+        //    return ElasticClient.IndexExists(indexExists);
+        //}
 
 
         public void Dispose()

@@ -35,7 +35,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OF.ServiceApp</RootNamespace>
     <AssemblyName>serviceapp</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -74,9 +74,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolkits\Prism\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Toolkits\Newtonsoft.Json.9.0.1\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -120,6 +119,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="app.manifest" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WSUI.Core\OF.Core.csproj">
@@ -156,7 +156,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p yar1k1 /f "$(SolutionDir)Toolkits\Certificate\new_outlookfinder.pfx"   /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  $(TargetFileName)</PostBuildEvent>
+    <PostBuildEvent>rem "$(SolutionDir)Toolkits\Certificate\signtool.exe" sign /p yar1k1 /f "$(SolutionDir)Toolkits\Certificate\new_outlookfinder.pfx"   /d "OutlookFinder" /du "http://www.outlookfinder.com/" /t http://timestamp.comodoca.com/authenticode /v  $(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

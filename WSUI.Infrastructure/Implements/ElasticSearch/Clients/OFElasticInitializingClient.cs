@@ -51,9 +51,9 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
         }
 
-        public ElasticsearchResponse<OFStatusResponse> GetIndexingProgress()
+        public OFStatusResponse GetIndexingProgress()
         {
-            return Raw.Get<OFStatusResponse>("_river", DefaultInfrastructureName, "status");
+            return Raw.Get<OFStatusResponse>(DefaultInfrastructureName, "status");
         }
 
         public OFNamedServerResponse GetRiverStatus()
@@ -165,44 +165,55 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
         private bool CreateIndex()
         {
 
-            var descriptor = new CreateIndexDescriptor(DefaultInfrastructureName)
-                .Settings(s => s
-                    .NumberOfShards(1)
-                    .NumberOfReplicas(0)
-                )
-                .Mappings(ms => ms
-                    .Map<OFEmail>(m => m
-                        .AutoMap()
-                        .Properties(pd => pd
-                            .Keyword(kd => kd.Name(e => e.ItemName).IgnoreAbove(Int32.MaxValue))
-                            .Keyword(kd => kd.Name(e => e.ItemUrl).IgnoreAbove(Int32.MaxValue))
-                            .Keyword(kd => kd.Name(e => e.Folder))
-                            .Text(td => td.Name(e => e.Content))
-                            .Text(td => td.Name(e => e.Htmlcontent))
-                            .Text(td => td.Name(e => e.Analyzedcontent).Index())
-                            .Keyword(kd => kd.Name(e => e.Subject).IgnoreAbove(Int32.MaxValue))
-                        ))
-                    .Map<OFContact>(m => m
-                        .AutoMap()
-                        .Properties(pd => pd
-                            .Date(dd => dd
-                                .Name(c => c.Birthday)
-                                .Format("yyyy-MM-dd'T'HH:mm:ss.SSS")
-                                .NullValue(new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, DateTime.MinValue.Hour, DateTime.MinValue.Minute, DateTime.MinValue.Second, 111))))
-                    )
-                    .Map<OFAttachmentContent>(m => m
-                        .AutoMap()
-                        .Properties(pd => pd
-                            .Text(td => td.Name(a => a.Analyzedcontent).Index())
-                            .Text(td => td.Name(a => a.Content))
-                            .Keyword(kd => kd.Name(a => a.Filename).IgnoreAbove(Int32.MaxValue))
+	        var descriptor = new CreateIndexDescriptor(DefaultInfrastructureName)
+	                         .Settings(s => s
+	                                        .NumberOfShards(1)
+	                                        .NumberOfReplicas(0)
+	                         )
+	                         .Map<OFEmail>(m => m
+	                                            .AutoMap()
+	                                            .Properties(pd => pd
+	                                                              .Keyword(kd =>
+		                                                              kd.Name(e => e.ItemName)
+		                                                                .IgnoreAbove(Int32.MaxValue))
+	                                                              .Keyword(kd =>
+		                                                              kd.Name(e => e.ItemUrl)
+		                                                                .IgnoreAbove(Int32.MaxValue))
+	                                                              .Keyword(kd => kd.Name(e => e.Folder))
+	                                                              .Text(td => td.Name(e => e.Content))
+	                                                              .Text(td => td.Name(e => e.Htmlcontent))
+	                                                              .Text(td => td.Name(e => e.Analyzedcontent).Index())
+	                                                              .Keyword(kd =>
+		                                                              kd.Name(e => e.Subject)
+		                                                                .IgnoreAbove(Int32.MaxValue))
+	                                            ))
+	                         .Map<OFContact>(m => m
+	                                              .AutoMap()
+	                                              .Properties(pd => pd
+		                                              .Date(dd => dd
+		                                                          .Name(c => c.Birthday)
+		                                                          .Format("yyyy-MM-dd'T'HH:mm:ss.SSS")
+		                                                          .NullValue(new DateTime(DateTime.MinValue.Year,
+			                                                          DateTime.MinValue.Month, DateTime.MinValue.Day,
+			                                                          DateTime.MinValue.Hour, DateTime.MinValue.Minute,
+			                                                          DateTime.MinValue.Second, 111))))
+	                         )
+	                         .Map<OFAttachmentContent>(m => m
+	                                                        .AutoMap()
+	                                                        .Properties(pd => pd
+	                                                                          .Text(td => td
+	                                                                                      .Name(a => a.Analyzedcontent)
+	                                                                                      .Index())
+	                                                                          .Text(td => td.Name(a => a.Content))
+	                                                                          .Keyword(kd =>
+		                                                                          kd.Name(a => a.Filename)
+		                                                                            .IgnoreAbove(Int32.MaxValue))
 
-                        ))
-                    .Map<OFStore>(m => m.AutoMap())
-                    .Map<OFShortContact>(m => m.AutoMap())
-                );
+	                                                        ))
+	                         .Map<OFStore>(m => m.AutoMap())
+	                         .Map<OFShortContact>(m => m.AutoMap());
 
-            var response = ElasticClient.CreateIndex(descriptor);
+            var response = ElasticClient.Indices.Create(descriptor);
 
             OFLogger.Instance.LogDebug("Create Index...");
             OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.ApiCall.HttpStatusCode, response.ApiCall.Success);

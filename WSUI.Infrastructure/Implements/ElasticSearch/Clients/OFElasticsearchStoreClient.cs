@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Practices.Unity;
+using Nest;
 using OF.Core.Core.ElasticSearch;
 using OF.Core.Data.ElasticSearch;
 using OF.Core.Interfaces;
@@ -16,8 +17,8 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
         
         public bool SaveStore(OFStore Store)
         {
-            var result = ElasticClient.Index(Store);
-            return result.Created;
+            var result = ElasticClient.IndexDocument(Store);
+            return result.Result == Result.Created;
         }
 
         public bool DeleteStore(OFStore Store)
