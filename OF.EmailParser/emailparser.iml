@@ -134,7 +134,7 @@
     <orderEntry type="module-library">
       <library name="Maven: groupid:artifiactId:1.0">
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.8.0_144/jre/lib/rt.jar!/" />
+          <root url="jar://$APPLICATION_HOME_DIR$/jbr/lib/rt.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

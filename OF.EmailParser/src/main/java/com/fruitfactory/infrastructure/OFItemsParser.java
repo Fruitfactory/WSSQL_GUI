@@ -1,14 +1,14 @@
 package com.fruitfactory.infrastructure;
 
+import java.io.*;
 import com.fruitfactory.models.OFAttachment;
 import com.fruitfactory.models.OFEmail;
 import com.fruitfactory.models.OFItemsContainer;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import java.util.concurrent.TimeUnit;
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
 import org.apache.log4j.Logger;
+import  java.util.Base64;
 
 /**
  * Created by Yariki on 6/2/2017.
@@ -42,10 +42,11 @@ public class OFItemsParser {
         }
         try{
             String parsedContent = "";
-            byte[] byteBuffer = Base64.decode(attachment.getContent());
+
+            byte[] byteBuffer = Base64.getDecoder().decode(attachment.getContent());
             OFTimeWatch watch = new OFTimeWatch();
             logger.info("Start parsing...");
-            parsedContent = tika.parseToString(new ByteInputStream(byteBuffer,byteBuffer.length), new Metadata());
+            parsedContent = tika.parseToString(new ByteArrayInputStream(byteBuffer), new Metadata());
             logger.info(String.format("Parsed time: %s ms", watch.timeInSeconds()));
             attachment.setAnalyzedcontent(parsedContent);
         }catch (Exception ex){
@@ -65,12 +66,12 @@ public class OFItemsParser {
             String body = null;
             String htmlBody = null;
             try {
-                body = new String(Base64.decode(email.getContent()));
+                body = new String(Base64.getDecoder().decode(email.getContent()));
             }catch (Exception ex){
                 logger.error(ex.toString());
             }
             try {
-                htmlBody = new String(Base64.decode(email.getHtmlcontent()));
+                htmlBody = new String(Base64.getDecoder().decode(email.getHtmlcontent()));
             }catch(Exception ex){
                 logger.error(ex.toString());
             }
@@ -78,10 +79,10 @@ public class OFItemsParser {
 
             if(body != null && !body.isEmpty()){
                 byte[] bytes = body.getBytes();
-                analyzedContent = tika.parseToString(new ByteInputStream(bytes,bytes.length),new Metadata());
+                analyzedContent = tika.parseToString(new ByteArrayInputStream(bytes),new Metadata());
             } else if(htmlBody != null && !htmlBody.isEmpty()){
                 byte[] bytes = htmlBody.getBytes();
-                analyzedContent = tika.parseToString(new ByteInputStream(bytes,bytes.length),new Metadata());
+                analyzedContent = tika.parseToString(new ByteArrayInputStream(bytes),new Metadata());
             }
             email.setAnalyzedcontent(analyzedContent);
 
