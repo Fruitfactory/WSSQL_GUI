@@ -93,12 +93,11 @@
             <version>1.2.17</version>
         </dependency>
         
+        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api-osgi -->
         <dependency>
-            <groupId>groupid</groupId>
-            <artifactId>artifiactId</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${java.home}/lib/rt.jar</systemPath>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api-osgi</artifactId>
+            <version>2.2.7</version>
         </dependency>
 
 

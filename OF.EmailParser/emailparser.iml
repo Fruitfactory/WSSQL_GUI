@@ -131,14 +131,6 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.22" level="project" />
     <orderEntry type="library" name="Maven: org.jglue.fluent-json:fluent-json:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
-    <orderEntry type="module-library">
-      <library name="Maven: groupid:artifiactId:1.0">
-        <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/jbr/lib/rt.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" name="Maven: javax.xml.bind:jaxb-api-osgi:2.2.7" level="project" />
   </component>
 </module>
