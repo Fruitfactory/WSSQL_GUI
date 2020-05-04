@@ -57,6 +57,8 @@ public class OFEmailController {
         return response;
     }
 
+    //TODO: introduce one more action which will be called like "flush" to send all emails/contacts/attachments which were added to bulk request but the number of items less them 100
+
     @RequestMapping(value = "/close",method = RequestMethod.POST,produces = "application/json")
     @ResponseBody
     public OFEmailResponse stopAndCloseApplication(){

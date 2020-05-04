@@ -24,98 +24,68 @@ namespace OF.Core.Core.ElasticSearch
     {
         
         public static readonly string ElasticSearchHost = "http://127.0.0.1:9200";
-        public static readonly string DefaultInfrastructureName = "outlookfinder";
 
-        private JsonSerializerSettings _settings;
-
-        [InjectionConstructor]
         protected OFElasticSearchClientBase()
-            : this(ElasticSearchHost)
         {
         }
-
-        protected OFElasticSearchClientBase(string host)
-            : this(host, DefaultInfrastructureName)
-        {
-        }
-
-        protected OFElasticSearchClientBase(string host, string defaultIndexName)
-        {
-            Init(host, defaultIndexName);
-        }
-
-        private void Init(string host, string defaultIndexName)
-        {
-            try
-            {
-                var node = new Uri(host);
-                var settings = new ConnectionSettings(node).DefaultIndex(DefaultInfrastructureName).DisableDirectStreaming();
-
-                //settings.SetJsonSerializerSettingsModifier(jsonSettings =>
-                //{
-                //    jsonSettings.DateFormatString = "yyyy-MM-ddTHH:mm:ss.fff";
-                //});
-                
-                ElasticClient = new ElasticClient(settings);
-                _settings = new JsonSerializerSettings();
-                _settings.DateFormatString = "yyyy-MM-ddTHH:mm:ss.fff";
-                _settings.ContractResolver = new OFLowercaseContractResolver();
-                _settings.Converters.Add(new OFConditionCollectionConverter());
-                _settings.Formatting = Formatting.Indented;
-            }
-            catch (Exception ex)
-            {
-                OFLogger.Instance.LogError(ex.ToString());
-            }
-        }
-
-        public ElasticClient ElasticClient { get; private set; }
-
-        //TODO: check carefully
-        protected IElasticsearchSerializer Serializer => ElasticClient.SourceSerializer;
-
-        protected IElasticLowLevelClient Raw => ElasticClient.LowLevel;
 
         public ExistsResponse IndexExists(string name)
         {
-	        return ElasticClient.Indices.Exists(Indices.Index(name));
+            var client = CreateClient(name);
+            return client.Indices.Exists(Indices.Index(name));
         }
 
-        //public ExistsResponse IndexExists(IIndexExistsRequest indexExists)
-        //{
-        //    return ElasticClient.IndexExists(indexExists);
-        //}
+        public long GetTypeCount<T>() where T : OFElasticSearchBaseEntity
+        {
+            var type = typeof(T).Name;
+            var defaultIdex = OFIndexNames.DefaultEmailIndexName;
+            switch (type)
+            {
+                case "OFAttachmentContent":
+                    defaultIdex = OFIndexNames.DefaultAttachmentIndexName;
+                    break;
+                case "OFContact":
+                    defaultIdex = OFIndexNames.DefaultContactIndexName;
+                    break;
+                case "OFShortContact":
+                    defaultIdex = OFIndexNames.DefaultShortContactIndexName;
+                    break;
+                case "OFStore":
+                    defaultIdex = OFIndexNames.DefaultStoreIndexName;
+                    break;
+                case "OFEmail":
+                default:
+                    defaultIdex = OFIndexNames.DefaultEmailIndexName;
+                    break;
+            }
+
+            var client = CreateClient(defaultIdex);
+            var status = client.Count<T>();
+            return status.Count;
+        }
 
 
         public void Dispose()
         {
-            if (ElasticClient != null)
-            {
-                ElasticClient = null;
-            }
-            GC.SuppressFinalize(this);
+            Dispose(true);
         }
 
-        protected byte[] Serialize(object obj)
+        protected virtual void Dispose(bool disposing)
         {
-            if (obj.IsNull())
-            {
-                return null;
-            }
-
-            var strResult = JsonConvert.SerializeObject(obj, _settings);
-            if (strResult.IsEmpty())
-            {
-                return null;
-            }
-            return Encoding.UTF8.GetBytes(strResult);
         }
 
-        protected JsonSerializerSettings GetJsonSettings()
+        protected ConnectionSettings GetConnectionSetting(string defaultIndex)
         {
-            return _settings;
+            var cs = new ConnectionSettings(new Uri(ElasticSearchHost));
+            cs.DefaultIndex(defaultIndex);
+            return cs;
         }
 
+        protected ElasticClient CreateClient(string indexName)
+        {
+            var setting = GetConnectionSetting(indexName);
+            return new ElasticClient(setting);
+        }
 
     }
 }

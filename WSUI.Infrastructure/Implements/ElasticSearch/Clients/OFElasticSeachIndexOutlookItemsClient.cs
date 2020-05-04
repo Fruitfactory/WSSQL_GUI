@@ -17,19 +17,19 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
     {
 
         private RestClient _restClient = new RestClient("http://localhost:11223");
-
+        private OFJsonSettings _jsonSettings;
 
         [InjectionConstructor]
         public OFElasticSeachIndexOutlookItemsClient()
         {
-            
+            _jsonSettings = new OFJsonSettings();
         }
 
         public bool SendOutlookItemsToIndex(OFOutlookItemsIndexingContainer outlookItemsContainer)
         {
             try
             {
-                var attachmentsList = JsonConvert.SerializeObject(outlookItemsContainer,GetJsonSettings());
+                var attachmentsList = JsonConvert.SerializeObject(outlookItemsContainer,_jsonSettings.Settings);
                 var request = new RestRequest("parse/items", Method.POST);
                 request.AddHeader("Accept", "application/json");
                 request.RequestFormat = DataFormat.Json;

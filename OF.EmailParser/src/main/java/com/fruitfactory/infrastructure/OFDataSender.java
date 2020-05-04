@@ -38,10 +38,13 @@ public class OFDataSender extends OFDataProcess {
     private JestClient client;
     private Logger logger;
 
-    private Bulk.Builder bulkBuilder;
+    private Bulk.Builder bulkEmailBuilder;
+    private Bulk.Builder bulkAttachmentBuilder;
+    private Bulk.Builder bulkContactBuilder;
     
-    private int countDocs = 0;
-    
+    private int countEmails = 0;
+    private int countAttachment = 0;
+    private int countContact = 0;
 
     public OFDataSender(IOFDataRepositoryPipe dataSource, String name, Logger logger) {
         super(dataSource,name);
@@ -54,7 +57,9 @@ public class OFDataSender extends OFDataProcess {
         );
         client = factory.getObject();
         this.logger = logger;
-        bulkBuilder = getBulkBuilder();
+        bulkEmailBuilder = getBulkEmailBuilder();
+        bulkAttachmentBuilder = getBulkAttachmentBuilder();
+        bulkContactBuilder = getBulkContactBuilder();
     }
 
     @Override
@@ -266,10 +271,20 @@ public class OFDataSender extends OFDataProcess {
     }
 
     private void sendIndexRequest() throws IOException {
-        if(countDocs == COUNT_DOCUMENTS){
-            send(bulkBuilder);
-            bulkBuilder = getBulkBuilder();
-            countDocs = 0;
+        if(countEmails == COUNT_DOCUMENTS){
+            send(bulkEmailBuilder);
+            bulkEmailBuilder = getBulkEmailBuilder();
+            countEmails = 0;
+        }
+        if(countAttachment == COUNT_DOCUMENTS){
+            send(bulkAttachmentBuilder);
+            bulkAttachmentBuilder = getBulkAttachmentBuilder();
+            countAttachment = 0;
+        }
+        if(countContact == COUNT_DOCUMENTS){
+            send(bulkContactBuilder);
+            bulkContactBuilder = getBulkContactBuilder();
+            countContact = 0;
         }
     }
 
@@ -289,13 +304,33 @@ public class OFDataSender extends OFDataProcess {
     }
 
     private void processDocuments(String type, String json) {
-        bulkBuilder.addAction(new Index.Builder(json).type(type).build());
-        countDocs++;
+        switch(type){
+            case OFMetadataTags.INDEX_TYPE_EMAIL_MESSAGE:
+                bulkEmailBuilder.addAction(new Index.Builder(json).type(type).build());
+                countEmails++;
+                break;
+            case OFMetadataTags.INDEX_TYPE_ATTACHMENT:
+                bulkAttachmentBuilder.addAction(new Index.Builder(json).type(type).build());
+                countAttachment++;
+                break;
+            case OFMetadataTags.INDEX_TYPE_CONTACT:
+                bulkContactBuilder.addAction(new Index.Builder(json).type(type).build());
+                countContact++;
+                break;
+        }
+    }
+
+    private Bulk.Builder getBulkEmailBuilder(){
+        return new Bulk.Builder().defaultIndex(OFMetadataTags.EMAIL_INDEX_NAME);
     }
 
 
-    private Bulk.Builder getBulkBuilder(){
-        return new Bulk.Builder().defaultIndex(OFMetadataTags.INDEX_NAME);
+    private Bulk.Builder getBulkAttachmentBuilder(){
+        return new Bulk.Builder().defaultIndex(OFMetadataTags.ATTACHMENT_INDEX_NAME);
+    }
+
+    private Bulk.Builder getBulkContactBuilder(){
+        return new Bulk.Builder().defaultIndex(OFMetadataTags.CONTACT_INDEX_NAME);
     }
 
 }

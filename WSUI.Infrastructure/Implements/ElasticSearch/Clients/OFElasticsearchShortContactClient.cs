@@ -11,13 +11,18 @@ using OF.Core.Logger;
 
 namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
-    public class OFElasticsearchShortContactClient : OFElasticSearchClientBase, IOFElasticsearchShortContactClient
+    public class OFElasticsearchShortContactClient : OFElasticSearchClientInstanceBase, IOFElasticsearchShortContactClient
     {
 
         [InjectionConstructor]
         public OFElasticsearchShortContactClient()
         {
             
+        }
+
+        protected override string GetDefaultIndexName()
+        {
+            return OFIndexNames.DefaultShortContactIndexName;
         }
 
         public void SaveShortContacts(List<OFShortContact> contacts)

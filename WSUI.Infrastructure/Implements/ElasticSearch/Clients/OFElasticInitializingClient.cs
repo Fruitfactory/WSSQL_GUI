@@ -24,21 +24,18 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
     public class OFElasticInitializingClient : OFElasticSearchClientBase, IElasticSearchInitializationIndex
     {
 
-        private const string Somevalue = "outlook";
-
         private static readonly int WARM_UP_SIZER = 1000;
-
 
         [InjectionConstructor()]
         public OFElasticInitializingClient()
         {
         }
 
-        public void CreateInfrastructure()
+        public async void CreateInfrastructure()
         {
             try
             {
-                if (CreateIndex())
+                if ( await CreateIndex())
                 {
                     CreateRiver();
                 }
@@ -53,7 +50,8 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
         public OFStatusResponse GetIndexingProgress()
         {
-            return Raw.Get<OFStatusResponse>(DefaultInfrastructureName, "status");
+            var client = CreateClient(OFIndexNames.DefaultEmailIndexName);
+            return client.LowLevel.Get<OFStatusResponse>(OFIndexNames.DefaultEmailIndexName, "status");
         }
 
         public OFNamedServerResponse GetRiverStatus()
@@ -68,13 +66,6 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             return response;
 
         }
-
-        public long GetTypeCount<T>() where T : class
-        {
-            var status = ElasticClient.Count<T>();
-            return status.Count;
-        }
-
 
         public void WarmUp()
         {
@@ -93,7 +84,9 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             try
             {
                 var value = "a";
-                var result = ElasticClient.Search<OFContact>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
+
+                var client = CreateClient(OFIndexNames.DefaultContactIndexName);
+                var result = client.Search<OFContact>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
                     q.Bool(bd => bd.Should(t => t.Term(c => c.Firstname, value),
                         t => t.Term(c => c.Lastname, value),
                         t => t.Term(c => c.Emailaddress1, value),
@@ -117,11 +110,12 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
                 var value = "outlook";
                 var email = "@";
-                var result = ElasticClient.Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
+                var client = CreateClient(OFIndexNames.DefaultEmailIndexName);
+                var result = client.Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
                     q.Term(e => e.Subject, value)));
-                result = ElasticClient.Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
+                result = client.Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
                     q.Term(e => e.Analyzedcontent, value)));
-                result = ElasticClient.Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(queryDescriptor => queryDescriptor.Bool(bd => bd.Should(
+                result = client.Search<OFEmail>(s => s.From(0).Size(WARM_UP_SIZER).Query(queryDescriptor => queryDescriptor.Bool(bd => bd.Should(
                     qd => qd.Term("to.name", email),
                     qd => qd.Term("to.address", email),
                     qd => qd.Term("cc.name", email),
@@ -146,9 +140,10 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             {
                 var image = "png";
                 var content = "a";
-                var result = ElasticClient.Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
+                var client = CreateClient(OFIndexNames.DefaultAttachmentIndexName);
+                var result = client.Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
                     q.Term(a => a.Filename, image)));
-                result = ElasticClient.Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
+                result = client.Search<OFAttachmentContent>(s => s.From(0).Size(WARM_UP_SIZER).Query(q =>
                     q.Term(a => a.Analyzedcontent, content)));
                 if (result.IsNotNull() && result.Documents.Any())
                 {
@@ -162,75 +157,106 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
         }
 
-        private bool CreateIndex()
+        private async Task<bool> CreateIndex()
         {
-
-	        var descriptor = new CreateIndexDescriptor(DefaultInfrastructureName)
-	                         .Settings(s => s
-	                                        .NumberOfShards(1)
-	                                        .NumberOfReplicas(0)
-	                         )
-	                         .Map<OFEmail>(m => m
-	                                            .AutoMap()
-	                                            .Properties(pd => pd
-	                                                              .Keyword(kd =>
-		                                                              kd.Name(e => e.ItemName)
-		                                                                .IgnoreAbove(Int32.MaxValue))
-	                                                              .Keyword(kd =>
-		                                                              kd.Name(e => e.ItemUrl)
-		                                                                .IgnoreAbove(Int32.MaxValue))
-	                                                              .Keyword(kd => kd.Name(e => e.Folder))
-	                                                              .Text(td => td.Name(e => e.Content))
-	                                                              .Text(td => td.Name(e => e.Htmlcontent))
-	                                                              .Text(td => td.Name(e => e.Analyzedcontent).Index())
-	                                                              .Keyword(kd =>
-		                                                              kd.Name(e => e.Subject)
-		                                                                .IgnoreAbove(Int32.MaxValue))
-	                                            ))
-	                         .Map<OFContact>(m => m
-	                                              .AutoMap()
-	                                              .Properties(pd => pd
-		                                              .Date(dd => dd
-		                                                          .Name(c => c.Birthday)
-		                                                          .Format("yyyy-MM-dd'T'HH:mm:ss.SSS")
-		                                                          .NullValue(new DateTime(DateTime.MinValue.Year,
-			                                                          DateTime.MinValue.Month, DateTime.MinValue.Day,
-			                                                          DateTime.MinValue.Hour, DateTime.MinValue.Minute,
-			                                                          DateTime.MinValue.Second, 111))))
-	                         )
-	                         .Map<OFAttachmentContent>(m => m
-	                                                        .AutoMap()
-	                                                        .Properties(pd => pd
-	                                                                          .Text(td => td
-	                                                                                      .Name(a => a.Analyzedcontent)
-	                                                                                      .Index())
-	                                                                          .Text(td => td.Name(a => a.Content))
-	                                                                          .Keyword(kd =>
-		                                                                          kd.Name(a => a.Filename)
-		                                                                            .IgnoreAbove(Int32.MaxValue))
-
-	                                                        ))
-	                         .Map<OFStore>(m => m.AutoMap())
-	                         .Map<OFShortContact>(m => m.AutoMap());
-
-            var response = ElasticClient.Indices.Create(descriptor);
-
+            var result =  await CreateIndexForEmails() && await CreateIndexForAttachmentContent() &&  await CreateIndexForContacts() &&
+                   await CreateIndexForShortContact() && await CreateIndexForStore();
             OFLogger.Instance.LogDebug("Create Index...");
-            OFLogger.Instance.LogDebug("Status: {0}  Success: {1}", response.ApiCall.HttpStatusCode, response.ApiCall.Success);
-            OFLogger.Instance.LogDebug("Debug Info: {0}", response.DebugInformation);
+            return result;
 
-            return response.ApiCall.HttpStatusCode == 200;
+        }
 
+        private async Task<bool> CreateIndexForEmails()
+        {
+            var connectionSettings = GetConnectionSetting(OFIndexNames.DefaultEmailIndexName);
+            connectionSettings.DefaultMappingFor<OFEmail>(s =>
+                s.IdProperty(e => e.Entryid).IndexName(OFIndexNames.DefaultEmailIndexName));
+            connectionSettings.DefaultMappingFor<OFRecipient>(s =>
+                s.IdProperty(r => r.Entryid).IndexName(OFIndexNames.DefaultEmailIndexName));
+            connectionSettings.DefaultMappingFor<OFAttachment>(s =>
+                s.IdProperty(a => a.Entryid).IndexName(OFIndexNames.DefaultEmailIndexName));
+
+            var client = new ElasticClient(connectionSettings);
+            var response = await client.Indices.CreateAsync(OFIndexNames.DefaultEmailIndexName, c => c
+                               .Map<OFEmail>(m => m
+                                                  .AutoMap()
+                                                  .Properties(p => p
+                                                      .Nested<OFRecipient>(np => np
+                                                                                 .AutoMap()
+                                                                                 .Name(e => e.To)
+                                                                                 .Name(e => e.Cc)
+                                                                                 .Name(e => e.Bcc))
+                                                      .Nested<OFAttachment>(np => np
+                                                          .AutoMap()
+                                                          .Name(e => e.Attachments))
+                                                  )
+                                                  )
+                           );
+
+            return response.ServerError.IsNull();
+        }
+
+        private async Task<bool> CreateIndexForContacts()
+        {
+            var connectionSettings = GetConnectionSetting(OFIndexNames.DefaultContactIndexName);
+            connectionSettings.DefaultMappingFor<OFContact>(s => s
+                                                                 .IdProperty(c => c.Entryid)
+                                                                 .IndexName(OFIndexNames.DefaultContactIndexName));
+
+            var client = new ElasticClient(connectionSettings);
+            var response = await client.Indices.CreateAsync(OFIndexNames.DefaultContactIndexName,
+                               d => d.Map<OFContact>(m => m.AutoMap()));
+
+            return response.ServerError.IsNull();
+        }
+
+        private async Task<bool> CreateIndexForAttachmentContent()
+        {
+            var connectionSettings = GetConnectionSetting(OFIndexNames.DefaultAttachmentIndexName);
+            connectionSettings.DefaultMappingFor<OFAttachmentContent>(s => s
+                                                                           .IdProperty(a => a.Entryid)
+                                                                           .IndexName(OFIndexNames
+                                                                               .DefaultAttachmentIndexName));
+            var client = new ElasticClient(connectionSettings);
+            var response = await client.Indices.CreateAsync(OFIndexNames.DefaultAttachmentIndexName, d => d
+                .Map<OFAttachmentContent>(m => m.AutoMap()));
+
+            return response.ServerError.IsNull();
+        }
+
+        private async Task<bool> CreateIndexForStore()
+        {
+            var connectionSettings = GetConnectionSetting(OFIndexNames.DefaultStoreIndexName);
+            connectionSettings.DefaultMappingFor<OFStore>(s =>
+                s.IdProperty(store => store.Storeid).IndexName(OFIndexNames.DefaultStoreIndexName));
+
+            var client = new ElasticClient(connectionSettings);
+            var response = await client.Indices.CreateAsync(OFIndexNames.DefaultStoreIndexName,
+                               d => d.Map<OFStore>(m => m.AutoMap()));
+
+            return response.ServerError.IsNull();
+        }
+
+        private async Task<bool> CreateIndexForShortContact()
+        {
+            var connectionSettings = GetConnectionSetting(OFIndexNames.DefaultShortContactIndexName);
+            connectionSettings.DefaultMappingFor<OFShortContact>(s =>
+                s.IdProperty(c => c.Email).IndexName(OFIndexNames.DefaultShortContactIndexName));
+
+            var client = new ElasticClient(connectionSettings);
+            var response = await client.Indices.CreateAsync(OFIndexNames.DefaultShortContactIndexName,
+                               d => d.Map<OFShortContact>(m => m.AutoMap()));
+
+            return response.ServerError.IsNull();
         }
 
         private void CreateRiver()
         {
-            var riverMeta = new OFRiverMeta(DefaultInfrastructureName);
+            var riverMeta = new OFRiverMeta(OFIndexNames.DefaultEmailIndexName);
 
             OFObjectJsonSaveReadHelper.Instance.SaveElasticSearchSettings(riverMeta);
 
-            OFLogger.Instance.LogDebug("Create Settings for service contoroller...");
+            OFLogger.Instance.LogDebug("Create Settings for service controller...");
         }
-
     }
 }

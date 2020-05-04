@@ -6,14 +6,19 @@ using OF.Core.Logger;
 
 namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
-    public class OFElasticSearchRemovingClient : OFElasticSearchClientBase,IOFElasticSearchRemovingClient
+    public class OFElasticSearchRemovingClient : OFElasticSearchClientInstanceBase,IOFElasticSearchRemovingClient
     {
         [InjectionConstructor]
         public OFElasticSearchRemovingClient()
         {
             
         }
-        
+
+        protected override string GetDefaultIndexName()
+        {
+            return OFIndexNames.DefaultEmailIndexName;
+        }
+
         public void RemoveEmail(string entryId)
         {
             var result = ElasticClient.DeleteByQuery<OFEmail>(q => q.Query(rq => rq.Term(e => e.Entryid, entryId)));

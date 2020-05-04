@@ -29,7 +29,7 @@ namespace OF.Core.Helpers
             }
             if (settingsMeta.IsNull())
             {
-                settingsMeta = new OFRiverMeta(OFElasticSearchClientBase.DefaultInfrastructureName);
+                settingsMeta = new OFRiverMeta(OFIndexNames.DefaultEmailIndexName);
             }
             return settingsMeta;
         }

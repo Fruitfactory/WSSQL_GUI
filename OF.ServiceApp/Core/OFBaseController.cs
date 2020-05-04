@@ -186,7 +186,7 @@ namespace OF.ServiceApp.Core
                     break;
                 }
                 var settings = _metaSettingsProvider.GetCurrentSettings();
-                OFParserApplicationHandler.Instance.StartParser();
+                //OFParserApplicationHandler.Instance.StartParser();
                 var delay = OnRun(settings.LastDate);
                 _metaSettingsProvider.UpdateLastIndexingDateTime(DateTime.Now);
 

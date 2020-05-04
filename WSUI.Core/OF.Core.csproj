@@ -131,6 +131,8 @@
     <Compile Include="Core\Attributes\OFEnumPrefixAttribute.cs" />
     <Compile Include="Core\Attributes\OFFieldAttribute.cs" />
     <Compile Include="Core\Attributes\OFIgnoreAttribute.cs" />
+    <Compile Include="Core\ElasticSearch\OFElasticSearchClientInstanceBase.cs" />
+    <Compile Include="Core\ElasticSearch\OFIndexNames.cs" />
     <Compile Include="Core\Inspections\OFSettingInspection.cs" />
     <Compile Include="Core\Rules\OFPriceAnountRule.cs" />
     <Compile Include="Core\Rules\OFRuleToken.cs" />
@@ -381,6 +383,7 @@
     <Compile Include="Interfaces\IWildcard.cs" />
     <Compile Include="Interfaces\IWSAction.cs" />
     <Compile Include="Interfaces\IWSUIAttribute.cs" />
+    <Compile Include="JsonSettings\OFJsonSettings.cs" />
     <Compile Include="JsonSettings\OFLowercaseContractResolver.cs" />
     <Compile Include="Logger\OFEventLogger.cs" />
     <Compile Include="Logger\OFLogger.cs" />

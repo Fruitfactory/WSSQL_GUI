@@ -2,6 +2,7 @@
 using Nest;
 using OF.Core;
 using OF.Core.Core.ElasticSearch;
+using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Data.NamedPipeMessages;
 using OF.Core.Data.NamedPipeMessages.Response;
@@ -28,12 +29,6 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                     MessageType = ofServiceApplicationMessageType.ControllerStatus
                 });
             return response;
-        }
-
-        public long GetTypeCount<T>() where T : class 
-        {
-            var status = ElasticClient.Count<T>();
-            return status.Count;
         }
 
     }
