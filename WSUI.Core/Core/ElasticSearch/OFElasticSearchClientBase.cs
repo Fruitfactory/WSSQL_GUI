@@ -20,7 +20,7 @@ using Exception = System.Exception;
 
 namespace OF.Core.Core.ElasticSearch
 {
-    public abstract class OFElasticSearchClientBase : IDisposable
+    public abstract class OFElasticSearchClientBase<E> : IDisposable where E : class, IElasticSearchObject, new()
     {
         
         public static readonly string ElasticSearchHost = "http://127.0.0.1:9200";
@@ -37,9 +37,21 @@ namespace OF.Core.Core.ElasticSearch
 
         public long GetTypeCount<T>() where T : OFElasticSearchBaseEntity
         {
-            var type = typeof(T).Name;
+            var client = CreateClient(GetIndexName(typeof(T)));
+            var status = client.Count<T>();
+            return status.Count;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual string GetIndexName(Type type)
+        {
+            var typeName = type.Name;
             var defaultIdex = OFIndexNames.DefaultEmailIndexName;
-            switch (type)
+            switch (typeName)
             {
                 case "OFAttachmentContent":
                     defaultIdex = OFIndexNames.DefaultAttachmentIndexName;
@@ -58,16 +70,7 @@ namespace OF.Core.Core.ElasticSearch
                     defaultIdex = OFIndexNames.DefaultEmailIndexName;
                     break;
             }
-
-            var client = CreateClient(defaultIdex);
-            var status = client.Count<T>();
-            return status.Count;
-        }
-
-
-        public void Dispose()
-        {
-            Dispose(true);
+            return defaultIdex;
         }
 
         protected virtual void Dispose(bool disposing)
@@ -78,6 +81,7 @@ namespace OF.Core.Core.ElasticSearch
         {
             var cs = new ConnectionSettings(new Uri(ElasticSearchHost));
             cs.DefaultIndex(defaultIndex);
+            cs.DisableDirectStreaming();
             return cs;
         }
 
@@ -86,6 +90,6 @@ namespace OF.Core.Core.ElasticSearch
             var setting = GetConnectionSetting(indexName);
             return new ElasticClient(setting);
         }
-
+        
     }
 }

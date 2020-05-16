@@ -5,32 +5,27 @@ using Nest;
 using Newtonsoft.Json;
 using OF.Core.Data.ElasticSearch.Converter;
 using OF.Core.Extensions;
+using OF.Core.Interfaces;
 using OF.Core.JsonSettings;
 using OF.Core.Logger;
 
 namespace OF.Core.Core.ElasticSearch
 {
-    public abstract class OFElasticSearchClientInstanceBase : OFElasticSearchClientBase
+    public abstract class OFElasticSearchClientInstanceBase<E> : OFElasticSearchClientBase<E> where E : class, IElasticSearchObject, new()
     {
         private OFJsonSettings _settings;
 
         protected OFElasticSearchClientInstanceBase()
         {
+            Init();
         }
 
-        protected OFElasticSearchClientInstanceBase(string host)
-        {
-            Init(host);
-        }
-
-        private void Init(string host)
+        private void Init()
         {
             try
             {
-                string defaultIndexName = GetDefaultIndexName();
-                var node = new Uri(host);
-                var settings = new ConnectionSettings(node).DefaultIndex(defaultIndexName).DisableDirectStreaming();
-                ElasticClient = new ElasticClient(settings);
+                string defaultIndexName = GetIndexName(typeof(E));
+                ElasticClient = CreateClient(defaultIndexName);
                 _settings = new OFJsonSettings();
             }
             catch (Exception ex)
@@ -38,8 +33,6 @@ namespace OF.Core.Core.ElasticSearch
                 OFLogger.Instance.LogError(ex.ToString());
             }
         }
-
-        protected abstract string GetDefaultIndexName();
 
         public ElasticClient ElasticClient { get; private set; }
 

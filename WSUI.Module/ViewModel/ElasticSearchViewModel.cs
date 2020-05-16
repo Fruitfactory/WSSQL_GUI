@@ -345,7 +345,7 @@ namespace OF.Module.ViewModel
 
         private void CheckIndexState()
         {
-            var resp = ElasticSearchClient.IndexExists(OFElasticSearchClientBase.DefaultInfrastructureName);
+            var resp = ElasticSearchClient.IndexExists(OFIndexNames.DefaultEmailIndexName);
             IsIndexExisted = resp.Exists;
             var riverStatusResp = ElasticSearchClient.GetRiverStatus();
             var status = riverStatusResp.IsNotNull() ? JsonConvert.DeserializeObject<IEnumerable<OFReaderStatus>>(riverStatusResp.Body.ToString()) : null;
