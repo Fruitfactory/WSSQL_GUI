@@ -14,6 +14,16 @@
         <version>1.4.4.RELEASE</version>
     </parent>
 
+    <repositories>
+        <repository>
+            <id>elastic-lucene-snapshots</id>
+            <name>Elastic Lucene Snapshots</name>
+            <url>https://s3.amazonaws.com/download.elasticsearch.org/lucenesnapshots/83f9835</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+    </repositories>
+
 
     <dependencies>
         <dependency>
@@ -75,12 +85,6 @@
             <version>2.4</version>
         </dependency>
         <dependency>
-            <groupId>io.searchbox</groupId>
-            <artifactId>jest</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.jglue.fluent-json</groupId>
             <artifactId>fluent-json</artifactId>
             <version>2.0.0</version>
@@ -92,15 +96,13 @@
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>
-        
-        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api-osgi -->
+
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api-osgi</artifactId>
-            <version>2.2.7</version>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>7.8.1</version>
         </dependency>
-
-
+        
     </dependencies>
 
     <properties>

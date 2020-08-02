@@ -230,6 +230,7 @@ pip-log.txt
 /ROutput
 /PSTRiverPlugin/target
 /OF.EmailParser/target
+*.xml
 *.publish
 /Toolkits/Elasticsearch/data
 /Toolkits/Elasticsearch/logs

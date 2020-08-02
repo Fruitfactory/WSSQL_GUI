@@ -5,20 +5,24 @@ import com.fruitfactory.interfaces.IOFDataRepositoryPipe;
 import com.fruitfactory.metadata.OFMetadataTags;
 import com.fruitfactory.models.*;
 import com.google.gson.JsonObject;
-import io.searchbox.action.Action;
-import io.searchbox.action.BulkableAction;
-import io.searchbox.client.JestClient;
-import io.searchbox.client.config.ClientConfig;
-import io.searchbox.client.*;
-import io.searchbox.client.config.HttpClientConfig;
-import io.searchbox.core.Bulk;
-import io.searchbox.core.BulkResult;
-import io.searchbox.core.Index;
+import org.apache.http.HttpHost;
+import org.elasticsearch.action.*;
+import org.elasticsearch.action.bulk.BulkProcessor;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.client.*;
+import org.elasticsearch.common.unit.ByteSizeUnit;
+import org.elasticsearch.common.unit.ByteSizeValue;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.threadpool.ThreadPool;
 import org.jglue.fluentjson.JsonArrayBuilder;
 import org.jglue.fluentjson.JsonBuilderFactory;
 import org.jglue.fluentjson.JsonObjectBuilder;
 
 import java.io.IOException;
+
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -35,31 +39,31 @@ public class OFDataSender extends OFDataProcess {
 
     private final int COUNT_DOCUMENTS = 100;
 
-    private JestClient client;
     private Logger logger;
 
-    private Bulk.Builder bulkEmailBuilder;
-    private Bulk.Builder bulkAttachmentBuilder;
-    private Bulk.Builder bulkContactBuilder;
+    RestHighLevelClient client;
+    BulkRequest bulkRequest;
+
+
+    private int countDocs = 0;
     
-    private int countEmails = 0;
-    private int countAttachment = 0;
-    private int countContact = 0;
 
     public OFDataSender(IOFDataRepositoryPipe dataSource, String name, Logger logger) {
         super(dataSource,name);
-        JestClientFactory factory = new JestClientFactory();
-        factory.setHttpClientConfig(
-                new HttpClientConfig
-                        .Builder("http://localhost:9200")
-                .multiThreaded(true)
-                .build()
-        );
-        client = factory.getObject();
         this.logger = logger;
-        bulkEmailBuilder = getBulkEmailBuilder();
-        bulkAttachmentBuilder = getBulkAttachmentBuilder();
-        bulkContactBuilder = getBulkContactBuilder();
+        client = new RestHighLevelClient(
+                RestClient.builder(
+                        new HttpHost("localhost", 9200, "http")));
+//        listener = getListener();
+//        BulkProcessor.Builder builder = BulkProcessor.builder((request,bulkListener) -> client.bulkAsync(request,RequestOptions.DEFAULT, bulkListener),
+//                listener);
+//        builder.setBulkActions(100);
+//        builder.setBulkSize(new ByteSizeValue(10L, ByteSizeUnit.MB));
+//        builder.setConcurrentRequests(0);
+//        builder.setFlushInterval(TimeValue.timeValueSeconds(10L));
+//        bulkProcessor = builder.build();
+
+
     }
 
     @Override
@@ -70,11 +74,11 @@ public class OFDataSender extends OFDataProcess {
         try{
 
             if(container != null && container.getEmail() != null){
-                logger.info(String.format("Send: %s",container.getEmail().getSubject()));
+                logger.info(String.format("Processing: %s",container.getEmail().getSubject()));
             }else if(container != null && container.getAttachments() != null && container.getAttachments().size() > 0){
-                logger.info(String.format("Send: %s",container.getAttachments().get(0).getFilename()));
+                logger.info(String.format("Processing: %s",container.getAttachments().get(0).getFilename()));
             }else if(container != null && container.getContact() != null){
-                logger.info(String.format("Send: %s",container.getContact().getEmailaddress1()));
+                logger.info(String.format("Processing: %s",container.getContact().getEmailaddress1()));
             }    
         }catch(Exception e){
             logger.error(e.toString());
@@ -132,7 +136,7 @@ public class OFDataSender extends OFDataProcess {
                     .add(OFMetadataTags.Contact.ITEM_STORE_ID,contact.getStoreid())
                     .getJson();
 
-            index(OFMetadataTags.INDEX_TYPE_CONTACT,json.toString());
+            index(OFMetadataTags.CONTACT_INDEX_NAME,json.toString());
 
         }catch (Exception ex){
             logger.error(ex.toString());
@@ -173,7 +177,7 @@ public class OFDataSender extends OFDataProcess {
                     .add(OFMetadataTags.Attachment.STORE_ID,attachment.getStoreid())
                     .getJson();
 
-            index(OFMetadataTags.INDEX_TYPE_ATTACHMENT,json.toString());
+            index(OFMetadataTags.ATTACHMENT_INDEX_NAME,json.toString());
 
         }catch(Exception e){
             logger.error(e.toString());
@@ -261,76 +265,29 @@ public class OFDataSender extends OFDataProcess {
         array.end();
     }
 
-    private void index(String type, String json){
+    private void index(String indexName, String json){
         try {
-            processDocuments(type, json);
-            sendIndexRequest();
+            bulkRequest.add(new IndexRequest(indexName).source(XContentType.JSON,json));
+            processBulkRequest();
         }catch (Exception ex){
             logger.error(ex.toString());
         }
     }
 
-    private void sendIndexRequest() throws IOException {
-        if(countEmails == COUNT_DOCUMENTS){
-            send(bulkEmailBuilder);
-            bulkEmailBuilder = getBulkEmailBuilder();
-            countEmails = 0;
-        }
-        if(countAttachment == COUNT_DOCUMENTS){
-            send(bulkAttachmentBuilder);
-            bulkAttachmentBuilder = getBulkAttachmentBuilder();
-            countAttachment = 0;
-        }
-        if(countContact == COUNT_DOCUMENTS){
-            send(bulkContactBuilder);
-            bulkContactBuilder = getBulkContactBuilder();
-            countContact = 0;
-        }
-    }
-
-    private void send(Bulk.Builder builder ) throws IOException {
-        if(builder == null){
-            return;
-        }
+    private void processBulkRequest() throws IOException {
+        if(bulkRequest.numberOfActions() < COUNT_DOCUMENTS) return;
         try {
-            Bulk bulkEmail = builder.build();
-            BulkResult execute = client.execute(bulkEmail);
-            if(execute != null){
-                logger.error(execute.getJsonString());
+            BulkResponse response = client.bulk(bulkRequest,RequestOptions.DEFAULT);
+            if(response.hasFailures()){
+                logger.warn("Bulk request has finished with some failures..." + response.buildFailureMessage());
+            }else{
+                logger.debug("Bulk request completed in " + response.getTookInMillis()+ " ms");
             }
-        }catch(Exception ex){
-            logger.error(ex.toString());
+            bulkRequest = new BulkRequest();
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
         }
     }
 
-    private void processDocuments(String type, String json) {
-        switch(type){
-            case OFMetadataTags.INDEX_TYPE_EMAIL_MESSAGE:
-                bulkEmailBuilder.addAction(new Index.Builder(json).type(type).build());
-                countEmails++;
-                break;
-            case OFMetadataTags.INDEX_TYPE_ATTACHMENT:
-                bulkAttachmentBuilder.addAction(new Index.Builder(json).type(type).build());
-                countAttachment++;
-                break;
-            case OFMetadataTags.INDEX_TYPE_CONTACT:
-                bulkContactBuilder.addAction(new Index.Builder(json).type(type).build());
-                countContact++;
-                break;
-        }
-    }
-
-    private Bulk.Builder getBulkEmailBuilder(){
-        return new Bulk.Builder().defaultIndex(OFMetadataTags.EMAIL_INDEX_NAME);
-    }
-
-
-    private Bulk.Builder getBulkAttachmentBuilder(){
-        return new Bulk.Builder().defaultIndex(OFMetadataTags.ATTACHMENT_INDEX_NAME);
-    }
-
-    private Bulk.Builder getBulkContactBuilder(){
-        return new Bulk.Builder().defaultIndex(OFMetadataTags.CONTACT_INDEX_NAME);
-    }
 
 }

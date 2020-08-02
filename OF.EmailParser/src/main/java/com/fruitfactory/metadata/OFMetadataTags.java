@@ -9,9 +9,11 @@ public class OFMetadataTags {
 
     private static final String PROPERTIES = "properties";
 
-    public static final String EMAIL_INDEX_NAME = "ofemail";
-    public static final String ATTACHMENT_INDEX_NAME = "ofattachment";
-    public static final String CONTACT_INDEX_NAME = "ofcontact";
+    public static final String INDEX_NAME = "outlookfinder";
+
+    public static final String EMAIL_INDEX_NAME = "email";
+    public static final String ATTACHMENT_INDEX_NAME = "attachment";
+    public static final String CONTACT_INDEX_NAME = "contact";
 
     public static final String INDEX_TYPE_EMAIL_MESSAGE = "email";
     public static final String INDEX_TYPE_FOLDER = "folder";

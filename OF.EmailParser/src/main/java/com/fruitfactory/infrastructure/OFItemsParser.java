@@ -1,14 +1,13 @@
 package com.fruitfactory.infrastructure;
 
-import java.io.*;
 import com.fruitfactory.models.OFAttachment;
 import com.fruitfactory.models.OFEmail;
 import com.fruitfactory.models.OFItemsContainer;
-import java.util.concurrent.TimeUnit;
+import java.io.ByteArrayInputStream;
+import java.util.Base64;
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
 import org.apache.log4j.Logger;
-import  java.util.Base64;
 
 /**
  * Created by Yariki on 6/2/2017.
@@ -42,11 +41,11 @@ public class OFItemsParser {
         }
         try{
             String parsedContent = "";
-
-            byte[] byteBuffer = Base64.getDecoder().decode(attachment.getContent());
+            Base64.Decoder decoder = Base64.getDecoder();
+            byte[] byteBuffer = decoder.decode(attachment.getContent());
             OFTimeWatch watch = new OFTimeWatch();
             logger.info("Start parsing...");
-            parsedContent = tika.parseToString(new ByteArrayInputStream(byteBuffer), new Metadata());
+            parsedContent = tika.parseToString(new ByteArrayInputStream(byteBuffer,0,byteBuffer.length), new Metadata());
             logger.info(String.format("Parsed time: %s ms", watch.timeInSeconds()));
             attachment.setAnalyzedcontent(parsedContent);
         }catch (Exception ex){
@@ -79,10 +78,10 @@ public class OFItemsParser {
 
             if(body != null && !body.isEmpty()){
                 byte[] bytes = body.getBytes();
-                analyzedContent = tika.parseToString(new ByteArrayInputStream(bytes),new Metadata());
+                analyzedContent = tika.parseToString(new ByteArrayInputStream(bytes,0,bytes.length),new Metadata());
             } else if(htmlBody != null && !htmlBody.isEmpty()){
                 byte[] bytes = htmlBody.getBytes();
-                analyzedContent = tika.parseToString(new ByteArrayInputStream(bytes),new Metadata());
+                analyzedContent = tika.parseToString(new ByteArrayInputStream(bytes,0,bytes.length),new Metadata());
             }
             email.setAnalyzedcontent(analyzedContent);
 
