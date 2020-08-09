@@ -8,7 +8,7 @@ using OF.Core.Interfaces;
 
 namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
-    public class OFElasticsearchStoreClient : OFElasticSearchClientInstanceBase, IOFElasticsearchStoreClient
+    public class OFElasticsearchStoreClient : OFElasticSearchClientInstanceBase<OFStore>, IOFElasticsearchStoreClient
     {
         [InjectionConstructor]
         public OFElasticsearchStoreClient()

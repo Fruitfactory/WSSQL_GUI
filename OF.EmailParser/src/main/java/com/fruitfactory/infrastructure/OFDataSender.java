@@ -136,7 +136,7 @@ public class OFDataSender extends OFDataProcess {
                     .add(OFMetadataTags.Contact.ITEM_STORE_ID,contact.getStoreid())
                     .getJson();
 
-            index(OFMetadataTags.CONTACT_INDEX_NAME,json.toString());
+            index(OFMetadataTags.INDEX_TYPE_CONTACT,json.toString());
 
         }catch (Exception ex){
             logger.error(ex.toString());
@@ -177,7 +177,7 @@ public class OFDataSender extends OFDataProcess {
                     .add(OFMetadataTags.Attachment.STORE_ID,attachment.getStoreid())
                     .getJson();
 
-            index(OFMetadataTags.ATTACHMENT_INDEX_NAME,json.toString());
+            index(OFMetadataTags.INDEX_TYPE_ATTACHMENT,json.toString());
 
         }catch(Exception e){
             logger.error(e.toString());

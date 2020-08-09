@@ -3,7 +3,7 @@
 namespace OF.Core.Data.ElasticSearch
 {
     [ElasticsearchType(Name = "store")]
-    public class OFStore
+    public class OFStore : OFElasticSearchBaseEntity
     {
         public string Name { get; set; }
 

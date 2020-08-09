@@ -35,7 +35,7 @@ using Exception = System.Exception;
 
 namespace OF.Core.Core.Search
 {
-    public abstract class BaseSearchRule<T, E> : ISearch, ISearchRule
+    public abstract class BaseSearchRule<T, E> : ISearch, ISearchRule 
         where T : class, ISearchObject, new()
         where E : class, IElasticSearchObject, new()
     {
@@ -43,7 +43,7 @@ namespace OF.Core.Core.Search
 
         private volatile bool _isSearching = false;
         private bool _exludeIgnored = false;
-        private IElasticSearchClient _elasticSearchClient;
+        private IElasticSearchClient<E> _elasticSearchClient;
         private Func<T> _create;
         private int _from = 0;
         private long _total = 0;
@@ -97,7 +97,7 @@ namespace OF.Core.Core.Search
             Lock = lockObject ?? new object();
             _exludeIgnored = exludeIgnored;
             _unityContainer = unityContainer;
-            _elasticSearchClient = _unityContainer.Resolve<IElasticSearchClient>();
+            _elasticSearchClient = _unityContainer.Resolve<IElasticSearchClient<E>>();
             _create = New<T>.Instance;
             _searchThreadPool = _unityContainer.Resolve<IOFSearchThreadPool>();
         }
@@ -244,7 +244,7 @@ namespace OF.Core.Core.Search
             {
                 body.from = _from;
                 body.size = TopQueryResult;
-                result = _elasticSearchClient.RawSearch<E>(body);
+                result = _elasticSearchClient.RawSearch(body);
                 if (result.IsNotNull())
                 {
                     Documents = result.Documents;
@@ -259,7 +259,7 @@ namespace OF.Core.Core.Search
         {
             body.from = _from;
             body.size = TopQueryResult;
-            result = _elasticSearchClient.RawSearch<E>(body);
+            result = _elasticSearchClient.RawSearch(body);
             return result;
         }
 

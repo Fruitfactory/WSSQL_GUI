@@ -11,16 +11,9 @@ public class OFMetadataTags {
 
     public static final String INDEX_NAME = "outlookfinder";
 
-    public static final String EMAIL_INDEX_NAME = "email";
-    public static final String ATTACHMENT_INDEX_NAME = "attachment";
-    public static final String CONTACT_INDEX_NAME = "contact";
-
-    public static final String INDEX_TYPE_EMAIL_MESSAGE = "email";
-    public static final String INDEX_TYPE_FOLDER = "folder";
-    public static final String INDEX_TYPE_CONTACT = "contact";
-    public static final String INDEX_TYPE_CALENDAR = "calendar";
-    public static final String INDEX_TYPE_ATTACHMENT = "attachment";
-    public static final String INDEX_TYPE_STORE = "store";
+    public static final String INDEX_TYPE_EMAIL_MESSAGE = "ofemail";
+    public static final String INDEX_TYPE_CONTACT = "ofcontact";
+    public static final String INDEX_TYPE_ATTACHMENT = "ofattachment";
 
     public static final class Email {
 

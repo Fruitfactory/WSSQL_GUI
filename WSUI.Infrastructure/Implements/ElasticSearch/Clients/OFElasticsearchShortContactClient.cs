@@ -11,7 +11,7 @@ using OF.Core.Logger;
 
 namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
-    public class OFElasticsearchShortContactClient : OFElasticSearchClientInstanceBase, IOFElasticsearchShortContactClient
+    public class OFElasticsearchShortContactClient : OFElasticSearchClientInstanceBase<OFShortContact>, IOFElasticsearchShortContactClient
     {
 
         [InjectionConstructor]

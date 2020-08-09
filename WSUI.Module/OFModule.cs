@@ -97,7 +97,6 @@ namespace OF.Module
 
             _unityContainer.RegisterType<IElasticSearchInitializationIndex, OFElasticInitializingClient>();
             
-            _unityContainer.RegisterType<IElasticSearchClient, OFElasticSearchClient>();
             _unityContainer.RegisterType<IElasticSearchRiverStatus, OFElasticRiverStatus>();           
            
 

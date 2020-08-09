@@ -20,7 +20,7 @@ using Exception = System.Exception;
 
 namespace OF.Core.Core.ElasticSearch
 {
-    public abstract class OFElasticSearchClientBase<E> : IDisposable where E : class, IElasticSearchObject, new()
+    public abstract class OFElasticSearchClientBase : IDisposable
     {
         
         public static readonly string ElasticSearchHost = "http://127.0.0.1:9200";

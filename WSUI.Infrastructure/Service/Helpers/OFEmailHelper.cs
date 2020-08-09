@@ -105,8 +105,8 @@ namespace OF.Infrastructure.Service.Helpers
 
         private IEnumerable<string> GetAttachments(OFEmailSearchObject searchObj, string tempFolder)
         {
-            var esClient = new OFElasticSearchClient();
-            var result = esClient.Search<OFAttachmentContent>(s => s.Query(d => d.QueryString(qq => qq.Query(searchObj.EntryID))));
+            var esClient = new OFElasticSearchClient<OFAttachmentContent>();
+            var result = esClient.Search(s => s.Query(d => d.QueryString(qq => qq.Query(searchObj.EntryID))));
             var fileList = new List<string>();
             if (result.Documents.Any())
             {

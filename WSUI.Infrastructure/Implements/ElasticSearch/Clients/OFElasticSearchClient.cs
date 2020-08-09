@@ -15,7 +15,7 @@ using OF.Core.Logger;
 
 namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 {
-    public class OFElasticSearchClient : OFElasticSearchClientInstanceBase,IElasticSearchClient
+    public class OFElasticSearchClient<T> : OFElasticSearchClientInstanceBase<T>, IElasticSearchClient<T> where T : class, IElasticSearchObject, new()
     {
         [InjectionConstructor]
         public OFElasticSearchClient()
@@ -23,18 +23,17 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
             
         }
 
-        protected override string GetDefaultIndexName()
+        protected virtual string GetDefaultIndexName()
         {
             return OFIndexNames.DefaultEmailIndexName;
         }
 
-        public ISearchResponse<T> Search<T>(Func<SearchDescriptor<T>, SearchDescriptor<T>> searchSelector)
-            where T : class
+        public ISearchResponse<T> Search(Func<SearchDescriptor<T>, SearchDescriptor<T>> searchSelector)
         {
             return ElasticClient.Search<T>(searchSelector);
         }
 
-        public IRawSearchResult<T> RawSearch<T>(object body) where T : class, new()
+        public IRawSearchResult<T> RawSearch(object body) 
         {
 
             byte[] bodyBytes = Serialize(body);

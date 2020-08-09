@@ -3,7 +3,7 @@
 namespace OF.Core.Data.ElasticSearch
 {
     [ElasticsearchType(Name = "shortcontact")]    
-    public class OFShortContact
+    public class OFShortContact : OFElasticSearchBaseEntity
     {
         public string Name { get; set; }
 

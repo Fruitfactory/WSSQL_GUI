@@ -10,13 +10,13 @@ using OF.Core.Logger;
 
 namespace OF.Core.Core.Suggest
 {
-    public abstract class OFBaseSuggester<T> where T:class, IElasticSearchObject
+    public abstract class OFBaseSuggester<T> where T:class, IElasticSearchObject, new()
     {
         #region [needs]
 
         private Thread _thread;
         private volatile bool _isSearching = false;
-        private IElasticSearchClient _elasticSearchClient;
+        private IElasticSearchClient<T> _elasticSearchClient;
         private readonly object _lock = new object();
         private string _searchString;
         private IEnumerable<string> _result;
@@ -29,7 +29,7 @@ namespace OF.Core.Core.Suggest
 
         protected OFBaseSuggester(IUnityContainer unityContainer)
         {
-            _elasticSearchClient = unityContainer.Resolve<IElasticSearchClient>();
+            _elasticSearchClient = unityContainer.Resolve<IElasticSearchClient<T>>();
         }
 
 

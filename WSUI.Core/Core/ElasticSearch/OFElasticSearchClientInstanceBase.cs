@@ -11,7 +11,7 @@ using OF.Core.Logger;
 
 namespace OF.Core.Core.ElasticSearch
 {
-    public abstract class OFElasticSearchClientInstanceBase<E> : OFElasticSearchClientBase<E> where E : class, IElasticSearchObject, new()
+    public abstract class OFElasticSearchClientInstanceBase<E> : OFElasticSearchClientBase where E : class, IElasticSearchObject, new()
     {
         private OFJsonSettings _settings;
 
@@ -60,6 +60,11 @@ namespace OF.Core.Core.ElasticSearch
         protected JsonSerializerSettings GetJsonSettings()
         {
             return _settings.Settings;
+        }
+
+        protected virtual string GetDefaultIndexName()
+        {
+            return OFIndexNames.DefaultEmailIndexName;
         }
 
         protected override void Dispose(bool disposing)
