@@ -12,7 +12,7 @@ namespace OF.ServiceApp.Service
     public class OFParserApplicationHandler
     {
 
-        private readonly string ParserApplicationFileName = "emailparser-1.0-SNAPSHOT.jar";
+        private readonly string ParserApplicationFileName = "emailparser.jar";
         private readonly int MinMemory = 256;
         private readonly int MaxMemory = 758;
 

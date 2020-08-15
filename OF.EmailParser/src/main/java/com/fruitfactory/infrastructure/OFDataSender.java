@@ -281,7 +281,7 @@ public class OFDataSender extends OFDataProcess {
             if(response.hasFailures()){
                 logger.warn("Bulk request has finished with some failures..." + response.buildFailureMessage());
             }else{
-                logger.debug("Bulk request completed in " + response.getTookInMillis()+ " ms");
+                logger.debug("Bulk request completed in " + response.getIngestTookInMillis()+ " ms");
             }
             bulkRequest = new BulkRequest();
         }catch (Exception ex){

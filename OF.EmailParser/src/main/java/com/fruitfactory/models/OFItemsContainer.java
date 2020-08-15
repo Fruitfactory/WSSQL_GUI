@@ -1,7 +1,6 @@
 package com.fruitfactory.models;
 
-import com.carrotsearch.ant.tasks.junit4.dependencies.com.google.gson.annotations.SerializedName;
-
+import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**

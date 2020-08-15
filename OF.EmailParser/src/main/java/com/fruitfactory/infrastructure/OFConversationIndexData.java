@@ -54,7 +54,7 @@ public class OFConversationIndexData {
     public Date getConversationFileTime() {
         Date date = null;
         byte[] filetimeArr = Arrays.copyOfRange(data, 0, CONVERSSATION_INDEX_OFFSET);
-        String hex_str = javax.xml.bind.DatatypeConverter.printHexBinary(filetimeArr) + "0000";
+        String hex_str = org.apache.commons.codec.binary.Hex.encodeHexString(filetimeArr) + "0000";
         long mil = Long.parseLong(hex_str, 16);
         date = convertFILETIMEToDate(mil);
         return date;
@@ -102,7 +102,7 @@ public class OFConversationIndexData {
         if (buffer == null || buffer.length == 0) {
             return;
         }
-        hex_string = javax.xml.bind.DatatypeConverter.printHexBinary(buffer);
+        hex_string = org.apache.commons.codec.binary.Hex.encodeHexString(buffer);
     }
 
 
