@@ -54,7 +54,7 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
                 //{
                 //    var rawResult = JsonSerializer.Create().Deserialize(reader, typeof(OFResponseRaw<T>)) as OFResponseRaw<T>;
                 took = (int)result.took;
-                total = result.hits.total;
+                total = result.hits.total.value;
                 listResult = result.hits.hits.Select(h => h._source);
                 //}
             }

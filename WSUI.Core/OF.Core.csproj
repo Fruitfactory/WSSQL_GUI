@@ -211,6 +211,7 @@
     <Compile Include="Data\ElasticSearch\Request\OFWildcard.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFHitRaw.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFHitsRaw.cs" />
+    <Compile Include="Data\ElasticSearch\Response\OFHitsTotal.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFRawSearchResponse.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFResponseRaw.cs" />
     <Compile Include="Data\ElasticSearch\Response\OFRiverStatus.cs" />
