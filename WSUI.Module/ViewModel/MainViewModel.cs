@@ -259,7 +259,7 @@ namespace OF.Module.ViewModel
         {
             try
             {
-                ActivateStatus = _turboLimeActivate.State;
+                ActivateStatus = OFActivationState.Activated; // TODO: _turboLimeActivate.State; 
                 OFLogger.Instance.LogDebug("Activated Status: {0}", ActivateStatus.ToString());
                 OnPropertyChanged(() => ActivateStatus);
                 OnPropertyChanged(() => VisibleTrialLabel);
@@ -305,7 +305,7 @@ namespace OF.Module.ViewModel
 
             try
             {
-                _turboLimeActivate.Activate(UpdatedActivatedStatus);
+                //_turboLimeActivate.Activate(UpdatedActivatedStatus);
                 //string path = Path.Combine(Path.GetDirectoryName(typeof(TurboLimeActivate).Assembly.Location), "TurboActivate.exe");
                 //OFLogger.Instance.LogDebug("Path Activate: {0}", path);
                 //Process activationProcess = new Process()
@@ -669,7 +669,7 @@ namespace OF.Module.ViewModel
             get
             {
 #if !TRIAL
-                return _turboLimeActivate.DaysRemain.ToString(); //return string.Empty;
+                return string.Empty; //_turboLimeActivate.DaysRemain.ToString(); TODO: remove TurboActive
 #else
       return TurboLimeActivate.Instance.DaysRemain.ToString();
 #endif
@@ -723,7 +723,7 @@ namespace OF.Module.ViewModel
                         break;
 
                     case OFActionType.Show:
-                        CheckStateAndShowActivatedForm();
+                        //TODO: remove TurboActive CheckStateAndShowActivatedForm();
                         break;
 
                     case OFActionType.Hide:
@@ -987,7 +987,7 @@ namespace OF.Module.ViewModel
             try
             {
                 var mem = WindowsFunction.GetAvailableMemory();
-                _turboLimeActivate.Init();
+                //_turboLimeActivate.Init();
             }
             catch (Exception ex)
             {

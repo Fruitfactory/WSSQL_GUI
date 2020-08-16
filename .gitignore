@@ -242,3 +242,4 @@ pip-log.txt
 /Toolkits/Newtonsoft.Json.9.0.1/Newtonsoft.Json.xml
 /Toolkits/RestSharp/RestSharp.xml
 /packages
+/OutputServiceApp

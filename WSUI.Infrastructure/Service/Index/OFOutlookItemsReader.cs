@@ -102,7 +102,7 @@ namespace OF.Infrastructure.Service.Index
         {
             lock (_lock)
             {
-                LoadExistingCntacts();
+                LoadExistingContacts();
 
                 if (_thread == null)
                 {
@@ -165,7 +165,7 @@ namespace OF.Infrastructure.Service.Index
             OFLogger.Instance.LogDebug("Last Updated Date: {0}", lastUpdated.HasValue ? lastUpdated.Value.ToString() : "N/a");
         }
 
-        private void LoadExistingCntacts()
+        private void LoadExistingContacts()
         {
             if (_contactClient.IsNull())
             {

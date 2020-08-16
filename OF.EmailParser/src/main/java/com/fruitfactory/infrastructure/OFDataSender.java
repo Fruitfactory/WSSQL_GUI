@@ -51,6 +51,7 @@ public class OFDataSender extends OFDataProcess {
     public OFDataSender(IOFDataRepositoryPipe dataSource, String name, Logger logger) {
         super(dataSource,name);
         this.logger = logger;
+        this.bulkRequest = new BulkRequest();
         client = new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost("localhost", 9200, "http")));
@@ -267,7 +268,7 @@ public class OFDataSender extends OFDataProcess {
 
     private void index(String indexName, String json){
         try {
-            bulkRequest.add(new IndexRequest(indexName).source(XContentType.JSON,json));
+            bulkRequest.add(new IndexRequest(indexName).source(json,XContentType.JSON));
             processBulkRequest();
         }catch (Exception ex){
             logger.error(ex.toString());

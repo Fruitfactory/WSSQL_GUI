@@ -4,6 +4,7 @@ using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
 using OF.Core.Core.LimeLM;
+using OF.Core.Data.ElasticSearch;
 using OF.Core.Helpers;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
@@ -143,7 +144,11 @@ namespace OF.Module
             _unityContainer.RegisterType<IOutlookAutoCompleteSettingsViewModel, OFOutlookAutoCompleteSettingsViewModel>();
 
             _unityContainer.RegisterType<IOFElasticsearchShortContactClient, OFElasticsearchShortContactClient>();
-            
+            _unityContainer.RegisterType<IElasticSearchClient<OFEmail>, OFElasticSearchClient<OFEmail>>();
+            _unityContainer.RegisterType<IElasticSearchClient<OFContact>, OFElasticSearchClient<OFContact>>();
+            _unityContainer.RegisterType<IElasticSearchClient<OFAttachment>, OFElasticSearchClient<OFAttachment>>();
+            _unityContainer.RegisterType<IElasticSearchClient<OFAttachmentContent>, OFElasticSearchClient<OFAttachmentContent>>();
+
             watch.Stop();
             OFLogger.Instance.LogError(string.Format("Elapsed ({0}): {1}", "RegistreInterfaces", watch.ElapsedMilliseconds));
         }
