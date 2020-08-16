@@ -13,6 +13,7 @@
              xmlns:headerControl="clr-namespace:OF.Infrastructure.Controls.HeaderControl;assembly=OF.Infrastructure"
              xmlns:behaviors="clr-namespace:OF.Module.Service.Behaviors"
              xmlns:behaviorsInfra="clr-namespace:OF.Infrastructure.Behaviors;assembly=OF.Infrastructure"
+             Background="White"
              x:Name="this">
     <UserControl.Resources>
         <ResourceDictionary>

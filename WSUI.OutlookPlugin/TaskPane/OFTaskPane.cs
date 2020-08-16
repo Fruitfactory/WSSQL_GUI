@@ -16,7 +16,8 @@ namespace OFOutlookPlugin.TaskPane
 		public OFTaskPane()
 		{
 			InitializeComponent();
-		}
+            this.BackColor = Color.White;
+        }
 
 		public void SetChild(UIElement child)
 		{

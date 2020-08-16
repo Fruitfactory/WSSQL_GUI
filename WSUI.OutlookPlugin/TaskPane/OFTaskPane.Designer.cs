@@ -28,26 +28,27 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.uiHost = new System.Windows.Forms.Integration.ElementHost();
-			this.SuspendLayout();
-			// 
-			// uiHost
-			// 
-			this.uiHost.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.uiHost.Location = new System.Drawing.Point(0, 0);
-			this.uiHost.Name = "uiHost";
-			this.uiHost.Size = new System.Drawing.Size(207, 254);
-			this.uiHost.TabIndex = 0;
-			this.uiHost.Child = null;
-			// 
-			// OFTaskPane
-			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.uiHost);
-			this.Name = "OFTaskPane";
-			this.Size = new System.Drawing.Size(207, 254);
-			this.ResumeLayout(false);
+            this.uiHost = new System.Windows.Forms.Integration.ElementHost();
+            this.SuspendLayout();
+            // 
+            // uiHost
+            // 
+            this.uiHost.BackColor = System.Drawing.Color.White;
+            this.uiHost.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.uiHost.Location = new System.Drawing.Point(0, 0);
+            this.uiHost.Name = "uiHost";
+            this.uiHost.Size = new System.Drawing.Size(207, 254);
+            this.uiHost.TabIndex = 0;
+            this.uiHost.Child = null;
+            // 
+            // OFTaskPane
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.uiHost);
+            this.Name = "OFTaskPane";
+            this.Size = new System.Drawing.Size(207, 254);
+            this.ResumeLayout(false);
 
 		}
 

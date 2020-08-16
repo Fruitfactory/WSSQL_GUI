@@ -13,7 +13,9 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:OF.Infrastructure.Behaviors;assembly=OF.Infrastructure"
              xmlns:advancedSearch="clr-namespace:OF.Module.Service.AdvancedSearch"
-             xmlns:advancedSearch2="clr-namespace:OF.Infrastructure.MVVM.AdvancedSearch;assembly=OF.Infrastructure">
+             xmlns:advancedSearch2="clr-namespace:OF.Infrastructure.MVVM.AdvancedSearch;assembly=OF.Infrastructure"
+             Background="White"
+             >
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

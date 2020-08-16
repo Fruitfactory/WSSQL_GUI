@@ -11,6 +11,7 @@
              xmlns:listBox="clr-namespace:OF.Infrastructure.Controls.ListBox;assembly=OF.Infrastructure"
              xmlns:attachedProperty="clr-namespace:OF.Infrastructure.Helpers.AttachedProperty;assembly=OF.Infrastructure"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             Background="White"
              xmlns:behaviors="clr-namespace:OF.Infrastructure.Behaviors;assembly=OF.Infrastructure">
     <UserControl.Resources>
         <ResourceDictionary>

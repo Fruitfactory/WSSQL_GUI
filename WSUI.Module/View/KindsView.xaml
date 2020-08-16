@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:localService="clr-namespace:OF.Module.Service"
             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             Background="White"
                               HorizontalContentAlignment="Stretch">
     <UserControl.Resources>
         <ResourceDictionary>

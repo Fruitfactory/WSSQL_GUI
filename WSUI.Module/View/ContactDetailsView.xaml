@@ -11,6 +11,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors1="clr-namespace:OF.Infrastructure.Behaviors;assembly=OF.Infrastructure"
              xmlns:enums="clr-namespace:OF.Module.Enums"
+             Background="White"
              x:Name="this">
     <UserControl.Resources>
         <ResourceDictionary>

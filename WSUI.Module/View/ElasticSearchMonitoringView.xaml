@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:service="clr-namespace:OF.Module.Service"
              mc:Ignorable="d" 
+             Background="White"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <service:RiverStatusToColorBrushConverter x:Key="RiverStatusToColorBrushConverter" />

@@ -6,6 +6,7 @@
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:Service="clr-namespace:OF.Module.Service"
              mc:Ignorable="d" 
+             Background="White"
              >
     <UserControl.Resources>
         <ResourceDictionary>

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:previewHandlerHost="clr-namespace:OFPreview.PreviewHandler.PreviewHandlerHost;assembly=OF.Preview"
+             Background="White"
              mc:Ignorable="d"
              >
     <UserControl.Resources>
