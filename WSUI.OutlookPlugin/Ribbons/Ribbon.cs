@@ -41,8 +41,9 @@ namespace OFOutlookPlugin.Ribbons
 	{
 		private Office.IRibbonUI ribbon;
 
-		public Ribbon(IEventAggregator eventAggregator) : base(eventAggregator)
-		{
+		public Ribbon() 
+        {
+
 		}
 
 		#region IRibbonExtensibility Members

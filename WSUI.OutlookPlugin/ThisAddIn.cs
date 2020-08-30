@@ -162,13 +162,8 @@ namespace OFOutlookPlugin
 
 		protected override Office.IRibbonExtensibility CreateRibbonExtensibilityObject()
 		{
-            if(_eventAggregator.IsNotNull())
-            {
-                _commandManager = new Ribbon(_eventAggregator);
-                return _commandManager as Office.IRibbonExtensibility;
-            }
-
-            return null;
+            _commandManager = new Ribbon();
+            return _commandManager as Office.IRibbonExtensibility;
 		}
 
 		#endregion
@@ -198,6 +193,7 @@ namespace OFOutlookPlugin
 				CreateEmailSuggesterManager();
                 CreateSidebar();
 				SubscribeToEvents();
+                InitializeRibbon(_eventAggregator);
 				LogVersions();
 
 				IsLoading = false;
@@ -230,6 +226,12 @@ namespace OFOutlookPlugin
 			_eventAggregator.GetEvent<OFShowFolder>().Subscribe(ShowOutlookFolder);
 			_eventAggregator.GetEvent<OFSuggestedEmailEvent>().Subscribe(OnSuggestedEmail);
 		}
+
+        private void InitializeRibbon(IEventAggregator eventAggregator)
+        {
+            _commandManager?.SetEventAggregator(eventAggregator);
+        }
+
 		private void OnSuggestedEmail ( OFSuggestedEmailPayload ofSuggestedEmailPayload )
 		{
 			if(_emailSuggesterManager.IsNull() || ofSuggestedEmailPayload.IsNull() || ofSuggestedEmailPayload.Data.IsNull())

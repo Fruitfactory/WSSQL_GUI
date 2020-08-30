@@ -5,16 +5,11 @@ using OFOutlookPlugin.Interfaces;
 
 namespace OFOutlookPlugin.Core
 {
-    public abstract class OFSearchCommandManager : OFBaseCommandManager, IOFCommandManager
+    public abstract class OFSearchCommandManager : OFBaseCommandManager
     {
-	    protected OFSearchCommandManager(IEventAggregator eventAggregator) : base(eventAggregator)
+	    protected OFSearchCommandManager()
 	    {
 	    }
-
-	    public virtual void SetShowHideButtonsEnabling(bool isShowButtonEnable, bool isHideButtonEnable)
-        {
-
-        }
 
         protected virtual void InternalShowHidePublish()
         {

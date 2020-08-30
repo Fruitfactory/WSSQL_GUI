@@ -1,18 +1,18 @@
 ﻿using Microsoft.Practices.Prism.Events;
 using OF.Core.Events;
+using OF.Module.Interface.Service;
 using OFOutlookPlugin.Events;
 using OFOutlookPlugin.Interfaces;
 
 namespace OFOutlookPlugin.Core
 {
-    public abstract class OFBaseCommandManager 
+    public abstract class OFBaseCommandManager :  IOFCommandManager
     {
         private IEventAggregator _eventAggregator;
 
-        protected OFBaseCommandManager(IEventAggregator eventAggregator)
+        protected OFBaseCommandManager()
         {
-	        _eventAggregator = eventAggregator;
-	        _eventAggregator.GetEvent<OFMenuEnabling>().Subscribe(MenuEnabling);
+            
         }
 
         protected virtual void MenuEnabling(bool obj)
@@ -24,5 +24,15 @@ namespace OFOutlookPlugin.Core
             return _eventAggregator;
         }
 
+        public virtual void SetShowHideButtonsEnabling(bool isShowButtonEnable, bool isHideButtonEnable)
+        {
+
+        }
+
+        public void SetEventAggregator(IEventAggregator eventAggregator)
+        {
+            _eventAggregator = eventAggregator;
+            _eventAggregator.GetEvent<OFMenuEnabling>().Subscribe(MenuEnabling);
+        }
     }
 }

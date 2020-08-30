@@ -255,7 +255,7 @@
     <Content Include="Images\question.png" />
     <Content Include="Loader\adxloader.dll" />
     <Content Include="Loader\adxloader64.dll" />
-    <Content Include="Ribbons\Ribbon.xml" />
+    <EmbeddedResource Include="Ribbons\Ribbon.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Version.cs">
