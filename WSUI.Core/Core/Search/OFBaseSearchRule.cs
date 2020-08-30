@@ -179,7 +179,7 @@ namespace OF.Core.Core.Search
                     var body = GetSearchBody();
                     if (body.IsNotNull())
                     {
-                        result = GetMainResult(body, result);
+                        result = GetMainResult(body);
                         if (result.IsNotNull() && result.Documents.IsNotNull() && result.Documents.Any())
                         {
                             Documents = result.Documents;
@@ -255,11 +255,11 @@ namespace OF.Core.Core.Search
             return Documents;
         }
 
-        private IRawSearchResult<E> GetMainResult(OFBody body, IRawSearchResult<E> result)
+        private IRawSearchResult<E> GetMainResult(OFBody body)
         {
             body.from = _from;
             body.size = TopQueryResult;
-            result = _elasticSearchClient.RawSearch(body);
+            var result = _elasticSearchClient.RawSearch(body);
             return result;
         }
 

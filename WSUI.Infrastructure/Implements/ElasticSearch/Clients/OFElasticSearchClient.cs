@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -9,6 +10,7 @@ using Microsoft.Practices.Unity;
 using Nest;
 using Newtonsoft.Json;
 using OF.Core.Core.ElasticSearch;
+using OF.Core.Data.ElasticSearch;
 using OF.Core.Data.ElasticSearch.Response;
 using OF.Core.Interfaces;
 using OF.Core.Logger;
@@ -25,6 +27,26 @@ namespace OF.Infrastructure.Implements.ElasticSearch.Clients
 
         protected virtual string GetDefaultIndexName()
         {
+            var currentType = typeof(T);
+            if (currentType == typeof(OFAttachmentContent))
+            {
+                return OFIndexNames.DefaultAttachmentIndexName;
+            }
+
+            if (currentType == typeof(OFContact))
+            {
+                return OFIndexNames.DefaultContactIndexName;
+            }
+
+            if (currentType == typeof(OFShortContact))
+            {
+                return OFIndexNames.DefaultShortContactIndexName;
+            }
+
+            if (currentType == typeof(OFStore))
+            {
+                return OFIndexNames.DefaultStoreIndexName;
+            }
             return OFIndexNames.DefaultEmailIndexName;
         }
 

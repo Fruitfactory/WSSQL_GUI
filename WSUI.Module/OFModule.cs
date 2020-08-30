@@ -146,7 +146,6 @@ namespace OF.Module
             _unityContainer.RegisterType<IOFElasticsearchShortContactClient, OFElasticsearchShortContactClient>();
             _unityContainer.RegisterType<IElasticSearchClient<OFEmail>, OFElasticSearchClient<OFEmail>>();
             _unityContainer.RegisterType<IElasticSearchClient<OFContact>, OFElasticSearchClient<OFContact>>();
-            _unityContainer.RegisterType<IElasticSearchClient<OFAttachment>, OFElasticSearchClient<OFAttachment>>();
             _unityContainer.RegisterType<IElasticSearchClient<OFAttachmentContent>, OFElasticSearchClient<OFAttachmentContent>>();
 
             watch.Stop();
