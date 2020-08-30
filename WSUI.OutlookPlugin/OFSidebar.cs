@@ -14,6 +14,7 @@ namespace OFOutlookPlugin
 {
     public partial class OFSidebar :  ISidebarForm
     {
+        private readonly int SideBarWidth = 400; // TODO: provide a setting
 	    private Microsoft.Office.Tools.CustomTaskPane _officeTaskPane;
 	    private OFTaskPane _oftaskPane;
         private IPluginBootStraper _wsuiBootStraper = null;
@@ -63,7 +64,7 @@ namespace OFOutlookPlugin
         {
 	        if (bootStraper == null)
 	        {
-		        OFLogger.Instance.LogDebug("Bootstraper eqaul 'NULL'.");
+		        OFLogger.Instance.LogDebug("Bootstraper equal 'NULL'.");
 		        return;
 	        }
 
@@ -78,6 +79,7 @@ namespace OFOutlookPlugin
 
 		        _officeTaskPane = Globals.ThisAddIn.CustomTaskPanes.Add(_oftaskPane, "OutlookFinderTaskPane",
 			        Globals.ThisAddIn.Application.ActiveExplorer());
+                _officeTaskPane.Width = SideBarWidth;
 		        Show();
 		        if (!OFRegistryHelper.Instance.GetIsPluginUiVisible())
 		        {
