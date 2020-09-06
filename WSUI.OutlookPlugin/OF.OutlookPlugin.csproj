@@ -274,17 +274,12 @@
     <Compile Include="Events\OFHideWindow.cs" />
     <Compile Include="Events\OFShowHideWindow.cs" />
     <Compile Include="Events\OFSearch.cs" />
-    <Compile Include="Hooks\GlobalEventProvider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Hooks\HookManager.Callbacks.cs" />
-    <Compile Include="Hooks\HookManager.cs" />
-    <Compile Include="Hooks\HookManager.Structures.cs" />
-    <Compile Include="Hooks\HookManager.Windows.cs" />
-    <Compile Include="Hooks\MouseEventExtArgs.cs" />
+    <Compile Include="Hooks\OFBaseHookSystem.cs" />
+    <Compile Include="Hooks\OFKeyboardSystem.cs" />
     <Compile Include="Interfaces\ICommandManager.cs" />
     <Compile Include="Interfaces\IMainForm.cs" />
     <Compile Include="Interfaces\IOFEmailSuggesterManager.cs" />
+    <Compile Include="Interfaces\IOFHookSystem.cs" />
     <Compile Include="Interfaces\IOFMailRemovingManager.cs" />
     <Compile Include="Interfaces\ISidebarForm.cs" />
     <Compile Include="Interfaces\IUpdatable.cs" />
