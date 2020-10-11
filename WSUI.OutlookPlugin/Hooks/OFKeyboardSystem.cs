@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Runtime.Remoting.Channels;
+using System.Text;
 using System.Windows.Forms;
 using Microsoft.Practices.Prism.Events;
 using OF.Core.Win32;
+using OF.Infrastructure.Events;
+using OF.Infrastructure.Payloads;
+using OFOutlookPlugin;
 using OFOutlookPlugin.Hooks;
 
 namespace SS.ShareScreen.Systems.Keyboard
@@ -11,10 +16,7 @@ namespace SS.ShareScreen.Systems.Keyboard
 
         private static System.Windows.Forms.Keys LastKey;
 
-        const int WH_KEYBOARD_LL = 13; 
-        const int WM_KEYDOWN = 0x100; 
-
-        private readonly WindowsFunction.LowLevelKeyboardProc _proc = KeyboardHookProc;
+        private readonly WindowsFunction.HookProc _proc = KeyboardHookProc;
 
         public OFKeyboardSystem(IEventAggregator eventAggregator)
             :base(eventAggregator)
@@ -23,15 +25,30 @@ namespace SS.ShareScreen.Systems.Keyboard
         
         protected override Delegate GetCallback() => _proc;
 
-        protected override int GetHookType() => WH_KEYBOARD_LL;
+        protected override int GetHookType() => WindowsFunction.WH_KEYBOARD;
 
-        private static IntPtr KeyboardHookProc(int code, int wParam, ref WindowsFunction.KeyboardHookStruct lParam)
+        private static IntPtr KeyboardHookProc(int code, IntPtr wParam, IntPtr lParam)
         {
-            if (code >= 0 && (wParam == WindowsFunction.WM_KEYDOWN || wParam == WindowsFunction.WM_SYSKEYDOWN))
+            if (code < 0)
+                WindowsFunction.CallNextHookEx(((OFBaseHookSystem)GetHookSystem()).GetHookPtr(), code, wParam, lParam);
+
+            bool ctrl = ((int)WindowsFunction.GetKeyState(162) & 256) == 256 || ((int)WindowsFunction.GetKeyState(163) & 256) == 256;
+            bool shift = ((int)WindowsFunction.GetKeyState(160) & 256) == 256 || ((int)WindowsFunction.GetKeyState(161) & 256) == 256;
+            bool alt = ((int)WindowsFunction.GetKeyState(164) & 256) == 256 || ((int)WindowsFunction.GetKeyState(165) & 256) == 256;
+
+            if (code == 0)
             {
-                var key = (System.Windows.Forms.Keys)Enum.Parse(typeof (System.Windows.Forms.Keys), lParam.vkCode.ToString());
+                long lp = Environment.Is64BitProcess ? lParam.ToInt64() : lParam.ToInt32(); 
+                uint num = (uint)((lp & 1073741824) >> 30);
+                if (num == 0)
+                {
+                    Keys key = (Keys)wParam.ToInt32();
+                    GetHookSystem().HookEventAggregator.GetEvent<OFKeyDownEvent>().Publish(new OFKeyDownPayload(key, ctrl, shift, alt));
+                }
             }
-            return WindowsFunction.CallNextHookEx( ((OFBaseHookSystem)GetHookSystem()).GetHookPtr() , code, (int)wParam, WindowsFunction.StructToPtr(lParam));
+
+            return WindowsFunction.CallNextHookEx(((OFBaseHookSystem)GetHookSystem()).GetHookPtr(), code, wParam, lParam);
         }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using OF.Infrastructure.Payloads;
 
 namespace OFOutlookPlugin.Interfaces
 {
@@ -8,7 +9,7 @@ namespace OFOutlookPlugin.Interfaces
 
         void UnsubscribeMailWindow();
 
-        void ProcessKeyDown(EventArgs Key);
+        void ProcessKeyDown(OFKeyDownPayload payload);
 
         void SuggestedEmail(Tuple<IntPtr, string> data);
 

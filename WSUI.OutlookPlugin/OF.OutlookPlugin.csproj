@@ -275,6 +275,7 @@
     <Compile Include="Events\OFShowHideWindow.cs" />
     <Compile Include="Events\OFSearch.cs" />
     <Compile Include="Hooks\OFBaseHookSystem.cs" />
+    <Compile Include="Hooks\OFInternalMessaging.cs" />
     <Compile Include="Hooks\OFKeyboardSystem.cs" />
     <Compile Include="Interfaces\ICommandManager.cs" />
     <Compile Include="Interfaces\IMainForm.cs" />

@@ -207,6 +207,9 @@ namespace OF.Core.Win32
         [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetDlgItemText(IntPtr hDlg, int nIDDlgItem, [Out] StringBuilder lpString, int nMaxCount);
 
+        [DllImport("kernel32.dll")]
+        public static extern uint GetCurrentThreadId();
+
 
         /// <summary>
         ///     Special window handles
@@ -1150,6 +1153,7 @@ namespace OF.Core.Win32
         public const int WH_KEYBOARD_LL = 13;
         public const int WH_MOUSE_LL = 14;
         public const int WH_MOUSE = 7;
+        public const int WH_KEYBOARD = 2;
 
         public const int WM_KEYDOWN = 0x100;
         public const int WM_KEYUP = 0x101;
@@ -1178,12 +1182,14 @@ namespace OF.Core.Win32
         public static extern bool UnhookWindowsHookEx(IntPtr hInstance);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr CallNextHookEx(IntPtr idHook, int nCode, int wParam, IntPtr lParam);
+        public static extern IntPtr CallNextHookEx(IntPtr idHook, int nCode, IntPtr wParam, IntPtr lParam);
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr LoadLibrary(string lpFileName);
 
         public delegate IntPtr LowLevelKeyboardProc(int nCode, int wParam, ref KeyboardHookStruct lParam);
+
+        public delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
 
         public static IntPtr StructToPtr(object obj)
         {
@@ -1191,6 +1197,9 @@ namespace OF.Core.Win32
             Marshal.StructureToPtr(obj, ptr, false);
             return ptr;
         }
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern short GetKeyState(int nVirtKey);
 
 
         #endregion

@@ -135,6 +135,7 @@
       <Link>Properties\Version.cs</Link>
     </Compile>
     <Compile Include="Behaviors\OFEventToComandBehavior.cs" />
+    <Compile Include="Events\OFKeyDownEvent.cs" />
     <Compile Include="Events\OFSelectSuggestEmailEvent.cs" />
     <Compile Include="Events\OFSuggestedEmailEvent.cs" />
     <Compile Include="Helpers\OFEmailCommandPreviewHelper.cs" />
@@ -223,6 +224,7 @@
     <Compile Include="MVVM\StatusItem\OFStatusItemViewModel.cs" />
     <Compile Include="NamedPipes\OFNamedPipeClient.cs" />
     <Compile Include="NamedPipes\OFNamedPipeServer.cs" />
+    <Compile Include="Payloads\OFKeyDownPayload.cs" />
     <Compile Include="Payloads\OFSearchObjectPayload.cs" />
     <Compile Include="Payloads\OFSuggestedEmailPayload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

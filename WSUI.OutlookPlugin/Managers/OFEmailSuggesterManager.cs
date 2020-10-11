@@ -19,6 +19,7 @@ using OF.Core.Extensions;
 using OF.Core.Logger;
 using OF.Core.Win32;
 using OF.Infrastructure.Helpers.AttachedProperty;
+using OF.Infrastructure.Payloads;
 using OF.Module.Data;
 using OF.Module.Events;
 using OFOutlookPlugin.Hooks;
@@ -129,7 +130,7 @@ namespace OFOutlookPlugin.Managers
         }
 
 
-        public void ProcessKeyDown(EventArgs Args)
+        public void ProcessKeyDown(OFKeyDownPayload payload)
         {
             var classStr = new StringBuilder(255);
             var hWnd = WindowsFunction.GetFocus();
@@ -138,7 +139,7 @@ namespace OFOutlookPlugin.Managers
 
             Dispatcher.CurrentDispatcher.BeginInvoke((Action) (() =>
             {
-                ProcessKeyPressing(Args,hWnd);
+                ProcessKeyPressing(payload,hWnd);
 
             }));
         }
@@ -150,9 +151,9 @@ namespace OFOutlookPlugin.Managers
             return data.IsVisible;
         }
 
-        private void ProcessKeyPressing(EventArgs Args, IntPtr hWnd)
+        private void ProcessKeyPressing(OFKeyDownPayload payload, IntPtr hWnd)
         {
-	        var key = Keys.Control; //Args.VirtualKey; // TODO:
+	        var key = payload.Data;
             if (key == Keys.Escape)
             {
                 _pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using Microsoft.Practices.Prism.Events;
+using Microsoft.Vbe.Interop;
 using OF.Core.Win32;
 using OFOutlookPlugin.Interfaces;
 
@@ -12,13 +13,12 @@ namespace OFOutlookPlugin.Hooks
         protected static IntPtr _hhook = IntPtr.Zero;
 
         private static OFBaseHookSystem _this;
-        private IEventAggregator _eventAggregator;
 
 
         protected OFBaseHookSystem(IEventAggregator eventAggregator)
         {
             _this = this;
-            _eventAggregator = eventAggregator;
+            HookEventAggregator = eventAggregator;
         }
 
 
@@ -37,7 +37,8 @@ namespace OFOutlookPlugin.Hooks
             //IntPtr ptrUser = SSWindowsFunctions.LoadLibrary("User32");
             using (ProcessModule module = Process.GetCurrentProcess().MainModule)
             {
-                _hhook = WindowsFunction.SetWindowsHookEx(GetHookType(), GetCallback(), WindowsFunction.GetModuleHandle(module.ModuleName), 0);
+                //_hhook = WindowsFunction.SetWindowsHookEx(GetHookType(), GetCallback(), WindowsFunction.GetModuleHandle(module.ModuleName), 0);
+                _hhook = WindowsFunction.SetWindowsHookEx(GetHookType(), GetCallback(), IntPtr.Zero, WindowsFunction.GetCurrentThreadId());
             }
         }
 
@@ -55,7 +56,6 @@ namespace OFOutlookPlugin.Hooks
 
         protected static OFBaseHookSystem GetHookSystem() => _this;
 
-        protected IEventAggregator EventAggregator => _eventAggregator;
-
+        internal IEventAggregator HookEventAggregator { get; }
     }
 }

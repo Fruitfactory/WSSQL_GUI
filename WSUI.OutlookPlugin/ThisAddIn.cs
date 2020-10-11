@@ -26,10 +26,12 @@ using OF.Infrastructure.Events;
 using OF.Infrastructure.Payloads;
 using OFOutlookPlugin.Core;
 using OFOutlookPlugin.Events;
+using OFOutlookPlugin.Hooks;
 using OFOutlookPlugin.Interfaces;
 using OFOutlookPlugin.Managers;
 using OFOutlookPlugin.Ribbons;
 using OFPreview.PreviewHandler.Service.OutlookPreview;
+using SS.ShareScreen.Systems.Keyboard;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using Office = Microsoft.Office.Core;
 
@@ -54,6 +56,8 @@ namespace OFOutlookPlugin
 		private IOFMailRemovingManager _mailRemovingManager;
 		private IOFEmailSuggesterManager _emailSuggesterManager;
 		private bool _canConnect = true;
+        private OFInternalMessaging _nativeWindow;
+        private OFKeyboardSystem _keyboardHook;
 
 		private static string SERVICE_APP = "SERVICEAPP";
 
@@ -195,6 +199,9 @@ namespace OFOutlookPlugin
 				SubscribeToEvents();
                 InitializeRibbon(_eventAggregator);
 				LogVersions();
+                _nativeWindow = new OFInternalMessaging(this,"Outlook");
+                _keyboardHook = new OFKeyboardSystem(_eventAggregator);
+                _keyboardHook.StartSystem();
 
 				IsLoading = false;
 				//StopWatch("RunPluginUI");
@@ -225,7 +232,8 @@ namespace OFOutlookPlugin
 			_eventAggregator.GetEvent<OFSearch>().Subscribe(StartSearch);
 			_eventAggregator.GetEvent<OFShowFolder>().Subscribe(ShowOutlookFolder);
 			_eventAggregator.GetEvent<OFSuggestedEmailEvent>().Subscribe(OnSuggestedEmail);
-		}
+            _eventAggregator.GetEvent<OFKeyDownEvent>().Subscribe(KeyDown);
+        }
 
         private void InitializeRibbon(IEventAggregator eventAggregator)
         {
@@ -545,6 +553,8 @@ namespace OFOutlookPlugin
             {
                 _wsuiBootStraper.PassAction(new OFAction(OFActionType.Quit,null));
             }
+            _nativeWindow?.Dispose();
+            _keyboardHook?.StopSystem();
 #if DEBUG
             CheckAndCloseServiceApp();
 #endif
@@ -610,33 +620,36 @@ namespace OFOutlookPlugin
         //}
 
         //// TODO: refactore and add support key events after adding hooks
-        private void KeyDown ( object sender,EventArgs e )
+        private void KeyDown (OFKeyDownPayload payload)
         {
             try
             {
-                //_sidebarForm = GetSidebarForm();
-                //if (_sidebarForm == null)
-                //    return;
-                //if (e.Ctrl && e.VirtualKey == (int)Keys.C)
-                //{
-                //    _sidebarForm.SendAction(OFActionType.Copy);
-                //}
+                // _sidebarForm = GetSidebarForm();
+                // if (_sidebarForm == null)
+                //     return;
 
-                //if (System.Windows.Application.Current != null)
-                //{
-                //    System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)(() =>
-                //    {
-                //        if (_emailSuggesterManager.IsNotNull() && OFRegistryHelper.Instance.CheckAutoCompleateState())
-                //        {
-                //            System.Diagnostics.Debug.WriteLine($"Key Down: {Enum.GetName(typeof(Keys), e.VirtualKey)}");
-                //            _emailSuggesterManager.ProcessKeyDown(e);
-                //        }
-                //    }));
-                //}
-                //if (e.VirtualKey == (int)Keys.Escape && _emailSuggesterManager.IsSuggestWindowVisible())
-                //{
-                //    e.Handled = true;
-                //}
+                OFLogger.Instance.LogDebug($"Keys: {payload.Data} : Control: {payload.Control}");
+
+                if (payload.Control && payload.Data == Keys.C)
+                {
+                    _sidebarForm.SendAction(OFActionType.Copy);
+                }
+
+                if (System.Windows.Application.Current != null)
+                {
+                    System.Windows.Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        if (_emailSuggesterManager.IsNotNull() && OFRegistryHelper.Instance.CheckAutoCompleateState())
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Key Down: {Enum.GetName(typeof(Keys), payload.Data)}");
+                            _emailSuggesterManager.ProcessKeyDown(payload);
+                        }
+                    }));
+                }
+                // if (payload.VirtualKey == (int)Keys.Escape && _emailSuggesterManager.IsSuggestWindowVisible())
+                // {
+                //     e.Handled = true;
+                // }
             }
             catch(Exception ex)
             {
