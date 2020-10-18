@@ -271,7 +271,16 @@
     <Compile Include="Core\OFExtensions.cs" />
     <Compile Include="Core\OFSearchCommandManager.cs" />
     <Compile Include="Core\OFUpdateHelper.cs" />
+    <Compile Include="Events\OFActivatedExplorerEvent.cs" />
+    <Compile Include="Events\OFActivatedInspectorEvent.cs" />
+    <Compile Include="Events\OFClosedExplorerEvent.cs" />
+    <Compile Include="Events\OFClosedInspectorEvent.cs" />
     <Compile Include="Events\OFHideWindow.cs" />
+    <Compile Include="Events\OFItemSendEvent.cs" />
+    <Compile Include="Events\OFNewExplorerEvent.cs" />
+    <Compile Include="Events\OFNewInspectorEvent.cs" />
+    <Compile Include="Events\OFQuitEvent.cs" />
+    <Compile Include="Events\OFSelectionChangedExplorerEvent.cs" />
     <Compile Include="Events\OFShowHideWindow.cs" />
     <Compile Include="Events\OFSearch.cs" />
     <Compile Include="Hooks\OFBaseHookSystem.cs" />
@@ -290,6 +299,7 @@
     <Compile Include="Managers\OFEmailSuggesterManager.cs" />
     <Compile Include="Managers\OFOutlookItemsRemovingManager.cs" />
     <Compile Include="Managers\OFWindowPositionManager.cs" />
+    <Compile Include="Managers\OutlookEventsManagers\OFOutlookEventManager.cs" />
     <Compile Include="Managers\OutlookEventsManagers\OFOutlookItemEvents.cs" />
     <Compile Include="TaskPane\OFTaskPane.cs">
       <SubType>UserControl</SubType>

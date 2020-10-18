@@ -29,6 +29,7 @@ using OFOutlookPlugin.Events;
 using OFOutlookPlugin.Hooks;
 using OFOutlookPlugin.Interfaces;
 using OFOutlookPlugin.Managers;
+using OFOutlookPlugin.Managers.OutlookEventsManagers;
 using OFOutlookPlugin.Ribbons;
 using OFPreview.PreviewHandler.Service.OutlookPreview;
 using SS.ShareScreen.Systems.Keyboard;
@@ -58,6 +59,7 @@ namespace OFOutlookPlugin
 		private bool _canConnect = true;
         private OFInternalMessaging _nativeWindow;
         private OFKeyboardSystem _keyboardHook;
+        private OFOutlookEventManager _eventManager;
 
 		private static string SERVICE_APP = "SERVICEAPP";
 
@@ -199,6 +201,7 @@ namespace OFOutlookPlugin
 				SubscribeToEvents();
                 InitializeRibbon(_eventAggregator);
 				LogVersions();
+                CreateOutlookEventManager(_eventAggregator);
                 _nativeWindow = new OFInternalMessaging(this,"Outlook");
                 _keyboardHook = new OFKeyboardSystem(_eventAggregator);
                 _keyboardHook.StartSystem();
@@ -331,6 +334,57 @@ namespace OFOutlookPlugin
 			_emailSuggesterManager = new OFEmailSuggesterManager(_wsuiBootStraper,_eventAggregator);
 		}
 
+        private void CreateOutlookEventManager(IEventAggregator eventAggregator)
+        {
+            _eventManager = new OFOutlookEventManager(Application, eventAggregator);
+            _eventManager.SubscribeEvents();
+
+            eventAggregator?.GetEvent<OFNewInspectorEvent>().Subscribe(OnNewInspector);
+            eventAggregator?.GetEvent<OFNewExplorerEvent>().Subscribe(OnNewExplorer);
+            
+            eventAggregator?.GetEvent<OFActivatedInspectorEvent>().Subscribe(InspectorActivated);
+            eventAggregator?.GetEvent<OFClosedInspectorEvent>().Subscribe(InspectorClosed);
+
+            eventAggregator?.GetEvent<OFActivatedExplorerEvent>().Subscribe(ExplorerActivated);
+            eventAggregator?.GetEvent<OFClosedExplorerEvent>().Subscribe(ExplorerClosed);
+            eventAggregator?.GetEvent<OFSelectionChangedExplorerEvent>().Subscribe(ExplorerSelectionChanged);
+
+        }
+
+        private void ExplorerSelectionChanged(Outlook.Explorer obj)
+        {
+            
+        }
+
+        private void ExplorerClosed(Outlook.Explorer obj)
+        {
+            
+        }
+
+        private void ExplorerActivated(Outlook.Explorer obj)
+        {
+            
+        }
+
+        private void InspectorClosed(Outlook.Inspector obj)
+        {
+            
+        }
+
+        private void InspectorActivated(Outlook.Inspector obj)
+        {
+            
+        }
+
+        private void OnNewExplorer(Outlook.Explorer obj)
+        {
+            
+        }
+
+        private void OnNewInspector(Outlook.Inspector obj)
+        {
+            
+        }
 
 
         private void CreateSidebar()
