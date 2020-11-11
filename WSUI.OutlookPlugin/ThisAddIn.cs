@@ -59,7 +59,7 @@ namespace OFOutlookPlugin
 		private bool _canConnect = true;
         private OFInternalMessaging _nativeWindow;
         private OFKeyboardSystem _keyboardHook;
-        private OFOutlookEventManager _eventManager;
+        private IOFOutlookEventManager _eventManager;
 
 		private static string SERVICE_APP = "SERVICEAPP";
 
@@ -350,7 +350,7 @@ namespace OFOutlookPlugin
             eventAggregator?.GetEvent<OFSelectionChangedExplorerEvent>().Subscribe(ExplorerSelectionChanged);
 
         }
-
+         
         private void ExplorerSelectionChanged(Outlook.Explorer obj)
         {
             
@@ -609,6 +609,7 @@ namespace OFOutlookPlugin
             }
             _nativeWindow?.Dispose();
             _keyboardHook?.StopSystem();
+            _eventManager?.UnsubscribeEvents();
 #if DEBUG
             CheckAndCloseServiceApp();
 #endif

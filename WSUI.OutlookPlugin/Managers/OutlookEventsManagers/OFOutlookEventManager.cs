@@ -7,7 +7,13 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace OFOutlookPlugin.Managers.OutlookEventsManagers
 {
-    public class OFOutlookEventManager : IDisposable
+    public interface IOFOutlookEventManager : IDisposable
+    {
+        void SubscribeEvents();
+        void UnsubscribeEvents();
+    }
+
+    public class OFOutlookEventManager : IOFOutlookEventManager
     {
         private Outlook.Application _application;
         private IEventAggregator _eventAggregator;
@@ -21,6 +27,8 @@ namespace OFOutlookPlugin.Managers.OutlookEventsManagers
         private Dictionary<int, Outlook.ExplorerEvents_10_CloseEventHandler> _closeExplorer = new Dictionary<int, Outlook.ExplorerEvents_10_CloseEventHandler>();
         private Dictionary<int, Outlook.ExplorerEvents_10_SelectionChangeEventHandler> _selectionChangedExplorer = new Dictionary<int, Outlook.ExplorerEvents_10_SelectionChangeEventHandler>();
 
+        private Outlook.Inspectors _origInspectors;
+        private Outlook.Explorers _origExplorers;
 
         public OFOutlookEventManager(Outlook.Application application, IEventAggregator eventAggregator)
         {
@@ -33,8 +41,10 @@ namespace OFOutlookPlugin.Managers.OutlookEventsManagers
         {
             ((Outlook.ApplicationEvents_11_Event)_application).Quit += ApplicationQuit;
             ((Outlook.ApplicationEvents_11_Event)_application).ItemSend += OnItemSend;
-            _application.Inspectors.NewInspector += InspectorsOnNewInspector;
-            _application.Explorers.NewExplorer += ExplorersOnNewExplorer;
+            _origInspectors = _application.Inspectors;
+            _origExplorers = _application.Explorers;
+            _origInspectors.NewInspector += InspectorsOnNewInspector;
+            _origExplorers.NewExplorer += ExplorersOnNewExplorer;
         }
 
         public void UnsubscribeEvents()
