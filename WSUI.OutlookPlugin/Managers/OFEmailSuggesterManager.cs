@@ -12,6 +12,7 @@ using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using Microsoft.Practices.Prism.Events;
+using Microsoft.Vbe.Interop;
 using OF.Control;
 using OF.Core.Data;
 using OF.Core.Enums;
@@ -31,7 +32,7 @@ namespace OFOutlookPlugin.Managers
     {
         #region [needs]
 
-        private readonly List<int> _needIdList = new List<int>() { 4099, 4100, 4103,4106 };
+        private readonly List<int> _needIdList = new List<int>() { 4099, 4100, 4103,4106, 4117, 4263, 4126 };
         private readonly IDictionary<int, List<int>> _needHwndCtrl = new Dictionary<int, List<int>>();
 
         private IntPtr _hook;
@@ -73,28 +74,36 @@ namespace OFOutlookPlugin.Managers
             WindowsFunction.GetAllObjectWithClass("rctrl_renwnd32", listWnd);
             foreach (var intPtr in listWnd)
             {
+                var title= WindowsFunction.GetText(intPtr);
+                System.Diagnostics.Debug.WriteLine($"Title of window {title} for handle {intPtr.ToInt64()}");
+                
                 var listChilds = new List<IntPtr>();
                 WindowsFunction.GetAllChildWindowsWithClass(intPtr, "RichEdit20WPT", listChilds);
                 var listControls = new List<int>();
                 foreach (var listChild in listChilds)
                 {
                     var ctrlId = WindowsFunction.GetDlgCtrlID(listChild);
+
+                    
+                    var ctrlTitle = WindowsFunction.GetRichEditText(listChild);
+                    System.Diagnostics.Debug.WriteLine($"Title of window {ctrlTitle} for handle {listChild.ToInt64()} and ctrlId {ctrlId}");
+
                     if (_needIdList.Contains(ctrlId))
                     {
                         listControls.Add(listChild.ToInt32());
                     }
                 }
-                if (listControls.Any())
+                
+                if (!listControls.Any()) continue;
+                
+                if (_needHwndCtrl.ContainsKey(intPtr.ToInt32()))
                 {
-                    if (_needHwndCtrl.ContainsKey(intPtr.ToInt32()))
-                    {
-                        var temp = _needHwndCtrl[intPtr.ToInt32()];
-                        temp.AddRange(listControls);
-                        _needHwndCtrl[intPtr.ToInt32()] = temp.Distinct().ToList();
-                    }
-                    else
-                        _needHwndCtrl.Add(intPtr.ToInt32(), listControls);
+                    var temp = _needHwndCtrl[intPtr.ToInt32()];
+                    temp.AddRange(listControls);
+                    _needHwndCtrl[intPtr.ToInt32()] = temp.Distinct().ToList();
                 }
+                else
+                    _needHwndCtrl.Add(intPtr.ToInt32(), listControls);
             }
         }
 
@@ -132,15 +141,16 @@ namespace OFOutlookPlugin.Managers
 
         public void ProcessKeyDown(OFKeyDownPayload payload)
         {
-            var classStr = new StringBuilder(255);
             var hWnd = WindowsFunction.GetFocus();
             var ctrlId = WindowsFunction.GetDlgCtrlID(hWnd);
-            WindowsFunction.GetClassName(hWnd, classStr, 255);
 
+            if (!_needIdList.Contains(ctrlId)) return;
+
+            if (!WindowsFunction.IsExpectedControlClass("RichEdit20WPT", hWnd)) return;
+            
             Dispatcher.CurrentDispatcher.BeginInvoke((Action) (() =>
             {
                 ProcessKeyPressing(payload,hWnd);
-
             }));
         }
 
@@ -159,50 +169,41 @@ namespace OFOutlookPlugin.Managers
                 _pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));
                 return;
             }
-
-            foreach (var keyValuePair in _needHwndCtrl)
+            var text = WindowsFunction.GetRichEditText(hWnd);
+            if ((key >= Keys.A && key <= Keys.Z) || key == Keys.Back || key == Keys.Delete)
             {
-                if (keyValuePair.Value.Contains(hWnd.ToInt32()))
+                var criteria = text.ToString();
+
+                if (criteria.IndexOf(EmailSeparator) > -1)
                 {
-                    
-                    var text = WindowsFunction.GetRichEditText(hWnd);
-
-                    if ((key >= Keys.A && key <= Keys.Z) || key == Keys.Back || key == Keys.Delete)
-                    {
-                        var criteria = text.ToString();
-
-                        if (criteria.IndexOf(EmailSeparator) > -1)
-                        {
-                            var arr = criteria.Split(EmailSeparator);
-                            criteria = arr[arr.Length - 1];
-                        }
-                        if (_token.IsNotNull())
-                        {
-                            _token.Dispose();
-                            _token = null;
-                        }
-                        _token = Scheduler.ThreadPool.Schedule(() =>
-                        {
-                            _pluginBootStraper.PassAction(new OFAction(OFActionType.ShowSuggestEmail,
-                                new Tuple<IntPtr, string>(hWnd, criteria.Trim())));
-                        }, TimeSpan.FromMilliseconds(50));
-                    }
-                    else if (key == Keys.Escape)
-                    {
-                        _pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));
-                    }
-                    else
-                    {
-                        OFActionType actionType = OFActionType.None;
-                        switch (key)
-                        {
-                            case Keys.Down:
-                                actionType = OFActionType.DownSuggestEmail;
-                                break;
-                        }
-                        _pluginBootStraper.PassAction(new OFAction(actionType, null));
-                    }
+                    var arr = criteria.Split(EmailSeparator);
+                    criteria = arr[arr.Length - 1];
                 }
+                if (_token.IsNotNull())
+                {
+                    _token.Dispose();
+                    _token = null;
+                }
+                _token = Scheduler.ThreadPool.Schedule(() =>
+                {
+                    _pluginBootStraper.PassAction(new OFAction(OFActionType.ShowSuggestEmail,
+                        new Tuple<IntPtr, string>(hWnd, criteria.Trim())));
+                }, TimeSpan.FromMilliseconds(50));
+            }
+            else if (key == Keys.Escape)
+            {
+                _pluginBootStraper.PassAction(new OFAction(OFActionType.HideSuggestEmail, null));
+            }
+            else
+            {
+                OFActionType actionType = OFActionType.None;
+                switch (key)
+                {
+                    case Keys.Down:
+                        actionType = OFActionType.DownSuggestEmail;
+                        break;
+                }
+                _pluginBootStraper.PassAction(new OFAction(actionType, null));
             }
         }
 
@@ -231,46 +232,40 @@ namespace OFOutlookPlugin.Managers
             {
                 return;
             }
-            foreach (var keyValuePair in _needHwndCtrl)
+            var text = GetTextFromFocusedTextControl(data.Item1);
+            var sb = WindowsFunction.GetRichEditText(data.Item1);
+            if (text.IsNotNull() && sb.IsNotNull())
             {
-                if (keyValuePair.Value.Contains(data.Item1.ToInt32()))
+                var str = sb.ToString();
+                if (str.Contains(EmailSeparator))
                 {
-                    var text = GetTextFromFocusedTextControl(data.Item1);
-                    var sb = WindowsFunction.GetRichEditText(data.Item1);
-                    if (text.IsNotNull() && sb.IsNotNull())
+                    var arr = str.Split(EmailSeparator);
+
+                    for (int i = 0; i < text.Count(); i++)
                     {
-                        var str = sb.ToString();
-                        if (str.Contains(EmailSeparator))
-                        {
-                            var arr = str.Split(EmailSeparator);
-
-                            for (int i = 0; i < text.Count(); i++)
-                            {
-                                if (i >= arr.Length)
-                                    continue;
-                                arr[i] = text.ElementAt(i);
-                            }
-                            if (!arr[arr.Length - 1].IsEmail())
-                            {
-                                arr[arr.Length - 1] = data.Item2;
-                            }
-                            str = String.Join(EmailSeparator.ToString() + ' ', arr);
-                            str = string.Format(TemplateInsert, str);
-                            WindowsFunction.SetRichEditText(data.Item1, str);
-                            WindowsFunction.SendMessage(data.Item1.ToInt32(), (int)WindowsFunction.EM.SETSEL, str.Length,
-                                new IntPtr(str.Length));
-
-                        }
-                        else
-                        {
-
-                            var email = string.Format(TemplateInsert, data.Item2);
-                            WindowsFunction.SetRichEditText(data.Item1, email);
-                            WindowsFunction.SendMessage(data.Item1.ToInt32(), (int)WindowsFunction.EM.SETSEL, email.Length,
-                                new IntPtr(email.Length));
-
-                        }
+                        if (i >= arr.Length)
+                            continue;
+                        arr[i] = text.ElementAt(i);
                     }
+                    if (!arr[arr.Length - 1].IsEmail())
+                    {
+                        arr[arr.Length - 1] = data.Item2;
+                    }
+                    str = String.Join(EmailSeparator.ToString() + ' ', arr);
+                    str = string.Format(TemplateInsert, str);
+                    WindowsFunction.SetRichEditText(data.Item1, str);
+                    WindowsFunction.SendMessage(data.Item1.ToInt32(), (int)WindowsFunction.EM.SETSEL, str.Length,
+                        new IntPtr(str.Length));
+
+                }
+                else
+                {
+
+                    var email = string.Format(TemplateInsert, data.Item2);
+                    WindowsFunction.SetRichEditText(data.Item1, email);
+                    WindowsFunction.SendMessage(data.Item1.ToInt32(), (int)WindowsFunction.EM.SETSEL, email.Length,
+                        new IntPtr(email.Length));
+
                 }
             }
         }

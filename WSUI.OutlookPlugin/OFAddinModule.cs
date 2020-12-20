@@ -963,23 +963,6 @@ namespace OFOutlookPlugin
             }
         }
 
-        private void OutlookFinderEvents_InspectorActivate(object sender, object inspector, string folderName)
-        {
-            if (_canConnect)
-            {
-                Outlook._Inspector insp = (Outlook._Inspector)inspector;
-                var item = insp.CurrentItem as Outlook.MailItem;
-                if (item != null)
-                {
-                    _mailRemovingManager.ConnectTo(item);
-                }
-            }
-            if (_emailSuggesterManager.IsNotNull())
-            {
-                _emailSuggesterManager.SubscribeMailWindow();
-            }
-        }
-
         private void OutlookFinderEvents_ExplorerClose(object sender, object explorer)
         {
             int count = 0;

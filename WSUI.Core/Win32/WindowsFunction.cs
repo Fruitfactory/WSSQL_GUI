@@ -368,6 +368,14 @@ namespace OF.Core.Win32
             EnumChildWindows(hWndParent, new EnumWindowsProc(EnumProcChild), ref sd);
         }
 
+        public static bool IsExpectedControlClass(string expectedClass, IntPtr hWnd)
+        {
+            StringBuilder sb = new StringBuilder(1024);
+            GetClassName(hWnd, sb, sb.Capacity);
+            return sb.ToString().StartsWith(expectedClass);
+        }
+        
+
         private static bool EnumProc1(IntPtr hWnd, ref SearchData data)
         {
             StringBuilder sb = new StringBuilder(1024);
@@ -469,6 +477,9 @@ namespace OF.Core.Win32
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, EntryPoint = "GlobalMemoryStatusEx", SetLastError = true)]
         public static extern bool _GlobalMemoryStatusEx(ref MEMORYSTATUSEX lpBuffer);
 
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        static extern int GetWindowTextLength(IntPtr hWnd);
+
         #endregion [function]
 
 
@@ -543,6 +554,15 @@ namespace OF.Core.Win32
             GetLastInputInfo(ref lastInPut);
             var tickCount = GetTickCount();
             return (tickCount - lastInPut.dwTime);
+        }
+
+        public static string GetText(IntPtr hWnd)
+        {
+            // Allocate correct string length first
+            int length = GetWindowTextLength(hWnd);
+            StringBuilder sb = new StringBuilder(length + 1);
+            GetWindowText(hWnd, sb, sb.Capacity);
+            return sb.ToString();
         }
 
         private static List<object> GetRunningInstances(string[] progIds)

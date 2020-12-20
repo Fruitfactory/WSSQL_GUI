@@ -382,8 +382,20 @@ namespace OFOutlookPlugin
         }
 
         private void OnNewInspector(Outlook.Inspector obj)
-        {
-            
+        { 
+            if (_canConnect)
+            {
+                Outlook._Inspector insp = (Outlook._Inspector)obj;
+                var item = insp.CurrentItem as Outlook.MailItem;
+                if (item != null)
+                {
+                    _mailRemovingManager.ConnectTo(item); // TODO: refactore this
+                }
+            }
+            //if (_emailSuggesterManager.IsNotNull())
+            //{
+            //    _emailSuggesterManager.SubscribeMailWindow();
+            //}
         }
 
 
@@ -1029,14 +1041,6 @@ namespace OFOutlookPlugin
                 Process.GetProcesses()
                     .FirstOrDefault(p => p.ProcessName.ToUpperInvariant().Contains("outlook".ToUpperInvariant()));
             return outlook.IsNotNull() ? outlook.MainWindowHandle : IntPtr.Zero;
-        }
-
-        private void OutlookFinderEvents_ExplorerInlineResponse ( object sender,object itemObject )
-        {
-            if(_emailSuggesterManager.IsNotNull())
-            {
-                _emailSuggesterManager.SubscribeMailWindow();
-            }
         }
 
         private void OutlookFinderEvents_ExplorerInlineResponseEx ( object sender,object itemObject,object sourceObject )
