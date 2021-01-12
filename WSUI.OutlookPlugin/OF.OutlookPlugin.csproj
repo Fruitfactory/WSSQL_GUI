@@ -273,8 +273,10 @@
     <Compile Include="Core\OFUpdateHelper.cs" />
     <Compile Include="Events\OFActivatedExplorerEvent.cs" />
     <Compile Include="Events\OFActivatedInspectorEvent.cs" />
+    <Compile Include="Events\OFBeforeFolderSwitchedEvent.cs" />
     <Compile Include="Events\OFClosedExplorerEvent.cs" />
     <Compile Include="Events\OFClosedInspectorEvent.cs" />
+    <Compile Include="Events\OFFolderSwitchedEvent.cs" />
     <Compile Include="Events\OFHideWindow.cs" />
     <Compile Include="Events\OFItemSendEvent.cs" />
     <Compile Include="Events\OFNewExplorerEvent.cs" />

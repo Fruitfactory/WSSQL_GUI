@@ -125,12 +125,12 @@ namespace OFOutlookPlugin
 		#region public
 
 		// TODO: change EventArgs to something particular
-		public void FolderSwitch ( object sender,EventArgs args )
+		public void FolderSwitch (Outlook.Explorer explorer)
 		{
 			try
 			{
-				//var folder = args.FolderObj as Outlook.Folder;
-				//_mailRemovingManager.ConnectTo(folder);
+				
+				_mailRemovingManager.ConnectTo(explorer.CurrentFolder as Outlook.Folder);
 				if(IsLoading)
 					return;
 				HideSidebarDuringSwitching();
@@ -346,6 +346,8 @@ namespace OFOutlookPlugin
             eventAggregator?.GetEvent<OFActivatedExplorerEvent>().Subscribe(ExplorerActivated);
             eventAggregator?.GetEvent<OFClosedExplorerEvent>().Subscribe(ExplorerClosed);
             eventAggregator?.GetEvent<OFSelectionChangedExplorerEvent>().Subscribe(ExplorerSelectionChanged);
+
+            eventAggregator?.GetEvent<OFFolderSwitchedEvent>().Subscribe(FolderSwitch);
 
         }
          

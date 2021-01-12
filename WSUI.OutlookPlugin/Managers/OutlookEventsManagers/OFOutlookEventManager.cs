@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Practices.Prism.Events;
+using OF.Infrastructure.Events;
 using OFOutlookPlugin.Events;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
@@ -26,6 +27,9 @@ namespace OFOutlookPlugin.Managers.OutlookEventsManagers
         private Dictionary<int, Outlook.ExplorerEvents_10_ActivateEventHandler> _activateExplorer = new Dictionary<int, Outlook.ExplorerEvents_10_ActivateEventHandler>();
         private Dictionary<int, Outlook.ExplorerEvents_10_CloseEventHandler> _closeExplorer = new Dictionary<int, Outlook.ExplorerEvents_10_CloseEventHandler>();
         private Dictionary<int, Outlook.ExplorerEvents_10_SelectionChangeEventHandler> _selectionChangedExplorer = new Dictionary<int, Outlook.ExplorerEvents_10_SelectionChangeEventHandler>();
+        private Dictionary<int,Outlook.ExplorerEvents_10_FolderSwitchEventHandler> _folderSwitchExplorer = new Dictionary<int, Outlook.ExplorerEvents_10_FolderSwitchEventHandler>();
+        private Dictionary<int,  Outlook.ExplorerEvents_10_BeforeFolderSwitchEventHandler> _beforeFolderSwitchExplorer =  new Dictionary<int, Outlook.ExplorerEvents_10_BeforeFolderSwitchEventHandler>();
+
 
         private Outlook.Inspectors _origInspectors;
         private Outlook.Explorers _origExplorers;
@@ -41,6 +45,7 @@ namespace OFOutlookPlugin.Managers.OutlookEventsManagers
         {
             ((Outlook.ApplicationEvents_11_Event)_application).Quit += ApplicationQuit;
             ((Outlook.ApplicationEvents_11_Event)_application).ItemSend += OnItemSend;
+
             _origInspectors = _application.Inspectors;
             _origExplorers = _application.Explorers;
             _origInspectors.NewInspector += InspectorsOnNewInspector;
@@ -144,12 +149,19 @@ namespace OFOutlookPlugin.Managers.OutlookEventsManagers
             Outlook.ExplorerEvents_10_ActivateEventHandler ad = () => ActivatedExplorer(explorer);
             Outlook.ExplorerEvents_10_CloseEventHandler cd = () => ClosedExplorer(explorer);
             Outlook.ExplorerEvents_10_SelectionChangeEventHandler sd = () => ExplorerOnSelectionChange(explorer);
+            Outlook.ExplorerEvents_10_FolderSwitchEventHandler fw = () => FolderSwitch(explorer);
+            Outlook.ExplorerEvents_10_BeforeFolderSwitchEventHandler bfw = (object folder, ref bool cancel) => BeforeFolderSwitched(explorer,folder, ref cancel);
             _activateExplorer.Add(hashCode, ad);
             _closeExplorer.Add(hashCode, cd);
             _selectionChangedExplorer.Add(hashCode, sd);
+            _folderSwitchExplorer.Add(hashCode, fw);
+            _beforeFolderSwitchExplorer.Add(hashCode, bfw);
             ((Outlook.ExplorerEvents_10_Event) explorer).Activate += ad;
             ((Outlook.ExplorerEvents_10_Event)explorer).Close += cd;
             ((Outlook.ExplorerEvents_10_Event)explorer).SelectionChange += sd;
+            explorer.FolderSwitch += fw;
+            explorer.BeforeFolderSwitch += bfw;
+
         }
 
         private void ClosedExplorer(Outlook.Explorer explorer)
@@ -173,11 +185,26 @@ namespace OFOutlookPlugin.Managers.OutlookEventsManagers
             ((Outlook.ExplorerEvents_10_Event)explorer).Activate -= _activateExplorer[hash];
             ((Outlook.ExplorerEvents_10_Event)explorer).Close -= _closeExplorer[hash];
             ((Outlook.ExplorerEvents_10_Event)explorer).SelectionChange -= _selectionChangedExplorer[hash];
+            explorer.FolderSwitch -= _folderSwitchExplorer[hash];
+            explorer.BeforeFolderSwitch -= _beforeFolderSwitchExplorer[hash];
         }
 
         private void ExplorerOnSelectionChange(Outlook.Explorer explorer)
         {
             _eventAggregator?.GetEvent<OFSelectionChangedExplorerEvent>().Publish(explorer);
         }
+
+        private void FolderSwitch(Outlook.Explorer explorer)
+        {
+            _eventAggregator?.GetEvent<OFFolderSwitchedEvent>().Publish(explorer);
+        }
+
+        private void BeforeFolderSwitched(Outlook.Explorer explorer, object folder, ref bool cancel)
+        {
+            var payload = new OFBeforeFolderSwitchedPayload(explorer,folder,cancel);
+            _eventAggregator?.GetEvent<OFBeforeFolderSwitchedEvent>().Publish(payload);
+            cancel = payload.Cancel;
+        }
+
     }
 }
